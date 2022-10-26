@@ -1,0 +1,28 @@
+image:
+  repository: eeacms/centos7dev
+  pullPolicy: IfNotPresent
+  tag: "2.2.4"
+
+resources: {}
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+nameOverride: ""
+
+fullnameOverride: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+
+securityContext: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
