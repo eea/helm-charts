@@ -47,6 +47,11 @@ spec:
 #           periodSeconds: 5
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          env:
+          - name: TZ
+            value: "Europe/Copenhagen"
+          - name: LANG
+            value: "en_US.UTF-8"
           stdin: true
           tty: true
       {{- with .Values.nodeSelector }}
