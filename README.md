@@ -13,7 +13,7 @@ Create your package or update the source. For the example we will call the packa
     cd helm-charts/sources
     mkdir toypackage
     cd toypackage
-    ... create Chart.yml, value.yml etc.
+    ... create Chart.yaml, values.yaml etc. If updating, remember to increase version number in Chart.yaml
     cd ../..
     helm package sources/toypackage
     helm repo index --url https://eea.github.io/helm-charts/ .
