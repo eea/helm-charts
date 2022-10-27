@@ -3,12 +3,12 @@ image:
   pullPolicy: IfNotPresent
   tag: "2.2.4"
 
-resources: {}
+resources:
   env:
-    - name: TZ
-    - value: "Europe/Copenhagen"
-    - name: LANG
-    - value: "en_US.UTF-8"
+  - name: TZ
+  - value: "Europe/Copenhagen"
+  - name: LANG
+  - value: "en_US.UTF-8"
   limits:
     memory: 128Mi
   #   cpu: 100m

@@ -7,15 +7,18 @@ The principles are taken from [Mattia Peri](https://medium.com/@mattiaperi/creat
 To add a chart do:
 
     git clone https://github.com/eea/helm-charts.git
+
+Create your package or update the source. For the example we will call the package `toypackage`.
+
     cd helm-charts/sources
-
-Create your package or update the source, then
-
-    cd ..
-    helm package sources
+    mkdir toypackage
+    cd toypackage
+    ... create Chart.yml, value.yml etc.
+    cd ../..
+    helm package sources/toypackage
     helm repo index --url https://eea.github.io/helm-charts/ .
     git add .
-    git commit
+    git commit .
     git push
 
 ## Deploying Helm charts
