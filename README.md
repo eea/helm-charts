@@ -25,3 +25,7 @@ In Rancher 2.6 you can add the repository to the cluster and it will show the pa
 On the command line you can do the same with the helm tool.
 
     helm add repo eea-charts https://eea.github.io/helm-charts/
+
+## Source repository
+
+The sources for these pages are located at the [GitHub project](https://github.com/eea/helm-charts).

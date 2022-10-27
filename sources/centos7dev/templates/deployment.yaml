@@ -26,26 +26,29 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          args:
-            - /bin/bash
-            - -c
-            - touch /tmp/healthy
-          livenessProbe:
-            exec:
-              command:
-                - cat
-                - /tmp/healthy
-            initialDelaySeconds: 5
-            periodSeconds: 5
-          readinessProbe:
-            exec:
-              command:
-                - cat
-                - /tmp/healthy
-            initialDelaySeconds: 5
-            periodSeconds: 5
+          command: ["/bin/sh"]
+#         args:
+#           - /bin/bash
+#           - -c
+#           - touch /tmp/healthy
+#         livenessProbe:
+#           exec:
+#             command:
+#               - cat
+#               - /tmp/healthy
+#           initialDelaySeconds: 5
+#           periodSeconds: 5
+#         readinessProbe:
+#           exec:
+#             command:
+#               - cat
+#               - /tmp/healthy
+#           initialDelaySeconds: 5
+#           periodSeconds: 5
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          stdin: true
+          tty: true
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
