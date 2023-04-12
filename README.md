@@ -14,11 +14,12 @@ Create your package or update the source. For the example we will call the packa
     mkdir toypackage
     cd toypackage
     ... create Chart.yaml, values.yaml etc. If updating, remember to increase version number in Chart.yaml
+    git add .
     cd ../../docs
     helm package ../sources/toypackage
     helm repo index --url https://eea.github.io/helm-charts/ .
     git add .
-    git commit .
+    git commit
     git push
 
 ## Deploying Helm charts
