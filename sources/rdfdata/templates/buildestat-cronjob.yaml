@@ -6,7 +6,7 @@ metadata:
     component: buildestat
   name: {{ include "rdfdata.fullname" . }}-buildestat
 spec:
-  schedule: "30 9 23 * * SAT"
+  schedule: "30 9 * * SAT"
   jobTemplate:
     spec:
       template:
