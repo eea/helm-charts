@@ -55,13 +55,6 @@ ingress:
   #    hosts:
   #      - rdfdata.eionet.europa.eu
 
-#resources: {}
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
-
 autoscaling:
   enabled: false
   minReplicas: 1
@@ -81,11 +74,11 @@ buildestat:
     tag: 2.2.4
   resources:
     requests:
+      memory: 128Mi
+  #   cpu: 100m
+    limits:
       memory: 256Mi
   #   cpu: 100m
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
   securityContext:
     # capabilities:
     #   drop:
@@ -103,12 +96,12 @@ buildsw:
     requests:
       memory: 64Mi
   #   cpu: 100m
-  # limits:
+    limits:
+      memory: 128Mi
   #   cpu: 100m
-  #   memory: 128Mi
 
 httpd:
-  hostName: rdfdata.eionet.europa.eu
+  hostName: rdfdata
   image:
     repository: httpd
     tag: 2.4.23
@@ -116,9 +109,9 @@ httpd:
     requests:
       memory: 64Mi
   #   cpu: 100m
-  # limits:
+    limits:
+      memory: 128Mi
   #   cpu: 100m
-  #   memory: 128Mi
 
 tomcat:
   enabled: false
@@ -127,8 +120,8 @@ tomcat:
     tag: 7-jre7
   resources:
     requests:
+      memory: 128Mi
+  #   cpu: 100m
+    limits:
       memory: 256Mi
   #   cpu: 100m
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
