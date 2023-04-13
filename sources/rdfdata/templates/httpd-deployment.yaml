@@ -42,8 +42,8 @@ spec:
             port: http
         resources:
           {{- toYaml .Values.httpd.resources | nindent 10 }}
-      hostname: {{ .Values.httpd.serviceName }}
-      subdomain: {{ .Values.httpd.serviceDomain }}
+      hostname: {{ .Values.httpd.hostName }}
+      setHostnameAsFQDN: true
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

@@ -108,8 +108,7 @@ buildsw:
   #   memory: 128Mi
 
 httpd:
-  serviceName: rdfdata
-  serviceDomain: eionet.europa.eu
+  hostName: rdfdata.eionet.europa.eu
   image:
     repository: httpd
     tag: 2.4.23
@@ -122,7 +121,7 @@ httpd:
   #   memory: 128Mi
 
 tomcat:
-  enabled: true
+  enabled: false
   image:
     repository: tomcat
     tag: 7-jre7
