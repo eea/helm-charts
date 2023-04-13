@@ -1,0 +1,15 @@
+{{- if .Values.tomcat.enabled -}}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    {{- include "rdfdata.labels" . | nindent 4 }}
+    component: webapps
+  name: {{ .Chart.Name }}-webapps
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 100Mi
+{{- end }}

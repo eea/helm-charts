@@ -1,0 +1,56 @@
+{{- if .Values.tomcat.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "rdfdata.fullname" . }}-tomcat
+  labels:
+    {{- include "rdfdata.labels" . | nindent 4 }}
+    component: tomcat
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "rdfdata.selectorLabels" . | nindent 6 }}
+      component: tomcat
+  template:
+    metadata:
+      labels:
+        {{- include "rdfdata.selectorLabels" . | nindent 8 }}
+        component: tomcat
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "rdfdata.serviceAccountName" . }}
+      containers:
+      - name: {{ .Chart.Name }}-tomcat
+        image: "{{ .Values.tomcat.image.repository }}:{{ .Values.tomcat.image.tag }}"
+        env:
+        - name: CATALINA_OPTS
+          value: -Djava.security.egd=file:/dev/./urandom
+        - name: JAVA_OPTS
+          value: -Xmx1024m
+        resources:
+          {{- toYaml .Values.tomcat.resources | nindent 10 }}
+        volumeMounts:
+        - mountPath: /usr/local/tomcat/webapps
+          name: {{ .Chart.Name }}-webapps
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+      volumes:
+      - name: {{ .Chart.Name }}-webapps
+        persistentVolumeClaim:
+          claimName: {{ .Chart.Name }}-webapps
+{{- end }}

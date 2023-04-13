@@ -1,0 +1,18 @@
+{{- if .Values.tomcat.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "rdfdata.fullname" . }}    # Something tomcat here
+  labels:
+    {{- include "rdfdata.labels" . | nindent 4 }}
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8080
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    component: tomcat
+    {{- include "rdfdata.selectorLabels" . | nindent 4 }}
+{{- end }}

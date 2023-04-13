@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "rdfdata.fullname" . }}-buildsw
+  labels:
+    {{- include "rdfdata.labels" . | nindent 4 }}
+    component: buildsw
+spec:
+  selector:
+    matchLabels:
+      {{- include "rdfdata.selectorLabels" . | nindent 6 }}
+      component: buildsw
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "rdfdata.selectorLabels" . | nindent 8 }}
+        component: buildsw
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "rdfdata.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+      - name: {{ .Chart.Name }}-buildsw
+        env:
+        - name: LANG
+          value: C.UTF-8
+        - name: TZ
+          value: Europe/Copenhagen
+        image: "{{ .Values.buildsw.image.repository }}:{{ .Values.buildsw.image.tag }}"
+        resources:
+          {{- toYaml .Values.buildsw.resources | nindent 10 }}
+        stdin: true
+        tty: true
+        volumeMounts:
+        - mountPath: /build
+          name: {{ .Chart.Name }}-buildsw
+        - mountPath: /usr/local/tomcat/webapps
+          name: {{ .Chart.Name }}-webapps
+        - mountPath: /rdfdata
+          name: {{ .Chart.Name }}-htdocs
+        - mountPath: /rdfdata-eionet
+          name: {{ .Chart.Name }}-buildrdf
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+      - name: {{ .Chart.Name }}-buildsw
+        persistentVolumeClaim:
+          claimName: {{ .Chart.Name }}-buildsw
+      - name: {{ .Chart.Name }}-webapps
+        persistentVolumeClaim:
+          claimName: {{ .Chart.Name }}-webapps
+      - name: {{ .Chart.Name }}-htdocs
+        persistentVolumeClaim:
+          claimName: {{ .Chart.Name }}-htdocs
+      - name: {{ .Chart.Name }}-buildrdf
+        persistentVolumeClaim:
+          claimName: {{ .Chart.Name }}-buildrdf

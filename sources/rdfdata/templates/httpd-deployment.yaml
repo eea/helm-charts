@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "rdfdata.fullname" . }}
+  labels:
+    {{- include "rdfdata.labels" . | nindent 4 }}
+    component: httpd
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "rdfdata.selectorLabels" . | nindent 6 }}
+      component: httpd
+  template:
+    metadata:
+      labels:
+        {{- include "rdfdata.selectorLabels" . | nindent 8 }}
+        component: httpd
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "rdfdata.serviceAccountName" . }}
+      containers:
+      - name: {{ .Chart.Name }}-httpd
+        image: "{{ .Values.httpd.image.repository }}:{{ .Values.httpd.image.tag }}"
+        volumeMounts:
+        - mountPath: /usr/local/apache2/conf
+          name: {{ .Chart.Name }}-htconf
+        - mountPath: /usr/local/apache2/htdocs
+          name: {{ .Chart.Name }}-htdocs
+        livenessProbe:
+          httpGet:
+            path: /
+            port: http
+          initialDelaySeconds: 3
+          periodSeconds: 20
+        readinessProbe:
+          httpGet:
+            path: /
+            port: http
+        resources:
+          {{- toYaml .Values.httpd.resources | nindent 10 }}
+      hostname: {{ .Values.httpd.serviceName }}
+      subdomain: {{ .Values.httpd.serviceDomain }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+      volumes:
+      - name: {{ .Chart.Name }}-htconf
+        persistentVolumeClaim:
+          claimName: {{ .Chart.Name }}-htconf
+      - name: {{ .Chart.Name }}-htdocs
+        persistentVolumeClaim:
+          claimName: {{ .Chart.Name }}-htdocs

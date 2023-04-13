@@ -1,0 +1,62 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  labels:
+    {{- include "rdfdata.labels" . | nindent 4 }}
+    component: buildestat
+  name: {{ include "rdfdata.fullname" . }}-buildestat
+spec:
+  schedule: "30 9 23 * * SAT"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          {{- with .Values.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          serviceAccountName: {{ include "rdfdata.serviceAccountName" . }}
+          containers:
+          - name: {{ .Chart.Name }}-buildestat
+            image: "{{ .Values.buildestat.image.repository }}:{{ .Values.buildestat.image.tag }}"
+            args:
+            - sh
+            - ./batch.sh
+            env:
+            - name: LANG
+              value: C.UTF-8
+            - name: TZ
+              value: Europe/Copenhagen
+            command:
+            - sh
+            - ./batch.sh
+            resources:
+              {{- toYaml .Values.buildestat.resources | nindent 14 }}
+            volumeMounts:
+            - mountPath: /var/local/rdfdata-eionet
+              name: {{ .Chart.Name }}-buildrdf
+            - mountPath: /var/local/rdfdata-eionet/htdocs
+              name: {{ .Chart.Name }}-htdocs
+            workingDir: /var/local/rdfdata-eionet/Data2RDF/Eurostat
+          restartPolicy: Never
+          securityContext:
+            {{- toYaml .Values.buildestat.securityContext | nindent 12 }}
+          {{- with .Values.nodeSelector }}
+          nodeSelector:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          {{- with .Values.affinity }}
+          affinity:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          {{- with .Values.tolerations }}
+          tolerations:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          volumes:
+          - name: {{ .Chart.Name }}-buildrdf
+            persistentVolumeClaim:
+              claimName: {{ .Chart.Name }}-buildrdf
+          - name: {{ .Chart.Name }}-htdocs
+            persistentVolumeClaim:
+              claimName: {{ .Chart.Name }}-htdocs
