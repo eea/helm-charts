@@ -44,6 +44,8 @@ spec:
           name: {{ .Chart.Name }}-buildsw
         - mountPath: /rdfdata
           name: {{ .Chart.Name }}-htdocs
+        - mountPath: /rdfdata-htconf
+          name: {{ .Chart.Name }}-htconf
         - mountPath: /rdfdata-eionet
           name: {{ .Chart.Name }}-buildrdf
         {{- if .Values.tomcat.enabled -}}
@@ -66,14 +68,16 @@ spec:
       - name: {{ .Chart.Name }}-buildsw
         persistentVolumeClaim:
           claimName: {{ .Chart.Name }}-buildsw
+      - name: {{ .Chart.Name }}-htconf
+        persistentVolumeClaim:
+          claimName: {{ .Chart.Name }}-htconf
       - name: {{ .Chart.Name }}-htdocs
         persistentVolumeClaim:
           claimName: {{ .Chart.Name }}-htdocs
       - name: {{ .Chart.Name }}-buildrdf
         persistentVolumeClaim:
           claimName: {{ .Chart.Name }}-buildrdf
-      {{- if .Values.tomcat.enabled -}}
       - name: {{ .Chart.Name }}-webapps
         persistentVolumeClaim:
           claimName: {{ .Chart.Name }}-webapps
-      {{- end }}
+ 
