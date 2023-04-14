@@ -7,7 +7,7 @@ metadata:
   name: {{ .Chart.Name }}-htconf
 spec:
   accessModes:
-  - ReadWriteOnce
+  - ReadWriteMany
   resources:
     requests:
-      storage: 100Mi
+      storage: 10Mi
