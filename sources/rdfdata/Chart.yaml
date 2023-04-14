@@ -1,14 +1,18 @@
 apiVersion: v2
 name: rdfdata
-description: Convert Eurostat and other orgs data to RDF and serve it
+description: Convert Eurostat and other orgs data to RDF and serve it from a website.
 icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/rdfdata/rdf.svg
 
 type: application
 
+keywords:
+- Reportnet
+- RDF
+
 # This is the chart version. This version number should be incremented each time you make changes
 # to the chart and its templates, including the app version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 0.1.5
+version: 0.1.6
 
 # This application does not have an app version, as it has the app in persistent storage
-appVersion: ""
+#appVersion: ""
