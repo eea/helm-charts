@@ -17,7 +17,7 @@ spec:
           {{- end }}
           serviceAccountName: {{ include "rdfdata.serviceAccountName" . }}
           containers:
-          - name: {{ .Chart.Name }}-buildestat
+          - name: {{ .Release.Name }}-buildestat
             image: "{{ .Values.buildestat.image.repository }}:{{ .Values.buildestat.image.tag }}"
             args:
             - sh
@@ -34,9 +34,9 @@ spec:
               {{- toYaml .Values.buildestat.resources | nindent 14 }}
             volumeMounts:
             - mountPath: /var/local/rdfdata-eionet
-              name: {{ .Chart.Name }}-buildrdf
+              name: {{ .Release.Name }}-buildrdf
             - mountPath: /var/local/rdfdata-eionet/htdocs
-              name: {{ .Chart.Name }}-htdocs
+              name: {{ .Release.Name }}-htdocs
             workingDir: /var/local/rdfdata-eionet/Data2RDF/Eurostat
           restartPolicy: Never
           securityContext:
@@ -54,9 +54,9 @@ spec:
             {{- toYaml . | nindent 8 }}
           {{- end }}
           volumes:
-          - name: {{ .Chart.Name }}-buildrdf
+          - name: {{ .Release.Name }}-buildrdf
             persistentVolumeClaim:
-              claimName: {{ .Chart.Name }}-buildrdf
-          - name: {{ .Chart.Name }}-htdocs
+              claimName: {{ .Release.Name }}-buildrdf
+          - name: {{ .Release.Name }}-htdocs
             persistentVolumeClaim:
-              claimName: {{ .Chart.Name }}-htdocs
+              claimName: {{ .Release.Name }}-htdocs

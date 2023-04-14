@@ -4,7 +4,7 @@ metadata:
   labels:
     {{- include "rdfdata.labels" . | nindent 4 }}
     component: htconf
-  name: {{ .Chart.Name }}-htconf
+  name: {{ .Release.Name }}-htconf
 spec:
   accessModes:
   - ReadWriteMany

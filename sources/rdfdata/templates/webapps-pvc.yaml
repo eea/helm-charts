@@ -4,7 +4,7 @@ metadata:
   labels:
     {{- include "rdfdata.labels" . | nindent 4 }}
     component: webapps
-  name: {{ .Chart.Name }}-webapps
+  name: {{ .Release.Name }}-webapps
 spec:
   accessModes:
   - ReadWriteMany

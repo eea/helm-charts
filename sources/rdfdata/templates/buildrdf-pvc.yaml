@@ -4,7 +4,7 @@ metadata:
   labels:
     {{- include "rdfdata.labels" . | nindent 4 }}
     component: buildrdf
-  name: {{ .Chart.Name }}-buildrdf
+  name: {{ .Release.Name }}-buildrdf
 spec:
   accessModes:
   - ReadWriteMany

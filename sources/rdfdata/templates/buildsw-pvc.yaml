@@ -4,7 +4,7 @@ metadata:
   labels:
     {{- include "rdfdata.labels" . | nindent 4 }}
     component: buildsw
-  name: {{ .Chart.Name }}-buildsw
+  name: {{ .Release.Name }}-buildsw
 spec:
   accessModes:
   - ReadWriteOnce

@@ -4,7 +4,7 @@ metadata:
   labels:
     {{- include "rdfdata.labels" . | nindent 4 }}
     component: htdocs
-  name: {{ .Chart.Name }}-htdocs
+  name: {{ .Release.Name }}-htdocs
 spec:
   accessModes:
   - ReadWriteMany

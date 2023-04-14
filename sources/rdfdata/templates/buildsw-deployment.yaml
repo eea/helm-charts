@@ -28,7 +28,7 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-      - name: {{ .Chart.Name }}-buildsw
+      - name: {{ .Release.Name }}-buildsw
         env:
         - name: LANG
           value: C.UTF-8
@@ -41,16 +41,16 @@ spec:
         tty: true
         volumeMounts:
         - mountPath: /build
-          name: {{ .Chart.Name }}-buildsw
+          name: {{ .Release.Name }}-buildsw
         - mountPath: /rdfdata
-          name: {{ .Chart.Name }}-htdocs
+          name: {{ .Release.Name }}-htdocs
         - mountPath: /rdfdata-htconf
-          name: {{ .Chart.Name }}-htconf
+          name: {{ .Release.Name }}-htconf
         - mountPath: /rdfdata-eionet
-          name: {{ .Chart.Name }}-buildrdf
+          name: {{ .Release.Name }}-buildrdf
         {{- if .Values.tomcat.enabled -}}
         - mountPath: /usr/local/tomcat/webapps
-          name: {{ .Chart.Name }}-webapps
+          name: {{ .Release.Name }}-webapps
         {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
@@ -65,19 +65,19 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       volumes:
-      - name: {{ .Chart.Name }}-buildsw
+      - name: {{ .Release.Name }}-buildsw
         persistentVolumeClaim:
-          claimName: {{ .Chart.Name }}-buildsw
-      - name: {{ .Chart.Name }}-htconf
+          claimName: {{ .Release.Name }}-buildsw
+      - name: {{ .Release.Name }}-htconf
         persistentVolumeClaim:
-          claimName: {{ .Chart.Name }}-htconf
-      - name: {{ .Chart.Name }}-htdocs
+          claimName: {{ .Release.Name }}-htconf
+      - name: {{ .Release.Name }}-htdocs
         persistentVolumeClaim:
-          claimName: {{ .Chart.Name }}-htdocs
-      - name: {{ .Chart.Name }}-buildrdf
+          claimName: {{ .Release.Name }}-htdocs
+      - name: {{ .Release.Name }}-buildrdf
         persistentVolumeClaim:
-          claimName: {{ .Chart.Name }}-buildrdf
-      - name: {{ .Chart.Name }}-webapps
+          claimName: {{ .Release.Name }}-buildrdf
+      - name: {{ .Release.Name }}-webapps
         persistentVolumeClaim:
-          claimName: {{ .Chart.Name }}-webapps
+          claimName: {{ .Release.Name }}-webapps
  

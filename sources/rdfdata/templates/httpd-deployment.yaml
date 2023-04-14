@@ -23,13 +23,13 @@ spec:
       {{- end }}
       serviceAccountName: {{ include "rdfdata.serviceAccountName" . }}
       containers:
-      - name: {{ .Chart.Name }}-httpd
+      - name: {{ .Release.Name }}-httpd
         image: "{{ .Values.httpd.image.repository }}:{{ .Values.httpd.image.tag }}"
         volumeMounts:
         - mountPath: /usr/local/apache2/conf
-          name: {{ .Chart.Name }}-htconf
+          name: {{ .Release.Name }}-htconf
         - mountPath: /usr/local/apache2/htdocs
-          name: {{ .Chart.Name }}-htdocs
+          name: {{ .Release.Name }}-htdocs
         livenessProbe:
           httpGet:
             path: /
@@ -58,9 +58,9 @@ spec:
       {{- end }}
       restartPolicy: Always
       volumes:
-      - name: {{ .Chart.Name }}-htconf
+      - name: {{ .Release.Name }}-htconf
         persistentVolumeClaim:
-          claimName: {{ .Chart.Name }}-htconf
-      - name: {{ .Chart.Name }}-htdocs
+          claimName: {{ .Release.Name }}-htconf
+      - name: {{ .Release.Name }}-htdocs
         persistentVolumeClaim:
-          claimName: {{ .Chart.Name }}-htdocs
+          claimName: {{ .Release.Name }}-htdocs
