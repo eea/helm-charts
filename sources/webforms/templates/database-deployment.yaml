@@ -50,7 +50,7 @@ spec:
             port: 3306
           initialDelaySeconds: 5
           periodSeconds: 20
-        cmd:
+        command:
         - mysqld
         - --max_allowed_packet=30M
         - --innodb_log_file_size=152MB
