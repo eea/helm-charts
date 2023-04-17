@@ -52,10 +52,10 @@ spec:
             port: 3306
           initialDelaySeconds: 5
           periodSeconds: 20
+        {{- with .Values.database.command }}
         command:
-        - mysqld
-        - --max_allowed_packet=30M
-        - --innodb_log_file_size=152MB
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
         resources:
           {{- toYaml .Values.database.resources | nindent 10 }}
       {{- with .Values.nodeSelector }}
