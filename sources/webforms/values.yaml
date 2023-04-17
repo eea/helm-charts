@@ -90,6 +90,13 @@ database:
   image:
     repository: mariadb
     tag: 10.1.26
+  securityContext:
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    runAsNonRoot: true
+    runAsUser: 999
   resources:
     requests:
       memory: 800Mi

@@ -3,7 +3,7 @@ entries:
   centos7dev:
   - apiVersion: v2
     appVersion: 2.2.4
-    created: "2023-04-17T14:15:50.572669161+02:00"
+    created: "2023-04-17T14:53:13.230971105+02:00"
     description: CentOS 7 image with Java development tools
     digest: 6533ee8cb9e891705b559b7f6cdbe0495fc5aa65b667ebca146d1dec294ae7ab
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/centos7dev/title_logo.svg
@@ -21,7 +21,7 @@ entries:
     version: 0.1.1
   - apiVersion: v2
     appVersion: 2.2.4
-    created: "2023-04-17T14:15:50.571151676+02:00"
+    created: "2023-04-17T14:53:13.23041541+02:00"
     description: CentOS 7 image with Java development tools
     digest: bebb5acf1be28ff28f33d6e0f90b090b7b0cdc513d8ed344fabb37eafb8bc788
     icon: https://eea.github.io/helm-charts/sources/centos7dev/title_logo.svg
@@ -39,7 +39,7 @@ entries:
     version: 0.1.0
   - apiVersion: v2
     appVersion: 2.0.0
-    created: "2023-04-17T14:15:50.569098102+02:00"
+    created: "2023-04-17T14:53:13.229564536+02:00"
     description: CentOS 7 image with Java development tools
     digest: 04061c7a0aa53ae22550c28c5a359448e68a61d1ce6eddd03323aac928563049
     icon: https://eea.github.io/helm-charts/sources/centos7dev/title_logo.svg
@@ -57,7 +57,7 @@ entries:
     version: 0.0.4
   rdfdata:
   - apiVersion: v2
-    created: "2023-04-17T14:15:50.58053673+02:00"
+    created: "2023-04-17T14:53:13.234253969+02:00"
     description: Convert Eurostat and other orgs data to RDF and serve it from a website.
     digest: c4270abfe7f5e9c1d3186349ad8b92d04b967e6143699720ef7002bf917dcc35
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/rdfdata/rdf.svg
@@ -70,7 +70,7 @@ entries:
     - https://eea.github.io/helm-charts/rdfdata-0.2.1.tgz
     version: 0.2.1
   - apiVersion: v2
-    created: "2023-04-17T14:15:50.577969633+02:00"
+    created: "2023-04-17T14:53:13.233145607+02:00"
     description: Convert Eurostat and other orgs data to RDF and serve it from a website.
     digest: 6b9b95b4c9a0c011443909848bd1e26910b6b97517b2e11877eb6e1af7017fba
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/rdfdata/rdf.svg
@@ -83,7 +83,7 @@ entries:
     - https://eea.github.io/helm-charts/rdfdata-0.2.0.tgz
     version: 0.2.0
   - apiVersion: v2
-    created: "2023-04-17T14:15:50.575325886+02:00"
+    created: "2023-04-17T14:53:13.232148911+02:00"
     description: Convert Eurostat and other orgs data to RDF and serve it from a website.
     digest: da280c0b1c91a73925521da2c1fcdc59301ad8e0daa8d9bd3d29ec5d0936b137
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/rdfdata/rdf.svg
@@ -98,7 +98,21 @@ entries:
   webforms:
   - apiVersion: v2
     appVersion: 2022-05-24T1320
-    created: "2023-04-17T14:15:50.613148988+02:00"
+    created: "2023-04-17T14:53:13.239938811+02:00"
+    description: Gather data for reporting obligations, using web questionnaires predefined
+      by the EEA.
+    digest: a34a085a8119b8555e79a14dfedc9fe431ea3fd3fb0f44b2914492eddf4e59a8
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/webforms/logo_eionet.png
+    keywords:
+    - Reportnet
+    name: webforms
+    type: application
+    urls:
+    - https://eea.github.io/helm-charts/webforms-0.1.4.tgz
+    version: 0.1.4
+  - apiVersion: v2
+    appVersion: 2022-05-24T1320
+    created: "2023-04-17T14:53:13.238475082+02:00"
     description: Gather data for reporting obligations, using web questionnaires predefined
       by the EEA.
     digest: 05f5df4aa500ecb15a53f9148c1563ff7ff398187e1096ba6393da53c7c04319
@@ -112,7 +126,7 @@ entries:
     version: 0.1.3
   - apiVersion: v2
     appVersion: 2022-05-24T1320
-    created: "2023-04-17T14:15:50.609819241+02:00"
+    created: "2023-04-17T14:53:13.236546302+02:00"
     description: Gather data for reporting obligations, using web questionnaires predefined
       by the EEA.
     digest: 30487e00319c9dafaf32413b1613dd66539302265467219da1912504cb4d7df5
@@ -124,32 +138,4 @@ entries:
     urls:
     - https://eea.github.io/helm-charts/webforms-0.1.2.tgz
     version: 0.1.2
-  - apiVersion: v2
-    appVersion: 2022-05-24T1320
-    created: "2023-04-17T14:15:50.60566742+02:00"
-    description: Gather data for reporting obligations, using web questionnaires predefined
-      by the EEA.
-    digest: a7d2b2d8b542f3cdd2fdc159df33f836892daad1d941dc718f82ef8495adfe43
-    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/webforms/logo_eionet.png
-    keywords:
-    - Reportnet
-    name: webforms
-    type: application
-    urls:
-    - https://eea.github.io/helm-charts/webforms-0.1.1.tgz
-    version: 0.1.1
-  - apiVersion: v2
-    appVersion: 2022-05-24T1320
-    created: "2023-04-17T14:15:50.600729671+02:00"
-    description: Gather data for reporting obligations, using web questionnaires predefined
-      by the EEA.
-    digest: 5fdd051bb7240dbe042c246b0d3407b6a7d12df70cd8088f843a74aa92028dd9
-    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/webforms/logo_eionet.png
-    keywords:
-    - Reportnet
-    name: webforms
-    type: application
-    urls:
-    - https://eea.github.io/helm-charts/webforms-0.1.0.tgz
-    version: 0.1.0
-generated: "2023-04-17T14:15:50.566520275+02:00"
+generated: "2023-04-17T14:53:13.22861319+02:00"

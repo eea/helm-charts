@@ -37,6 +37,8 @@ spec:
           value: "{{ .Values.database.rootpw }}"
         - name: MYSQL_USER
           value: "{{ .Values.database.username }}"
+        securityContext:
+          {{- toYaml .Values.database.securityContext | nindent 10 }}
         volumeMounts:
         - mountPath: /var/lib/mysql
           name: {{ .Release.Name }}-database
