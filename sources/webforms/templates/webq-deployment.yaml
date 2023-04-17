@@ -31,33 +31,18 @@ spec:
         - containerPort: 8080
           protocol: TCP
         env:
+        - name: CATALINA_OUT
+          value: "/dev/stdout"
         - name: CATALINA_OPTS
-          value: |-
-            "-Dcas.service={{ .Values.casService }}"
-            "-Djava.security.egd=file:/dev/./urandom"
-            "-Ddb.url=jdbc:mysql://{{ .Release.Name }}-db:3306/{{ .Values.database.database }}?maxAllowedPacket=32212254720"
-            "-Ddb.driver=com.mysql.jdbc.Driver"
-            "-Ddb.username={{ .Values.database.username }}"
-            "-Ddb.password={{ .Values.database.password }}"
-            "-Dconverters.api.url={{ .Values.convertersApi }}"
-            "-Duser.file.expiration.hours=72"
-            {{- if .Values.log4jConfiguration }}
-            "-Dlog4j.configuration="{{.Values.log4jConfiguration }}"
-            {{- end }}
-            {{- if .Values.initialAdminUsername }}
-            "-Dinitial.admin.username={{.Values.initialAdminUsername }}"
-            {{- end }}
-            {{- if .Values.initialAdminPassword }}
-            "-Dinitial.admin.password={{.Values.initialAdminPassword }}"
-            {{- end }}
+          value: '"-Dcas.service={{ .Values.casService }}" "-Djava.security.egd=file:/dev/./urandom" "-Ddb.url=jdbc:mysql://{{ .Release.Name }}-db:3306/{{ .Values.database.database }}?maxAllowedPacket=32212254720" "-Ddb.driver=com.mysql.jdbc.Driver" "-Ddb.username={{ .Values.database.username }}" "-Ddb.password={{ .Values.database.password }}" "-Dconverters.api.url={{ .Values.convertersApi }}" "-Duser.file.expiration.hours=72" {{- if .Values.log4jConfiguration }} "-Dlog4j.configuration="{{.Values.log4jConfiguration }}" {{- end }} {{- if .Values.initialAdminUsername }} "-Dinitial.admin.username={{.Values.initialAdminUsername }}" {{- end }} {{- if .Values.initialAdminPassword }} "-Dinitial.admin.password={{.Values.initialAdminPassword }}" {{- end }}'
         - name: JAVA_OPTS
           value: "-Xmx3072m"
         - name: LANG
           value: "en_US.UTF-8"
 # Debug start
-        command: ["/bin/sh"]
-        stdin: true
-        tty: true
+#       command: ["/bin/sh"]
+#       stdin: true
+#       tty: true
 # Debug end
         resources:
           {{- toYaml .Values.resources | nindent 10 }}

@@ -31,11 +31,11 @@ spec:
         env:
         - name: MYSQL_DATABASE
           value: "{{ .Values.database.database }}"
-          name: MYSQL_PASSWORD
+        - name: MYSQL_PASSWORD
           value: "{{ .Values.database.password }}"
-          name: MYSQL_ROOT_PASSWORD
+        - name: MYSQL_ROOT_PASSWORD
           value: "{{ .Values.database.rootpw }}"
-          name: MYSQL_USER
+        - name: MYSQL_USER
           value: "{{ .Values.database.username }}"
         volumeMounts:
         - mountPath: /var/lib/mysql
