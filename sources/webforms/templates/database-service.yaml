@@ -6,9 +6,9 @@ metadata:
     {{- include "webforms.labels" . | nindent 4 }}
     component: database
 spec:
-  type: {{ .Values.service.type }}
+  type: ClusterIP
   ports:
-    - port: {{ .Values.service.port }}
+    - port: 3306
       targetPort: 3306
       protocol: TCP
   selector:
