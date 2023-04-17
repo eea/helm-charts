@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "webforms.fullname" . }}
+  labels:
+    {{- include "webforms.labels" . | nindent 4 }}
+    component: webq
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "webforms.selectorLabels" . | nindent 6 }}
+      component: webq
+  template:
+    metadata:
+      labels:
+        {{- include "webforms.selectorLabels" . | nindent 8 }}
+        component: webq
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "webforms.serviceAccountName" . }}
+      containers:
+      - name: {{ .Release.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        env:
+        - name: CATALINA_OPTS
+          value: |-
+            "-Dcas.service={{ .Values.casService }}"
+            "-Djava.security.egd=file:/dev/./urandom"
+            "-Ddb.url=jdbc:mysql://{{ .Release.Name }}-db:3306/{{ .Values.database.database }}?maxAllowedPacket=32212254720"
+            "-Ddb.driver=com.mysql.jdbc.Driver"
+            "-Ddb.username={{ .Values.database.username }}"
+            "-Ddb.password={{ .Values.database.password }}"
+            "-Dconverters.api.url={{ .Values.convertersApi }}"
+            "-Duser.file.expiration.hours=72"
+            {{- if .Values.log4jConfiguration }}
+            "-Dlog4j.configuration="{{.Values.log4jConfiguration }}"
+            {{- end }}
+            {{- if .Values.initialAdminUsername }}
+            "-Dinitial.admin.username={{.Values.initialAdminUsername }}"
+            {{- end }}
+            {{- if .Values.initialAdminPassword }}
+            "-Dinitial.admin.password={{.Values.initialAdminPassword }}"
+            {{- end }}
+        - name: JAVA_OPTS
+          value: "-Xmx3072m"
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
+        securityContext:
+          {{- toYaml .Values.securityContext | nindent 12 }}
+        volumeMounts:
+        - mountPath: /opt/config
+          name: {{ .Release.Name }}-config
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+      volumes:
+      - name: {{ .Release.Name }}-config
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-config

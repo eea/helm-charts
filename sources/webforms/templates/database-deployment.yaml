@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "webforms.fullname" . }}
+  labels:
+    {{- include "webforms.labels" . | nindent 4 }}
+    component: database
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "webforms.selectorLabels" . | nindent 6 }}
+      component: database
+  template:
+    metadata:
+      labels:
+        {{- include "webforms.selectorLabels" . | nindent 8 }}
+        component: database
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "webforms.serviceAccountName" . }}
+      containers:
+      - name: {{ .Release.Name }}-db
+        image: "{{ .Values.database.image.repository }}:{{ .Values.database.image.tag }}"
+        ports:
+        - containerPort: 3306
+          protocol: TCP
+        env:
+        - name: MYSQL_DATABASE
+          value: "{{ .Values.database.database }}"
+          name: MYSQL_PASSWORD
+          value: "{{ .Values.database.password }}"
+          name: MYSQL_ROOT_PASSWORD
+          value: "{{ .Values.database.rootpw }}"
+          name: MYSQL_USER
+          value: "{{ .Values.database.username }}"
+        volumeMounts:
+        - mountPath: /var/lib/mysql
+          name: {{ .Release.Name }}-database
+        livenessProbe:
+          tcpSocket:
+            port: 3306
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        readinessProbe:
+          tcpSocket:
+            port: 3306
+          initialDelaySeconds: 5
+          periodSeconds: 20
+        cmd:
+        - mysqld
+        - --max_allowed_packet=30M
+        - --innodb_log_file_size=152MB
+        resources:
+          {{- toYaml .Values.database.resources | nindent 10 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+      volumes:
+      - name: {{ .Release.Name }}-database
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-database
