@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "webforms.fullname" . }}
+  name: {{ include "webforms.fullname" . }}-db
   labels:
     {{- include "webforms.labels" . | nindent 4 }}
     component: database

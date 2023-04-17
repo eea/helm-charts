@@ -52,6 +52,13 @@ spec:
             {{- end }}
         - name: JAVA_OPTS
           value: "-Xmx3072m"
+        - name: LANG
+          value: "en_US.UTF-8"
+# Debug start
+        command: ["/bin/sh"]
+        stdin: true
+        tty: true
+# Debug end
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
         securityContext:
