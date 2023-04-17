@@ -25,6 +25,9 @@ spec:
       containers:
       - name: {{ .Release.Name }}-httpd
         image: "{{ .Values.httpd.image.repository }}:{{ .Values.httpd.image.tag }}"
+        ports:
+        - containerPort: 80
+          protocol: TCP
         volumeMounts:
         - mountPath: /usr/local/apache2/conf
           name: {{ .Release.Name }}-htconf
@@ -33,17 +36,17 @@ spec:
         livenessProbe:
           httpGet:
             path: /
-            port: http
+            port: 80
           initialDelaySeconds: 3
           periodSeconds: 20
         readinessProbe:
           httpGet:
             path: /
-            port: http
+            port: 80
         resources:
           {{- toYaml .Values.httpd.resources | nindent 10 }}
       hostname: {{ .Values.httpd.hostName }}
-      #setHostnameAsFQDN: true
+      setHostnameAsFQDN: true
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

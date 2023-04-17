@@ -26,6 +26,9 @@ spec:
       containers:
       - name: {{ .Release.Name }}-tomcat
         image: "{{ .Values.tomcat.image.repository }}:{{ .Values.tomcat.image.tag }}"
+        ports:
+        - containerPort: 8080
+          protocol: TCP
         env:
         - name: CATALINA_OPTS
           value: -Djava.security.egd=file:/dev/./urandom
