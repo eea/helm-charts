@@ -9,10 +9,9 @@ spec:
   type: ClusterIP
   ports:
     - port: 8080
-      targetPort: http
+      targetPort: 8080
       protocol: TCP
-      name: http
   selector:
-    component: tomcat
     {{- include "rdfdata.selectorLabels" . | nindent 4 }}
+    component: tomcat
 {{- end }}
