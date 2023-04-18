@@ -39,18 +39,13 @@ spec:
           value: "-Xmx3072m"
         - name: LANG
           value: "en_US.UTF-8"
-# Debug start
-#       command: ["/bin/sh"]
-#       stdin: true
-#       tty: true
-# Debug end
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
         securityContext:
           {{- toYaml .Values.securityContext | nindent 12 }}
         volumeMounts:
         - mountPath: /opt/config
-          name: {{ .Release.Name }}-config
+          name: {{ .Release.Name }}-configdir
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -65,6 +60,6 @@ spec:
       {{- end }}
       restartPolicy: Always
       volumes:
-      - name: {{ .Release.Name }}-config
-        persistentVolumeClaim:
-          claimName: {{ .Release.Name }}-config
+      - name: {{ .Release.Name }}-configdir
+        configMap:
+          name: {{ .Release.Name }}-configdir
