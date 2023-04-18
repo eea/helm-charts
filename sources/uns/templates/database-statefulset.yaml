@@ -1,0 +1,86 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "uns.fullname" . }}-db
+  labels:
+    {{- include "uns.labels" . | nindent 4 }}
+    component: database
+spec:
+  replicas: 1
+  serviceName: {{ .Release.Name }}-db
+  selector:
+    matchLabels:
+      {{- include "uns.selectorLabels" . | nindent 6 }}
+      component: database
+  template:
+    metadata:
+      labels:
+        {{- include "uns.selectorLabels" . | nindent 8 }}
+        component: database
+    spec:
+      terminationGracePeriodSeconds: 10
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "uns.serviceAccountName" . }}
+      containers:
+      - name: {{ .Release.Name }}-db
+        image: "{{ .Values.database.image.repository }}:{{ .Values.database.image.tag }}"
+        ports:
+        - containerPort: 3306
+          protocol: TCP
+        env:
+        - name: MYSQL_DATABASE
+          value: "{{ .Values.database.database }}"
+        - name: MYSQL_PASSWORD
+          value: "{{ .Values.database.password }}"
+        - name: MYSQL_ROOT_PASSWORD
+          value: "{{ .Values.database.rootpw }}"
+        - name: MYSQL_USER
+          value: "{{ .Values.database.username }}"
+        - name: TZ
+          value: "Europe/Copenhagen"
+        securityContext:
+          {{- toYaml .Values.database.securityContext | nindent 10 }}
+        volumeMounts:
+        - mountPath: /var/lib/mysql
+          name: {{ .Release.Name }}-database
+        livenessProbe:
+          tcpSocket:
+            port: 3306
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        readinessProbe:
+          tcpSocket:
+            port: 3306
+          initialDelaySeconds: 5
+          periodSeconds: 20
+        {{- with .Values.database.command }}
+        command:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        resources:
+          {{- toYaml .Values.database.resources | nindent 10 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+  volumeClaimTemplates:
+  - metadata:
+      name: {{ .Release.Name }}-database
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 5Gi

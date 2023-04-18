@@ -1,0 +1,88 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "uns.fullname" . }}
+  labels:
+    {{- include "uns.labels" . | nindent 4 }}
+    component: uns
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "uns.selectorLabels" . | nindent 6 }}
+      component: uns
+  template:
+    metadata:
+      labels:
+        {{- include "uns.selectorLabels" . | nindent 8 }}
+        component: uns
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "uns.serviceAccountName" . }}
+      containers:
+      - name: {{ .Release.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        env:
+        - name: CATALINA_OPTS
+          value: '"-Dlog4j.configurationFile=/opt/uns/log4j2-gelf.xml"
+            "-Ddb.host={{ .Release.Name }}-db-0.{{ .Release.Name }}-db"
+            "-Ddb.url=jdbc:mysql://{{ .Release.Name }}-db-0.{{ .Release.Name }}-db:3306/{{ .Values.database.database }}?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&createDatabaseIfNotExist=true"
+            "-Ddb.user={{ .Values.database.username }}"
+            "-Ddb.password={{ .Values.database.password }}"
+            "-Dcas.filter.serverName=uns.eionet.europa.eu"
+            "-Dcas.filter.domain=uns.eionet.europa.eu"
+            "-Duns.url=https://uns.eionet.europa.eu/"
+            "-Dsmtp.host=mailservice"
+            "-Djabber.host="
+            "-Dpop3.host="
+            "-Dpop3.adminMail=uns@eionet.europa.eu"
+            "-Dconfig.ldap.url={{ .Values.ldap.url }}"
+            "-Dconfig.ldap.principal={{ .Values.ldap.principal }}"
+            "-Dconfig.ldap.password={{ .Values.ldap.password }}"'
+        - name: TZ
+          value: "Europe/Copenhagen"
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
+        securityContext:
+          {{- toYaml .Values.securityContext | nindent 12 }}
+        volumeMounts:
+        - mountPath: /opt/uns
+          name: {{ .Release.Name }}-configdir
+        - mountPath: /opt/log
+          name: {{ .Release.Name }}-logfile
+        livenessProbe:
+          httpGet:
+            path: /home.jsf
+            port: 8080
+          initialDelaySeconds: 3
+          periodSeconds: 20
+        readinessProbe:
+          httpGet:
+            path: /home.jsf
+            port: 8080
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+      volumes:
+      - name: {{ .Release.Name }}-logfile
+        configMap:
+          name: {{ .Release.Name }}-logfile
+      - name: {{ .Release.Name }}-configdir
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-configdir
