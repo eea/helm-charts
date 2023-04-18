@@ -1,5 +1,5 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: {{ include "webforms.fullname" . }}-db
   labels:
@@ -7,6 +7,7 @@ metadata:
     component: database
 spec:
   replicas: 1
+  serviceName: {{ include "webforms.fullname" . }}-db
   selector:
     matchLabels:
       {{- include "webforms.selectorLabels" . | nindent 6 }}
@@ -17,6 +18,7 @@ spec:
         {{- include "webforms.selectorLabels" . | nindent 8 }}
         component: database
     spec:
+      terminationGracePeriodSeconds: 10
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -71,7 +73,12 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       restartPolicy: Always
-      volumes:
-      - name: {{ .Release.Name }}-database
-        persistentVolumeClaim:
-          claimName: {{ .Release.Name }}-database
+  volumeClaimTemplates:
+  - metadata:
+      name: {{ .Release.Name }}-database
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 5Gi
