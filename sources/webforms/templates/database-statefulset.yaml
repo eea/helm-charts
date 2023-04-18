@@ -7,7 +7,7 @@ metadata:
     component: database
 spec:
   replicas: 1
-  serviceName: {{ include "webforms.fullname" . }}-db
+  serviceName: {{ .Release.Name }}-db
   selector:
     matchLabels:
       {{- include "webforms.selectorLabels" . | nindent 6 }}

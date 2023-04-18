@@ -34,7 +34,7 @@ spec:
         - name: CATALINA_OUT
           value: "/dev/stdout"
         - name: CATALINA_OPTS
-          value: '"-Dcas.service={{ .Values.casService }}" "-Djava.security.egd=file:/dev/./urandom" "-Ddb.url=jdbc:mysql://{{ .Release.Name }}-db:3306/{{ .Values.database.database }}?maxAllowedPacket=32212254720" "-Ddb.driver=com.mysql.jdbc.Driver" "-Ddb.username={{ .Values.database.username }}" "-Ddb.password={{ .Values.database.password }}" "-Dconverters.api.url={{ .Values.convertersApi }}" "-Duser.file.expiration.hours=72" {{- if .Values.log4jConfiguration }} "-Dlog4j.configuration="{{.Values.log4jConfiguration }}" {{- end }} {{- if .Values.initialAdminUsername }} "-Dinitial.admin.username={{.Values.initialAdminUsername }}" {{- end }} {{- if .Values.initialAdminPassword }} "-Dinitial.admin.password={{.Values.initialAdminPassword }}" {{- end }}'
+          value: '"-Dcas.service={{ .Values.casService }}" "-Djava.security.egd=file:/dev/./urandom" "-Ddb.url=jdbc:mysql://{{ .Release.Name }}-db-0.{{ .Release.Name }}-db:3306/{{ .Values.database.database }}?maxAllowedPacket=32212254720" "-Ddb.driver=com.mysql.jdbc.Driver" "-Ddb.username={{ .Values.database.username }}" "-Ddb.password={{ .Values.database.password }}" "-Dconverters.api.url={{ .Values.convertersApi }}" "-Duser.file.expiration.hours=72" {{- if .Values.log4jConfiguration }} "-Dlog4j.configuration="{{.Values.log4jConfiguration }}" {{- end }} {{- if .Values.initialAdminUsername }} "-Dinitial.admin.username={{.Values.initialAdminUsername }}" {{- end }} {{- if .Values.initialAdminPassword }} "-Dinitial.admin.password={{.Values.initialAdminPassword }}" {{- end }}'
         - name: JAVA_OPTS
           value: "-Xmx3072m"
         - name: LANG
