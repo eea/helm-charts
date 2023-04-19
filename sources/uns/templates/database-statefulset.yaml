@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ include "uns.fullname" . }}-db
+  name: {{ include "appl.fullname" . }}-db
   labels:
-    {{- include "uns.labels" . | nindent 4 }}
+    {{- include "appl.labels" . | nindent 4 }}
     component: database
 spec:
   replicas: 1
   serviceName: {{ .Release.Name }}-db
   selector:
     matchLabels:
-      {{- include "uns.selectorLabels" . | nindent 6 }}
+      {{- include "appl.selectorLabels" . | nindent 6 }}
       component: database
   template:
     metadata:
       labels:
-        {{- include "uns.selectorLabels" . | nindent 8 }}
+        {{- include "appl.selectorLabels" . | nindent 8 }}
         component: database
     spec:
       terminationGracePeriodSeconds: 10
@@ -23,7 +23,7 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "uns.serviceAccountName" . }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
       containers:
       - name: {{ .Release.Name }}-db
         image: "{{ .Values.database.image.repository }}:{{ .Values.database.image.tag }}"
@@ -40,7 +40,7 @@ spec:
         - name: MYSQL_USER
           value: "{{ .Values.database.username }}"
         - name: TZ
-          value: "Europe/Copenhagen"
+          value: "{{ .Values.timezone }}"
         securityContext:
           {{- toYaml .Values.database.securityContext | nindent 10 }}
         volumeMounts:

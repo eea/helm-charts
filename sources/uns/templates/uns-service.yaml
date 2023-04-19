@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "uns.fullname" . }}
+  name: {{ include "appl.fullname" . }}
   labels:
-    {{- include "uns.labels" . | nindent 4 }}
+    {{- include "appl.labels" . | nindent 4 }}
     component: uns
 spec:
   type: {{ .Values.service.type }}
@@ -12,5 +12,5 @@ spec:
       targetPort: 8080
       protocol: TCP
   selector:
-    {{- include "uns.selectorLabels" . | nindent 4 }}
+    {{- include "appl.selectorLabels" . | nindent 4 }}
     component: uns

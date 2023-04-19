@@ -1,27 +1,27 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "uns.fullname" . }}
+  name: {{ include "appl.fullname" . }}
   labels:
-    {{- include "uns.labels" . | nindent 4 }}
+    {{- include "appl.labels" . | nindent 4 }}
     component: uns
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "uns.selectorLabels" . | nindent 6 }}
+      {{- include "appl.selectorLabels" . | nindent 6 }}
       component: uns
   template:
     metadata:
       labels:
-        {{- include "uns.selectorLabels" . | nindent 8 }}
+        {{- include "appl.selectorLabels" . | nindent 8 }}
         component: uns
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "uns.serviceAccountName" . }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
       containers:
       - name: {{ .Release.Name }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -30,7 +30,8 @@ spec:
           protocol: TCP
         env:
         - name: CATALINA_OPTS
-          value: '"-Dlog4j.configurationFile=/opt/uns/log4j2-gelf.xml"
+          value: >-
+            "-Dlog4j.configurationFile={{ .Values.log4jConfiguration }}"
             "-Ddb.host={{ .Release.Name }}-db-0.{{ .Release.Name }}-db"
             "-Ddb.url=jdbc:mysql://{{ .Release.Name }}-db-0.{{ .Release.Name }}-db:3306/{{ .Values.database.database }}?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&createDatabaseIfNotExist=true"
             "-Ddb.user={{ .Values.database.username }}"
@@ -38,15 +39,15 @@ spec:
             "-Dcas.filter.serverName=uns.eionet.europa.eu"
             "-Dcas.filter.domain=uns.eionet.europa.eu"
             "-Duns.url=https://uns.eionet.europa.eu/"
-            "-Dsmtp.host=mailservice"
-            "-Djabber.host="
-            "-Dpop3.host="
-            "-Dpop3.adminMail=uns@eionet.europa.eu"
+            "-Dsmtp.host={{ .Values.smtp.host }}"
+            "-Djabber.host={{ .Values.jabber.host }}"
+            "-Dpop3.host={{ .Values.pop3.host }}"
+            "-Dpop3.adminMail={{ .Values.pop3.from }}"
             "-Dconfig.ldap.url={{ .Values.ldap.url }}"
             "-Dconfig.ldap.principal={{ .Values.ldap.principal }}"
-            "-Dconfig.ldap.password={{ .Values.ldap.password }}"'
+            "-Dconfig.ldap.password={{ .Values.ldap.password }}"
         - name: TZ
-          value: "Europe/Copenhagen"
+          value: "{{ .Values.timezone }}"
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
         securityContext:

@@ -16,6 +16,8 @@ casService: "https://unsdev.eionet.europa.eu"
 
 log4jConfiguration: "/opt/log/log4j2-gelf.xml"
 
+timezone: Europe/Copenhagen
+
 serviceAccount:
   # Specifies whether a service account should be created
   create: true
@@ -51,7 +53,14 @@ ldap:
 # or use "uns-mailfwd" to send to a proxy.
 smtp:
   host: ""
-  
+ 
+jabber:
+  host: ""
+
+pop3:
+  host: ""
+  from: uns@eionet.europa.eu
+
 ingress:
   enabled: false
   className: ""
@@ -111,6 +120,12 @@ database:
 mailfwd:
   enabled: false
   image: eeacms/postfix:eionet
+  securityContext: {}
+  resources:
+    requests:
+      memory: 10Mi
+    limits:
+      memory: 80Mi
   env:
     logspout: ignore
     host: uns.eionet.europa.eu
@@ -118,5 +133,4 @@ mailfwd:
     pass: REPLACEME
     port: '8587'
     relay: ironports.eea.europa.eu
-    tz: Europe/Copenhagen
 
