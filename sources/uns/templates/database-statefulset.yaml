@@ -26,7 +26,7 @@ spec:
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
       containers:
       - name: {{ .Release.Name }}-db
-        image: "{{ .Values.database.image.repository }}:{{ .Values.database.image.tag }}"
+        image: "{{ .Values.database.image }}"
         ports:
         - containerPort: 3306
           protocol: TCP
@@ -81,6 +81,9 @@ spec:
     spec:
       accessModes:
       - ReadWriteOnce
+      {{- if .Values.database.storageClassName }}
+      storageClass: "{{ .Values.database.storageClassName }}"
+      {{- end }}
       resources:
         requests:
-          storage: 5Gi
+          storage: "{{ .Values.database.storage }}"

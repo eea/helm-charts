@@ -92,9 +92,7 @@ tolerations: []
 affinity: {}
 
 database:
-  image:
-    repository: mariadb
-    tag: 5.5.63
+  image: mariadb:5.5.63
   securityContext: {}
     # capabilities:
     #   drop:
@@ -114,6 +112,8 @@ database:
   password: REPLACEME
   rootpw: REPLACEME
   command: []
+  storage: 5Gi
+  storageClassName: ""
 
 # We set up a mailforwarder that can authenticate to the real mail relay.
 # Alternatively use image "marcelesser/smtp-sink:latest"
