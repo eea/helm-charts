@@ -1,14 +1,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "rdfdata.fullname" . }}-buildsw
+  name: {{ include "appl.fullname" . }}-buildsw
   labels:
-    {{- include "rdfdata.labels" . | nindent 4 }}
+    {{- include "appl.labels" . | nindent 4 }}
     component: buildsw
 spec:
   selector:
     matchLabels:
-      {{- include "rdfdata.selectorLabels" . | nindent 6 }}
+      {{- include "appl.selectorLabels" . | nindent 6 }}
       component: buildsw
   template:
     metadata:
@@ -17,14 +17,14 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "rdfdata.selectorLabels" . | nindent 8 }}
+        {{- include "appl.selectorLabels" . | nindent 8 }}
         component: buildsw
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "rdfdata.serviceAccountName" . }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
@@ -34,7 +34,7 @@ spec:
           value: C.UTF-8
         - name: TZ
           value: Europe/Copenhagen
-        image: "{{ .Values.buildsw.image.repository }}:{{ .Values.buildsw.image.tag }}"
+        image: "{{ .Values.buildsw.image }}"
         resources:
           {{- toYaml .Values.buildsw.resources | nindent 10 }}
         stdin: true

@@ -1,30 +1,30 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "rdfdata.fullname" . }}
+  name: {{ include "appl.fullname" . }}
   labels:
-    {{- include "rdfdata.labels" . | nindent 4 }}
+    {{- include "appl.labels" . | nindent 4 }}
     component: httpd
 spec:
   replicas: 1
   selector:
     matchLabels:
-      {{- include "rdfdata.selectorLabels" . | nindent 6 }}
+      {{- include "appl.selectorLabels" . | nindent 6 }}
       component: httpd
   template:
     metadata:
       labels:
-        {{- include "rdfdata.selectorLabels" . | nindent 8 }}
+        {{- include "appl.selectorLabels" . | nindent 8 }}
         component: httpd
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "rdfdata.serviceAccountName" . }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
       containers:
       - name: {{ .Release.Name }}-httpd
-        image: "{{ .Values.httpd.image.repository }}:{{ .Values.httpd.image.tag }}"
+        image: "{{ .Values.httpd.image }}"
         ports:
         - containerPort: 80
           protocol: TCP

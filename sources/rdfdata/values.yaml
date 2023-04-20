@@ -69,9 +69,7 @@ tolerations: []
 affinity: {}
 
 buildestat:
-  image:
-    repository: eeacms/centos7dev
-    tag: 2.2.4
+  image: eeacms/centos7dev:2.2.4
   resources:
     requests:
       memory: 128Mi
@@ -89,9 +87,7 @@ buildestat:
     runAsGroup: 504
 
 buildsw:
-  image:
-    repository: eeacms/centos7dev
-    tag: 2.2.4
+  image: eeacms/centos7dev:2.2.4
   resources:
     requests:
       memory: 64Mi
@@ -102,9 +98,7 @@ buildsw:
 
 httpd:
   hostName: rdfdata
-  image:
-    repository: httpd
-    tag: 2.4.23
+  image: httpd:2.4.23
   resources:
     requests:
       memory: 64Mi
@@ -115,9 +109,7 @@ httpd:
 
 tomcat:
   enabled: false
-  image:
-    repository: tomcat
-    tag: 7-jre7
+  image: tomcat:7-jre7
   resources:
     requests:
       memory: 128Mi

@@ -2,30 +2,30 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "rdfdata.fullname" . }}-tomcat
+  name: {{ include "appl.fullname" . }}-tomcat
   labels:
-    {{- include "rdfdata.labels" . | nindent 4 }}
+    {{- include "appl.labels" . | nindent 4 }}
     component: tomcat
 spec:
   replicas: 1
   selector:
     matchLabels:
-      {{- include "rdfdata.selectorLabels" . | nindent 6 }}
+      {{- include "appl.selectorLabels" . | nindent 6 }}
       component: tomcat
   template:
     metadata:
       labels:
-        {{- include "rdfdata.selectorLabels" . | nindent 8 }}
+        {{- include "appl.selectorLabels" . | nindent 8 }}
         component: tomcat
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "rdfdata.serviceAccountName" . }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
       containers:
       - name: {{ .Release.Name }}-tomcat
-        image: "{{ .Values.tomcat.image.repository }}:{{ .Values.tomcat.image.tag }}"
+        image: "{{ .Values.tomcat.image }}"
         ports:
         - containerPort: 8080
           protocol: TCP

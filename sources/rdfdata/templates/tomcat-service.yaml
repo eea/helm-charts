@@ -2,9 +2,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "rdfdata.fullname" . }}    # Something tomcat here
+  name: {{ include "appl.fullname" . }}    # Something tomcat here
   labels:
-    {{- include "rdfdata.labels" . | nindent 4 }}
+    {{- include "appl.labels" . | nindent 4 }}
 spec:
   type: ClusterIP
   ports:
@@ -12,6 +12,6 @@ spec:
       targetPort: 8080
       protocol: TCP
   selector:
-    {{- include "rdfdata.selectorLabels" . | nindent 4 }}
+    {{- include "appl.selectorLabels" . | nindent 4 }}
     component: tomcat
 {{- end }}
