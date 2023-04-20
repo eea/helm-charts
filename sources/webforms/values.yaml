@@ -84,9 +84,7 @@ tolerations: []
 affinity: {}
 
 database:
-  image:
-    repository: mariadb
-    tag: 10.1.26
+  image: mariadb:10.1.26
   securityContext: {}
     # capabilities:
     #   drop:

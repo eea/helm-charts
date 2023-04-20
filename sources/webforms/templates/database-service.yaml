@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: {{ .Release.Name }}-db
   labels:
-    {{- include "webforms.labels" . | nindent 4 }}
+    {{- include "appl.labels" . | nindent 4 }}
     component: database
 spec:
   clusterIP: None
@@ -12,6 +12,6 @@ spec:
       targetPort: 3306
       protocol: TCP
   selector:
-    {{- include "webforms.selectorLabels" . | nindent 4 }}
+    {{- include "appl.selectorLabels" . | nindent 4 }}
     component: database
 

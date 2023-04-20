@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ include "webforms.fullname" . }}-db
+  name: {{ include "appl.fullname" . }}-db
   labels:
-    {{- include "webforms.labels" . | nindent 4 }}
+    {{- include "appl.labels" . | nindent 4 }}
     component: database
 spec:
   replicas: 1
   serviceName: {{ .Release.Name }}-db
   selector:
     matchLabels:
-      {{- include "webforms.selectorLabels" . | nindent 6 }}
+      {{- include "appl.selectorLabels" . | nindent 6 }}
       component: database
   template:
     metadata:
       labels:
-        {{- include "webforms.selectorLabels" . | nindent 8 }}
+        {{- include "appl.selectorLabels" . | nindent 8 }}
         component: database
     spec:
       terminationGracePeriodSeconds: 10
@@ -23,10 +23,10 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "webforms.serviceAccountName" . }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
       containers:
       - name: {{ .Release.Name }}-db
-        image: "{{ .Values.database.image.repository }}:{{ .Values.database.image.tag }}"
+        image: "{{ .Values.database.image }}"
         ports:
         - containerPort: 3306
           protocol: TCP
