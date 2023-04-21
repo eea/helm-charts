@@ -6,6 +6,8 @@ metadata:
 data:
   httpd.conf: |-
     {{ .Files.Get "htconf/httpd.conf" | nindent 4 }}
+  httpd-autoindex.conf: |-
+    {{ .Files.Get "htconf/httpd-autoindex.conf" | nindent 4 }}
   mime.types: |-
     {{ .Files.Get "htconf/mime.types" | nindent 4 }}
   magic: |-
