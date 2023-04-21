@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-htdocs
+
+data:
+  index.html: |
+    <DOCTYPE html>
+    <html>
+    <head>
+    <title>Data repository</title>
+    </head>
+    <body>
+
+    <h1>RDF exports of database tables</h1>
+    <ul>
+    <li><a href="rdfdumps/">RDF dumps</a>.</li>
+    </ul>
+
+    </body>
+    </html>
