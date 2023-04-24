@@ -9,7 +9,7 @@ spec:
   type: {{ .Values.service.type }}
   ports:
     - port: {{ .Values.service.port }}
-      targetPort: 80
+      targetPort: 5000
       protocol: TCP
   selector:
     {{- include "appl.selectorLabels" . | nindent 4 }}

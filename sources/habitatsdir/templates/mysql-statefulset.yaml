@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ include "appl.fullname" . }}-db
+  name: {{ include "appl.fullname" . }}-mysql
   labels:
     {{- include "appl.labels" . | nindent 4 }}
-    component: database
+    component: mysql
 spec:
   replicas: 1
-  serviceName: {{ .Release.Name }}-db
+  serviceName: {{ .Release.Name }}-mysql
   selector:
     matchLabels:
       {{- include "appl.selectorLabels" . | nindent 6 }}
-      component: database
+      component: mysql
   template:
     metadata:
       labels:
         {{- include "appl.selectorLabels" . | nindent 8 }}
-        component: database
+        component: mysql
     spec:
       terminationGracePeriodSeconds: 10
       {{- with .Values.imagePullSecrets }}
@@ -25,27 +25,27 @@ spec:
       {{- end }}
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
       containers:
-      - name: {{ .Release.Name }}-db
-        image: "{{ .Values.database.image }}"
+      - name: {{ .Release.Name }}-mysql
+        image: "{{ .Values.mysql.image }}"
         ports:
         - containerPort: 3306
           protocol: TCP
         env:
         - name: MYSQL_DATABASE
-          value: "{{ .Values.database.database }}"
+          value: "{{ .Values.mysql.database }}"
         - name: MYSQL_PASSWORD
-          value: "{{ .Values.database.password }}"
+          value: "{{ .Values.mysql.password }}"
         - name: MYSQL_ROOT_PASSWORD
-          value: "{{ .Values.database.rootpw }}"
+          value: "{{ .Values.mysql.rootpw }}"
         - name: MYSQL_USER
-          value: "{{ .Values.database.username }}"
+          value: "{{ .Values.mysql.username }}"
         - name: TZ
           value: "{{ .Values.timezone }}"
         securityContext:
-          {{- toYaml .Values.database.securityContext | nindent 10 }}
+          {{- toYaml .Values.mysql.securityContext | nindent 10 }}
         volumeMounts:
         - mountPath: /var/lib/mysql
-          name: {{ .Release.Name }}-database
+          name: {{ .Release.Name }}-mysql
         livenessProbe:
           tcpSocket:
             port: 3306
@@ -56,12 +56,12 @@ spec:
             port: 3306
           initialDelaySeconds: 5
           periodSeconds: 20
-        {{- with .Values.database.command }}
+        {{- with .Values.mysql.command }}
         command:
           {{- toYaml . | nindent 10 }}
         {{- end }}
         resources:
-          {{- toYaml .Values.database.resources | nindent 10 }}
+          {{- toYaml .Values.mysql.resources | nindent 10 }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -77,13 +77,13 @@ spec:
       restartPolicy: Always
   volumeClaimTemplates:
   - metadata:
-      name: {{ .Release.Name }}-database
+      name: {{ .Release.Name }}-mysql
     spec:
       accessModes:
       - ReadWriteOnce
-      {{- if .Values.database.storageClassName }}
-      storageClass: "{{ .Values.database.storageClassName }}"
+      {{- if .Values.mysql.storageClassName }}
+      storageClass: "{{ .Values.mysql.storageClassName }}"
       {{- end }}
       resources:
         requests:
-          storage: "{{ .Values.database.storage }}"
+          storage: "{{ .Values.mysql.storage }}"

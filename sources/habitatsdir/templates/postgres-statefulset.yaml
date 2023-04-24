@@ -1,0 +1,147 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "appl.fullname" . }}-psql
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: postgres
+spec:
+  replicas: 1
+  serviceName: {{ .Release.Name }}-psql
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: postgres
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: postgres
+    spec:
+      terminationGracePeriodSeconds: 10
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      containers:
+      - name: {{ .Release.Name }}-psql
+        image: "{{ .Values.postgres.image }}"
+        ports:
+        - containerPort: 5432
+          protocol: TCP
+        env:
+        - name: ART17_SERVER_NAME
+          value: eionet.europa.eu
+        - name: ASSETS_DEBUG
+          value: "True"
+        - name: AUTH_DEBUG
+          value: "False"
+        - name: BIND_NAME
+          value: art17_eu
+        - name: DB_HOST
+          value: art17-postgres
+        - name: DB_NAME
+          value: art17prod
+        - name: DB_PASS
+          value: Ahgh7oha
+        - name: DB_SCHEMA
+          value: postgresql
+        - name: DB_USER
+          value: art17prod
+        - name: DEBUG
+          value: "False"
+        - name: DEMO_SERVER
+          value: "False"
+        - name: EEA_LDAP_PORT
+          value: "636"
+        - name: EEA_LDAP_PROTOCOL
+          value: ldaps
+        - name: EEA_LDAP_SERVER
+          value: ldap2.eionet.europa.eu
+        - name: EEA_PASSWORD_RESET
+          value: https://www.eionet.europa.eu/password-reset
+        - name: FACTSHEETS_REMOTE_URL
+          value: '''https://forum.eionet.europa.eu/habitat-art17report/library/2007-2012-reporting/factsheets/'''
+        - name: FLASK_APP
+          value: art17/app.py
+        - name: MAIL_PASSWORD
+        - name: MAIL_PORT
+          value: "25"
+        - name: MAIL_SERVER
+          value: art17-mailserver
+        - name: MAIL_USERNAME
+        - name: MAIL_USE_SSL
+        - name: MAIL_USE_TLS
+        - name: MAPS_STATIC
+          value: maps/
+        - name: MIGRATE
+          value: "no"
+        - name: MYSQL_ADDR
+          value: art17-mysql
+        - name: MYSQL_ROOT_PASSWORD
+          value: etheip1aixaBei1supheiyochah2Oh3m
+        - name: PDF_DESTINATION
+          value: factsheets/
+        - name: PDF_URL_PREFIX
+          value: https://www.eionet.europa.eu/article17
+        - name: POSTGRES_ADDR
+          value: art17-postgres
+        - name: POSTGRES_PASSWORD
+          value: Kuv#6[-*b)463+h5&B,f2-E^U`S[t"*{
+        - name: SCRIPT_NAME
+          value: /article17
+        - name: SECRET_KEY
+          value: abGHlYNVJ6Xo6Pk3wKwG
+        - name: SERVER_NAME
+          value: art17.eionet.europa.eu
+        - name: STATIC_ROOT
+          value: /var/local/static
+        - name: TZ
+          value: "{{ .Values.timezone }}"
+        securityContext:
+          {{- toYaml .Values.postgres.securityContext | nindent 10 }}
+        volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          name: {{ .Release.Name }}-psqldata
+        livenessProbe:
+          tcpSocket:
+            port: 5432
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        readinessProbe:
+          tcpSocket:
+            port: 5432
+          initialDelaySeconds: 5
+          periodSeconds: 20
+        {{- with .Values.postgres.command }}
+        command:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        resources:
+          {{- toYaml .Values.postgres.resources | nindent 10 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+  volumeClaimTemplates:
+  - metadata:
+      name: {{ .Release.Name }}-psqldata
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      {{- if .Values.postgres.storageClassName }}
+      storageClass: "{{ .Values.postgres.storageClassName }}"
+      {{- end }}
+      resources:
+        requests:
+          storage: "{{ .Values.postgres.storage }}"

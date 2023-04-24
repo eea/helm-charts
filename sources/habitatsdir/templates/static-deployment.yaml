@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "appl.fullname" . }}
+  name: {{ include "appl.fullname" . }}-static
   labels:
     {{- include "appl.labels" . | nindent 4 }}
-    component: app
+    component: static
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: 1
   selector:
     matchLabels:
       {{- include "appl.selectorLabels" . | nindent 6 }}
-      component: app
+      component: static
   template:
     metadata:
       labels:
         {{- include "appl.selectorLabels" . | nindent 8 }}
-        component: app
+        component: static
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -23,37 +23,38 @@ spec:
       {{- end }}
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
       containers:
-      - name: {{ .Release.Name }}
-        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-        ports:
-        - containerPort: 5000
-          protocol: TCP
+      - name: {{ .Release.Name }}-static
+        image: "{{ .Values.static.image }}"
         env:
-        - name: ART17_SERVER_NAME
-          value: "eionet.europa.eu"
         - name: TZ
-          value: "{{ .Values.timezone }}"
+          value: Europe/Copenhagen
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
-        securityContext:
-          {{- toYaml .Values.securityContext | nindent 12 }}
         volumeMounts:
+        - mountPath: /etc/nginx/conf.d
+          name: {{ .Release.Name }}-conf
         - mountPath: /var/local/static
           name: {{ .Release.Name }}-static
+          readOnly: true
         - mountPath: /var/local/art17-data/maps
           name: {{ .Release.Name }}-maps
+          readOnly: true
         - mountPath: /var/local/art17-data/factsheets
           name: {{ .Release.Name }}-factsheets
+          readOnly: true
+        ports:
+        - containerPort: 80
+          protocol: TCP
         livenessProbe:
           httpGet:
             path: /
-            port: 5000
+            port: 80
           initialDelaySeconds: 3
           periodSeconds: 20
         readinessProbe:
           httpGet:
             path: /
-            port: 5000
+            port: 80
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -68,12 +69,19 @@ spec:
       {{- end }}
       restartPolicy: Always
       volumes:
+      - name: {{ .Release.Name }}-conf
+        configMap:
+          name: {{ .Release.Name }}-conf
       - name: {{ .Release.Name }}-static
         persistentVolumeClaim:
           claimName: {{ .Release.Name }}-static
+          readOnly: true
       - name: {{ .Release.Name }}-maps
         persistentVolumeClaim:
-          name: {{ .Release.Name }}-maps
+          claimName: {{ .Release.Name }}-maps
+          readOnly: true
       - name: {{ .Release.Name }}-factsheets
         persistentVolumeClaim:
-          name: {{ .Release.Name }}-factsheets
+          claimName: {{ .Release.Name }}-factsheets
+          readOnly: true
+status: {}

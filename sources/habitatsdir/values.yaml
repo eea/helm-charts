@@ -12,11 +12,8 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
-casService: "https://unsdev.eionet.europa.eu"
-
-log4jConfiguration: "/opt/log/log4j2-gelf.xml"
-
 timezone: Europe/Copenhagen
+serverName: eionet.europa.eu
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -45,21 +42,11 @@ service:
   port: 8080
 
 ldap:
-  url: ldaps://ldap.eionet.europa.eu:636/
+  protocol: ldaps
+  port: 636
+  server: ldap2.eionet.europa.eu
   principal: REPLACEME
   password: REPLACEME
-
-# Set this to the hostname of the mail relay if it doesn't require authentication
-# or use "uns-mailfwd" to send to a proxy.
-smtp:
-  host: ""
- 
-jabber:
-  host: ""
-
-pop3:
-  host: ""
-  from: uns@eionet.europa.eu
 
 ingress:
   enabled: false
@@ -82,7 +69,7 @@ resources:
     memory: 256Mi
 #   cpu: 100m
   limits:
-    memory: 3Gi
+    memory: 256Mi
 #   cpu: 100m
 
 nodeSelector: {}
@@ -91,7 +78,15 @@ tolerations: []
 
 affinity: {}
 
-database:
+static:
+  image: nginx:alpine
+  resources:
+    requests:
+      memory: 32Mi
+    limits:
+      memory: 64Mi
+
+mysql:
   image: mariadb:5.5.63
   securityContext: {}
     # capabilities:
@@ -107,13 +102,41 @@ database:
     limits:
       memory: 800Mi
   #   cpu: 100m
-  database: uns
-  username: unsuser
+  database: art17prod
+  username: art17prod
+  password: REPLACEME
+  rootpw: REPLACEME
+  command:
+  - --character-set-server=utf8mb4
+  - --collation-server=utf8mb4_unicode_ci
+  storage: 5Gi
+  storageClassName: ""
+
+postgres:
+  image: postgres:13
+  securityContext: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+    # runAsUser: 999
+  resources:
+    requests:
+      memory: 100Mi
+  #   cpu: 100m
+    limits:
+      memory: 1Gi
+  #   cpu: 100m
+  database: art17prod
+  username: art17prod
   password: REPLACEME
   rootpw: REPLACEME
   command: []
   storage: 5Gi
   storageClassName: ""
+
+
 
 # We set up a mailforwarder that can authenticate to the real mail relay.
 # Alternatively use image "marcelesser/smtp-sink:latest"
@@ -125,11 +148,11 @@ mailfwd:
     requests:
       memory: 10Mi
     limits:
-      memory: 80Mi
+      memory: 64Mi
   env:
     logspout: ignore
-    host: uns.eionet.europa.eu
-    user: unsuser
+    host: nature-art17.eionet.europa.eu
+    user: REPLACEME
     pass: REPLACEME
     port: '8587'
     relay: ironports.eea.europa.eu
