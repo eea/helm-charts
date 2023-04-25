@@ -1,4 +1,4 @@
-# Default values for uns.
+# Default values for app.
 
 replicaCount: 1
 
@@ -54,15 +54,11 @@ ingress:
   annotations: {}
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
-  hosts:
-    - host: unsdev.eionet.europa.eu
-      paths:
-        - path: /
-          pathType: Prefix
+  hosts: []
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:
-  #      - unsdev.eionet.europa.eu
+  #      - nature-art17.eionet.europa.eu
 
 resources:
   requests:
