@@ -24,7 +24,7 @@ spec:
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
       containers:
       - name: {{ .Release.Name }}
-        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         ports:
         - containerPort: 5000
           protocol: TCP
@@ -36,21 +36,24 @@ spec:
         - name: AUTH_DEBUG
           value: "False"
         - name: BIND_NAME
-          value: art17_eu
+          value: {{ .Values.bindName }}
+        - name: COLLECT_STATIC
+          value: "yes"
         - name: DB_HOST
           value: {{ .Release.Name }}-psql
         - name: DB_NAME
-          value: art17prod
+          value: {{ .Values.postgres.database }}
         - name: DB_PASS
           value: {{ .Values.postgres.password }}
         - name: DB_SCHEMA
-          value: postgresql
+          value: {{ .Values.postgres.schema }}
         - name: DB_USER
           value: {{ .Values.postgres.username }}
         - name: DEBUG
-          value: "False"
+          value: "{{ .Values.debug }}"
         - name: DEMO_SERVER
           value: "False"
+
         - name: EEA_LDAP_PORT
           value:  "{{ .Values.ldap.port }}"
         - name: EEA_LDAP_PROTOCOL
@@ -58,25 +61,70 @@ spec:
         - name: EEA_LDAP_SERVER
           value:  "{{ .Values.ldap.server }}"
         - name: EEA_PASSWORD_RESET
-          value: "{{ .Values.passwordReset }}"
+          value: "https://www.eionet.europa.eu/password-reset"
+
+        {{- if .Values.factsheetsRemoteUrl }}
+        - name: FACTSHEETS_REMOTE_URL
+          value: "{{ .Values.factsheetsRemoteUrl }}"
+        {{- end }}
         - name: FLASK_APP
-          value: art17/app.py
+          value: {{ .Values.flaskApp }}
+
+        - name: LOCAL_PDF_URL_PREFIX
+          value: "{{ .Values.localPdfUrlPrefix }}"
+
+        {{- if .Values.mailfwd.enabled }}
+        - name: MAIL_PASSWORD
+          value: ""
+        - name: MAIL_PORT
+          value: "25"
+        - name: MAIL_SERVER
+          value: {{ .Release.Name }}-mailfwd
+        - name: MAIL_USERNAME
+          value: ""
+        - name: MAIL_USE_SSL
+          value: ""
+        - name: MAIL_USE_TLS
+          value: ""
+        {{- end }}
+
+        - name: MAPS_STATIC
+          value: maps/
+        - name: MAP_URL_PREFIX
+          value: "{{ .Values.mapUrlPrefix }}"
+        - name: MIGRATE
+          value: "no"
 
         - name: MYSQL_ADDR
           value: {{ .Release.Name }}-mysql
         - name: MYSQL_ROOT_PASSWORD
           value: "{{ .Values.mysql.rootpw }}"
                    
+        {{- if .Values.pdfUrlPrefix }}
+        - name: PDF_DESTINATION
+          value: factsheets/
+        - name: PDF_URL_PREFIX
+          value: "{{ .Values.pdfUrlPrefix }}"
+        {{- end }}
+
+        - name: POSTGRES_ADDR
+          value: {{ .Release.Name }}-psql
+        - name: POSTGRES_PASSWORD
+          value: {{ .Values.postgres.psqlpw }}
+
+        - name: PUBLIC_SERVER_NAME
+          value: eionet.europa.eu
+
+        - name: SCRIPT_NAME
+          value: /article17
+        - name: SECRET_KEY
+          value: "{{ .Values.secretKey }}"
+        - name: SERVER_NAME
+          value: {{ .Values.serverName }}
+        - name: STATIC_ROOT
+          value: /var/local/static
         - name: TZ
           value: "{{ .Values.timezone }}"
-        {{- if .Values.factsheetsRemoteUrl }}
-        - name: FACTSHEETS_REMOTE_URL
-          value: "{{ .Values.factsheetsRemoteUrl }}"
-        {{- end }}
-        {{- if .Values.pdfRemoteUrl }}
-        - name: PDF_URL_PREFIX
-          value: "{{ .Values.pdfRemoteUrl }}"
-        {{- end }}
 
         resources:
           {{- toYaml .Values.resources | nindent 10 }}

@@ -10,14 +10,17 @@ imagePullSecrets: []
 timezone: Europe/Copenhagen
 
 factsheetsRemoteUrl: 'https://forum.eionet.europa.eu/habitat-art17report/library/2007-2012-reporting/factsheets/'
+localPdfUrlPrefix: ""
+mapUrlPrefix: ""
+pdfUrlPrefix: 'https://www.eionet.europa.eu/article17'
+
+bindName: art17_eu
+flaskApp: "art17/app.py"
+serverName: art17.eionet.europa.eu
 
 # staticPath is used in the nginx configuration
 staticPath: /article17/static
 
-# Set this to the hostname of the mail relay if it doesn't require authentication
-smtp:
-  host: art17-mailfwd
- 
 ingress:
   enabled: true
   hosts:

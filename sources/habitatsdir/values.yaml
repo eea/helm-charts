@@ -13,11 +13,16 @@ nameOverride: ""
 fullnameOverride: ""
 
 timezone: Europe/Copenhagen
-serverName: eionet.europa.eu
-passwordReset: 'https://www.eionet.europa.eu/password-reset'
-
+bindName: replace
+flaskApp: "replace/app.py"
+domainName: eionet.europa.eu
+serverName: replace.eionet.europa.eu
+secretKey: REPLACEME
 factsheetsRemoteUrl: ''
-pdfRemoteUrl: ''
+localPdfUrlPrefix: ""
+mapUrlPrefix: ""
+pdfUrlPrefix: ''
+debug: "False"
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -133,6 +138,7 @@ postgres:
   #   cpu: 100m
   database: art17prod
   username: art17prod
+  schema: postgresql
   password: REPLACEME
   psqlpw: REPLACEME
   command: []

@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "appl.fullname" . }}-mailfwd
+  name: {{ .Release.Name }}-mailfwd
   labels:
     {{- include "appl.labels" . | nindent 4 }}
     component: mailfwd
