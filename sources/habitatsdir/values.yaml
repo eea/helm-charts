@@ -14,6 +14,10 @@ fullnameOverride: ""
 
 timezone: Europe/Copenhagen
 serverName: eionet.europa.eu
+passwordReset: 'https://www.eionet.europa.eu/password-reset'
+
+factsheetsRemoteUrl: ''
+pdfRemoteUrl: ''
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -39,7 +43,7 @@ securityContext: {}
 
 service:
   type: ClusterIP
-  port: 8080
+  port: 5000
 
 ldap:
   protocol: ldaps
@@ -47,6 +51,9 @@ ldap:
   server: ldap2.eionet.europa.eu
   principal: REPLACEME
   password: REPLACEME
+
+# staticPath is used in the nginx configuration
+staticPath: /article1X/static
 
 ingress:
   enabled: false
@@ -127,7 +134,7 @@ postgres:
   database: art17prod
   username: art17prod
   password: REPLACEME
-  rootpw: REPLACEME
+  psqlpw: REPLACEME
   command: []
   storage: 5Gi
   storageClassName: ""

@@ -1,0 +1,18 @@
+{{- if .Values.mailfwd.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "appl.fullname" . }}-mailfwd
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: mailfwd
+spec:
+  type: ClusterIP
+  ports:
+    - port: 25
+      targetPort: 25
+      protocol: TCP
+  selector:
+    {{- include "appl.selectorLabels" . | nindent 4 }}
+    component: mailfwd
+{{- end }}

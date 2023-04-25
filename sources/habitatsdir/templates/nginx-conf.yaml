@@ -8,8 +8,8 @@ data:
     server {
         listen       80;
 
-            location /article17/static/ {
-            alias /var/local//static/;
+            location {{ .Values.staticPath }}/ {
+            alias /var/local/static/;
             sendfile on;
             tcp_nopush on;
             gzip on;

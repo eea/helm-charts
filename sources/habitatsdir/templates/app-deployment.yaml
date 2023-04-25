@@ -31,8 +31,53 @@ spec:
         env:
         - name: ART17_SERVER_NAME
           value: "eionet.europa.eu"
+        - name: ASSETS_DEBUG
+          value: "True"
+        - name: AUTH_DEBUG
+          value: "False"
+        - name: BIND_NAME
+          value: art17_eu
+        - name: DB_HOST
+          value: {{ .Release.Name }}-psql
+        - name: DB_NAME
+          value: art17prod
+        - name: DB_PASS
+          value: {{ .Values.postgres.password }}
+        - name: DB_SCHEMA
+          value: postgresql
+        - name: DB_USER
+          value: {{ .Values.postgres.username }}
+        - name: DEBUG
+          value: "False"
+        - name: DEMO_SERVER
+          value: "False"
+        - name: EEA_LDAP_PORT
+          value:  "{{ .Values.ldap.port }}"
+        - name: EEA_LDAP_PROTOCOL
+          value:  "{{ .Values.ldap.protocol }}"
+        - name: EEA_LDAP_SERVER
+          value:  "{{ .Values.ldap.server }}"
+        - name: EEA_PASSWORD_RESET
+          value: "{{ .Values.passwordReset }}"
+        - name: FLASK_APP
+          value: art17/app.py
+
+        - name: MYSQL_ADDR
+          value: {{ .Release.Name }}-mysql
+        - name: MYSQL_ROOT_PASSWORD
+          value: "{{ .Values.mysql.rootpw }}"
+                   
         - name: TZ
           value: "{{ .Values.timezone }}"
+{{- if .Values.factsheetsRemoteUrl -}}
+        - name: FACTSHEETS_REMOTE_URL
+          value: "{{ .Values.factsheetsRemoteUrl }}"
+{{- end }}
+{{- if .Values.pdfRemoteUrl -}}
+        - name: PDF_URL_PREFIX
+          value: "{{ .Values.pdfRemoteUrl }}"
+{{- end }}
+
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
         securityContext:

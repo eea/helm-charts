@@ -33,12 +33,12 @@ spec:
         env:
         - name: MYSQL_DATABASE
           value: "{{ .Values.mysql.database }}"
-        - name: MYSQL_PASSWORD
-          value: "{{ .Values.mysql.password }}"
         - name: MYSQL_ROOT_PASSWORD
           value: "{{ .Values.mysql.rootpw }}"
-        - name: MYSQL_USER
-          value: "{{ .Values.mysql.username }}"
+#       - name: MYSQL_PASSWORD
+#         value: "{{ .Values.mysql.password }}"
+#       - name: MYSQL_USER
+#         value: "{{ .Values.mysql.username }}"
         - name: TZ
           value: "{{ .Values.timezone }}"
         securityContext:

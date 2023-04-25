@@ -68,18 +68,22 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       restartPolicy: Always
+
       volumes:
       - name: {{ .Release.Name }}-conf
         configMap:
-          name: {{ .Release.Name }}-conf
+          name: {{ .Release.Name }}-nginx-conf
+
       - name: {{ .Release.Name }}-static
         persistentVolumeClaim:
           claimName: {{ .Release.Name }}-static
           readOnly: true
+
       - name: {{ .Release.Name }}-maps
         persistentVolumeClaim:
           claimName: {{ .Release.Name }}-maps
           readOnly: true
+
       - name: {{ .Release.Name }}-factsheets
         persistentVolumeClaim:
           claimName: {{ .Release.Name }}-factsheets

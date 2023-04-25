@@ -1,0 +1,73 @@
+{{- if .Values.mailfwd.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "appl.fullname" . }}-mailfwd
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: mailfwd
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: mailfwd
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: mailfwd
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      containers:
+      - name: {{ .Release.Name }}-mailfwd
+        image: "{{ .Values.mailfwd.image }}"
+        ports:
+        - containerPort: 25
+          name: smtp
+          protocol: TCP
+        env:
+        - name: LOGSPOUT
+          value: "{{ .Values.mailfwd.logspout }}"
+        - name: MTP_HOST
+          value: "{{ .Values.mailfwd.host }}"
+        - name: MTP_PASS
+          value: "{{ .Values.mailfwd.pass }}"
+        - name: MTP_PORT
+          value: "{{ .Values.mailfwd.port }}"
+        - name: MTP_RELAY
+          value: "{{ .Values.mailfwd.relay }}"
+        - name: MTP_USER
+          value: "{{ .Values.mailfwd.user }}"
+        - name: TZ
+          value: "{{ .Values.timezone }}"
+        resources:
+          {{- toYaml .Values.mailfwd.resources | nindent 10 }}
+        securityContext:
+          {{- toYaml .Values.mailfwd.securityContext | nindent 12 }}
+        livenessProbe:
+          tcpSocket:
+            port: smtp
+          initialDelaySeconds: 3
+          periodSeconds: 20
+        readinessProbe:
+          tcpSocket:
+            port: smtp
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+{{- end }}

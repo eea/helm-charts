@@ -44,7 +44,7 @@ spec:
         - name: DB_NAME
           value: art17prod
         - name: DB_PASS
-          value: Ahgh7oha
+          value: {{ .Values.postgres.password }}
         - name: DB_SCHEMA
           value: postgresql
         - name: DB_USER
@@ -59,40 +59,12 @@ spec:
           value: ldaps
         - name: EEA_LDAP_SERVER
           value: ldap2.eionet.europa.eu
-        - name: EEA_PASSWORD_RESET
-          value: https://www.eionet.europa.eu/password-reset
-        - name: FACTSHEETS_REMOTE_URL
-          value: '''https://forum.eionet.europa.eu/habitat-art17report/library/2007-2012-reporting/factsheets/'''
-        - name: FLASK_APP
-          value: art17/app.py
-        - name: MAIL_PASSWORD
-        - name: MAIL_PORT
-          value: "25"
-        - name: MAIL_SERVER
-          value: art17-mailserver
-        - name: MAIL_USERNAME
-        - name: MAIL_USE_SSL
-        - name: MAIL_USE_TLS
-        - name: MAPS_STATIC
-          value: maps/
-        - name: MIGRATE
-          value: "no"
-        - name: MYSQL_ADDR
-          value: art17-mysql
-        - name: MYSQL_ROOT_PASSWORD
-          value: etheip1aixaBei1supheiyochah2Oh3m
-        - name: PDF_DESTINATION
-          value: factsheets/
-        - name: PDF_URL_PREFIX
-          value: https://www.eionet.europa.eu/article17
         - name: POSTGRES_ADDR
           value: art17-postgres
         - name: POSTGRES_PASSWORD
-          value: Kuv#6[-*b)463+h5&B,f2-E^U`S[t"*{
+          value: {{ .Values.postgres.psqlpw }}
         - name: SCRIPT_NAME
           value: /article17
-        - name: SECRET_KEY
-          value: abGHlYNVJ6Xo6Pk3wKwG
         - name: SERVER_NAME
           value: art17.eionet.europa.eu
         - name: STATIC_ROOT

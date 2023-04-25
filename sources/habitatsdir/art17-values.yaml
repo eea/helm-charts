@@ -1,0 +1,54 @@
+
+image:
+  repository: eeacms/art17-consultation
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "3.4.6"
+
+imagePullSecrets: []
+
+timezone: Europe/Copenhagen
+
+factsheetsRemoteUrl: 'https://forum.eionet.europa.eu/habitat-art17report/library/2007-2012-reporting/factsheets/'
+
+# staticPath is used in the nginx configuration
+staticPath: /article17/static
+
+# Set this to the hostname of the mail relay if it doesn't require authentication
+smtp:
+  host: art17-mailfwd
+ 
+ingress:
+  enabled: true
+  hosts:
+    - host: art17.eionet.europa.eu
+      paths:
+        - path: /article17
+          pathType: Prefix
+    - host: nature-art17.eionet.europa.eu
+      paths:
+        - path: /article17
+          pathType: Prefix
+  tls:
+    - secretName: eionet-w-tls
+      hosts:
+        - art17.eionet.europa.eu
+        - nature-art17.eionet.europa.eu
+
+resources:
+  requests:
+    memory: 256Mi
+  limits:
+    memory: 3Gi
+
+mailfwd:
+  enabled: true
+  image: eeacms/postfix:eionet
+  env:
+    logspout: ignore
+    host: nature-art17.eionet.europa.eu
+    user: ""
+    pass: ""
+    port: '25'
+    relay: ironports.eea.europa.eu
+

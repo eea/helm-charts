@@ -1,0 +1,55 @@
+image:
+  repository: eeacms/art12-viewer:
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "2.7.3"
+
+imagePullSecrets: []
+
+timezone: Europe/Copenhagen
+
+pdfRemoteUrl: 'https://forum.eionet.europa.eu/article-12-birds-directive/library/2008-2012-reporting/species-factsheets'
+
+passwordReset: 'https://www.eionet.europa.eu/password-reset'
+
+# Set this to the hostname of the mail relay if it doesn't require authentication
+smtp:
+  host: art12-mailfwd
+
+# staticPath is used in the nginx configuration
+staticPath: /article12/static
+
+ingress:
+  enabled: true
+  hosts:
+    - host: art12.eionet.europa.eu
+      paths:
+        - path: /article12
+          pathType: Prefix
+    - host: nature-art12.eionet.europa.eu
+      paths:
+        - path: /article12
+          pathType: Prefix
+  tls:
+    - secretName: eionet-w-tls
+      hosts:
+        - art12.eionet.europa.eu
+        - nature-art12.eionet.europa.eu
+
+resources:
+  requests:
+    memory: 256Mi
+  limits:
+    memory: 3Gi
+
+mailfwd:
+  enabled: true
+  image: eeacms/postfix:eionet
+  env:
+    logspout: ignore
+    host: nature-art17.eionet.europa.eu
+    user: ""
+    pass: ""
+    port: '25'
+    relay: ironports.eea.europa.eu
+
