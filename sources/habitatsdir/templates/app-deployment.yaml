@@ -166,7 +166,7 @@ spec:
           claimName: {{ .Release.Name }}-static
       - name: {{ .Release.Name }}-maps
         persistentVolumeClaim:
-          name: {{ .Release.Name }}-maps
+          claimName: {{ .Release.Name }}-maps
       - name: {{ .Release.Name }}-factsheets
         persistentVolumeClaim:
-          name: {{ .Release.Name }}-factsheets
+          claimName: {{ .Release.Name }}-factsheets
