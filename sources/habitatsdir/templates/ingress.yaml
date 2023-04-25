@@ -35,8 +35,8 @@ spec:
     - host: {{ .host | quote }}
       http:
         paths:
-          {{- range .paths }}/static
-          - path: {{ .path }}
+          {{- range .paths }}
+          - path: {{ .path }}/static
             pathType: {{ .pathType }}
             backend:
               service:

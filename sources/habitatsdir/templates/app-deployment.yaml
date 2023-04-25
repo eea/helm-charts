@@ -69,14 +69,14 @@ spec:
                    
         - name: TZ
           value: "{{ .Values.timezone }}"
-{{- if .Values.factsheetsRemoteUrl -}}
+        {{- if .Values.factsheetsRemoteUrl }}
         - name: FACTSHEETS_REMOTE_URL
           value: "{{ .Values.factsheetsRemoteUrl }}"
-{{- end }}
-{{- if .Values.pdfRemoteUrl -}}
+        {{- end }}
+        {{- if .Values.pdfRemoteUrl }}
         - name: PDF_URL_PREFIX
           value: "{{ .Values.pdfRemoteUrl }}"
-{{- end }}
+        {{- end }}
 
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
