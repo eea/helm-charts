@@ -1,0 +1,84 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "appl.fullname" . }}
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: httpd
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: httpd
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: httpd
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      containers:
+      - name: {{ .Release.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        ports:
+        - containerPort: 80
+          protocol: TCP
+        env:
+        - name: APPHEADING
+          value: EEA TransferIT
+        - name: APPSUBHEADING
+          value: Transfer your files with confidence
+        - name: BASE_URL
+          value: "{{ .Values.baseUrl }}"
+        - name: CLIENT_ID
+          value: "{{ .Values.clientId }}"
+        - name: ISSUER_BASE_URL
+          value: "{{ .Values.issuerBaseUrl }}"
+        - name: NEXTCLOUD_PASSWORD
+          value: "{{ .Values.nextcloudPassword }}"
+        - name: NEXTCLOUD_URL
+          value: "{{ .Values.nextcloudUrl }}"
+        - name: NEXTCLOUD_USERNAME
+          value: "{{ .Values.nextcloudUsername }}"
+        - name: PORT
+          value: "{{ .Values.appPort }}"
+        - name: POSTFIXHOST
+          value: "{{ .Values.postfixHost }}"
+        - name: REDISHOST
+          value: "{{ .Release.Name }}-redis-0.redis"
+        - name: REDISPORT
+          value: "6379"
+        - name: REDISSECRET
+          value: "{{ .Values.redisSecret }}"
+        - name: REDISTTL
+          value: "{{ .Values.redisTtl }}"
+        - name: SECRET
+          value: "{{ .Values.secret }}"
+        - name: SENDEREMAIL
+          value: "{{ .Values.senderEmail }}"
+        - name: TZ
+          value: "Europe/Copenhagen"
+        - name: LANG
+          value: "en_US.UTF-8"
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
+        securityContext:
+          {{- toYaml .Values.securityContext | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
