@@ -50,7 +50,7 @@ spec:
         - name: POSTFIXHOST
           value: "{{ .Values.postfixHost }}"
         - name: REDISHOST
-          value: "{{ .Release.Name }}-redis-0.redis"
+          value: "{{ .Release.Name }}-redis-0.{{ .Release.Name }}-redis"
         - name: REDISPORT
           value: "6379"
         - name: REDISSECRET
