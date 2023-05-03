@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ include "appl.fullname" . }}-mysql
+  name: {{ .Release.Name }}-psql
   labels:
     {{- include "appl.labels" . | nindent 4 }}
     component: mysql

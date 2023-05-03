@@ -40,7 +40,7 @@ spec:
         - name: COLLECT_STATIC
           value: "yes"
         - name: DB_HOST
-          value: {{ .Release.Name }}-psql
+          value: {{ .Release.Name }}-psql-0.{{ .Release.Name }}-psql
         - name: DB_NAME
           value: {{ .Values.postgres.database }}
         - name: DB_PASS
