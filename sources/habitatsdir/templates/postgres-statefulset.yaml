@@ -31,8 +31,6 @@ spec:
         - containerPort: 5432
           protocol: TCP
         env:
-        - name: ART17_SERVER_NAME
-          value: eionet.europa.eu
         - name: ASSETS_DEBUG
           value: "True"
         - name: AUTH_DEBUG
@@ -51,22 +49,10 @@ spec:
           value: art17prod
         - name: DEBUG
           value: "False"
-        - name: DEMO_SERVER
-          value: "False"
-        - name: EEA_LDAP_PORT
-          value: "636"
-        - name: EEA_LDAP_PROTOCOL
-          value: ldaps
-        - name: EEA_LDAP_SERVER
-          value: ldap2.eionet.europa.eu
-        - name: POSTGRES_ADDR
-          value: art17-postgres
+#       - name: POSTGRES_ADDR
+#         value: art17-postgres
         - name: POSTGRES_PASSWORD
           value: {{ .Values.postgres.psqlpw }}
-        - name: SCRIPT_NAME
-          value: /article17
-        - name: SERVER_NAME
-          value: art17.eionet.europa.eu
         - name: STATIC_ROOT
           value: /var/local/static
         - name: TZ
