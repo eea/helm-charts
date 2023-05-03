@@ -96,7 +96,7 @@ spec:
           value: "no"
 
         - name: MYSQL_ADDR
-          value: {{ .Release.Name }}-mysql
+          value: {{ .Release.Name }}-mysql-0.{{ .Release.Name }}-mysql
         - name: MYSQL_ROOT_PASSWORD
           value: "{{ .Values.mysql.rootpw }}"
                    
@@ -108,7 +108,7 @@ spec:
         {{- end }}
 
         - name: POSTGRES_ADDR
-          value: {{ .Release.Name }}-psql
+          value: {{ .Release.Name }}-psql-0.{{ .Release.Name }}-psql
         - name: POSTGRES_PASSWORD
           value: {{ .Values.postgres.psqlpw }}
 
