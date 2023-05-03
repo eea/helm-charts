@@ -18,6 +18,7 @@ casService: "https://webformsdev.eionet.europa.eu"
 initialAdminUsername: ""
 initialAdminPassword: ""
 log4jConfiguration: "file:/opt/config/log4j.xml"
+fileExpirationHours: 72
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -56,17 +57,17 @@ ingress:
       paths:
         - path: /
           pathType: Prefix
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - webforms.eionet.europa.eu
+  tls:
+   - secretName: chart-example-tls
+     hosts:
+       - webformsdev.eionet.europa.eu
 
 resources:
   requests:
     memory: 256Mi
 #   cpu: 100m
   limits:
-    memory: 3Gi
+    memory: 1Gi
 #   cpu: 100m
 
 # This probably requires that a Metrics Server is deployed and configured
