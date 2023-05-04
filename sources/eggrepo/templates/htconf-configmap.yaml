@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-htconf
+
+data:
+  vh-my-app.conf: |-
+    <VirtualHost *:80>
+      ServerName eggrepo.apps.eea.europa.eu
+      RewriteEngine On
+      RewriteRule ^(.*)$$ https://eggrepo.eea.europa.eu$$1 [R=permanent,L]
+    </VirtualHost>
+    <VirtualHost *:80>
+      ServerAdmin helpdesk@eea.europa.eu
+      ServerName eggrepo.eea.europa.eu
+      <LocationMatch "^/(?!(simple|pypi|(.+)\.gif|(.+)\.jpg|(.+)\.css|(.+)\.gz|(.+)\.zip))">
+
+        AuthBasicProvider ldap
+        AuthName        pypi
+        AuthType        Basic
+        AuthLDAPUrl ldaps://ldap.eionet.europa.eu/ou=Users,o=Eionet,l=Europe?uid
+        <Limit POST>
+          Require valid-user
+        </Limit>
+
+      </LocationMatch>
+
+      RewriteEngine On
+      RewriteRule ^/pypi(.*) http://pypi.python.org/simple$$1 [R=permanent,L]
+
+      ProxyPass / http://{{ .Release.Name }}-repo-0.{{ .Release.Name }}-repo:9090/
+      ProxyPassReverse / http://{{ .Release.Name }}-repo-0.{{ .Release.Name }}-repo:9090/
+
+    </VirtualHost>
+
+# httpd.conf: |-
+#   x{ .Files.Get "htconf/httpd.conf" | nindent 4 }}
+# mime.types: |-
+#   x{ .Files.Get "htconf/mime.types" | nindent 4 }}
+# magic: |-
+#   x{ .Files.Get "htconf/magic" | nindent 4 }}

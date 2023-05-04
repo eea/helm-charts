@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Release.Name }}-repo
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: eggrepo
+spec:
+  replicas: 1
+  serviceName: {{ .Release.Name }}-repo
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: eggrepo
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: eggrepo
+    spec:
+      terminationGracePeriodSeconds: 10
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      containers:
+      - name: {{ .Release.Name }}-repo
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        ports:
+        - containerPort: 9090
+          protocol: TCP
+        env:
+        - name: TZ
+          value: "{{ .Values.timezone }}"
+        securityContext:
+          {{- toYaml .Values.securityContext | nindent 10 }}
+        volumeMounts:
+        - mountPath: /var/local/eggrepo
+          name: {{ .Release.Name }}-eggrepo
+        livenessProbe:
+          tcpSocket:
+            port: 9090
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        readinessProbe:
+          tcpSocket:
+            port: 9090
+          initialDelaySeconds: 5
+          periodSeconds: 20
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+  volumeClaimTemplates:
+  - metadata:
+      name: {{ .Release.Name }}-eggrepo
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      {{- if .Values.storageClassName }}
+      storageClass: "{{ .Values.storageClassName }}"
+      {{- end }}
+      resources:
+        requests:
+          storage: 10Gi
