@@ -33,6 +33,8 @@ spec:
         volumeMounts:
         - mountPath: /etc/nginx/conf.d
           name: {{ .Release.Name }}-conf
+        - mountPath: /etc/nginx/html
+          name: {{ .Release.Name }}-html
         - mountPath: /var/local/static
           name: {{ .Release.Name }}-static
           readOnly: true
@@ -88,4 +90,7 @@ spec:
         persistentVolumeClaim:
           claimName: {{ .Release.Name }}-factsheets
           readOnly: true
-status: {}
+
+      - name: {{ .Release.Name }}-html
+        configMap:
+          name: {{ .Release.Name }}-nginx-html

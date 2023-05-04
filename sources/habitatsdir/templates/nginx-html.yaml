@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-nginx-html
+
+data:
+  index.html: "<html><body>It works</body></html>" 
