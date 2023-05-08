@@ -68,12 +68,12 @@ ingress:
   #      - rod.eionet.europa.eu
 
 resources:
-  limits:
-  #   cpu: 100m
-    memory: 128Mi
   requests:
   #   cpu: 100m
-    memory: 300Mi
+    memory: 512Mi
+  limits:
+  #   cpu: 100m
+    memory: 1Gi
 
 autoscaling:
   enabled: false

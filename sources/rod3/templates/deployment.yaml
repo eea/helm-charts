@@ -20,7 +20,7 @@ spec:
       labels:
         {{- include "appl.selectorLabels" . | nindent 8 }}
     spec:
-      subdomain: eionet.europa.eu
+      #subdomain: eionet.europa.eu
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
