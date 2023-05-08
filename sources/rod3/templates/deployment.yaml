@@ -1,0 +1,89 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "appl.fullname" . }}
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+    spec:
+      subdomain: eionet.europa.eu
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          volumeMounts:
+          - mountPath: /var/local/rod
+            name: {{ .Release.Name }}-files
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          env:
+          - name: CATALINA_OPTS
+            value: |-
+              "-Xmx1024m"
+              "-Djava.security.egd=file:/dev/./urandom"
+              "-Dinitial.username={{ .Values.initialuser }}"
+              "-Dcas.service=https://{{ .Values.hostname }}"
+              "-Ddb.driver=org.mariadb.jdbc.Driver"
+              "-Ddb.url=jdbc:mariadb://{{ .Release.Name }}-db-0.{{ .Release.Name }}-db/{{ .Values.database.database }}?zeroDateTimeBehavior=convertToNull&createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=UTF-8&characterSetResults=UTF-8"
+              "-Ddb.username={{ .Values.database.username }}"
+              "-Ddb.password={{ .Values.database.password }}"
+              "-Dcr.sparql.endpoint={{ .Values.crSparqlEndpoint }}"
+              "-Duns.xml.rpc.server.url={{ .Values.unsXmlRpcServerUrl }}"
+              "-Duns.username={{ .Values.unsUsername }}"
+              "-Duns.pwd={{ .Values.unsPwd }}"
+              "-Ddeploy.contexts={{ .Values.deployContext }}"
+              "-Dstorage.dir=/var/local/rod"
+              "-Dconfig.ldap.password={{ .Values.ldapPassword }}"
+
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+      volumes:
+      - name: {{ .Release.Name }}-files
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-files

@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "appl.fullname" . }}-db
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: database
+spec:
+  replicas: 1
+  serviceName: {{ .Release.Name }}-db
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: database
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: database
+    spec:
+      terminationGracePeriodSeconds: 10
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      containers:
+      - name: {{ .Release.Name }}-db
+        ports:
+        - containerPort: 3306
+          protocol: TCP
+        args:
+        - mysqld
+        - --character-set-server=utf8
+        - --collation-server=utf8_general_ci
+        image: "{{ .Values.database.image }}"
+        env:
+        - name: LANG
+          value: C.UTF-8
+        - name: TZ
+          value: Europe/Copenhagen
+        - name: MYSQL_DATABASE
+          value: "{{ .Values.database.database }}"
+        - name: MYSQL_PASSWORD
+          value: "{{ .Values.database.password }}"
+        - name: MYSQL_ROOT_PASSWORD
+          value: "{{ .Values.database.rootpw }}"
+        - name: MYSQL_USER
+          value: "{{ .Values.database.username }}"
+        resources: {}
+        securityContext:
+          {{- toYaml .Values.database.securityContext | nindent 10 }}
+        volumeMounts:
+        - mountPath: /var/lib/mysql
+          name: {{ .Release.Name }}-database
+        livenessProbe:
+          tcpSocket:
+            port: 3306
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        readinessProbe:
+          tcpSocket:
+            port: 3306
+          initialDelaySeconds: 5
+          periodSeconds: 20
+        resources:
+          {{- toYaml .Values.database.resources | nindent 10 }}
+      restartPolicy: Always
+  volumeClaimTemplates:
+  - metadata:
+      name: {{ .Release.Name }}-database
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: "{{ .Values.database.storage }}"
