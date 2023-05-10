@@ -1,0 +1,83 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "appl.fullname" . }}-buildsw
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: buildsw
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: buildsw
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: buildsw
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
+      containers:
+      - name: {{ .Release.Name }}-buildsw
+        image: eeacms/centos7dev:2.2.4
+        env:
+        - name: LANG
+          value: en_US.UTF-8
+        stdin: true
+        tty: true
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
+        securityContext:
+          {{- toYaml .Values.securityContext | nindent 12 }}
+        volumeMounts:
+        - mountPath: /var/local/eunis
+          name: {{ .Release.Name }}-files
+        - mountPath: /usr/local/tomcat/webapps
+          name: {{ .Release.Name }}-apps
+        - mountPath: /build
+          name: {{ .Release.Name }}-build
+        - mountPath: /work
+          name: {{ .Release.Name }}-work
+        - mountPath: /root/.m2
+          name: {{ .Release.Name }}-m2cache
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+      volumes:
+      - name: {{ .Release.Name }}-logs
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-logs
+      - name: {{ .Release.Name }}-files
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-files
+      - name: {{ .Release.Name }}-apps
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-apps
+
+      - name: {{ .Release.Name }}-build
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-build
+      - name: {{ .Release.Name }}-work
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-work
+      - name: {{ .Release.Name }}-m2cache
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-m2cache

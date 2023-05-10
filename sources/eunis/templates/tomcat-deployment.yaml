@@ -1,0 +1,84 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "appl.fullname" . }}
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: tomcat
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: tomcat
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: tomcat
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
+      containers:
+      - name: {{ .Release.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        env:
+        - name: CATALINA_OPTS
+          value: -Xmx2048m -Djava.security.egd=file:/dev/./urandom
+        - name: TZ
+          value: "{{ .Values.timezone }}"
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
+        securityContext:
+          {{- toYaml .Values.securityContext | nindent 12 }}
+
+        volumeMounts:
+        - mountPath: /var/local/eunis
+          name: {{ .Release.Name }}-files
+        - mountPath: /usr/local/tomcat/webapps
+          name: {{ .Release.Name }}-apps
+        - mountPath: /var/log/tomcat
+          name:  {{ .Release.Name }}-logs
+
+        livenessProbe:
+          httpGet:
+            path: /systemcheck.jsp
+            port: 8080
+          initialDelaySeconds: 3
+          periodSeconds: 20
+        readinessProbe:
+          httpGet:
+            path: /systemcheck.jsp
+            port: 8080
+
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+
+      volumes:
+      - name: {{ .Release.Name }}-logs
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-logs
+      - name: {{ .Release.Name }}-files
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-files
+      - name: {{ .Release.Name }}-apps
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-apps

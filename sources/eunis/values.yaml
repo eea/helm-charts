@@ -1,0 +1,88 @@
+# Default values for eunis.
+
+replicaCount: 1
+
+image:
+  repository: tomcat
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "8.5.46-jdk8-openjdk"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+timezone: Europe/Copenhagen
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+
+service:
+  type: ClusterIP
+  port: 8080
+
+#Unused
+ldap:
+  url: ldaps://ldap.eea.europa.eu:636/
+  principal: REPLACEME
+  password: REPLACEME
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts:
+    - host: eunis.eea.europa.eu
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - eunis.eea.europa.eu
+
+resources:
+  requests:
+    memory: 256Mi
+#   cpu: 100m
+  limits:
+    memory: 1Gi
+#   cpu: 100m
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+database:
+  image: mariadb:5.5.64
+  securityContext: {}
+  resources:
+    requests:
+      memory: 1Gi
+  #   cpu: 100m
+    limits:
+      memory: 1Gi
+  #   cpu: 100m
+  database: eunis
+  username: eunisuser
+  password: REPLACEME
+  rootpw: REPLACEME
+  args: []
+  storage: 10Gi
+  storageClassName: ""
+
