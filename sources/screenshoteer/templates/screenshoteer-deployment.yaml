@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "appl.fullname" . }}
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
+      containers:
+      - name: {{ .Release.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        ports:
+        - containerPort: 3000
+          protocol: TCP
+        env:
+        - name: VOLUME
+          value: /prod/
+        - name: SENTRY_DSN
+          value: "{{ .Values.sentryDSN }}"
+        - name: TZ
+          value: "{{ .Values.timezone }}"
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
+        securityContext:
+          {{- toYaml .Values.securityContext | nindent 12 }}
+        volumeMounts:
+        - mountPath: /prod
+          name: {{ .Release.Name }}-prod
+
+        livenessProbe:
+          httpGet:
+            path: /API/v1/healthcheck
+            port: 3000
+          initialDelaySeconds: 3
+          periodSeconds: 20
+        readinessProbe:
+          httpGet:
+            path: /API/v1/healthcheck
+            port: 3000
+
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+
+      volumes:
+      - name: {{ .Release.Name }}-prod
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-prod
