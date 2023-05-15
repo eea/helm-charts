@@ -13,6 +13,9 @@ data:
     <VirtualHost *:80>
       ServerAdmin helpdesk@eea.europa.eu
       ServerName eggrepo.eea.europa.eu
+      RequestHeader unset X-Forwarded-Host
+      RequestHeader unset X-Forwarded-For
+
       <LocationMatch "^/(?!(simple|pypi|(.+)\.gif|(.+)\.jpg|(.+)\.css|(.+)\.gz|(.+)\.zip))">
 
         AuthBasicProvider ldap

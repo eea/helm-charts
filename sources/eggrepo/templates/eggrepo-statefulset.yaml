@@ -38,11 +38,6 @@ spec:
         volumeMounts:
         - mountPath: /var/local/eggrepo
           name: {{ .Release.Name }}-eggrepo
-        livenessProbe:
-          tcpSocket:
-            port: 9090
-          initialDelaySeconds: 15
-          periodSeconds: 20
         readinessProbe:
           tcpSocket:
             port: 9090
