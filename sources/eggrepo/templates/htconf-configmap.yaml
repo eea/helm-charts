@@ -18,7 +18,7 @@ data:
         AuthBasicProvider ldap
         AuthName        pypi
         AuthType        Basic
-        AuthLDAPUrl ldaps://ldap.eionet.europa.eu/ou=Users,o=Eionet,l=Europe?uid
+        AuthLDAPUrl ldaps://{{ .Values.ldapServer }}/ou=Users,o=Eionet,l=Europe?uid
         <Limit POST>
           Require valid-user
         </Limit>
@@ -28,8 +28,8 @@ data:
       RewriteEngine On
       RewriteRule ^/pypi(.*) http://pypi.python.org/simple$$1 [R=permanent,L]
 
+      ProxyPreserveHost On
       ProxyPass / http://{{ .Release.Name }}-repo-0.{{ .Release.Name }}-repo:9090/
-      ProxyPassReverse / http://{{ .Release.Name }}-repo-0.{{ .Release.Name }}-repo:9090/
 
     </VirtualHost>
 
