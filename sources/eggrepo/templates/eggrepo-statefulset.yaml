@@ -27,6 +27,10 @@ spec:
       containers:
       - name: {{ .Release.Name }}-repo
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        {{- with .Values.commandArgs }}
+        args:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
         ports:
         - containerPort: 9090
           protocol: TCP

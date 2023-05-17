@@ -8,7 +8,7 @@ data:
     <VirtualHost *:80>
       ServerName eggrepo.apps.eea.europa.eu
       RewriteEngine On
-      RewriteRule ^(.*)$$ https://eggrepo.eea.europa.eu$$1 [R=permanent,L]
+      RewriteRule ^(.*)$ https://eggrepo.eea.europa.eu$1 [R=permanent,L]
     </VirtualHost>
     <VirtualHost *:80>
       ServerAdmin helpdesk@eea.europa.eu
@@ -30,10 +30,11 @@ data:
       </LocationMatch>
 
       RewriteEngine On
-      RewriteRule ^/pypi(.*) http://pypi.python.org/simple$$1 [R=permanent,L]
+      RewriteRule ^/pypi(.*) http://pypi.python.org/simple$1 [R=permanent,L]
 
-      ProxyPreserveHost On
+      #ProxyPreserveHost On
       ProxyPass / http://{{ .Release.Name }}-repo-0.{{ .Release.Name }}-repo:9090/
+      ProxyPassReverse / http://{{ .Release.Name }}-repo-0.{{ .Release.Name }}-repo:9090/
 
     </VirtualHost>
 
