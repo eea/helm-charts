@@ -1,6 +1,7 @@
 apiVersion: v2
 name: sqlservice
-description: Serves RDF files from PostgresQL
+description: Serves RDF files from file system
+icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/sqlservice/rdf.svg
 
 type: application
 
@@ -10,7 +11,7 @@ keywords:
 # This is the chart version. This version number should be incremented each time you make changes
 # to the chart and its templates, including the app version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 0.1.1
+version: 0.1.2
 
-# Version for the webq2 container
+# Version for the main container
 appVersion: "2.4.57-alpine"
