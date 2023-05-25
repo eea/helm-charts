@@ -53,17 +53,20 @@ service:
 
 ingress:
   enabled: false
-  className: ""
-  annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
+  className: "nginx"
+  annotations:
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers 'X-XSS-Protection: 1; mode=block'
+        'X-Frame-Options: SAMEORIGIN'
+        'X-Content-Type-Options: nosniff'
+        'Referrer-Policy: no-referrer,same-origin,strict-origin,strict-origin-when-cross-origin';
   hosts:
     - host: transferit.eea.europa.eu
       paths:
         - path: /
           pathType: Prefix
   tls:
-    - secretName: chart-example-tls
+    - secretName: ''
       hosts:
         - transferit.eea.europa.eu
 
