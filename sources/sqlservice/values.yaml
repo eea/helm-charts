@@ -91,3 +91,14 @@ admin:
 #   - arg1
 #   - arg2
 
+postgres:
+  image: postgres:9.3.6
+  resources:
+    requests:
+      memory: 100Mi
+#   limits:
+#     memory: 1Gi
+  psqlpw: REPLACEME
+  command: []
+  storage: 10Gi
+
