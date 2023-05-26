@@ -62,8 +62,8 @@ resources:
   requests:
     memory: 256Mi
 #   cpu: 100m
-  limits:
-    memory: 1Gi
+# limits:
+#   memory: 1Gi
 #   cpu: 100m
 
 nodeSelector: {}
@@ -84,12 +84,11 @@ admin:
   resources:
     requests:
       memory: 16Mi
-    #limits:
-    #  memory: 512Mi
   nodeSelector: {}
   tolerations: []
   affinity: {}
   pullPolicy: IfNotPresent
+  podAnnotations: {}
 
 postgres:
   image: postgres:9.3.6

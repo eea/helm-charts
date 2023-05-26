@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "appl.fullname" . }}
+  name: {{ include "appl.fullname" . }}-admin
   labels:
     {{- include "appl.labels" . | nindent 4 }}
     component: admin
@@ -13,7 +13,7 @@ spec:
       component: admin
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
+      {{- with .Values.admin.podAnnotations }}
       annotations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -30,16 +30,12 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
 
       containers:
-        - name: {{ .Release.Name }}
+        - name: {{ .Release.Name }}-admin
           securityContext:
             {{- toYaml .Values.admin.securityContext | nindent 12 }}
           image: "{{ .Values.admin.image }}"
           imagePullPolicy: {{ .Values.admin.pullPolicy }}
           command: ["/bin/sh"]
-#         args:
-#           - /bin/bash
-#           - -c
-#           - touch /tmp/healthy
           resources:
             {{- toYaml .Values.admin.resources | nindent 12 }}
           env:
