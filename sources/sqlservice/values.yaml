@@ -12,6 +12,8 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
+timezone: "Europe/Copenhagen"
+
 serviceAccount:
   # Specifies whether a service account should be created
   create: true
@@ -81,15 +83,13 @@ admin:
     # runAsUser: 999
   resources:
     requests:
-      memory: 128Mi
-  #   cpu: 100m
-    limits:
-      memory: 512Mi
-  #   cpu: 100m
-  command: []
-#   - /bin/sh
-#   - arg1
-#   - arg2
+      memory: 16Mi
+    #limits:
+    #  memory: 512Mi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  pullPolicy: IfNotPresent
 
 postgres:
   image: postgres:9.3.6

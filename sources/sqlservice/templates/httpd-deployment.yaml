@@ -30,7 +30,7 @@ spec:
           protocol: TCP
         env:
         - name: TZ
-          value: "Europe/Copenhagen"
+          value: "{{ .Values.timezone }}"
         - name: LANG
           value: "en_US.UTF-8"
         resources:

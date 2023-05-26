@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "appl.fullname" . }}
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: admin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: admin
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: admin
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+
+      containers:
+        - name: {{ .Release.Name }}
+          securityContext:
+            {{- toYaml .Values.admin.securityContext | nindent 12 }}
+          image: "{{ .Values.admin.image }}"
+          imagePullPolicy: {{ .Values.admin.pullPolicy }}
+          command: ["/bin/sh"]
+#         args:
+#           - /bin/bash
+#           - -c
+#           - touch /tmp/healthy
+          resources:
+            {{- toYaml .Values.admin.resources | nindent 12 }}
+          env:
+          - name: TZ
+            value: "{{ .Values.timezone }}"
+          - name: LANG
+            value: "en_US.UTF-8"
+          stdin: true
+          tty: true
+          volumeMounts:
+          - mountPath: /var/local
+            name: {{ .Release.Name }}-varlocal
+
+      {{- with .Values.admin.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.admin.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.admin.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+
+      volumes:
+      - name: {{ .Release.Name }}-varlocal
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-varlocal
