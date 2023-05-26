@@ -42,8 +42,8 @@ spec:
           name: {{ .Release.Name }}-htdocs
         - mountPath: /usr/local/apache2/conf
           name: {{ .Release.Name }}-htconf
-        - mountPath: /var/local/extractions
-          name: {{ .Release.Name }}-extract
+        - mountPath: /var/local
+          name: {{ .Release.Name }}-varlocal
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -64,7 +64,7 @@ spec:
       - name: {{ .Release.Name }}-htdocs
         configMap:
           name: {{ .Release.Name }}-htdocs
-      - name: {{ .Release.Name }}-extract
+      - name: {{ .Release.Name }}-varlocal
         persistentVolumeClaim:
-          claimName: {{ .Release.Name }}-extract
+          claimName: {{ .Release.Name }}-varlocal
 
