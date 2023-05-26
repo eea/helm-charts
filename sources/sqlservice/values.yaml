@@ -60,7 +60,7 @@ ingress:
 
 resources:
   requests:
-    memory: 256Mi
+    memory: 6Mi
 #   cpu: 100m
 # limits:
 #   memory: 1Gi
@@ -94,7 +94,7 @@ postgres:
   image: postgres:9.3.6
   resources:
     requests:
-      memory: 100Mi
+      memory: 50Mi
 #   limits:
 #     memory: 1Gi
   psqlpw: REPLACEME
