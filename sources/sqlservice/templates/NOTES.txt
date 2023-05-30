@@ -25,3 +25,7 @@ load data into Postgres, and therefore it is not necessary to run that program.
   echo "Visit http://127.0.0.1:8080 to use your application"
   kubectl --namespace {{ .Release.Namespace }} port-forward $POD_NAME 8080:$CONTAINER_PORT
 {{- end }}
+
+# Release notes
+
+Version 1.0.0 - First production release
