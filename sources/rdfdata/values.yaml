@@ -68,9 +68,9 @@ buildestat:
   image: eeacms/centos7dev:2.2.4
   resources:
     requests:
-      memory: 128Mi
-    limits:
       memory: 256Mi
+    limits:
+      memory: 512Mi
   securityContext:
     # capabilities:
     #   drop:
@@ -102,6 +102,6 @@ tomcat:
   image: tomcat:7-jre7
   resources:
     requests:
-      memory: 128Mi
-    limits:
       memory: 256Mi
+    limits:
+      memory: 512Mi
