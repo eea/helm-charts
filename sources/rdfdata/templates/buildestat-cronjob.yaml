@@ -1,3 +1,4 @@
+{{- if .Values.buildestat.enabled -}}
 apiVersion: batch/v1
 kind: CronJob
 metadata:
@@ -5,6 +6,7 @@ metadata:
     {{- include "appl.labels" . | nindent 4 }}
     component: buildestat
   name: {{ include "appl.fullname" . }}-buildestat
+
 spec:
   schedule: "30 9 * * SAT"
   jobTemplate:
@@ -16,6 +18,7 @@ spec:
             {{- toYaml . | nindent 8 }}
           {{- end }}
           serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
           containers:
           - name: {{ .Release.Name }}-buildestat
             image: "{{ .Values.buildestat.image }}"
@@ -39,6 +42,7 @@ spec:
               name: {{ .Release.Name }}-htdocs
             workingDir: /var/local/rdfdata-eionet/Data2RDF/Eurostat
           restartPolicy: Never
+
           securityContext:
             {{- toYaml .Values.buildestat.securityContext | nindent 12 }}
           {{- with .Values.nodeSelector }}
@@ -60,3 +64,4 @@ spec:
           - name: {{ .Release.Name }}-htdocs
             persistentVolumeClaim:
               claimName: {{ .Release.Name }}-htdocs
+{{- end }}

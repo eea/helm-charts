@@ -5,6 +5,8 @@ metadata:
     {{- include "appl.labels" . | nindent 4 }}
     component: htdocs
   name: {{ .Release.Name }}-htdocs
+  annotations:
+    "helm.sh/resource-policy": keep
 spec:
   accessModes:
   - ReadWriteMany

@@ -33,16 +33,12 @@ spec:
           name: {{ .Release.Name }}-htconf
         - mountPath: /usr/local/apache2/htdocs
           name: {{ .Release.Name }}-htdocs
-        livenessProbe:
+        readinessProbe:
           httpGet:
             path: /
             port: 80
           initialDelaySeconds: 3
           periodSeconds: 20
-        readinessProbe:
-          httpGet:
-            path: /
-            port: 80
         resources:
           {{- toYaml .Values.httpd.resources | nindent 10 }}
       hostname: {{ .Values.httpd.hostName }}

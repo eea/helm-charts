@@ -1,4 +1,4 @@
-# Default values for rdfdata.
+# Default values
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
@@ -40,7 +40,7 @@ service:
   port: 80
 
 ingress:
-  enabled: true
+  enabled: false
   className: "nginx"
   annotations:
     nginx.ingress.kubernetes.io/configuration-snippet: |
@@ -57,13 +57,6 @@ ingress:
       hosts:
         - rdfdata.eionet.europa.eu
 
-autoscaling:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 100
-  targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
-
 nodeSelector: {}
 
 tolerations: []
@@ -71,14 +64,13 @@ tolerations: []
 affinity: {}
 
 buildestat:
+  enabled: false
   image: eeacms/centos7dev:2.2.4
   resources:
     requests:
       memory: 128Mi
-  #   cpu: 100m
     limits:
       memory: 256Mi
-  #   cpu: 100m
   securityContext:
     # capabilities:
     #   drop:
@@ -93,10 +85,8 @@ buildsw:
   resources:
     requests:
       memory: 64Mi
-  #   cpu: 100m
     limits:
       memory: 128Mi
-  #   cpu: 100m
 
 httpd:
   hostName: rdfdata
@@ -104,10 +94,8 @@ httpd:
   resources:
     requests:
       memory: 64Mi
-  #   cpu: 100m
     limits:
       memory: 128Mi
-  #   cpu: 100m
 
 tomcat:
   enabled: false
@@ -115,7 +103,5 @@ tomcat:
   resources:
     requests:
       memory: 128Mi
-  #   cpu: 100m
     limits:
       memory: 256Mi
-  #   cpu: 100m

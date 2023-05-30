@@ -5,6 +5,8 @@ metadata:
     {{- include "appl.labels" . | nindent 4 }}
     component: buildsw
   name: {{ .Release.Name }}-buildsw
+  annotations:
+    "helm.sh/resource-policy": keep
 spec:
   accessModes:
   - ReadWriteOnce

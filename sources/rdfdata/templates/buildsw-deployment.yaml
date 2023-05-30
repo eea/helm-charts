@@ -27,6 +27,7 @@ spec:
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+
       containers:
       - name: {{ .Release.Name }}-buildsw
         env:
@@ -48,10 +49,11 @@ spec:
           name: {{ .Release.Name }}-htconf
         - mountPath: /rdfdata-eionet
           name: {{ .Release.Name }}-buildrdf
-        {{- if .Values.tomcat.enabled -}}
+        {{- if .Values.tomcat.enabled }}
         - mountPath: /usr/local/tomcat/webapps
           name: {{ .Release.Name }}-webapps
         {{- end }}
+
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -64,6 +66,7 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+
       volumes:
       - name: {{ .Release.Name }}-buildsw
         persistentVolumeClaim:
