@@ -5,6 +5,7 @@ metadata:
   labels:
     {{- include "appl.labels" . | nindent 4 }}
     component: httpd
+
 spec:
   replicas: 1
   selector:
@@ -22,6 +23,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
       containers:
       - name: {{ .Release.Name }}-httpd
         image: "{{ .Values.httpd.image }}"
@@ -41,8 +43,10 @@ spec:
           periodSeconds: 20
         resources:
           {{- toYaml .Values.httpd.resources | nindent 10 }}
+
       hostname: {{ .Values.httpd.hostName }}
       setHostnameAsFQDN: true
+
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -56,6 +60,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       restartPolicy: Always
+
       volumes:
       - name: {{ .Release.Name }}-htconf
         persistentVolumeClaim:

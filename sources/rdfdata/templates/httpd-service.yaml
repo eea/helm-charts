@@ -4,6 +4,7 @@ metadata:
   name: {{ include "appl.fullname" . }}
   labels:
     {{- include "appl.labels" . | nindent 4 }}
+
 spec:
   type: {{ .Values.service.type }}
   ports:

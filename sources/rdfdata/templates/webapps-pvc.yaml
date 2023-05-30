@@ -1,4 +1,3 @@
-{{- if .Values.tomcat.enabled -}}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -14,4 +13,3 @@ spec:
   resources:
     requests:
       storage: 100Mi
-{{- end }}
