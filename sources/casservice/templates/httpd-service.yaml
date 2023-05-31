@@ -9,9 +9,11 @@ spec:
   type: {{ .Values.apache.type }}
   ports:
     - port: {{ .Values.apache.http.port }}
+      name: http
       targetPort: 80
       protocol: TCP
     - port: {{ .Values.apache.https.port }}
+      name: https
       targetPort: 443
       protocol: TCP
   selector:
