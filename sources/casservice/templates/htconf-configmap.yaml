@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-htconf
+
+data:
+  httpd.conf: |-
+    {{ .Files.Get "htconf/httpd.conf" | nindent 4 }}
+  httpd-ssl.conf: |-
+    {{ .Files.Get "htconf/httpd-ssl.conf" | nindent 4 }}
+  httpd-vh.conf: |
+    <VirtualHost *:443>
+     ServerName {{ .Values.serverName }}
+     Header set Strict-Transport-Security "max-age=15780000"
+     SSLEngine on
+     SSLProtocol -all +TLSv1.2
+     SSLCipherSuite ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256
+     SSLCertificateFile "/usr/local/apache2/tls/tls.crt"
+     SSLCertificateKeyFile "/usr/local/apache2/tls/tls.key"
+     #SSLCertificateChainFile "/usr/local/apache2/cacert/eionet-ca.crt"
+     ProxyPass / ajp://{{ .Release.Name }}-tomcat:8009/
+    </VirtualHost>
+  mime.types: |-
+    {{ .Files.Get "htconf/mime.types" | nindent 4 }}
+  magic: |-
+    {{ .Files.Get "htconf/magic" | nindent 4 }}

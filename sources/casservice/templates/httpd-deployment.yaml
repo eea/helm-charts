@@ -1,21 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "appl.fullname" . }}-tomcat
+  name: {{ include "appl.fullname" . }}
   labels:
     {{- include "appl.labels" . | nindent 4 }}
-    component: tomcat
+    component: httpd
+
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
       {{- include "appl.selectorLabels" . | nindent 6 }}
-      component: tomcat
+      component: httpd
   template:
     metadata:
       labels:
         {{- include "appl.selectorLabels" . | nindent 8 }}
-        component: tomcat
+        component: httpd
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -24,35 +25,28 @@ spec:
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
 
       containers:
-      - name: {{ .Release.Name }}-tomcat
-        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+      - name: {{ .Release.Name }}
+        image: "{{ .Values.apache.image }}"
         ports:
-        - containerPort: 8009
+        - containerPort: 80
           protocol: TCP
-        - containerPort: 8080
+        - containerPort: 443
           protocol: TCP
-#       env:
-#       - name: CATALINA_OPTS
-#         value: -Xmx2048m -Djava.security.egd=file:/dev/./urandom
-#       - name: TZ
-#         value: "{{ .Values.timezone }}"
+        env:
+        - name: TZ
+          value: "Europe/Copenhagen"
+        - name: LANG
+          value: "en_US.UTF-8"
         resources:
-          {{- toYaml .Values.resources | nindent 10 }}
+          {{- toYaml .Values.apache.resources | nindent 10 }}
         securityContext:
           {{- toYaml .Values.securityContext | nindent 12 }}
-
         volumeMounts:
-        - mountPath: /etc/cas
-          name: {{ .Release.Name }}-cas
-        - mountPath: /usr/local/tomcat/webapps
-          name: {{ .Release.Name }}-webapps
-
-        readinessProbe:
-          httpGet:
-            path: /login
-            port: 8080
-          initialDelaySeconds: 15
-          periodSeconds: 30
+        - mountPath: /usr/local/apache2/conf
+          name: {{ .Release.Name }}-htconf
+        - name: tls-volume
+          readOnly: true
+          mountPath: /usr/local/apache2/tls
 
       {{- with .Values.nodeSelector }}
       nodeSelector:
@@ -69,9 +63,9 @@ spec:
       restartPolicy: Always
 
       volumes:
-      - name: {{ .Release.Name }}-cas
-        persistentVolumeClaim:
-          claimName: {{ .Release.Name }}-cas
-      - name: {{ .Release.Name }}-webapps
-        persistentVolumeClaim:
-          claimName: {{ .Release.Name }}-webapps
+      - name: {{ .Release.Name }}-htconf
+        configMap:
+          name: {{ .Release.Name }}-htconf
+      - name: tls-volume
+        secret:
+          secretName: star-eionet-europa-eu

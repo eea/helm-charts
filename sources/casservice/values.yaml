@@ -11,6 +11,7 @@ image:
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
+serverName: ssotest.eionet.europa.eu
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -27,25 +28,18 @@ podSecurityContext: {}
 
 securityContext: {}
 
-service:
+apache:
+  image: httpd:2.4.57-alpine
   type: ClusterIP
-  port: 8080
-
-ingress:
-  enabled: true
-  className: "nginx"
-  annotations:
-    nginx.ingress.kubernetes.io/configuration-snippet: |
-      more_set_headers 'X-Frame-Options: SAMEORIGIN';
-  hosts:
-    - host: ssotest.eionet.europa.eu
-      paths:
-        - path: /
-          pathType: Prefix
-  tls:
-    - secretName: ""
-      hosts:
-        - ssotest.eionet.europa.eu
+  http:
+    port: 80
+  https:
+    port: 443
+  resources: {}
+#   requests:
+#     memory: 16Mi
+#   limits:
+#     memory: 64Mi
 
 resources:
   requests:
@@ -58,19 +52,4 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
-
-admin:
-  image: eeacms/centos7dev:2.2.4
-  securityContext: {}
-  resources:
-    requests:
-      memory: 64Mi
-  #   cpu: 100m
-    limits:
-      memory: 128Mi
-  #   cpu: 100m
-  command: []
-#   - /bin/sh
-#   - arg1
-#   - arg2
 
