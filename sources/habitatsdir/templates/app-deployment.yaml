@@ -5,6 +5,7 @@ metadata:
   labels:
     {{- include "appl.labels" . | nindent 4 }}
     component: app
+
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
@@ -22,6 +23,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
       containers:
       - name: {{ .Release.Name }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -137,16 +139,12 @@ spec:
           name: {{ .Release.Name }}-maps
         - mountPath: /var/local/art17-data/factsheets
           name: {{ .Release.Name }}-factsheets
-        livenessProbe:
-          tcpSocket:
-            port: 5000
-          initialDelaySeconds: 15
-          periodSeconds: 20
         readinessProbe:
           tcpSocket:
             port: 5000
-          initialDelaySeconds: 4
+          initialDelaySeconds: 15
           periodSeconds: 10
+
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -160,6 +158,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       restartPolicy: Always
+
       volumes:
       - name: {{ .Release.Name }}-static
         persistentVolumeClaim:

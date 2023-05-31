@@ -5,6 +5,7 @@ metadata:
   labels:
     {{- include "appl.labels" . | nindent 4 }}
     component: postgres
+
 spec:
   replicas: 1
   serviceName: {{ .Release.Name }}-psql
@@ -24,6 +25,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
       containers:
       - name: {{ .Release.Name }}-psql
         image: "{{ .Values.postgres.image }}"
@@ -62,15 +64,10 @@ spec:
         volumeMounts:
         - mountPath: /var/lib/postgresql/data
           name: {{ .Release.Name }}-psqldata
-        livenessProbe:
-          tcpSocket:
-            port: 5432
-          initialDelaySeconds: 15
-          periodSeconds: 20
         readinessProbe:
           tcpSocket:
             port: 5432
-          initialDelaySeconds: 5
+          initialDelaySeconds: 15
           periodSeconds: 20
         {{- with .Values.postgres.command }}
         command:
@@ -78,6 +75,7 @@ spec:
         {{- end }}
         resources:
           {{- toYaml .Values.postgres.resources | nindent 10 }}
+
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -91,6 +89,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       restartPolicy: Always
+
   volumeClaimTemplates:
   - metadata:
       name: {{ .Release.Name }}-psqldata

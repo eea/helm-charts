@@ -1,0 +1,80 @@
+# Default values
+
+replicaCount: 1
+
+image:
+  repository: tomcat
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "8-jre8"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+
+securityContext: {}
+
+service:
+  type: ClusterIP
+  port: 8080
+
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers 'X-Frame-Options: SAMEORIGIN';
+
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: ssotest.eionet.europa.eu
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: ""
+      hosts:
+        - ssotest.eionet.europa.eu
+
+resources:
+  requests:
+    memory: 256Mi
+  limits:
+    memory: 1Gi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+admin:
+  image: eeacms/centos7dev:2.2.4
+  securityContext: {}
+  resources:
+    requests:
+      memory: 64Mi
+  #   cpu: 100m
+    limits:
+      memory: 128Mi
+  #   cpu: 100m
+  command: []
+#   - /bin/sh
+#   - arg1
+#   - arg2
+

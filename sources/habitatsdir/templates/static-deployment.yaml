@@ -5,6 +5,7 @@ metadata:
   labels:
     {{- include "appl.labels" . | nindent 4 }}
     component: static
+
 spec:
   replicas: 1
   selector:
@@ -22,6 +23,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
       containers:
       - name: {{ .Release.Name }}-static
         image: "{{ .Values.static.image }}"
@@ -47,16 +49,12 @@ spec:
         ports:
         - containerPort: 80
           protocol: TCP
-        livenessProbe:
-          httpGet:
-            path: /
-            port: 80
-          initialDelaySeconds: 3
-          periodSeconds: 20
         readinessProbe:
           httpGet:
             path: /
             port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 20
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
