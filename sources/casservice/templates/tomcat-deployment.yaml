@@ -46,6 +46,9 @@ spec:
           name: {{ .Release.Name }}-cas
         - mountPath: /usr/local/tomcat/webapps
           name: {{ .Release.Name }}-webapps
+        - mountPath: /usr/local/tomcat/conf/server.xml
+          name: {{ .Release.Name }}-conf
+          subPath: "server.xml"
 
         readinessProbe:
           httpGet:
@@ -75,3 +78,6 @@ spec:
       - name: {{ .Release.Name }}-webapps
         persistentVolumeClaim:
           claimName: {{ .Release.Name }}-webapps
+      - name: {{ .Release.Name }}-conf
+        configMap:
+          name: {{ .Release.Name }}-conf
