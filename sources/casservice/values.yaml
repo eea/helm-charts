@@ -28,18 +28,25 @@ podSecurityContext: {}
 
 securityContext: {}
 
-apache:
-  image: httpd:2.4.57-alpine
+service:
   type: ClusterIP
-  http:
-    port: 80
-  https:
-    port: 443
-  resources: {}
-#   requests:
-#     memory: 16Mi
-#   limits:
-#     memory: 64Mi
+  port: 8080
+
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers 'X-Frame-Options: SAMEORIGIN';
+  hosts:
+    - host: ssotest.eionet.europa.eu
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: ""
+      hosts:
+        - ssotest.eionet.europa.eu
 
 resources:
   requests:

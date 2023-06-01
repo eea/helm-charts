@@ -4,5 +4,5 @@ metadata:
   name: {{ .Release.Name }}-conf
 
 data:
-  server.xml: |-
-    {{ .Files.Get "tomcatconf/server.xml" | nindent 4 }}
+  server.xml: |
+    {{- .Files.Get "tomcatconf/server.xml" | nindent 4 }}
