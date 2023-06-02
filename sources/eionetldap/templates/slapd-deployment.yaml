@@ -6,7 +6,7 @@ metadata:
     {{- include "appl.labels" . | nindent 4 }}
     component: slapd
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: 1
   selector:
     matchLabels:
       {{- include "appl.selectorLabels" . | nindent 6 }}
@@ -142,6 +142,12 @@ spec:
         volumeMounts:
         - mountPath: /var/lib/ldap
           name: {{ .Release.Name }}-ldapdb
+
+        readinessProbe:
+          tcpSocket:
+            port: 389
+          initialDelaySeconds: 15
+          periodSeconds: 20
 
       {{- with .Values.nodeSelector }}
       nodeSelector:
