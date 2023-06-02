@@ -11,6 +11,13 @@ spec:
     matchLabels:
       {{- include "appl.selectorLabels" . | nindent 6 }}
       component: slapd
+
+  strategy:
+    type: Recreate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+
   template:
     metadata:
       labels:
