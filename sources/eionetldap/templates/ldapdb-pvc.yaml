@@ -5,8 +5,11 @@ metadata:
     {{- include "appl.labels" . | nindent 4 }}
     component: ldapdb
   name: {{ .Release.Name }}-ldapdb
+  {{- if contains "syncconsumer" .Values.role }}
+  {{- else }}
   annotations:
     "helm.sh/resource-policy": keep
+  {{- end }}
 
 spec:
   accessModes:
