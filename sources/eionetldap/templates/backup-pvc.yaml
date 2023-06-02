@@ -1,0 +1,18 @@
+{{- if .Values.backup.enabled -}}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: backup
+  name: {{ .Release.Name }}-backup
+  annotations:
+    "helm.sh/resource-policy": keep
+
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+{{- end }}

@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "appl.fullname" . }}
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: slapd
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.ldapPort }}
+      name: ldap
+      targetPort: 389
+      protocol: TCP
+    - port: {{ .Values.service.ldapsPort }}
+      name: ldaps
+      targetPort: 636
+      protocol: TCP
+
+  selector:
+    {{- include "appl.selectorLabels" . | nindent 4 }}
+    component: slapd

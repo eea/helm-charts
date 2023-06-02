@@ -1,0 +1,116 @@
+{{- if .Values.backup.enabled -}}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: backup
+  name: {{ include "appl.fullname" . }}-backup
+
+spec:
+  schedule: "30 16 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          {{- with .Values.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
+          containers:
+          - name: {{ .Release.Name }}-backup
+            image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+            env:
+            - name: LANG
+              value: C.UTF-8
+            - name: LDAP_BACKUP
+              value: 'yes'
+            - name: HISTORY_LEVEL
+              value: '{{ .Values.backup.historyLevel }}'
+            - name: SLAPD_ACIS
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-conf
+                  key: acis.inc
+            - name: SLAPD_CONF
+              value: |
+                moduleload ppolicy.la
+                moduleload                 back_ldap.la
+                overlay                    chain
+            - name: SLAPD_DATABASE
+              value: |
+                database bdb
+                suffix  "o=EIONET,l=Europe"
+                directory /var/lib/ldap
+
+                index objectClass                       eq,pres
+                index uid,cn,mail,surname,givenname         eq,pres,sub
+                index uniqueMember                      eq,pres
+                index contextCSN                        eq
+                index entryCSN                          eq
+                index entryUUID                         eq
+                index member                            eq
+                index memberUid                         eq
+
+                overlay ppolicy
+                ppolicy_hash_cleartext
+                ppolicy_default "cn=defaultppolicy,ou=pwpolicies,o=EIONET,l=Europe"
+                ppolicy_forward_updates
+            - name: SLAPD_DEBUG_LEVEL
+              value: "{{ .Values.debugLevel }}"
+            - name: SLAPD_INCLUDES
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-conf
+                  key: includes.inc
+            - name: SSL_CA_CERTS
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-conf
+                  key: cacerts.pem
+            - name: SSL_CERT
+              valueFrom:
+                secretKeyRef:
+                  name: star-eionet-europa-eu
+                  key: tls.crt
+            - name: SSL_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: star-eionet-europa-eu
+                  key: tls.key
+            - name: TZ
+              value: "{{ .Values.timezone }}"
+            resources:
+              {{- toYaml .Values.backup.resources | nindent 14 }}
+            volumeMounts:
+            - mountPath: /var/local/ldapbackup
+              name: {{ .Release.Name }}-backup
+            - mountPath: /var/lib/ldap
+              name: {{ .Release.Name }}-ldapdb
+          restartPolicy: Never
+
+          securityContext:
+            {{- toYaml .Values.backup.securityContext | nindent 12 }}
+          {{- with .Values.nodeSelector }}
+          nodeSelector:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          {{- with .Values.affinity }}
+          affinity:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          {{- with .Values.tolerations }}
+          tolerations:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+
+          volumes:
+          - name: {{ .Release.Name }}-backup
+            persistentVolumeClaim:
+              claimName: {{ .Release.Name }}-backup
+          - name: {{ .Release.Name }}-ldapdb
+            persistentVolumeClaim:
+              claimName: {{ .Release.Name }}-ldapdb
+{{- end }}

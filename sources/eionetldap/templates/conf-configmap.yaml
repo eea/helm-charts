@@ -1,0 +1,101 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-conf
+
+data:
+  slapd.inc: |
+    TLSCipherSuite  HIGH:!3DES
+    TLSProtocolMin  3.3
+    allow bind_v2
+    security        tls=1
+    sizelimit       10
+    timelimit       3600
+    idletimeout     600
+    pidfile /var/run/openldap/slapd.pid
+    argsfile /var/run/openldap/slapd.args
+    moduleload ppolicy.la
+    {{- if contains "syncprovider" .Values.role }}
+    authz-policy    to
+    authz-regexp  "^uid=([^,]+),.*" "uid=$1,ou=Users,o=EIONET,l=Europe"
+    {{- else if contains "syncconsumer" .Values.role }}
+    moduleload                 back_ldap.la
+    overlay                    chain
+    chain-uri                  {{ .Values.chainURL }}
+    chain-idassert-bind        bindmethod="simple"
+                               binddn="{{ .Values.chainDN }}"
+                               credentials="{{ .Values.chainPW }}"
+                               mode=self
+    chain-tls                  start
+    chain-return-error         TRUE
+    {{- end }}
+  acis.inc: |
+    # Sample security restrictions
+    # Require integrity protection (prevent hijacking)
+    # Require 112-bit (3DES or better) encryption for updates
+    # Require 63-bit encryption for simple bind
+    # security ssf=1 update_ssf=112 simple_bind=64
+
+    ##########################
+    # ACIs
+    ##########################
+    # It's useless (and results in a performance penalty) to explicitly
+    # list the rootdn among the <by> clauses.
+    # Ordering:
+    #   Slapd stops with the first <what> selector that matches the entry and/or attribute.
+    # by dn="uid=_admin,ou=Users,o=EIONET,l=Europe" write
+    access to attrs=userPassword
+            by dn="{{ .Values.syncDN }}" write
+            by dn="cn=Password Reset,o=EIONET,l=Europe" write
+            by dn="cn=Account Administrator,o=EIONET,l=Europe" write
+            by self write
+            by * auth
+
+    access to attrs=authzTo
+            by * read stop
+
+    access to attrs=pwdFailureTime,pwdAccountLockedTime,pwdGraceUseTime
+            by dn="{{ .Values.chainDN }}" manage
+            by dn="{{ .Values.syncDN }}" manage
+
+    access to dn.subtree="ou=Users,o=EIONET,l=Europe" attrs=mail,registeredAddress,postalAddress,description,jpegPhoto,telephoneNumber,facsimileTelephoneNumber,mobile
+            by dn="cn=Account Administrator,o=EIONET,l=Europe" write
+            by self write
+            by users read
+            by anonymous none
+
+    access to dn.subtree="ou=Organisations,o=EIONET,l=Europe"
+            by dn="cn=Organisation Administrator,o=EIONET,l=Europe" write
+            by users read
+            by anonymous read
+            by * auth
+
+    access to dn.subtree="ou=Roles,o=EIONET,l=Europe"
+            by dn="cn=Role Administrator,o=EIONET,l=Europe" write
+            by users read
+            by anonymous read
+            by * auth
+
+    access to dn.subtree="ou=Users,o=EIONET,l=Europe"
+            by dn="cn=Account Administrator,o=EIONET,l=Europe" write
+            by self write
+            by users read
+            by anonymous read
+            by * auth
+
+    access to *
+            by dn="{{ .Values.syncDN }}" write
+            by self write
+            by users read
+            by anonymous read
+            by * auth
+
+  includes.inc: |
+    include /etc/openldap/schema/core.schema
+    include /etc/openldap/schema/cosine.schema
+    include /etc/openldap/schema/inetorgperson.schema
+    include /etc/openldap/schema/eionet.schema
+    include /etc/openldap/schema/nis.schema
+    include /etc/openldap/schema/ppolicy.schema
+  cacerts.pem: |
+    {{- .Files.Get "cacerts.pem" | nindent 4 }}

@@ -1,0 +1,107 @@
+# Default values
+
+replicaCount: 1
+
+image:
+  repository: eeacms/ldapservice
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+rootDN: "REPLACEDN"
+rootPW: "REPLACEME"
+
+debugLevel: 256
+
+# Role: standalone, syncprovider, syncconsumer
+# If syncconsumer, set a SYNCREPL RID
+role: standalone
+
+# SYNCREPL RIDs usage:
+# 009 = ldap6 - in AWS
+# 012 = ldap3 - in EEA cph cloud
+# 014 = dockerized ldap in bdr stack
+# 015 = dockerized ldap in bdr-test stack
+# 017 = ldap - in the EEA cloud (replaced Walrus)
+# 018 = dockerized ldap in bdr-dev stack
+# 019 = dockerized ldap on kvm-rancher-s4
+# no longer active: 020 = dockerized ldap on kvm-rancher-s3
+# 021 = dockerized ldap on kvm-rancher-s2
+# 023 = dockerized ldap on kvm-rancherdev
+# 025 = dockerized ldap on rancheraws (used by Rancher S3 in AWS)
+# 027 = dockerized ldap on kvm-rancher2-s1
+# 028 = dockerized ldap on jerboa.mgmt.eea
+syncreplRid: ""
+
+chainURL: ldaps://ldap2.eionet.europa.eu
+chainDN: "cn=ProxyCh,o=EIONET,l=Europe"
+chainPW: "REPLACECHAINPW"
+
+syncURL: ldaps://ldap2.eionet.europa.eu
+syncDN: cn=Replicator,o=EIONET,l=Europe"
+syncPW: "REPLACESYNCPW"
+
+#  file:/var/lib/ldap/load_ldif/eionet-ldapDB.ldif
+ldifSeedURL: ""
+
+timezone: Europe/Copenhagen
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: ClusterIP
+  ldapPort: 389
+  ldapsPort: 636
+
+resources:
+  requests:
+    memory: 1Gi
+  limits:
+    memory: 1300Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+# Enable backup for the database.
+backup:
+  enabled: true
+  historyLevel: '160'
+  resources:
+    requests:
+      memory: 1Gi
+    limits:
+      memory: 1300Mi
+
+  nodeSelector: {}
+
+  tolerations: []
+
+  affinity: {}
+

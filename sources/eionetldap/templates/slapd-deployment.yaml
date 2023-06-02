@@ -1,0 +1,163 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "appl.fullname" . }}
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: slapd
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: slapd
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: slapd
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      containers:
+      - name: {{ .Release.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        ports:
+        - containerPort: 389
+          protocol: TCP
+        - containerPort: 636
+          protocol: TCP
+        env:
+        {{- if .Values.ldifSeedURL }}
+        - name: LDIF_SEED_URL
+          value: {{ .Values.ldifSeedURL }}
+        {{- end }}
+        - name: LANG
+          value: "en_US.UTF-8"
+        - name: LDAPSERVERS
+          value: "ldap:/// ldaps:///"
+        - name: LDAP_UID
+          value: "55"
+        - name: LDAP_GID
+          value: "55"
+        - name: SLAPD_ACIS
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Release.Name }}-conf
+              key: acis.inc
+        - name: SLAPD_CONF
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Release.Name }}-conf
+              key: slapd.inc
+        - name: SLAPD_DATABASE
+          value: |
+            database bdb
+            cachesize 50000
+            idlcachesize 150000
+            suffix  "o=EIONET,l=Europe"
+            rootdn  "{{ .Values.rootDN }}"
+            rootpw "{{ .Values.rootPW }}"
+            directory /var/lib/ldap
+
+            index objectClass                       eq,pres
+            index uid,cn,mail,surname,givenname         eq,pres,sub
+            index uniqueMember                      eq,pres
+            index contextCSN                        eq
+            index entryCSN                          eq
+            index entryUUID                         eq
+            index member                            eq
+            index memberUid                         eq
+
+            limits  dn.exact="cn=Accounts browser,o=EIONET,l=Europe" size=unlimited
+            limits  dn.exact="cn=Organisation Administrator,o=EIONET,l=Europe" size=10000
+            limits  dn.exact="cn=Account Administrator,o=EIONET,l=Europe" size=10000
+            limits  dn.exact="cn=Role Administrator,o=EIONET,l=Europe" size=10000
+            limits  dn.exact="{{ .Values.syncDN }}" size=unlimited
+            #limits  dn.exact="cn=LDAPBrowser,o=EIONET,l=Europe" size=10000
+
+            overlay ppolicy
+            ppolicy_hash_cleartext
+            ppolicy_default "cn=defaultppolicy,ou=pwpolicies,o=EIONET,l=Europe"
+
+            {{- if contains "syncprovider" .Values.role }}
+            moduleload syncprov.la
+            overlay syncprov
+            syncprov-checkpoint 100 10
+            syncprov-sessionlog 20000
+            {{- else if contains "syncconsumer" .Values.role }}
+            ppolicy_forward_updates
+
+            syncrepl    rid={{ .Values.syncreplRid }}
+                provider={{ .Values.syncURL }}
+                type=refreshAndPersist
+                retry="60 10 300 +"
+                searchbase="o=EIONET,l=Europe"
+                filter="(objectClass=*)"
+                scope=sub
+                schemachecking=off
+                bindmethod=simple
+                binddn="{{ .Values.syncDN }}"
+                credentials="{{ .Values.syncPW }}"
+            updateref {{ .Values.chainURL }}
+            {{- end }}
+            #add a checkpoint every 128k and/or 5 minutes
+            checkpoint 128 15
+            loglevel {{ .Values.debugLevel }}
+
+        - name: SLAPD_DEBUG_LEVEL
+          value: "{{ .Values.debugLevel }}"
+        - name: SLAPD_INCLUDES
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Release.Name }}-conf
+              key: includes.inc
+        - name: SSL_CA_CERTS
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Release.Name }}-conf
+              key: cacerts.pem
+        - name: SSL_CERT
+          valueFrom:
+            secretKeyRef:
+              name: star-eionet-europa-eu
+              key: tls.crt
+        - name: SSL_KEY
+          valueFrom:
+            secretKeyRef:
+              name: star-eionet-europa-eu
+              key: tls.key
+        - name: TZ
+          value: "{{ .Values.timezone }}"
+
+        hostname: {{- .Values.hostname }}
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
+        securityContext:
+          {{- toYaml .Values.securityContext | nindent 12 }}
+
+        volumeMounts:
+        - mountPath: /var/lib/ldap
+          name: {{ .Release.Name }}-ldapdb
+
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+
+      volumes:
+      - name: {{ .Release.Name }}-ldapdb
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-ldapdb
