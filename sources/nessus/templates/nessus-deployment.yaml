@@ -35,10 +35,8 @@ spec:
           {{- toYaml .Values.resources | nindent 10 }}
         securityContext:
           {{- toYaml .Values.securityContext | nindent 12 }}
-
-        volumeMounts:
-        - mountPath: /opt/nessus
-          name: {{ .Release.Name }}
+        stdin: true
+        tty: true
 
       {{- with .Values.nodeSelector }}
       nodeSelector:
@@ -53,8 +51,3 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       restartPolicy: Always
-
-      volumes:
-      - name: {{ .Release.Name }}
-        persistentVolumeClaim:
-          claimName: {{ .Release.Name }}
