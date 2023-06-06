@@ -33,6 +33,9 @@ role: standalone
 # 025 = dockerized ldap on rancheraws (used by Rancher S3 in AWS)
 # 027 = dockerized ldap on kvm-rancher2-s1
 # 028 = dockerized ldap on jerboa.mgmt.eea
+# 030 = test instance on Kubernetes 02prod
+# 103 = ldap3 in Kubernetes 02prod
+#
 syncreplRid: ""
 
 chainURL: ldaps://ldap2.eionet.europa.eu
@@ -40,7 +43,7 @@ chainDN: "cn=ProxyCh,o=EIONET,l=Europe"
 chainPW: "REPLACECHAINPW"
 
 syncURL: ldaps://ldap2.eionet.europa.eu
-syncDN: cn=Replicator,o=EIONET,l=Europe"
+syncDN: cn=Replicator,o=EIONET,l=Europe
 syncPW: "REPLACESYNCPW"
 
 #  file:/var/lib/ldap/load_ldif/eionet-ldapDB.ldif
@@ -89,7 +92,7 @@ affinity: {}
 
 # Enable backup for the database.
 backup:
-  enabled: true
+  enabled: false
   historyLevel: '160'
   resources:
     requests:
