@@ -5,6 +5,10 @@ metadata:
   labels:
     {{- include "appl.labels" . | nindent 4 }}
     component: slapd
+  {{- with .Values.service.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   type: {{ .Values.service.type }}
   ports:

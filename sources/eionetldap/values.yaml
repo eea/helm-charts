@@ -20,21 +20,7 @@ debugLevel: 256
 role: standalone
 
 # SYNCREPL RIDs usage:
-# 009 = ldap6 - in AWS
-# 012 = ldap3 - in EEA cph cloud
-# 014 = dockerized ldap in bdr stack
-# 015 = dockerized ldap in bdr-test stack
-# 017 = ldap - in the EEA cloud (replaced Walrus)
-# 018 = dockerized ldap in bdr-dev stack
-# 019 = dockerized ldap on kvm-rancher-s4
-# no longer active: 020 = dockerized ldap on kvm-rancher-s3
-# 021 = dockerized ldap on kvm-rancher-s2
-# 023 = dockerized ldap on kvm-rancherdev
-# 025 = dockerized ldap on rancheraws (used by Rancher S3 in AWS)
-# 027 = dockerized ldap on kvm-rancher2-s1
-# 028 = dockerized ldap on jerboa.mgmt.eea
-# 030 = test instance on Kubernetes 02prod
-# 103 = ldap3 in Kubernetes 02prod
+# See https://taskman.eionet.europa.eu/projects/infrastructure/wiki/Eionet_LDAP
 #
 syncreplRid: ""
 
@@ -75,6 +61,8 @@ securityContext: {}
 
 service:
   type: ClusterIP
+  annotations: {}
+  # metallb.universe.tf/loadBalancerIPs: 10.50.7.41
   ldapPort: 389
   ldapsPort: 636
 
