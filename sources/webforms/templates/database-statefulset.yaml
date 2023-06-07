@@ -44,11 +44,6 @@ spec:
         volumeMounts:
         - mountPath: /var/lib/mysql
           name: {{ .Release.Name }}-database
-        livenessProbe:
-          tcpSocket:
-            port: 3306
-          initialDelaySeconds: 15
-          periodSeconds: 20
         readinessProbe:
           tcpSocket:
             port: 3306

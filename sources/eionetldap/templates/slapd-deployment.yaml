@@ -137,7 +137,6 @@ spec:
         - name: TZ
           value: "{{ .Values.timezone }}"
 
-        hostname: {{- .Values.hostname }}
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
         securityContext:

@@ -46,31 +46,44 @@ service:
   type: ClusterIP
   port: 8080
 
+# Additional headers
+#       'X-Content-Type-Options: nosniff'
+#       'Referrer-Policy: strict-origin-when-cross-origin'
+#       'Feature-Policy: accelerometer "none"; ambient-light-sensor "none"; autoplay "none"; camera "none"; encrypted-media "none"; fullscreen "self"; geolocation "none"; gyroscope "none"; magnetometer "none"; microphone "none"; midi "none"; payment "none"; picture-in-picture "none"; speaker "none"; sync-xhr "self"; usb "none"; vr "none"'
+#       'Expect-CT: max-age=604800, report-uri="https://sentry.eea.europa.eu/api/25/security/?sentry_key=36e966c526304fb38680f19ac1927bb5"'
+#       'Server: HTTPS'
+#       'Content-Security-Policy: default-src "self" blob: data: https://*.eea.europa.eu https://*.eionet.europa.eu; connect-src "self" https://*.openstreetmap.org https://*.eea.europa.eu https://*.eionet.europa.eu http://*.eea.europa.eu; font-src "self" data: https://cdnjs.cloudflare.com/ https://use.fontawesome.com/ https://fonts.gstatic.com/ https://maxcdn.bootstrapcdn.com https://*.eea.europa.eu https://*.eionet.europa.eu; frame-src "self"  https://ec.europa.eu/  https://*.eea.europa.eu https://*.eionet.europa.eu http://*.eea.europa.eu; img-src http: https: blob: data:; script-src "self" "unsafe-inline" "unsafe-eval" blob: data: https://matomo.eea.europa.eu https://openlayers.org/ https://www.google.com/jsapi https://www.google.com/uds/ https://www.gstatic.com/ https://spreadsheets.google.com/ https://docs.google.com/ https://*.eea.europa.eu https://*.eionet.europa.eu http://*.eea.europa.eu https://cdnjs.cloudflare.com https://code.jquery.com; style-src "self" "unsafe-inline" https://openlayers.org/ https://use.fontawesome.com https://www.google.com/uds/ https://ajax.googleapis.com/ https://www.gstatic.com/ https://*.eionet.europa.eu https://*.eea.europa.eu https://cdnjs.cloudflare.com https://code.jquery.com https://maxcdn.bootstrapcdn.com; report-uri https://sentry.eea.europa.eu/api/25/security/?sentry_key=36e966c526304fb38680f19ac1927bb5';
+
 ingress:
   enabled: false
-  className: ""
-  annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
+  className: "nginx"
+  annotations:
+    nginx.ingress.kubernetes.io/affinity: "cookie"
+    nginx.ingress.kubernetes.io/affinity-mode: "persistent"
+    nginx.ingress.kubernetes.io/session-cookie-name: "route"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers 'X-Frame-Options: SAMEORIGIN'
+        'Server: HTTPS'
+        'X-Content-Type-Options: nosniff';
+
   hosts:
     - host: webformsdev.eionet.europa.eu
       paths:
         - path: /
           pathType: Prefix
   tls:
-   - secretName: chart-example-tls
+   - secretName: ''
      hosts:
        - webformsdev.eionet.europa.eu
 
 resources:
   requests:
     memory: 256Mi
-#   cpu: 100m
   limits:
     memory: 1Gi
-#   cpu: 100m
 
-# This probably requires that a Metrics Server is deployed and configured
+# Probably requires that a Metrics Server is deployed and configured
+# Also gives syntax error
 autoscaling:
   enabled: false
   minReplicas: 1

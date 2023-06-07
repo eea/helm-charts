@@ -5,6 +5,7 @@ metadata:
   labels:
     {{- include "appl.labels" . | nindent 4 }}
     component: webq
+
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
@@ -24,6 +25,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
       containers:
       - name: {{ .Release.Name }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -34,7 +36,24 @@ spec:
         - name: CATALINA_OUT
           value: "/dev/stdout"
         - name: CATALINA_OPTS
-          value: '"-Dcas.service={{ .Values.casService }}" "-Djava.security.egd=file:/dev/./urandom" "-Ddb.url=jdbc:mysql://{{ .Release.Name }}-db-0.{{ .Release.Name }}-db:3306/{{ .Values.database.database }}?maxAllowedPacket=32212254720" "-Ddb.driver=com.mysql.jdbc.Driver" "-Ddb.username={{ .Values.database.username }}" "-Ddb.password={{ .Values.database.password }}" "-Dconverters.api.url={{ .Values.convertersApi }}" "-Duser.file.expiration.hours={{ .Values.fileExpirationHours }}" {{- if .Values.log4jConfiguration }} "-Dlog4j.configuration={{.Values.log4jConfiguration }}" {{- end }} {{- if .Values.initialAdminUsername }} "-Dinitial.admin.username={{.Values.initialAdminUsername }}" {{- end }} {{- if .Values.initialAdminPassword }} "-Dinitial.admin.password={{.Values.initialAdminPassword }}" {{- end }}'
+          value: >-
+            "-Dcas.service={{ .Values.casService }}"
+            "-Djava.security.egd=file:/dev/./urandom"
+            "-Ddb.url=jdbc:mysql://{{ .Release.Name }}-db-0.{{ .Release.Name }}-db:3306/{{ .Values.database.database }}?maxAllowedPacket=32212254720"
+            "-Ddb.driver=com.mysql.jdbc.Driver"
+            "-Ddb.username={{ .Values.database.username }}"
+            "-Ddb.password={{ .Values.database.password }}"
+            "-Dconverters.api.url={{ .Values.convertersApi }}"
+            "-Duser.file.expiration.hours={{ .Values.fileExpirationHours }}"
+            {{- if .Values.log4jConfiguration }}
+            "-Dlog4j.configuration={{.Values.log4jConfiguration }}"
+            {{- end }}
+            {{- if .Values.initialAdminUsername }}
+            "-Dinitial.admin.username={{.Values.initialAdminUsername }}"
+            {{- end }}
+            {{- if .Values.initialAdminPassword }}
+            "-Dinitial.admin.password={{.Values.initialAdminPassword }}"
+            {{- end }}
         - name: JAVA_OPTS
           value: "-Xmx3072m"
         - name: LANG
@@ -43,9 +62,18 @@ spec:
           {{- toYaml .Values.resources | nindent 10 }}
         securityContext:
           {{- toYaml .Values.securityContext | nindent 12 }}
+
+# Should probably use a httpGet here, but that creates a session
+        readinessProbe:
+          tcpSocket:
+            port: 8080
+          initialDelaySeconds: 15
+          periodSeconds: 20
+
         volumeMounts:
         - mountPath: /opt/config
           name: {{ .Release.Name }}-configdir
+
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -59,6 +87,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       restartPolicy: Always
+
       volumes:
       - name: {{ .Release.Name }}-configdir
         configMap:
