@@ -16,11 +16,13 @@ set the values in the database section.
 Production deployment
 ---------------------
 For deployment into production you will have to activate the ingress, set higher memory limits,
-and change the mysql arguments to `mysqld --max_allowed_packet=30M --innodb_log_file_size=152MB`
+and change the database command to:
+```
+database:
+  command:
+    - mysqld
+    - '--user=mysql'
+    - '--max_allowed_packet=30M'
+    - '--innodb_log_file_size=152MB'
+```
 
-Issues
-------
-It might not be possible to upgrade as the database can't be running in two instances at 
-the same time. This will have to be investigated. However, since the database is a
-StatefulSet, you can delete the app. The persistent volume will not be deleted. And
-then you can install again.

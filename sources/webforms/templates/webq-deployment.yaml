@@ -48,6 +48,9 @@ spec:
             {{- if .Values.log4jConfiguration }}
             "-Dlog4j.configuration={{.Values.log4jConfiguration }}"
             {{- end }}
+            {{- if .Values.webq1Url }}
+            "-Dwebq1.url={{.Values.webq1Url }}"
+            {{- end }}
             {{- if .Values.initialAdminUsername }}
             "-Dinitial.admin.username={{.Values.initialAdminUsername }}"
             {{- end }}
