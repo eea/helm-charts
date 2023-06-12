@@ -22,9 +22,6 @@ spec:
           containers:
           - name: {{ .Release.Name }}-buildestat
             image: "{{ .Values.buildestat.image }}"
-            args:
-            - sh
-            - ./batch.sh
             env:
             - name: LANG
               value: C.UTF-8
