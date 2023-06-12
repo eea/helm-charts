@@ -1,0 +1,108 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "appl.fullname" . }}-virtuoso
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: virtuoso
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: virtuoso
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: virtuoso
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
+      containers:
+      - name: {{ .Release.Name }}-virtuoso
+        image: {{ .Values.virtuoso.image }}
+        env:
+        - name: LANG
+          value: en_US.UTF-8
+        - name: TZ
+          value: {{ .Values.timezone }}
+        - name: DBA_PASSWORD
+          value: {{ .Values.virtuoso.dbapw }}
+        - name: VIRT_Parameters_ColumnStore
+          value: "1"
+        - name: VIRT_Parameters_DirsAllowed
+          value: ., ../vad, /usr/share/proj, /var/tmp, /var/local/cr3/files
+        - name: VIRT_Parameters_KeepAliveTimeout
+          value: "100"
+        - name: VIRT_Parameters_MaxCheckpointRemap
+          value: "2000000"
+        - name: VIRT_Parameters_MaxDirtyBuffers
+          value: "2000000"
+        - name: VIRT_Parameters_MaxQueryCostEstimationTime
+          value: "0"
+        - name: VIRT_Parameters_MaxQueryExecutionTime
+          value: "600"
+        - name: VIRT_Parameters_MaxQueryMem
+          value: 12G
+        - name: VIRT_Parameters_MaxVectorSize
+          value: "2000000"
+        - name: VIRT_Parameters_NumberOfBuffers
+          value: "3000000"
+        - name: VIRT_Parameters_ResultSetMaxRows
+          value: "50000"
+        - name: VIRT_Parameters_TimezonelessDatetimes
+          value: "0"
+        - name: VIRT_Parameters_VectorSize
+          value: "2000"
+
+        ports:
+        - containerPort: 1111
+        - containerPort: 8890
+        resources:
+          {{- toYaml .Values.virtuoso.resources | nindent 10 }}
+        securityContext:
+          {{- toYaml .Values.virtuoso.securityContext | nindent 12 }}
+        volumeMounts:
+        - mountPath: /opt/virtuoso-opensource/database
+          name: {{ .Release.Name }}-data
+        - mountPath: /var/virtuosotmp
+          name: {{ .Release.Name }}-virtuosotmp
+        - mountPath: /var/tmp
+          name: {{ .Release.Name }}-tmp
+        - mountPath: /var/local/cr3
+          name: {{ .Release.Name }}-cr3
+        
+      {{- with .Values.virtuoso.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.virtuoso.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.virtuoso.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+
+      volumes:
+      - name: {{ .Release.Name }}-data
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-data
+      - name: {{ .Release.Name }}-virtuosotmp
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-virtuosotmp
+      - name: {{ .Release.Name }}-tmp
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-tmp
+      - name: {{ .Release.Name }}-cr3
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-cr3

@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Release.Name }}-tmp
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: tmp
+  annotations:
+    "helm.sh/resource-policy": keep
+
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi

@@ -1,0 +1,134 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "appl.fullname" . }}
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+
+      containers:
+      - name: tomcat
+        securityContext:
+          {{- toYaml .Values.securityContext | nindent 12 }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        volumeMounts:
+        - mountPath: /var/local/cr3
+          name: {{ .Release.Name }}-cr3
+        - mountPath: /var/tmp
+          name: {{ .Release.Name }}-tmp
+        - mountPath: /querylog
+          name: {{ .Release.Name }}-querylog
+        ports:
+          - name: tomcat
+            containerPort: {{ .Values.service.port }}
+            protocol: TCP
+        readinessProbe:
+          httpGet:
+            path: /
+            port: tomcat
+        resources:
+          {{- toYaml .Values.resources | nindent 12 }}
+        env:
+        - name: CATALINA_OPTS
+          value: >-
+            "-Xmx12000m"
+            "-Djava.security.egd=file:/dev/./urandom"
+            "-Dconfig.application.displayName={{ .Values.displayName }}"
+            "-Dconfig.app.home={{ .Values.appHome }}"
+            "-Dmail.transport.protocol=smtp"
+            "-Dmail.store.protocol=smtp"
+            "-Dconfig.mail.host={{ .Values.mailHost }}"
+            "-Dconfig.mail.user={{ .Values.mailUser }}"
+            "-Dconfig.mail.password={{ .Values.mailPassword }}"
+            "-Dconfig.mail.from={{ .Values.mailFrom }}"
+            "-Dconfig.mail.sysAdmins={{ .Values.mailSysAdmins }}"
+            "-Dconfig.virtuoso.db.usr={{ .Values.virtuosoDbUsr }}"
+            "-Dconfig.virtuoso.db.pwd={{ .Values.virtuosoDbPwd }}"
+            "-Dconfig.virtuoso.db.rousr={{ .Values.virtuosoDbRousr }}"
+            "-Dconfig.virtuoso.db.ropwd={{ .Values.virtuosoDbRopwd }}"
+            "-Dconfig.application.homeURL={{ .Values.homeURL }}"
+            "-Dconfig.edu.yale.its.tp.cas.client.filter.serverName={{ .Values.serverName }}"
+            "-Dconfig.pingWhitelist={{ .Values.pingWhitelist }}"
+            "-Dconfig.harvester.tempFileDir={{ .Values.harvester.tempFileDir }}"
+            "-Dconfig.harvester.batchHarvestingHours={{ .Values.harvester.batchHarvestingHours }}"
+            "-Dconfig.harvester.jobInterval={{ .Values.harvester.jobInterval }}"
+            "-Dconfig.harvester.batchHarvestingUpperLimit={{ .Values.harvester.batchHarvestingUpperLimit }}"
+            "-Dconfig.harvester.httpConnection.timeout={{ .Values.harvester.httpConnectionTimeout }}"
+            "-Dconfig.harvester.rdfLoaderThreads={{ .Values.harvester.rdfLoaderThreads }}"
+            "-Dconfig.harvester.skipXoring.noOfTriplesThreshold={{ .Values.harvester.skipXoringNoOfTriplesThreshold }}"
+            "-Dconfig.harvester.skipXoring.fileSizeThreshold={{ .Values.harvester.skipXoringFileSizeThreshold }}"
+            "-Dconfig.ldap.url={{ .Values.ldapUrl }}"
+            "-Dconfig.ldap.context={{ .Values.ldapContext }}"
+            "-Dconfig.ldap.principal={{ .Values.ldapPrincipal }}"
+            "-Dconfig.ldap.password={{ .Values.ldapPassword }}"
+            "-Dadmin-group={{ .Values.adminGroup }}"
+
+        - name: INSTANCE_NAME
+          value: cr.eionet.europa.eu
+        - name: LOG_FILE_PATH
+          value: /var/local/cr3
+        - name: LOG_RETAIN_ALL
+          value: "false"
+        - name: LOG_RETENTION_DAYS
+          value: P60D
+        - name: QUERY_LOG_DIR_PATH
+          value: /querylog
+        - name: QUERY_LOG_FILENAME_PATH
+          value: services_query.log
+        - name: QUERY_LOG_LEVEL
+          value: trace
+        - name: QUERY_LOG_RETAIN_ALL
+          value: "false"
+        - name: QUERY_LOG_RETENTION_DAYS
+          value: 30d
+        - name: TZ
+          value: {{ .Values.timezone }}
+
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+      restartPolicy: Always
+
+      volumes:
+      - name: {{ .Release.Name }}-cr3
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-cr3
+      - name: {{ .Release.Name }}-tmp
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-tmp
+      - name: {{ .Release.Name }}-querylog
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-querylog

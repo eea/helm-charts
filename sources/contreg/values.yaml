@@ -1,0 +1,152 @@
+# Default values
+
+replicaCount: 1
+
+image:
+  repository: eeacms/contreg
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+serverName: "cr.eionet.europa.eu"
+
+displayName: "Ver.7 Content Registry"
+appHome: /var/local/cr3
+mailHost: ironport2.eea.eu.int
+mailUser: ""
+mailPassword: ""
+mailFrom: cr@eionet.europa.eu
+mailSysAdmins: soren.roug@eea.europa.eu
+virtuosoDbUsr: cr3user
+virtuosoDbPwd: REPLACEME
+virtuosoDbRousr: cr3rouser
+virtuosoDbRopwd: REPLACEME
+homeURL: http://cr.eionet.europa.eu
+
+pingWhitelist: '*.eea.europa.eu, *.eionet.europa.eu, 192.168.34.*, 10.50.6.119,10.50.0.221, 87.54.2.100, 87.54.7.*, 172.17.*, 10.42.*, 10.62.*, 52.30.187.203'
+
+harvester:
+  tempFileDir: /var/tmp
+  batchHarvestingHours: 0-7,20-23
+  jobInterval: 0
+  batchHarvestingUpperLimit: 100
+  httpConnectionTimeout: 30000
+  rdfLoaderThreads: 3
+  skipXoringNoOfTriplesThreshold: 3000000
+  skipXoringFileSizeThreshold: 150000000
+
+casService: "https://cr.eionet.europa.eu"
+
+ldapPassword: REPLACEME
+adminGroup: extranet-cr-admin
+ldapPrincipal: "cn=Accounts browser,o=EIONET,l=Europe"
+ldapUrl: ldaps://ldap.eionet.europa.eu:636
+ldapContext: "o=EIONET,l=Europe"
+
+timezone: UTC
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+podSecurityContext: {}
+securityContext: {}
+
+service:
+  type: ClusterIP
+  port: 8080
+
+ingress:
+  enabled: false
+  className: "nginx"
+  annotations: {}
+  hosts:
+    - host: cr.eionet.europa.eu
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: ''
+      hosts:
+        - cr.eionet.europa.eu
+
+resources:
+  requests:
+    memory: 512Mi
+  #  cpu: 100m
+  #limits:
+  #  memory: 2Gi
+  #  cpu: 100m
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+virtuoso:
+  image: openlink/virtuoso-opensource-7:7.2.6-r7-ga1549e8
+  resources:
+    requests:
+      memory: 48Gi
+#   limits:
+#     memory: 800Mi
+  dbapw: REPLACEME
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  podAnnotations: {}
+  securityContext: {}
+
+admin:
+  image: eeacms/centos7dev:2.2.4
+  resources:
+    requests:
+      memory: 16Mi
+    limits:
+      memory: 64Mi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  podAnnotations: {}
+  securityContext: {}
+
+logstash:
+  enabled: false
+  image: docker.elastic.co/logstash/logstash-oss:6.8.23
+  resources:
+    requests:
+      memory: 16Mi
+    limits:
+      memory: 64Mi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  podAnnotations: {}
+  securityContext: {}
+  elasticSearchIndex: cr.eionet.europa.eu_queries
+  elasticSearchPassword: REPLACEME
+  elasticSearchUsername: REPLACEME
+  elasticSearchUrl: REPLACEME
+
+
+cron:
+  enabled: true
+  image: eeacms/virtuoso-cron
+  resources: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  podAnnotations: {}
+  securityContext: {}
+
+

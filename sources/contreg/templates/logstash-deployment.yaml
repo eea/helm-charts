@@ -1,0 +1,76 @@
+{{- if .Values.logstash.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "appl.fullname" . }}-logstash
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: logstash
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: logstash
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: logstash
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
+      containers:
+      - name: {{ .Release.Name }}-logstash
+        image: {{ .Values.logstash.image }}
+        args:
+        - logstash
+        - -f
+        - /querylog/query_log.conf
+        env:
+        - name: ELASTICSEARCHINDEX
+          value: {{ .Values.logstash.elasticSearchIndex }}
+        - name: ELASTICSEARCHPASSWORD
+          value: {{ .Values.logstash.elasticSearchPassword }}
+        - name: ELASTICSEARCHURL
+          value: {{ .Values.logstash.elasticSearchUrl }}
+        - name: ELASTICSEARCHUSERNAME
+          value: {{ .Values.logstash.elasticSearchUsername }}
+        - name: FILENAMES
+          value: /querylog/*.log
+        - name: SERVICENAME
+          value: {{ .Values.serverName }}
+
+        resources:
+          {{- toYaml .Values.logstash.resources | nindent 10 }}
+        securityContext:
+          {{- toYaml .Values.logstash.securityContext | nindent 12 }}
+        volumeMounts:
+        - mountPath: /querylog
+          name: {{ .Release.Name }}-querylog
+
+      {{- with .Values.logstash.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.logstash.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.logstash.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+
+      volumes:
+      - name: {{ .Release.Name }}-querylog
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-querylog
+{{- end }}

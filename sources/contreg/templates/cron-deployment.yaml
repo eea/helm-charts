@@ -1,0 +1,69 @@
+{{- if .Values.cron.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "appl.fullname" . }}-cron
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: cron
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: cron
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: cron
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
+      containers:
+      - name: {{ .Release.Name }}-cron
+        image: {{ .Values.cron.image }}
+        env:
+        - name: CRONTAB
+          value: |-
+            * * * * * echo 1 minute cron
+            */17 * * * * /var/local/cr3/utils/harvest_history_not_matching_harvest_source_to_be_deleted/script.sh
+            * * * * * chown -R 1000:1000 /querylog
+        resources:
+          {{- toYaml .Values.cron.resources | nindent 10 }}
+        securityContext:
+          {{- toYaml .Values.cron.securityContext | nindent 12 }}
+        volumeMounts:
+        - mountPath: /var/local/cr3
+          name: {{ .Release.Name }}-cr3
+        - mountPath: /querylog
+          name: {{ .Release.Name }}-querylog
+
+      {{- with .Values.cron.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.cron.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.cron.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+
+      volumes:
+      - name: {{ .Release.Name }}-cr3
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-cr3
+      - name: {{ .Release.Name }}-querylog
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-querylog
+{{- end }}

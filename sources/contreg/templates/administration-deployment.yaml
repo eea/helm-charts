@@ -1,0 +1,87 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "appl.fullname" . }}-admin
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: admin
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: admin
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: admin
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
+      containers:
+      - name: {{ .Release.Name }}-admin
+        image: {{ .Values.admin.image }}
+        env:
+        - name: LANG
+          value: en_US.UTF-8
+        - name: TZ
+          value: Europe/Copenhagen
+        stdin: true
+        tty: true
+        name: administration
+        workingDir: /var/local
+
+        resources:
+          {{- toYaml .Values.admin.resources | nindent 10 }}
+        securityContext:
+          {{- toYaml .Values.admin.securityContext | nindent 12 }}
+        volumeMounts:
+        - mountPath: /opt/virtuoso-opensource/database
+          name: {{ .Release.Name }}-data
+        - mountPath: /var/virtuosotmp
+          name: {{ .Release.Name }}-virtuosotmp
+        - mountPath: /var/tmp
+          name: {{ .Release.Name }}-tmp
+        - mountPath: /var/local/cr3
+          name: {{ .Release.Name }}-cr3
+        - mountPath: /querylog
+          name: {{ .Release.Name }}-querylog
+
+      {{- with .Values.admin.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.admin.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.admin.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+
+      volumes:
+      - name: {{ .Release.Name }}-data
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-data
+      - name: {{ .Release.Name }}-virtuosotmp
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-virtuosotmp
+      - name: {{ .Release.Name }}-tmp
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-tmp
+      - name: {{ .Release.Name }}-cr3
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-cr3
+      - name: {{ .Release.Name }}-querylog
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-querylog
+
