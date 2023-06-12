@@ -4,6 +4,7 @@ metadata:
   name: {{ include "appl.fullname" . }}
   labels:
     {{- include "appl.labels" . | nindent 4 }}
+    component: tomcat
 spec:
   replicas: {{ .Values.replicaCount }}
   strategy:
@@ -11,6 +12,7 @@ spec:
   selector:
     matchLabels:
       {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: tomcat
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -19,6 +21,7 @@ spec:
       {{- end }}
       labels:
         {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: tomcat
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
