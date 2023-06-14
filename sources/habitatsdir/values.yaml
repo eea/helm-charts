@@ -3,7 +3,7 @@
 replicaCount: 1
 
 image:
-  repository: eeacms/art17-consultation
+  repository: ""
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
@@ -62,23 +62,23 @@ staticPath: /article1X/static
 
 ingress:
   enabled: false
-  className: ""
+  className: "nginx"
   annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
+    # nginx.ingress.kubernetes.io/configuration-snippet: |
+    #   more_set_headers 'X-XSS-Protection: 1; mode=block'
+    #     'X-Frame-Options: SAMEORIGIN'
+    #     'Referrer-Policy: no-referrer';
   hosts: []
   tls: []
-  #  - secretName: chart-example-tls
+  #  - secretName: ''
   #    hosts:
   #      - nature-art17.eionet.europa.eu
 
 resources:
   requests:
     memory: 256Mi
-#   cpu: 100m
   limits:
     memory: 256Mi
-#   cpu: 100m
 
 nodeSelector: {}
 
@@ -97,24 +97,18 @@ static:
 mysql:
   image: mariadb:5.5.64
   securityContext: {}
-    # capabilities:
-    #   drop:
-    #   - ALL
-    # readOnlyRootFilesystem: true
-    # runAsNonRoot: true
-    # runAsUser: 999
   resources:
     requests:
       memory: 100Mi
-  #   cpu: 100m
     limits:
       memory: 800Mi
-  #   cpu: 100m
   database: art17prod
   username: art17prod
   password: REPLACEME
   rootpw: REPLACEME
   command: []
+# - mysqld
+# - --user=mysql
 # - --character-set-server=utf8mb4
 # - --collation-server=utf8mb4_unicode_ci
   storage: 5Gi
@@ -123,19 +117,11 @@ mysql:
 postgres:
   image: postgres:13
   securityContext: {}
-    # capabilities:
-    #   drop:
-    #   - ALL
-    # readOnlyRootFilesystem: true
-    # runAsNonRoot: true
-    # runAsUser: 999
   resources:
     requests:
       memory: 100Mi
-  #   cpu: 100m
     limits:
       memory: 1Gi
-  #   cpu: 100m
   database: art17prod
   username: art17prod
   schema: postgresql
