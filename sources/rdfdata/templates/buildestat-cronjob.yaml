@@ -9,6 +9,7 @@ metadata:
 
 spec:
   schedule: "30 9 * * SAT"
+  concurrencyPolicy: Forbid
   jobTemplate:
     spec:
       template:

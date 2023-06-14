@@ -18,7 +18,7 @@ Create your package or update the source. For the example we will call the packa
     git add .
     cd ../../docs
     helm package ../sources/toypackage
-    helm repo index --url https://eea.github.io/helm-charts/ .
+    helm repo index .
     git add .
     git commit
     git push
