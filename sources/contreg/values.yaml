@@ -95,6 +95,7 @@ affinity: {}
 
 virtuoso:
   image: openlink/virtuoso-opensource-7:7.2.6-r7-ga1549e8
+  serviceType: ClusterIP
   resources:
     requests:
       memory: 48Gi

@@ -6,7 +6,7 @@ metadata:
     {{- include "appl.labels" . | nindent 4 }}
     component: virtuoso
 spec:
-  type: ClusterIP
+  type: {{ .Values.virtuoso.serviceType }}
   ports:
   - name: "virtsql"
     port: 1111
