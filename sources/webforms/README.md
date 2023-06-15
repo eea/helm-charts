@@ -1,5 +1,4 @@
-Eionet WebQuestionnaires 2
-==========================
+# Eionet WebQuestionnaires 2
 
 This chart is configured to require little or no configuration for development and test usage.
 
@@ -26,3 +25,13 @@ database:
     - '--innodb_log_file_size=152MB'
 ```
 
+## Release notes
+
+<dl>
+  <dt>Version 0.5.0</dt>
+  <dd>Autoscaling works, but is disabled by default.</dd>
+
+  <dt>Version 0.4.0</dt>
+  <dd>First version to be used in production.</dd>
+
+</dl>
