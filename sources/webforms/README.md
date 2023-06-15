@@ -29,7 +29,8 @@ database:
 
 <dl>
   <dt>Version 0.5.0</dt>
-  <dd>Autoscaling works, but is disabled by default.</dd>
+  <dd>Autoscaling works, but is disabled by default. Memory reservation for webq must be set
+  to minimum 512Mi to scale correctly.</dd>
 
   <dt>Version 0.4.0</dt>
   <dd>First version to be used in production.</dd>
