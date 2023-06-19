@@ -47,7 +47,7 @@ spec:
         - mountPath: /var/log/tomcat
           name:  {{ .Release.Name }}-logs
 
-        readinessProbe:
+        livenessProbe:
           initialDelaySeconds: 15
           periodSeconds: 20
           httpGet:
