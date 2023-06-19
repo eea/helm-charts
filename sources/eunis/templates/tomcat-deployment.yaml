@@ -47,13 +47,9 @@ spec:
         - mountPath: /var/log/tomcat
           name:  {{ .Release.Name }}-logs
 
-        livenessProbe:
-          httpGet:
-            path: /systemcheck.jsp
-            port: 8080
-          initialDelaySeconds: 3
-          periodSeconds: 20
         readinessProbe:
+          initialDelaySeconds: 15
+          periodSeconds: 20
           httpGet:
             path: /systemcheck.jsp
             port: 8080
