@@ -59,6 +59,7 @@ ingress:
   enabled: false
   className: "nginx"
   annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: 30m
     nginx.ingress.kubernetes.io/affinity: "cookie"
     nginx.ingress.kubernetes.io/affinity-mode: "persistent"
     nginx.ingress.kubernetes.io/session-cookie-name: "route"
