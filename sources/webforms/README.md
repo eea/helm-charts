@@ -28,6 +28,9 @@ database:
 ## Release notes
 
 <dl>
+  <dt>Version 1.0.2</dt>
+  <dd>Minor change to documentation</dd>
+
   <dt>Version 1.0.1</dt>
   <dd>Added max body size for the ingress and set it to 30M.</dd>
 

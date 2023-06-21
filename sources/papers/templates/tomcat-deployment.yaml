@@ -82,7 +82,8 @@ spec:
       volumes:
       - name: {{ .Release.Name }}-aqrlogs
         persistentVolumeClaim:
-          name: {{ .Release.Name }}-aqrlogs
+          claimName: {{ .Release.Name }}-aqrlogs
       - name: {{ .Release.Name }}-tomcatlogs
         persistentVolumeClaim:
-          name: {{ .Release.Name }}-tomcatlogs
+          claimName: {{ .Release.Name }}-tomcatlogs
+

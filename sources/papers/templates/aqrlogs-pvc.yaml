@@ -5,8 +5,6 @@ metadata:
   labels:
     {{- include "appl.labels" . | nindent 4 }}
     component: aqrlogs
-  annotations:
-    "helm.sh/resource-policy": keep
 
 spec:
   accessModes:
