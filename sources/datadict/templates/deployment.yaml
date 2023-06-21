@@ -1,0 +1,118 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "appl.fullname" . }}
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: tomcat
+
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: tomcat
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: tomcat
+    spec:
+      #subdomain: eionet.europa.eu
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: tomcat8080
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          env:
+          - name: logFilePath
+            value: /opt/datadict
+          - name: queryLogRetainAll
+            value: "false"
+          - name: queryLogRetentionDays
+            value: P60D
+          - name: CATALINA_OPTS
+            value: >-
+              '-Xmx6144m'
+              '-Denv.app.home=/opt/datadict'
+              '-Djava.security.egd=file:/dev/./urandom'
+              '-Denv.xmlConv.url={{ .Values.xmlConvUrl }}'
+              '-Denv.cr.reharvest.request.url={{ .Values.crReharvestRequestUrl }}'
+              '-Denv.db.driver=com.mysql.jdbc.Driver'
+              '-Denv.db.jdbcurl=jdbc:mysql://{{ include "dbsvc.name" . }}:3306/{{ .Values.database.database }}?{{ .Values.database.parameters }}'
+              '-Denv.db.jdbcurl.encoded=jdbc:mysql://{{ include "dbsvc.name" . }}:3306/{{ .Values.database.database }}?{{ .Values.database.parameters | replace "&" "&amp;" }}'
+              '-Denv.mysql.url=jdbc:mysql://{{ include "dbsvc.name" . }}:3306/mysql?{{ .Values.database.parameters }}'
+              '-Denv.db.user={{ .Values.database.username }}'
+              '-Denv.db.password={{ .Values.database.password }}'
+              '-Denv.dd.host={{ .Values.hostname }}'
+              '-Denv.dd.url=https://{{ .Values.hostname }}'
+              '-Denv.smtp.host={{ .Values.mailHost }}'
+              '-Denv.notification.email.from={{ .Values.mailFrom }}'
+              '-Denv.siteCode.allocate.notification.to={{ .Values.siteCode.allocate.notificationTo }}'
+              '-Denv.siteCode.reserve.notification.to={{ .Values.siteCode.reserve.notificationTo }}'
+              '-Denv.siteCode.notification.from={{ .Values.siteCode.notificationFrom }}'
+              '-Denv.siteCode.test.notification.to={{ .Values.siteCode.test.notificationTo }}'
+              '-Denv.siteCode.allocate.maxAmount={{ .Values.siteCode.allocate.maxAmount }}'
+              '-Denv.siteCode.allocate.maxAmountWithoutName={{ .Values.siteCode.allocate.maxAmounttWithoutName }}'
+              '-Denv.siteCode.allocate.maxAmountForEtcEeaUsers={{ .Values.siteCode.allocate.maxAmountForEtcEeaUsers }}'
+              '-Denv.siteCode.reserve.maxAmount={{ .Values.siteCode.reserve.maxAmount }}'
+              '-Denv.dd.vocabulary.api.jwt.timeout=10000'
+              '-Duns.sendNotification.method=/v2/uns/event/legacy/sendNotification/'
+              '-Duns.makeSubscription.method=/v2/uns/event/legacy/makeSubscription/'
+              '-Denv.uns.xml.rpc.server.url={{ .Values.unsUrl }}/rpcrouter'
+              '-Denv.uns.channel.name={{ .Values.unsChannelName }}'
+              '-Denv.uns.url={{ .Values.unsUrl }}'
+              '-Denv.uns.rest.username={{ .Values.unsUsername }}'
+              '-Denv.uns.rest.password={{ .Values.unsPwd }}'
+              '-Dconfig.ldap.url={{ .Values.ldap.url }}'
+              '-Dconfig.ldap.principal={{ .Values.ldap.principal }}'
+              '-Dconfig.ldap.password={{ .Values.ldap.password }}'
+              '-Dconfig.ldap.context={{ .Values.ldap.context }}'
+              '-Dconfig.ldap.role.dir={{ .Values.ldap.roleDir }}'
+              '-Dconfig.ldap.user.dir={{ .Values.ldap.userDir }}'
+
+          volumeMounts:
+          - mountPath: /opt/datadict
+            name: {{ .Release.Name }}-files
+
+          livenessProbe:
+            httpGet:
+              path: /
+              port: tomcat8080
+
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+
+      volumes:
+      - name: {{ .Release.Name }}-files
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-files

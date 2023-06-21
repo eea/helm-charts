@@ -1,0 +1,127 @@
+# Default values
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: eeacms/datadict
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+hostname: "dd.eionet.europa.eu"
+initialuser: ""
+
+casService: "https://dd.eionet.europa.eu"
+crSparqlEndpoint: "https://cr.eionet.europa.eu/sparql"
+crReharvestRequestUrl: https://cr.eionet.europa.eu/ping?uri=%s
+xmlConvUrl: https://converters.eionet.europa.eu
+
+unsUrl: "https://uns.eionet.europa.eu"
+unsChannelName: ''
+unsUsername: ""
+unsPwd: ""
+
+ldap:
+  url: ldaps://ldap.eionet.europa.eu:636
+  password: ''
+  principal: ''
+  context: o=Eionet,l=EUROPE
+  roleDir: ou=Roles
+  userDir: ou=Users
+
+timezone: Europe/Copenhagen
+mailFrom: user@domain
+mailHost: REPLACEME
+
+deployContexts: prod
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+
+service:
+  type: ClusterIP
+  port: 8080
+
+ingress:
+  enabled: false
+  className: "nginx"
+  annotations: {}
+  hosts:
+    - host: dd.eionet.europa.eu
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+     - secretName: ''
+       hosts:
+         - dd.eionet.europa.eu
+
+resources:
+  requests:
+    memory: 1Gi
+  limits:
+    memory: 5Gi
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+database:
+  image: mariadb:10.2
+  securityContext: {}
+  resources:
+    requests:
+      memory: 100Mi
+    limits:
+      memory: 800Mi
+  database: DataDict
+  username: dduser
+  password: REPLACEME
+  rootpw: REPLACEME
+  parameters: "maxAllowedPacket=16106127360&autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&emptyStringsConvertToZero=false&jdbcCompliantTruncation=false&rewriteBatchedStatements=true"
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+builddicts:
+  image: eeacms/centos7dev:2.2.4
+
+  resources:
+    requests:
+      memory: 64Mi
+    limits:
+      memory: 64Mi
+
+siteCode:
+  notificationFrom: dd@eionet.europa.eu
+  allocate:
+    maxAmount: 1000
+    maxAmountForEtcEeaUsers: 2000
+    maxAmountWithoutName: 200
+    notificationTo: eionet-nfp-[mc_or_cc]-[iso_country_code]@roles.eea.eionet.europa.eu,eionet-nrc-biodiversity-[mc_or_cc]-[iso_country_code]@roles.eea.eionet.europa.eu,reportnet-awp-cdda-reporter-[iso_country_code]@roles.eea.eionet.europa.eu,eionet-etc-bd-cdda@roles.eea.eionet.europa.eu
+
+  reserve:
+    maxAmount: 20000
+    notificationTo: eionet-etc-bd-cdda@roles.eea.eionet.europa.eu
+
+  test:
+    notificationTo: 
+

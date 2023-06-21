@@ -1,0 +1,62 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: builddicts
+  name: {{ include "appl.fullname" . }}-builddicts
+
+spec:
+  schedule: "30 3 * * SAT"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          {{- with .Values.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
+          containers:
+          - name: {{ .Release.Name }}-builddicts
+            image: "{{ .Values.builddicts.image }}"
+            args:
+            - sh
+            - ./batch.sh
+            env:
+            - name: LANG
+              value: en_US.UTF-8
+            - name: TZ
+              value: {{ .Values.timezone }}
+            command:
+            - python
+            - dic2dd.py
+            - -v
+            resources:
+              {{- toYaml .Values.builddicts.resources | nindent 14 }}
+            volumeMounts:
+            - mountPath: /var/local/Data2RDF
+              name: {{ .Release.Name }}-data2rdf
+            workingDir: /var/local/Data2RDF/EstatDic2DDVoc
+
+          restartPolicy: Never
+          securityContext:
+            {{- toYaml .Values.builddicts.securityContext | nindent 12 }}
+          {{- with .Values.nodeSelector }}
+          nodeSelector:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          {{- with .Values.affinity }}
+          affinity:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          {{- with .Values.tolerations }}
+          tolerations:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+
+          volumes:
+          - name: {{ .Release.Name }}-data2rdf
+            persistentVolumeClaim:
+              claimName: {{ .Release.Name }}-data2rdf
