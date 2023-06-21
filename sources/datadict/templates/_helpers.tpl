@@ -2,7 +2,11 @@
 Generate database service name
 */}}
 {{- define "dbsvc.name" -}}
+{{- if .Values.database.hostname }}
+{{- .Values.database.hostname | trunc 63 | trimSuffix "-" }}
+{{- else }}
 {{-  printf "%s-db-0.%s-db" .Release.Name .Release.Name | trunc 63 | trimSuffix "-" }}
+{{- end }}
 {{- end }}
 
 {{/*
