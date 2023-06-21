@@ -66,7 +66,7 @@ spec:
               '-Denv.siteCode.notification.from={{ .Values.siteCode.notificationFrom }}'
               '-Denv.siteCode.test.notification.to={{ .Values.siteCode.test.notificationTo }}'
               '-Denv.siteCode.allocate.maxAmount={{ .Values.siteCode.allocate.maxAmount }}'
-              '-Denv.siteCode.allocate.maxAmountWithoutName={{ .Values.siteCode.allocate.maxAmounttWithoutName }}'
+              '-Denv.siteCode.allocate.maxAmountWithoutName={{ .Values.siteCode.allocate.maxAmountWithoutName }}'
               '-Denv.siteCode.allocate.maxAmountForEtcEeaUsers={{ .Values.siteCode.allocate.maxAmountForEtcEeaUsers }}'
               '-Denv.siteCode.reserve.maxAmount={{ .Values.siteCode.reserve.maxAmount }}'
               '-Denv.dd.vocabulary.api.jwt.timeout=10000'

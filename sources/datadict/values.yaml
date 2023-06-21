@@ -89,9 +89,9 @@ database:
   securityContext: {}
   resources:
     requests:
-      memory: 100Mi
+      memory: 2Gi
     limits:
-      memory: 800Mi
+      memory: 4Gi
   hostname: dbservice-upd
   database: DataDict
   username: dduser

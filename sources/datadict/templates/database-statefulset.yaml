@@ -34,14 +34,10 @@ spec:
         args:
         - mysqld
         - --user=mysql
-        - --character-set-server=utf8
-        - --collation-server=utf8_general_ci
+        - --max_allowed_packet=16M
+        - --innodb_lock_wait_timeout=120
         image: "{{ .Values.database.image }}"
         env:
-        - name: LANG
-          value: C.UTF-8
-        - name: TZ
-          value: "{{ .Values.timezone }}"
         - name: MYSQL_DATABASE
           value: "{{ .Values.database.database }}"
         - name: MYSQL_PASSWORD
