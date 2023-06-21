@@ -28,6 +28,12 @@ database:
 ## Release notes
 
 <dl>
+  <dt>Version 1.0.1</dt>
+  <dd>Added max body size for the ingress and set it to 30M.</dd>
+
+  <dt>Version 1.0.0</dt>
+  <dd>Changed 0.5.0 to 1.0.0.</dd>
+
   <dt>Version 0.5.0</dt>
   <dd>Autoscaling works, but is disabled by default. Memory reservation for webq must be set
   to minimum 512Mi to scale correctly.</dd>
