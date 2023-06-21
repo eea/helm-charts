@@ -1,0 +1,88 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "appl.fullname" . }}
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: tomcat
+
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: tomcat
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: tomcat
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
+      containers:
+      - name: {{ .Release.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        env:
+        - name: DB_DRIVER
+          value: org.postgresql.Driver
+        - name: DB_PASSWORD
+          value: {{ .Values.postgres.password }}
+        - name: DB_URL
+          value: jdbc:postgresql://postgres:5432/{{ .Values.postgres.database }}
+        - name: DB_USERNAME
+          value: {{ .Values.postgres.username }}
+        - name: SERVER_NAME
+          value: {{ .Values.serverName }}
+        - name: SERVER_PORT
+          value: "80"
+        - name: TZ
+          value: {{ .Values.timezone }}
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
+        securityContext:
+          {{- toYaml .Values.securityContext | nindent 12 }}
+
+        # Will restart the pods if it is not responding
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 15
+          periodSeconds: 60
+
+        volumeMounts:
+        - mountPath: /var/log/aqrsystem
+          name: {{ .Release.Name }}-aqrlogs
+        - mountPath: /usr/local/tomcat/logs
+          name: {{ .Release.Name }}-tomcatlogs
+
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+
+      volumes:
+      - name: {{ .Release.Name }}-aqrlogs
+        persistentVolumeClaim:
+          name: {{ .Release.Name }}-aqrlogs
+      - name: {{ .Release.Name }}-tomcatlogs
+        persistentVolumeClaim:
+          name: {{ .Release.Name }}-tomcatlogs

@@ -1,0 +1,79 @@
+# Default values
+
+replicaCount: 1
+
+image:
+  repository: eeacms/aqrsystem
+  pullPolicy: IfNotPresent
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+timezone: "Europe/Copenhagen"
+serverName: "papers.eionet.europa.eu"
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+
+service:
+  type: ClusterIP
+  port: 8080
+
+ingress:
+  enabled: false
+  className: "nginx"
+  annotations:
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers 'X-XSS-Protection: 1; mode=block'
+        'X-Frame-Options: SAMEORIGIN'
+        'Referrer-Policy: no-referrer';
+  hosts:
+    - host: papers.eionet.europa.eu
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: ''
+      hosts:
+        - papers.eionet.europa.eu
+
+resources:
+  requests:
+    memory: 1Gi
+  limits:
+    memory: 1Gi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+postgres:
+  database: aqrsystem
+  username: aqrsystem
+  password: REPLACEME
+  image: postgres:9.3
+  resources:
+    requests:
+      memory: 75Mi
+    limits:
+      memory: 75Mi
+  storage: 10Gi
+  logspace: 5Gi
+
