@@ -4,7 +4,7 @@ metadata:
   name: {{ include "appl.fullname" . }}
   labels:
     {{- include "appl.labels" . | nindent 4 }}
-    component: webq
+    component: tomcat
 spec:
   type: {{ .Values.service.type }}
   ports:
@@ -13,4 +13,4 @@ spec:
       protocol: TCP
   selector:
     {{- include "appl.selectorLabels" . | nindent 4 }}
-    component: webq
+    component: tomcat
