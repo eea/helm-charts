@@ -22,7 +22,6 @@ spec:
         {{- include "appl.selectorLabels" . | nindent 8 }}
         component: tomcat
     spec:
-      #subdomain: eionet.europa.eu
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -30,6 +29,7 @@ spec:
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
@@ -44,13 +44,12 @@ spec:
               containerPort: 8080
               protocol: TCP
           livenessProbe:
+
+            timeoutSeconds: 3
             httpGet:
               path: /
               port: tomcat
-          readinessProbe:
-            httpGet:
-              path: /
-              port: tomcat
+
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           env:
