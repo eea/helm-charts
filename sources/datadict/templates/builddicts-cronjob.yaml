@@ -1,3 +1,4 @@
+{{- if .Values.builddicts.enabled }}
 apiVersion: batch/v1
 kind: CronJob
 metadata:
@@ -7,7 +8,8 @@ metadata:
   name: {{ include "appl.fullname" . }}-builddicts
 
 spec:
-  schedule: "30 3 * * SAT"
+  schedule: "30 3 * * 6"
+  concurrencyPolicy: Forbid
   jobTemplate:
     spec:
       template:
@@ -20,19 +22,16 @@ spec:
 
           containers:
           - name: {{ .Release.Name }}-builddicts
-            image: "{{ .Values.builddicts.image }}"
+            image: eeacms/centos7dev:2.2.4
             args:
-            - sh
-            - ./batch.sh
+            - python
+            - dic2dd.py
+            - -v
             env:
             - name: LANG
               value: en_US.UTF-8
             - name: TZ
               value: {{ .Values.timezone }}
-            command:
-            - python
-            - dic2dd.py
-            - -v
             resources:
               {{- toYaml .Values.builddicts.resources | nindent 14 }}
             volumeMounts:
@@ -60,3 +59,4 @@ spec:
           - name: {{ .Release.Name }}-data2rdf
             persistentVolumeClaim:
               claimName: {{ .Release.Name }}-data2rdf
+{{- end }}

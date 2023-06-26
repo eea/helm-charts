@@ -14,7 +14,6 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 hostname: "dd.eionet.europa.eu"
-initialuser: ""
 
 casService: "https://dd.eionet.europa.eu"
 crSparqlEndpoint: "https://cr.eionet.europa.eu/sparql"
@@ -37,8 +36,6 @@ ldap:
 timezone: Europe/Copenhagen
 mailFrom: user@domain
 mailHost: REPLACEME
-
-deployContexts: prod
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -103,13 +100,16 @@ database:
   affinity: {}
 
 builddicts:
-  image: eeacms/centos7dev:2.2.4
-
+  enabled: true
   resources:
     requests:
       memory: 64Mi
     limits:
       memory: 64Mi
+
+buildsw:
+  enabled: true
+  resources: {}
 
 siteCode:
   notificationFrom: dd@eionet.europa.eu
