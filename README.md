@@ -15,6 +15,7 @@ Create your package or update the source. For the example we will call the packa
     cd toypackage
     ... create Chart.yaml, values.yaml etc. If updating, remember to increase version number in Chart.yaml
     helm lint .
+    git pull
     git add .
     cd ../../docs
     helm package ../sources/toypackage
