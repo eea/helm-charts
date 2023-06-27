@@ -67,7 +67,7 @@ spec:
               "-Duns.xml.rpc.server.url={{ .Values.unsXmlRpcServerUrl }}"
               "-Duns.username={{ .Values.unsUsername }}"
               "-Duns.pwd={{ .Values.unsPwd }}"
-              "-Ddeploy.contexts={{ .Values.deployContext }}"
+              "-Ddeploy.contexts={{ .Values.deployContexts }}"
               "-Dstorage.dir=/var/local/rod"
               {{- if .Values.ldapPassword }}
               "-Dconfig.ldap.password={{ .Values.ldapPassword }}"
