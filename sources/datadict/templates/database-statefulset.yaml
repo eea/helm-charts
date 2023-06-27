@@ -36,7 +36,7 @@ spec:
         - --user=mysql
         - --max_allowed_packet=16M
         - --innodb_lock_wait_timeout=120
-        image: "{{ .Values.database.image }}"
+        image: mariadb:10.2
         env:
         - name: MYSQL_DATABASE
           value: "{{ .Values.database.database }}"
