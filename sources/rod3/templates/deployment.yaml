@@ -69,7 +69,15 @@ spec:
               "-Duns.pwd={{ .Values.unsPwd }}"
               "-Ddeploy.contexts={{ .Values.deployContext }}"
               "-Dstorage.dir=/var/local/rod"
+              {{- if .Values.ldapPassword }}
               "-Dconfig.ldap.password={{ .Values.ldapPassword }}"
+              {{- end }}
+              {{- if .Values.ldapPrincial }}
+              "-Dconfig.ldap.principal={{ .Values.ldapPrincipal }}"
+              {{- end }}
+              {{- if .Values.ldapUrl }}
+              "-Dconfig.ldap.url={{ .Values.ldapUrl }}"
+              {{- end }}
 
       {{- with .Values.nodeSelector }}
       nodeSelector:

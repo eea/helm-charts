@@ -13,18 +13,24 @@ image:
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
+
+timezone: Europe/Copenhagen
 hostname: "rod.eionet.europa.eu"
 initialuser: ""
 
 casService: "https://rod.eionet.europa.eu"
 crSparqlEndpoint: "https://cr.eionet.europa.eu/sparql"
+
 unsXmlRpcServerUrl: "https://uns.eionet.europa.eu/rpcrouter"
 unsUsername: ""
 unsPwd: ""
-ldapPassword: REPLACEME
-timezone: Europe/Copenhagen
+
 
 deployContexts: prod
+
+ldapPassword: ""
+ldapPrincipal: ""
+ldapUrl: ""
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -70,7 +76,6 @@ tolerations: []
 affinity: {}
 
 database:
-  image: mariadb:10.2.10
   securityContext: {}
   resources:
     requests:

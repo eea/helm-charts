@@ -29,7 +29,7 @@ spec:
       containers:
       - name: {{ .Release.Name }}-db
         imagePullPolicy: {{ .Values.image.pullPolicy }}
-        image: "{{ .Values.database.image }}"
+        image: mariadb:10.2.10
         ports:
         - containerPort: 3306
           protocol: TCP
