@@ -1,0 +1,127 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "appl.fullname" . }}
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: archives
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: archives
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: archives
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      containers:
+      - name: {{ .Release.Name }}-archives
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        ports:
+        - containerPort: 80
+          protocol: TCP
+          name: http
+        env:
+        - name: ERROR_FROM_EMAIL
+          value: {{ .Values.errorFromEmail }}
+        - name: GOOGLE_AUTH_CLIENT_ID
+          value: ''
+        - name: GOOGLE_AUTH_CLIENT_SECRET
+          value: ''
+        - name: HOST_NAME
+          value: {{ .Values.serverName }}
+        - name: SENTRY_DSN
+          value: ''
+        - name: WEBEX_CONTACTS
+          value: ''
+        - name: reCAPTCHA_PRIVATE_KEY
+          value: ''
+        - name: reCAPTCHA_PUBLIC_KEY
+          value: ''
+        - name: TZ
+          value: "{{ .Values.timezone }}"
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
+        securityContext:
+          {{- toYaml .Values.securityContext | nindent 12 }}
+        volumeMounts:
+        - mountPath: /var/local/groupware/var/ldapdump
+          name: {{ .Release.Name }}-ldapdump
+        - mountPath: /var/local/groupware/var/naaya-mail-queue
+          name: {{ .Release.Name }}-mailqueue
+        - mountPath: /tmp
+          name: {{ .Release.Name }}-tmp
+        - mountPath: /var/local/groupware/var/instance/import
+          name: groupware-zexp-files
+        - mountPath: /var/local/groupware/var/zeoserver/blobs
+          name: {{ .Release.Name }}-blobstorage
+
+        # Don't give work if slow
+        livenessProbe:
+          httpGet:
+            path: /@@health_check
+            port: http
+          timeoutSeconds: 5
+          initialDelaySeconds: 15
+          failureThreshold: 3
+          periodSeconds: 30
+
+        # Restart if unresponsive for 30 seconds 3 times
+        livenessProbe:
+          httpGet:
+            path: /@@health_check
+            port: http
+          timeoutSeconds: 30
+          initialDelaySeconds: 15
+          failureThreshold: 3
+          periodSeconds: 30
+
+        # Wait up to 5 minutes to start
+        startupProbe:
+          httpGet:
+            path: /@@health_check
+            port: http
+          timeoutSeconds: 3
+          failureThreshold: 30
+          periodSeconds: 10
+
+
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+
+      volumes:
+      - name: {{ .Release.Name }}-ldapdump
+        persistentVolumeClaim:
+          claimName: eionet-ldapdump
+      - name: {{ .Release.Name }}-mailqueue
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-mailqueue
+      - name: {{ .Release.Name }}-tmp
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-tmp
+      - name: groupware-zexp-files
+        persistentVolumeClaim:
+          claimName: groupware-zexp-files
+      - name: {{ .Release.Name }}-blobstorage
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-blobstorage
+
