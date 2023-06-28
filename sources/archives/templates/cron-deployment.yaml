@@ -99,6 +99,3 @@ spec:
       - name: {{ .Release.Name }}-filestorage
         persistentVolumeClaim:
           claimName: {{ .Release.Name }}-filestorage
-      - name: {{ .Release.Name }}-repozo
-        persistentVolumeClaim:
-          claimName: {{ .Release.Name }}-repozo
