@@ -146,11 +146,21 @@ spec:
         - mountPath: /var/lib/ldap
           name: {{ .Release.Name }}-ldapdb
 
-        readinessProbe:
+        livenessProbe:
           tcpSocket:
             port: 389
           initialDelaySeconds: 15
           periodSeconds: 20
+        # Alternatively, for full verification of health:
+        # exec:
+        #   command:
+        #   - ldapsearch
+        #   - -Zx
+        #   - -h
+        #   - localhost
+        #   - -b
+        #   - o=EIONET,l=Europe
+        #   - objectClass=organization
 
       {{- with .Values.nodeSelector }}
       nodeSelector:
