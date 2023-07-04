@@ -43,8 +43,8 @@ spec:
             - name: tomcat
               containerPort: 8080
               protocol: TCP
-          livenessProbe:
 
+          livenessProbe:
             timeoutSeconds: 3
             httpGet:
               path: /
@@ -92,6 +92,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       restartPolicy: Always
+
       volumes:
       - name: {{ .Release.Name }}-files
         persistentVolumeClaim:

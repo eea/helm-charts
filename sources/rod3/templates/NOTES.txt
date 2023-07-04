@@ -1,3 +1,5 @@
+# Notes
+
 1. Get the application URL by running these commands:
 {{- if .Values.ingress.enabled }}
 {{- range $host := .Values.ingress.hosts }}
@@ -20,3 +22,22 @@
   echo "Visit http://127.0.0.1:8080 to use your application"
   kubectl --namespace {{ .Release.Namespace }} port-forward $POD_NAME 8080:$CONTAINER_PORT
 {{- end }}
+
+## Release notes
+
+<dl>
+
+  <dt>Version 1.0.0</dt>
+  <dd>First version to be used in production.</dd>
+
+  <dt>Version 0.1.6</dt>
+  <dd>Updated documentation.</dd>
+
+  <dt>Version 0.1.5</dt>
+  <dd>Typo in deployContexts variable.</dd>
+
+  <dt>Version 0.1.0</dt>
+  <dd>Initial version.</dd>
+
+</dl>
+
