@@ -24,9 +24,10 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
       containers:
       - name: {{ .Release.Name }}-db
-        image: "{{ .Values.database.image }}"
+        image: mariadb:5.5.63
         ports:
         - containerPort: 3306
           protocol: TCP
@@ -46,11 +47,7 @@ spec:
         volumeMounts:
         - mountPath: /var/lib/mysql
           name: {{ .Release.Name }}-database
-        livenessProbe:
-          tcpSocket:
-            port: 3306
-          initialDelaySeconds: 15
-          periodSeconds: 20
+
         readinessProbe:
           tcpSocket:
             port: 3306
@@ -62,19 +59,20 @@ spec:
         {{- end }}
         resources:
           {{- toYaml .Values.database.resources | nindent 10 }}
-      {{- with .Values.nodeSelector }}
+      {{- with .Values.database.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.affinity }}
+      {{- with .Values.database.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.tolerations }}
+      {{- with .Values.database.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       restartPolicy: Always
+
   volumeClaimTemplates:
   - metadata:
       name: {{ .Release.Name }}-database

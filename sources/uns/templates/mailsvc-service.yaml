@@ -7,9 +7,9 @@ metadata:
     {{- include "appl.labels" . | nindent 4 }}
     component: mailfwd
 spec:
-  type: {{ .Values.service.type }}
+  type: ClusterIP
   ports:
-    - port: {{ .Values.service.port }}
+    - port: 25
       targetPort: 25
       protocol: TCP
   selector:

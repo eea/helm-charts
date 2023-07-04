@@ -63,27 +63,24 @@ pop3:
 
 ingress:
   enabled: false
-  className: ""
+  className: "nginx"
   annotations: {}
-    # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   hosts:
     - host: unsdev.eionet.europa.eu
       paths:
         - path: /
           pathType: Prefix
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - unsdev.eionet.europa.eu
+  tls:
+    - secretName: ''
+      hosts:
+        - unsdev.eionet.europa.eu
 
 resources:
   requests:
     memory: 256Mi
-#   cpu: 100m
   limits:
     memory: 3Gi
-#   cpu: 100m
 
 nodeSelector: {}
 
@@ -92,21 +89,12 @@ tolerations: []
 affinity: {}
 
 database:
-  image: mariadb:5.5.63
   securityContext: {}
-    # capabilities:
-    #   drop:
-    #   - ALL
-    # readOnlyRootFilesystem: true
-    # runAsNonRoot: true
-    # runAsUser: 999
   resources:
     requests:
       memory: 100Mi
-  #   cpu: 100m
     limits:
       memory: 800Mi
-  #   cpu: 100m
   database: uns
   username: unsuser
   password: REPLACEME
@@ -114,6 +102,9 @@ database:
   command: []
   storage: 5Gi
   storageClassName: ""
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
 
 # We set up a mailforwarder that can authenticate to the real mail relay.
 # Alternatively use image "marcelesser/smtp-sink:latest"
