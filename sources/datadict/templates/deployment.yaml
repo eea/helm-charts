@@ -58,7 +58,7 @@ spec:
               '-Denv.db.user={{ .Values.database.username }}'
               '-Denv.db.password={{ .Values.database.password }}'
               '-Denv.dd.host={{ .Values.hostname }}'
-              '-Denv.dd.url=https://{{ .Values.hostname }}'
+              '-Denv.dd.url=http://{{ .Values.hostname }}'
               '-Denv.smtp.host={{ .Values.mailHost }}'
               '-Denv.notification.email.from={{ .Values.mailFrom }}'
               '-Denv.siteCode.allocate.notification.to={{ .Values.siteCode.allocate.notificationTo }}'
