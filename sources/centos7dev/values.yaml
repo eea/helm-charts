@@ -3,13 +3,19 @@ image:
   pullPolicy: IfNotPresent
   tag: ""
 
+timezone: Europe/Copenhagen
+
+# Enter the names of the Persistent Volume Claims.
+# They will be mounted under /mnt
+mounts: []
+#- eionet-ldapdump
+#- sqlservice-varlocal
+
 resources:
   limits:
     memory: 128Mi
-  #   cpu: 100m
   requests:
     memory: 64Mi
-  #   cpu: 100m
 
 nameOverride: ""
 

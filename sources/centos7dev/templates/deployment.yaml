@@ -4,6 +4,7 @@ metadata:
   name: {{ include "centos7dev.fullname" . }}
   labels:
     {{- include "centos7dev.labels" . | nindent 4 }}
+
 spec:
   replicas: 1
   selector:
@@ -27,29 +28,23 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           command: ["/bin/sh"]
+          {{- if .Values.mounts }}
+          volumeMounts:
+          {{- range .Values.mounts }}
+          - mountPath: /mnt/{{ . }}
+            name: {{ . }}
+          {{- end }}
+          {{- end }}
+
 #         args:
 #           - /bin/bash
 #           - -c
 #           - touch /tmp/healthy
-#         livenessProbe:
-#           exec:
-#             command:
-#               - cat
-#               - /tmp/healthy
-#           initialDelaySeconds: 5
-#           periodSeconds: 5
-#         readinessProbe:
-#           exec:
-#             command:
-#               - cat
-#               - /tmp/healthy
-#           initialDelaySeconds: 5
-#           periodSeconds: 5
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           env:
           - name: TZ
-            value: "Europe/Copenhagen"
+            value: "{{ .Values.timezone }}"
           - name: LANG
             value: "en_US.UTF-8"
           stdin: true
@@ -66,3 +61,13 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+
+      {{- if .Values.mounts }}
+      volumes:
+      {{- range .Values.mounts }}
+      - name: {{ . }}
+        persistentVolumeClaim:
+          claimName: {{ . }}
+      {{- end }}
+      {{- end }}
+
