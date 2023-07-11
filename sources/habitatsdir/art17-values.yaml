@@ -24,10 +24,6 @@ staticPath: /article17/static
 ingress:
   enabled: true
   hosts:
-    - host: art17.eionet.europa.eu
-      paths:
-        - path: /article17
-          pathType: Prefix
     - host: nature-art17.eionet.europa.eu
       paths:
         - path: /article17
@@ -35,7 +31,6 @@ ingress:
   tls:
     - secretName: ''
       hosts:
-        - art17.eionet.europa.eu
         - nature-art17.eionet.europa.eu
 
 resources:
