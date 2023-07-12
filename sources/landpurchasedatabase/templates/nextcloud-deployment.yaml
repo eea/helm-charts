@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "appl.fullname" . }}-nextcloud
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: nextcloud
+
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: nextcloud
+
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: nextcloud
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
+      containers:
+      - name: {{ .Release.Name }}-nextcloud
+        image: "{{ .Values.nextcloud.image }}"
+        ports:
+        - containerPort: 80
+          protocol: TCP
+        env:
+        - name: NEXTCLOUD_ADMIN_PASSWORD
+          value: "{{ .Values.nextcloud.adminPassword }}"
+        - name: NEXTCLOUD_ADMIN_USER
+          value: "{{ .Values.nextcloud.adminUser }}"
+        - name: SQLITE_DATABASE
+          value: nc.sqlite
+        - name: TRUSTED_PROXIES
+          value: "{{ .Values.nextcloud.trustedProxies }}"
+        - name: TZ
+          value: "{{ .Values.timezone }}"
+        
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
+        securityContext:
+          {{- toYaml .Values.securityContext | nindent 12 }}
+        volumeMounts:
+        - mountPath: /var/www/html
+          name: {{ .Release.Name }}-data
+        - mountPath: /lpd
+          name: {{ .Release.Name }}-lpd
+
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+
+      volumes:
+      - name: {{ .Release.Name }}-data
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-data
+      - name: {{ .Release.Name }}-lpd
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-lpd

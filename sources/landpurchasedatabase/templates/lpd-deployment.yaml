@@ -1,0 +1,149 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "appl.fullname" . }}
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: lpd
+
+spec:
+  replicas: {{ .Values.replicaCount }}
+  strategy:
+    type: Recreate
+
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: lpd
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: lpd
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
+      containers:
+      - name: {{ .Release.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        ports:
+        - containerPort: 8080
+        - containerPort: 9990
+          protocol: TCP
+        env:
+        - name: DBCONNECTION_PASSWORD
+          value: "{{ .Values.dbconnectionPassword }}"
+        - name: DBCONNECTION_URL
+          value: "{{ .Values.dbconnectionUrl }}"
+        - name: DBCONNECTION_USERNAME
+          value: "{{ .Values.dbconnectionUsername }}"
+        - name: JAVA_HOME
+          value: /usr/lib/jvm/java-7-openjdk-amd64
+        - name: JBOSS_HOME
+          value: /opt/jboss/jboss-as-7.1.1.Final
+
+        - name: LPD_EXTRACT_SPATIAL_DATA_SERVICE
+          value: "{{ .Values.lpdExtractSpatialDataService }}"
+        - name: LPD_PRINT_SERVICE
+          value: "{{ .Values.lpdPrintService }}"
+        - name: LPD_SEARCH_LAYER
+          value: "{{ .Values.lpdSearchLayer }}"
+        - name: SCK_ARCGIS_PROXY
+          value: "{{ .Values.serviceUrl }}/lpd_web/ArcGISProxy"
+        - name: SCK_ARCHIVE_PROVIDER
+          value: "{{ .Values.serviceUrl }}/lpd_archive_provider/ArchiveProvider"
+        - name: SCK_AUTH
+          value: "{{ .Values.sckAuth }}"
+        - name: SCK_BACKGROUND_LAYER
+          value: "{{ .Values.sckBackgroundLayer }}"
+        - name: SCK_BENEFICIARY_ACCESS_ACTIVATION_TOKEN_VALIDITY
+          value: "{{ .Values.sckBeneficiaryAccessActivationTokenValidity }}"
+        - name: SCK_BENEFICIARY_ACCESS_VALIDITY
+          value: "{{ .Values.sckBeneficiaryAccessValidity }}"
+        - name: SCK_BENEFICIARY_FEATURE_LAYER_URL
+          value: "{{ .Values.sckBeneficiaryFeatureLayerUrl }}"
+        - name: SCK_BENEFICIARY_PUBLIC_LAYER
+          value: "{{ .Values.sckBeneficiaryPublicLayer }}"
+        - name: SCK_BING_KEY
+          value: "{{ .Values.sckBingKey }}"
+        - name: SCK_DOCUMENTATIONFILE_FOLDER
+          value: /lpd/documentation
+        - name: SCK_DOCUMENTATION_PROVIDER
+          value: "{{ .Values.serviceUrl }}/lpd_archive_provider/DocumentationProvider"
+        - name: SCK_EXPORT_FOLDER
+          value: /lpd/export/out
+        - name: SCK_LDAP_BASE_CONTEXT
+          value: "{{ .Values.sckLdapBaseContext }}"
+        - name: SCK_LDAP_UID
+          value: "{{ .Values.sckLdapUid }}"
+        - name: SCK_LDAP_URL
+          value: "{{ .Values.sckLdapUrl }}"
+        - name: SCK_LPD_WEB_APPLICATION
+          value: "{{ .Values.serviceUrl }}/lpd_web"
+        - name: SCK_MAIL_OUTCOPY
+          value: "{{ .Values.sckMailOutcopy | default .Values.defaultMailAddress }}"
+        - name: SCK_MAIL_QC
+          value: "{{ .Values.sckMailQc | default .Values.defaultMailAddress }}"
+        - name: SCK_MAIL_STMP_FROM_FOR_BENEF
+          value: "{{ .Values.sckMailStmpFromForBenef | default .Values.defaultMailAddress }}"
+        - name: SCK_PRIVATE_EXPORT_TEMPLATE
+          value: /lpd/export/private/export.xlsx
+        - name: SCK_PUBLIC_EXPORT_TEMPLATE
+          value: /lpd/export/public/export.xls
+        - name: SCK_REPORT_PROVIDER
+          value: "{{ .Values.serviceUrl }}/lpd_archive_provider/ReportProvider"
+        - name: SCK_REPORT_SUPPORT_MAIL
+          value: "{{ .Values.sckReportSupportMail | default .Values.defaultMailAddress }}"
+        - name: SCK_SHAPEFILE_FOLDER
+          value: /lpd/shapefile/tmp
+        - name: SCK_SHAPEFILE_IMPORT_SERVICE_URL
+          value: "{{ .Values.sckShapefileImportServiceUrl }}"
+        - name: SCK_SHAPEFILE_TPL_FOLDER
+          value: /lpd/shapefile/tpl
+        - name: SCK_SPATIAL_REFERENCE
+          value: "{{ .Values.sckSpatialReference }}"
+        - name: SCK_SUPER_ADMIN
+          value: "{{ .Values.sckSuperAdmin }}"
+        - name: SCK_TABLE_PREFIX
+          value: "{{ .Values.sckTablePrefix }}"
+        - name: SCK_TEMPLATE_PROVIDER
+          value: "{{ .Values.serviceUrl }}/lpd_archive_provider/TemplateProvider"
+        - name: SCK_USER_GUIDE_FOLDER
+          value: /lpd/templates/userguide
+        - name: SCK_USER_GUIDE_PROVIDER
+          value: "{{ .Values.serviceUrl }}/lpd_archive_provider/UserGuideProvider"
+        - name: mail_smtp_host
+          value: "{{ .Values.mailSmtpHost }}"
+        - name: mail_smtp_user
+          value: "{{ .Values.mailSmtpUser | default .Values.defaultMailAddress }}"
+
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
+        securityContext:
+          {{- toYaml .Values.securityContext | nindent 12 }}
+        volumeMounts:
+        - mountPath: /lpd
+          name: {{ .Release.Name }}-lpd
+
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+
+      volumes:
+      - name: {{ .Release.Name }}-lpd
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-lpd

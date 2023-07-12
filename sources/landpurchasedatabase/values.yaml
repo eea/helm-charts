@@ -1,0 +1,164 @@
+# Default values
+
+replicaCount: 1
+
+image:
+  repository: eeacms/lpd
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceUrl: https://lpd.eea.europa.eu
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+podSecurityContext: {}
+securityContext: {}
+
+dbconnectionPassword: replaceme
+dbconnectionUrl: replaceme
+dbconnectionUsername: replaceme
+
+lpdExtractSpatialDataService: replaceme
+lpdPrintService: replaceme
+lpdSearchLayer: replaceme
+
+mailSmtpHost: replaceme
+mailSmtpUser: EASME-LIFE-LPD@ec.europa.eu
+defaultMailAddress: EASME-LIFE-LPD@ec.europa.eu
+
+sckAuth: replaceme
+sckBackgroundLayer: replaceme
+
+sckBeneficiaryAccessActivationTokenValidity: '10'
+sckBeneficiaryAccessValidity: '180'
+sckBeneficiaryFeatureLayerUrl: replaceme
+sckBeneficiaryPublicLayer: replaceme
+sckBingKey: changeme
+
+sckLdapBaseContext: replaceme
+sckLdapUid: uid=
+sckLdapUrl: replaceme
+
+sckMailOutcopy: ""
+sckMailQc: ""
+sckMailStmpFromForBenef: ""
+sckReportSupportMail: ""
+sckShapefileImportServiceUrl: replaceme
+sckSpatialReference: '3857'
+sckSuperAdmin: replaceme
+sckTablePrefix: LPD_2020.DBO
+
+timezone: Europe/Copenhagen
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+  className: "nginx"
+  annotations:
+    nginx.ingress.kubernetes.io/app-root: /lpd_web/pages/login/beneficiary.xhtml
+  hosts:
+    - host: lpd.eea.europa.eu
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: ''
+      hosts:
+        - lpd.eea.europa.eu
+
+resources:
+  requests:
+    memory: 256Mi
+  limits:
+    memory: 1Gi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+nextcloud:
+  image: eeacms/nextcloud:25.0.6-apache
+  adminPassword: replaceme
+  adminUser: replaceme
+  trustedProxies: replaceme
+  securityContext: {}
+  resources:
+    requests:
+      memory: 256Mi
+    limits:
+      memory: 1Gi
+
+  ingress:
+    enabled: false
+    className: ""
+    annotations:
+      nginx.ingress.kubernetes.io/configuration-snippet: |
+        more_set_headers 'X-XSS-Protection: 1; mode=block'
+          'X-Robots-Tag: noindex, nofollow'
+          'X-Frame-Options: SAMEORIGIN'
+          'Referrer-Policy: no-referrer';
+      nginx.ingress.kubernetes.io/server-snippet: |
+        location /.well-known/carddav {
+          rewrite ^/.well-known/carddav?$ /remote.php/dav break;
+        }
+        location /.well-known/caldav {
+          rewrite ^/.well-known/caldav?$ /remote.php/dav break;
+        }
+        location /.well-known/webfinger {
+          rewrite ^/.well-known/webfinger?$ /index.php/.well-known/webfinger break;
+        }
+
+# Rules from HAProxy that must be integrated.
+#backend lpd
+#  acl is_root path -i /
+#    redirect code 301 location /lpd_web/pages/login/beneficiary.xhtml if is_root
+#
+#backend lpddata
+#  http-response set-header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+#  http-response set-header X-Content-Type-Options "nosniff"
+#  http-response set-header X-XSS-Protection "1; mode=block"
+#  http-response set-header X-Robots-Tag "noindex, nofollow"
+#  http-response set-header X-Frame-Options "SAMEORIGIN"
+#  http-response set-header Referrer-Policy "no-referrer"
+#
+#  http-request set-path %[path,regsub(^/.well-known/carddav,/remote.php/dav,)]  if { path path_beg /.well-known/carddav }
+#  http-request set-path %[path,regsub(^/.well-known/caldav,/remote.php/dav,)]  if { path path_beg /.well-known/caldav } 
+#  http-request set-path %[path,regsub(^/.well-known/webfinger,/index.php/.well-known/webfinger,)]  if { path path_beg /.well-known/webfinger }
+#  http-request set-path %[path,regsub(^/.well-known/nodeinfo,/index.php/.well-known/nodeinfo,)]  if { path path_beg /.well-known/webfinger }
+
+    hosts:
+      - host: lpddata.eea.europa.eu
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - secretName: ''
+        hosts:
+          - lpddata.eea.europa.eu
+
+cron:
+  securityContext: {}
+  resources:
+    requests:
+      memory: 256Mi
+    limits:
+      memory: 1Gi
+
