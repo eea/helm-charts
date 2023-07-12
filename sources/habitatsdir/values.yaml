@@ -59,6 +59,7 @@ ldap:
 
 # staticPath is used in the nginx configuration
 staticPath: /article1X/static
+scriptName: /article1X
 
 ingress:
   enabled: false
@@ -85,9 +86,7 @@ resources:
     memory: 256Mi
 
 nodeSelector: {}
-
 tolerations: []
-
 affinity: {}
 
 static:

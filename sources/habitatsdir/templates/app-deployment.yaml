@@ -118,7 +118,7 @@ spec:
           value: eionet.europa.eu
 
         - name: SCRIPT_NAME
-          value: /article17
+          value: "{{ .Values.scriptName }}"
         - name: SECRET_KEY
           value: "{{ .Values.secretKey }}"
         - name: SERVER_NAME
