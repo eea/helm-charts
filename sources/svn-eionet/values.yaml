@@ -36,7 +36,9 @@ service:
 ingress:
   enabled: false
   className: "nginx"
-  annotations: {}
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: 50m
+
   hosts:
     - host: svn.eionet.europa.eu
       paths:
