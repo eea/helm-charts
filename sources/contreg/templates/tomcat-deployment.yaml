@@ -75,6 +75,9 @@ spec:
             "-Djava.security.egd=file:/dev/./urandom"
             "-Dconfig.application.displayName={{ .Values.displayName }}"
             "-Dconfig.app.home={{ .Values.appHome }}"
+            {{- if .Values.useEeaTemplate }}
+            "-Dconfig.useEeaTemplate=true"
+            {{- end }}
             "-Dmail.transport.protocol=smtp"
             "-Dmail.store.protocol=smtp"
             "-Dconfig.mail.host={{ .Values.mailHost }}"
