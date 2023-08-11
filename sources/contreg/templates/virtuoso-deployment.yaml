@@ -74,12 +74,14 @@ spec:
         securityContext:
           {{- toYaml .Values.virtuoso.securityContext | nindent 12 }}
 
+        {{- if .Values.virtuoso.healthCheck }}
         livenessProbe:
           tcpSocket:
             port: sqlport
           periodSeconds: 60
           timeoutSeconds: 10
           successThreshold: 1
+        {{- end }}
 
         startupProbe:
           tcpSocket:
