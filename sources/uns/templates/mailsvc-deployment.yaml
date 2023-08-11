@@ -32,17 +32,17 @@ spec:
           protocol: TCP
         env:
         - name: LOGSPOUT
-          value: "{{ .Values.mailfwd.logspout }}"
+          value: "{{ .Values.mailfwd.env.logspout }}"
         - name: MTP_HOST
-          value: "{{ .Values.mailfwd.host }}"
+          value: "{{ .Values.mailfwd.env.host }}"
         - name: MTP_PASS
-          value: "{{ .Values.mailfwd.pass }}"
+          value: "{{ .Values.mailfwd.env.pass }}"
         - name: MTP_PORT
-          value: "{{ .Values.mailfwd.port }}"
+          value: "{{ .Values.mailfwd.env.port }}"
         - name: MTP_RELAY
-          value: "{{ .Values.mailfwd.relay }}"
+          value: "{{ .Values.mailfwd.env.relay }}"
         - name: MTP_USER
-          value: "{{ .Values.mailfwd.user }}"
+          value: "{{ .Values.mailfwd.env.user }}"
         - name: TZ
           value: "{{ .Values.timezone }}"
         resources:
