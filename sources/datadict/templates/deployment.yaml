@@ -77,12 +77,12 @@ spec:
               '-Denv.uns.url={{ .Values.unsUrl }}'
               '-Denv.uns.rest.username={{ .Values.unsUsername }}'
               '-Denv.uns.rest.password={{ .Values.unsPwd }}'
-              '-Dconfig.ldap.url={{ .Values.ldap.url }}'
-              '-Dconfig.ldap.principal={{ .Values.ldap.principal }}'
-              '-Dconfig.ldap.password={{ .Values.ldap.password }}'
-              '-Dconfig.ldap.context={{ .Values.ldap.context }}'
-              '-Dconfig.ldap.role.dir={{ .Values.ldap.roleDir }}'
-              '-Dconfig.ldap.user.dir={{ .Values.ldap.userDir }}'
+              '-Denv.ldap.url={{ .Values.ldap.url }}'
+              '-Denv.ldap.principal={{ .Values.ldap.principal }}'
+              '-Denv.ldap.password={{ .Values.ldap.password }}'
+              '-Denv.ldap.context={{ .Values.ldap.context }}'
+              '-Denv.ldap.role.dir={{ .Values.ldap.roleDir }}'
+              '-Denv.ldap.user.dir={{ .Values.ldap.userDir }}'
 
           volumeMounts:
           - mountPath: /opt/datadict
