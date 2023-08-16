@@ -1,11 +1,14 @@
 Learning for EEAcademy
 ======================
 
-This chart is configured for production.
+This chart is configured for production, but Ingress is disabled by default.
 
 ## Releases
 
 <dl>
+
+  <dt>Version 0.3.2</dt>
+  <dd>Added icon.</dd>
 
   <dt>Version 0.3.1</dt>
   <dd>Added liveness probe.</dd>

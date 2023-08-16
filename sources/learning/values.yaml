@@ -66,24 +66,3 @@ tolerations: []
 
 affinity: {}
 
-admin:
-  image: eeacms/centos7dev:2.2.4
-  securityContext: {}
-    # capabilities:
-    #   drop:
-    #   - ALL
-    # readOnlyRootFilesystem: true
-    # runAsNonRoot: true
-    # runAsUser: 999
-  resources:
-    requests:
-      memory: 128Mi
-  #   cpu: 100m
-    limits:
-      memory: 512Mi
-  #   cpu: 100m
-  command: []
-#   - /bin/sh
-#   - arg1
-#   - arg2
-
