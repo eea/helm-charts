@@ -35,6 +35,11 @@ spec:
           value: "en_US.UTF-8"
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
+        livenessProbe:
+          tcpSocket:
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 20
         securityContext:
           {{- toYaml .Values.securityContext | nindent 12 }}
         volumeMounts:
