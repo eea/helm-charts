@@ -178,5 +178,20 @@ spec:
 
       volumes:
       - name: {{ .Release.Name }}-ldapdb
+        {{- if contains "syncconsumer" .Values.role }}
+        ephemeral:
+          volumeClaimTemplate:
+            metadata:
+              labels:
+                {{- include "appl.labels" . | nindent 16 }}
+                component: ldapdb
+            spec:
+              accessModes:
+              - ReadWriteOnce
+              resources:
+                requests:
+                  storage: 1Gi
+        {{- else }}
         persistentVolumeClaim:
           claimName: {{ .Release.Name }}-ldapdb
+      {{- end }}
