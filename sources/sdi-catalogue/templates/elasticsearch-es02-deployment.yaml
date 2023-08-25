@@ -1,0 +1,90 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: elasticsearch-es02
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: elasticsearch-es02
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: elasticsearch-es02
+  strategy:
+    type: Recreate
+
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: elasticsearch-es02
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
+      initContainers:
+      - name: sysctl-1
+        image: rawmind/alpine-sysctl:0.2-1
+        env:
+        - name: SYSCTL_KEY
+          value: vm.max_map_count
+        - name: SYSCTL_VALUE
+          value: "262144"
+        resources: {}
+        securityContext:
+          privileged: true
+
+      containers:
+      - name: elasticsearch-es02
+        image: docker.elastic.co/elasticsearch/elasticsearch:7.17.0
+        env:
+        - name: ELASTIC_PASSWORD
+          value: {{ .Values.elasticsearch.password }}
+        - name: ES_JAVA_OPTS
+          value: -Xms1G -Xmx1G
+        - name: bootstrap.memory_lock
+          value: "false"
+        - name: cluster.initial_master_nodes
+          value: elasticsearch,elasticsearch-es02
+        - name: cluster.name
+          value: sdi-es-cluster
+        - name: discovery.seed_hosts
+          value: elasticsearch-es02
+        - name: node.name
+          value: elasticsearch-es02
+        - name: xpack.security.enabled
+          value: "false"
+        - name: xpack.security.http.ssl.enabled
+          value: "false"
+        ports:
+        - containerPort: 9200
+        - containerPort: 9300
+        resources:
+          {{- toYaml .Values.elasticsearch.resources | nindent 10 }}
+        volumeMounts:
+        - mountPath: /usr/share/elasticsearch/data
+          name: sdi-esdata-node1
+
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+
+      volumes:
+      - name: sdi-esdata-node1
+        persistentVolumeClaim:
+          claimName: sdi-esdata-node1

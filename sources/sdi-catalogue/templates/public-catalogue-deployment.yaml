@@ -1,0 +1,87 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: public-catalogue
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: public-catalogue
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: public-catalogue
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: public-catalogue
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      containers:
+      - name: public-catalogue
+        image: eeacms/eea-geonetwork:5e5bf9f0a151c4127a8bbd1321ffc0410e132569
+        env:
+        - name: CATALOGUE
+          value: catalogue
+        - name: DATABASE
+          value: {{ .Values.geonetworkdb.database }}
+        - name: ES_HOST
+          value: elasticsearch
+        - name: ES_INDEX_RECORDS
+          value: gn-records
+        - name: ES_PORT
+          value: "9200"
+        - name: ES_PROTOCOL
+          value: http
+        - name: GEONETWORK_MICROSERVICESPROXY_TARGETURI
+          value: http://ogcapi:8080
+        - name: JAVA_OPTIONS
+          value: '-Djava.security.egd=file:/dev/./urandom -Djava.awt.headless=true -Xms512M -Xss512M -Xmx1G -XX:+UseConcMarkSweepGC -Dgeonetwork.dir=/catalogue-data -Dgeonetwork.db.type=postgres -Dgeonetwork.schema.dir=/var/lib/jetty/webapps/catalogue/WEB-INF/data/config/schema_plugins -Dgeonetwork.formatter.dir=/catalogue-data/data/formatter -Dgeonetwork.indexConfig.dir=/var/lib/jetty/webapps/catalogue/WEB-INF/data/config/index -Dgeonetwork.resources.dir=/catalogue-data/resources -Dorg.eclipse.jetty.annotations.AnnotationParser.LEVEL=OFF'
+        - name: HOST
+          value: postgres-geonetwork
+        - name: PORT
+          value: "5432"
+        - name: PASSWORD
+          value: {{ .Values.geonetworkdb.password }}
+        - name: USERNAME
+          value: {{ .Values.geonetworkdb.username }}
+
+        ports:
+        - containerPort: 8080
+        resources:
+          {{- toYaml .Values.publicCatalogue.resources | nindent 10 }}
+        volumeMounts:
+        - mountPath: /catalogue-data
+          name: sdi-public-catalogue-data
+        - mountPath: /resources
+          name: sdi-public-catalogue-resources
+
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+
+      volumes:
+      - name: sdi-public-catalogue-data
+        persistentVolumeClaim:
+          claimName: sdi-public-catalogue-data
+      - name: sdi-public-catalogue-resources
+        persistentVolumeClaim:
+          claimName: sdi-public-catalogue-resources

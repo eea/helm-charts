@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nextcloud-cron
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: nextcloud-cron
+
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: nextcloud-cron
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: nextcloud-cron
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      containers:
+      - name: nextcloud-cron
+        image: eeacms/nextcloud:25.0.6-apache
+        command:
+        - /cron.sh
+        env:
+        - name: MYSQL_DATABASE
+          value: {{ .Values.nextclouddb.database }}
+        - name: MYSQL_PASSWORD
+          value: {{ .Values.nextclouddb.password }}
+        - name: MYSQL_USER
+          value: {{ .Values.nextclouddb.user }}
+        - name: NEXTCLOUD_ADMIN_PASSWORD
+          value: {{ .Values.nextcloud.adminPassword }}
+        - name: NEXTCLOUD_ADMIN_USER
+          value: {{ .Values.nextcloud.adminUser }}
+        - name: TZ
+          value: Europe/Copenhagen
+        resources:
+          {{- toYaml .Values.nextcloudCron.resources | nindent 10 }}
+        tty: true
+        volumeMounts:
+        - mountPath: /var/www/html
+          name: sdi-nextcloud-app
+        - mountPath: /var/local/gis_sdi
+          name: gis-sdi
+        - mountPath: /usr/local/apache2/htdocs
+          name: sdi-apache-www
+
+      restartPolicy: Always
+
+      volumes:
+      - name: sdi-nextcloud-app
+        persistentVolumeClaim:
+          claimName: sdi-nextcloud-app
+      - name: gis-sdi
+        persistentVolumeClaim:
+          claimName: gis-sdi
+      - name: sdi-apache-www
+        persistentVolumeClaim:
+          claimName: sdi-apache-www

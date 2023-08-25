@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: filebeat
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: filebeat
+
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: filebeat
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: filebeat
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      containers:
+      - name: filebeat
+        image: eeacms/sdi-filebeat:7.9.3
+        env:
+        - name: ELASTICSEARCH_HOST
+          value: elasticsearch:9200
+        - name: GEONETWORK_PASSWORD
+          value: {{ .Values.geoserver.password }}
+        - name: GEONETWORK_USERNAME
+          value: {{ .Values.geoserver.username }}
+        - name: KIBANA_HOST
+          value: {{ .Values.serverUrl }}
+        resources:
+          {{- toYaml .Values.filebeat.resources | nindent 10 }}
+        volumeMounts:
+        - mountPath: /var/log/apache
+          name: sdi-apache-log
+          readOnly: true
+
+      restartPolicy: Always
+
+      volumes:
+      - name: sdi-apache-log
+        persistentVolumeClaim:
+          claimName: sdi-apache-log
+          readOnly: true

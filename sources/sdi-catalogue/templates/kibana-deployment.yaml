@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kibana
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: kibana
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: kibana
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: kibana
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      containers:
+      - name: kibana
+        image: docker.elastic.co/kibana/kibana:7.17.0
+        env:
+        - name: ELASTICSEARCH_URL
+          value: http://elasticsearch:9200/
+        - name: KIBANA_INDEX
+          value: .dashboards
+        - name: SERVER_BASEPATH
+          value: /catalogue/dashboards
+        - name: SERVER_MAXPAYLOADBYTES
+          value: "1048576000"
+        - name: SERVER_NAME
+          value: kibana
+        - name: SERVER_REWRITEBASEPATH
+          value: "false"
+        - name: XPACK_MONITORING_UI_CONTAINER_ELASTICSEARCH_ENABLED
+          value: "true"
+        resources:
+          {{- toYaml .Values.kibana.resources | nindent 10 }}
+        ports:
+        - containerPort: 5601
+
+      restartPolicy: Always

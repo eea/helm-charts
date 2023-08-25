@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-cacrts
+
+# Apache complains if the ca-bundle is empty
+# The server.crt is identical to *.eea.europa.eu cert.
+data:
+  ca-bundle.crt: |-
+    {{ .Files.Get "sslcerts/server.crt" | nindent 4 }}
+    {{ .Files.Get "sslcerts/chain.crt" | nindent 4 }}
+  chain.crt: |-
+    {{ .Files.Get "sslcerts/chain.crt" | nindent 4 }}

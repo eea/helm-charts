@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: samba
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: samba
+  annotations:
+    {{- toYaml .Values.samba.service.annotations | nindent 4 }}
+
+spec:
+  type: {{ .Values.samba.service.type }}
+  ports:
+  - name: netbios
+    port: 139
+    targetPort: 139
+  - name: "ds"
+    port: 445
+    targetPort: 445
+  - name: "ldap"
+    port: 389
+    targetPort: 389
+  selector:
+    {{- include "appl.selectorLabels" . | nindent 4 }}
+    component: samba

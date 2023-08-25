@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: sdi-public-catalogue-resources
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: sdi-public-catalogue-resources
+  annotations:
+    "helm.sh/resource-policy": keep
+
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 200Mi

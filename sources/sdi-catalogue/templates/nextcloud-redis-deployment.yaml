@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nextcloud-redis
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: nextcloud-redis
+
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: nextcloud-redis
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: nextcloud-redis
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      containers:
+      - name: nextcloud-redis
+        image: redis:6.2.12-alpine
+        resources: {}
+        volumeMounts:
+        - mountPath: /data
+          name: sdi-nextcloud-redis
+        ports:
+        - containerPort: 6379
+
+      restartPolicy: Always
+
+      volumes:
+      - name: sdi-nextcloud-redis
+        persistentVolumeClaim:
+          claimName: sdi-nextcloud-redis

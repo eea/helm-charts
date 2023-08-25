@@ -1,0 +1,85 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres-geonetwork
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: postgres-geonetwork
+
+spec:
+  replicas: 1
+  serviceName: {{ .Release.Name }}-pggn
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: postgres-geonetwork
+
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: postgres-geonetwork
+    spec:
+      terminationGracePeriodSeconds: 10
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
+      containers:
+      - name: postgres-geonetwork
+        image: postgres:13.1
+        env:
+        - name: POSTGRES_PASSWORD
+          value: {{ .Values.geonetworkdb.psqlpw }}
+        ports:
+        - containerPort: 5432
+          protocol: TCP
+        resources:
+           {{- toYaml .Values.geonetworkdb.resources | nindent 10 }}
+        volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          name: sdi-geonetwork-postgres
+
+        - mountPath: /ssl/server.key
+          name: eea-certificate
+          readOnly: true
+          subPath: tls.key
+        - mountPath: /ssl/server.crt
+          name: eea-certificate
+          readOnly: true
+          subPath: tls.crt
+        - mountPath: /ssl/ca-bundle.crt
+          name: ca-certificates
+          readOnly: true
+          subPath: ca-bundle.crt
+
+        livenessProbe:
+          tcpSocket:
+            port: 5432
+          initialDelaySeconds: 15
+          periodSeconds: 20
+
+      restartPolicy: Always
+      volumes:
+      - name: eea-certificate
+        secret:
+          defaultMode: 0444
+          optional: false
+          secretName: star-eea-europa-eu
+      - name: ca-certificates
+        configMap:
+          defaultMode: 0444
+          optional: false
+          name: {{ .Release.Name }}-cacrts
+
+  volumeClaimTemplates:
+  - metadata:
+      name: sdi-geonetwork-postgres
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: "{{ .Values.geonetworkdb.storage }}"

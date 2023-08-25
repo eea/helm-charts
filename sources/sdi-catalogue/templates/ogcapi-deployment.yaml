@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ogcapi
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: ogcapi
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: ogcapi
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: ogcapi
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
+      containers:
+      - name: ogcapi
+        image: geonetwork/gn-cloud-ogc-api-records-service:4.2.2
+        ports:
+        - containerPort: 8080
+        env:
+        - name: JAVA_OPTS
+          value: -Dfile.encoding=UTF-8
+        - name: SPRING_CONFIG_LOCATION
+          value: /ogcapiconfig/
+        - name: SPRING_PROFILES_ACTIVE
+          value: standalone
+        resources:
+          {{- toYaml .Values.ogcapi.resources | nindent 10 }}
+
+        livenessProbe:
+          tcpSocket:
+            port: 8080
+          initialDelaySeconds: 15
+          periodSeconds: 20
+
+        volumeMounts:
+        - mountPath: /ogcapiconfig
+          name: sdi-ogcapi-config
+
+      restartPolicy: Always
+
+      volumes:
+      - name: sdi-ogcapi-config
+        configMap:
+          name: sdi-ogcapi-config

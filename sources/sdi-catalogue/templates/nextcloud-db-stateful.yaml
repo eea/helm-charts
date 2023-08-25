@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: nextcloud-db
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: nextcloud-db
+
+spec:
+  replicas: 1
+  serviceName: {{ .Release.Name }}-ncdb
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: nextcloud-db
+
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: nextcloud-db
+    spec:
+      terminationGracePeriodSeconds: 10
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
+      containers:
+      - name: nextcloud-db
+        image: mariadb:10.5
+        env:
+        - name: MYSQL_DATABASE
+          value: {{ .Values.nextclouddb.database }}
+        - name: MYSQL_PASSWORD
+          value: {{ .Values.nextclouddb.password }}
+        - name: MYSQL_ROOT_PASSWORD
+          value: {{ .Values.nextclouddb.rootPW }}
+        - name: MYSQL_USER
+          value: {{ .Values.nextclouddb.user }}
+        resources:
+           {{- toYaml .Values.nextclouddb.resources | nindent 10 }}
+        volumeMounts:
+        - mountPath: /var/lib/mysql
+          name: sdi-nextcloud-db
+
+        livenessProbe:
+          tcpSocket:
+            port: 3306
+          initialDelaySeconds: 15
+          periodSeconds: 20
+
+      restartPolicy: Always
+
+  volumeClaimTemplates:
+  - metadata:
+      name: sdi-nextcloud-db
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: "{{ .Values.nextclouddb.storage }}"

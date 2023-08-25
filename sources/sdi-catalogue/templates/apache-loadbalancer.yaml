@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: apache
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: apache
+  annotations:
+    {{- toYaml .Values.apache.service.annotations | nindent 4 }}
+
+spec:
+  type: {{ .Values.apache.service.type }}
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+      protocol: TCP
+    - name: https
+      port: 443
+      targetPort: 443
+  selector:
+    {{- include "appl.selectorLabels" . | nindent 4 }}
+    component: apache

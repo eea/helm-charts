@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: elasticsearch
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: elasticsearch
+spec:
+  type: ClusterIP
+  ports:
+  - name: elasticsearch
+    port: 9200
+    targetPort: 9200
+  - name: cluster 
+    port: 9300
+    targetPort: 9300
+  selector:
+    {{- include "appl.selectorLabels" . | nindent 4 }}
+    component: elasticsearch

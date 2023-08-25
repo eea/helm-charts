@@ -1,0 +1,141 @@
+serverName: sdi.eea.europa.eu
+# Number is required for filebeat and metricbeat.
+serverUrl: https://sdi.eea.europa.eu:443
+
+image:
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+
+securityContext: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+apache:
+  resources:
+    requests:
+      memory: 64Mi
+    limits:
+      memory: 128Mi
+  serverAdmin: helpdesk@eea.europa.eu
+  service:
+    type: ClusterIP
+    annotations: {}
+#     metallb.universe.tf/allow-shared-ip: "sdi-catalogue"
+
+cron:
+  resources: {}
+
+elasticsearch:
+  password: changeme
+  resources:
+    requests:
+      memory: 3Gi
+    limits:
+      memory: 3Gi
+
+filebeat:
+  resources: {}
+
+geonetworkdb:
+  database: geonetwork_sdi
+  user: ''
+  psqlpw: ''
+  password: ''
+  resources:
+    requests:
+      memory: 1600Mi
+    limits:
+      memory: 1600Mi
+  storage: 4Gi
+
+geoserver:
+  password: ''
+  username: ''
+
+kibana:
+  resources: {}
+
+metricbeat:
+  resources: {}
+
+nextcloud:
+  adminUser: ''
+  adminPassword: ''
+  trustedProxies: '10.0.0.1'
+  resources: {}
+
+nextclouddb:
+  database: ncdb
+  user: ''
+  password: ''
+  rootPW: ''
+  resources:
+    requests:
+      memory: 5Gi
+    limits:
+      memory: 5Gi
+  storage: 4Gi
+
+nextcloudCron:
+  resources:
+    requests:
+      memory: 2Gi
+    limits:
+      memory: 2Gi
+
+ogcapi:
+  resources: {}
+
+proftpd:
+  service:
+    type: ClusterIP
+    annotations: {}
+  resources:
+    requests:
+      memory: 64Mi
+    limits:
+      memory: 128Mi
+  users: []
+
+publicCatalogue:
+  resources:
+    requests:
+      memory: 2Gi
+    limits:
+      memory: 4Gi
+
+samba:
+  enabled: true
+  service:
+    type: ClusterIP
+    annotations: {}
+  centralLdapPassword: ''
+  centralLdapUrl: ldap3.eionet.europa.eu
+  slapdDomain: eea.europa.eu
+  slapdPassword: ''
+  resources: {}
+
+validator:
+  resources: {}

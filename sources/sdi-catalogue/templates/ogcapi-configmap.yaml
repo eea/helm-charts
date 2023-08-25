@@ -1,0 +1,232 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sdi-ogcapi-config
+
+data:
+  bootstrap.yml: |-
+    server:
+      port: 8080
+      #address: ogcapi
+      #forward-headers-strategy: NATIVE
+      forward-headers-strategy: FRAMEWORK
+      servlet:
+        #context-path: /ogcapi
+        encoding:
+          charset: UTF-8
+          force-response: true
+      instance-id: ${spring.application.name}:${spring.application.instance_id:${spring.cloud.client.ip-address}}:${server.port}
+    spring:
+      application.name: ogc-records-service
+      main.banner-mode: off
+      cloud:
+        loadbalancer.ribbon.enabled: false # ribbon is in maintenance mode and should be replaced by spring-cloud-loadbalancer
+        config:
+          fail-fast: true
+          retry:
+            max-attempts: 20
+          discovery:
+            enabled: true
+            service-id: config-service
+
+    eureka:
+      instance:
+        hostname: ${spring.application.name}
+        instance-id: ${server.instance-id}
+        preferIpAddress: true
+        lease-expiration-duration-in-seconds: 30
+        lease-renewal-interval-in-seconds: 30
+      client:
+        enabled: true
+        registerWithEureka: true
+        fetchRegistry: true
+        registry-fetch-interval-seconds: 30
+        serviceUrl:
+          defaultZone: ${eureka.server.url:http://localhost:8761/eureka}
+        healthcheck:
+          enabled: true
+
+    ---
+    # Use this profile when running on a GN4 database on localhost and Elasticsearch index.
+    # Turn off security, config & discover.
+    spring:
+      profiles: standalone
+      rabbitmq.host: localhost
+      datasource:
+        driver-class-name: org.postgresql.Driver
+        url: jdbc:postgresql://postgres-geonetwork:5432/{{ .Values.geonetworkdb.database }}
+        username: {{ .Values.geonetworkdb.username }}
+        password: {{ .Values.geonetworkdb.password }}
+      jpa:
+        database-platform: org.hibernate.dialect.PostgreSQLDialect
+        jpa.generate-ddl: false
+        jpa.hibernate.ddl-auto: none
+      cloud:
+        config:
+          discovery:
+            enabled: false
+          enabled: false
+    management:
+      health.ldap.enabled: false
+    eureka:
+      client:
+        enabled: false
+        registerWithEureka: false
+        fetch-registry: false
+    gn:
+      baseurl: {{ .Values.serverUrl }}/catalogue/api
+      language:
+        default: eng
+      linkToLegacyGN4: true
+      legacy.url: {{ .Values.serverUrl }}/catalogue
+      index:
+        url: http://elasticsearch:9200
+        records: gn-records
+        username:
+        password:
+      search:
+        queryFilter: '+isTemplate:n AND -indexingError:true'
+        queryBase: '(any.\*:(${any}) OR resourceTitleObject.\*:(${any})^2)'
+        trackTotalHits: true
+        scoreConfig: >
+          {
+            "boost": "5",
+            "functions": [
+              { // Boost down member of a series
+                "filter": { "exists": { "field": "parentUuid" } },
+                "weight": 0.3
+              },
+              { // Boost down obsolete records
+                "filter": { "match": { "cl_status.key": "obsolete" } },
+                "weight": 0.3
+              },
+              {
+                "gauss": {
+                  "dateStamp": {
+                    "scale": "365d",
+                    "offset": "90d",
+                    "decay": 0.5
+                  }
+                }
+              }
+            ],
+            "score_mode": "multiply"
+          }
+        sortables:
+          - "relevance"
+          - "createDate:desc"
+          - "resourceTitleObject.default.keyword"
+          - "rating:desc"
+          - "popularity:desc"
+        formats:
+          - name: html
+            mimeType: text/html
+            responseProcessor: JsonUserAndSelectionAwareResponseProcessorImpl
+            operations:
+              - root
+              - conformance
+              - collections
+              - collection
+              - items
+              - item
+          -
+            name: xml
+            mimeType: application/xml
+            responseProcessor: XmlResponseProcessorImpl
+            operations:
+              - root
+              - collections
+              - collection
+              - items
+              - item
+          -
+            name: json
+            mimeType: application/json
+            responseProcessor: JsonUserAndSelectionAwareResponseProcessorImpl
+            operations:
+              - root
+              - conformance
+              - collections
+              - collection
+              - items
+              - item
+          -
+            name : gn
+            mimeType : application/gn+xml
+            responseProcessor: XsltResponseProcessorImpl
+          -
+            name: opensearch
+            mimeType: application/opensearchdescription+xml
+            operations:
+              - collection
+          -
+            name : schema.org
+            mimeType : application/ld+json
+            responseProcessor: JsonLdResponseProcessorImpl
+            operations:
+              - items
+              - item
+          -
+            name: dcat
+            mimeType: application/rdf+xml
+            responseProcessor: DcatCatalogResponseProcessorImpl
+            operations:
+              - items
+              - item
+          -
+            name : dcat_turtle
+            mimeType : text/turtle
+            responseProcessor: JsonUserAndSelectionAwareResponseProcessorImpl
+            operations :
+              - item
+          #      -
+          #        name : iso19139
+          #        mimeType : application/iso19139+xml
+          #        responseProcessor: XsltResponseProcessorImpl
+          #      -
+          #        name : iso19115-3
+          #        mimeType : application/iso19115-3+xml
+          #        responseProcessor: XsltResponseProcessorImpl
+          -
+            name : rss
+            mimeType : application/rss+xml
+            responseProcessor: RssResponseProcessorImpl
+            operations:
+              - items
+          -
+            name : geojson
+            mimeType : application/geo+json
+            responseProcessor: GeoJsonResponseProcessorImpl
+            operations:
+              - items
+              - item
+        defaultMimeType: text/html
+        sources:
+          - "resourceTitleObject"
+          - "resourceAbstractObject"
+          - "resourceType"
+          - "overview"
+          - "uuid"
+          - "schema"
+          - "link"
+          - "allKeywords"
+          - "contactForResource"
+          - "cl_status"
+          - "edit"
+
+
+    metadata:
+      license:
+        name: GNU General Public License v2.0
+        url: https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html
+
+    springfox:
+      documentation:
+        swaggerUi:
+          baseUrl: /catalogue/api/openapi
+        openApi:
+          v3:
+            path: /catalogue/api/openapi/v3/api-docs
+        swagger:
+          v2:
+            path: /catalogue/api/openapi/v2/api-docs
