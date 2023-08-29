@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-swagger
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: test
+  annotations:
+    "helm.sh/hook": test
+    "helm.sh/hook-delete-policy": "hook-succeeded"
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args:
+      - -S
+      - http://public-catalogue:8080/catalogue/doc/api/index.html
+  restartPolicy: Never

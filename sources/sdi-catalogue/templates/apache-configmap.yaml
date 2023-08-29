@@ -1,0 +1,301 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sdi-apache-config
+
+data:
+  ssl.conf: |
+    Listen 443
+
+    LDAPVerifyServerCert Off
+    Header always set Strict-Transport-Security "max-age=15768000; includeSubDomains;"
+    Header set X-Content-Type-Options nosniff
+    #Header always set X-Frame-Options SAMEORIGIN
+
+    #Header set X-Frame-Options SAMEORIGIN
+    #Header always set X-Frame-Options "ALLOW-FROM https://*.eea.europa.eu/"
+    Header set X-XSS-Protection "1; mode=block"
+
+    Header set Content-Security-Policy "upgrade-insecure-requests"
+    Header set Content-Security-Policy "frame-ancestors 'self' https://*.eea.europa.eu"
+    Header set Content-Security-Policy "default-src 'none'"
+    #'self' https://*.eea.europa.eu"
+    Header set Content-Security-Policy "base-uri 'none'"
+    Header set Content-Security-Policy "form-action 'self' https://*.eea.europa.eu"
+    Header set Content-Security-Policy "connect-src 'self' https://*.openstreetmap.org https://*.eea.europa.eu"
+    Header set Content-Security-Policy "font-src 'self' data: https://fonts.gstatic.com https://*.eea.europa.eu"
+    Header set Content-Security-Policy "frame-src 'self' https://*.europa.eu https://europa.eu https://*.eea.europa.eu"
+    Header set Content-Security-Policy "img-src https: blob: data:"
+    Header set Content-Security-Policy "script-src 'self' https://*.eea.europa.eu"
+    #https://openlayers.org https://www.google.com/jsapi https://www.google.com/uds https://www.gstatic.com https://spreadsheets.google.com https://docs.google.com https://*.eea.europa.eu"
+    Header set Content-Security-Policy "object-src 'self'"
+    Header set Content-Security-Policy "style-src 'self' https://openlayers.org https://www.google.com/uds https://ajax.googleapis.com https://www.gstatic.com https://*.eea.europa.eu"
+    Header set Content-Security-Policy "report-uri https://sentry.eea.europa.eu/api/22/security/?sentry_key=c2d7a7ca8deb46909d3bfc1bd468eb3d"
+
+    RequestHeader set X-HTTPS 1
+    Header always set Referrer-Policy "same-origin"
+    Header always set Feature-Policy "fullscreen 'none'; microphone 'none'"
+
+    #                 *:443
+    SSLProtocol all -TLSv1.1 -TLSv1 -SSLv2 -SSLv3
+    SSLOpenSSLConfCmd Curves X25519:secp521r1:secp384r1:prime256v1
+
+    SSLCipherSuite EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH:!DES-CBC3-SHA:!ECDHE-RSA-DES-CBC3-SHA
+    SSLHonorCipherOrder on
+
+    LDAPSharedCacheSize 500000
+    LDAPCacheEntries 1024
+    LDAPCacheTTL 600
+    LDAPOpCacheEntries 1024
+    LDAPOpCacheTTL 600
+    ServerName {{ .Values.serverName }}
+
+    <VirtualHost *:443>
+        Protocols h2 h2c http/1.1
+        SSLEngine on
+        SSLCertificateFile    /ssl/server.crt
+        SSLCertificateKeyFile /ssl/server.key
+        SSLCACertificateFile /ssl/ca-bundle.crt
+        #ServerName {{ .Values.serverName }}
+        ServerAdmin sysadm@eea.europa.eu
+
+
+      #<If "%{HTTP_HOST} == '{{ .Values.serverName }}'">
+      #  Redirect permanent / https://{{ .Values.serverName }}/
+      #</If>
+
+        ErrorLog /var/log/apache/logs/error_log
+        CustomLog /var/log/apache/logs/access_log combined
+
+        <Directory />
+           Options FollowSymLinks 
+           AllowOverride None
+           Allow from all
+           Require all granted
+        </Directory>
+
+        <Location /server-status>
+           SetHandler server-status
+
+           <RequireAny>
+             Require ip 10.50.0.0/16
+             Require ip 10.92.0.0/16
+           </RequireAny>
+
+        </Location>
+
+        Redirect /internal-catalogue /catalogue
+        RewriteEngine On  
+        RewriteRule ^/catalogue/srv/(.*)/csw-(.*) /catalogue/$2/eng/csw  [L,R]
+     
+        <Location /catalogue>
+            ProxyPreserveHost On
+            AllowOverride None
+
+            ## Reverse proxy configuration
+            ProxyPreserveHost On
+            <IfModule mod_headers.c>
+    #         RequestHeader unset Authorization
+              # <if "%{REMOTE_HOST} == 'metricbeat.sdi-eea.rancher.internal'>
+    #          <if "%{REMOTE_ADDR} != '10.42.106.115'>
+                 #RequestHeader unset Authorization
+    #          </if>
+            </IfModule>
+            ProxyPass http://public-catalogue:8080/catalogue
+            ProxyPassReverse http://public-catalogue:8080/catalogue
+        </Location>
+
+    #    <Location "/editor-catalogue">
+    #        #        ProxyPreserveHost On
+    #        AllowOverride None
+    #        Require all denied
+    #
+    #        <RequireAny>
+    #
+    #            ##EEA proxy
+    #            Require ip 10.92.24.0/21
+    #
+    #            ## Allow direct access from EEA network
+    #            Require ip 10.92.27.219
+    #            Require ip 10.92.27.233
+    #            Require ip 10.50.0.0/23
+    #            Require ip 87.54.7.251
+    #            Require ip 192.168.60.0/23
+    #            Require ip 192.168.62.0/23
+    #            Require ip 192.168.64.0/23
+    #            Require ip 192.168.66.0/23
+    #            Require ip 192.168.68.0/23
+    #            ## Allow direct access for Armin Burger (JRC) for checks on pmapper
+    #            #Require ip 139.191.16.144
+    #
+    #            ## Allow access for authenticated users
+    #            AuthType Basic
+    #            AuthName "LDAP Access to the EEA internal SDI catalogue (EIONET account)"
+    #            AuthBasicProvider ldap
+    #            AuthLDAPURL ldaps://{{ .Values.centralLdapUrl }}/o=EIONET,l=Europe?uid
+    #            Require ldap-group cn=eea-staff,cn=eea,ou=Roles,o=EIONET,l=Europe
+    #            Require ldap-group cn=eionet-etc-data,cn=eionet-etc,cn=eionet,ou=Roles,o=EIONET,l=Europe
+    #            Require ldap-group cn=eionet-group-sdi,cn=eionet-group,cn=eionet,ou=Roles,o=EIONET,l=Europe
+    #            Require ldap-user francpru courtoli ostlanic burgearm michimau
+    #            #Require ldap-user michimau
+    #        </RequireAny>
+    #
+    #        ## Reverse proxy configuration
+    #        ProxyPreserveHost On
+    #        <IfModule mod_headers.c>
+    #           RequestHeader unset Authorization
+    #        </IfModule>
+    #        ProxyPass http://editor-catalogue:8080/editor-catalogue
+    #        ProxyPassReverse http://editor-catalogue:8080/editor-catalogue
+    #    </Location>
+
+        <Location /validator>
+            RequestHeader set X-Forwarded-Prefix "/validator"
+            RequestHeader set X-Forwarded-Proto "https"
+            RequestHeader set X-Forwarded-For "{{ .Values.serverName }}"
+            ProxyPass http://validator:8080/validator/
+            ProxyPassReverse http://validator:8080/validator/
+        </Location>
+
+        <Location /geoserver>
+            ProxyPreserveHost On
+            AllowOverride None
+
+            ## Reverse proxy configuration
+            <IfModule mod_headers.c>
+               RequestHeader unset Authorization
+            </IfModule>
+
+            ProxyPass http://geoserver:8080/geoserver
+            ProxyPassReverse http://geoserver:8080/geoserver
+
+            #ProxyPass http://geoserver:8080/web
+            #ProxyPassReverse http://geoserver:8080/web
+        </Location>
+     
+        <Location /datashare>
+            ProxyPreserveHost On
+            RewriteEngine On
+            Order deny,allow
+            Allow from all
+    #        Deny from all
+    #
+    #        Allow from 192.168.60.0/23
+    #        Allow from 192.168.62.0/23
+    #        Allow from 192.168.64.0/23
+    #        Allow from 192.168.66.0/23
+    #        Allow from 192.168.68.0/23
+    #        Allow from 10.92.27.158
+    #        Allow from 10.92.27.219
+    #        Allow from 10.92.27.233
+    #        Allow from 87.54.7.251
+    #        Allow from 10.50.4.0/23
+    #        Allow from 78.206.215.176/32
+    #        Allow from 10.175.9.34/32
+    #        Allow from 10.50.254.253/32
+    #        
+    #        #Allow from 10.42.138.241/32
+    #        # Allow from 2.109.50.206
+    #
+    #        Header always set Strict-Transport-Security "max-age=15552000; includeSubDomains"
+    #
+    #        <If "%{REQUEST_METHOD} != 'PROPFIND'">
+    #           AuthType Basic
+    #           AuthName "Access to the EEA internal webdav"
+    #           AuthBasicProvider ldap
+    #           AuthLDAPURL ldaps://{{ .Values.centralLdapUrl }}/o=EIONET,l=Europe?uid 
+    #           Require ldap-group cn=eea-staff,cn=eea,ou=Roles,o=EIONET,l=Europe
+    #           Require ldap-group cn=eionet-etc-data,cn=eionet-etc,cn=eionet,ou=Roles,o=EIONET,l=Europe
+    #           Require ldap-group cn=eionet-group-sdi,cn=eionet-group,cn=eionet,ou=Roles,o=EIONET,l=Europe
+    #           Require ldap-user michimau
+    #           RequestHeader unset Authorization
+    #         </If>
+    #
+    #         Satisfy Any
+    #
+            ProxyPass http://nextcloud
+            ProxyPassReverse http://nextcloud
+            ProxyPassReverseCookiePath /datashare /datashare
+         </Location>
+
+
+        <Location /datashare/login>
+            ProxyPreserveHost On
+            AllowOverride None
+            Require all denied
+
+            <RequireAny>
+
+                ## Allow direct access from EEA network
+                Require ip 171.19.0.0/16
+                Require ip 87.54.7.251
+                Require ip 192.168.60.0/23
+                Require ip 192.168.62.0/23
+                Require ip 192.168.64.0/23
+                Require ip 192.168.66.0/23
+                Require ip 192.168.68.0/23
+                ## Allow direct access for Armin Burger (JRC) for checks on pmapper
+                #Require ip 78.206.215.176/32
+                #Require ip 10.42.138.241/32
+                Require ip 10.50.27.219
+                Require ip 10.50.0.0/16
+                Require ip 10.50.4.0/23
+                Require ip 10.175.9.34/32
+                Require ip 10.50.254.253/32
+            </RequireAny>
+        </Location>
+
+    #    SSLProxyEngine On
+
+        <Location /data>
+           ProxyPreserveHost On
+           AllowOverride None
+            RequestHeader unset Authorization
+            
+        </Location>
+
+        <Location /samba>
+            ProxyPreserveHost On
+            AllowOverride None
+            Require all denied
+            <RequireAny>
+
+                ##EEA proxy
+                Require ip 10.92.24.0/21
+                Require ip 10.92.1.0/23
+                ## Allow direct access from EEA network
+                Require ip 10.92.27.219
+                Require ip 10.92.27.233
+                Require ip 10.50.0.0/23
+                Require ip 87.54.7.251
+                Require ip 192.168.60.0/23
+                Require ip 192.168.62.0/23
+                Require ip 192.168.64.0/23
+                Require ip 192.168.66.0/23
+                Require ip 192.168.68.0/23
+                ## Allow direct access for Armin Burger (JRC) for checks on pmapper
+                Require ip 139.191.16.144
+
+                ## Allow access for authenticated users
+                AuthType Basic
+                AuthName "LDAP Access to the EEA internal SDI catalogue (EIONET account)"
+                AuthBasicProvider ldap
+                AuthLDAPURL ldaps://{{ .Values.centralLdapUrl }}/o=EIONET,l=Europe?uid
+                Require ldap-group cn=eea-staff,cn=eea,ou=Roles,o=EIONET,l=Europe
+                Require ldap-group cn=eionet-etc-data,cn=eionet-etc,cn=eionet,ou=Roles,o=EIONET,l=Europe
+                Require ldap-group cn=eionet-group-sdi,cn=eionet-group,cn=eionet,ou=Roles,o=EIONET,l=Europe
+                Require ldap-user francpru courtoli ostlanic burgearm roug antunchr
+                #Require ldap-user michimau
+            </RequireAny>
+            RequestHeader unset Authorization
+
+            ProxyPass http://samba
+
+        </Location>
+
+        IncludeOptional conf/extra/extra-mime-types.conf
+        IncludeOptional conf/extra/nc.conf 
+        IncludeOptional conf/extra/datashare.conf
+        IncludeOptional conf/extra/webdav.conf
+    </VirtualHost>
+

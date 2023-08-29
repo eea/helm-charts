@@ -34,14 +34,15 @@ spec:
         - name: BACKUPDIR
           value: /backups
         - name: CENTRAL_LDAP_PASSWORD
-          value: {{ .Values.samba.centralLdapPassword }}
+          value: {{ .Values.centralLdapPassword }}
         - name: CENTRAL_LDAP_URL
-          value: {{ .Values.samba.centralLdapUrl }}
+          value: {{ .Values.centralLdapUrl }}
         - name: SLAPD_DOMAIN
           value: {{ .Values.samba.slapdDomain }}
         - name: SLAPD_PASSWORD
           value: {{ .Values.samba.slapdPassword }}
         ports:
+        - containerPort: 80
         - containerPort: 139
         - containerPort: 445
         - containerPort: 389

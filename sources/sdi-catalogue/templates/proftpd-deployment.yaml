@@ -53,7 +53,7 @@ spec:
         - name: LDAPGENERATEHOMEDIRPREFIX
           value: /var/local/gis_sdi/
         - name: LDAPSERVER
-          value: ldap3.eionet.europa.eu
+          value: {{ .Values.centralLdapUrl }}
         - name: PASSIVE_PORTS
           value: "49200 49201"
         - name: PORT

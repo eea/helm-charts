@@ -2,6 +2,9 @@ serverName: sdi.eea.europa.eu
 # Number is required for filebeat and metricbeat.
 serverUrl: https://sdi.eea.europa.eu:443
 
+centralLdapUrl: ldap3.eionet.europa.eu
+centralLdapPassword: ''
+
 image:
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
@@ -131,8 +134,6 @@ samba:
   service:
     type: ClusterIP
     annotations: {}
-  centralLdapPassword: ''
-  centralLdapUrl: ldap3.eionet.europa.eu
   slapdDomain: eea.europa.eu
   slapdPassword: ''
   resources: {}

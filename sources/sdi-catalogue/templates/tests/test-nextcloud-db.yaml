@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-nextcloud-db
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: test
+  annotations:
+    "helm.sh/hook": test
+#   "helm.sh/hook-delete-policy": "hook-succeeded"
+spec:
+  containers:
+    - name: mariadb-test
+      image: mariadb:10.5
+      command: ['mysql']
+      args:
+      - --host=nextcloud-db
+      - --user={{ .Values.nextclouddb.user }}
+      - --password={{ .Values.nextclouddb.password }}
+      - --execute
+      - show tables
+      - {{ .Values.nextclouddb.database }}
+  restartPolicy: Never
+

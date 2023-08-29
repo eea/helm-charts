@@ -24,6 +24,8 @@ spec:
       {{- end }}
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
 
+      hostname: ogcapi
+
       containers:
       - name: ogcapi
         image: geonetwork/gn-cloud-ogc-api-records-service:4.2.2
