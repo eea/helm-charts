@@ -31,8 +31,6 @@ spec:
         env:
         - name: CATALOGUE
           value: catalogue
-        - name: DATABASE
-          value: {{ .Values.geonetworkdb.database }}
         - name: ES_HOST
           value: elasticsearch
         - name: ES_INDEX_RECORDS
@@ -45,13 +43,15 @@ spec:
           value: http://ogcapi:8080
         - name: JAVA_OPTIONS
           value: '-Djava.security.egd=file:/dev/./urandom -Djava.awt.headless=true -Xms512M -Xss512M -Xmx1G -XX:+UseConcMarkSweepGC -Dgeonetwork.dir=/catalogue-data -Dgeonetwork.db.type=postgres -Dgeonetwork.schema.dir=/var/lib/jetty/webapps/catalogue/WEB-INF/data/config/schema_plugins -Dgeonetwork.formatter.dir=/catalogue-data/data/formatter -Dgeonetwork.indexConfig.dir=/var/lib/jetty/webapps/catalogue/WEB-INF/data/config/index -Dgeonetwork.resources.dir=/catalogue-data/resources -Dorg.eclipse.jetty.annotations.AnnotationParser.LEVEL=OFF'
-        - name: HOST
+        - name: GEONETWORK_DB_HOST
           value: postgres-geonetwork
-        - name: PORT
+        - name: GEONETWORK_DB_PORT
           value: "5432"
-        - name: PASSWORD
+        - name: GEONETWORK_DB_NAME
+          value: {{ .Values.geonetworkdb.database }}
+        - name: GEONETWORK_DB_PASSWORD
           value: {{ .Values.geonetworkdb.password }}
-        - name: USERNAME
+        - name: GEONETWORK_DB_USERNAME
           value: {{ .Values.geonetworkdb.username }}
 
         ports:
