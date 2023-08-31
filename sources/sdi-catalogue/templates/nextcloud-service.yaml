@@ -13,4 +13,4 @@ spec:
     targetPort: 80
   selector:
     {{- include "appl.selectorLabels" . | nindent 4 }}
-    component: nextcloud-db
+    component: nextcloud
