@@ -1,3 +1,4 @@
+{{- if .Values.metricbeat.enabled -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -41,3 +42,4 @@ spec:
           {{- toYaml .Values.metricbeat.resources | nindent 10 }}
 
       restartPolicy: Always
+{{- end }}

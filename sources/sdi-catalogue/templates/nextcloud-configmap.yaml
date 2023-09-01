@@ -1,0 +1,64 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nextcloud-config
+
+data:
+  config.php: |
+    <?php
+    $CONFIG = array (
+      'htaccess.RewriteBase' => '/',
+      'apps_paths' => 
+      array (
+        0 => 
+        array (
+          'path' => '/var/www/html/apps',
+          'url' => '/apps',
+          'writable' => false,
+        ),
+        1 => 
+        array (
+          'path' => '/var/www/html/custom_apps',
+          'url' => '/custom_apps',
+          'writable' => true,
+        ),
+      ),
+      'instanceid' => 'ocvezsf3198o',
+      'passwordsalt' => '{{ .Values.nextcloud.passwordsalt }}',
+      'secret' => '{{ .Values.nextcloud.secret }}',
+      'trusted_domains' => 
+      array (
+        0 => '10.50.4.60:5000',
+      ),
+      'datadirectory' => '/var/www/html/data',
+      'dbtype' => 'mysql',
+      'version' => '25.0.6.1',
+      'overwrite.cli.url' => 'https://{{ .Values.serverName }}/datashare',
+      'dbname' => '{{ .Values.nextclouddb.database }}',
+      'dbhost' => 'nextcloud-db',
+      'dbport' => '',
+      'dbtableprefix' => 'oc_',
+      'mysql.utf8mb4' => true,
+      'dbuser' => '{{ .Values.nextclouddb.user }}',
+      'dbpassword' => '{{ .Values.nextclouddb.password }}',
+      'installed' => true,
+      'memcache.distributed' => '\\OC\\Memcache\\APCu',
+      'overwritewebroot' => '/datashare',
+      'lost_password_link' => 'disabled',
+      'skeletondirectory' => '',
+      'simpleSignUpLink.shown' => false,
+      'memcache.local' => '\\OC\\Memcache\\APCu',
+      'overwritehost' => '{{ .Values.serverName }}',
+      'overwriteprotocol' => 'https',
+      'maintenance' => false,
+      'loglevel' => 2,
+      'defaultapp' => 'files',
+      'default_phone_region' => 'DK',
+      'mail_from_address' => 'datashrusr',
+      'mail_smtpmode' => 'smtp',
+      'mail_sendmailmode' => 'smtp',
+      'mail_domain' => 'eionet.europa.eu',
+      'mail_smtphost' => 'postfix',
+      'mail_smtpport' => '25',
+    );
+

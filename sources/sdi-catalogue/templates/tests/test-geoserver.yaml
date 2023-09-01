@@ -12,5 +12,5 @@ spec:
     - name: wget
       image: busybox
       command: ['wget']
-      args: ['-S', '-O', '/dev/null', 'http://geoserver:8080/geoserver/web/']
+      args: ['-S', 'http://geoserver:8080/geoserver/index.html']
   restartPolicy: Never

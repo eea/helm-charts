@@ -12,5 +12,5 @@ spec:
     - name: wget
       image: busybox
       command: ['wget']
-      args: ['-S', '-O', '/dev/null', 'http://nextcloud/']
+      args: ['-S', '-O', '/dev/null', 'http://nextcloud/index.html']
   restartPolicy: Never

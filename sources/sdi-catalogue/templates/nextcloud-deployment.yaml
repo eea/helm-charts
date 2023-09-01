@@ -50,6 +50,10 @@ spec:
         volumeMounts:
         - mountPath: /var/www/html
           name: sdi-nextcloud-app
+        - mountPath: /var/www/html/config/config.php
+          name: nextcloud-config
+          readOnly: true
+          subPath: config.php
         - mountPath: /var/local/gis_sdi
           name: gis-sdi
         - mountPath: /usr/local/apache2/htdocs
@@ -79,3 +83,9 @@ spec:
       - name: sdi-apache-www
         persistentVolumeClaim:
           claimName: sdi-apache-www
+      - name: nextcloud-config
+        configMap:
+          defaultMode: 0444
+          optional: false
+          name: nextcloud-config
+

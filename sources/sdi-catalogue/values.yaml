@@ -59,6 +59,7 @@ elasticsearch:
       memory: 3Gi
 
 filebeat:
+  enabled: true
   resources: {}
 
 geonetworkdb:
@@ -81,12 +82,16 @@ kibana:
   resources: {}
 
 metricbeat:
+  enabled: true
   resources: {}
 
 nextcloud:
   adminUser: ''
   adminPassword: ''
   trustedProxies: '10.0.0.1'
+# Secret and passwordsalt will be inserted into /var/www/html/config/config.php
+  secret: ''
+  passwordsalt: ''
   resources: {}
 
 nextclouddb:
