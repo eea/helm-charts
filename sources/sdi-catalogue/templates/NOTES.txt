@@ -1,3 +1,6 @@
 
 This chart has smoke tests. Please run `helm test <release>` a few seconds after upgrade.
 
+Get the application URL by running these commands:
+
+    kubectl --namespace {{ .Release.Namespace }} port-forward svc/apache 8080:80 8443:443

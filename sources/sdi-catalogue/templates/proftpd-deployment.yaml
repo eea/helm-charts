@@ -71,6 +71,13 @@ spec:
             {{- range .Values.proftpd.users }}
             {{ . }}
             {{- end }}
+
+        livenessProbe:
+          tcpSocket:
+            port: 990
+          initialDelaySeconds: 15
+          periodSeconds: 60
+
         volumeMounts:
         - mountPath: /var/local/gis_sdi
           name: gis-sdi
