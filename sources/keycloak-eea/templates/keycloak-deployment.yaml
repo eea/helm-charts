@@ -1,0 +1,117 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: keycloak
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: keycloak
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: keycloak
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: keycloak
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
+      containers:
+      - name: keycloak
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        args:
+        - start
+        - --http-enabled=true
+        - --http-port=8080
+        - --http-host=0.0.0.0
+        - --hostname={{ .Values.serviceName }}
+        - --hostname-strict-https=false
+        - --db-url-host={{ .Values.database.host }}
+        - -Dkc.db=postgres
+        - --db-username={{ .Values.database.username }}
+        - --db-password={{ .Values.database.password }}
+        - --db-schema={{ .Values.database.schema }}
+        - --db-url-database={{ .Values.database.database }}
+        - --proxy=passthrough
+        - -Dkeycloak.profile.feature.upload_scripts=enabled
+        - --cache=ispn
+        - --auto-build
+        - --metrics-enabled=true
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        env:
+        - name: AUTH_CACHE_OWNERS_COUNT
+          value: "3"
+        - name: CACHE_OWNERS_COUNT
+          value: "3"
+
+        - name: KC_DB
+          value: postgres
+        - name: KC_DB_PASSWORD
+          value: {{ .Values.database.password }}
+        - name: KC_DB_USERNAME
+          value: {{ .Values.database.username }}
+        - name: KC_DB_SCHEMA
+          value: "{{ .Values.database.schema }}"
+        - name: KC_DB_URL
+          value: jdbc:postgresql://{{ .Values.database.host }}:5432/{{ .Values.database.database }}?currentSchema={{ .Values.database.schema }}
+        - name: KC_DB_URL_DATABASE
+          value: "{{ .Values.database.database }}"
+        - name: KC_DB_URL_HOST
+          value: "{{ .Values.database.host }}"
+
+        - name: KEYCLOAK_ADMIN
+          value: "{{ .Values.adminUser }}"
+        - name: KEYCLOAK_ADMIN_PASSWORD
+          value: "{{ .Values.adminPassword }}"
+        - name: PROXY_ADDRESS_FORWARDING
+          value: "true"
+        - name: TZ
+          value: "{{ .Values.timezone }}"
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
+        securityContext:
+          {{- toYaml .Values.securityContext | nindent 12 }}
+        volumeMounts:
+        - mountPath: /opt/keycloak/themes
+          name: keycloak-theme
+        - mountPath: /opt/keycloak/data/tmp/kc-gzip-cache
+          name: keycloak-theme-cache
+
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 3
+          periodSeconds: 20
+
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+
+      volumes:
+      - name: keycloak-theme
+        persistentVolumeClaim:
+          claimName: keycloak-theme
+      - name: keycloak-theme-cache
+        persistentVolumeClaim:
+          claimName: keycloak-theme-cache

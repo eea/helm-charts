@@ -1,0 +1,92 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pg-0
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: pg-0
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: pg-0
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: pg-0
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
+      containers:
+      - name: pg-0
+        image: docker.io/bitnami/postgresql-repmgr:13.6.0
+
+        ports:
+        - containerPort: 5432
+          protocol: TCP
+
+        env:
+        - name: POSTGRESQL_DATABASE
+          value: {{ .Values.database.database }}
+        - name: POSTGRESQL_NUM_SYNCHRONOUS_REPLICAS
+          value: "1"
+        - name: POSTGRESQL_PASSWORD
+          value: {{ .Values.database.password }}
+        - name: POSTGRESQL_POSTGRES_PASSWORD
+          value: {{ .Values.database.postgres }}
+        - name: POSTGRESQL_USERNAME
+          value: {{ .Values.database.username }}
+        - name: REPMGR_NODE_NAME
+          value: pg-0
+        - name: REPMGR_NODE_NETWORK_NAME
+          value: pg-0
+        - name: REPMGR_PARTNER_NODES
+          value: pg-0,pg-1
+        - name: REPMGR_PASSWORD
+          value: {{ .Values.repmgr.password }}
+        - name: REPMGR_PORT_NUMBER
+          value: '{{ .Values.repmgr.portNumber }}'
+        - name: REPMGR_PRIMARY_HOST
+          value: {{ .Values.repmgr.primaryHost }}
+        - name: REPMGR_PRIMARY_PORT
+          value: '{{ .Values.repmgr.primaryPort }}'
+
+        resources:
+          {{- toYaml .Values.database.resources | nindent 10 }}
+        securityContext:
+          {{- toYaml .Values.database.securityContext | nindent 12 }}
+        volumeMounts:
+        - mountPath: /bitnami/postgresql
+          name: keycloak-postgres0-data
+
+        livenessProbe:
+          tcpSocket:
+            port: 5432
+          initialDelaySeconds: 15
+          periodSeconds: 20
+
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+
+      volumes:
+      - name: keycloak-postgres0-data
+        persistentVolumeClaim:
+          claimName: keycloak-postgres0-data

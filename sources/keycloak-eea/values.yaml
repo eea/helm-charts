@@ -1,0 +1,90 @@
+
+image:
+  repository: eeacms/eea-keycloak
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+timezone: "Europe/Copenhagen"
+
+serviceName: login.eea.europa.eu
+adminUser: ""
+adminPassword: ""
+
+serviceAccount:
+  create: false
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+
+securityContext: {}
+
+service:
+  type: ClusterIP
+  port: 8080
+
+ingress:
+  enabled: false
+  className: "nginx"
+  annotations: {}
+  hosts:
+    - host: login.eea.europa.eu
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - hosts:
+        - login.eea.europa.eu
+
+resources:
+  requests:
+    memory: 2Gi
+  limits:
+    memory: 2Gi
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+pgpool:
+  resources:
+    requests:
+      memory: 2Gi
+    limits:
+      memory: 2Gi
+  securityContext: {}
+
+database:
+  host: pgpool
+  password: ""
+  postgres: ""
+  username: ""
+  schema: public
+  database: keycloak
+  resources:
+    requests:
+      memory: 4Gi
+    limits:
+      memory: 4Gi
+  securityContext: {}
+
+theme:
+  resources:
+    requests:
+      memory: 24Mi
+    limits:
+      memory: 24Mi
+
+repmgr:
+  password: ""
+  portNumber: "5432"
+  primaryHost: pg-0
+  primaryPort: "5432"
+

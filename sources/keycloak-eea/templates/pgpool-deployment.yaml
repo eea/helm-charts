@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pgpool
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: pgpool
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: pgpool
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: pgpool
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
+      containers:
+      - name: pgpool
+        image: eeacms/pgpool_bitnami_rancher
+
+        ports:
+        - containerPort: 5432
+          protocol: TCP
+
+        env:
+        - name: ORG_Backend_nodes
+          value: 0:pg-0:5432,1:pg-1:5432
+        - name: PASSWORD_AUTHENTICATION
+          value: md5
+        - name: PGPOOL_ADMIN_PASSWORD
+          value: {{ .Values.database.password }}
+        - name: PGPOOL_ADMIN_USERNAME
+          value: {{ .Values.database.username }}
+        - name: PGPOOL_AUTHENTICATION_METHOD
+          value: md5
+        - name: PGPOOL_BACKEND_NODES
+          value: 0:pg-0:5432,1:pg-1:5432
+        - name: PGPOOL_ENABLE_LDAP
+          value: "no"
+        - name: PGPOOL_ENABLE_LOAD_BALANCING
+          value: "yes"
+        - name: PGPOOL_POSTGRES_PASSWORD
+          value: {{ .Values.database.password }}
+        - name: PGPOOL_POSTGRES_USERNAME
+          value: {{ .Values.database.username }}
+        - name: PGPOOL_SR_CHECK_PASSWORD
+          value: {{ .Values.database.password }}
+        - name: PGPOOL_SR_CHECK_USER
+          value: {{ .Values.database.username }}
+
+        resources:
+          {{- toYaml .Values.pgpool.resources | nindent 10 }}
+        securityContext:
+          {{- toYaml .Values.pgpool.securityContext | nindent 12 }}
+
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+
