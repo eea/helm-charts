@@ -6,11 +6,14 @@ This chart is configured for production use.
 
 <dl>
 
+  <dt>Version 1.1.0</dt>
+  <dd>Make it possible to connect to database over load-balancer.</dd>
+
   <dt>Version 1.0.2</dt>
-  <dd>Bugfix in ldap system properties</dd>
+  <dd>Bugfix in ldap system properties.</dd>
 
   <dt>Version 1.0.1</dt>
-  <dd>Use http for env.dd.url instead of https</dd>
+  <dd>Use http for env.dd.url instead of https.</dd>
 
   <dt>Version 1.0.0</dt>
   <dd>First version to be used in production.</dd>

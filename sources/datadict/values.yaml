@@ -94,6 +94,9 @@ database:
   password: REPLACEME
   rootpw: REPLACEME
   parameters: "maxAllowedPacket=16106127360&autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&emptyStringsConvertToZero=false&jdbcCompliantTruncation=false&rewriteBatchedStatements=true"
+  service:
+    type: ClusterIP
+    port: 3306
   nodeSelector: {}
   tolerations: []
   affinity: {}
