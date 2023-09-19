@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: async
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: async
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: async
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: async
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      containers:
+      - name: async
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        env:
+        - name: SENTRY_DSN
+          value: {{ .Values.sentryDSN }}
+        - name: SENTRY_ENVIRONMENT
+          value: {{ .Values.sentryEnvironment }}
+        - name: SENTRY_SITE
+          value: {{ .Values.serverName }}
+        - name: SERVER_NAME
+          value: {{ .Values.serverName }}
+        - name: TZ
+          value: {{ .Values.timezone }}
+        - name: ZOPE_MODE
+          value: zeo_async
+        resources:
+          {{- toYaml .Values.async.resources | nindent 10 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+

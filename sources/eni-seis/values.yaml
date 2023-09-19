@@ -1,0 +1,102 @@
+
+# For the plone Pod
+replicaCount: 1
+
+image:
+  repository: eeacms/plone-eni-seis
+  pullPolicy: IfNotPresent
+  tag: ""
+
+serverName: eni-seis.eionet.europa.eu
+sentryDSN: replaceme
+sentryEnvironment: ENI-SEIS AWS - eni-seis-eionet
+
+timezone: Europe/Copenhagen
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: false
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+
+securityContext: {}
+
+resources:
+  requests:
+    memory: 2Gi
+  limits:
+    memory: 3Gi
+
+service:
+  type: ClusterIP
+  port: 8080
+
+cron:
+  enabled: false
+
+ingress:
+  enabled: false
+  className: "nginx"
+  annotations: {}
+  hosts:
+    - host: eni-seis.eionet.europa.eu
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - hosts:
+        - eni-seis.eionet.europa.eu
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 4
+  #targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+async:
+  resources:
+    requests:
+      memory: 1Gi
+    limits:
+      memory: 2Gi
+
+memcached:
+  resources:
+    requests:
+      memory: 1Gi
+    limits:
+      memory: 1Gi
+
+# Mail transport
+postfix:
+  host: eni-seis.eionet.europa.eu
+  pass: ''
+  port: '8587'
+  relay: ''
+  user: eni-seis
+  resources:
+    requests:
+      memory: 64Mi
+    limits:
+      memory: 64Mi
+
+
+zeoserver:
+  resources:
+    requests:
+      memory: 1Gi
+    limits:
+      memory: 2Gi
+

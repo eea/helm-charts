@@ -1,0 +1,46 @@
+{{- if .Values.cron.enabled }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: cron-get-broken-links
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: cron-get-broken-links
+
+spec:
+  schedule: "1 0 * * 0"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          {{- with .Values.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
+          containers:
+          - name: cron-get-broken-links
+            image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+            imagePullPolicy: {{ .Values.image.pullPolicy }}
+            resources: {}
+            command:
+            - bin/zeo_client
+            - run
+            - bin/get_broken_links
+            env:
+            - name: SENTRY_DSN
+              value: {{ .Values.sentryDSN }}
+            - name: SENTRY_ENVIRONMENT
+              value: {{ .Values.sentryEnvironment }}
+            - name: SENTRY_SITE
+              value: {{ .Values.serverName }}
+            - name: SERVER_NAME
+              value: {{ .Values.serverName }}
+            - name: TZ
+              value: {{ .Values.timezone }}
+            - name: ZOPE_MODE
+              value: zeo_client
+          restartPolicy: Never
+{{- end }}
