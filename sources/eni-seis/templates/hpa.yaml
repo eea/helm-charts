@@ -2,14 +2,15 @@
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ include "appl.fullname" . }}
+  name: plone
   labels:
     {{- include "appl.labels" . | nindent 4 }}
+    component: plone
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ include "appl.fullname" . }}
+    name: plone
   minReplicas: {{ .Values.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.autoscaling.maxReplicas }}
   metrics:
