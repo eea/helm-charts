@@ -53,7 +53,7 @@ ingress:
   hosts:
     - host: eni-seis.eionet.europa.eu
       paths:
-        - path: /
+        - path: /(.*)
           pathType: Prefix
   tls:
     - hosts:
