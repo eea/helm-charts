@@ -44,7 +44,12 @@ cron:
 ingress:
   enabled: false
   className: "nginx"
-  annotations: {}
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /VirtualHostBase/https/eni-seis.eionet.europa.eu:443/VirtualHostRoot/$1
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers 'X-Frame-Options: SAMEORIGIN';
+
   hosts:
     - host: eni-seis.eionet.europa.eu
       paths:
