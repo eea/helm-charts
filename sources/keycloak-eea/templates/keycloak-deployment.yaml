@@ -45,6 +45,9 @@ spec:
         - --cache=ispn
         - --auto-build
         - --metrics-enabled=true
+        {{- if .Values.logLevel }}
+        - --log-level={{ .Values.logLevel }}
+        {{- end }}
         ports:
         - containerPort: 8080
           protocol: TCP
