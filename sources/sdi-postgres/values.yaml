@@ -1,0 +1,36 @@
+
+replicaCount: 1
+
+image:
+  repository: eeacms/postgis
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serverName: iguana.eea.europa.eu
+ldapHost: ldap.eionet.europa.eu
+timezone: "Europe/Copenhagen"
+psqlpw: ''
+
+serviceAccount:
+  create: false
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+podSecurityContext: {}
+securityContext: {}
+
+service:
+  type: ClusterIP
+  port: 5432
+
+resources: {}
+nodeSelector: {}
+tolerations: []
+affinity: {}
+

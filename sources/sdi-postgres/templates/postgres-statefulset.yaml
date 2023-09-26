@@ -1,0 +1,144 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: postgres
+spec:
+  replicas: 1
+  serviceName: psql
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: postgres
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: postgres
+    spec:
+      terminationGracePeriodSeconds: 10
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
+      initContainers:
+      - name: fix-ssl-perms
+        image: busybox:1.28
+        command: ['sh', '-c', "cp /var/ssl/* /ssl ; chown -R 999.999 /ssl ; chmod 400 /ssl/* "]
+        volumeMounts:
+        - mountPath: /ssl
+          name: tmpcertificates
+        - mountPath: /var/ssl/server.key
+          name: eea-certificate
+          readOnly: true
+          subPath: tls.key
+        - mountPath: /var/ssl/server.crt
+          name: eea-certificate
+          readOnly: true
+          subPath: tls.crt
+        - mountPath: /var/ssl/chain.crt
+          name: ca-certificates
+          readOnly: true
+          subPath: chain.crt
+
+
+      containers:
+      - name: postgres
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+
+        ports:
+        - containerPort: 5432
+          protocol: TCP
+
+        env:
+        - name: PG_HBA
+          valueFrom:
+            configMapKeyRef:
+              name: hba-configmap
+              key: pg_hba
+        - name: POSTGRES_CONFIG_checkpoint_completion_target
+          value: "0.9"
+        - name: POSTGRES_CONFIG_default_statistics_target
+          value: "500"
+        - name: POSTGRES_CONFIG_effective_cache_size
+          value: 8GB
+        - name: POSTGRES_CONFIG_maintenance_work_mem
+          value: 3GB
+        - name: POSTGRES_CONFIG_max_connections
+          value: "300"
+        - name: POSTGRES_CONFIG_max_wal_size
+          value: 6GB
+        - name: POSTGRES_CONFIG_min_wal_size
+          value: 3GB
+        - name: POSTGRES_CONFIG_shared_buffers
+          value: 7GB
+        - name: POSTGRES_CONFIG_work_mem
+          value: 48MB
+        - name: SERVER_NAME
+          value: {{ .Values.serverName }}
+        - name: POSTGRES_PASSWORD
+          value: {{ .Values.psqlpw }}
+
+        securityContext:
+          {{- toYaml .Values.securityContext | nindent 10 }}
+
+        volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          name: psqldata
+        - mountPath: /ssl
+          name: tmpcertificates
+
+#       livenessProbe:
+#         tcpSocket:
+#           port: 5432
+#         initialDelaySeconds: 15
+#         periodSeconds: 20
+#       readinessProbe:
+#         tcpSocket:
+#           port: 5432
+#         initialDelaySeconds: 5
+#         periodSeconds: 20
+
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+
+      volumes:
+      - name: tmpcertificates
+        emptyDir: {}
+      - name: eea-certificate
+        secret:
+          defaultMode: 0444
+          optional: false
+          secretName: star-eea-europa-eu
+      - name: ca-certificates
+        configMap:
+          defaultMode: 0444
+          optional: false
+          name: cacrts
+
+  volumeClaimTemplates:
+  - metadata:
+      name: psqldata
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 500Gi
