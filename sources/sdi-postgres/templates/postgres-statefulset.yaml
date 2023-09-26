@@ -92,16 +92,11 @@ spec:
         - mountPath: /ssl
           name: tmpcertificates
 
-#       livenessProbe:
-#         tcpSocket:
-#           port: 5432
-#         initialDelaySeconds: 15
-#         periodSeconds: 20
-#       readinessProbe:
-#         tcpSocket:
-#           port: 5432
-#         initialDelaySeconds: 5
-#         periodSeconds: 20
+        livenessProbe:
+          tcpSocket:
+            port: 5432
+          initialDelaySeconds: 15
+          periodSeconds: 60
 
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
