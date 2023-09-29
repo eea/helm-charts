@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: nginx
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: nginx
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      containers:
+      - name: nginx
+        image: nginx:1.23-alpine
+        ports:
+        - containerPort: 80
+        args:
+        - /bin/sh
+        - -c
+        - echo "${NGINX_CONF}" > /etc/nginx/nginx.conf; nginx -g "daemon off;"
+        env:
+        - name: NGINX_CONF
+          valueFrom:
+            configMapKeyRef:
+              name: nginx-config
+              key: nginx.conf
+        - name: TZ
+          value: Europe/Copenhagen
+
+        resources:
+          {{- toYaml .Values.nginx.resources | nindent 10 }}
+        volumeMounts:
+        - mountPath: /var/www/html
+          name: datashare-app
+
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+
+      volumes:
+      - name: datashare-app
+        persistentVolumeClaim:
+          claimName: datashare-app

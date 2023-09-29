@@ -1,0 +1,109 @@
+
+image:
+  repository: nextcloud
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+timezone: Europe/Copenhagen
+
+serviceAccount:
+  create: false
+  annotations: {}
+  name: ""
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+  className: "nginx"
+  annotations: {}
+  hosts:
+    - host: shareit.eea.europa.eu
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - hosts:
+        - shareit.eea.europa.eu
+
+podAnnotations: {}
+
+podSecurityContext: {}
+
+securityContext: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+nginx:
+  resources:
+    requests:
+      memory: 1Gi
+    limits:
+      memory: 3Gi
+  service:
+    type: ClusterIP
+
+cron:
+  securityContext:
+    privileged: true
+  resources:
+    requests:
+      memory: 4Gi
+    limits:
+      memory: 4Gi
+
+app:
+  securityContext:
+    privileged: true
+  resources:
+    requests:
+      memory: 4Gi
+    limits:
+      memory: 4Gi
+
+postfix:
+  mtpHost: ''
+  mtpPass: ''
+  mtpPort: ''
+  mtpRelay: ''
+  mtpUser: ''
+  securityContext: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  resources:
+    requests:
+      memory: 64Mi
+    limits:
+      memory: 64Mi
+
+db:
+  database: ncdb
+  user: ''
+  password: ''
+  rootPW: ''
+  resources:
+    requests:
+      memory: 5Gi
+    limits:
+      memory: 5Gi
+  storage: 4Gi
+
+redis:
+  resources:
+    requests:
+      memory: 1Gi
+    limits:
+      memory: 4Gi
+

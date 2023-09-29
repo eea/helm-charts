@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cron
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: cron
+
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: cron
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: cron
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      containers:
+      - name: cron
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        command:
+        - /cron.sh
+
+        env:
+        - name: MYSQL_DATABASE
+          value: {{ .Values.db.database }}
+        - name: MYSQL_PASSWORD
+          value: {{ .Values.db.password }}
+        - name: MYSQL_USER
+          value: {{ .Values.db.user }}
+        - name: MYSQL_HOST
+          value: db
+        - name: REDIS_HOST
+          value: redis
+        - name: TZ
+          value: Europe/Copenhagen
+        resources:
+          {{- toYaml .Values.cron.resources | nindent 10 }}
+
+        volumeMounts:
+        - mountPath: /var/www/html
+          name: datashare-app
+        - mountPath: /data
+          name: shareit-data
+        - mountPath: /gis-data
+          name: shareit-gis-data
+
+        securityContext:
+          {{- toYaml .Values.cron.securityContext | nindent 10 }}
+
+      restartPolicy: Always
+
+      volumes:
+      - name: datashare-app
+        persistentVolumeClaim:
+          claimName: datashare-app
+      - name: shareit-data
+        persistentVolumeClaim:
+          claimName: shareit-data
+      - name: shareit-gis-data
+        persistentVolumeClaim:
+          claimName: shareit-gis-data

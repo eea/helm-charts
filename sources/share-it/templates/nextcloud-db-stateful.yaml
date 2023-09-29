@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: db
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: db
+
+spec:
+  replicas: 1
+  serviceName: {{ .Release.Name }}-ncdb
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: db
+
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: db
+    spec:
+      terminationGracePeriodSeconds: 10
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
+      containers:
+      - name: db
+        image: mariadb:10.4
+        args:
+        - --transaction-isolation=READ-COMMITTED
+        - --binlog-format=ROW
+        env:
+        - name: MYSQL_DATABASE
+          value: {{ .Values.db.database }}
+        - name: MYSQL_PASSWORD
+          value: {{ .Values.db.password }}
+        - name: MYSQL_ROOT_PASSWORD
+          value: {{ .Values.db.rootPW }}
+        - name: MYSQL_USER
+          value: {{ .Values.db.user }}
+        - name: TZ
+          value: Europe/Copenhagen
+        resources:
+           {{- toYaml .Values.db.resources | nindent 10 }}
+        volumeMounts:
+        - mountPath: /var/lib/mysql
+          name: datashare-db
+
+        ports:
+        - containerPort: 3306
+
+        livenessProbe:
+          tcpSocket:
+            port: 3306
+          initialDelaySeconds: 15
+          periodSeconds: 20
+
+      restartPolicy: Always
+
+  volumeClaimTemplates:
+  - metadata:
+      name: datashare-db
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: "{{ .Values.db.storage }}"
