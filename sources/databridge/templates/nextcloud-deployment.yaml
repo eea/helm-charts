@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nextcloud
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: nextcloud
+
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: nextcloud
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: nextcloud
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      containers:
+      - name: nextcloud
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        ports:
+        - containerPort: 80
+          protocol: TCP
+        env:
+        - name: NEXTCLOUD_ADMIN_PASSWORD
+          value: "{{ .Values.adminPassword }}"
+        - name: NEXTCLOUD_ADMIN_USER
+          value: "{{ .Values.adminUsername }}"
+        - name: NEXTCLOUD_DATA_DIR
+          value: /mnt/data
+        - name: SQLITE_DATABASE
+          value: bridge.sqlite
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
+        securityContext:
+          {{- toYaml .Values.securityContext | nindent 12 }}
+
+        volumeMounts:
+        - mountPath: /var/www/html
+          name: bridge-nextcloud-www
+        - mountPath: /mnt/data
+          name: bridge-nextcloud-data
+
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+
+      volumes:
+      - name: bridge-nextcloud-www
+        persistentVolumeClaim:
+          claimName: bridge-nextcloud-www
+      - name: bridge-nextcloud-data
+        persistentVolumeClaim:
+          claimName: bridge-nextcloud-data

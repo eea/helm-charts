@@ -1,4 +1,8 @@
 
+# Keycloak profile can be 'edge' or 'standalone'
+# In the latter case you ned to provide certificates
+profile: edge
+
 image:
   repository: eeacms/eea-keycloak
   pullPolicy: IfNotPresent
@@ -30,6 +34,7 @@ securityContext: {}
 service:
   type: ClusterIP
   port: 8080
+  tlsport: 8443
 
 ingress:
   enabled: false

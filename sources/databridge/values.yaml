@@ -1,0 +1,60 @@
+# Default values
+
+replicaCount: 2
+
+image:
+  repository: nextcloud
+  pullPolicy: IfNotPresent
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: false
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+
+securityContext: {}
+
+adminPassword: ''
+adminUsername: ''
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+  className: "nginx"
+  annotations: {}
+#   nginx.ingress.kubernetes.io/configuration-snippet: |
+#     more_set_headers 'X-XSS-Protection: 1; mode=block'
+#       'X-Frame-Options: SAMEORIGIN'
+#       'X-Content-Type-Options: nosniff'
+#       'Referrer-Policy: no-referrer,same-origin,strict-origin,strict-origin-when-cross-origin';
+  hosts:
+    - host: databridge.eionet.europa.eu
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: ''
+      hosts:
+        - databridge.eionet.europa.eu
+
+resources:
+  requests:
+    memory: 352Mi
+  limits:
+    memory: 352Mi
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+

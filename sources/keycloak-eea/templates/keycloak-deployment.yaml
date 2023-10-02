@@ -33,24 +33,30 @@ spec:
         - --http-port=8080
         - --http-host=0.0.0.0
         - --hostname={{ .Values.serviceName }}
-        - --hostname-strict-https=false
         - --db-url-host={{ .Values.database.host }}
-        - -Dkc.db=postgres
         - --db-username={{ .Values.database.username }}
         - --db-password={{ .Values.database.password }}
         - --db-schema={{ .Values.database.schema }}
         - --db-url-database={{ .Values.database.database }}
-        - --proxy=passthrough
+        - -Dkc.db=postgres
         - -Dkeycloak.profile.feature.upload_scripts=enabled
         - --cache=ispn
         - --auto-build
         - --metrics-enabled=true
+        {{- if contains "edge" .Values.profile }}
+        - --hostname-strict-https=false
+        - --proxy=passthrough
+        {{- end }}
         {{- if .Values.logLevel }}
         - --log-level={{ .Values.logLevel }}
         {{- end }}
+
         ports:
         - containerPort: 8080
           protocol: TCP
+        - containerPort: 8443
+          protocol: TCP
+
         env:
         - name: AUTH_CACHE_OWNERS_COUNT
           value: "3"
@@ -80,6 +86,14 @@ spec:
           value: "true"
         - name: TZ
           value: "{{ .Values.timezone }}"
+
+        {{- if contains "standalone" .Values.profile }}
+        - name: KC_HTTPS_CERTIFICATE_KEY_FILE
+          value: /ssl/tls.key
+        - name: KC_HTTPS_CERTIFICATE_FILE
+          value: /ssl/tls.crt
+        {{- end }}
+
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
         securityContext:
@@ -89,6 +103,17 @@ spec:
           name: keycloak-theme
         - mountPath: /opt/keycloak/data/tmp/kc-gzip-cache
           name: keycloak-theme-cache
+
+        {{- if contains "standalone" .Values.profile }}
+        - mountPath: /ssl/tls.key
+          name: eea-certificate
+          readOnly: true
+          subPath: tls.key
+        - mountPath: /ssl/tls.crt
+          name: eea-certificate
+          readOnly: true
+          subPath: tls.crt
+        {{- end }}
 
         livenessProbe:
           httpGet:
@@ -118,3 +143,11 @@ spec:
       - name: keycloak-theme-cache
         persistentVolumeClaim:
           claimName: keycloak-theme-cache
+
+      {{- if contains "standalone" .Values.profile }}
+      - name: eea-certificate
+        secret:
+          defaultMode: 0444
+          optional: false
+          secretName: star-eea-europa-eu
+      {{- end }}
