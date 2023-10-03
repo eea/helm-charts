@@ -68,9 +68,9 @@ service:
 
 resources:
   requests:
-    memory: 1Gi
+    memory: 4Gi
   limits:
-    memory: 1300Mi
+    memory: 4Gi
 
 nodeSelector: {}
 
@@ -84,9 +84,9 @@ backup:
   historyLevel: '160'
   resources:
     requests:
-      memory: 1Gi
+      memory: 2Gi
     limits:
-      memory: 1300Mi
+      memory: 2Gi
 
   nodeSelector: {}
 
