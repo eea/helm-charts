@@ -12,6 +12,9 @@ There is a backup cronjob built in, which can be enabled with backup.enable=true
 ## Releases
 
 <dl>
+  <dt>Version 1.1.1</dt>
+  <dd>Increased container default memory values. Increased image version tag. </dd>
+  
   <dt>Version 1.1.0</dt>
   <dd>Sync consumers now use ephemeral storage, which means they will 
       do a complete download of the ldap database at redeploy.</dd>
