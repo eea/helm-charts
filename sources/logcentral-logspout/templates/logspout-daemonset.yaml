@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: logspout-graylog
+
+spec:
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      name: logspout-graylog
+  template:
+
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        name: logspout-graylog
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
+      containers:
+      - name: logspout
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+
+        env:
+        - name: TAIL
+          value: "0"
+        - name: LOGSPOUT
+          name: "ignore"
+        - name: SYSLOG_FORMAT
+          value: {{ .Values.syslogFormat }}
+
+        args:
+        - "{{ .Values.routeUri }}"
+
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
+        securityContext:
+          {{- toYaml .Values.securityContext | nindent 12 }}
+
+        volumeMounts:
+        - name: log
+          mountPath: /var/run/docker.sock
+
+      volumes:
+        - name: log
+          hostPath:
+              path: /var/run/docker.sock

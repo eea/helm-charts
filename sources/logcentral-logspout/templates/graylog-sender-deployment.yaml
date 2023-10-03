@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: graylog-sender
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    name: graylog-sender
+
+spec:
+  replicas: 1
+  strategy: Recreate
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      name: graylog-sender
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        name: graylog-sender
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
+      containers:
+      - name: graylog-sender
+        image: eeacms/graylog-sender:1.1
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+
+        env:
+        - name: GRAYLOG_INPUTS_LIST
+          value: {{ .Values.graylogInputsList }}
+        - name: GRAYLOG_TIMEOUT_S
+          value: {{ .Values.graylogTimeoutS }}
+
+        resources:
+          {{- toYaml .Values.sender.resources | nindent 10 }}
+        securityContext:
+          {{- toYaml .Values.sender.securityContext | nindent 12 }}
+
+      restartPolicy: Always
+

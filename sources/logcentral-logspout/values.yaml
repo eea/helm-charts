@@ -1,0 +1,44 @@
+# Default values
+
+image:
+  repository: gliderlabs/logspout
+  pullPolicy: IfNotPresent
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: false
+  annotations: {}
+  name: ""
+
+# The Syslog format to use.  If not certain, use rfc5424
+syslogFormat: rfc5424
+# Logspout route for logs
+routeUri: 'syslog://logs.apps.eea.europa.eu:1514'
+# List of graylog inputs to send logs to
+graylogInputsList: "syslog;udp;logs.apps.eea.europa.eu;1514"
+# Send logs frequency
+graylogTimeoutS: "300"
+
+podAnnotations: {}
+podSecurityContext: {}
+securityContext: {}
+
+resources:
+  requests:
+    memory: 352Mi
+    cpu: 0.15
+  limits:
+    memory: 500Mi
+
+sender:
+  resources:
+    requests:
+      memory: 64Mi
+    limits:
+      memory: 64Mi
+  securityContext: {}
+
