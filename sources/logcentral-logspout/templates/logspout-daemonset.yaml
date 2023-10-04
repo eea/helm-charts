@@ -32,7 +32,7 @@ spec:
         - name: LOGSPOUT
           name: "ignore"
         - name: SYSLOG_FORMAT
-          value: {{ .Values.syslogFormat }}
+          value: "{{ .Values.syslogFormat }}"
 
         args:
         - "{{ .Values.routeUri }}"

@@ -17,6 +17,9 @@ This chart is (almost) configured for production.
 ## Releases
 
 <dl>
+  <dt>Version 0.1.2</dt>
+  <dd>Fixed syntax error in graylog-sender.</dd>
+
   <dt>Version 0.1.1</dt>
   <dd>Fixed syntax error in deployment strategy.</dd>
 

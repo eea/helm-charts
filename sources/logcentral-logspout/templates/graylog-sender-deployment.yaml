@@ -33,9 +33,9 @@ spec:
 
         env:
         - name: GRAYLOG_INPUTS_LIST
-          value: {{ .Values.graylogInputsList }}
+          value: "{{ .Values.graylogInputsList }}"
         - name: GRAYLOG_TIMEOUT_S
-          value: {{ .Values.graylogTimeoutS }}
+          value: "{{ .Values.graylogTimeoutS }}"
 
         resources:
           {{- toYaml .Values.sender.resources | nindent 10 }}
