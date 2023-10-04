@@ -1,5 +1,7 @@
 # EEA - Logspout
 
+**Kubernetes uses containerd and has removed support for Docker control socket from version 1.24 onwards.**
+
 Glider Labs Logspout for docker logs to logcentral.
 
 Logspout Agents: To send logs from containers on rancher, users deploy a logspout infrastructure stack from the EEA Helm catalog as a DaemonSet. All containers in the environment will automatically send all logs to Graylog.
@@ -17,6 +19,9 @@ This chart is (almost) configured for production.
 ## Releases
 
 <dl>
+  <dt>Version 0.1.3</dt>
+  <dd>Added kubernets version constraint.</dd>
+
   <dt>Version 0.1.2</dt>
   <dd>Fixed syntax error in graylog-sender.</dd>
 
