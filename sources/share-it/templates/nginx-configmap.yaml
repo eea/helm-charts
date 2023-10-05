@@ -122,8 +122,8 @@ data:
 
                 # Enable pretty urls
                 fastcgi_param front_controller_active true;
-                resolver 169.254.169.250 ipv6=off valid=15s;
-                set $backend "app:9000";
+                resolver {{ .Values.resolver }} ipv6=off valid=15s;
+                set $backend "app.{{ .Release.Namespace }}.svc.cluster.local:9000";
                 fastcgi_pass $backend;
                 fastcgi_intercept_errors on;
                 fastcgi_request_buffering off;

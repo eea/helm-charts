@@ -5,6 +5,9 @@ A Nextcloud instance for sharing files.
 ## Releases
 
 <dl>
+  <dt>Version 0.1.2</dt>
+  <dd>Provide resolver value as parameter in nginx.</dd>
+
   <dt>Version 0.1.1</dt>
   <dd>Fixed label match in db-service.</dd>
 
