@@ -4,7 +4,7 @@ metadata:
   name: db
   labels:
     {{- include "appl.labels" . | nindent 4 }}
-    component: nextcloud-db
+    component: db
 spec:
   type: ClusterIP
   ports:
@@ -13,4 +13,4 @@ spec:
     targetPort: 3306
   selector:
     {{- include "appl.selectorLabels" . | nindent 4 }}
-    component: nextcloud-db
+    component: db
