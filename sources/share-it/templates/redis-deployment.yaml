@@ -28,16 +28,30 @@ spec:
       containers:
       - name: redis
         image: redis:5-alpine3.10
-        resources:
-          {{- toYaml .Values.redis.resources | nindent 10 }}
-        volumeMounts:
-        - mountPath: /data
-          name: shareit-redis
-        ports:
-        - containerPort: 6379
         env:
         - name: TZ
           value: Europe/Copenhagen
+
+        resources:
+          {{- toYaml .Values.redis.resources | nindent 10 }}
+
+        volumeMounts:
+        - mountPath: /data
+          name: shareit-redis
+
+        ports:
+        - containerPort: 6379
+
+        livenessProbe:
+          tcpSocket:
+            port: 6379
+          periodSeconds: 60
+
+        startupProbe:
+          tcpSocket:
+            port: 6379
+          failureThreshold: 6
+          periodSeconds: 10
 
       restartPolicy: Always
 

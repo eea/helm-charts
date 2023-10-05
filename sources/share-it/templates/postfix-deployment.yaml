@@ -54,4 +54,17 @@ spec:
           value: {{ .Values.timezone }}
         resources:
           {{- toYaml .Values.postfix.resources | nindent 10 }}
+
+        livenessProbe:
+          tcpSocket:
+            port: 25
+          periodSeconds: 60
+
+        startupProbe:
+          tcpSocket:
+            port: 25
+          failureThreshold: 6
+          periodSeconds: 10
+
+
       restartPolicy: Always
