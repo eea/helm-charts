@@ -32,7 +32,10 @@ service:
 ingress:
   enabled: false
   className: "nginx"
-  annotations: {}
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-max-temp-file-size: '1024m'
+    nginx.ingress.kubernetes.io/proxy-read-timeout: '120'
+    nginx.ingress.kubernetes.io/proxy-send-timeout: '120'
 #   nginx.ingress.kubernetes.io/configuration-snippet: |
 #     more_set_headers 'X-XSS-Protection: 1; mode=block'
 #       'X-Frame-Options: SAMEORIGIN'
