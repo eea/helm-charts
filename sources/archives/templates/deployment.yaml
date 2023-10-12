@@ -64,16 +64,6 @@ spec:
         - mountPath: /var/local/groupware/var/zeoserver/blobs
           name: {{ .Release.Name }}-blobstorage
 
-        # Don't give work if slow
-        livenessProbe:
-          httpGet:
-            path: /@@health_check
-            port: http
-          timeoutSeconds: 5
-          initialDelaySeconds: 15
-          failureThreshold: 3
-          periodSeconds: 30
-
         # Restart if unresponsive for 30 seconds 3 times
         livenessProbe:
           httpGet:
@@ -92,7 +82,6 @@ spec:
           timeoutSeconds: 3
           failureThreshold: 30
           periodSeconds: 10
-
 
       {{- with .Values.nodeSelector }}
       nodeSelector:
