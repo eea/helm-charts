@@ -18,7 +18,10 @@ This chart is configured for production use.
 <dl>
 
   <dt>Version 1.0.0 (future)</dt>
-  <dd>First version to be used in production.</dd>
+  <dd>First version to be used in production.</dd> 
+
+  <dt>Version 0.2.5</dt>
+  <dd>Envrionmental variables as strings for helm numeric values.</dd>
 
   <dt>Version 0.2.4</dt>
   <dd>String variable values fix.</dd>
