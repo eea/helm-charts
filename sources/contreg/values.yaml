@@ -109,6 +109,10 @@ virtuoso:
   podAnnotations: {}
   securityContext: {}
   healthCheck: true
+  numberOfBuffers: 4000000
+  maxDirtyBuffers: 3000000
+  maxCheckpointRemap: 875000
+  maxQueryMem: 16
 
 admin:
   image: eeacms/centos7dev:2.2.4

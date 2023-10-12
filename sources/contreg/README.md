@@ -20,6 +20,9 @@ This chart is configured for production use.
   <dt>Version 1.0.0 (future)</dt>
   <dd>First version to be used in production.</dd>
 
+  <dt>Version 0.2.3</dt>
+  <dd>Placeholders and updated values for environmental variables.</dd>
+
   <dt>Version 0.2.2</dt>
   <dd>Make virtuoso health checks optional.</dd>
 

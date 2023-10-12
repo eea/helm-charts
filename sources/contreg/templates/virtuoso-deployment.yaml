@@ -44,19 +44,19 @@ spec:
         - name: VIRT_Parameters_KeepAliveTimeout
           value: "100"
         - name: VIRT_Parameters_MaxCheckpointRemap
-          value: "2000000"
+          value: {{ .Values.virtuoso.maxCheckpointRemap }}
         - name: VIRT_Parameters_MaxDirtyBuffers
-          value: "2000000"
+          value: {{ .Values.virtuoso.maxDirtyBuffers }}
         - name: VIRT_Parameters_MaxQueryCostEstimationTime
           value: "0"
         - name: VIRT_Parameters_MaxQueryExecutionTime
           value: "600"
         - name: VIRT_Parameters_MaxQueryMem
-          value: 12G
+          value: {{ .Values.virtuoso.maxQueryMem }}
         - name: VIRT_Parameters_MaxVectorSize
           value: "2000000"
         - name: VIRT_Parameters_NumberOfBuffers
-          value: "3000000"
+          value: {{ .Values.virtuoso.numberOfBuffers }}
         - name: VIRT_Parameters_ResultSetMaxRows
           value: "50000"
         - name: VIRT_Parameters_TimezonelessDatetimes
