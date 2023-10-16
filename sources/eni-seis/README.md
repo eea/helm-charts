@@ -1,1 +1,14 @@
 # ENI-SEIS
+
+## Releases
+
+<dl>
+
+  <dt>Version 0.3.0</dt>
+  <dd>Added network security policies. Activated autoscaling as default.</dd>
+
+  <dt>Version 0.1.0</dt>
+  <dd>Initial version.</dd>
+
+</dl>
+

@@ -30,7 +30,7 @@ securityContext: {}
 
 resources:
   requests:
-    memory: 2Gi
+    memory: 3Gi
   limits:
     memory: 3Gi
 
@@ -60,7 +60,7 @@ ingress:
         - eni-seis.eionet.europa.eu
 
 autoscaling:
-  enabled: false
+  enabled: true
   minReplicas: 1
   maxReplicas: 4
   #targetCPUUtilizationPercentage: 80
