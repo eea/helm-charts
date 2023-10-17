@@ -1,0 +1,27 @@
+# Allow NGINX to contact the frontend service.
+#
+{{- if .Values.ingress.enabled -}}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: rke2-ingress-nginx
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component : httpd
+  policyTypes:
+  - Ingress
+
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: rke2-ingress-nginx
+{{- end }}

@@ -1,0 +1,20 @@
+# Deny all communication for all pods in the app.
+# (There can be more than one app in a namespace)
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: deny-all
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+  policyTypes:
+  - Ingress
+  - Egress
+
+  ingress: []
+
+  egress: []
