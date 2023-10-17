@@ -7,6 +7,9 @@ This chart is configured for production, but Ingress is disabled by default.
 
 <dl>
 
+  <dt>Version 0.4.1</dt>
+  <dd>Typo in network security policy.</dd>
+
   <dt>Version 0.4.0</dt>
   <dd>Added network security policies.</dd>
 
