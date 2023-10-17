@@ -5,6 +5,9 @@ A Nextcloud instance for sharing files.
 ## Releases
 
 <dl>
+  <dt>Version 0.1.4</dt>
+  <dd>Typo in mount path.</dd>
+
   <dt>Version 0.1.3</dt>
   <dd>Added health checks.</dd>
 
