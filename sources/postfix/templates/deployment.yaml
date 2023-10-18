@@ -1,11 +1,9 @@
-{{- if .Values.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "appl.fullname" . }}-postfix
+  name: {{ include "appl.fullname" . }}
   labels:
     {{- include "appl.labels" . | nindent 4 }}
-    component: postfix
 
 spec:
   replicas: {{ .Values.replicaCount }}
@@ -15,12 +13,10 @@ spec:
   selector:
     matchLabels:
       {{- include "appl.selectorLabels" . | nindent 6 }}
-      component: postfix
   template:
     metadata:
       labels:
         {{- include "appl.selectorLabels" . | nindent 8 }}
-        component: postfix
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -65,4 +61,3 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       restartPolicy: Always
-{{- end }}
