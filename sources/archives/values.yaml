@@ -77,19 +77,13 @@ cron:
       memory: 1Gi
 
 postfix:
+  enabled: true
+  fullnameOverride: "postfix"
+  serverName: archives.eionet.europa.eu
   mtpPass: ''
   mtpPort: ''
   mtpRelay: ''
   mtpUser: ''
-  securityContext: {}
-  nodeSelector: {}
-  tolerations: []
-  affinity: {}
-  resources:
-    requests:
-      memory: 64Mi
-    limits:
-      memory: 64Mi
 
 zeo:
   replicaCount: 1
