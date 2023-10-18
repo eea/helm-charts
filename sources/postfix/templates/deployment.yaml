@@ -17,19 +17,28 @@ spec:
     metadata:
       labels:
         {{- include "appl.selectorLabels" . | nindent 8 }}
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+
       containers:
       - name: {{ include "appl.name" . }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+
         ports:
         - containerPort: 25
           protocol: TCP
           name: smtp
+
         env:
         - name: MTP_HOST
           value: {{ .Values.serverName }}
@@ -46,7 +55,19 @@ spec:
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
         securityContext:
-          {{- toYaml .Values.securityContext | nindent 12 }}
+          {{- toYaml .Values.securityContext | nindent 10 }}
+
+#       livenessProbe:
+#         tcpSocket:
+#           port: 25
+#         periodSeconds: 60
+
+        startupProbe:
+          tcpSocket:
+            port: 25
+          failureThreshold: 6
+          periodSeconds: 10
+
 
       {{- with .Values.nodeSelector }}
       nodeSelector:

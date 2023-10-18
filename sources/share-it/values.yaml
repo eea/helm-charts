@@ -74,20 +74,12 @@ app:
       memory: 4Gi
 
 postfix:
-  mtpHost: ''
+  fullnameOverride: "postfix"
+  serverName: ''
   mtpPass: ''
   mtpPort: ''
   mtpRelay: ''
   mtpUser: ''
-  securityContext: {}
-  nodeSelector: {}
-  tolerations: []
-  affinity: {}
-  resources:
-    requests:
-      memory: 64Mi
-    limits:
-      memory: 64Mi
 
 db:
   database: ncdb
