@@ -78,6 +78,7 @@ async:
       memory: 2Gi
 
 memcached:
+  fullnameOverride: "memcached"
   resources:
     requests:
       memory: 1Gi

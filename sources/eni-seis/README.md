@@ -4,6 +4,9 @@
 
 <dl>
 
+  <dt>Version 0.5.0</dt>
+  <dd>Use subchart for memcached.</dd>
+
   <dt>Version 0.4.0</dt>
   <dd>Use subchart for postfix.</dd>
 
