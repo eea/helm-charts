@@ -11,10 +11,11 @@ To add a chart do:
 Create your package or update the source. For the example we will call the package `toypackage`.
 
     cd helm-charts/sources
-    mkdir toypackage
+    mkdir toypackage _or helm create toypackage_
     cd toypackage
-    ... create Chart.yaml, values.yaml etc. If updating, remember to increase version number in Chart.yaml
+    _... create Chart.yaml, values.yaml etc. If updating, remember to increase version number in Chart.yaml_
     helm lint .
+    helm dependencies update _if you have changed the chart dependencies_
     git pull
     git add .
     cd ../../docs

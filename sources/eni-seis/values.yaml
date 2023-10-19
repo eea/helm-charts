@@ -86,17 +86,12 @@ memcached:
 
 # Mail transport
 postfix:
-  host: eni-seis.eionet.europa.eu
-  pass: ''
-  port: '8587'
-  relay: ''
-  user: eni-seis
-  resources:
-    requests:
-      memory: 64Mi
-    limits:
-      memory: 64Mi
-
+  fullnameOverride: "postfix"
+  serverName: 'eni-seis.eionet.europa.eu'
+  mtpPass: ''
+  mtpPort: '8587'
+  mtpRelay: ''
+  mtpUser: 'eni-seis'
 
 zeoserver:
   resources:
