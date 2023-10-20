@@ -5,6 +5,9 @@ A csw service and front end application to search and find EEA GIS datasets.
 ## Releases
 
 <dl>
+  <dt>Version 0.1.3</dt>
+  <dd>Removed geoserver.</dd>
+
   <dt>Version 0.1.2</dt>
   <dd>More smoke tests. Fixed service selector for nextcloud.</dd>
 

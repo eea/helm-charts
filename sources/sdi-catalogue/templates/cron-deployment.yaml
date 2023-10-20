@@ -33,7 +33,7 @@ spec:
           value: |-
             # m h dom mon dow user  command
             #* * * * * echo 1 minute cron
-            8 1,3,5,13,19,21,23 * * *   root        /opt/geoserver_publication.sh
+            #8 1,3,5,13,19,21,23 * * *   root        /opt/geoserver_publication.sh
             41 1,3,5,13,19,21,23 * * *  root        /opt/nextcloud_apache_conf_main.sh
             * */12 * * *                root        /opt/transferit/cleanup_files.sh
             33 * * * *                  www-data    /opt/webdav_public_links/webdav_public_links.sh
@@ -50,8 +50,6 @@ spec:
           name: sdi-apache-configuration
         - mountPath: /usr/local/apache2/htdocs
           name: sdi-apache-www
-        - mountPath: /usr/local/tomcat/webapps/ROOT/data
-          name: sdi-geoserver-app
         - mountPath: /redis-data
           name: sdi-nextcloud-redis
 #       - mountPath: /var/lib/postgresql/data
@@ -76,9 +74,6 @@ spec:
       - name: sdi-apache-www
         persistentVolumeClaim:
           claimName: sdi-apache-www
-      - name: sdi-geoserver-app
-        persistentVolumeClaim:
-          claimName: sdi-geoserver-app
       - name: sdi-nextcloud-redis
         persistentVolumeClaim:
           claimName: sdi-nextcloud-redis

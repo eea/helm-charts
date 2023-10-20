@@ -32,10 +32,6 @@ spec:
         env:
         - name: ELASTICSEARCH_HOST
           value: elasticsearch:9200
-        - name: GEONETWORK_PASSWORD
-          value: {{ .Values.geoserver.password }}
-        - name: GEONETWORK_USERNAME
-          value: {{ .Values.geoserver.username }}
         - name: KIBANA_HOST
           value: {{ .Values.serverUrl }}
         resources:

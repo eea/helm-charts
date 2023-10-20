@@ -157,22 +157,6 @@ data:
             ProxyPassReverse http://validator:8080/validator/
         </Location>
 
-        <Location /geoserver>
-            ProxyPreserveHost On
-            AllowOverride None
-
-            ## Reverse proxy configuration
-            <IfModule mod_headers.c>
-               RequestHeader unset Authorization
-            </IfModule>
-
-            ProxyPass http://geoserver:8080/geoserver
-            ProxyPassReverse http://geoserver:8080/geoserver
-
-            #ProxyPass http://geoserver:8080/web
-            #ProxyPassReverse http://geoserver:8080/web
-        </Location>
-     
         <Location /datashare>
             ProxyPreserveHost On
             RewriteEngine On
