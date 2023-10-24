@@ -15,3 +15,19 @@ run two different EUNIS applications in the same namespace.
 ## Smoke test
 
 You can run `helm test eunis` to verify the system is working correctly.
+
+## Releases
+
+<dl>
+
+  <dt>Version 0.2.0</dt>
+  <dd>Added network security policies.</dd>
+
+  <dt>Version 0.1.3</dt>
+  <dd>First version to be used in production.</dd>
+
+  <dt>Version 0.1.0</dt>
+  <dd>Initial version.</dd>
+
+</dl>
+

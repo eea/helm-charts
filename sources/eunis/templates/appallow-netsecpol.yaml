@@ -1,0 +1,22 @@
+# Allow pods in the same application to communicate
+# (There can be more than one app in a namespace)
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: appl-communication
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+  policyTypes:
+  - Ingress
+
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          {{- include "appl.selectorLabels" . | nindent 10 }}
+
