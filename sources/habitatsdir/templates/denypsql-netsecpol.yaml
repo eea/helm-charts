@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: deny-psql-egress
+  name: {{ .Release.Name }}-psql-egress
   labels:
     {{- include "appl.labels" . | nindent 4 }}
 

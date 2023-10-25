@@ -1,4 +1,4 @@
-## Nature Directives expert review tool
+# Nature Directives expert review tool
 
 This chart is configured to require little or no configuration for development and test usage.
 
@@ -24,6 +24,9 @@ To set the app up for Article 12 do:
 ## Releases
 
 <dl>
+
+  <dt>Version 0.3.1</dt>
+  <dd>More network security policies for ingresshh</dd>
 
   <dt>Version 0.3.0</dt>
   <dd>Added network security policy to prevent egress from database pods.</dd>
