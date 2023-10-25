@@ -5,6 +5,9 @@ A csw service and front end application to search and find EEA GIS datasets.
 ## Releases
 
 <dl>
+  <dt>Version 0.1.4</dt>
+  <dd>Removed geoserver smoke test. Metricbeat and Filebeat disabled by default</dd>
+
   <dt>Version 0.1.3</dt>
   <dd>Removed geoserver.</dd>
 

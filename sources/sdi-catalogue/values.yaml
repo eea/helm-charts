@@ -59,8 +59,9 @@ elasticsearch:
     limits:
       memory: 3Gi
 
+# Should probably not be part of this app
 filebeat:
-  enabled: true
+  enabled: false
   resources: {}
 
 geonetworkdb:
@@ -78,8 +79,9 @@ geonetworkdb:
 kibana:
   resources: {}
 
+# Should probably not be part of this app
 metricbeat:
-  enabled: true
+  enabled: false
   resources: {}
 
 nextcloud:
