@@ -6,8 +6,7 @@ This chart is configured for production use.
 
 <dl>
   <dt>deployContexts</dt>
-  <dd>If set to `demo`, then the deployment will fill the database with
-sample data. Must be set to `prod` in production.</dd>
+  <dd>If set to `uat`, then the deployment will fill the database with sample data. Must be set to `prod` in production.</dd>
 
   <dt>ldapPassword</dt>
   <dd>Contains the password needed to run queries on the ldap service for group memberships.</dd>
@@ -19,3 +18,22 @@ sample data. Must be set to `prod` in production.</dd>
   <dd>Probably not implemented.</dd>
 
 </dl>
+
+## Releases
+
+<dl>
+
+  <dt>Version 0.1.7</dt>
+  <dd>Added smoke test for database.</dd>
+
+  <dt>Version 0.1.6</dt>
+  <dd>Updated documentation.</dd>
+
+  <dt>Version 0.1.5</dt>
+  <dd>Typo in deployContexts variable.</dd>
+
+  <dt>Version 0.1.0</dt>
+  <dd>Initial version.</dd>
+
+</dl>
+
