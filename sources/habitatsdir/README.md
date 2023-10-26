@@ -25,8 +25,11 @@ To set the app up for Article 12 do:
 
 <dl>
 
+  <dt>Version 0.3.2</dt>
+  <dd>Also allow ingress to reach static resources.</dd>
+
   <dt>Version 0.3.1</dt>
-  <dd>More network security policies for ingresshh</dd>
+  <dd>More network security policies for ingress.</dd>
 
   <dt>Version 0.3.0</dt>
   <dd>Added network security policy to prevent egress from database pods.</dd>
