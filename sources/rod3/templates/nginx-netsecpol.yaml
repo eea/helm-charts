@@ -1,11 +1,10 @@
-#
 # Allow NGINX to contact the frontend service.
 #
 {{- if .Values.ingress.enabled }}
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: rke2-ingress-nginx
+  name: {{ .Release.Name }}-allow-ingress
   labels:
     {{- include "appl.labels" . | nindent 4 }}
 
