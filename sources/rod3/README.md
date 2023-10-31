@@ -8,6 +8,8 @@ This chart is configured for production use.
   <dt>deployContexts</dt>
   <dd>If set to `uat`, then the deployment will fill the database with sample data. Must be set to `prod` in production.</dd>
 
+  <dt>initialuser</dt>
+  <dd>If set, then this username is added to the permissions table as administrator.</dd>
   <dt>ldapPassword</dt>
   <dd>Contains the password needed to run queries on the ldap service for group memberships.</dd>
 
@@ -22,6 +24,9 @@ This chart is configured for production use.
 ## Releases
 
 <dl>
+
+  <dt>Version 0.2.0</dt>
+  <dd>Added network security policies</dd>
 
   <dt>Version 0.1.7</dt>
   <dd>Added smoke test for database.</dd>
