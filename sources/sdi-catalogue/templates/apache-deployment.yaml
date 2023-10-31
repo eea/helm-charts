@@ -38,10 +38,6 @@ spec:
         volumeMounts:
         - mountPath: /usr/local/apache2/conf/extra
           name: sdi-apache-configuration
-        - mountPath: /usr/local/apache2/conf/extra/ssl.conf
-          name: sdi-apache-config
-          readOnly: true
-          subPath: ssl.conf
 
         - mountPath: /usr/local/apache2/htdocs
           name: sdi-apache-www
@@ -80,12 +76,6 @@ spec:
       - name: sdi-apache-configuration
         persistentVolumeClaim:
           claimName: sdi-apache-configuration
-      - name: sdi-apache-config
-        configMap:
-          defaultMode: 0444
-          optional: false
-          name: sdi-apache-config
-
       - name: sdi-apache-www
         persistentVolumeClaim:
           claimName: sdi-apache-www
