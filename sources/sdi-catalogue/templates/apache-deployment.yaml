@@ -58,6 +58,10 @@ spec:
           name: ca-certificates
           readOnly: true
           subPath: ca-bundle.crt
+        - mountPath: /ssl/chain.crt
+          name: ca-certificates
+          readOnly: true
+          subPath: chain.crt
 
       {{- with .Values.nodeSelector }}
       nodeSelector:

@@ -5,6 +5,9 @@ A csw service and front end application to search and find EEA GIS datasets.
 ## Releases
 
 <dl>
+  <dt>Version 0.2.1</dt>
+  <dd>Typo in geonetworkdb value.</dd>
+
   <dt>Version 0.2.0</dt>
   <dd>Stopped using config map for Apache ssl.conf.</dd>
 
