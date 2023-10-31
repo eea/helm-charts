@@ -31,6 +31,7 @@ spec:
         image: ghcr.io/inspire-mif/helpdesk-validator/inspire-validator:2021.3.1
         ports:
         - containerPort: 8080
+        - containerPort: 8090
         resources:
           {{- toYaml .Values.validator.resources | nindent 10 }}
         volumeMounts:
