@@ -1,0 +1,9 @@
+{{ $cert := genSelfSignedCert  .Values.serverName (list ) (list ) 3650 }}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: dummy-certificate
+type: kubernetes.io/tls
+data:
+  tls.crt: {{ $cert.Cert | b64enc }}
+  tls.key: {{ $cert.Key | b64enc }}

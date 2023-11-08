@@ -2,6 +2,8 @@
 serverName: apache
 # Number is required for filebeat and metricbeat.
 serverUrl: https://apache:443
+# Name of Secret object
+serverCert: dummy-certificate
 
 centralLdapUrl: ldap3.eionet.europa.eu
 centralLdapPassword: ''
@@ -113,6 +115,7 @@ nextcloudCron:
       memory: 2Gi
 
 ogcapi:
+  enabled: true
   resources: {}
 
 proftpd:

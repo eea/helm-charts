@@ -5,6 +5,11 @@ A csw service and front end application to search and find EEA GIS datasets.
 ## Releases
 
 <dl>
+  <dt>Version 0.3.0</dt>
+  <dd>Can now deploy with empty volumes - except for ogcapi.
+  If there is no ssl.conf the apache configuration, then one is created.
+  Use serverCert to point to the official certificate, otherwise a self-signed cert will be used.</dd>
+
   <dt>Version 0.2.1</dt>
   <dd>Typo in geonetworkdb value.</dd>
 

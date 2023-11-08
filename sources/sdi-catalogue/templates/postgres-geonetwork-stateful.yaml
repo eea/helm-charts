@@ -32,6 +32,12 @@ spec:
         image: postgres:13.1
         env:
         - name: POSTGRES_PASSWORD
+          value: {{ .Values.geonetworkdb.password }}
+        - name: POSTGRES_DB
+          value: {{ .Values.geonetworkdb.database }}
+        - name: POSTGRES_USER
+          value: {{ .Values.geonetworkdb.username }}
+        - name: PSQL_PASSWORD
           value: {{ .Values.geonetworkdb.psqlpw }}
         ports:
         - containerPort: 5432
@@ -67,7 +73,7 @@ spec:
         secret:
           defaultMode: 0444
           optional: false
-          secretName: star-eea-europa-eu
+          secretName: "{{ .Values.serverCert }}"
       - name: ca-certificates
         configMap:
           defaultMode: 0444

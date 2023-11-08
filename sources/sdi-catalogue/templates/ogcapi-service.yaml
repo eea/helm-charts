@@ -1,3 +1,4 @@
+{{- if .Values.ogcapi.enabled -}}
 apiVersion: v1
 kind: Service
 metadata:
@@ -14,3 +15,4 @@ spec:
   selector:
     {{- include "appl.selectorLabels" . | nindent 4 }}
     component: ogcapi
+{{- end }}

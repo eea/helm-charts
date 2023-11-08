@@ -118,7 +118,7 @@ spec:
         secret:
           defaultMode: 0444
           optional: false
-          secretName: star-eea-europa-eu
+          secretName: "{{ .Values.serverCert }}"
       - name: ca-certificates
         configMap:
           defaultMode: 0444

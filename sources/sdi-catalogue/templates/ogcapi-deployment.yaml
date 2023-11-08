@@ -1,3 +1,4 @@
+{{- if .Values.ogcapi.enabled -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -57,3 +58,4 @@ spec:
       - name: sdi-ogcapi-config
         configMap:
           name: sdi-ogcapi-config
+{{- end }}

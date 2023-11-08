@@ -22,6 +22,20 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
+      initContainers:
+      # Copy a simple ssl.conf file if it doesn't exist at target
+      - name: init-ssl-conf
+        image: busybox:1.36
+        command: ['sh', '-c', 'test -f /usr/local/apache2/conf/extra/ssl.conf || cp /mnt/ssl.conf /usr/local/apache2/conf/extra/ssl.conf && touch /usr/local/apache2/conf/extra/nc.conf']
+        volumeMounts:
+        - mountPath: /usr/local/apache2/conf/extra
+          name: sdi-apache-configuration
+        - mountPath: /mnt/ssl.conf
+          name: sdi-apache-config
+          readOnly: true
+          subPath: ssl.conf
+
       containers:
       - name: apache
         image: eeacms/sdi-apache:1.0.10
@@ -95,9 +109,14 @@ spec:
         secret:
           defaultMode: 0444
           optional: false
-          secretName: star-eea-europa-eu
+          secretName: "{{ .Values.serverCert }}"
       - name: ca-certificates
         configMap:
           defaultMode: 0444
           optional: false
           name: {{ .Release.Name }}-cacrts
+      - name: sdi-apache-config
+        configMap:
+          defaultMode: 0444
+          optional: false
+          name: sdi-apache-config
