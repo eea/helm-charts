@@ -22,7 +22,7 @@ spec:
 
           containers:
           - name: {{ .Release.Name }}-builddicts
-            image: eeacms/centos7dev:2.2.4
+            image: eeacms/centos7dev:2.2.6
             args:
             - python
             - dic2dd.py

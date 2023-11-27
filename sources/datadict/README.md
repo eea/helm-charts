@@ -6,6 +6,9 @@ This chart is configured for production use.
 
 <dl>
 
+  <dt>Version 1.2.0</dt>
+  <dd>Builddict and buildsw no longer enabled by default.</dd>
+
   <dt>Version 1.1.1</dt>
   <dd>Set up startupProbe to allow liquibase to complete.
      Added netsecpol to block egress from database.</dd>

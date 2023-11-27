@@ -108,10 +108,12 @@ builddicts:
       memory: 64Mi
     limits:
       memory: 64Mi
+  securityContext: {}
 
 buildsw:
-  enabled: true
+  enabled: false
   resources: {}
+  securityContext: {}
 
 siteCode:
   notificationFrom: dd@eionet.europa.eu
