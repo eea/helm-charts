@@ -6,6 +6,10 @@ This chart is configured for production use.
 
 <dl>
 
+  <dt>Version 1.1.1</dt>
+  <dd>Set up startupProbe to allow liquibase to complete.
+     Added netsecpol to block egress from database.</dd>
+
   <dt>Version 1.1.0</dt>
   <dd>Make it possible to connect to database over load-balancer.</dd>
 

@@ -88,10 +88,19 @@ spec:
           - mountPath: /opt/datadict
             name: {{ .Release.Name }}-files
 
+          # Wait for up to 3 minutes to all liquibase to finish
+          startupProbe:
+            httpGet:
+              path: /
+              port: tomcat8080
+            failureThreshold: 18
+            periodSeconds: 10
+
           livenessProbe:
             httpGet:
               path: /
               port: tomcat8080
+            periodSeconds: 20
 
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
