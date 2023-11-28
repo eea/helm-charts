@@ -1,0 +1,20 @@
+{{- if .Values.useRedis }}
+{{- if empty (lookup "v1" "Service" .Release.Namespace .Values.redisHost) }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.redisHost }}
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: redis
+spec:
+  type: ClusterIP
+  ports:
+    - port: 6379
+      targetPort: 6379
+      protocol: TCP
+  selector:
+    {{- include "appl.selectorLabels" . | nindent 4 }}
+    component: redis
+{{- end }}
+{{- end }}

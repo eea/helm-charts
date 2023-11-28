@@ -1,0 +1,90 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "appl.fullname" . }}
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: celery
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: celery
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: celery
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
+      containers:
+      - name: {{ .Release.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - containerPort: 5672
+          protocol: TCP
+        - containerPort: 15672
+          protocol: TCP
+        env:
+        {{- if .Values.useRedis }}
+        - name: CELERY_BACKEND_URL
+          value: redis://{{ .Values.redisHost }}
+        {{- end }}
+        - name: CELERY_BROKER_URL
+          value: amqp://{{ .Values.rabbitUser }}:{{ .Values.rabbitPass }}@{{ include "rabbit.hostname" . }}
+        - name: EVENT_CONSUMER_ARCHIVE_EXPIRY
+          value: "{{ .Values.archiveExpiry }}"
+        - name: EVENT_CONSUMER_MAX_RETRIES
+          value: "{{ .Values.maxRetries }}"
+        - name: REQUIREMENTS
+          value: |
+            {{- .Values.requirements | nindent 12 }}
+        - name: CONSTRAINTS
+          value: |
+            {{- .Values.constraints | nindent 12 }}
+        - name: TASKS
+          value: |
+            {{- .Values.tasks | nindent 12 }}
+        - name: TZ
+          value: {{ .Values.timezone }}
+        {{- toYaml .Values.envVars | nindent 8 }}
+
+        stdin: true
+        tty: true
+
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
+        securityContext:
+          {{- toYaml .Values.securityContext | nindent 10 }}
+
+        # Will restart the pods if it is not responding
+#       livenessProbe:
+#         httpGet:
+#           path: /
+#           port: 5672
+#         initialDelaySeconds: 15
+#         periodSeconds: 60
+
+
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+

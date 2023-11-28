@@ -1,0 +1,74 @@
+{{- if .Values.useRedis }}
+{{- if empty (lookup "v1" "Service" .Release.Namespace .Values.redisHost) }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.redisHost }}
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: redis
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: redis
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: redis
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
+      containers:
+      - name: {{ .Release.Name }}
+        image: redis:5
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - containerPort: 6379
+          protocol: TCP
+
+        resources:
+          {{- toYaml .Values.redis.resources | nindent 10 }}
+        securityContext:
+          {{- toYaml .Values.redis.securityContext | nindent 10 }}
+
+        volumeMounts:
+        - mountPath: /data
+          name: tmpdata
+
+        # Will restart the pods if it is not responding
+#       livenessProbe:
+#         httpGet:
+#           path: /
+#           port: 5672
+#         initialDelaySeconds: 15
+#         periodSeconds: 60
+
+
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+
+      volumes:
+      - name: tmpdata
+        emptyDir: {}
+
+{{- end }}
+{{- end }}

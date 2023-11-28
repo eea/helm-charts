@@ -1,0 +1,16 @@
+{{- if .Values.managementService.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "appl.fullname" . }}
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.managementService.type }}
+  ports:
+    - port: {{ .Values.managementService.port }}
+      targetPort: 15672
+      protocol: TCP
+  selector:
+    {{- include "appl.selectorLabels" . | nindent 4 }}
+{{- end }}
