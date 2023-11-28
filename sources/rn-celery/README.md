@@ -29,6 +29,9 @@ It also has the ability to consume **vanilla AMQP messages** (i.e. **not** Celer
 
 <dl>
 
+  <dt>Version 0.1.1</dt>
+  <dd>Some numeric values shall be interpreted as string.</dd>
+
   <dt>Version 0.1.0</dt>
   <dd>Initial release.</dd>
 
