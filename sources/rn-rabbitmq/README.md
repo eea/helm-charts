@@ -78,6 +78,9 @@ version.
 
 <dl>
 
+  <dt>Version 0.1.1</dt>
+  <dd>Added volume for production data.</dd>
+
   <dt>Version 0.1.0</dt>
   <dd>Initial release.</dd>
 

@@ -46,6 +46,10 @@ spec:
         securityContext:
           {{- toYaml .Values.securityContext | nindent 10 }}
 
+        volumeMounts:
+        - mountPath: /var/lib/rabbitmq
+          name: work-volume
+
         # Will restart the pods if it is not responding
         livenessProbe:
           tcpSocket:
@@ -68,4 +72,10 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       restartPolicy: Always
+
+
+      volumes:
+      - name: work-volume
+        persistentVolumeClaim:
+          claimName: {{ include "appl.fullname" . }}
 
