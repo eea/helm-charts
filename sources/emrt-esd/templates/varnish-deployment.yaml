@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: varnish
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: varnish
+
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: varnish
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: varnish
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
+      containers:
+      - name: varnish
+        image: eeacms/varnish-emrt-necd:4.1-2.0
+
+        ports:
+        - containerPort: 6081
+
+        env:
+        - name: BACKENDS
+          value: haproxy
+        - name: BACKENDS_PORT
+          value: "5000"
+        - name: CACHE_SIZE
+          value: 1G
+        - name: DNS_ENABLED
+          value: "true"
+        - name: LOGSPOUT
+          value: ignore
+        - name: TZ
+          value: Europe/Copenhagen
+
+        livenessProbe:
+          tcpSocket:
+            port: 6081
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          timeoutSeconds: 3
+
+        resources:
+          {{- toYaml .Values.varnish.resources | nindent 10 }}
+        securityContext:
+          {{- toYaml .Values.varnish.securityContext | nindent 10 }}
+      restartPolicy: Always
+

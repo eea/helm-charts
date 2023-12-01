@@ -1,0 +1,31 @@
+apiVersion: v2
+name: emrt-esd
+description: Emission Review Tool - Effort Sharing Decision
+icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/emrt-esd/logo_eionet.png
+
+type: application
+
+keywords:
+- Reportnet
+- Emmission
+
+# This is the chart version. This version number should be incremented each time you make changes
+# to the chart and its templates, including the app version.
+# Versions are expected to follow Semantic Versioning (https://semver.org/)
+version: 0.1.0
+
+# Version for the main container
+appVersion: "18.1.23-1-1.74.3"
+
+# Remember to do helm dep up .
+dependencies:
+  - name: postfix
+    version: 0.2.1
+    repository: https://eea.github.io/helm-charts
+  - name: zeoserver
+    version: 0.1.0
+    repository: https://eea.github.io/helm-charts
+  - name: memcached
+    version: 6.6.7
+    repository: https://charts.bitnami.com/bitnami
+

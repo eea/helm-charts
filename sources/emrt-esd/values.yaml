@@ -1,0 +1,97 @@
+
+replicaCount: 2
+
+image:
+  repository: eeacms/plone-emrt
+  pullPolicy: IfNotPresent
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+proxyBaseUrl: emrt-esd.eionet.europa.eu
+smtpHost: postfix
+smtpPort: '25'
+
+serviceAccount:
+  create: false
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+podSecurityContext: {}
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+service:
+  type: ClusterIP
+  port: 6081
+
+ingress:
+  enabled: false
+  className: "nginx"
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-max-temp-file-size: '1024m'
+#   nginx.ingress.kubernetes.io/configuration-snippet: |
+#     more_set_headers 'X-XSS-Protection: 1; mode=block'
+#       'X-Frame-Options: SAMEORIGIN'
+#       'X-Content-Type-Options: nosniff'
+#       'Referrer-Policy: no-referrer,same-origin,strict-origin,strict-origin-when-cross-origin';
+  hosts:
+    - host: emrt-esd.eionet.europa.eu
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: ''
+      hosts:
+        - emrt-esd.eionet.europa.eu
+
+memcached:
+  fullnameOverride: "memcached"
+  resources:
+    requests:
+      memory: 2Gi
+
+# Mail transport
+postfix:
+  fullnameOverride: "postfix"
+  serverName: emrt-esd.eionet.europa.eu
+  mtpPass: ''
+  mtpPort: ''
+  mtpRelay: ''
+  mtpUser: ''
+
+plone:
+  securityContext: {}
+  resources:
+    requests:
+      memory: 1536Mi
+
+varnish:
+  securityContext: {}
+  resources:
+    requests:
+      memory: 1Gi
+
+haproxy:
+  securityContext: {}
+  resources:
+    requests:
+      memory: 1Gi
+
+cron:
+  enabled: false
+  securityContext: {}
+  resources: {}
+
+zeoserver:
+  fullnameOverride: "zeoserver"
+  storage: 30Gi
+  resources:
+    requests:
+      memory: 1Gi
+

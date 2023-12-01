@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: haproxy
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: haproxy
+
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: haproxy
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: haproxy
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
+      containers:
+      - name: haproxy
+        image: eeacms/haproxy:1.8-1.2
+        env:
+        - name: BACKENDS
+          value: plone
+        - name: BACKENDS_PORT
+          value: "8080"
+        - name: DNS_ENABLED
+          value: "true"
+        - name: DOWN_INTER
+          value: 5s
+        - name: FAST_INTER
+          value: 15s
+        - name: HTTPCHK
+          value: GET /health.check
+        - name: INTER
+          value: 20s
+        - name: LOGSPOUT
+          value: ignore
+        - name: TIMEOUT_CLIENT
+          value: 120s
+        - name: TIMEOUT_SERVER
+          value: 120s
+        - name: TZ
+          value: Europe/Copenhagen
+
+        ports:
+        - containerPort: 5000
+
+        resources:
+          {{- toYaml .Values.haproxy.resources | nindent 10 }}
+        securityContext:
+          {{- toYaml .Values.haproxy.securityContext | nindent 10 }}
+
+      restartPolicy: Always
+
