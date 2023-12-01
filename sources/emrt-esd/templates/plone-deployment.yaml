@@ -28,12 +28,12 @@ spec:
 
       containers:
       - name: plone
-        image: eeacms/plone-emrt:18.1.23-1-1.74.3
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
         env:
         - name: GRAYLOG_FACILITY
-          value: emrt.eionet.europa.eu
+          value: {{ .Values.proxyBaseUrl }}
         - name: TZ
-          value: Europe/Copenhagen
+          value: {{ .Values.timezone }}
         - name: WARMUP_HEALTH_THRESHOLD
           value: "10"
         - name: ZOPE_MODE
@@ -44,12 +44,14 @@ spec:
 
         resources:
           {{- toYaml .Values.plone.resources | nindent 10 }}
-        securityContext:
-          {{- toYaml .Values.plone.securityContext | nindent 10 }}
 
         volumeMounts:
         - mountPath: /data/downloads
           name: emrt-esd-downloads
+
+        securityContext:
+          {{- toYaml .Values.plone.securityContext | nindent 10 }}
+
       restartPolicy: Always
 
       volumes:
