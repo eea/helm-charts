@@ -31,6 +31,10 @@ spec:
           value: "{{ .Values.linkingKey }}"
         - name: SCANNER_NAME
           value: "{{ .Values.scannerName | default .Release.Name }}"
+        - name: ADMIN_USER
+          value: "{{ .Values.adminName }}"
+        - name: ADMIN_PASS
+          value: "{{ .Values.adminPwd }}"
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
         securityContext:
@@ -51,3 +55,4 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       restartPolicy: Always
+      hostNetwork: "{{ .Values.listentoHostport }}"
