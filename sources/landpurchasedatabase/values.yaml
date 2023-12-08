@@ -67,6 +67,7 @@ ingress:
   className: "nginx"
   annotations:
     nginx.ingress.kubernetes.io/app-root: /lpd_web/pages/login/beneficiary.xhtml
+    nginx.ingress.kubernetes.io/permanent-redirect: https://webgate.ec.europa.eu/life/lpd/public/homepage.xhtml
   hosts:
     - host: lpd.eea.europa.eu
       paths:
