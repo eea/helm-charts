@@ -1,0 +1,40 @@
+
+replicaCount: 1
+
+image:
+  repository: eeacms/haproxy
+  pullPolicy: IfNotPresent
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: false
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+podSecurityContext: {}
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+service:
+  type: ClusterIP
+  port: 5000
+
+securityContext: {}
+resources:
+  requests:
+    memory: 1Gi
+
+
+environment:
+  - name: BACKENDS
+    value: ""
+  - name: TZ
+    value: "Europe/Copenhagen"
+
