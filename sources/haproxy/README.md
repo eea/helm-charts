@@ -6,6 +6,11 @@ This image is generic, thus you can obviously re-use it within your other EEA pr
 
 <dl>
 
+  <dt>Version 1.8-1.6</dt>
+  <dd>Upgrade HAProxy to 1.8.29.</dd>
+  <dd>Fixed code to work with new HAProxy configuration location - /usr/local/etc/haproxy/haproxy.cfg.</dd>
+  <dd>Fix backend port when `DNS_ENABLED`.</dd>
+
   <dt>Version 1.8-1.5</dt>
   <dd>Add `COOKIES_PARAMS` variable to give the possibility to add expiration time to cookies.</dd>
 
