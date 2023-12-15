@@ -6,6 +6,11 @@ This image is generic, thus you can obviously re-use it within your other EEA pr
 
 <dl>
 
+  <dt>Version 1.8-1.7</dt>
+  <dd>Upgrade HAProxy to 1.8.30.</dd>
+  <dd>Add `COOKIES_NAME` parameter to configure cookie name.</dd>
+  <dd>Add `HTTPCHK_HOST` parameter to allow health check to include host HTTP Header - refs #20.</dd>
+
   <dt>Version 1.8-1.6</dt>
   <dd>Upgrade HAProxy to 1.8.29.</dd>
   <dd>Fixed code to work with new HAProxy configuration location - /usr/local/etc/haproxy/haproxy.cfg.</dd>
