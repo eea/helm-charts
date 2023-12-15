@@ -6,6 +6,9 @@ This image is generic, thus you can obviously re-use it within your other EEA pr
 
 <dl>
 
+  <dt>Version 1.8-1.1</dt>
+  <dd>Fix entrypoint to work when haproxy.cfg externally is provided.</dd>
+
   <dt>Version 1.8-1.0</dt>
   <dd>Upgrade to haproxy 1.8</dd>
   <dd>Possibility to change frontend/backend mode to TCP via environment variables `FRONTEND_MODE` and `BACKENDS_MODE`</dd>
