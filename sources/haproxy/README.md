@@ -6,6 +6,9 @@ This image is generic, thus you can obviously re-use it within your other EEA pr
 
 <dl>
 
+  <dt>Version 1.8-1.8</dt>
+  <dd>Upgrade HAproxy to 1.8.31.</dd>
+
   <dt>Version 1.8-1.7</dt>
   <dd>Upgrade HAProxy to 1.8.30.</dd>
   <dd>Add `COOKIES_NAME` parameter to configure cookie name.</dd>
