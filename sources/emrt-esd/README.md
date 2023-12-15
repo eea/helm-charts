@@ -6,6 +6,9 @@ The EMRT(EEA Emission Review Tool) is a web-based tool hosted by the EEA to faci
 
 <dl>
 
+  <dt>Version 0.1.3</dt>
+  <dd>Use haproxy subchart.</dd>
+
   <dt>Version 0.1.2</dt>
   <dd>Set VirtualHostBase in Ingress configuration. </dd>
 
