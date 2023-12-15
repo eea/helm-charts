@@ -6,6 +6,10 @@ This image is generic, thus you can obviously re-use it within your other EEA pr
 
 <dl>
 
+  <dt>Version 1.8-1.3</dt>
+  <dd>Upgrade to haproxy 1.8.14</dd>
+  <dd>Move the restart of rsyslog and cron to run at every docker start</dd>
+
   <dt>Version 1.8-1.2</dt>
   <dd>Upgrade to haproxy 1.8.13.</dd>
 
