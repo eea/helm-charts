@@ -4,18 +4,18 @@ metadata:
   name: {{ include "appl.fullname" . }}
   labels:
     {{- include "appl.labels" . | nindent 4 }}
-    component: archives
+    component: worker
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
       {{- include "appl.selectorLabels" . | nindent 6 }}
-      component: archives
+      component: worker
   template:
     metadata:
       labels:
         {{- include "appl.selectorLabels" . | nindent 8 }}
-        component: archives
+        component: worker
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -23,29 +23,29 @@ spec:
       {{- end }}
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
       containers:
-      - name: {{ .Release.Name }}-archives
+      - name: {{ .Release.Name }}-worker
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
         ports:
         - containerPort: 80
           protocol: TCP
           name: http
         env:
+        - name: DEBUG_MODE
+          value: "{{ .Values.debugMode }}"
         - name: ERROR_FROM_EMAIL
           value: {{ .Values.errorFromEmail }}
         - name: GOOGLE_AUTH_CLIENT_ID
-          value: ''
+          value: {{ .Values.googleAuthClientId }}
         - name: GOOGLE_AUTH_CLIENT_SECRET
-          value: ''
+          value: {{ .Values.googleAuthClientSecret }}
         - name: HOST_NAME
           value: {{ .Values.serverName }}
         - name: SENTRY_DSN
-          value: ''
-        - name: WEBEX_CONTACTS
-          value: ''
+          value: {{ .Values.sentryDsn }}
         - name: reCAPTCHA_PRIVATE_KEY
-          value: ''
+          value: "{{ .Values.recaptchaPrivateKey }}"
         - name: reCAPTCHA_PUBLIC_KEY
-          value: ''
+          value: "{{ .Values.recaptchaPublicKey }}"
         - name: TZ
           value: "{{ .Values.timezone }}"
         resources:
