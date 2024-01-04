@@ -1,0 +1,98 @@
+# Default values
+
+replicaCount: 1
+
+image:
+  repository: eeacms/groupware
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+serverName: forum-test.eionet.europa.eu
+errorFromEmail: error@forum-test.eionet.europa.eu
+googleAuthClientId: ''
+googleAuthClientSecret: ''
+sentryDsn: ''
+timezone: Europe/Copenhagen
+recaptchaPrivateKey: ''
+recaptchaPublicKey: ''
+debugMode: ''
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: false
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+securityContext: {}
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+  className: "nginx"
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /VirtualHostBase/https/forum-test.eionet.europa.eu:443/VirtualHostRoot/$1
+  hosts:
+    - host: forum-test.eionet.europa.eu
+      paths:
+        - path: /(.*)
+          pathType: Prefix
+  tls:
+    - secretName: ''
+      hosts:
+        - forum-test.eionet.europa.eu
+
+resources:
+  requests:
+    memory: 2Gi
+  limits:
+    memory: 2Gi
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+cron:
+  replicaCount: 1
+  securityContext: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  resources:
+    limits:
+      memory: 1Gi
+
+postfix:
+  enabled: true
+  fullnameOverride: "postfix"
+  serverName: forum-test.eionet.europa.eu
+  mtpPass: ''
+  mtpPort: ''
+  mtpRelay: ''
+  mtpUser: ''
+
+zeo:
+  replicaCount: 1
+  securityContext: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  resources:
+    requests:
+      memory: 3Gi
+    limits:
+      memory: 3Gi
