@@ -5,8 +5,11 @@ This chart is configured for production. Must run in its own namespace.
 ## Releases
 
 <dl>
+  <dt>Version 0.2.2</dt>
+  <dd>debugMode must be empty (=false) or 'True'.</dd>
+
   <dt>Version 0.2.1</dt>
-  <dd>Alignment with forum-test values</dd>
+  <dd>Alignment with forum-test values.</dd>
 
   <dt>Version 0.2.0</dt>
   <dd>Use subchart for postfix.</dd>
