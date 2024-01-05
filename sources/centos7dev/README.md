@@ -11,6 +11,9 @@ under /mnt. The volume claims must exist already.
 ## Releases
 
 <dl>
+  <dt>Version 1.0.1</dt>
+  <dd>Fixed typo in network security policy.</dd>
+
   <dt>Version 1.0.0</dt>
   <dd>Migrated to ALMA Linux 9.3 as CentOS has not been maintained by Redhat for a couple of years.
       Added network security policy that blocks inter-namespace traffic.
