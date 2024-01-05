@@ -1,3 +1,4 @@
+{{- if .Values.admin.enabled -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -84,4 +85,4 @@ spec:
       - name: {{ .Release.Name }}-querylog
         persistentVolumeClaim:
           claimName: {{ .Release.Name }}-querylog
-
+{{- end }}

@@ -115,7 +115,8 @@ virtuoso:
   maxQueryMem: 16G
 
 admin:
-  image: eeacms/centos7dev:2.2.4
+  enabled: false
+  image: eeacms/centos7dev:3.0.0
   resources:
     requests:
       memory: 16Mi
