@@ -6,6 +6,9 @@ This chart is configured for production use.
 
 <dl>
 
+  <dt>Version 1.2.1</dt>
+  <dd>Buildsw now uses centos7dev image version 3.0.0.</dd>
+
   <dt>Version 1.2.0</dt>
   <dd>Builddict and buildsw no longer enabled by default.</dd>
 
