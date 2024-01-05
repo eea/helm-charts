@@ -1,0 +1,31 @@
+# Allow pod to talk to other pods in same namespace
+# and nothing else
+{{- if .Values.networkSecurity.enabled -}}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "centos7dev.fullname" . }}-deny
+  labels:
+    {{- include "centos7dev.labels" . | nindent 4 }}
+
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "centos7dev.selectorLabels" . | nindent 6 }}
+
+  policyTypes:
+  - Ingress
+  - Egress
+
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: {{ .Release.Namespace }}
+
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: {{ .Release.Namespace }}
+{{- end }}
