@@ -1,0 +1,96 @@
+# Default values
+
+replicaCount: 3
+
+image:
+  repository: eeacms/groupware
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+serverName: projects.eionet.europa.eu
+errorFromEmail: error@projects.eionet.europa.eu
+googleAuthClientId: ''
+googleAuthClientSecret: ''
+sentryDsn: ''
+timezone: Europe/Copenhagen
+recaptchaPrivateKey: ''
+recaptchaPublicKey: ''
+debugMode: ''
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: false
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+securityContext: {}
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+  className: "nginx"
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /VirtualHostBase/https/projects.eionet.europa.eu:443/VirtualHostRoot/$1
+  hosts:
+    - host: projects.eionet.europa.eu
+      paths:
+        - path: /(.*)
+          pathType: Prefix
+  tls:
+    - secretName: ''
+      hosts:
+        - projects.eionet.europa.eu
+
+resources:
+  requests:
+    memory: 2Gi
+  limits:
+    memory: 2Gi
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+cron:
+  securityContext: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  resources:
+    limits:
+      memory: 1Gi
+
+postfix:
+  enabled: true
+  fullnameOverride: "postfix"
+  serverName: projects.eionet.europa.eu
+  mtpPass: ''
+  mtpPort: ''
+  mtpRelay: ''
+  mtpUser: ''
+
+zeo:
+  securityContext: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  resources:
+    requests:
+      memory: 2Gi
+    limits:
+      memory: 2Gi
