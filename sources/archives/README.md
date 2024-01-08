@@ -5,6 +5,9 @@ This chart is configured for production. Must run in its own namespace.
 ## Releases
 
 <dl>
+  <dt>Version 0.2.3</dt>
+  <dd>Give zeo its own resource params.</dd>
+
   <dt>Version 0.2.2</dt>
   <dd>debugMode must be empty (=false) or 'True'.</dd>
 

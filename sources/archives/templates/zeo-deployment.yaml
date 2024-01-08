@@ -6,7 +6,7 @@ metadata:
     {{- include "appl.labels" . | nindent 4 }}
     component: zeo
 spec:
-  replicas: {{ .Values.zeo.replicaCount }}
+  replicas: 1
   strategy:
     type: Recreate
   selector:
@@ -40,9 +40,9 @@ spec:
         - name: TZ
           value: "{{ .Values.timezone }}"
         resources:
-          {{- toYaml .Values.resources | nindent 10 }}
+          {{- toYaml .Values.zeo.resources | nindent 10 }}
         securityContext:
-          {{- toYaml .Values.securityContext | nindent 12 }}
+          {{- toYaml .Values.zeo.securityContext | nindent 12 }}
 
         # Restart if unresponsive for 10 minutes
         livenessProbe:
@@ -67,15 +67,15 @@ spec:
         - mountPath: /var/local/groupware/var/zeoserver/blobs
           name: {{ .Release.Name }}-blobstorage
 
-      {{- with .Values.nodeSelector }}
+      {{- with .Values.zeo.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.affinity }}
+      {{- with .Values.zeo.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.tolerations }}
+      {{- with .Values.zeo.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
