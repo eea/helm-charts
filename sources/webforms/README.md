@@ -28,6 +28,9 @@ database:
 ## Release notes
 
 <dl>
+  <dt>Version 1.0.3</dt>
+  <dd>Removed debugging info</dd>
+
   <dt>Version 1.0.2</dt>
   <dd>Minor change to documentation</dd>
 
