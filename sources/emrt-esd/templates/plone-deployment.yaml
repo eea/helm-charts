@@ -43,6 +43,21 @@ spec:
 
         ports:
         - containerPort: 8080
+          name: plone8080
+
+        # Wait for up to 600 seconds
+        startupProbe:
+          httpGet:
+            path: /health.check
+            port: plone8080
+          failureThreshold: 60
+          periodSeconds: 10
+
+        livenessProbe:
+          httpGet:
+            path: /health.check
+            port: plone8080
+          periodSeconds: 15
 
         resources:
           {{- toYaml .Values.plone.resources | nindent 10 }}
