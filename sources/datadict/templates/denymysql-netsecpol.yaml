@@ -13,5 +13,13 @@ spec:
 
   policyTypes:
   - Egress
+  - Ingress
 
   egress: []
+
+  ingress:
+  - from:
+      ports:
+        - protocol: TCP
+          port: 3306
+
