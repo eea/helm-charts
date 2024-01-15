@@ -27,8 +27,6 @@ spec:
       - name: {{ .Release.Name }}-tomcat
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         ports:
-        - containerPort: 8009
-          protocol: TCP
         - containerPort: 8080
           protocol: TCP
 #       env:
