@@ -1,6 +1,13 @@
 
 replicaCount: 2
 
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 10
+  # targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
+
 image:
   repository: eeacms/plone-emrt
   pullPolicy: IfNotPresent
@@ -78,33 +85,6 @@ varnish:
   resources:
     requests:
       memory: 1Gi
-
-haproxy:
-  fullnameOverride: "haproxy"
-  environment:
-    - name: BACKENDS
-      value: plone
-    - name: BACKENDS_PORT
-      value: "8080"
-    - name: DNS_ENABLED
-      value: "true"
-    - name: DOWN_INTER
-      value: 5s
-    - name: FAST_INTER
-      value: 15s
-    - name: HTTPCHK
-      value: GET /health.check
-    - name: INTER
-      value: 20s
-    - name: LOGSPOUT
-      value: ignore
-    - name: TIMEOUT_CLIENT
-      value: 120s
-    - name: TIMEOUT_SERVER
-      value: 120s
-    - name: TZ
-      value: Europe/Copenhagen
-
 
 cron:
   enabled: false

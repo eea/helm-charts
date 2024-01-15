@@ -6,6 +6,10 @@ The EMRT(EEA Emission Review Tool) is a web-based tool hosted by the EEA to faci
 
 <dl>
 
+  <dt>Version 0.2.0</dt>
+  <dd>Removed the haproxy, as Kubernetes does loadbalancing via a ClusterIP.
+      Added autoscaling option.</dd>
+
   <dt>Version 0.1.4</dt>
   <dd>Subcharts must comply with x.y.z versioning.</dd>
 

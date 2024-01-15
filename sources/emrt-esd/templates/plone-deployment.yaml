@@ -7,7 +7,9 @@ metadata:
     component: plone
 
 spec:
-  replicas: 1
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
   strategy:
     type: Recreate
   selector:
