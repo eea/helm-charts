@@ -18,8 +18,7 @@ spec:
   egress: []
 
   ingress:
-  - from:
-      ports:
-        - protocol: TCP
-          port: 3306
+  - ports:
+    - protocol: TCP
+      port: 3306
 
