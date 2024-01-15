@@ -42,6 +42,7 @@ ingress:
       more_set_headers 'X-XSS-Protection: 1; mode=block'
         'X-Frame-Options: SAMEORIGIN'
         'Referrer-Policy: no-referrer';
+    nginx.ingress.kubernetes.io/proxy-body-size: 20m
   hosts:
     - host: papers.eionet.europa.eu
       paths:
