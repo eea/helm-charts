@@ -20,6 +20,9 @@ You can run `helm test eunis` to verify the system is working correctly.
 
 <dl>
 
+  <dt>Version 1.0.1</dt>
+  <dd>Added security policy to deny outward connections from database.</dd>
+
   <dt>Version 1.0.0</dt>
   <dd>Removed readyness probe.</dd>
 

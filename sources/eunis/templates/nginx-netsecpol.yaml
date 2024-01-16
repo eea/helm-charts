@@ -5,7 +5,7 @@
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: rke2-ingress-nginx
+  name: {{ .Release.Name }}-nginx-ingress
   labels:
     {{- include "appl.labels" . | nindent 4 }}
 
