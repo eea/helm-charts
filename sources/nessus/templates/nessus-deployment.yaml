@@ -4,6 +4,7 @@ metadata:
   name: {{ include "appl.fullname" . }}
   labels:
     {{- include "appl.labels" . | nindent 4 }}
+
 spec:
   replicas: 1
   selector:
@@ -23,6 +24,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
       containers:
       - name: {{ .Release.Name }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -41,6 +43,12 @@ spec:
           {{- toYaml .Values.securityContext | nindent 12 }}
         stdin: true
         tty: true
+
+        # Port 8834 - User Interface, TSC communication, and API calls
+        ports:
+        - name: nessus
+          containerPort: 8834
+          protocol: TCP
 
       {{- with .Values.nodeSelector }}
       nodeSelector:

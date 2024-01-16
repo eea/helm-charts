@@ -4,7 +4,8 @@ image:
   repository: andreicenja/docker-nessus_scanner
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "1.0"
+  # Only to be used for testing new container images.
+  tag: ""
 
 imagePullSecrets: []
 nameOverride: ""
@@ -20,15 +21,9 @@ adminPwd: ""
 
 listentoHostport: false
 
-timezone: Europe/Copenhagen
-
 serviceAccount:
-  # Specifies whether a service account should be created
   create: true
-  # Annotations to add to the service account
   annotations: {}
-  # The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
   name: ""
 
 podAnnotations: {}
