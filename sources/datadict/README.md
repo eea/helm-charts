@@ -5,6 +5,8 @@ This chart is configured for production use.
 ## Releases
 
 <dl>
+  <dt>Version 1.2.3</dt>
+  <dd>XSS fix.</dd>
 
   <dt>Version 1.2.2</dt>
   <dd>Additional network security policies.</dd>
