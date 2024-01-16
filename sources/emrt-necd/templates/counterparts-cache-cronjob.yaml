@@ -1,0 +1,44 @@
+{{- if .Values.cron.enabled -}}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: cron-counterparts-cache
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: cron-counterparts-cache
+
+spec:
+  schedule: "30 * * * *"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          {{- with .Values.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
+          containers:
+          - name: cron-counterparts-cache
+            image: alpine:3.8
+            env:
+            - name: LANG
+              value: C.UTF-8
+            - name: TZ
+              value: Europe/Copenhagen
+
+            args:
+            - wget
+            - https://{{ .Values.proxyBaseUrl }}/cron_update_vocabularies
+            - -O
+            - /dev/stdout
+            resources:
+              {{- toYaml .Values.cron.resources | nindent 14 }}
+
+          restartPolicy: Never
+
+          securityContext:
+            {{- toYaml .Values.cron.securityContext | nindent 12 }}
+{{- end }}

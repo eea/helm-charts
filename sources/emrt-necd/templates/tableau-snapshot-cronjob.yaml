@@ -1,0 +1,64 @@
+{{- if .Values.cron.enabled -}}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: cron
+  name: {{ include "appl.fullname" . }}-cron
+
+spec:
+  schedule: "30 9 * * SAT"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          {{- with .Values.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
+          containers:
+          - name: {{ .Release.Name }}-cron
+            image: "{{ .Values.cron.image }}"
+            env:
+            - name: LANG
+              value: C.UTF-8
+            - name: TZ
+              value: Europe/Copenhagen
+            args:
+              {{- toYaml .Values.cron.args | nindent 14 }}
+            resources:
+              {{- toYaml .Values.cron.resources | nindent 14 }}
+            volumeMounts:
+            - mountPath: /var/local/rdfdata-eionet
+              name: {{ .Release.Name }}-buildrdf
+            - mountPath: /var/local/rdfdata-eionet/htdocs
+              name: {{ .Release.Name }}-htdocs
+            workingDir: /var/local/rdfdata-eionet/Data2RDF/Eurostat
+          restartPolicy: Never
+
+          securityContext:
+            {{- toYaml .Values.cron.securityContext | nindent 12 }}
+          {{- with .Values.nodeSelector }}
+          nodeSelector:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          {{- with .Values.affinity }}
+          affinity:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          {{- with .Values.tolerations }}
+          tolerations:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          volumes:
+          - name: {{ .Release.Name }}-buildrdf
+            persistentVolumeClaim:
+              claimName: {{ .Release.Name }}-buildrdf
+          - name: {{ .Release.Name }}-htdocs
+            persistentVolumeClaim:
+              claimName: {{ .Release.Name }}-htdocs
+{{- end }}

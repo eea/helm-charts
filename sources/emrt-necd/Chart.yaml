@@ -1,0 +1,28 @@
+apiVersion: v2
+name: emrt-necd
+description: Emission Review Tool for NEC Directive
+icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/emrt-necd/logo_eionet.png
+
+type: application
+
+keywords:
+- Reportnet
+- Emmission
+
+version: 0.1.0
+
+# Version for the main container
+appVersion: "plone-2.5.41"
+
+# Remember to do helm dep up .
+dependencies:
+  - name: postfix
+    version: 0.2.1
+    repository: https://eea.github.io/helm-charts
+# - name: zeoserver
+#   version: 0.1.0
+#   repository: https://eea.github.io/helm-charts
+  - name: memcached
+    version: 6.6.7
+    repository: https://charts.bitnami.com/bitnami
+

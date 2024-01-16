@@ -1,0 +1,108 @@
+
+replicaCount: 2
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 10
+  # targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
+
+
+image:
+  repository: eeacms/plone-emrt-necd
+  pullPolicy: IfNotPresent
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+proxyBaseUrl: emrt-necd.eionet.europa.eu
+smtpHost: postfix
+smtpPort: '25'
+timezone: Europe/Copenhagen
+
+serviceAccount:
+  create: false
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+podSecurityContext: {}
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+service:
+  type: ClusterIP
+  port: 6081
+
+ingress:
+  enabled: false
+  className: "nginx"
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-max-temp-file-size: '1024m'
+    nginx.ingress.kubernetes.io/rewrite-target: /VirtualHostBase/https/emrt-necd.eionet.europa.eu:443/Plone/VirtualHostRoot/$1
+    nginx.ingress.kubernetes.io/use-regex: 'true'
+#   nginx.ingress.kubernetes.io/configuration-snippet: |
+#     more_set_headers 'X-XSS-Protection: 1; mode=block'
+#       'X-Frame-Options: SAMEORIGIN'
+#       'X-Content-Type-Options: nosniff'
+#       'Referrer-Policy: no-referrer,same-origin,strict-origin,strict-origin-when-cross-origin';
+  hosts:
+    - host: emrt-necd.eionet.europa.eu
+      paths:
+        - path: /(.*)
+          pathType: Prefix
+  tls:
+    - hosts:
+        - emrt-necd.eionet.europa.eu
+
+memcached:
+  fullnameOverride: "memcached"
+  resources:
+    requests:
+      memory: 2Gi
+
+# Mail transport
+postfix:
+  fullnameOverride: "postfix"
+  serverName: emrt-necd.eionet.europa.eu
+  mtpPass: ''
+  mtpPort: ''
+  mtpRelay: ''
+  mtpUser: ''
+
+plone:
+  securityContext: {}
+  resources:
+    requests:
+      memory: 1536Mi
+
+varnish:
+  securityContext: {}
+  resources:
+    requests:
+      memory: 1Gi
+
+cron:
+  enabled: false
+  securityContext: {}
+  resources: {}
+
+  args:
+    - wget
+    - https://emrt-necd.eionet.europa.eu/2019/tableau-snapshot.json?tableau_token=Sohcuk5wohjuoPheedeifeMooghahqu3
+    - https://emrt-necd.eionet.europa.eu/2019-projection/tableau-snapshot.json?tableau_token=Sohcuk5wohjuoPheedeifeMooghahqu3
+    - https://emrt-necd.eionet.europa.eu/2020/tableau-snapshot.json?tableau_token=Sohcuk5wohjuoPheedeifeMooghahqu3
+    - https://emrt-necd.eionet.europa.eu/2020-projection/tableau-snapshot.json?tableau_token=Sohcuk5wohjuoPheedeifeMooghahqu3
+    - https://emrt-necd.eionet.europa.eu/2021/tableau-snapshot.json?tableau_token=Sohcuk5wohjuoPheedeifeMooghahqu3
+    - https://emrt-necd.eionet.europa.eu/2021-projection/tableau-snapshot.json?tableau_token=Sohcuk5wohjuoPheedeifeMooghahqu3
+    - https://emrt-necd.eionet.europa.eu/2022/tableau-snapshot.json?tableau_token=Sohcuk5wohjuoPheedeifeMooghahqu3
+    - https://emrt-necd.eionet.europa.eu/2023-projection/tableau-snapshot.json?tableau_token=Sohcuk5wohjuoPheedeifeMooghahqu3
+    - https://emrt-necd.eionet.europa.eu/2023/tableau-snapshot.json?tableau_token=Sohcuk5wohjuoPheedeifeMooghahqu3
+    - -O
+    - /dev/stdout
+

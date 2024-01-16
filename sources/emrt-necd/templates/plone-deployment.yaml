@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: plone
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: plone
+
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: plone
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: plone
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
+      containers:
+      - name: plone
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        env:
+        - name: GRAYLOG_FACILITY
+          value: {{ .Values.proxyBaseUrl }}
+        - name: TZ
+          value: {{ .Values.timezone }}
+        - name: WARMUP_HEALTH_THRESHOLD
+          value: "10"
+        - name: ZEO_ADDRESS
+          value: zeoserver:8100
+
+        ports:
+        - containerPort: 8080
+          name: plone8080
+
+        # Wait for up to 600 seconds
+        startupProbe:
+          httpGet:
+            path: /Plone/2018/
+            port: plone8080
+          failureThreshold: 60
+          periodSeconds: 10
+
+        livenessProbe:
+          httpGet:
+            path: /Plone/2018/
+            port: plone8080
+          periodSeconds: 15
+
+        resources:
+          {{- toYaml .Values.plone.resources | nindent 10 }}
+
+        volumeMounts:
+        - mountPath: /data/downloads
+          name: emrt-necd-downloads
+
+        securityContext:
+          {{- toYaml .Values.plone.securityContext | nindent 10 }}
+
+      restartPolicy: Always
+
+      volumes:
+      - name: emrt-necd-downloads
+        persistentVolumeClaim:
+          claimName: emrt-necd-downloads
+
