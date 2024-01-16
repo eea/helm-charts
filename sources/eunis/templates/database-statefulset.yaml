@@ -5,6 +5,7 @@ metadata:
   labels:
     {{- include "appl.labels" . | nindent 4 }}
     component: database
+
 spec:
   replicas: 1
   serviceName: {{ .Release.Name }}-db
@@ -12,6 +13,7 @@ spec:
     matchLabels:
       {{- include "appl.selectorLabels" . | nindent 6 }}
       component: database
+
   template:
     metadata:
       labels:
@@ -24,12 +26,15 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
       containers:
       - name: {{ .Release.Name }}-db
-        image: "{{ .Values.database.image }}"
+        image: mariadb:5.5.64
         ports:
         - containerPort: 3306
+          name: mysql
           protocol: TCP
+
         env:
         - name: MYSQL_DATABASE
           value: "{{ .Values.database.database }}"
@@ -46,22 +51,20 @@ spec:
         volumeMounts:
         - mountPath: /var/lib/mysql
           name: {{ .Release.Name }}-database
+
         livenessProbe:
           tcpSocket:
-            port: 3306
+            port: mysql
           initialDelaySeconds: 15
           periodSeconds: 20
-        readinessProbe:
-          tcpSocket:
-            port: 3306
-          initialDelaySeconds: 5
-          periodSeconds: 20
+          
         {{- with .Values.database.args }}
         args:
           {{- toYaml . | nindent 10 }}
         {{- end }}
         resources:
           {{- toYaml .Values.database.resources | nindent 10 }}
+
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -75,6 +78,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       restartPolicy: Always
+
   volumeClaimTemplates:
   - metadata:
       name: {{ .Release.Name }}-database

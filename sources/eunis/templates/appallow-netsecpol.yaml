@@ -3,7 +3,7 @@
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: appl-communication
+  name: {{ .Release.Name }}-intraapp
   labels:
     {{- include "appl.labels" . | nindent 4 }}
 

@@ -20,6 +20,9 @@ You can run `helm test eunis` to verify the system is working correctly.
 
 <dl>
 
+  <dt>Version 1.0.0</dt>
+  <dd>Removed readyness probe.</dd>
+
   <dt>Version 0.2.0</dt>
   <dd>Added network security policies.</dd>
 
