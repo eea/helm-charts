@@ -25,7 +25,7 @@ spec:
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
       containers:
       - name: {{ .Release.Name }}-tomcat
-        image: "{{ .Values.tomcat.image }}"
+        image: tomcat:7-jre7
         ports:
         - containerPort: 8080
           protocol: TCP

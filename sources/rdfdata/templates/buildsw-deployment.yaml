@@ -1,3 +1,4 @@
+{{- if .Values.buildsw.enabled -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -36,7 +37,7 @@ spec:
           value: C.UTF-8
         - name: TZ
           value: Europe/Copenhagen
-        image: "{{ .Values.buildsw.image }}"
+        image: eeacms/centos7dev:2.2.4
         resources:
           {{- toYaml .Values.buildsw.resources | nindent 10 }}
         stdin: true
@@ -86,4 +87,4 @@ spec:
         persistentVolumeClaim:
           claimName: {{ .Release.Name }}-webapps
       {{- end }}
- 
+{{- end }}

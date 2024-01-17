@@ -65,7 +65,6 @@ affinity: {}
 
 buildestat:
   enabled: false
-  image: eeacms/centos7dev:2.2.4
   resources:
     requests:
       memory: 256Mi
@@ -81,7 +80,7 @@ buildestat:
     runAsGroup: 504
 
 buildsw:
-  image: eeacms/centos7dev:2.2.4
+  enabled: false
   resources:
     requests:
       memory: 64Mi
@@ -90,7 +89,6 @@ buildsw:
 
 httpd:
   hostName: rdfdata
-  image: httpd:2.4.23
   resources:
     requests:
       memory: 64Mi
@@ -99,7 +97,6 @@ httpd:
 
 tomcat:
   enabled: false
-  image: tomcat:7-jre7
   resources:
     requests:
       memory: 256Mi

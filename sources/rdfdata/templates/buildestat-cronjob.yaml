@@ -22,7 +22,7 @@ spec:
 
           containers:
           - name: {{ .Release.Name }}-buildestat
-            image: "{{ .Values.buildestat.image }}"
+            image: eeacms/centos7dev:2.2.4
             env:
             - name: LANG
               value: C.UTF-8
