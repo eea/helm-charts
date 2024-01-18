@@ -36,6 +36,53 @@ service:
   port: 8080
   tlsport: 8443
 
+haproxy:
+  enabled: true
+  service:
+    type: LoadBalancer
+    externalTrafficPolicy: Local
+    service.loadBalancerIP: ""
+
+    ports:
+    - port: 80
+      name: http
+      targetPort: 8080
+      protocol: TCP
+    - port: 443
+      name: https
+      targetPort: 8443
+      protocol: TCP
+
+    containerPorts:
+    - containerPort: 8080
+    - containerPort: 8443
+
+  extraVolumes:
+  - name: eea-certificate
+    secret:
+      defaultMode: 0444
+      optional: false
+      secretName: star-eea-europa-eu
+  - name: tmpcertificates
+    emptyDir: {}
+
+  extraVolumeMounts:
+  - mountPath: /ssl
+    name: tmpcertificates
+
+  existingConfigmap: haproxyconf
+
+  initContainers:
+  - name: cat-ssl
+    image: busybox:1.28
+    command: ['sh', '-c', "cat /var/ssl/* >/ssl/combined.pem ; chown -R 1001.1001 /ssl ; chmod 400 /ssl/* "]
+    volumeMounts:
+    - mountPath: /ssl
+      name: tmpcertificates
+    - mountPath: /var/ssl
+      name: eea-certificate
+      readOnly: true
+
 ingress:
   enabled: false
   className: "nginx"

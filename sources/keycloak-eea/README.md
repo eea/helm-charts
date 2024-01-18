@@ -6,12 +6,15 @@ Configured for EEA use only.
 
 | Key | Description | Default |
 | --- | ----------- | ------- |
-| profile | Keycloak profile can be 'edge' or 'standalone'. In the latter case you ned to provide certificates | edge |
-| serviceName | The hostname of the service | login.eea.europa.eu |
+| `profile` | Keycloak profile can be 'edge' or 'standalone'. In the latter case you ned to provide certificates | edge |
+| `serviceName` | The hostname of the service | login.eea.europa.eu |
 
 ## Releases
 
 <dl>
+
+  <dt>Version 0.4.0</dt>
+  <dd>Uses HAProxy to restrict access to admin pages.</dd>
 
   <dt>Version 0.3.0</dt>
   <dd>Standalone profile</dd>

@@ -1,0 +1,50 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: haproxyconf
+
+data:
+  haproxy.cfg: |
+    global
+      ssl-default-server-options force-tlsv12
+      ssl-default-bind-options force-tlsv12
+      ssl-default-bind-ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384
+      ssl-default-server-ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384
+      log stdout format raw local0
+      maxconn 1024
+
+    defaults
+      timeout client 120s
+      timeout server 120s
+      log global
+      option httplog
+      compression type text/html text/html;charset=utf-8 text/html;charset=ISO-8859-1 text/plain text/css text/javascript application/x-javascript application/javascript application/ecmascript application/rss+xml application/atomsvc+xml application/atom+xml application/atom+xml;type=entry application/atom+xml;type=feed application/cmisquery+xml application/cmisallowableactions+xml application/cmisatom+xml application/cmistree+xml application/cmisacl+xml application/msword application/vnd.ms-excel application/vnd.ms-powerpoint
+
+    frontend www
+      bind :8080
+      bind *:8443 ssl crt /ssl/combined.pem
+      http-request redirect scheme https unless { ssl_fc }
+      http-response set-header Strict-Transport-Security "max-age=31536000; includeSubDomains; "
+      http-response set-header X-Content-Type-Options "nosniff"
+      http-response set-header X-XSS-Protection "1; mode=block"
+      mode http
+      option forwardfor
+      acl network_allowed src 192.168.0.0/16 10.92.24.0/21 10.50.0.0/16 87.54.7.0/24
+      acl restricted_page path_beg /admin
+      acl restricted_page path_beg /realms/master
+      acl restricted_page path /
+      http-request deny if restricted_page !network_allowed
+      default_backend keycloak
+
+    backend keycloak
+      timeout server 120s
+      timeout connect 10s
+      option forwarded
+      acl forwarded_proto hdr_cnt(X-Forwarded-Proto) eq 0
+      acl forwarded_port hdr_cnt(X-Forwarded-Port) eq 0
+      # Don't know why this is added.
+      http-request add-header X-Forwarded-Port %[dst_port] if forwarded_port
+      http-request add-header X-Forwarded-Proto https if { ssl_fc } forwarded_proto
+      mode http
+      server keycloak "$KEYCLOAK_SERVICE_HOST":"$KEYCLOAK_SERVICE_PORT"
+
