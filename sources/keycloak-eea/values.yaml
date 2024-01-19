@@ -13,6 +13,8 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
+adminNetworks: 192.168.0.0/16 10.92.24.0/21 10.50.0.0/16 87.54.7.0/24
+
 timezone: "Europe/Copenhagen"
 
 serviceName: login.eea.europa.eu
@@ -83,19 +85,6 @@ haproxy:
       name: eea-certificate
       readOnly: true
 
-ingress:
-  enabled: false
-  className: "nginx"
-  annotations: {}
-  hosts:
-    - host: login.eea.europa.eu
-      paths:
-        - path: /
-          pathType: Prefix
-  tls:
-    - hosts:
-        - login.eea.europa.eu
-
 resources:
   requests:
     memory: 2Gi
@@ -129,6 +118,7 @@ database:
   securityContext: {}
 
 theme:
+  enabled: false
   resources:
     requests:
       memory: 24Mi

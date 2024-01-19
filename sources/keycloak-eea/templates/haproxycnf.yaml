@@ -29,7 +29,7 @@ data:
       http-response set-header X-XSS-Protection "1; mode=block"
       mode http
       option forwardfor
-      acl network_allowed src 192.168.0.0/16 10.92.24.0/21 10.50.0.0/16 87.54.7.0/24
+      acl network_allowed src {{ .Values.adminNetworks }}
       acl restricted_page path_beg /admin
       acl restricted_page path_beg /realms/master
       acl restricted_page path /

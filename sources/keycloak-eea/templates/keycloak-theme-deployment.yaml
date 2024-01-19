@@ -1,3 +1,4 @@
+{{- if .Values.theme.enabled -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -62,3 +63,4 @@ spec:
       - name: keycloak-theme-cache
         persistentVolumeClaim:
           claimName: keycloak-theme-cache
+{{- end }}

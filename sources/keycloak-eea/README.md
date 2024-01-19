@@ -1,6 +1,6 @@
 # EEA Keycloak
 
-Configured for EEA use only.
+Configured for EEA use only. Depends on the TLS certificate to be in the Secret star-eea-europa-eu.
 
 ## Configuration
 
@@ -8,10 +8,14 @@ Configured for EEA use only.
 | --- | ----------- | ------- |
 | `profile` | Keycloak profile can be 'edge' or 'standalone'. In the latter case you ned to provide certificates | edge |
 | `serviceName` | The hostname of the service | login.eea.europa.eu |
+| `haproxy.enabled` | Creates a frontend that restricts the admin pages | true |
 
 ## Releases
 
 <dl>
+
+  <dt>Version 0.5.0</dt>
+  <dd>Removed the Ingress configuration.</dd>
 
   <dt>Version 0.4.0</dt>
   <dd>Uses HAProxy to restrict access to admin pages.</dd>
