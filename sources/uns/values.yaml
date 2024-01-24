@@ -125,3 +125,12 @@ mailfwd:
     port: '8587'
     relay: ironports.eea.europa.eu
 
+postfix:
+  enabled: false
+  fullnameOverride: "postfix"
+  serverName: uns.eionet.europa.eu
+  mtpPass: ''
+  mtpPort: '8587'
+  mtpRelay: 'ironports.eea.europa.eu'
+  mtpUser: 'unsuser'
+
