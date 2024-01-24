@@ -107,27 +107,9 @@ database:
   affinity: {}
 
 # We set up a mailforwarder that can authenticate to the real mail relay.
-# Alternatively use image "marcelesser/smtp-sink:latest"
-mailfwd:
-  enabled: false
-  image: eeacms/postfix:eionet
-  securityContext: {}
-  resources:
-    requests:
-      memory: 10Mi
-    limits:
-      memory: 80Mi
-  env:
-    logspout: ignore
-    host: uns.eionet.europa.eu
-    user: unsuser
-    pass: REPLACEME
-    port: '8587'
-    relay: ironports.eea.europa.eu
-
 postfix:
   enabled: false
-  fullnameOverride: "postfix"
+  fullnameOverride: "uns-mailfwd"
   serverName: uns.eionet.europa.eu
   mtpPass: ''
   mtpPort: '8587'

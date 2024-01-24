@@ -12,6 +12,9 @@ set the values in the database section.
 
 <dl>
 
+  <dt>Version 0.2.0</dt>
+  <dd>Switch to postfix subchart.</dd>
+
   <dt>Version 0.1.5</dt>
   <dd>Preparation to switch to postfix subchart.</dd>
 
