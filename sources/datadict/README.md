@@ -5,6 +5,9 @@ This chart is configured for production use.
 ## Releases
 
 <dl>
+  <dt>Version 1.2.4</dt>
+  <dd>Typo in database chart.</dd>
+
   <dt>Version 1.2.3</dt>
   <dd>XSS fix.</dd>
 

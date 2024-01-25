@@ -46,7 +46,7 @@ spec:
           value: "{{ .Values.database.rootpw }}"
         - name: MYSQL_USER
           value: "{{ .Values.database.username }}"
-        resources: {}
+
         securityContext:
           {{- toYaml .Values.database.securityContext | nindent 10 }}
         volumeMounts:
@@ -61,6 +61,7 @@ spec:
 
         resources:
           {{- toYaml .Values.database.resources | nindent 10 }}
+
       restartPolicy: Always
 
       {{- with .Values.database.nodeSelector }}
