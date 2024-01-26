@@ -61,6 +61,7 @@ securityContext: {}
 
 service:
   type: ClusterIP
+  externalTrafficPolicy: Cluster
   annotations: {}
   # metallb.universe.tf/loadBalancerIPs: 10.50.7.41
   ldapPort: 389
