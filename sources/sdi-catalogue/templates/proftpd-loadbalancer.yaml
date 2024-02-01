@@ -10,6 +10,9 @@ metadata:
 
 spec:
   type: {{ .Values.proftpd.service.type }}
+  {{- if (or (eq .Values.proftpd.service.type "LoadBalancer") (eq .Values.proftpd.service.type "NodePort")) }}
+  externalTrafficPolicy: {{ .Values.proftpd.service.externalTrafficPolicy | quote }}
+  {{- end }}
   ports:
   - name: "ftpdata"
     port: 20

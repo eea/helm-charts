@@ -10,6 +10,9 @@ metadata:
 
 spec:
   type: {{ .Values.apache.service.type }}
+  {{- if (or (eq .Values.apache.service.type "LoadBalancer") (eq .Values.apache.service.type "NodePort")) }}
+  externalTrafficPolicy: {{ .Values.apache.service.externalTrafficPolicy | quote }}
+  {{- end }}
   ports:
     - name: http
       port: 80

@@ -5,6 +5,9 @@ A csw service and front end application to search and find EEA GIS datasets.
 ## Releases
 
 <dl>
+  <dt>Version 0.3.2</dt>
+  <dd>Added the ability to set an externalTrafficPolicy</dd>
+
   <dt>Version 0.3.1</dt>
   <dd>Upgraded Apache image due to a security vulnerability in HTTPD 2.4.57.</dd>
 
