@@ -1,0 +1,131 @@
+
+image:
+  repository: eeacms/eea-otrs
+  pullPolicy: IfNotPresent
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: false
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+podSecurityContext: {}
+securityContext: {}
+
+ldapHost: ''
+ldapPassword: ''
+mailHost: postfix
+
+mysqlRootPassword: ''
+otrsRootPassword: ''
+serverName: helpdesk.eionet.europa.eu
+trustedDomain: eea.europa.eu
+timezone: Europe/Copenhagen
+
+openID:
+  clientID: ''
+  clientSecret: ''
+  cryptoPass: ''
+  defaultLogoutURL: ''
+  providerIssuer: ''
+  redirectURI: ''
+
+
+# Frontend
+resources:
+  requests:
+    memory: 5Gi
+  limits:
+    memory: 5Gi
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+smtpService:
+  type: ClusterIP
+  port: 25
+  externalTrafficPolicy: Local
+  loadbalancerName: 'name'
+
+service:
+  type: ClusterIP
+  port: 80
+  externalTrafficPolicy: Cluster
+
+ingress:
+  enabled: false
+  className: "nginx"
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-max-temp-file-size: '1024m'
+#   nginx.ingress.kubernetes.io/configuration-snippet: |
+#     more_set_headers 'X-XSS-Protection: 1; mode=block'
+#       'X-Frame-Options: SAMEORIGIN'
+#       'X-Content-Type-Options: nosniff'
+#       'Referrer-Policy: no-referrer,same-origin,strict-origin,strict-origin-when-cross-origin';
+  hosts:
+    - host: helpdesk.eionet.europa.eu
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - hosts:
+        - helpdesk.eionet.europa.eu
+
+#
+# OTRS Backend is an MTA
+smtp:
+  service:
+    type: LoadBalancer
+    externalTrafficPolicy: Cluster
+    port: 25
+
+frontend:
+  resources:
+    requests:
+      memory: 5Gi
+    limits:
+      memory: 7Gi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+backend:
+  resources:
+    requests:
+      memory: 5Gi
+    limits:
+      memory: 7Gi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+database:
+  securityContext: {}
+  resources:
+    requests:
+      memory: 4Gi
+    limits:
+      memory: 4Gi
+  hostname: mariadb
+  database: DataDict
+  username: dduser
+  password: REPLACEME
+  rootpw: REPLACEME
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+postfix:
+  fullnameOverride: "postfix"
+  serverName: helpdesk.eionet.europa.eu
+  mtpPass: ''
+  mtpPort: ''
+  mtpRelay: ''
+  mtpUser: ''
+

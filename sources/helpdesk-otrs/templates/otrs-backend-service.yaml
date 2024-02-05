@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: otrs-backend
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: otrs-backend
+
+spec:
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
+    protocol: TCP
+  selector:
+    {{- include "appl.selectorLabels" . | nindent 4 }}
+    component: otrs-backend
+

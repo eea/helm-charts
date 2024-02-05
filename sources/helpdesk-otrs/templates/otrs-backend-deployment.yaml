@@ -1,0 +1,112 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: otrs-backend
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: otrs-backend
+
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: otrs-backend
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: otrs-backend
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
+      containers:
+      - name: otrs-backend
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        env:
+        - name: LANG
+          value: en_US.UTF-8
+        - name: LANGUAGE
+          value: en_US.UTF-8
+        - name: LC_ALL
+          value: en_US.UTF-8
+        - name: LDAP_HOST
+          value: {{ .Values.ldapHost }}
+        - name: LDAP_PASSWORD
+          value: {{ .Values.ldapPassword }}
+        - name: MAIL_ADDRESSES
+          value: "@{{ .Values.smtpService.loadbalancerName }} @{{ .Values.serverName }}"
+        - name: MASTER
+          value: "true"
+        - name: MTP_RELAY
+          value: {{ .Values.mailHost }}
+        - name: MYSQL_ROOT_PASSWORD
+          value: "{{ .Values.database.rootpw }}"
+        - name: OTRS_DB_PASSWORD
+          value: "{{ .Values.database.password }}"
+        - name: OTRS_ROOT_PASSWORD
+          value: "{{ .Values.otrsRootPassword }}"
+        - name: SERVER_NAME
+          value: {{ .Values.serverName }}
+        - name: TRUSTED_DOMAIN
+          value: {{ .Values.trustedDomain }}
+        - name: TZ
+          value: {{ .Values.timezone }}
+
+        ports:
+        - containerPort: 80
+        - containerPort: 25
+
+        resources:
+          {{- toYaml .Values.backend.resources | nindent 10 }}
+        securityContext:
+          {{- toYaml .Values.backend.securityContext | nindent 10 }}
+
+        volumeMounts:
+        - mountPath: /backups
+          name: helpdesk-eionet-backups
+        - mountPath: /article
+          name: helpdesk-eionet-article
+        - mountPath: /opt/otrs/var/tmp
+          name: helpdesk-eionet-tmp
+        - mountPath: /opt/otrs/Kernel
+          name: helpdesk-eionet-kernel-config
+
+      {{- with .Values.backend.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.backend.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.backend.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+      restartPolicy: Always
+
+      volumes:
+      - name: helpdesk-eionet-backups
+        persistentVolumeClaim:
+          claimName: helpdesk-eionet-backups
+
+      - name: helpdesk-eionet-article
+        persistentVolumeClaim:
+          claimName: helpdesk-eionet-article
+
+      - name: helpdesk-eionet-tmp
+        persistentVolumeClaim:
+          claimName: helpdesk-eionet-tmp
+
+      - name: helpdesk-eionet-kernel-config
+        persistentVolumeClaim:
+          claimName: helpdesk-eionet-kernel-config
+
