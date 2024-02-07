@@ -42,8 +42,6 @@ spec:
           value: {{ .Values.ldapPassword }}
         - name: MAIL_ADDRESSES
           value: "@{{ .Values.smtpService.loadbalancerName }} @{{ .Values.serverName }}"
-        - name: MASTER
-          value: "true"
         - name: MTP_RELAY
           value: {{ .Values.mailHost }}
         - name: MYSQL_ROOT_PASSWORD
