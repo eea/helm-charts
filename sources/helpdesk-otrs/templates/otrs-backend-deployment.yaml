@@ -25,6 +25,9 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      # Sendmail requires a fully qualified hostname
+      subdomain: m
+      setHostnameAsFQDN: true
 
       containers:
       - name: otrs-backend

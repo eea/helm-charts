@@ -6,6 +6,9 @@ This chart is (almost) configured for production.
 
 <dl>
 
+  <dt>Version 0.2.0</dt>
+  <dd>Sendmail requires a FQDN for hostname. In Kubernetes this requires a subdomain.</dd>
+
   <dt>Version 0.1.2</dt>
   <dd>Backend doesn't listen on port 80.</dd>
 
