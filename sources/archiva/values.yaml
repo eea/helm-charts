@@ -1,0 +1,67 @@
+
+replicaCount: 1
+
+image:
+  repository: xetusoss/archiva
+  pullPolicy: IfNotPresent
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+proxyBaseUrl: archiva.eionet.europa.eu
+smtpHost: postfix
+smtpPort: '25'
+
+serviceAccount:
+  create: false
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+podSecurityContext: {}
+securityContext: {}
+
+# Frontend
+resources:
+  requests:
+    memory: 1Gi
+  limits:
+    memory: 1Gi
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+service:
+  type: ClusterIP
+  port: 8080
+
+ingress:
+  enabled: false
+  className: "nginx"
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-max-temp-file-size: '1024m'
+#   nginx.ingress.kubernetes.io/configuration-snippet: |
+#     more_set_headers 'X-XSS-Protection: 1; mode=block'
+#       'X-Frame-Options: SAMEORIGIN'
+#       'X-Content-Type-Options: nosniff'
+#       'Referrer-Policy: no-referrer,same-origin,strict-origin,strict-origin-when-cross-origin';
+  hosts:
+    - host: archiva.eionet.europa.eu
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - hosts:
+        - archiva.eionet.europa.eu
+
+postfix:
+  fullnameOverride: "postfix"
+  serverName: archiva.eionet.europa.eu
+  mtpPass: ''
+  mtpPort: ''
+  mtpRelay: ''
+  mtpUser: ''
+
