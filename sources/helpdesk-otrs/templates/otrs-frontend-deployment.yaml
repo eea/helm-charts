@@ -91,6 +91,20 @@ spec:
         - mountPath: /opt/otrs/var/httpd/htdocs/skins/Agent/default/css-cache
           name: helpdesk-eionet-css-cache
 
+        # Wait 120 seconds for startup
+        startupProbe:
+          tcpSocket:
+            port: 80
+          failureThreshold: 12
+          periodSeconds: 10
+
+        livenessProbe:
+          tcpSocket:
+            port: 80
+          initialDelaySeconds: 15
+          periodSeconds: 20
+          timeoutSeconds: 3
+
       {{- with .Values.frontend.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

@@ -47,6 +47,8 @@ nodeSelector: {}
 tolerations: []
 affinity: {}
 
+#
+# OTRS Backend is an MTA
 smtpService:
   type: ClusterIP
   port: 25
@@ -76,14 +78,6 @@ ingress:
   tls:
     - hosts:
         - helpdesk.eionet.europa.eu
-
-#
-# OTRS Backend is an MTA
-smtp:
-  service:
-    type: LoadBalancer
-    externalTrafficPolicy: Cluster
-    port: 25
 
 frontend:
   resources:
@@ -121,6 +115,8 @@ database:
   tolerations: []
   affinity: {}
 
+#
+# Mailforwarder subchart
 postfix:
   fullnameOverride: "postfix"
   serverName: helpdesk.eionet.europa.eu

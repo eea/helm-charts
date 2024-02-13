@@ -6,6 +6,9 @@ This chart is (almost) configured for production.
 
 <dl>
 
+  <dt>Version 0.2.1</dt>
+  <dd>Liveness probe on frontend.</dd>
+
   <dt>Version 0.2.0</dt>
   <dd>Sendmail requires a FQDN for hostname. In Kubernetes this requires a subdomain.</dd>
 
