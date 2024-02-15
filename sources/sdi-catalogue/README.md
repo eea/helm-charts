@@ -5,6 +5,9 @@ A csw service and front end application to search and find EEA GIS datasets.
 ## Releases
 
 <dl>
+  <dt>Version 0.3.4</dt>
+  <dd>Security upgrade of OpenSSL in the apache image.</dd>
+
   <dt>Version 0.3.3</dt>
   <dd>Removed the GDAL service.</dd>
 
