@@ -1,5 +1,5 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: archiva
   labels:
@@ -8,6 +8,7 @@ metadata:
 
 spec:
   replicas: 1
+  serviceName: db
   strategy:
     type: Recreate
   selector:
@@ -20,6 +21,7 @@ spec:
         {{- include "appl.selectorLabels" . | nindent 8 }}
         component: archiva
     spec:
+      terminationGracePeriodSeconds: 10
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -64,8 +66,13 @@ spec:
 
       restartPolicy: Always
 
-      volumes:
-      - name: archiva-eionet-data
-        persistentVolumeClaim:
-          claimName: archiva-eionet-data
+  volumeClaimTemplates:
+  - metadata:
+      name: archiva-eionet-data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 15Gi
 

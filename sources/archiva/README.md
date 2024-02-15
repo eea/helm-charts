@@ -6,6 +6,9 @@ This chart is (almost) configured for production.
 
 <dl>
 
+  <dt>Version 0.2.0</dt>
+  <dd>Use StatefulSet instead of deployment to ensure prober upgrade.</dd>
+
   <dt>Version 0.1.1</dt>
   <dd>Use postfix subchart.</dd>
 
