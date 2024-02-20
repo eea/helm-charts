@@ -95,7 +95,8 @@ varnish:
       memory: 1Gi
 
 cron:
-  enabled: false
+  enabled: true
+  schedule: "10 * * * *"
   securityContext: {}
   resources: {}
 
