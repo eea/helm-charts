@@ -60,16 +60,18 @@ spec:
         # Wait for up to 600 seconds
         startupProbe:
           httpGet:
-            path: /Plone/2018/
+            path: {{ .Values.plone.probePath }}
             port: plone8080
           failureThreshold: 60
           periodSeconds: 10
+          timeoutSeconds: 2
 
         livenessProbe:
           httpGet:
-            path: /Plone/2018/
+            path: {{ .Values.plone.probePath }}
             port: plone8080
           periodSeconds: 15
+          timeoutSeconds: 2
 
         resources:
           {{- toYaml .Values.plone.resources | nindent 10 }}

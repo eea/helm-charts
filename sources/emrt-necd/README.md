@@ -6,6 +6,9 @@ The EMRT(EEA Emission Review Tool) is a web-based tool hosted by the EEA to faci
 
 <dl>
 
+  <dt>Version 0.3.2</dt>
+  <dd>Set a variable path to probe. Increase timeout to 2 seconds.</dd>
+
   <dt>Version 0.3.1</dt>
   <dd>Fix crontab job. Refs #260926 .</dd>
 
