@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: otrs-frontend
+  name: frontend
   labels:
     {{- include "appl.labels" . | nindent 4 }}
     component: otrs-frontend
@@ -13,12 +13,12 @@ spec:
   selector:
     matchLabels:
       {{- include "appl.selectorLabels" . | nindent 6 }}
-      component: otrs-frontend
+      component: frontend
   template:
     metadata:
       labels:
         {{- include "appl.selectorLabels" . | nindent 8 }}
-        component: otrs-frontend
+        component: frontend
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:

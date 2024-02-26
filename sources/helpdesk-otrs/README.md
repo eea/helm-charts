@@ -2,9 +2,17 @@
 
 This chart is (almost) configured for production.
 
-# Releases
+## Dependencies
+
+As the package has an integrated web frontend that listens on the HTTPS port, it
+expects to find a certificate secret matching the name at `haproxy.extraVolumes.secretName`.
+
+## Releases
 
 <dl>
+
+  <dt>Version 0.3.0</dt>
+  <dd>Integrated HAProxy as subchart.</dd>
 
   <dt>Version 0.2.1</dt>
   <dd>Liveness probe on frontend.</dd>

@@ -53,31 +53,9 @@ smtpService:
   type: ClusterIP
   port: 25
   externalTrafficPolicy: Local
-  loadbalancerName: 'name'
-
-service:
-  type: ClusterIP
-  port: 80
-  externalTrafficPolicy: Cluster
-
-ingress:
-  enabled: false
-  className: "nginx"
+  loadbalancerName: 'REPLACEME'
   annotations:
-    nginx.ingress.kubernetes.io/proxy-max-temp-file-size: '1024m'
-#   nginx.ingress.kubernetes.io/configuration-snippet: |
-#     more_set_headers 'X-XSS-Protection: 1; mode=block'
-#       'X-Frame-Options: SAMEORIGIN'
-#       'X-Content-Type-Options: nosniff'
-#       'Referrer-Policy: no-referrer,same-origin,strict-origin,strict-origin-when-cross-origin';
-  hosts:
-    - host: helpdesk.eionet.europa.eu
-      paths:
-        - path: /
-          pathType: Prefix
-  tls:
-    - hosts:
-        - helpdesk.eionet.europa.eu
+    metallb.universe.tf/allow-shared-ip: "otrs-helpdesk"
 
 frontend:
   resources:
@@ -107,8 +85,8 @@ database:
     limits:
       memory: 4Gi
   hostname: mariadb
-  database: DataDict
-  username: dduser
+  database: REPLACEME
+  username: REPLACEME
   password: REPLACEME
   rootpw: REPLACEME
   nodeSelector: {}
@@ -125,3 +103,51 @@ postfix:
   mtpRelay: ''
   mtpUser: ''
 
+haproxy:
+  enabled: true
+  service:
+    type: LoadBalancer
+    externalTrafficPolicy: Local
+    service.loadBalancerIP: ""
+    annotations:
+      metallb.universe.tf/allow-shared-ip: "otrs-helpdesk"
+
+    ports:
+    - port: 80
+      name: http
+      targetPort: 80
+      protocol: TCP
+    - port: 443
+      name: https
+      targetPort: 80
+      protocol: TCP
+
+    containerPorts:
+    - containerPort: 8080
+    - containerPort: 8443
+
+  extraVolumes:
+  - name: eionet-certificate
+    secret:
+      defaultMode: 0444
+      optional: false
+      secretName: star-eionet-europa-eu
+  - name: tmpcertificates
+    emptyDir: {}
+
+  extraVolumeMounts:
+  - mountPath: /ssl
+    name: tmpcertificates
+
+  existingConfigmap: haproxyconf
+
+  initContainers:
+  - name: cat-ssl
+    image: busybox:1.28
+    command: ['sh', '-c', "cat /var/ssl/* >/ssl/combined.pem ; chown -R 1001.1001 /ssl ; chmod 400 /ssl/* "]
+    volumeMounts:
+    - mountPath: /ssl
+      name: tmpcertificates
+    - mountPath: /var/ssl
+      name: eionet-certificate
+      readOnly: true
