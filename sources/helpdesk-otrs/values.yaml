@@ -35,27 +35,10 @@ openID:
   providerIssuer: ''
   redirectURI: ''
 
-
-# Frontend
-resources:
-  requests:
-    memory: 5Gi
-  limits:
-    memory: 5Gi
-
-nodeSelector: {}
-tolerations: []
-affinity: {}
-
 #
 # OTRS Backend is an MTA
 smtpService:
-  type: ClusterIP
-  port: 25
-  externalTrafficPolicy: Local
   loadbalancerName: 'REPLACEME'
-  annotations:
-    metallb.universe.tf/allow-shared-ip: "otrs-helpdesk"
 
 frontend:
   resources:
@@ -108,23 +91,31 @@ haproxy:
   service:
     type: LoadBalancer
     externalTrafficPolicy: Local
-    service.loadBalancerIP: ""
-    annotations:
-      metallb.universe.tf/allow-shared-ip: "otrs-helpdesk"
 
     ports:
-    - port: 80
-      name: http
+    - name: smtp
+      port: 25
+      targetPort: 25
+      protocol: TCP
+    - name: http
+      port: 80
       targetPort: 80
       protocol: TCP
-    - port: 443
-      name: https
+    - name: https
+      port: 443
       targetPort: 80
       protocol: TCP
 
-    containerPorts:
-    - containerPort: 8080
-    - containerPort: 8443
+  containerPorts:
+  - name: smtp
+    containerPort: 8025
+  - name: http
+    containerPort: 8080
+  - name: https
+    containerPort: 8443
+
+  networkPolicy:
+    enabled: true
 
   extraVolumes:
   - name: eionet-certificate

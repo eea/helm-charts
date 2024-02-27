@@ -16,12 +16,13 @@ data:
     defaults
       timeout client 120s
       timeout server 120s
+      timeout connect 5s
       log global
-      option httplog
+      option tcplog
       compression type text/html text/html;charset=utf-8 text/html;charset=ISO-8859-1 text/plain text/css text/javascript application/x-javascript application/javascript application/ecmascript
 
     frontend www
-      bind :8080
+      bind *:8080
       bind *:8443 ssl crt /ssl/combined.pem
       http-request redirect scheme https unless { ssl_fc }
       http-response set-header Strict-Transport-Security "max-age=31536000; includeSubDomains; "
@@ -31,6 +32,11 @@ data:
       option forwardfor
       default_backend otrsfront
 
+    frontend mta
+      bind *:8025
+      mode tcp
+      default_backend smtpsvc
+
     backend otrsfront
       timeout server 120s
       timeout connect 10s
@@ -38,3 +44,6 @@ data:
       mode http
       server otrsfrontend "$FRONTEND_SERVICE_HOST":"$FRONTEND_SERVICE_PORT"
 
+    backend smtpsvc
+      mode tcp
+      server sendmail "$SENDMAIL_SERVICE_HOST":"$SENDMAIL_SERVICE_PORT"
