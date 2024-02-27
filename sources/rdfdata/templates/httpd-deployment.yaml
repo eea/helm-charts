@@ -26,7 +26,7 @@ spec:
 
       containers:
       - name: httpd
-        image: httpd:2.4.58
+        image: httpd:2.4.58-alpine3.19
         ports:
         - containerPort: 80
           protocol: TCP
