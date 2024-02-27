@@ -73,7 +73,7 @@ tolerations: []
 affinity: {}
 
 admin:
-  image: eeacms/centos7dev:2.2.4
+  enabled: false
   securityContext: {}
     # capabilities:
     #   drop:
@@ -91,7 +91,7 @@ admin:
   podAnnotations: {}
 
 postgres:
-  image: postgres:9.3.6
+  enabled: false
   resources:
     requests:
       memory: 50Mi

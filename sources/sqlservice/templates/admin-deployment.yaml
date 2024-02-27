@@ -1,3 +1,4 @@
+{{- if .Values.admin.enabled -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -33,7 +34,7 @@ spec:
         - name: {{ .Release.Name }}-admin
           securityContext:
             {{- toYaml .Values.admin.securityContext | nindent 12 }}
-          image: "{{ .Values.admin.image }}"
+          image: eeacms/centos7dev:3.0.0
           imagePullPolicy: {{ .Values.admin.pullPolicy }}
           command: ["/bin/sh"]
           resources:
@@ -67,3 +68,4 @@ spec:
       - name: {{ .Release.Name }}-varlocal
         persistentVolumeClaim:
           claimName: {{ .Release.Name }}-varlocal
+{{- end }}

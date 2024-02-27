@@ -1,3 +1,4 @@
+{{- if .Values.postgres.enabled -}}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -26,7 +27,7 @@ spec:
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
       containers:
       - name: {{ .Release.Name }}-psql
-        image: "{{ .Values.postgres.image }}"
+        image: postgres:9.3.6
         ports:
         - containerPort: 5432
           protocol: TCP
@@ -83,3 +84,4 @@ spec:
       resources:
         requests:
           storage: "{{ .Values.postgres.storage }}"
+{{- end }}
