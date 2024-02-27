@@ -130,6 +130,24 @@ proftpd:
   users: []
 
 publicCatalogue:
+  webapp_context: /catalogue
+  geonetwork_dir: /catalogue-data
+  catalogue_name: catalogue
+  jvm_max_memory: 2G
+  db_type: postgres
+  formatter_dir: "{{ .Values.publicCatalogue.geonetwork_dir }}/data/formatter"
+  schema_dir: /opt/geonetwork/WEB-INF/data/config/schema_plugins
+  index_config_dir: /opt/geonetwork/WEB-INF/data/config/index
+  resources_dir: "{{ .Values.publicCatalogue.geonetwork_dir }}/resources"
+  es_host: elasticsearch
+  es_port: 9200
+  es_protocol: http
+  es_url: "{{ .Values.publicCatalogue.es_protocol }}://{{ .Values.publicCatalogue.es_host }}:{{ .Values.publicCatalogue.es_port}}"
+  es_index_records: gn-records
+  es_features_proxy: "{{ .Values.publicCatalogue.es_protocol }}://{{ .Values.publicCatalogue.es_host }}:{{ .Values.publicCatalogue.es_port}}/gn-features/{_}"
+  microserviceproxy_targeturi: http://ogcapi:8080
+
+
   resources:
     requests:
       memory: 2Gi

@@ -5,6 +5,12 @@ A csw service and front end application to search and find EEA GIS datasets.
 ## Releases
 
 <dl>
+  <dt>Version 0.3.5</dt>
+  <dd>
+    Update GN image to eeacms/eea-geonetwork:27fc3b4a.
+    Use new GN configuration method with GN_CONFIG_PROPERTIES variable.
+  </dd>
+
   <dt>Version 0.3.4</dt>
   <dd>Security upgrade of OpenSSL in the apache image.</dd>
 

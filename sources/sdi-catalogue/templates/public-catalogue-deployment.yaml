@@ -27,32 +27,22 @@ spec:
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
       containers:
       - name: public-catalogue
-        image: eeacms/eea-geonetwork:0cb4b7263c292571f32318e75b82302b2d551201
+        image: eeacms/eea-geonetwork:27fc3b4a
         env:
+        - name: WEBAPP_CONTEXT_PATH
+          value: {{ .Values.publicCatalogue.webapp_context }}
+        - name: geonetwork_dir
+          value: {{ .Values.publicCatalogue.geonetwork_dir }}
         - name: CATALOGUE
-          value: catalogue
-        - name: ES_HOST
-          value: elasticsearch
-        - name: ES_INDEX_RECORDS
-          value: gn-records
-        - name: ES_PORT
-          value: "9200"
-        - name: ES_PROTOCOL
-          value: http
+          value: {{ .Values.publicCatalogue.catalogue_name }}
         - name: GEONETWORK_MICROSERVICESPROXY_TARGETURI
-          value: http://ogcapi:8080
+          value: {{ .Values.publicCatalogue.microserviceproxy_targeturi }}
         - name: JAVA_OPTIONS
-          value: '-Djava.security.egd=file:/dev/./urandom -Djava.awt.headless=true -Xms512M -Xss512M -Xmx1G -XX:+UseConcMarkSweepGC -Dgeonetwork.dir=/catalogue-data -Dgeonetwork.db.type=postgres -Dgeonetwork.schema.dir=/var/lib/jetty/webapps/catalogue/WEB-INF/data/config/schema_plugins -Dgeonetwork.formatter.dir=/catalogue-data/data/formatter -Dgeonetwork.indexConfig.dir=/var/lib/jetty/webapps/catalogue/WEB-INF/data/config/index -Dgeonetwork.resources.dir=/catalogue-data/resources -Dorg.eclipse.jetty.annotations.AnnotationParser.LEVEL=OFF'
-        - name: GEONETWORK_DB_HOST
-          value: postgres-geonetwork
-        - name: GEONETWORK_DB_PORT
-          value: "5432"
-        - name: GEONETWORK_DB_NAME
-          value: {{ .Values.geonetworkdb.database }}
-        - name: GEONETWORK_DB_PASSWORD
-          value: {{ .Values.geonetworkdb.password }}
-        - name: GEONETWORK_DB_USERNAME
-          value: {{ .Values.geonetworkdb.username }}
+          value: "-Djava.security.egd=file:/dev/./urandom -Djava.awt.headless=true -Xms512M -Xss512M -Xmx{{ .Values.publicCatalogue.jvm_max_memory }} -XX:+UseConcMarkSweepGC -Dorg.eclipse.jetty.annotations.AnnotationParser.LEVEL=OFF"
+        - name: GN_CONFIG_PROPERTIES
+          value: "-Dgeonetwork.dir={{ .Values.publicCatalogue.geonetwork_dir }} -Dgeonetwork.db.type={{ .Values.publicCatalogue.db_type }} -Dgeonetwork.schema.dir={{ .Values.publicCatalogue.schema_dir }} -Dgeonetwork.formatter.dir={{ tpl .Values.publicCatalogue.formatter_dir . }} -Dgeonetwork.indexConfig.dir={{ .Values.publicCatalogue.index_config_dir }} -Dgeonetwork.resources.dir={{ tpl .Values.publicCatalogue.resources_dir . }} -Des.host={{ .Values.publicCatalogue.es_host }} -Des.port={{ .Values.publicCatalogue.es_port }} -Des.protocol={{ .Values.publicCatalogue.es_protocol }} -Des.index.records={{ .Values.publicCatalogue.es_index_records }} -Des.url={{ tpl .Values.publicCatalogue.es_url . }} -Dgeonetwork.ESFeaturesProxy.targetUri={{ tpl .Values.publicCatalogue.es_features_proxy .}} -Dkb.url=http://kibana:5601"
+        # To configure the database connection parameters fill the values in /catalogue-data/config/db.properties
+        # To configure the LDAP connection options fill the values in /catalogue-data/config/security.properties
 
         ports:
         - containerPort: 8080
