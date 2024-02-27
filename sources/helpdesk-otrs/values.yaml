@@ -95,15 +95,15 @@ haproxy:
     ports:
     - name: smtp
       port: 25
-      targetPort: 25
+      targetPort: 8025
       protocol: TCP
     - name: http
       port: 80
-      targetPort: 80
+      targetPort: 8080
       protocol: TCP
     - name: https
       port: 443
-      targetPort: 80
+      targetPort: 8443
       protocol: TCP
 
   containerPorts:

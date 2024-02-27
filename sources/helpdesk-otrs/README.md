@@ -11,6 +11,9 @@ expects to find a certificate secret matching the name at `haproxy.extraVolumes.
 
 <dl>
 
+  <dt>Version 0.3.1</dt>
+  <dd>Typo in target ports.</dd>
+
   <dt>Version 0.3.0</dt>
   <dd>Integrated HAProxy as subchart.</dd>
 
