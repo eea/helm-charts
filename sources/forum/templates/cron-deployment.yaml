@@ -1,0 +1,101 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "appl.fullname" . }}-cron
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: cron
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: cron
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: cron
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      containers:
+      - name: {{ .Release.Name }}-cron
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        stdin: true
+        tty: true
+        env:
+        - name: CRONTAB
+          value: 'True'
+        - name: ERROR_FROM_EMAIL
+          value: "{{ .Values.errorFromEmail }}"
+        - name: GOOGLE_AUTH_CLIENT_ID
+          value: "{{ .Values.googleAuthClientId }}"
+        - name: GOOGLE_AUTH_CLIENT_SECRET
+          value: "{{ .Values.googleAuthClientSecret }}"
+        - name: SENTRY_DSN
+          value: "{{ .Values.sentryDsn }}"
+        - name: SENTRY_RELEASE
+          value: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        - name: SENTRY_SITE
+          value: {{ .Values.serverName }}
+        - name: reCAPTCHA_PRIVATE_KEY
+          value: "{{ .Values.recaptchaPrivateKey }}"
+        - name: reCAPTCHA_PUBLIC_KEY
+          value: "{{ .Values.recaptchaPublicKey }}"
+        - name: TZ
+          value: "{{ .Values.timezone }}"
+        resources:
+          {{- toYaml .Values.cron.resources | nindent 10 }}
+        securityContext:
+          {{- toYaml .Values.cron.securityContext | nindent 12 }}
+        volumeMounts:
+        - mountPath: /var/local/groupware/var/ldapdump
+          name: {{ .Release.Name }}-ldapdump
+        - mountPath: /var/local/groupware/var/naaya-mail-queue
+          name: {{ .Release.Name }}-mailqueue
+        - mountPath: /tmp
+          name: {{ .Release.Name }}-tmp
+        - mountPath: /var/local/groupware/var/zeoserver/blobs
+          name: {{ .Release.Name }}-blobstorage
+        - mountPath: /var/local/groupware/var/zeoserver/filestorage
+          name: {{ .Release.Name }}-filestorage
+        - mountPath: /var/local/groupware/var/zeoserver/repozo
+          name: {{ .Release.Name }}-repozo
+
+      {{- with .Values.cron.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.cron.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.cron.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+
+      volumes:
+      - name: {{ .Release.Name }}-ldapdump
+        persistentVolumeClaim:
+          claimName: eionet-ldapdump
+      - name: {{ .Release.Name }}-mailqueue
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-mailqueue
+      - name: {{ .Release.Name }}-tmp
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-tmp
+      - name: {{ .Release.Name }}-blobstorage
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-blobstorage
+      - name: {{ .Release.Name }}-repozo
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-repozo
+      - name: {{ .Release.Name }}-filestorage
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-filestorage

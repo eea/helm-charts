@@ -1,0 +1,25 @@
+apiVersion: v2
+name: forum
+description: Forum Interest Groups
+icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/forum/logo_eionet.png
+
+type: application
+
+keywords:
+- Eionet
+- Groupware
+
+# This is the chart version. This version number should be incremented each time you make changes
+# to the chart and its templates, including the app version.
+# Versions are expected to follow Semantic Versioning (https://semver.org/)
+version: 0.1.0
+
+# Version for the main container
+appVersion: "forum-22.09.06"
+
+# Remember to do helm dep up .
+dependencies:
+  - name: postfix
+    version: 0.2.1
+    repository: https://eea.github.io/helm-charts
+    condition: postfix.enabled
