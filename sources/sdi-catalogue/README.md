@@ -5,11 +5,16 @@ A csw service and front end application to search and find EEA GIS datasets.
 ## Releases
 
 <dl>
+  <dt>Version 0.3.7</dt>
+  <dd>
+    Update ogcapi service to 4.2.8-0.
+  </dd>
+
   <dt>Version 0.3.6</dt>
   <dd>
     Update INSPIRE validator to 2024.0.
   </dd>
-
+  
   <dt>Version 0.3.5</dt>
   <dd>
     Update GN image to eeacms/eea-geonetwork:27fc3b4a.

@@ -74,14 +74,14 @@ data:
         registerWithEureka: false
         fetch-registry: false
     gn:
-      baseurl: {{ .Values.serverUrl }}/catalogue/api
+      baseurl: {{ .Values.serverUrl }}{{ .Values.publicCatalogue.webapp_context }}/api
       language:
         default: eng
       linkToLegacyGN4: true
-      legacy.url: {{ .Values.serverUrl }}/catalogue
+      legacy.url: {{ .Values.serverUrl }}{{ .Values.publicCatalogue.webapp_context }}
       index:
-        url: http://elasticsearch:9200
-        records: gn-records
+        url: {{ tpl .Values.publicCatalogue.es_url . }}
+        records: {{ .Values.publicCatalogue.es_index_records }}
         username:
         password:
       search:
@@ -223,10 +223,10 @@ data:
     springfox:
       documentation:
         swaggerUi:
-          baseUrl: /catalogue/api/openapi
+          baseUrl: {{ .Values.publicCatalogue.webapp_context }}/api/openapi
         openApi:
           v3:
-            path: /catalogue/api/openapi/v3/api-docs
+            path: {{ .Values.publicCatalogue.webapp_context }}/api/openapi/v3/api-docs
         swagger:
           v2:
-            path: /catalogue/api/openapi/v2/api-docs
+            path: {{ .Values.publicCatalogue.webapp_context }}/api/openapi/v2/api-docs
