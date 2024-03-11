@@ -7,6 +7,9 @@ This chart is configured for production, but Ingress is disabled by default.
 
 <dl>
 
+  <dt>Version 0.4.2</dt>
+  <dd>Upgrade Apache to 2.4.58-alpine3.19</dd>
+
   <dt>Version 0.4.1</dt>
   <dd>Typo in network security policy.</dd>
 
