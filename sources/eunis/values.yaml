@@ -88,3 +88,11 @@ database:
   storage: 10Gi
   storageClassName: ""
 
+buildsw:
+  enabled: false
+  resources:
+    requests:
+      memory: 64Mi
+    limits:
+      memory: 128Mi
+  securityContext: {}
