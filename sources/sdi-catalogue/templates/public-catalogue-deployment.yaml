@@ -35,12 +35,10 @@ spec:
           value: {{ .Values.publicCatalogue.geonetwork_dir }}
         - name: CATALOGUE
           value: {{ .Values.publicCatalogue.catalogue_name }}
-        - name: GEONETWORK_MICROSERVICESPROXY_TARGETURI
-          value: {{ .Values.publicCatalogue.microserviceproxy_targeturi }}
         - name: JAVA_OPTIONS
           value: "-Djava.security.egd=file:/dev/./urandom -Djava.awt.headless=true -Xms512M -Xss512M -Xmx{{ .Values.publicCatalogue.jvm_max_memory }} -XX:+UseConcMarkSweepGC -Dorg.eclipse.jetty.annotations.AnnotationParser.LEVEL=OFF"
         - name: GN_CONFIG_PROPERTIES
-          value: "-Dgeonetwork.dir={{ .Values.publicCatalogue.geonetwork_dir }} -Dgeonetwork.db.type={{ .Values.publicCatalogue.db_type }} -Dgeonetwork.schema.dir={{ .Values.publicCatalogue.schema_dir }} -Dgeonetwork.formatter.dir={{ tpl .Values.publicCatalogue.formatter_dir . }} -Dgeonetwork.indexConfig.dir={{ .Values.publicCatalogue.index_config_dir }} -Dgeonetwork.resources.dir={{ tpl .Values.publicCatalogue.resources_dir . }} -Des.host={{ .Values.publicCatalogue.es_host }} -Des.port={{ .Values.publicCatalogue.es_port }} -Des.protocol={{ .Values.publicCatalogue.es_protocol }} -Des.index.records={{ .Values.publicCatalogue.es_index_records }} -Des.url={{ tpl .Values.publicCatalogue.es_url . }} -Dgeonetwork.ESFeaturesProxy.targetUri={{ tpl .Values.publicCatalogue.es_features_proxy .}} -Dkb.url=http://kibana:5601"
+          value: "-Dgeonetwork.dir={{ .Values.publicCatalogue.geonetwork_dir }} -Dgeonetwork.db.type={{ .Values.publicCatalogue.db_type }} -Dgeonetwork.schema.dir={{ .Values.publicCatalogue.schema_dir }} -Dgeonetwork.formatter.dir={{ tpl .Values.publicCatalogue.formatter_dir . }} -Dgeonetwork.indexConfig.dir={{ .Values.publicCatalogue.index_config_dir }} -Dgeonetwork.resources.dir={{ tpl .Values.publicCatalogue.resources_dir . }} -Des.host={{ .Values.publicCatalogue.es_host }} -Des.port={{ .Values.publicCatalogue.es_port }} -Des.protocol={{ .Values.publicCatalogue.es_protocol }} -Des.index.records={{ .Values.publicCatalogue.es_index_records }} -Des.url={{ tpl .Values.publicCatalogue.es_url . }} -Dgeonetwork.ESFeaturesProxy.targetUri={{ tpl .Values.publicCatalogue.es_features_proxy .}} -Dkb.url=http://kibana:5601 -Dgeonetwork.HttpDashboardProxy.targetUri={{ .Values.publicCatalogue.dashboardproxy_targeturi }} -Dgeonetwork.MicroServicesProxy.targetUri={{ .Values.publicCatalogue.microserviceproxy_targeturi }}"
         # To configure the database connection parameters fill the values in /catalogue-data/config/db.properties
         # To configure the LDAP connection options fill the values in /catalogue-data/config/security.properties
 

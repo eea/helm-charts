@@ -5,6 +5,9 @@ A csw service and front end application to search and find EEA GIS datasets.
 ## Releases
 
 <dl>
+  <dt>Version 0.3.9</dt>
+  <dd>Configure Kibana and ogcapi proxies</dd>
+
   <dt>Version 0.3.8</dt>
   <dd>Update GN image to eeacms/eea-geonetwork:f65c25a5</dd>
 

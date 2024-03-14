@@ -146,6 +146,7 @@ publicCatalogue:
   es_index_records: gn-records
   es_features_proxy: "{{ .Values.publicCatalogue.es_protocol }}://{{ .Values.publicCatalogue.es_host }}:{{ .Values.publicCatalogue.es_port}}/gn-features/{_}"
   microserviceproxy_targeturi: http://ogcapi:8080
+  dashboardproxy_targeturi: http://kibana:5601
 
 
   resources:
