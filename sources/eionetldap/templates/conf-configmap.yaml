@@ -96,6 +96,6 @@ data:
     include /etc/openldap/schema/inetorgperson.schema
     include /etc/openldap/schema/eionet.schema
     include /etc/openldap/schema/nis.schema
-    include /etc/openldap/schema/ppolicy.schema
+    #include /etc/openldap/schema/ppolicy.schema
   cacerts.pem: |
     {{- .Files.Get "cacerts.pem" | nindent 4 }}

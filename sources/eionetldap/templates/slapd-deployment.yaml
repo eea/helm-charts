@@ -59,9 +59,9 @@ spec:
               key: slapd.inc
         - name: SLAPD_DATABASE
           value: |
-            database bdb
-            cachesize 50000
-            idlcachesize 150000
+            database mdb
+            maxsize 10737418240
+            maxreaders 256
             suffix  "o=EIONET,l=Europe"
             rootdn  "{{ .Values.rootDN }}"
             rootpw "{{ .Values.rootPW }}"
@@ -108,8 +108,8 @@ spec:
                 credentials="{{ .Values.syncPW }}"
             updateref {{ .Values.chainURL }}
             {{- end }}
-            #add a checkpoint every 128k and/or 5 minutes
-            checkpoint 128 15
+            #add a checkpoint every 128k and/or 5 minutes, requires dbnosync to be set
+            #checkpoint 128 15
             loglevel {{ .Values.debugLevel }}
 
         - name: SLAPD_DEBUG_LEVEL
@@ -162,6 +162,15 @@ spec:
         #   - o=EIONET,l=Europe
         #   - objectClass=organization
 
+        startupProbe:
+          failureThreshold: 20
+          initialDelaySeconds: 10
+          periodSeconds: 20
+          successThreshold: 1
+          tcpSocket:
+            port: 389
+          timeoutSeconds: 1
+          
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

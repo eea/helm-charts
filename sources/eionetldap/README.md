@@ -12,6 +12,9 @@ There is a backup cronjob built in, which can be enabled with backup.enable=true
 ## Releases
 
 <dl>
+  <dt>Version 1.2.0-alpha.1</dt>
+  <dd>Unsuitable for production environments.</dd>
+
   <dt>Version 1.1.3</dt>
   <dd>Added externalTrafficPolicy option.</dd>
   
