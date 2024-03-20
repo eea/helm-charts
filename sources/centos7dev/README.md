@@ -11,6 +11,9 @@ under /mnt. The volume claims must exist already.
 ## Releases
 
 <dl>
+  <dt>Version 1.0.2</dt>
+  <dd>Added ldap clients.</dd>
+
   <dt>Version 1.0.1</dt>
   <dd>Fixed typo in network security policy.</dd>
 
