@@ -32,11 +32,10 @@ spec:
         - name: CRONTAB
           value: |-
             # m h dom mon dow user  command
-            #* * * * * echo 1 minute cron
-            #8 1,3,5,13,19,21,23 * * *   root        /opt/geoserver_publication.sh
-            41 1,3,5,13,19,21,23 * * *  root        /opt/nextcloud_apache_conf_main.sh
+            41 10,12,13,14,15,17,20 * * *  root     /opt/nextcloud_apache_conf_main.sh
             * */12 * * *                root        /opt/transferit/cleanup_files.sh
             33 * * * *                  www-data    /opt/webdav_public_links/webdav_public_links.sh
+            0 2,12 * * *                www-data    /opt/webdav_public_links/webdav_metadata_download.sh
 
             #*/15 * * * *               root        /opt/syncldapgroups/syncldapgroups.sh
         resources:
