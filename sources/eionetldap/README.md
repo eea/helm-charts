@@ -12,6 +12,10 @@ There is a backup cronjob built in, which can be enabled with backup.enable=true
 ## Releases
 
 <dl>
+
+  <dt>Version 1.2.1</dt>
+  <dd>Prepared for MDB backend and Alma9. Increased container image version tag.</dd>
+
   <dt>Version 1.2.0-alpha.1</dt>
   <dd>Unsuitable for production environments.</dd>
 
