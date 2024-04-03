@@ -118,6 +118,16 @@ ogcapi:
   enabled: true
   resources: {}
 
+#
+# Mailforwarder subchart
+postfix:
+  fullnameOverride: "postfix"
+  serverName: sdi.eea.europa.eu
+  mtpPass: ''
+  mtpPort: ''
+  mtpRelay: ''
+  mtpUser: ''
+
 proftpd:
   service:
     type: ClusterIP

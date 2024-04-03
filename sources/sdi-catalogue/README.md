@@ -5,6 +5,10 @@ A csw service and front end application to search and find EEA GIS datasets.
 ## Releases
 
 <dl>
+  <dt>Version 0.4.0</dt>
+  <dd>Nextcloud logs constantly about a missing postfix name. Added now.
+      Seems to have been forgotten at initial installation.</dd>
+
   <dt>Version 0.3.10</dt>
   <dd>Update GN to eeacms/eea-geonetwork:c12306d8, ogcapi to 4.4.3-0, elasticsearch:8.12.2, kibana:8.12.2.
   Added webdav_metadata_download.sh script to cron and updated the schedule of webdav_public_links.sh.

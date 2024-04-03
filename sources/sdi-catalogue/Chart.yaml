@@ -11,4 +11,11 @@ keywords:
 # This is the chart version. This version number should be incremented each time you make changes
 # to the chart and its templates, including the app version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 0.3.10
+version: 0.4.0
+
+# Remember to do helm dep up .
+dependencies:
+  - name: postfix
+    version: 1.0.0
+    repository: https://eea.github.io/helm-charts
+
