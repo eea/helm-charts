@@ -9,6 +9,9 @@ spec:
   replicas: {{ .Values.replicaCount }}
   strategy:
     type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
 
   selector:
     matchLabels:
