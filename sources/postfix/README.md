@@ -1,10 +1,17 @@
-# Mail forwarder to Ironport
+# Mail forwarder
 
-This chart is configured for production.
+This service listens on port 25 for emails. It then sends them to a upstream
+MTA using authentication.
+
+If the `dryrun` flag is set to true, the mails will not get sent, but sent to stdout
+for logging. Defaults to false.
 
 ## Releases
 
 <dl>
+  <dt>Version 1.1.0</dt>
+  <dd>Can now set a dryrun flag.</dd>
+
   <dt>Version 1.0.0</dt>
   <dd>Production release. Set maxSurge and maxUnavailable to 1.</dd>
 

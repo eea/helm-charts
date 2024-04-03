@@ -35,7 +35,11 @@ spec:
 
       containers:
       - name: {{ include "appl.name" . }}
+        {{- if .Values.dryrun }}
+        image: marcelesser/smtp-sink:latest
+        {{- else }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        {{- end }}
 
         ports:
         - containerPort: 25
