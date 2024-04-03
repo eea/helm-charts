@@ -5,6 +5,9 @@ A csw service and front end application to search and find EEA GIS datasets.
 ## Releases
 
 <dl>
+  <dt>Version 0.4.1</dt>
+  <dd>Upgrade to postfix 1.1.0.</dd>
+
   <dt>Version 0.4.0</dt>
   <dd>Nextcloud logs constantly about a missing postfix name. Added now.
       Seems to have been forgotten at initial installation.</dd>
