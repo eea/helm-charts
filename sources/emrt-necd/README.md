@@ -6,6 +6,9 @@ The EMRT(EEA Emission Review Tool) is a web-based tool hosted by the EEA to faci
 
 <dl>
 
+  <dt>Version 0.3.3</dt>
+  <dd>Change to rolling upgrades for Plone.</dd>
+
   <dt>Version 0.3.2</dt>
   <dd>Set a variable path to probe. Increase timeout to 2 seconds.</dd>
 
