@@ -1,0 +1,93 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mediaserver
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: mediaserver
+
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: mediaserver
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: mediaserver
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+      containers:
+      - name: mediaserver
+        image: eeacms/nginx-eionet-styles:1.5
+        env:
+        - name: TZ
+          value: {{ .Values.timezone }}
+
+        ports:
+        - containerPort: 80
+
+        resources:
+          {{- toYaml .Values.mediaserver.resources | nindent 10 }}
+
+        securityContext:
+          {{- toYaml .Values.mediaserver.securityContext | nindent 10 }}
+
+        volumeMounts:
+        - mountPath: /opt/zope/var/styles
+          name: www-eionet-staticfiles
+          readOnly: true
+        - mountPath: /var/local/gemet/static
+          name: www-eionet-gemet-staticfiles
+          readOnly: true
+        - mountPath: /var/local/gemet/exports
+          name: www-eionet-gemet-exports
+          readOnly: true
+
+        livenessProbe:
+          tcpSocket:
+            port: 80
+          initialDelaySeconds: 15
+          periodSeconds: 20
+
+      restartPolicy: Always
+
+      {{- with .Values.mediaserver.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.mediaserver.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.mediaserver.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+      volumes:
+      - name: www-eionet-staticfiles
+        persistentVolumeClaim:
+          claimName: www-eionet-staticfiles
+          readOnly: true
+      - name: www-eionet-gemet-staticfiles
+        persistentVolumeClaim:
+          claimName: www-eionet-gemet-staticfiles
+          readOnly: true
+      - name: www-eionet-gemet-exports
+        persistentVolumeClaim:
+          claimName: www-eionet-gemet-exports
+          readOnly: true
+

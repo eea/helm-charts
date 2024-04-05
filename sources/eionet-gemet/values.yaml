@@ -1,0 +1,181 @@
+
+image:
+  repository: eeacms/gemet
+  pullPolicy: IfNotPresent
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: false
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+podSecurityContext: {}
+securityContext: {}
+
+ldapHost: ''
+ldapPassword: ''
+ldapRoot: ''
+ldapDN: ''
+mailHost: postfix
+secretKey: ''
+
+timezone: Europe/Copenhagen
+
+service:
+  type: ClusterIP
+  port: 8443
+
+async:
+  securityContext: {}
+  resources:
+    requests:
+      memory: 1Gi
+    limits:
+      memory: 1Gi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+broker:
+  securityContext: {}
+  resources:
+    requests:
+      memory: 64Mi
+    limits:
+      memory: 64Mi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+gemet:
+  securityContext: {}
+  resources:
+    requests:
+      memory: 512Mi
+    limits:
+      memory: 512Mi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+ingress:
+  enabled: false
+  className: "nginx"
+  annotations: {}
+
+  hosts:
+    - host: www.eionet.europa.eu
+      paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: webserver
+              port:
+                number: 8443
+
+    - host: eionet.europa.eu
+      paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: webserver
+              port:
+                number: 8443
+  tls:
+    - hosts:
+        - www.eionet.europa.eu
+        - eionet.europa.eu
+
+
+ 
+mysql:
+  securityContext: {}
+  resources:
+    requests:
+      memory: 4Gi
+    limits:
+      memory: 4Gi
+  hostname: db
+  database: REPLACEME
+  username: REPLACEME
+  password: REPLACEME
+  rootpw: REPLACEME
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+postgres:
+  securityContext: {}
+  resources:
+    requests:
+      memory: 4Gi
+    limits:
+      memory: 4Gi
+  hostname: postgres
+  database: REPLACEME
+  username: REPLACEME
+  password: REPLACEME
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+#
+# Mailforwarder subchart
+postfix:
+  fullnameOverride: "postfix"
+  serverName: www.eionet.europa.eu
+  mtpPass: ''
+  mtpPort: ''
+  mtpRelay: ''
+  mtpUser: ''
+
+zeoserver:
+  fullnameOverride: "zeoserver"
+  storage: 30Gi
+  resources:
+    requests:
+      memory: 1Gi
+    limits:
+      memory: 3Gi
+
+zope:
+  enabled: false
+  securityContext: {}
+  resources:
+    requests:
+      memory: 2Gi
+    limits:
+      memory: 2Gi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+mediaserver:
+  securityContext: {}
+  resources:
+    requests:
+      memory: 2Gi
+    limits:
+      memory: 2Gi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+webserver:
+  securityContext: {}
+  resources:
+    requests:
+      memory: 256Mi
+    limits:
+      memory: 256Mi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+

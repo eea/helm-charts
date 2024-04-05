@@ -1,0 +1,90 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Release.Name }}-db
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: database
+
+spec:
+  replicas: 1
+  serviceName: mariadb
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: database
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: database
+    spec:
+      terminationGracePeriodSeconds: 10
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
+      containers:
+      - name: mysql
+        image: mysql:5.7
+        ports:
+        - containerPort: 3306
+          protocol: TCP
+        args:
+        - mysqld
+        - --user=mysql
+        - --character-set-server=utf8
+        - --collation-server=utf8_general_ci
+        env:
+        - name: MYSQL_DATABASE
+          value: "{{ .Values.mysql.database }}"
+        - name: MYSQL_PASSWORD
+          value: "{{ .Values.mysql.password }}"
+        - name: MYSQL_ROOT_PASSWORD
+          value: "{{ .Values.mysql.rootpw }}"
+        - name: MYSQL_USER
+          value: "{{ .Values.mysql.username }}"
+        - name: TZ
+          value: {{ .Values.timezone }}
+
+        resources:
+          {{- toYaml .Values.mysql.resources | nindent 10 }}
+
+        securityContext:
+          {{- toYaml .Values.mysql.securityContext | nindent 10 }}
+        volumeMounts:
+        - mountPath: /var/lib/mysql
+          name: {{ .Release.Name }}-mysql
+
+        livenessProbe:
+          tcpSocket:
+            port: 3306
+          initialDelaySeconds: 15
+          periodSeconds: 20
+
+      restartPolicy: Always
+
+      {{- with .Values.mysql.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.mysql.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.mysql.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+  volumeClaimTemplates:
+  - metadata:
+      name: {{ .Release.Name }}-mysql
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 30Gi

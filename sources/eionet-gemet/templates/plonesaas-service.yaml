@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: plonesaas
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: plonesaas
+
+spec:
+  type: ExternalName
+  # Should be  plonesaas.eea.europa.eu
+  externalName: kvm-prod4-f01.eea.europa.eu
+

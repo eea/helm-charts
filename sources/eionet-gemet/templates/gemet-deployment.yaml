@@ -1,0 +1,91 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gemet
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: gemet
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: gemet
+
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: gemet
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+      containers:
+      - name: gemet
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        env:
+        - name: AUTH_LDAP_SERVER_URI
+          value: ldaps://{{ .Values.ldapHost }}
+        - name: DJANGO_LOG_LEVEL
+          value: INFO
+        - name: FORCE_SCRIPT_NAME
+          value: /gemet
+        - name: MYSQL_ADDR
+          value: db
+        - name: MYSQL_DATABASE
+          value: "{{ .Values.mysql.database }}"
+        - name: MYSQL_PASSWORD
+          value: "{{ .Values.mysql.password }}"
+        - name: MYSQL_ROOT_PASSWORD
+          value: "{{ .Values.mysql.rootpw }}"
+        - name: MYSQL_USER
+          value: "{{ .Values.mysql.username }}"
+        - name: PGPASSWORD
+          value: "{{ .Values.mysql.password }}"
+        - name: POSTGRES_ADDR
+          value: postgres
+        - name: POSTGRES_PASSWORD
+          value: "{{ .Values.postgres.password }}"
+        - name: POSTGRES_DB
+          value: "{{ .Values.postgres.database }}"
+        - name: POSTGRES_USER
+          value: "{{ .Values.postgres.username }}"
+        - name: POSTGRES_HOST
+          value: postgres
+        - name: REDIS_HOST
+          value: broker
+        - name: REDIS_PORT
+          value: "6379"
+        - name: SECRET_KEY
+          value: "{{ .Values.secretKey }}"
+        - name: TZ
+          value: "{{ .Values.timezone }}"
+
+        ports:
+        - containerPort: 8888
+
+        resources:
+          {{- toYaml .Values.gemet.resources | nindent 10 }}
+
+        securityContext:
+          {{- toYaml .Values.gemet.securityContext | nindent 10 }}
+
+        volumeMounts:
+        - mountPath: /var/local/static
+          name: www-eionet-gemet-staticfiles
+        - mountPath: /var/local/gemet/exports
+          name: www-eionet-gemet-exports
+
+      restartPolicy: Always
+
+      volumes:
+      - name: www-eionet-gemet-staticfiles
+        persistentVolumeClaim:
+          claimName: www-eionet-gemet-staticfiles
+      - name: www-eionet-gemet-exports
+        persistentVolumeClaim:
+          claimName: www-eionet-gemet-exports

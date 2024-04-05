@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: www-eionet-staticfiles
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: www-eionet-staticfiles
+  annotations:
+    "helm.sh/resource-policy": keep
+
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 100Mi
+
