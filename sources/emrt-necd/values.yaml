@@ -116,3 +116,10 @@ cron:
     - -O
     - /dev/stdout
 
+zeoserver:
+  fullnameOverride: "zeoserver"
+  storage: 30Gi
+  resources:
+    requests:
+      memory: 1Gi
+
