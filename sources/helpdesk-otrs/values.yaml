@@ -79,6 +79,7 @@ database:
 #
 # Mailforwarder subchart
 postfix:
+  dryrun: false
   fullnameOverride: "postfix"
   serverName: helpdesk.eionet.europa.eu
   mtpPass: ''
