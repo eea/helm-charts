@@ -7,9 +7,24 @@ This chart is (almost) configured for production.
 As the package has an integrated web frontend that listens on the HTTPS port, it
 expects to find a certificate secret matching the name at `haproxy.extraVolumes.secretName`.
 
+## Parameters
+
+| Name | Description | Value |
+| ---- | ----------- | ----- |
+| postfix.dryrun | If set to true, the mails will not get sent, but sent to stdout | false |
+| smtpService.loadbalancerName | FQDN of the Loadbalancer vIP, that the smtp service receives mail from | REPLACEME |
+| database.hostname | Name of database host | mariadb |
+| database.database | Name of database | otrs |
+| database.username | Name of database user | otrs |
+| database.password | Database password | REPLACEME |
+| database.rootpw | Name of database root password | REPLACEME |
+
 ## Releases
 
 <dl>
+
+  <dt>Version 0.4.0 - 10-MAR-2024</dt>
+  <dd>Upgrade of postfix subchart, which adds the dryrun switch.</dd>
 
   <dt>Version 0.3.1</dt>
   <dd>Typo in target ports.</dd>
