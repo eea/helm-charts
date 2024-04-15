@@ -43,7 +43,7 @@ haproxy:
   service:
     type: LoadBalancer
     externalTrafficPolicy: Local
-    service.loadBalancerIP: ""
+    loadBalancerIP: ""
 
     ports:
     - port: 80
