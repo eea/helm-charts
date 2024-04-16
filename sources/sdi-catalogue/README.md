@@ -5,6 +5,10 @@ A csw service and front end application to search and find EEA GIS datasets.
 ## Releases
 
 <dl>
+  <dt>Version 0.4.2</dt>
+  <dd>Update GN image to eeacms/eea-geonetwork:56df1491
+</dd>
+
   <dt>Version 0.4.1</dt>
   <dd>Upgrade to postfix 1.1.0.</dd>
 
