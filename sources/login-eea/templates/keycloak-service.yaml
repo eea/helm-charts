@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: keycloak
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: keycloak
+
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      name: http
+      targetPort: 8080
+      protocol: TCP
+    - port: {{ .Values.service.tlsport }}
+      name: https
+      targetPort: 8443
+      protocol: TCP
+
+  selector:
+    {{- include "appl.selectorLabels" . | nindent 4 }}
+    component: keycloak

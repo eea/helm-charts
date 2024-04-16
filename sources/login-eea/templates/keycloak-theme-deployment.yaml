@@ -1,0 +1,66 @@
+{{- if .Values.theme.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: keycloak-theme
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: theme
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: theme
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: theme
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
+      containers:
+      - name: keycloak-theme
+        image: alpine
+        command:
+        - /bin/sh
+        stdin: true
+        tty: true
+
+        resources:
+          {{- toYaml .Values.theme.resources | nindent 10 }}
+
+        volumeMounts:
+        - mountPath: /keycloak-theme
+          name: keycloak-theme
+        - mountPath: /opt/keycloak/cache
+          name: keycloak-theme-cache
+
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+
+      volumes:
+      - name: keycloak-theme
+        persistentVolumeClaim:
+          claimName: keycloak-theme
+      - name: keycloak-theme-cache
+        persistentVolumeClaim:
+          claimName: keycloak-theme-cache
+{{- end }}

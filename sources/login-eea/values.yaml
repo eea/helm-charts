@@ -1,0 +1,123 @@
+
+image:
+  repository: eeacms/eea-keycloak
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+adminNetworks: 192.168.0.0/16 10.92.24.0/21 10.50.0.0/16 87.54.7.0/24
+
+timezone: "Europe/Copenhagen"
+
+serviceName: login.eea.europa.eu
+adminUser: ""
+adminPassword: ""
+logLevel: ""
+
+serviceAccount:
+  create: false
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+
+securityContext: {}
+
+service:
+  type: ClusterIP
+  port: 8080
+  tlsport: 8443
+
+haproxy:
+  enabled: true
+  service:
+    type: LoadBalancer
+    externalTrafficPolicy: Local
+    loadBalancerIP: ""
+
+    ports:
+    - port: 80
+      name: http
+      targetPort: 8080
+      protocol: TCP
+    - port: 443
+      name: https
+      targetPort: 8443
+      protocol: TCP
+
+    containerPorts:
+    - containerPort: 8080
+    - containerPort: 8443
+
+  extraVolumes:
+  - name: eea-certificate
+    secret:
+      defaultMode: 0444
+      optional: false
+      secretName: star-eea-europa-eu
+  - name: tmpcertificates
+    emptyDir: {}
+
+  extraVolumeMounts:
+  - mountPath: /ssl
+    name: tmpcertificates
+
+  existingConfigmap: haproxyconf
+
+  initContainers:
+  - name: cat-ssl
+    image: busybox:1.28
+    command: ['sh', '-c', "cat /var/ssl/* >/ssl/combined.pem ; chown -R 1001.1001 /ssl ; chmod 400 /ssl/* "]
+    volumeMounts:
+    - mountPath: /ssl
+      name: tmpcertificates
+    - mountPath: /var/ssl
+      name: eea-certificate
+      readOnly: true
+
+resources:
+  requests:
+    memory: 2Gi
+  limits:
+    memory: 2Gi
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+# See https://artifacthub.io/packages/helm/bitnami/postgresql
+postgresql:
+  fullnameOverride: "pgpool"
+  auth:
+    password: ""
+    enablePostgresUser: true
+    postgresPassword: ""
+    database: keycloak
+    username: keycloak
+    resources:
+      requests:
+        memory: 2Gi
+      limits:
+        memory: 2Gi
+  primary:
+    persistence:
+      size: 8Gi
+
+database:
+  host: pgpool-hl
+  schema: public
+
+theme:
+  enabled: false
+  resources:
+    requests:
+      memory: 24Mi
+    limits:
+      memory: 24Mi
+

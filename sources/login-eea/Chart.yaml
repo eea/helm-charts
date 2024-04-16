@@ -1,0 +1,23 @@
+apiVersion: v2
+name: login-eea
+description: Identity provider based on Keycloak for EEA use
+icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/login-eea/keycloak.svg
+
+type: application
+
+keywords:
+- Authentication
+
+version: 0.6.0
+
+# Version for the main container
+appVersion: "17.0.0"
+
+dependencies:
+  - name: haproxy
+    version: 1.0.4
+    repository: https://charts.bitnami.com/bitnami
+    condition: haproxy.enabled
+  - name: postgresql
+    version: 15.2.5
+    repository: https://charts.bitnami.com/bitnami
