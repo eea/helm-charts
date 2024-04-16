@@ -39,6 +39,8 @@ spec:
           value: "false"
         - name: XPACK_MONITORING_UI_CONTAINER_ELASTICSEARCH_ENABLED
           value: "true"
+        - name: CSP_STRICT
+          value: "{{ .Values.kibana.csp_strict | default "false" }}" 
         resources:
           {{- toYaml .Values.kibana.resources | nindent 10 }}
         ports:

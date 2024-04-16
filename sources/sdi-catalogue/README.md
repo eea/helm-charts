@@ -5,6 +5,9 @@ A csw service and front end application to search and find EEA GIS datasets.
 ## Releases
 
 <dl>
+  <dt>Version 0.4.4</dt>
+  <dd>Set kibana csp.strict property to false. Add it to values.yaml to allow config it without a new version.</dd>
+
   <dt>Version 0.4.3</dt>
   <dd>Remove unsupported kibana.index property from kibana 8</dd>
 
