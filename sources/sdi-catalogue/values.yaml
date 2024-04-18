@@ -61,10 +61,6 @@ elasticsearch:
     limits:
       memory: 3Gi
 
-# Should probably not be part of this app
-filebeat:
-  enabled: false
-  resources: {}
 
 geonetworkdb:
   database: geonetwork_sdi
@@ -81,11 +77,6 @@ geonetworkdb:
 kibana:
   resources: {}
   csp_strict: false
-
-# Should probably not be part of this app
-metricbeat:
-  enabled: false
-  resources: {}
 
 nextcloud:
   adminUser: ''
