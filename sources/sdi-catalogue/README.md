@@ -5,6 +5,9 @@ A csw service and front end application to search and find EEA GIS datasets.
 ## Releases
 
 <dl>
+  <dt>Version 0.4.6</dt>
+  <dd>Update INSPIRE Validator to 2024.0.1</dd>
+
   <dt>Version 0.4.5</dt>
   <dd>Remove filebeat and metricbeat from the stack.</dd>
 

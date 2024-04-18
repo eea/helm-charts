@@ -28,7 +28,7 @@ spec:
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
       containers:
       - name: validator
-        image: ghcr.io/inspire-mif/helpdesk-validator/inspire-validator:2024.0
+        image: ghcr.io/inspire-mif/helpdesk-validator/inspire-validator:2024.0.1
         ports:
         - containerPort: 8080
         - containerPort: 8090
