@@ -41,6 +41,8 @@ spec:
           value: "{{ .Values.postgres.username }}"
         - name: TZ
           value: {{ .Values.timezone }}
+        - name: LANG
+          value: "en_US.UTF-8"
 
         resources:
           {{- toYaml .Values.postgres.resources | nindent 10 }}
