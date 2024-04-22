@@ -57,10 +57,10 @@ spec:
           tolerations:
             {{- toYaml . | nindent 8 }}
           {{- end }}
-          restartPolicy: Always
+          restartPolicy: Never
 
           volumes:
           - name: {{ .Release.Name }}-ldapdump
             persistentVolumeClaim:
-          claimName: eionet-ldapdump
+              claimName: eionet-ldapdump
 {{- end }}
