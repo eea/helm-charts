@@ -75,6 +75,10 @@ cron:
     limits:
       memory: 1Gi
 
+ldapdump:
+  enabled: false
+  schedule: "5,20,35,50 8-18 * * 1-5"
+
 postfix:
   enabled: true
   fullnameOverride: "postfix"

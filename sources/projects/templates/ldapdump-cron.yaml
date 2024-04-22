@@ -1,0 +1,66 @@
+{{- if .Values.ldapdump.enabled -}}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "appl.fullname" . }}-ldapdump
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: ldapdump
+
+spec:
+  schedule: "{{ .Values.ldapdump.schedule }}"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          {{- with .Values.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
+          securityContext:
+            runAsUser: 500
+            runAsGroup: 500
+
+          containers:
+          - name: ldapdump
+            image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+            stdin: true
+            tty: true
+            command:
+            - /var/local/groupware/bin/python2
+            - /var/local/groupware/bin/dump_ldap
+            env:
+            - name: ERROR_FROM_EMAIL
+              value: "{{ .Values.errorFromEmail }}"
+            - name: TZ
+              value: "{{ .Values.timezone }}"
+            resources:
+              {{- toYaml .Values.cron.resources | nindent 14 }}
+            securityContext:
+              {{- toYaml .Values.cron.securityContext | nindent 16 }}
+            volumeMounts:
+            - mountPath: /var/local/groupware/var/ldapdump
+              name: {{ .Release.Name }}-ldapdump
+
+          {{- with .Values.cron.nodeSelector }}
+          nodeSelector:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          {{- with .Values.cron.affinity }}
+          affinity:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          {{- with .Values.cron.tolerations }}
+          tolerations:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          restartPolicy: Always
+
+          volumes:
+          - name: {{ .Release.Name }}-ldapdump
+            persistentVolumeClaim:
+          claimName: eionet-ldapdump
+{{- end }}
