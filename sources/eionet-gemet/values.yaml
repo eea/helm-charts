@@ -21,7 +21,7 @@ ldapHost: ''
 ldapPassword: ''
 ldapRoot: ''
 ldapDN: ''
-mailHost: postfix
+
 secretKey: ''
 
 timezone: Europe/Copenhagen
@@ -92,25 +92,7 @@ ingress:
     - hosts:
         - www.eionet.europa.eu
         - eionet.europa.eu
-
-
  
-mysql:
-  securityContext: {}
-  resources:
-    requests:
-      memory: 4Gi
-    limits:
-      memory: 4Gi
-  hostname: db
-  database: REPLACEME
-  username: REPLACEME
-  password: REPLACEME
-  rootpw: REPLACEME
-  nodeSelector: {}
-  tolerations: []
-  affinity: {}
-
 postgres:
   securityContext: {}
   resources:
@@ -122,37 +104,6 @@ postgres:
   database: REPLACEME
   username: REPLACEME
   password: REPLACEME
-  nodeSelector: {}
-  tolerations: []
-  affinity: {}
-
-#
-# Mailforwarder subchart
-postfix:
-  fullnameOverride: "postfix"
-  serverName: www.eionet.europa.eu
-  mtpPass: ''
-  mtpPort: ''
-  mtpRelay: ''
-  mtpUser: ''
-
-zeoserver:
-  fullnameOverride: "zeoserver"
-  storage: 30Gi
-  resources:
-    requests:
-      memory: 1Gi
-    limits:
-      memory: 3Gi
-
-zope:
-  enabled: false
-  securityContext: {}
-  resources:
-    requests:
-      memory: 2Gi
-    limits:
-      memory: 2Gi
   nodeSelector: {}
   tolerations: []
   affinity: {}
