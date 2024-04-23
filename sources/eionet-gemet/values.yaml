@@ -94,19 +94,28 @@ ingress:
         - eionet.europa.eu
  
 postgres:
-  securityContext: {}
-  resources:
-    requests:
-      memory: 4Gi
-    limits:
-      memory: 4Gi
-  hostname: postgres
+  hostname: postgresql
   database: REPLACEME
   username: REPLACEME
   password: REPLACEME
-  nodeSelector: {}
-  tolerations: []
-  affinity: {}
+
+# See https://artifacthub.io/packages/helm/bitnami/postgresql
+postgresql:
+  fullnameOverride: "postgresql"
+  auth:
+    enablePostgresUser: true
+    database: REPLACEME
+    password: ""
+    postgresPassword: ""
+    username: REPLACEME
+    resources:
+      requests:
+        memory: 2Gi
+      limits:
+        memory: 2Gi
+  primary:
+    persistence:
+      size: 2Gi
 
 mediaserver:
   securityContext: {}

@@ -35,7 +35,7 @@ spec:
         - name: FORCE_SCRIPT_NAME
           value: /gemet
         - name: POSTGRES_ADDR
-          value: postgres
+          value: "{{ .Values.postgres.hostname }}"
         - name: POSTGRES_PASSWORD
           value: "{{ .Values.postgres.password }}"
         - name: POSTGRES_DB
@@ -43,7 +43,7 @@ spec:
         - name: POSTGRES_USER
           value: "{{ .Values.postgres.username }}"
         - name: POSTGRES_HOST
-          value: postgres
+          value: "{{ .Values.postgres.hostname }}"
         - name: REDIS_HOST
           value: broker
         - name: REDIS_PORT
