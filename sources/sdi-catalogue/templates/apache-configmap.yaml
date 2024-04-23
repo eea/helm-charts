@@ -68,7 +68,7 @@ data:
         CustomLog /var/log/apache/logs/access_log combined
 
         <Directory />
-           Options FollowSymLinks 
+           Options FollowSymLinks
            AllowOverride None
            Allow from all
            Require all granted
@@ -85,9 +85,9 @@ data:
         </Location>
 
         Redirect /internal-catalogue /catalogue
-        RewriteEngine On  
+        RewriteEngine On
         RewriteRule ^/catalogue/srv/(.*)/csw-(.*) /catalogue/$2/eng/csw  [L,R]
-     
+
         <Location /catalogue>
             ProxyPreserveHost On
             AllowOverride None
@@ -95,59 +95,16 @@ data:
             ## Reverse proxy configuration
             ProxyPreserveHost On
             <IfModule mod_headers.c>
-    #         RequestHeader unset Authorization
+              # RequestHeader unset Authorization
               # <if "%{REMOTE_HOST} == 'metricbeat.sdi-eea.rancher.internal'>
-    #          <if "%{REMOTE_ADDR} != '10.42.106.115'>
-                 #RequestHeader unset Authorization
-    #          </if>
+              # <if "%{REMOTE_ADDR} != '10.42.106.115'>
+              #   RequestHeader unset Authorization
+              # </if>
             </IfModule>
             ProxyPass http://public-catalogue:8080/catalogue
             ProxyPassReverse http://public-catalogue:8080/catalogue
         </Location>
 
-    #    <Location "/editor-catalogue">
-    #        #        ProxyPreserveHost On
-    #        AllowOverride None
-    #        Require all denied
-    #
-    #        <RequireAny>
-    #
-    #            ##EEA proxy
-    #            Require ip 10.92.24.0/21
-    #
-    #            ## Allow direct access from EEA network
-    #            Require ip 10.92.27.219
-    #            Require ip 10.92.27.233
-    #            Require ip 10.50.0.0/23
-    #            Require ip 87.54.7.251
-    #            Require ip 192.168.60.0/23
-    #            Require ip 192.168.62.0/23
-    #            Require ip 192.168.64.0/23
-    #            Require ip 192.168.66.0/23
-    #            Require ip 192.168.68.0/23
-    #            ## Allow direct access for Armin Burger (JRC) for checks on pmapper
-    #            #Require ip 139.191.16.144
-    #
-    #            ## Allow access for authenticated users
-    #            AuthType Basic
-    #            AuthName "LDAP Access to the EEA internal SDI catalogue (EIONET account)"
-    #            AuthBasicProvider ldap
-    #            AuthLDAPURL ldaps://{{ .Values.centralLdapUrl }}/o=EIONET,l=Europe?uid
-    #            Require ldap-group cn=eea-staff,cn=eea,ou=Roles,o=EIONET,l=Europe
-    #            Require ldap-group cn=eionet-etc-data,cn=eionet-etc,cn=eionet,ou=Roles,o=EIONET,l=Europe
-    #            Require ldap-group cn=eionet-group-sdi,cn=eionet-group,cn=eionet,ou=Roles,o=EIONET,l=Europe
-    #            Require ldap-user francpru courtoli ostlanic burgearm michimau
-    #            #Require ldap-user michimau
-    #        </RequireAny>
-    #
-    #        ## Reverse proxy configuration
-    #        ProxyPreserveHost On
-    #        <IfModule mod_headers.c>
-    #           RequestHeader unset Authorization
-    #        </IfModule>
-    #        ProxyPass http://editor-catalogue:8080/editor-catalogue
-    #        ProxyPassReverse http://editor-catalogue:8080/editor-catalogue
-    #    </Location>
 
         <Location /validator>
             RequestHeader set X-Forwarded-Prefix "/validator"
@@ -226,6 +183,8 @@ data:
                 Require ip 10.50.4.0/23
                 Require ip 10.175.9.34/32
                 Require ip 10.50.254.253/32
+                # New rule 03-04-2024 SRO
+                Require ip 10.92.0.0/16
             </RequireAny>
         </Location>
 
@@ -268,7 +227,7 @@ data:
                 Require ldap-group cn=eea-staff,cn=eea,ou=Roles,o=EIONET,l=Europe
                 Require ldap-group cn=eionet-etc-data,cn=eionet-etc,cn=eionet,ou=Roles,o=EIONET,l=Europe
                 Require ldap-group cn=eionet-group-sdi,cn=eionet-group,cn=eionet,ou=Roles,o=EIONET,l=Europe
-                Require ldap-user francpru courtoli ostlanic burgearm roug antunchr
+                Require ldap-user francpru courtoli ostlanic burgearm roug antunchr rodrijua
                 #Require ldap-user michimau
             </RequireAny>
             RequestHeader unset Authorization
