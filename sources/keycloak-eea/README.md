@@ -14,6 +14,9 @@ Configured for EEA use only. Depends on the TLS certificate to be in the Secret 
 
 <dl>
 
+  <dt>Version 0.5.2</dt>
+  <dd>Fixed wrong declarition of container ports.</dd>
+
   <dt>Version 0.5.1</dt>
   <dd>Increase bitnami haproxy subchart from 0.12.0 to 1.0.1.</dd>
 

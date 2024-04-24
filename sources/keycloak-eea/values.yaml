@@ -40,6 +40,13 @@ service:
 
 haproxy:
   enabled: true
+
+  containerPorts:
+  - containerPort: 8080
+    name: http
+  - containerPort: 8443
+    name: https
+
   service:
     type: LoadBalancer
     externalTrafficPolicy: Local
@@ -54,10 +61,6 @@ haproxy:
       name: https
       targetPort: 8443
       protocol: TCP
-
-    containerPorts:
-    - containerPort: 8080
-    - containerPort: 8443
 
   extraVolumes:
   - name: eea-certificate
