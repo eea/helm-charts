@@ -5,6 +5,11 @@ A csw service and front end application to search and find EEA GIS datasets.
 ## Releases
 
 <dl>
+  <dt>Version 0.4.8</dt>
+  <dd>Remove FTP service.
+      Update GN image to eeacms/eea-geonetwork:8e0ad200
+  </dd>
+
   <dt>Version 0.4.7</dt>
   <dd>Clean up apache configuration</dd>
 

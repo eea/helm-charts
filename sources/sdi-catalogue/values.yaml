@@ -120,16 +120,6 @@ postfix:
   mtpRelay: ''
   mtpUser: ''
 
-proftpd:
-  service:
-    type: ClusterIP
-    annotations: {}
-  resources:
-    requests:
-      memory: 64Mi
-    limits:
-      memory: 128Mi
-  users: []
 
 publicCatalogue:
   webapp_context: /catalogue
