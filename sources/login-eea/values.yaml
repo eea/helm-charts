@@ -51,9 +51,11 @@ haproxy:
       targetPort: 8443
       protocol: TCP
 
-    containerPorts:
-    - containerPort: 8080
-    - containerPort: 8443
+  containerPorts:
+  - containerPort: 8080
+    name: http
+  - containerPort: 8443
+    name: https
 
   extraVolumes:
   - name: eea-certificate
