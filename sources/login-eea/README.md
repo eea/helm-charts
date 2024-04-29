@@ -6,12 +6,24 @@ Configured for EEA use only. Depends on the TLS certificate to be in the Secret 
 
 | Key | Description | Default |
 | --- | ----------- | ------- |
+| `adminUser` | Keycloak administrator |"" |
+| `adminPassword` | Administrator password |"" |
+| `logLevel` | Sets the log level for the JBoss Logging framework |"" |
 | `serviceName` | The hostname of the service | login.eea.europa.eu |
 | `haproxy.enabled` | Creates a frontend that restricts the admin pages | true |
+| `postgresql.auth.password` | Password for the custom user to create |"" |
+| `postgresql.auth.enablePostgresUser` | Flag to create postgres admin user |true |
+| `postgresql.auth.postgresPassword` | Password for the "postgres" admin user |"" |
+| `postgresql.auth.database` | Name for a custom database to create |keycloak |
+| `postgresql.auth.username` | Name for a custom user to create |keycloak |
+| `postgresql.backup.enabled` | Enable the logical dump of the database | false |
 
 ## Releases
 
 <dl>
+
+  <dt>Version 0.6.1</dt>
+  <dd>Wrong location for containerPorts.</dd>
 
   <dt>Version 0.6.0</dt>
   <dd>Replaced the handmade postgresql config with the bitnami postgresql subchart.
