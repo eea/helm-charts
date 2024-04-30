@@ -5,6 +5,9 @@ A csw service and front end application to search and find EEA GIS datasets.
 ## Releases
 
 <dl>
+  <dt>Version 0.4.10</dt>
+  <dd>Add config_is_read_only=true to nextcloud config map</dd>
+
   <dt>Version 0.4.9</dt>
   <dd>Update GN image to eeacms/eea-geonetwork:8e0ad200</dd>
   
