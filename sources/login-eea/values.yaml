@@ -102,14 +102,15 @@ postgresql:
     postgresPassword: ""
     database: keycloak
     username: keycloak
-    resources:
-      requests:
-        memory: 2Gi
-      limits:
-        memory: 2Gi
   primary:
     persistence:
       size: 8Gi
+    resources:
+      limits:
+        memory: 256Mi
+      requests:
+        memory: 256Mi
+
 
 database:
   host: pgpool-hl

@@ -22,6 +22,9 @@ Configured for EEA use only. Depends on the TLS certificate to be in the Secret 
 
 <dl>
 
+  <dt>Version 0.6.2 - 2024-05-03</dt>
+  <dd>Upgrade to new version of postgresql subchart. This does not change the postgreSQL version.</dd>
+
   <dt>Version 0.6.1</dt>
   <dd>Wrong location for containerPorts.</dd>
 
