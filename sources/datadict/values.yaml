@@ -130,3 +130,14 @@ siteCode:
   test:
     notificationTo: 
 
+#
+# Mailforwarder subchart
+postfix:
+  dryrun: false
+  fullnameOverride: "dd-mailfwd"
+  serverName: dd.eionet.europa.eu
+  mtpPass: ''
+  mtpPort: ''
+  mtpRelay: ''
+  mtpUser: ''
+

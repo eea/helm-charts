@@ -5,6 +5,9 @@ This chart is configured for production use.
 ## Releases
 
 <dl>
+  <dt>Version 1.3.0</dt>
+  <dd>Added mail forwarder pod. Usage to be specified in mailHost.</dd>
+
   <dt>Version 1.2.5</dt>
   <dd>Upload RDF API gzip compressed, base64 encoded RDF content, db column type change, 
       site code allocation service notifications update, xss fix</dd>
