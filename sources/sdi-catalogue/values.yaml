@@ -7,6 +7,22 @@ serverCert: dummy-certificate
 
 centralLdapUrl: ldap3.eionet.europa.eu
 centralLdapPassword: ''
+reportUri: ''
+privilegedIPs:
+  - 10.50.0.0/16
+  - 10.92.0.0/16
+  - 87.54.7.251
+  - 192.168.0.0/16
+privilegedUsers:
+  - antunchr
+  - francpru
+  - ostlanic
+  - rodrijua
+  - roug
+privilegedGroups:
+  - cn=eea-staff,cn=eea,ou=Roles,o=EIONET,l=Europe
+  - cn=eionet-etc-data,cn=eionet-etc,cn=eionet,ou=Roles,o=EIONET,l=Europe
+  - cn=eionet-group-sdi,cn=eionet-group,cn=eionet,ou=Roles,o=EIONET,l=Europe
 
 image:
   pullPolicy: IfNotPresent

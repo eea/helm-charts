@@ -27,10 +27,11 @@ data:
     Header set Content-Security-Policy "frame-src 'self' https://*.europa.eu https://europa.eu https://*.eea.europa.eu"
     Header set Content-Security-Policy "img-src https: blob: data:"
     Header set Content-Security-Policy "script-src 'self' https://*.eea.europa.eu"
-    #https://openlayers.org https://www.google.com/jsapi https://www.google.com/uds https://www.gstatic.com https://spreadsheets.google.com https://docs.google.com https://*.eea.europa.eu"
     Header set Content-Security-Policy "object-src 'self'"
     Header set Content-Security-Policy "style-src 'self' https://openlayers.org https://www.google.com/uds https://ajax.googleapis.com https://www.gstatic.com https://*.eea.europa.eu"
-    Header set Content-Security-Policy "report-uri https://sentry.eea.europa.eu/api/22/security/?sentry_key=c2d7a7ca8deb46909d3bfc1bd468eb3d"
+    {{- if .Values.reportUri }}
+    Header set Content-Security-Policy "report-uri {{ .Values.reportUri }}"
+    {{- end }}
 
     RequestHeader set X-HTTPS 1
     Header always set Referrer-Policy "same-origin"
@@ -77,10 +78,13 @@ data:
         <Location /server-status>
            SetHandler server-status
 
+           {{- if .Values.privilegedIPs }}
            <RequireAny>
-             Require ip 10.50.0.0/16
-             Require ip 10.92.0.0/16
+             {{- range .Values.privilegedIPs }}
+             Require ip {{ . }}
+             {{- end }}
            </RequireAny>
+           {{- end }}
 
         </Location>
 
@@ -130,27 +134,13 @@ data:
             AllowOverride None
             Require all denied
 
+            {{- if .Values.privilegedIPs }}
             <RequireAny>
-
-                ## Allow direct access from EEA network
-                Require ip 171.19.0.0/16
-                Require ip 87.54.7.251
-                Require ip 192.168.60.0/23
-                Require ip 192.168.62.0/23
-                Require ip 192.168.64.0/23
-                Require ip 192.168.66.0/23
-                Require ip 192.168.68.0/23
-                ## Allow direct access for Armin Burger (JRC) for checks on pmapper
-                #Require ip 78.206.215.176/32
-                #Require ip 10.42.138.241/32
-                Require ip 10.50.27.219
-                Require ip 10.50.0.0/16
-                Require ip 10.50.4.0/23
-                Require ip 10.175.9.34/32
-                Require ip 10.50.254.253/32
-                # New rule 03-04-2024 SRO
-                Require ip 10.92.0.0/16
+                {{- range .Values.privilegedIPs }}
+                 Require ip {{ . }}
+                {{- end }}
             </RequireAny>
+            {{- end }}
         </Location>
 
     #    SSLProxyEngine On
@@ -168,32 +158,28 @@ data:
             Require all denied
             <RequireAny>
 
-                ##EEA proxy
-                Require ip 10.92.24.0/21
-                Require ip 10.92.1.0/23
-                ## Allow direct access from EEA network
-                Require ip 10.92.27.219
-                Require ip 10.92.27.233
-                Require ip 10.50.0.0/23
-                Require ip 87.54.7.251
-                Require ip 192.168.60.0/23
-                Require ip 192.168.62.0/23
-                Require ip 192.168.64.0/23
-                Require ip 192.168.66.0/23
-                Require ip 192.168.68.0/23
-                ## Allow direct access for Armin Burger (JRC) for checks on pmapper
-                Require ip 139.191.16.144
+                {{- if .Values.privilegedIPs }}
+                {{- range .Values.privilegedIPs }}
+                Require ip {{ . }}
+                {{- end }}
+                {{- end }}
 
                 ## Allow access for authenticated users
                 AuthType Basic
                 AuthName "LDAP Access to the EEA internal SDI catalogue (EIONET account)"
                 AuthBasicProvider ldap
                 AuthLDAPURL ldaps://{{ .Values.centralLdapUrl }}/o=EIONET,l=Europe?uid
-                Require ldap-group cn=eea-staff,cn=eea,ou=Roles,o=EIONET,l=Europe
-                Require ldap-group cn=eionet-etc-data,cn=eionet-etc,cn=eionet,ou=Roles,o=EIONET,l=Europe
-                Require ldap-group cn=eionet-group-sdi,cn=eionet-group,cn=eionet,ou=Roles,o=EIONET,l=Europe
-                Require ldap-user francpru courtoli ostlanic burgearm roug antunchr rodrijua
-                #Require ldap-user michimau
+                {{- if .Values.privilegedGroups }}
+                {{- range .Values.privilegedGroups }}
+                Require ldap-group {{ . | quote }}
+                {{- end }}
+                {{- end }}
+                {{- if .Values.privilegedUsers }}
+                {{- range .Values.privilegedUsers }}
+                Require ldap-user {{ . }}
+                {{- end }}
+                {{- end }}
+
             </RequireAny>
             RequestHeader unset Authorization
 
