@@ -28,7 +28,7 @@ spec:
 
       containers:
       - name: {{ .Release.Name }}-psql
-        image: "{{ .Values.postgres.image }}"
+        image: postgres:13
         ports:
         - containerPort: 5432
           protocol: TCP

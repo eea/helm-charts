@@ -28,7 +28,7 @@ spec:
 
       containers:
       - name: {{ .Release.Name }}-mysql
-        image: "{{ .Values.mysql.image }}"
+        image: mariadb:5.5.64
         ports:
         - containerPort: 3306
           protocol: TCP

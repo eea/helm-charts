@@ -98,7 +98,6 @@ static:
       memory: 64Mi
 
 mysql:
-  image: mariadb:5.5.64
   securityContext: {}
   resources:
     requests:
@@ -118,7 +117,6 @@ mysql:
   storageClassName: ""
 
 postgres:
-  image: postgres:13
   securityContext: {}
   resources:
     requests:
@@ -148,10 +146,18 @@ mailfwd:
     limits:
       memory: 64Mi
   env:
-    logspout: ignore
     host: nature-art17.eionet.europa.eu
     user: REPLACEME
     pass: REPLACEME
     port: '8587'
     relay: ironports.eea.europa.eu
+
+postfix:
+  enabled: true
+  #fullnameOverride: "postfix"
+  serverName: nature-art17.eionet.europa.eu
+  mtpPass: ''
+  mtpPort: '8587'
+  mtpRelay: 'ironports.eea.europa.eu'
+  mtpUser: ''
 

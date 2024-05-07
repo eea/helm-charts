@@ -25,6 +25,9 @@ To set the app up for Article 12 do:
 
 <dl>
 
+  <dt>Version 0.3.3</dt>
+  <dd>Hardwire versions of mariadb and postgresql.</dd>
+
   <dt>Version 0.3.2</dt>
   <dd>Also allow ingress to reach static resources.</dd>
 

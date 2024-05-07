@@ -33,8 +33,6 @@ spec:
           name: smtp
           protocol: TCP
         env:
-        - name: LOGSPOUT
-          value: "{{ .Values.mailfwd.logspout }}"
         - name: MTP_HOST
           value: "{{ .Values.mailfwd.host }}"
         - name: MTP_PASS
