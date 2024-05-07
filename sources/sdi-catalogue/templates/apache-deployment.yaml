@@ -24,10 +24,10 @@ spec:
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
 
       initContainers:
-      # Copy a simple ssl.conf file if it doesn't exist at target
+      # Set up ssl.conf and nc.conf
       - name: init-ssl-conf
         image: busybox:1.36
-        command: ['sh', '-c', 'test -f /usr/local/apache2/conf/extra/ssl.conf || cp /mnt/ssl.conf /usr/local/apache2/conf/extra/ssl.conf && touch /usr/local/apache2/conf/extra/nc.conf']
+        command: ['sh', '-c', 'cp /mnt/ssl.conf /usr/local/apache2/conf/extra/ssl.conf && touch /usr/local/apache2/conf/extra/nc.conf']
         volumeMounts:
         - mountPath: /usr/local/apache2/conf/extra
           name: sdi-apache-configuration
