@@ -69,11 +69,44 @@ data:
         CustomLog /var/log/apache/logs/access_log combined
 
         <Directory />
-           Options FollowSymLinks
-           AllowOverride None
-           Allow from all
-           Require all granted
+            Options FollowSymLinks
+            AllowOverride None
+            Allow from all
+            Require all granted
         </Directory>
+
+        {{- if .Values.apache.protectedWithBasicAuth}}
+        <Location />
+            AllowOverride None
+            Require all denied                                                                                                                                                                   
+                                                                                                                                                                                                
+            <RequireAny>                                                                                                                                                                         
+                {{- if .Values.privilegedIPs }}
+                {{- range .Values.privilegedIPs }}
+                Require ip {{ . }}
+                {{- end }}
+                {{- end }}
+                
+                {{- if or .Values.privilegedGroups .Values.privilegedUsers }} 
+                ## Allow access for authenticated users
+                AuthType Basic
+                AuthName "LDAP Access to the EEA internal SDI catalogue (EIONET account)"
+                AuthBasicProvider ldap
+                AuthLDAPURL ldaps://{{ .Values.centralLdapUrl }}/o=EIONET,l=Europe?uid
+                {{- end }}
+                {{- if .Values.privilegedGroups }} 
+                {{- range .Values.privilegedGroups }}
+                Require ldap-group {{ . | quote }}
+                {{- end }}
+                {{- end }}
+                {{- if .Values.privilegedUsers }}
+                {{- range .Values.privilegedUsers }}
+                Require ldap-user {{ . }}
+                {{- end }}
+                {{- end }}                                                              
+            </RequireAny> 
+        </Location>
+        {{- end }}
 
         <Location /server-status>
            SetHandler server-status

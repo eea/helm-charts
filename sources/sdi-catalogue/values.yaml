@@ -55,6 +55,7 @@ tolerations: []
 affinity: {}
 
 apache:
+  protectedWithBasicAuth: false
   resources:
     requests:
       memory: 64Mi

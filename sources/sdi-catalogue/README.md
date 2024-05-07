@@ -6,7 +6,9 @@ A csw service and front end application to search and find EEA GIS datasets.
 
 <dl>
   <dt>Version 0.5.0 - 07 May 2024</dt>
-  <dd>Clean up apache config. Added reportUri, privilegedIPs, privilegedGroups and privilegedUsers in values.yaml.</dd>
+  <dd>Clean up apache config. Added reportUri, privilegedIPs, privilegedGroups and privilegedUsers in values.yaml.
+    Add basic auth globally to the web controlled by a value.
+  </dd>
 
   <dt>Version 0.4.10</dt>
   <dd>Add config_is_read_only=true to nextcloud config map</dd>
