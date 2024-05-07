@@ -25,6 +25,9 @@ To set the app up for Article 12 do:
 
 <dl>
 
+  <dt>Version 0.4.0</dt>
+  <dd>Replace mailfwd with postfix subchart.</dd>
+
   <dt>Version 0.3.3</dt>
   <dd>Hardwire versions of mariadb and postgresql.</dd>
 

@@ -40,14 +40,7 @@ resources:
   limits:
     memory: 3Gi
 
-mailfwd:
+postfix:
   enabled: true
-  image: eeacms/postfix:eionet
-  env:
-    logspout: ignore
-    host: nature-art17.eionet.europa.eu
-    user: ""
-    pass: ""
-    port: '25'
-    relay: ironports.eea.europa.eu
+  dryrun: false
 

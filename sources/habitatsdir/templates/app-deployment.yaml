@@ -75,13 +75,13 @@ spec:
         - name: LOCAL_PDF_URL_PREFIX
           value: "{{ .Values.localPdfUrlPrefix }}"
 
-        {{- if .Values.mailfwd.enabled }}
+        {{- if .Values.postfix.enabled }}
         - name: MAIL_PASSWORD
           value: ""
         - name: MAIL_PORT
           value: "25"
         - name: MAIL_SERVER
-          value: {{ .Release.Name }}-mailfwd
+          value: {{ .Release.Name }}-postfix
         - name: MAIL_USERNAME
           value: ""
         - name: MAIL_USE_SSL
