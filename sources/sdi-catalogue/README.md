@@ -5,6 +5,11 @@ A csw service and front end application to search and find EEA GIS datasets.
 ## Releases
 
 <dl>
+  <dt>Version 0.5.1 - 09 May 2024</dt>
+  <dd>Tune Content-Security-Policy headers. Use Header add instead of Header set to avoid
+  override previous headers already set.
+  </dd>
+
   <dt>Version 0.5.0 - 07 May 2024</dt>
   <dd>Clean up apache config.
     Added reportUri, privilegedIPs, privilegedGroups and privilegedUsers in values.yaml.

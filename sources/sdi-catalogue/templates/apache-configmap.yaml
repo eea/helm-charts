@@ -10,27 +10,23 @@ data:
     LDAPVerifyServerCert Off
     Header always set Strict-Transport-Security "max-age=15768000; includeSubDomains;"
     Header set X-Content-Type-Options nosniff
-    #Header always set X-Frame-Options SAMEORIGIN
-
-    #Header set X-Frame-Options SAMEORIGIN
-    #Header always set X-Frame-Options "ALLOW-FROM https://*.eea.europa.eu/"
     Header set X-XSS-Protection "1; mode=block"
 
     Header set Content-Security-Policy "upgrade-insecure-requests"
-    Header set Content-Security-Policy "frame-ancestors 'self' https://*.eea.europa.eu"
-    Header set Content-Security-Policy "default-src 'none'"
+    Header add Content-Security-Policy "frame-ancestors 'self' https://*.eea.europa.eu"
+    Header add Content-Security-Policy "default-src 'self' blob: data: 'unsafe-inline' 'unsafe-eval' https://*.eea.europa.eu"
     #'self' https://*.eea.europa.eu"
-    Header set Content-Security-Policy "base-uri 'none'"
-    Header set Content-Security-Policy "form-action 'self' https://*.eea.europa.eu"
-    Header set Content-Security-Policy "connect-src 'self' https://*.openstreetmap.org https://*.eea.europa.eu"
-    Header set Content-Security-Policy "font-src 'self' data: https://fonts.gstatic.com https://*.eea.europa.eu"
-    Header set Content-Security-Policy "frame-src 'self' https://*.europa.eu https://europa.eu https://*.eea.europa.eu"
-    Header set Content-Security-Policy "img-src https: blob: data:"
-    Header set Content-Security-Policy "script-src 'self' https://*.eea.europa.eu"
-    Header set Content-Security-Policy "object-src 'self'"
-    Header set Content-Security-Policy "style-src 'self' https://openlayers.org https://www.google.com/uds https://ajax.googleapis.com https://www.gstatic.com https://*.eea.europa.eu"
+    Header add Content-Security-Policy "base-uri 'self'"
+    Header add Content-Security-Policy "form-action 'self' https://*.eea.europa.eu"
+    Header add Content-Security-Policy "connect-src 'self' https://*.openstreetmap.org https://*.eea.europa.eu"
+    Header add Content-Security-Policy "font-src 'self' data: https://fonts.gstatic.com https://*.eea.europa.eu"
+    Header add Content-Security-Policy "frame-src 'self' https://*.europa.eu https://europa.eu https://*.eea.europa.eu"
+    Header add Content-Security-Policy "img-src https: blob: data:"
+    Header add Content-Security-Policy "script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: data: https://*.eea.europa.eu"
+    Header add Content-Security-Policy "object-src self' https://*.eea.europa.eu"
+  
     {{- if .Values.reportUri }}
-    Header set Content-Security-Policy "report-uri {{ .Values.reportUri }}"
+    #'self' https://*.eea.europa.eu"    Header add Content-Security-Policy "report-uri {{ .Values.reportUri }}"
     {{- end }}
 
     RequestHeader set X-HTTPS 1
