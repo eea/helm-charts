@@ -5,6 +5,10 @@ A csw service and front end application to search and find EEA GIS datasets.
 ## Releases
 
 <dl>
+  <dt>Version 0.5.4 - 09 May 2024</dt>
+  <dd>Use only one header in Content-Security-Policy. This allow to fix a problem with img-src ignored if
+  multiple hearders are used.</dd>
+
   <dt>Version 0.5.3 - 09 May 2024</dt>
   <dd>Add openstreetmap.org to allowed img-src policy.</dd>
 
