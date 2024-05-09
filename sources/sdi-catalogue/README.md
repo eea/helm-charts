@@ -5,9 +5,12 @@ A csw service and front end application to search and find EEA GIS datasets.
 ## Releases
 
 <dl>
+  <dt>Version 0.5.3 - 09 May 2024</dt>
+  <dd>Add openstreetmap.org to allowed img-src policy.</dd>
+
   <dt>Version 0.5.2 - 09 May 2024</dt>
   <dd>Fix typo</dd>
-  
+
   <dt>Version 0.5.1 - 09 May 2024</dt>
   <dd>Tune Content-Security-Policy headers. Use Header add instead of Header set to avoid
   override previous headers already set.

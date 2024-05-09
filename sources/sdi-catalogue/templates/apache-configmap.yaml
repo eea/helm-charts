@@ -21,7 +21,7 @@ data:
     Header add Content-Security-Policy "connect-src 'self' https://*.openstreetmap.org https://*.eea.europa.eu"
     Header add Content-Security-Policy "font-src 'self' data: https://fonts.gstatic.com https://*.eea.europa.eu"
     Header add Content-Security-Policy "frame-src 'self' https://*.europa.eu https://europa.eu https://*.eea.europa.eu"
-    Header add Content-Security-Policy "img-src https: blob: data:"
+    Header add Content-Security-Policy "img-src https: blob: data: https://*.tile.openstreetmap.org"
     Header add Content-Security-Policy "script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: data: https://*.eea.europa.eu"
     Header add Content-Security-Policy "object-src 'self' https://*.eea.europa.eu"
   
