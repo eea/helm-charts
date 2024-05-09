@@ -26,7 +26,7 @@ data:
     Header add Content-Security-Policy "object-src 'self' https://*.eea.europa.eu"
   
     {{- if .Values.reportUri }}
-    #'self' https://*.eea.europa.eu"    Header add Content-Security-Policy "report-uri {{ .Values.reportUri }}"
+    Header add Content-Security-Policy "report-uri {{ .Values.reportUri }}"
     {{- end }}
 
     RequestHeader set X-HTTPS 1
