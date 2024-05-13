@@ -60,7 +60,7 @@ data:
             Require all granted
         </Directory>
 
-        {{- if .Values.apache.protectedWithBasicAuth}}
+        {{- if .Values.apache.protectedWithBasicAuth }}
         <Location />
             AllowOverride None
             Require all denied                                                                                                                                                                   
@@ -116,13 +116,11 @@ data:
 
             ## Reverse proxy configuration
             ProxyPreserveHost On
+            {{- if .Values.apache.protectedWithBasicAuth}}
             <IfModule mod_headers.c>
-              # RequestHeader unset Authorization
-              # <if "%{REMOTE_HOST} == 'metricbeat.sdi-eea.rancher.internal'>
-              # <if "%{REMOTE_ADDR} != '10.42.106.115'>
-              #   RequestHeader unset Authorization
-              # </if>
+                RequestHeader unset Authorization
             </IfModule>
+            {{- end }}
             ProxyPass http://public-catalogue:8080/catalogue
             ProxyPassReverse http://public-catalogue:8080/catalogue
         </Location>
@@ -166,7 +164,7 @@ data:
         <Location /data>
            ProxyPreserveHost On
            AllowOverride None
-            RequestHeader unset Authorization
+           RequestHeader unset Authorization
             
         </Location>
 

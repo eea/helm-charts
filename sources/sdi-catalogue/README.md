@@ -5,6 +5,9 @@ A csw service and front end application to search and find EEA GIS datasets.
 ## Releases
 
 <dl>
+  <dt>Version 0.5.5 - 13 May 2024</dt>
+  <dd>Remove Authorization header for /catalogue if the site is protected with basic auth.</dd>
+
   <dt>Version 0.5.4 - 09 May 2024</dt>
   <dd>Use only one header in Content-Security-Policy. This allow to fix a problem with img-src ignored if
   multiple hearders are used.</dd>
