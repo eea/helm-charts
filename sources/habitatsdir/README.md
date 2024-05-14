@@ -25,6 +25,9 @@ To set the app up for Article 12 do:
 
 <dl>
 
+  <dt>Version 0.4.1</dt>
+  <dd>Update eeacms/art17-consultation and eeacms/art12-viewer<dd>
+
   <dt>Version 0.4.0</dt>
   <dd>Replace mailfwd with postfix subchart.</dd>
 
