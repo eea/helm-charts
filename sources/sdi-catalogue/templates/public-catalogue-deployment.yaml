@@ -49,8 +49,6 @@ spec:
         volumeMounts:
         - mountPath: /catalogue-data
           name: sdi-public-catalogue-data
-        - mountPath: /resources
-          name: sdi-public-catalogue-resources
 
       {{- with .Values.nodeSelector }}
       nodeSelector:
@@ -70,6 +68,4 @@ spec:
       - name: sdi-public-catalogue-data
         persistentVolumeClaim:
           claimName: sdi-public-catalogue-data
-      - name: sdi-public-catalogue-resources
-        persistentVolumeClaim:
-          claimName: sdi-public-catalogue-resources
+ 

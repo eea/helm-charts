@@ -5,6 +5,9 @@ A csw service and front end application to search and find EEA GIS datasets.
 ## Releases
 
 <dl>
+  <dt>Version 0.5.6 - 14 May 2024</dt>
+  <dd>Removed unused sdi-public-catalogue-resources-pvc volume.</dd>
+
   <dt>Version 0.5.5 - 13 May 2024</dt>
   <dd>Remove Authorization header for /catalogue if the site is protected with basic auth.</dd>
 

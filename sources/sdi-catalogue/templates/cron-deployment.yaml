@@ -54,8 +54,6 @@ spec:
 #         name: sdi-geonetwork-postgres
         - mountPath: /catalogue-data
           name: sdi-public-catalogue-data
-        - mountPath: /resources
-          name: sdi-public-catalogue-resources
 
       restartPolicy: Always
 
@@ -81,6 +79,3 @@ spec:
       - name: sdi-public-catalogue-data
         persistentVolumeClaim:
           claimName: sdi-public-catalogue-data
-      - name: sdi-public-catalogue-resources
-        persistentVolumeClaim:
-          claimName: sdi-public-catalogue-resources
