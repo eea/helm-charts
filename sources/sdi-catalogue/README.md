@@ -5,6 +5,9 @@ A csw service and front end application to search and find EEA GIS datasets.
 ## Releases
 
 <dl>
+  <dt>Version 0.5.7 - 17 May 2024</dt>
+  <dd>Updated GN to ecb45615. Added some extra CSP header entries for the validator and OGC Records API</dd>
+
   <dt>Version 0.5.6 - 14 May 2024</dt>
   <dd>Removed unused sdi-public-catalogue-resources-pvc volume.</dd>
 
