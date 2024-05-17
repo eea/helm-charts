@@ -5,6 +5,9 @@ A csw service and front end application to search and find EEA GIS datasets.
 ## Releases
 
 <dl>
+  <dt>Version 0.5.9 - 17 May 2024</dt>
+  <dd>Redirect HTTP to HTTPS. Update GN to c255d985.</dd>
+
   <dt>Version 0.5.8 - 17 May 2024</dt>
   <dd>Remove CSP form-action directive casusing problems with the login form redirection.</dd>
 

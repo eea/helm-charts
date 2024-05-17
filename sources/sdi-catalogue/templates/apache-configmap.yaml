@@ -36,6 +36,12 @@ data:
     LDAPOpCacheTTL 600
     ServerName {{ .Values.serverName }}
 
+    <VirtualHost *:80>
+        Protocols h2 h2c http/1.1
+        RewriteEngine On
+        RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+    </VirtualHost>
+
     <VirtualHost *:443>
         Protocols h2 h2c http/1.1
         SSLEngine on
@@ -45,10 +51,6 @@ data:
         #ServerName {{ .Values.serverName }}
         ServerAdmin sysadm@eea.europa.eu
 
-
-      #<If "%{HTTP_HOST} == '{{ .Values.serverName }}'">
-      #  Redirect permanent / https://{{ .Values.serverName }}/
-      #</If>
 
         ErrorLog /var/log/apache/logs/error_log
         CustomLog /var/log/apache/logs/access_log combined
