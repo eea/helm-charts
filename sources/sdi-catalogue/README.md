@@ -5,6 +5,8 @@ A csw service and front end application to search and find EEA GIS datasets.
 ## Releases
 
 <dl>
+  <dt>Version 0.5.11 - 23 May 2024</dt>
+  <dd>Update GN to 384d7b8c.</dd>
 
   <dt>Version 0.5.10 - 17 May 2024</dt>
   <dd>Update GN to 57c1ae49.</dd>
