@@ -40,7 +40,7 @@ spec:
           value: {{ .Values.ldifSeedURL }}
         {{- end }}
         - name: LANG
-          value: "en_US.UTF-8"
+          value: "C"
         - name: LDAPSERVERS
           value: "ldap:/// ldaps:///"
         - name: LDAP_UID

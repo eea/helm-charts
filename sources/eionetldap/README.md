@@ -13,6 +13,9 @@ There is a backup cronjob built in, which can be enabled with backup.enable=true
 
 <dl>
 
+  <dt>Version 1.2.2 - 28 May 2024</dt>
+  <dd>Make TLS enforcement optional.</dd>
+
   <dt>Version 1.2.1</dt>
   <dd>Prepared for MDB backend and Alma9. Increased container image version tag.</dd>
 

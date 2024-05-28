@@ -8,7 +8,9 @@ data:
     TLSCipherSuite  HIGH:!3DES
     TLSProtocolMin  3.3
     allow bind_v2
+    {{- if .Values.forceTLS }}
     security        tls=1
+    {{- end }}
     sizelimit       10
     timelimit       3600
     idletimeout     600
