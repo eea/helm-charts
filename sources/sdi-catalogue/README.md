@@ -5,6 +5,9 @@ A csw service and front end application to search and find EEA GIS datasets.
 ## Releases
 
 <dl>
+  <dt>Version 0.5.14 - 04 June 2024</dt>
+  <dd>The argument to Require ldap-group must not have quotes - implement everywhere.</dd>
+
   <dt>Version 0.5.13 - 04 June 2024</dt>
   <dd>The argument to Require ldap-group must not have quotes.</dd>
 
@@ -87,46 +90,6 @@ A csw service and front end application to search and find EEA GIS datasets.
   <dt>Version 0.4.0</dt>
   <dd>Nextcloud logs constantly about a missing postfix name. Added now.
       Seems to have been forgotten at initial installation.</dd>
-
-  <dt>Version 0.3.10</dt>
-  <dd>Update GN to eeacms/eea-geonetwork:c12306d8, ogcapi to 4.4.3-0, elasticsearch:8.12.2, kibana:8.12.2.
-  Added webdav_metadata_download.sh script to cron and updated the schedule of webdav_public_links.sh.
-  </dd>
-
-  <dt>Version 0.3.9</dt>
-  <dd>Configure Kibana and ogcapi proxies</dd>
-
-  <dt>Version 0.3.8</dt>
-  <dd>Update GN image to eeacms/eea-geonetwork:f65c25a5</dd>
-
-  <dt>Version 0.3.7</dt>
-  <dd>Update ogcapi service to 4.2.8-0.</dd>
-
-  <dt>Version 0.3.6</dt>
-  <dd>Update INSPIRE validator to 2024.0.</dd>
-  
-  <dt>Version 0.3.5</dt>
-  <dd>
-    Update GN image to eeacms/eea-geonetwork:27fc3b4a.
-    Use new GN configuration method with GN_CONFIG_PROPERTIES variable.
-  </dd>
-
-  <dt>Version 0.3.4</dt>
-  <dd>Security upgrade of OpenSSL in the apache image.</dd>
-
-  <dt>Version 0.3.3</dt>
-  <dd>Removed the GDAL service.</dd>
-
-  <dt>Version 0.3.2</dt>
-  <dd>Added the ability to set an externalTrafficPolicy.</dd>
-
-  <dt>Version 0.3.1</dt>
-  <dd>Upgraded Apache image due to a security vulnerability in HTTPD 2.4.57.</dd>
-
-  <dt>Version 0.3.0</dt>
-  <dd>Can now deploy with empty volumes - except for ogcapi.
-  If there is no ssl.conf the apache configuration, then one is created.
-  Use serverCert to point to the official certificate, otherwise a self-signed cert will be used.</dd>
 
 </dl>
 
