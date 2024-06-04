@@ -5,6 +5,9 @@ A csw service and front end application to search and find EEA GIS datasets.
 ## Releases
 
 <dl>
+  <dt>Version 0.5.13 - 04 June 2024</dt>
+  <dd>The argument to Require ldap-group must not have quotes.</dd>
+
   <dt>Version 0.5.12 - 29 May 2024</dt>
   <dd>Update GN to 8a0008a6.</dd>
 

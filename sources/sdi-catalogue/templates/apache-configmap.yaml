@@ -83,7 +83,7 @@ data:
                 {{- end }}
                 {{- if .Values.privilegedGroups }} 
                 {{- range .Values.privilegedGroups }}
-                Require ldap-group {{ . | quote }}
+                Require ldap-group {{ . }}
                 {{- end }}
                 {{- end }}
                 {{- if .Values.privilegedUsers }}
