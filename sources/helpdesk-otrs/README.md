@@ -18,10 +18,19 @@ expects to find a certificate secret matching the name at `haproxy.extraVolumes.
 | database.username | Name of database user | otrs |
 | database.password | Database password | REPLACEME |
 | database.rootpw | Name of database root password | REPLACEME |
+| ldapHost | Ldap service for looking up Eionet users| '' |
+| ldapPassword | Password for DN with unlimited browsing | '' |
+| mailHost | Name of mail service for outgoing mail | postfix |
+| mysqlRootPassword | Root password of mysql | '' |
+| otrsRootPassword | Root password of OTRS | '' |
 
 ## Releases
 
 <dl>
+
+  <dt>Version 0.5.0 - 11-JUN-2024</dt>
+  <dd>Add X-Forwarded-Proto and X-Forwarded-Port to haproxy configuration.</dd>
+  <dd>Upgrade haproxy subchart to version 2.0.2.</dd>
 
   <dt>Version 0.4.0 - 10-MAR-2024</dt>
   <dd>Upgrade of postfix subchart, which adds the dryrun switch.</dd>
