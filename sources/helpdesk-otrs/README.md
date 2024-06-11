@@ -28,6 +28,9 @@ expects to find a certificate secret matching the name at `haproxy.extraVolumes.
 
 <dl>
 
+  <dt>Version 0.5.1 - 11-JUN-2024</dt>
+  <dd>Delete X-Forwarded-Port as it resolves to 8443.</dd>
+
   <dt>Version 0.5.0 - 11-JUN-2024</dt>
   <dd>Add X-Forwarded-Proto and X-Forwarded-Port to haproxy configuration.</dd>
   <dd>Upgrade haproxy subchart to version 2.0.2.</dd>
