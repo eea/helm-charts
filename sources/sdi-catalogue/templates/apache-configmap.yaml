@@ -6,6 +6,7 @@ metadata:
 data:
   ssl.conf: |
     Listen 443
+    TraceEnable off
 
     LDAPVerifyServerCert Off
     Header always set Strict-Transport-Security "max-age=15768000; includeSubDomains;"
