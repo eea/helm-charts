@@ -5,6 +5,9 @@ A csw service and front end application to search and find EEA GIS datasets.
 ## Releases
 
 <dl>
+  <dt>Version 0.5.15 - 11 June 2024</dt>
+  <dd>Upgraded Apache version.</dd>
+
   <dt>Version 0.5.14 - 04 June 2024</dt>
   <dd>The argument to Require ldap-group must not have quotes - implement everywhere.</dd>
 
