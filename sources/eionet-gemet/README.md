@@ -22,3 +22,14 @@ This chart is (almost) configured for production.
 
 </dl>
 
+## Deployment
+
+The chart is not prepared for testing, and won't come up correctly with default values. However, the
+only value to set is the `secretKey`, and can be set to a random string. For deployment in production,
+set better values where you see 'REPLACEME'. You will still have an empty database though.
+
+| Key | Description | Default |
+| --- | ----------- | ------- |
+| autoscaling.enabled | Turn on horisontal scaling for the gemet pod | false |
+| secretKey | Used for gemet to async communication | "" |
+
