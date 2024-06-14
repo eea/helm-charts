@@ -7,7 +7,9 @@ metadata:
     component: gemet
 
 spec:
-  replicas: 1
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
   selector:
     matchLabels:
       {{- include "appl.selectorLabels" . | nindent 6 }}

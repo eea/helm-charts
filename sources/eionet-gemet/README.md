@@ -5,6 +5,9 @@ This chart is (almost) configured for production.
 ## Releases
 
 <dl>
+  <dt>Version 0.4.0 - 14 June 2024</dt>
+  <dd>Implemented autoscaling for the gemet pod.</dd>
+
   <dt>Version 0.3.0</dt>
   <dd>Replaced the home-made postgres deployment with bitnami dependency.</dd>
 

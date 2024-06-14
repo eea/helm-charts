@@ -26,6 +26,15 @@ secretKey: ''
 
 timezone: Europe/Copenhagen
 
+replicaCount: 1
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 4
+  targetCPUUtilizationPercentage: 200
+  #targetMemoryUtilizationPercentage: 80
+
 service:
   type: ClusterIP
   port: 8443
