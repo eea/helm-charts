@@ -54,7 +54,7 @@ ingress:
     - host: eni-seis.eionet.europa.eu
       paths:
         - path: /(.*)
-          pathType: Prefix
+          pathType: ImplementationSpecific
   tls:
     - hosts:
         - eni-seis.eionet.europa.eu

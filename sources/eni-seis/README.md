@@ -4,6 +4,9 @@
 
 <dl>
 
+  <dt>Version 0.5.1</dt>
+  <dd>Set pathType to ImplementationSpecific. Update memcached chart to 7.4.7.</dd>
+
   <dt>Version 0.5.0</dt>
   <dd>Use subchart for memcached.</dd>
 
