@@ -6,6 +6,9 @@ The EMRT(EEA Emission Review Tool) is a web-based tool hosted by the EEA to faci
 
 <dl>
 
+  <dt>Version 0.3.8 - 20/6-2024</dt>
+  <dd>Upgraded memcached to 7.4.7, upgraded postfix to 1.1.0.</dd>
+
   <dt>Version 0.3.7</dt>
   <dd>Upgrade to plone-2.5.51</dd>
 

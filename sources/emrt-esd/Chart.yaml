@@ -9,7 +9,7 @@ keywords:
 - Reportnet
 - Emmission
 
-version: 0.2.4
+version: 0.2.5
 
 # Version for the main container
 appVersion: "18.1.23-1-1.74.5"
@@ -17,12 +17,12 @@ appVersion: "18.1.23-1-1.74.5"
 # Remember to do helm dep up .
 dependencies:
   - name: postfix
-    version: 0.2.1
+    version: 1.1.0
     repository: https://eea.github.io/helm-charts
   - name: zeoserver
     version: 0.1.0
     repository: https://eea.github.io/helm-charts
   - name: memcached
-    version: 6.6.7
+    version: 7.4.7
     repository: https://charts.bitnami.com/bitnami
 

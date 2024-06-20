@@ -62,7 +62,7 @@ ingress:
     - host: emrt-necd.eionet.europa.eu
       paths:
         - path: /(.*)
-          pathType: Prefix
+          pathType: ImplementationSpecific
   tls:
     - hosts:
         - emrt-necd.eionet.europa.eu
@@ -71,6 +71,8 @@ memcached:
   fullnameOverride: "memcached"
   resources:
     requests:
+      memory: 2Gi
+    limits:
       memory: 2Gi
 
 # Mail transport
