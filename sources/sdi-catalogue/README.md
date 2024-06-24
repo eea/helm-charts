@@ -5,6 +5,9 @@ A csw service and front end application to search and find EEA GIS datasets.
 ## Releases
 
 <dl>
+  <dt>Version 0.5.17 - 24 June 2024</dt>
+  <dd>Optional cronjob for syncronising Nextcloud files with Apache.</dd>
+
   <dt>Version 0.5.16 - 11 June 2024</dt>
   <dd>Deactivate TRACE in Apache.</dd>
 

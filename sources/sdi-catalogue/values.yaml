@@ -175,3 +175,12 @@ samba:
 
 validator:
   resources: {}
+
+syncNcApache:
+  enabled: false
+  schedule: "30 22 * * 6"
+  resources: {}
+  securityContext: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}

@@ -1,0 +1,89 @@
+{{- if .Values.syncNcApache.enabled }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: sync-nc-apache
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: sync-nc-apache
+  annotations:
+    field.cattle.io/description: Sync Nextcloud data with apache nc config.
+
+spec:
+  schedule: "{{ .Values.syncNcApache.schedule }}"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          {{- with .Values.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
+          containers:
+          - name: syncncapache
+            image: eeacms/sdi-cron:latest
+            args:
+              - /opt/nextcloud_apache_conf_main.sh
+            command:
+              - /bin/sh
+            env:
+            - name: LANG
+              value: en_US.UTF-8
+            resources:
+              {{- toYaml .Values.syncNcApache.resources | nindent 14 }}
+            volumeMounts:
+            - mountPath: /var/local/gis_sdi
+              name: gis-sdi
+            - mountPath: /opt
+              name: sdi-cron-opt
+            - mountPath: /usr/local/apache2/conf/extra
+              name: sdi-apache-configuration
+            - mountPath: /usr/local/apache2/htdocs
+              name: sdi-apache-www
+            - mountPath: /redis-data
+              name: sdi-nextcloud-redis
+            - mountPath: /catalogue-data
+              name: sdi-public-catalogue-data
+
+          restartPolicy: Never
+
+          securityContext:
+            {{- toYaml .Values.syncNcApache.securityContext | nindent 12 }}
+
+          {{- with .Values.syncNcApache.nodeSelector }}
+          nodeSelector:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.syncNcApache.affinity }}
+          affinity:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.syncNcApache.tolerations }}
+          tolerations:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+
+          volumes:
+          - name: gis-sdi
+            persistentVolumeClaim:
+              claimName: gis-sdi
+          - name: sdi-cron-opt
+            persistentVolumeClaim:
+              claimName: sdi-cron-opt
+          - name: sdi-apache-configuration
+            persistentVolumeClaim:
+              claimName: sdi-apache-configuration
+          - name: sdi-apache-www
+            persistentVolumeClaim:
+              claimName: sdi-apache-www
+          - name: sdi-nextcloud-redis
+            persistentVolumeClaim:
+              claimName: sdi-nextcloud-redis
+          - name: sdi-public-catalogue-data
+            persistentVolumeClaim:
+              claimName: sdi-public-catalogue-data
+
+{{- end }}
