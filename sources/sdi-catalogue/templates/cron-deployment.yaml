@@ -1,3 +1,4 @@
+{{- if .Values.cron.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -30,13 +31,8 @@ spec:
         image: eeacms/sdi-cron
         env:
         - name: CRONTAB
-          value: |-
-            # m h dom mon dow user  command
-            41 10,12,13,14,15,17,20 * * *  root     /opt/nextcloud_apache_conf_main.sh
-            * */12 * * *                root        /opt/transferit/cleanup_files.sh
-            0 2,12 * * *                www-data    /opt/webdav_public_links/webdav_metadata_download.sh
-
-            #*/15 * * * *               root        /opt/syncldapgroups/syncldapgroups.sh
+          value: |
+            {{ .Values.cron.crontab | nindent 12}}
         resources:
           {{- toYaml .Values.cron.resources | nindent 10 }}
         volumeMounts:
@@ -73,9 +69,7 @@ spec:
       - name: sdi-nextcloud-redis
         persistentVolumeClaim:
           claimName: sdi-nextcloud-redis
-#     - name: sdi-geonetwork-postgres
-#       persistentVolumeClaim:
-#         claimName: sdi-geonetwork-postgres
       - name: sdi-public-catalogue-data
         persistentVolumeClaim:
           claimName: sdi-public-catalogue-data
+{{- end }}

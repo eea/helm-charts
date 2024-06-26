@@ -1,17 +1,17 @@
-{{- if .Values.syncNcApache.enabled }}
+{{- if .Values.cleanupTransfer.enabled }}
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: sync-nc-apache
+  name: shareit-cleanup
   labels:
     {{- include "appl.labels" . | nindent 4 }}
-    component: sync-nc-apache
+    component: shareit-cleanup
   annotations:
     field.cattle.io/description: Sync Nextcloud data with apache nc config.
 
 spec:
   timeZone: 'Europe/Copenhagen'
-  schedule: "{{ .Values.syncNcApache.schedule }}"
+  schedule: "{{ .Values.cleanupTransfer.schedule }}"
   concurrencyPolicy: Forbid
   jobTemplate:
     spec:
@@ -27,17 +27,17 @@ spec:
             {{- toYaml .Values.podSecurityContext | nindent 12 }}
 
           containers:
-          - name: syncncapache
+          - name: cleanup
             image: eeacms/sdi-cron:latest
             args:
-              - /opt/nextcloud_apache_conf_main.sh
+              - /opt/transferit/cleanup_files.sh
             command:
               - /bin/bash
             env:
             - name: LANG
               value: en_US.UTF-8
             resources:
-              {{- toYaml .Values.syncNcApache.resources | nindent 14 }}
+              {{- toYaml .Values.cleanupTransfer.resources | nindent 14 }}
             volumeMounts:
             - mountPath: /var/local/gis_sdi
               name: gis-sdi
@@ -55,17 +55,17 @@ spec:
           restartPolicy: Never
 
           securityContext:
-            {{- toYaml .Values.syncNcApache.securityContext | nindent 12 }}
+            {{- toYaml .Values.cleanupTransfer.securityContext | nindent 12 }}
 
-          {{- with .Values.syncNcApache.nodeSelector }}
+          {{- with .Values.cleanupTransfer.nodeSelector }}
           nodeSelector:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          {{- with .Values.syncNcApache.affinity }}
+          {{- with .Values.cleanupTransfer.affinity }}
           affinity:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          {{- with .Values.syncNcApache.tolerations }}
+          {{- with .Values.cleanupTransfer.tolerations }}
           tolerations:
             {{- toYaml . | nindent 12 }}
           {{- end }}

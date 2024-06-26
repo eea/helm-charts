@@ -2,9 +2,21 @@
 
 A csw service and front end application to search and find EEA GIS datasets.
 
+## Values
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| cron.enabled | bool | true | Use the old crontab mechanism |
+| cleanupTransfer.enabled | bool | false | Remove files in ShareIT |
+| syncNcApache.enabled | bool | false | Sync NextCloud files with Apache |
+| webdavMetadata.enabled | bool | false | Update webdav meta data |
+
 ## Releases
 
 <dl>
+  <dt>Version 0.6.0 - 26 June 2024</dt>
+  <dd>Use CronJob for all cron jobs. Must be enabled in values.yaml.</dd>
+
   <dt>Version 0.5.17 - 24 June 2024</dt>
   <dd>Optional cronjob for syncronising Nextcloud files with Apache.</dd>
 
@@ -65,40 +77,6 @@ A csw service and front end application to search and find EEA GIS datasets.
     Add basic auth globally to the web controlled by a value.
     The ssl.conf file is now applied unconditionally.
   </dd>
-
-  <dt>Version 0.4.10</dt>
-  <dd>Add config_is_read_only=true to nextcloud config map</dd>
-
-  <dt>Version 0.4.9</dt>
-  <dd>Update GN image to eeacms/eea-geonetwork:8e0ad200</dd>
-  
-  <dt>Version 0.4.8</dt>
-  <dd>Remove FTP service.</dd>
-
-  <dt>Version 0.4.7</dt>
-  <dd>Clean up apache configuration</dd>
-
-  <dt>Version 0.4.6</dt>
-  <dd>Update INSPIRE Validator to 2024.0.1</dd>
-
-  <dt>Version 0.4.5</dt>
-  <dd>Remove filebeat and metricbeat from the stack.</dd>
-
-  <dt>Version 0.4.4</dt>
-  <dd>Set kibana csp.strict property to false. Add it to values.yaml to allow config it without a new version.</dd>
-
-  <dt>Version 0.4.3</dt>
-  <dd>Remove unsupported kibana.index property from kibana 8</dd>
-
-  <dt>Version 0.4.2</dt>
-  <dd>Update GN image to eeacms/eea-geonetwork:56df1491</dd>
-
-  <dt>Version 0.4.1</dt>
-  <dd>Upgrade to postfix 1.1.0.</dd>
-
-  <dt>Version 0.4.0</dt>
-  <dd>Nextcloud logs constantly about a missing postfix name. Added now.
-      Seems to have been forgotten at initial installation.</dd>
 
 </dl>
 
