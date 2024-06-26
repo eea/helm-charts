@@ -7,7 +7,7 @@ metadata:
     {{- include "appl.labels" . | nindent 4 }}
     component: webdav-metadata
   annotations:
-    field.cattle.io/description: Sync Nextcloud data with apache nc config.
+    field.cattle.io/description: Download metadata from webdav
 
 spec:
   timeZone: 'Europe/Copenhagen'
