@@ -68,7 +68,7 @@ apache:
 #     metallb.universe.tf/allow-shared-ip: "sdi-catalogue"
 
 cron:
-  enabled: true
+  enabled: false
   crontab: |
     # m h dom mon dow user  command
     41 10,12,13,14,15,17,20 * * *  root     /opt/nextcloud_apache_conf_main.sh

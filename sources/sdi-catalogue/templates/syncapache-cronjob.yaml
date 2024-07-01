@@ -36,6 +36,8 @@ spec:
             env:
             - name: LANG
               value: en_US.UTF-8
+            - name: PATH
+              value: /sbin:/bin:/usr/sbin:/usr/bin
             resources:
               {{- toYaml .Values.syncNcApache.resources | nindent 14 }}
             volumeMounts:

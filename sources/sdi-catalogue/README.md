@@ -2,14 +2,21 @@
 
 A csw service and front end application to search and find EEA GIS datasets.
 
+## Cronjobs
+
+When the application was running on Rancher 1.6, it had a container, which ran the cron utility. It then ran three jobs periodically. The old mechanism is called cron and is now disabled by default. The three jobs are created as Kubernetes CronJobs, and can be enabled on an individual basis.
+
 ## Values
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| cron.enabled | bool | true | Use the old crontab mechanism |
+| cron.enabled | bool | false | Use the old crontab mechanism |
 | cleanupTransfer.enabled | bool | false | Remove files in ShareIT |
 | syncNcApache.enabled | bool | false | Sync NextCloud files with Apache |
 | webdavMetadata.enabled | bool | false | Update webdav meta data |
+| serverName | string | sdi.eea.europa.eu | Name of the server |
+| serverUrl | string | https://sdi.eea.europa.eu:443 | URL of the server. The port is required. |
+
 
 ## Releases
 
