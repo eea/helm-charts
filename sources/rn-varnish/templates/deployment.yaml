@@ -1,0 +1,99 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "rn-varnish.fullname" . }}
+  labels:
+    {{- include "rn-varnish.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "rn-varnish.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "rn-varnish.labels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "rn-varnish.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          env:
+            - name: TZ
+              value: "{{ .Values.timezone }}"
+            - name: VARNISH_BACKEND
+              value: "{{ .Values.varnishBackend }}"
+            - name: VARNISH_BACKEND_PORT
+              value: "{{ .Values.varnishBackendPort }}"
+            - name: VARNISH_HTTP_PORT
+              value: "{{ .Values.varnishHTTPPort }}"
+            {{- with .Values.varnishHTTPSPort }}
+            - name: VARNISH_HTTPS_PORT
+              value: "{{- toYaml . }}"
+            {{- end }}
+            {{- with .Values.varnishSize }}
+            - name: VARNISH_SIZE
+              value: "{{- toYaml . }}"
+            {{- end }}
+            {{- with .Values.autoKillCron }}
+            - name: AUTOKILL_CRON
+              value: "{{- toYaml . }}"
+            {{- end }}
+            {{- with .Values.varnishCFGContent }}
+            - name: VARNISH_CFG_CONTENT
+              value: "{{- toYaml . }}"
+            {{- end }}
+            {{- with .Values.varnishDNSTTL }}
+            - name: VARNISH_DNS_TTL
+              value: "{{- toYaml . }}"
+            {{- end }}
+            {{- with .Values.varnishBERESPTTL }}
+            - name: VARNISH_BERESP_TTL
+              value: "{{- toYaml . }}"
+            {{- end }}
+            {{- with .Values.varnishBERESPGrace }}
+            - name: VARNISH_BERESP_GRACE
+              value: "{{- toYaml . }}"
+            {{- end }}
+            {{- with .Values.varnishBerespKeep }}
+            - name: VARNISH_BERESP_KEEP
+              value: "{{- toYaml . }}"
+            {{- end }}
+          livenessProbe:
+            {{- toYaml .Values.livenessProbe | nindent 12 }}
+          readinessProbe:
+            {{- toYaml .Values.readinessProbe | nindent 12 }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

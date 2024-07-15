@@ -1,0 +1,29 @@
+# Reportnet Varnish
+
+Varnish for Reportek.
+
+[See more](https://github.com/eea/eea.docker.varnish-reportek)
+
+## Configuration
+
+- `timezone` - Time zone.
+- `varnishHTTPPort` - Port for HTTP traffic.
+- `varnishHTTPSPort` - Port for HTTPS traffic.
+- `varnishSize` - Size of the varnish cache.
+- `autoKillCron` - Auto kill cron.
+- `varnishCFGContent` - Content of the configuration file.
+- `varnishBackend` - Backend to use.
+- `varnishBackendPort` - Port of the backend.
+- `varnishDNSTTL` - TTL for DNS.
+- `varnishBERESPTTL` - TTL for BERESP.
+- `varnishBERESPGrace` - Grace period for BERESP.
+- `varnishBERESPKeep` - Keep period for BERESP.
+
+## Releases
+
+<dl>
+
+  <dt>Version 0.1.0</dt>
+  <dd>Initial release.</dd>
+
+</dl>
