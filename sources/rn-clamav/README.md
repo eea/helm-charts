@@ -16,6 +16,9 @@ Clamav scanner for Reportek.
 
 <dl>
 
+  <dt>Version 0.1.1</dt>
+  <dd>Added enabled flag.</dd>
+
   <dt>Version 0.1.0</dt>
   <dd>Initial release.</dd>
 
