@@ -1,0 +1,220 @@
+image:
+  repository: eeacms/reportek-cdr
+  pullPolicy: IfNotPresent
+  tag: ""
+
+deployment: cdr
+timezone: Europe/Copenhagen
+
+# used by the cron-zeopack job
+cdrUser: ''
+cdrPass: ''
+
+instance:
+  enabled: true
+  repository: eeacms/reportek-cdr
+  tag: ""
+  replicaCount: 1
+  port: 8080
+  resources:
+    requests:
+      memory: 2Gi
+      cpu: 500m
+    limits:
+      cpu: 500m
+      memory: 2Gi
+  env:
+    beakerPath: /sessions
+    beakerSecret: ''
+    sentryDSN: ''
+    zopeThreads: 4
+    deploymentHost: cdr.eionet.europa.eu
+    cachePurgingDomain: cdr.eionet.europa.eu
+    cachePurgingEnabled: true
+    cachePurgingProxy: http://varnish
+    cachePurgingProxyPort: 8080
+    cachePurgingVhost: true
+    cacheSettingsEnabled: true
+    clamavHost: clamav
+    graylog: ''
+    graylogFacility: ''
+    rabbitmqEnabled: false
+    rabbitmqHost: ''
+    rabbitmqUser: ''
+    rabbitmqPass: ''
+    rabbitmqPort: 5672
+    zipCacheEnabled: true
+    zipCachePath: /opt/zope/var
+    zipCacheThreshold: "100000000"
+    zeoAddress: zeoserver:8100
+
+cronzeopack:
+  enabled: false
+  repository: curlimages/curl
+  tag: 8.4.0
+  schedule: "0 3 * * *"
+  resources:
+    requests:
+      memory: 16Mi
+    limits:
+      memory: 16Mi
+
+cronsessionscleanup:
+  enabled: true
+  schedule: "* 4 * * *"
+  resources:
+    requests:
+      memory: 16Mi
+    limits:
+      memory: 16Mi
+
+cronautoenvcleanup:
+  enabled: false
+  schedule: "45 3 * * *"
+  resources:
+    requests:
+      memory: 2.5Gi
+    limits:
+      memory: 3Gi
+
+cronautofallin:
+  enabled: false
+  schedule: "*/5 * 16 11 *"
+  resources:
+    requests:
+      memory: 2.5Gi
+    limits:
+      memory: 3Gi
+
+cronzipcachecleanup:
+  enabled: true
+  schedule: "0 0 4 * *"
+  resources:
+    requests:
+      memory: 2.5Gi
+    limits:
+      memory: 3Gi
+
+rn-zeoserver:
+  fullnameOverride: "zeoserver"
+  storage: 10Gi
+  storageName: cdr-storage
+  resources:
+    requests:
+      memory: 1Gi
+
+rn-varnish:
+  enabled: true
+  fullnameOverride: "varnish"
+  varnishHTTPPort: 8080
+  varnishSize: 5G
+  varnishBackend: instance
+  varnishBackendPort: 8080
+  autoKillCron: 0 2 * * *
+  resources:
+    requests:
+      memory: 5Gi
+    limits:
+      memory: 5Gi
+
+rn-local-converters:
+  enabled: true
+  fullnameOverride: "converter"
+  resources:
+    requests:
+      memory: 1.5Gi
+      cpu: 300m
+    limits:
+      memory: 1.5Gi
+      cpu: 300m
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 2
+    targetCPUUtilizationPercentage: 80
+    targetMemoryUtilizationPercentage: 80
+
+rn-clamav:
+  enabled: true
+  fullnameOverride: "clamav"
+  resources:
+    requests:
+      memory: 3.5Gi
+      cpu: 300m
+    limits:
+      cpu: 300m
+      memory: 3.5Gi
+  storage: 1Gi
+  storageName: cdr-clamav-data
+  autoscaling:
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 2
+    targetCPUUtilizationPercentage: 80
+    targetMemoryUtilizationPercentage: 80
+
+rabbitmq:
+  externalIP: 
+  port: 
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: false
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+
+securityContext: {}
+
+service:
+  type: ClusterIP
+  port: 8080
+
+cron:
+  enabled: false
+
+ingress:
+  enabled: false
+  className: "nginx"
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "1024m"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "480"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "120"
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /VirtualHostBase/https/cdr.eionet.europa.eu:443/VirtualHostRoot/$1
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers 'X-Frame-Options: SAMEORIGIN'
+       'Strict-Transport-Security max-age=15768000'
+       'Server HTTPS'
+       'X-Content-Type-Options: nosniff'
+       'Referrer-Policy strict-origin-when-cross-origin'
+       "Feature-Policy accelerometer 'none'; ambient-light-sensor 'none'; autoplay 'none'; camera 'none'; encrypted-media 'none'; fullscreen 'self'; geolocation 'none'; gyroscope 'none'; magnetometer 'none'; microphone 'none'; midi 'none'; payment 'none'; picture-in-picture 'none'; speaker 'none'; sync-xhr 'self'; usb 'none'; vr 'none'"
+       "X-XSS-Protection 1; mode=block'"
+       "Content-Security-Policy default-src 'self' blob: data: https://*.eea.europa.eu https://*.eionet.europa.eu; connect-src 'self' https://*.openstreetmap.org https://*.eea.europa.eu https://*.eionet.europa.eu http://*.eea.europa.eu; font-src 'self' data: https://cdnjs.cloudflare.com/ https://fonts.gstatic.com/ https://*.eea.europa.eu https://*.eionet.europa.eu; frame-src 'self'  https://ec.europa.eu/  https://*.eea.europa.eu https://*.eionet.europa.eu http://*.eea.europa.eu; img-src http: https: blob: data:; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: data: https://matomo.eea.europa.eu https://openlayers.org/ https://www.google.com/jsapi https://www.google.com/uds/ https://www.gstatic.com/ https://spreadsheets.google.com/ https://docs.google.com/ https://*.eea.europa.eu https://*.eionet.europa.eu http://*.eea.europa.eu https://cdnjs.cloudflare.com https://code.jquery.com; style-src 'self' 'unsafe-inline' https://openlayers.org/ https://www.google.com/uds/ https://ajax.googleapis.com/ https://www.gstatic.com/ https://*.eionet.europa.eu https://*.eea.europa.eu https://cdnjs.cloudflare.com https://code.jquery.com";
+
+  hosts:
+    - host: cdr.eionet.europa.eu
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: ''
+      hosts:
+        - cdr.eionet.europa.eu
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 4
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+tolerations: []
+affinity: {}

@@ -1,0 +1,47 @@
+{{- if and .Values.cron.enabled .Values.cronautoenvcleanup.enabled }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: cron-auto-env-cleanup
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: cron-auto-env-cleanup
+
+spec:
+  schedule: "{{ .Values.cronautoenvcleanup.schedule }}"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          {{- with .Values.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
+          containers:
+          - name: cron-auto-env-cleanup
+            image: "{{ .Values.instance.repository }}:{{ .Values.instance.tag | default .Chart.AppVersion }}"
+            imagePullPolicy: {{ .Values.image.pullPolicy }}
+            resources:
+              {{- toYaml .Values.cronautoenvcleanup.resources | nindent 14 }}
+            command:
+            - /opt/zope/bin/instance
+            - run
+            - /opt/zope/bin/auto_env_cleanup
+            - --inactive_for
+            - "30"
+            - --limit
+            - "10"
+            env:
+            - name: SENTRY_DSN
+              value: "{{ .Values.instance.env.sentryDSN }}"
+            - name: DEPLOYMENT_HOST
+              value: "{{ .Values.instance.env.deploymentHost }}"
+            - name: TZ
+              value: {{ .Values.timezone }}
+            - name: ZEO_ADDRESS
+              value: "{{ .Values.instance.env.zeoAddress }}"
+          restartPolicy: Never
+{{- end }}

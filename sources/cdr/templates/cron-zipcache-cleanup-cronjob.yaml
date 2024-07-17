@@ -1,0 +1,80 @@
+{{- if and .Values.cron.enabled .Values.cronzipcachecleanup.enabled }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: cron-zipcache-cleanup
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: cron-zipcache-cleanup
+
+spec:
+  schedule: "{{ .Values.cronzipcachecleanup.schedule }}"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          {{- with .Values.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
+          containers:
+          - name: cron-zipcache-cleanup
+            image: "{{ .Values.instance.repository }}:{{ .Values.instance.tag | default .Chart.AppVersion }}"
+            imagePullPolicy: {{ .Values.image.pullPolicy }}
+            resources:
+              {{- toYaml .Values.cronzipcachecleanup.resources | nindent 14 }}
+            command:
+            - /opt/zope/bin/instance
+            - run
+            - /opt/zope/bin/zip_cache_cleanup
+            env:
+            - name: SENTRY_DSN
+              value: "{{ .Values.instance.env.sentryDSN }}"
+            - name: DEPLOYMENT_HOST
+              value: "{{ .Values.instance.env.deploymentHost }}"
+            - name: TZ
+              value: {{ .Values.timezone }}
+            - name: ZEO_ADDRESS
+              value: "{{ .Values.instance.env.zeoAddress }}"
+            - name: GRAYLOG
+              value: "{{ .Values.instance.env.graylog }}"
+            - name: GRAYLOG_FACILITY
+              value: "{{ .Values.instance.env.graylogFacility }}"
+            - name: ZIP_CACHE_ENABLED
+              value: "{{ .Values.instance.env.zipCacheEnabled }}"
+            - name: ZIP_CACHE_PATH
+              value: "{{ .Values.instance.env.zipCachePath }}"
+            - name: ZIP_CACHE_THRESHOLD
+              value: "{{ .Values.instance.env.zipCacheThreshold }}"
+            - name: RABBITMQ_ENABLED
+              value: "{{ .Values.instance.env.rabbitmqEnabled }}"
+            - name: RABBITMQ_HOST
+              value: "{{ .Values.instance.env.rabbitmqHost }}"
+            - name: RABBITMQ_PASS
+              value: "{{ .Values.instance.env.rabbitmqPass }}"
+            - name: RABBITMQ_PORT
+              value: "{{ .Values.instance.env.rabbitmqPort }}"
+            - name: RABBITMQ_USER
+              value: "{{ .Values.instance.env.rabbitmqUser }}"
+            volumeMounts:
+              - mountPath: /opt/zope/var/zip_cache
+                name: {{ .Values.deployment }}-zipcache-storage
+              - mountPath: /sessions
+                name: {{ .Values.deployment }}-sessions-storage
+              - mountPath: /tmp
+                name: {{ .Values.deployment }}-tmpdir-storage
+          restartPolicy: Never
+          volumes:
+            - name: {{ .Values.deployment }}-zipcache-storage
+              persistentVolumeClaim:
+                claimName: {{ .Values.deployment }}-zipcache-storage
+            - name: {{ .Values.deployment }}-sessions-storage
+              persistentVolumeClaim:
+                claimName: {{ .Values.deployment }}-sessions-storage
+            - name: {{ .Values.deployment }}-tmpdir-storage
+              persistentVolumeClaim:
+                claimName: {{ .Values.deployment }}-tmpdir-storage
+{{- end }}

@@ -1,0 +1,27 @@
+apiVersion: v2
+name: cdr
+description: A CDR Helm chart for Kubernetes
+icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/cdr/logo_eionet.png
+
+type: application
+
+version: 0.1.0
+
+appVersion: "6.7.3-193"
+
+dependencies:
+  - name: rn-zeoserver
+    version: 0.1.0
+    repository: https://eea.github.io/helm-charts
+  - name: rn-varnish
+    version: 0.1.1
+    repository: https://eea.github.io/helm-charts
+    condition: rn-varnish.enabled
+  - name: rn-local-converters
+    version: 0.1.1
+    repository: https://eea.github.io/helm-charts
+    condition: rn-local-converters.enabled
+  - name: rn-clamav
+    version: 0.1.1
+    repository: https://eea.github.io/helm-charts
+    condition: rn-clamav.enabled

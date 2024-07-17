@@ -1,0 +1,45 @@
+{{- if and .Values.cron.enabled .Values.cronsessionscleanup.enabled }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: cron-sessions-cleanup
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: cron-sessions-cleanup
+
+spec:
+  schedule: "{{ .Values.cronsessionscleanup.schedule }}"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          {{- with .Values.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
+          containers:
+          - name: cron-sessions-cleanup
+            image: busybox
+            imagePullPolicy: {{ .Values.image.pullPolicy }}
+            resources:
+              {{- toYaml .Values.cronsessionscleanup.resources | nindent 14 }}
+            command: 
+            - '/bin/sh'
+            args: ["-c", "$(SESSIONS_CLEANUP)"]
+            env:
+            - name: TZ
+              value: {{ .Values.timezone }}
+            - name: SESSIONS_CLEANUP
+              value: 'find /sessions -type f -mtime +3 -print -exec rm {} \; || echo "Sessions cleanup completed"'
+            volumeMounts:
+            - mountPath: /sessions
+              name: {{ .Values.deployment }}-sessions-storage
+          restartPolicy: Never
+          volumes:
+            - name: {{ .Values.deployment }}-sessions-storage
+              persistentVolumeClaim:
+                claimName: {{ .Values.deployment }}-sessions-storage
+{{- end }}

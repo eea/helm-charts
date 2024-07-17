@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Values.deployment }}-storage
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: {{ .Values.deployment }}-storage
+  annotations:
+    "helm.sh/resource-policy": keep
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
