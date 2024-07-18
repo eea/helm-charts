@@ -23,6 +23,9 @@ Varnish for Reportek.
 
 <dl>
 
+  <dt>Version 0.1.2</dt>
+  <dd>Changed default port to 8080.</dd>
+
   <dt>Version 0.1.1</dt>
   <dd>Added enabled flag.</dd>
 

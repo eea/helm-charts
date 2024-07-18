@@ -38,7 +38,7 @@ securityContext: {}
 
 service:
   type: ClusterIP
-  port: 6081
+  port: 8080
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -52,7 +52,7 @@ resources: {}
   #   cpu: 100m
   #   memory: 128Mi
 
-varnishHTTPPort: 6081
+varnishHTTPPort: 8080
 varnishHTTPSPort: {}
 varnishSize: 2G
 autoKillCron: 0 2 * * *
