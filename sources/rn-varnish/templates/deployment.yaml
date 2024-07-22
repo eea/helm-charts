@@ -55,10 +55,6 @@ spec:
             - name: VARNISH_SIZE
               value: "{{- toYaml . }}"
             {{- end }}
-            {{- with .Values.autoKillCron }}
-            - name: AUTOKILL_CRON
-              value: "{{- toYaml . }}"
-            {{- end }}
             {{- with .Values.varnishCFGContent }}
             - name: VARNISH_CFG_CONTENT
               value: "{{- toYaml . }}"

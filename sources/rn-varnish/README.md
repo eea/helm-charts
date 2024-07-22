@@ -23,6 +23,9 @@ Varnish for Reportek.
 
 <dl>
 
+  <dt>Version 0.1.3</dt>
+  <dd>Removed autoKillCron variable since, using it, causes varnish to no longer respond.</dd>
+
   <dt>Version 0.1.2</dt>
   <dd>Changed default port to 8080.</dd>
 
