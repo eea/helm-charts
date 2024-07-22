@@ -110,7 +110,6 @@ rn-varnish:
   varnishSize: 5G
   varnishBackend: instance
   varnishBackendPort: 8080
-  autoKillCron: 0 2 * * *
   resources:
     requests:
       memory: 5Gi
@@ -201,7 +200,7 @@ ingress:
   hosts:
     - host: cdr.eionet.europa.eu
       paths:
-        - path: /
+        - path: /(.*)
           pathType: Prefix
   tls:
     - secretName: ''
