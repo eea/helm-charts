@@ -18,6 +18,9 @@ This chart is almost configured for production use.
 ## Releases
 
 <dl>
+  <dt>Version 0.1.3</dt>
+  <dd>Changed rabbitmq to externalName.</dd>
+
   <dt>Version 0.1.2</dt>
   <dd>Updated rn-varnish chart to 0.1.3 and fix ingress path</dd>
 

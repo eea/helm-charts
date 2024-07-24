@@ -4,15 +4,8 @@ metadata:
   name: rabbitmq
   labels:
     {{- include "appl.labels" . | nindent 4 }}
-    component: rabbitmq
 spec:
   selector:
     {{- include "appl.selectorLabels" . | nindent 4 }}
-    component: rabbitmq
-  ports:
-    - name: rabbitmq
-      protocol: TCP
-      port: {{ .Values.rabbitmq.port }}
-      targetPort: {{ .Values.rabbitmq.port }}
-  externalIPs:
-    - {{ .Values.rabbitmq.externalIP }}
+  type: ExternalName
+  externalName: {{ .Values.rabbitmq.externalName }}
