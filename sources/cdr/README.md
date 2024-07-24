@@ -18,6 +18,10 @@ This chart is almost configured for production use.
 ## Releases
 
 <dl>
+
+  <dt>Version 0.1.4</dt>
+  <dd>Get the image and tag from image section.</dd>
+
   <dt>Version 0.1.3</dt>
   <dd>Changed rabbitmq to externalName.</dd>
 

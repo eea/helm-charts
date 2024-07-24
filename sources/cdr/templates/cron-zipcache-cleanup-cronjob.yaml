@@ -22,7 +22,7 @@ spec:
 
           containers:
           - name: cron-zipcache-cleanup
-            image: "{{ .Values.instance.repository }}:{{ .Values.instance.tag | default .Chart.AppVersion }}"
+            image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
             imagePullPolicy: {{ .Values.image.pullPolicy }}
             resources:
               {{- toYaml .Values.cronzipcachecleanup.resources | nindent 14 }}

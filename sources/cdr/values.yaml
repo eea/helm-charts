@@ -7,13 +7,11 @@ deployment: cdr
 timezone: Europe/Copenhagen
 
 # used by the cron-zeopack job
-cdrUser: ''
-cdrPass: ''
+cdrUser: ""
+cdrPass: ""
 
 instance:
   enabled: true
-  repository: eeacms/reportek-cdr
-  tag: ""
   replicaCount: 1
   port: 8080
   resources:
@@ -25,8 +23,8 @@ instance:
       memory: 2Gi
   env:
     beakerPath: /sessions
-    beakerSecret: ''
-    sentryDSN: ''
+    beakerSecret: ""
+    sentryDSN: ""
     zopeThreads: 4
     deploymentHost: cdr.eionet.europa.eu
     cachePurgingDomain: cdr.eionet.europa.eu
@@ -36,12 +34,12 @@ instance:
     cachePurgingVhost: true
     cacheSettingsEnabled: true
     clamavHost: clamav
-    graylog: ''
-    graylogFacility: ''
+    graylog: ""
+    graylogFacility: ""
     rabbitmqEnabled: false
-    rabbitmqHost: ''
-    rabbitmqUser: ''
-    rabbitmqPass: ''
+    rabbitmqHost: ""
+    rabbitmqUser: ""
+    rabbitmqPass: ""
     rabbitmqPort: 5672
     zipCacheEnabled: true
     zipCachePath: /opt/zope/var
@@ -153,7 +151,7 @@ rn-clamav:
     targetMemoryUtilizationPercentage: 80
 
 rabbitmq:
-  externalName: 
+  externalName:
 
 imagePullSecrets: []
 nameOverride: ""
@@ -202,7 +200,7 @@ ingress:
         - path: /(.*)
           pathType: Prefix
   tls:
-    - secretName: ''
+    - secretName: ""
       hosts:
         - cdr.eionet.europa.eu
 

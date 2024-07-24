@@ -27,7 +27,7 @@ spec:
 
       containers:
       - name: instance
-        image: "{{ .Values.instance.repository }}:{{ .Values.instance.tag | default .Chart.AppVersion }}"
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
 
         ports:
