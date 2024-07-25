@@ -19,6 +19,9 @@ This chart is almost configured for production use.
 
 <dl>
 
+  <dt>Version 0.1.5</dt>
+  <dd>Added rabbitmq.create and rabbitmq.name. When create is true, the rabbitmq service will be created.</dd>
+
   <dt>Version 0.1.4</dt>
   <dd>Get the image and tag from image section.</dd>
 
