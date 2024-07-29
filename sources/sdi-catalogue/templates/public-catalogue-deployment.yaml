@@ -27,7 +27,7 @@ spec:
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
       containers:
       - name: public-catalogue
-        image: eeacms/eea-geonetwork:8a0008a6
+        image: eeacms/eea-geonetwork:7bc024ea
         env:
         - name: WEBAPP_CONTEXT_PATH
           value: {{ .Values.publicCatalogue.webapp_context }}
