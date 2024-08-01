@@ -7,8 +7,6 @@ This chart is almost configured for production use.
 ## Values
 
 <dl>
-  <dt>deployment</dt>
-  <dd>This should be set based on deployment. The deployment value is used for the various used pvc names as a prefix.</dd>
 
   <dt>rabbitmq</dt>
   <dd>This can be used to set the rabbitmq host to be used.</dd>.</dd>
@@ -18,6 +16,9 @@ This chart is almost configured for production use.
 ## Releases
 
 <dl>
+
+  <dt>Version 0.1.1</dt>
+  <dd>Removed deployment referrence from README.</dd>
 
   <dt>Version 0.1.0</dt>
   <dd>Initial release.</dd>
