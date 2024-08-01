@@ -1,0 +1,107 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "appl.fullname" . }}-instance
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: instance
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.instance.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: instance
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: instance
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
+      containers:
+      - name: {{ .Release.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+
+        ports:
+        - containerPort: {{ .Values.instance.port }}
+          name: http
+          protocol: TCP
+
+        env:
+        - name: BEAKER_PATH
+          value: "{{ .Values.instance.env.beakerPath }}"
+        - name: BEAKER_SECRET
+          value: "{{ .Values.instance.env.beakerSecret }}"
+        - name: CACHE_PURGING_DOMAIN
+          value: "{{ .Values.instance.env.cachePurgingDomain }}"
+        - name: CACHE_PURGING_ENABLED
+          value: "{{ .Values.instance.env.cachePurgingEnabled }}"
+        - name: CACHE_PURGING_PROXY
+          value: "{{ .Values.instance.env.cachePurgingProxy }}"
+        - name: CACHE_PURGING_PROXY_PORT
+          value: "{{ .Values.instance.env.cachePurgingProxyPort }}"
+        - name: CACHE_PURGING_VHOST
+          value: "{{ .Values.instance.env.cachePurgingVhost }}"
+        - name: CACHE_SETTINGS_ENABLED
+          value: "{{ .Values.instance.env.cacheSettingsEnabled }}"
+        - name: CLAMAV_HOST
+          value: "{{ .Values.instance.env.clamavHost }}"
+        - name: GRAYLOG
+          value: "{{ .Values.instance.env.graylog }}"
+        - name: GRAYLOG_FACILITY
+          value: "{{ .Values.instance.env.graylogFacility }}"
+        - name: RABBITMQ_ENABLED
+          value: "{{ .Values.instance.env.rabbitmqEnabled }}"
+        - name: RABBITMQ_HOST
+          value: "{{ .Values.instance.env.rabbitmqHost }}"
+        - name: RABBITMQ_PASS
+          value: "{{ .Values.instance.env.rabbitmqPass }}"
+        - name: RABBITMQ_PORT
+          value: "{{ .Values.instance.env.rabbitmqPort }}"
+        - name: RABBITMQ_USER
+          value: "{{ .Values.instance.env.rabbitmqUser }}"
+        - name: SENTRY_DSN
+          value: "{{ .Values.instance.env.sentryDSN }}"
+        - name: TZ
+          value: {{ .Values.timezone }}
+        - name: ZEO_ADDRESS
+          value: "{{ .Values.instance.env.zeoAddress }}"
+        - name: ZOPE_THREADS
+          value: "{{ .Values.instance.env.zopeThreads }}"
+        - name: LOCAL_CONVERTERS_HOST
+          value: "{{ .Values.instance.env.localConvertersHost }}"
+
+        livenessProbe:
+          httpGet:
+            path: /
+            port: {{ .Values.instance.port }}
+          initialDelaySeconds: 30
+          periodSeconds: 20
+          failureThreshold: 3
+          timeoutSeconds: 6
+
+        resources:
+          {{- toYaml .Values.instance.resources | nindent 10 }}
+
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+      restartPolicy: Always

@@ -1,0 +1,13 @@
+{{- if .Values.rabbitmq.create }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.rabbitmq.name }}
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+spec:
+  selector:
+    {{- include "appl.selectorLabels" . | nindent 4 }}
+  type: ExternalName
+  externalName: {{ .Values.rabbitmq.externalName }}
+{{- end }}
