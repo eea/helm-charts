@@ -2,7 +2,7 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: cron-auto-fallin
+  name: {{ include "appl.fullname" . }}-cron-auto-fallin
   labels:
     {{- include "appl.labels" . | nindent 4 }}
     component: cron-auto-fallin
@@ -21,7 +21,7 @@ spec:
           serviceAccountName: {{ include "appl.serviceAccountName" . }}
 
           containers:
-          - name: cron-auto-fallin
+          - name: {{ .Release.Name }}
             image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
             imagePullPolicy: {{ .Values.image.pullPolicy }}
             resources:
@@ -87,24 +87,25 @@ spec:
               value: "{{ .Values.instance.env.zipCacheThreshold }}"
             - name: ZOPE_THREADS
               value: "{{ .Values.instance.env.zopeThreads }}"
-
+            - name: LOCAL_CONVERTERS_HOST
+              value: "{{ .Values.instance.env.localConvertersHost }}"
             volumeMounts:
               - mountPath: /opt/zope/var/zip_cache
-                name: {{ .Values.deployment }}-zipcache-storage
+                name: {{ .Release.Name }}-zipcache-storage
               - mountPath: /sessions
-                name: {{ .Values.deployment }}-sessions-storage
+                name: {{ .Release.Name }}-sessions-storage
               - mountPath: /tmp
-                name: {{ .Values.deployment }}-tmpdir-storage
+                name: {{ .Release.Name }}-tmpdir-storage
 
           restartPolicy: Never
           volumes:
-            - name: {{ .Values.deployment }}-zipcache-storage
+            - name: {{ .Release.Name }}-zipcache-storage
               persistentVolumeClaim:
-                claimName: {{ .Values.deployment }}-zipcache-storage
-            - name: {{ .Values.deployment }}-sessions-storage
+                claimName: {{ .Release.Name }}-zipcache-storage
+            - name: {{ .Release.Name }}-sessions-storage
               persistentVolumeClaim:
-                claimName: {{ .Values.deployment }}-sessions-storage
-            - name: {{ .Values.deployment }}-tmpdir-storage
+                claimName: {{ .Release.Name }}-sessions-storage
+            - name: {{ .Release.Name }}-tmpdir-storage
               persistentVolumeClaim:
-                claimName: {{ .Values.deployment }}-tmpdir-storage
+                claimName: {{ .Release.Name }}-tmpdir-storage
 {{- end }}

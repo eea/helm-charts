@@ -7,8 +7,6 @@ This chart is almost configured for production use.
 ## Values
 
 <dl>
-  <dt>deployment</dt>
-  <dd>This should be set based on deployment. The deployment value is used for the various used pvc names as a prefix.</dd>
 
   <dt>rabbitmq</dt>
   <dd>This can be used to set the rabbitmq host to be used.</dd>.</dd>
@@ -18,6 +16,11 @@ This chart is almost configured for production use.
 ## Releases
 
 <dl>
+
+  <dt>Version 0.1.6</dt>
+  <dd>Refactored to be able to install multiple stacks in the same namespace. Due to the chart naming, we can't solely rely on appl.fullname for service naming</dd>
+  <dd>Dropped deployment since it's not needed, we can use RELEASE instead</dd>
+  <dd>Removed storage PVC since it's not needed</dd>
 
   <dt>Version 0.1.5</dt>
   <dd>Added rabbitmq.create and rabbitmq.name. When create is true, the rabbitmq service will be created.</dd>

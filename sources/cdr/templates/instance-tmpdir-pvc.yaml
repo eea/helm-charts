@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ .Values.deployment }}-tmpdir-storage
+  name: {{ .Release.Name }}-tmpdir-storage
   labels:
     {{- include "appl.labels" . | nindent 4 }}
-    component: {{ .Values.deployment }}-tmpdir-storage
+    component: {{ .Release.Name }}-tmpdir-storage
   annotations:
     "helm.sh/resource-policy": keep
 spec:
