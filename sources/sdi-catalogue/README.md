@@ -21,15 +21,19 @@ When the application was running on Rancher 1.6, it had a container, which ran t
 ## Releases
 
 <dl>
+  <dt>Version 0.6.2 - 06 August 2024</dt>
+  <dd>Update GN to c3949e2c. EEA / SDMX / Add maintenance info to FREQ_DISS.
+</dd>
+
   <dt>Version 0.6.1 - 29 July 2024</dt>
   <dd>
     <ul>
-    <li>EEA / Statistical data / Add date of next update.</li>
-    <li>EEA / Statistical data / Migrate frequency of dissemination from maintenance to specific element.</li>
-    <li>EEA / SDMX / Add frequency of dissemination.</li>
-    <li>Standard / ISO19139 / Fix removal of link when multiple transferoptions are used.</li>
-  </ul>
-</dd>
+      <li>EEA / Statistical data / Add date of next update.</li>
+      <li>EEA / Statistical data / Migrate frequency of dissemination from maintenance to specific element.</li>
+      <li>EEA / SDMX / Add frequency of dissemination.</li>
+      <li>Standard / ISO19139 / Fix removal of link when multiple transferoptions are used.</li>
+    </ul>
+  </dd>
 
   <dt>Version 0.6.0 - 26 June 2024</dt>
   <dd>Use CronJob for all cron jobs. Must be enabled in values.yaml.</dd>
