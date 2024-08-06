@@ -21,9 +21,11 @@ When the application was running on Rancher 1.6, it had a container, which ran t
 ## Releases
 
 <dl>
+  <dt>Version 0.6.3 - 06 August 2024</dt>
+  <dd>Upgraded Apache version.</dd>
+
   <dt>Version 0.6.2 - 06 August 2024</dt>
-  <dd>Update GN to c3949e2c. EEA / SDMX / Add maintenance info to FREQ_DISS.
-</dd>
+  <dd>Update GN to c3949e2c. EEA / SDMX / Add maintenance info to FREQ_DISS.</dd>
 
   <dt>Version 0.6.1 - 29 July 2024</dt>
   <dd>
