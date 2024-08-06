@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
+  name: {{ .Release.Name }}-svndata
   labels:
     {{- include "appl.labels" . | nindent 4 }}
     component: svndata
-  name: {{ .Release.Name }}-svndata
   annotations:
     "helm.sh/resource-policy": keep
 
@@ -13,4 +13,4 @@ spec:
   - ReadWriteMany
   resources:
     requests:
-      storage: 100Gi
+      storage: {{ .Values.datavolume.size }}
