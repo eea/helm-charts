@@ -5,6 +5,9 @@ This chart is (almost) configured for production.
 ## Releases
 
 <dl>
+  <dt>Version 0.5.0 - 7 August 2024</dt>
+  <dd>Moved the security headers to standard Ingress annotations.</dd>
+
   <dt>Version 0.4.0 - 14 June 2024</dt>
   <dd>Implemented autoscaling for the gemet pod.</dd>
 
