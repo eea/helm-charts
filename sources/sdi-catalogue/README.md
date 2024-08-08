@@ -15,12 +15,19 @@ When the application was running on Rancher 1.6, it had a container, which ran t
 | syncNcApache.enabled | bool | false | Sync NextCloud files with Apache |
 | webdavMetadata.enabled | bool | false | Update webdav meta data |
 | serverName | string | sdi.eea.europa.eu | Name of the server |
-| serverUrl | string | https://sdi.eea.europa.eu:443 | URL of the server. The port is required. |
-
+| serverUrl | string | <https://sdi.eea.europa.eu:443> | URL of the server. The port is required. |
 
 ## Releases
 
 <dl>
+  <dt>Version 0.6.4 - 08 August 2024</dt>
+  <dd>Upgraded GN to b1adafc2.
+    <ul>
+      <li>EEA / Script / Add hierarchylevelname if not present https://taskman.eionet.europa.eu/issues/273346</li>
+      <li>Record view / Improve layout of table (eg. quality measures)</li>
+    </ul>
+  </dd>
+
   <dt>Version 0.6.3 - 06 August 2024</dt>
   <dd>Upgraded Apache version.</dd>
 
@@ -102,4 +109,3 @@ When the application was running on Rancher 1.6, it had a container, which ran t
   </dd>
 
 </dl>
-
