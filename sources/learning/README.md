@@ -7,6 +7,9 @@ This chart is configured for production, but Ingress is disabled by default.
 
 <dl>
 
+  <dt>Version 0.4.3 - 8 Aug 2024</dt>
+  <dd>Upgrade Apache to 2.4.62-alpine3.20</dd>
+
   <dt>Version 0.4.2</dt>
   <dd>Upgrade Apache to 2.4.58-alpine3.19</dd>
 
