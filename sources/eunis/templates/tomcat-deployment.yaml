@@ -30,7 +30,9 @@ spec:
         - containerPort: 8009
           protocol: TCP
         - containerPort: 8080
+          name: tomcat
           protocol: TCP
+
         env:
         - name: CATALINA_OPTS
           value: -Xmx2048m -Djava.security.egd=file:/dev/./urandom
@@ -49,12 +51,33 @@ spec:
         - mountPath: /var/log/tomcat
           name:  {{ .Release.Name }}-logs
 
+        {{- if .Values.healthchecks.liveness.enabled }}
         livenessProbe:
-          initialDelaySeconds: 15
           periodSeconds: 20
           httpGet:
             path: /systemcheck.jsp
-            port: 8080
+            port: tomcat
+        {{- end }}
+
+        {{- if .Values.healthchecks.readiness.enabled }}
+        readinessProbe:
+          periodSeconds: 60
+          timeoutSeconds: 3
+          httpGet:
+            path: /systemcheck.jsp
+            port: tomcat
+        {{- end }}
+
+        {{- if .Values.healthchecks.startup.enabled }}
+        startupProbe:
+          initialDelaySeconds: 15
+          periodSeconds: 10
+          timeoutSeconds: 1
+          failureThreshold: 6
+          httpGet:
+            path: /systemcheck.jsp
+            port: tomcat
+        {{- end }}
 
       {{- with .Values.nodeSelector }}
       nodeSelector:

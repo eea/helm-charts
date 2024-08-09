@@ -34,6 +34,14 @@ service:
   type: ClusterIP
   port: 8080
 
+healthchecks:
+  startup:
+    enabled: true
+  readiness:
+    enabled: true
+  liveness:
+    enabled: true
+
 #Unused
 ldap:
   url: ldaps://ldap.eea.europa.eu:636/
