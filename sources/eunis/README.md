@@ -20,10 +20,10 @@ You can run `helm test eunis` to verify the system is working correctly.
 
 <dl>
 
-  <dt>Version 1.0.3 - 9 Aug. 2024</dt>
+  <dt>Version 1.0.4 - 9 Aug. 2024</dt>
   <dd>Removed default annotations for Ingress.</dd>
 
-  <dt>Version 1.0.2 - 9 Aug. 2024</dt>
+  <dt>Version 1.0.3 - 9 Aug. 2024</dt>
   <dd>Added startup and readyness probes. Made them optional.</dd>
 
   <dt>Version 1.0.2</dt>
