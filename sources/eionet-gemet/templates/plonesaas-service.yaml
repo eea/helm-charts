@@ -9,5 +9,4 @@ metadata:
 spec:
   type: ExternalName
   # Should be  plonesaas.eea.europa.eu
-  externalName: kvm-prod4-f01.eea.europa.eu
-
+  externalName: {{ .Values.externalBackend.name }}

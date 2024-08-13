@@ -39,6 +39,10 @@ service:
   type: ClusterIP
   port: 8443
 
+externalBackend:
+  enabled: true
+  name: kvm-prod4-f01.eea.europa.eu
+
 async:
   securityContext: {}
   resources:

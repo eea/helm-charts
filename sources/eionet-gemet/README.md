@@ -5,6 +5,9 @@ This chart is (almost) configured for production.
 ## Releases
 
 <dl>
+  <dt>Version 0.5.2 - 13 August 2024</dt>
+  <dd>Made it the address of the backend configurable.</dd>
+
   <dt>Version 0.5.1 - 13 August 2024</dt>
   <dd>Made replica count for webserver configurable.</dd>
 
