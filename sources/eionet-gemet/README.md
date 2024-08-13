@@ -5,6 +5,9 @@ This chart is (almost) configured for production.
 ## Releases
 
 <dl>
+  <dt>Version 0.5.1 - 13 August 2024</dt>
+  <dd>Made replica count for webserver configurable.</dd>
+
   <dt>Version 0.5.0 - 7 August 2024</dt>
   <dd>Moved the security headers to standard Ingress annotations.</dd>
 
