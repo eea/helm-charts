@@ -1,0 +1,16 @@
+{{- if .Values.plonesaas.enabled -}}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: eionet-ldapdump
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: ldapdump
+
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+{{- end }}

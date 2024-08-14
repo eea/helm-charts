@@ -1,0 +1,26 @@
+{{- if and .Values.plonesaas.enabled (not .Values.externalBackend.enabled) -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: varnish
+  {{- with .Values.plonesaas.service.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+
+spec:
+  type: {{ .Values.plonesaas.service.type }}
+  {{- if (or (eq .Values.plonesaas.service.type "LoadBalancer") (eq .Values.plonesaas.service.type "NodePort")) }}
+  externalTrafficPolicy: {{ .Values.plonesaas.service.externalTrafficPolicy | quote }}
+  {{- end }}
+  ports:
+  - name: webui
+    port: {{ .Values.plonesaas.service.port }}
+    targetPort: 6081
+  selector:
+    {{- include "appl.selectorLabels" . | nindent 4 }}
+    component: varnish
+{{- end }}

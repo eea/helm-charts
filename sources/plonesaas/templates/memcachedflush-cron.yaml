@@ -1,0 +1,52 @@
+{{- if .Values.plonesaas.enabled -}}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "appl.fullname" . }}-memcachedflush
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: memcachedflush
+
+spec:
+  schedule: "{{ .Values.memcachedflush.schedule }}"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          {{- with .Values.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
+          containers:
+          - name: memcachedflush
+            image: alpine:3.11
+            stdin: true
+            tty: true
+            command:
+            - sh
+            - -c
+            - echo 'flush_all' | nc memcached 11211
+
+            resources:
+              {{- toYaml .Values.memcachedflush.resources | nindent 14 }}
+            securityContext:
+              {{- toYaml .Values.memcachedflush.securityContext | nindent 16 }}
+
+          {{- with .Values.memcachedflush.nodeSelector }}
+          nodeSelector:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          {{- with .Values.memcachedflush.affinity }}
+          affinity:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          {{- with .Values.memcachedflush.tolerations }}
+          tolerations:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          restartPolicy: Never
+
+{{- end }}

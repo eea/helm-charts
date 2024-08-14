@@ -1,0 +1,120 @@
+{{- if .Values.plonesaas.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: plone
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: plone
+
+spec:
+  replicas: {{ .Values.plone.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: plone
+
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: plone
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      containers:
+      - name: plone
+        {{- if eq .Values.mode "develop" }}
+        image: eeacms/plonesaas-devel
+        {{- else }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        {{- end }}
+        env:
+        - name: BACKEND_VERSION
+          value: "{{ .Values.image.tag | default .Chart.AppVersion }}"
+        - name: CORS_ALLOW_ORIGIN
+          value: "{{ .Values.corsAllowOrigin }}"
+        - name: SENTRY_RELEASE
+          value: "{{ .Values.image.tag | default .Chart.AppVersion }}"
+        - name: TZ
+          value: "{{ .Values.timezone }}"
+        - name: ZEO_ADDRESS
+          value: zeo:8080
+        - name: ZOPE_MODE
+          value: zeo_client
+        {{- range $key, $value := .Values.plone.environment }}
+        - name: {{ $key }}
+          value: {{ $value | quote }}
+        {{- end }}
+
+        ports:
+        - containerPort: 8080
+
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          periodSeconds: 60
+          timeoutSeconds: 5
+          successThreshold: 1
+
+        startupProbe:
+          tcpSocket:
+            port: 8080
+          failureThreshold: 30
+          periodSeconds: 20
+          timeoutSeconds: 5
+
+        resources:
+          {{- toYaml .Values.plone.resources | nindent 10 }}
+
+        volumeMounts:
+        - mountPath: /data
+          name: plonesaas-zeocache
+        {{- if eq .Values.mode "production"}}
+        - mountPath: /plone/imports
+          name: plone5demo-imports
+        - mountPath: /plone/instance/var/ldapdump
+          name: eionet-ldapdump
+        {{- end }}
+	{{- if eq .Values.mode "develop"}}
+        - mountPath: /plone/instance/src
+          name: plonesaas-src
+        {{- end }}
+
+      {{- with .Values.plone.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.plone.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.plone.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+
+      volumes:
+      - name: plonesaas-zeocache
+        emptyDir:
+          sizeLimit: 16Gi
+      {{- if eq .Values.mode "production"}}
+      - name: plone5demo-imports
+        persistentVolumeClaim:
+          claimName: plone5demo-imports
+      - name: eionet-ldapdump
+        persistentVolumeClaim:
+          claimName: eionet-ldapdump
+      {{- end }}
+      {{- if eq .Values.mode "develop"}}
+      - name: plonesaas-src
+        persistentVolumeClaim:
+          claimName: plonesaas-src
+      {{- end }}
+
+{{- end }}

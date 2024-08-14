@@ -1,0 +1,63 @@
+{{- if .Values.ldapdump.enabled -}}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "appl.fullname" . }}-ldapdump
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: ldapdump
+
+spec:
+  schedule: "{{ .Values.ldapdump.schedule }}"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          {{- with .Values.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
+          securityContext:
+            runAsUser: 500
+            runAsGroup: 500
+
+          containers:
+          - name: ldapdump
+            image: eeacms/groupware:projects-23.09.22
+            stdin: true
+            tty: true
+            command:
+            - /var/local/groupware/bin/python2
+            - /var/local/groupware/bin/dump_ldap
+
+            resources:
+              {{- toYaml .Values.ldapdump.resources | nindent 14 }}
+            securityContext:
+              {{- toYaml .Values.ldapdump.securityContext | nindent 16 }}
+
+            volumeMounts:
+            - mountPath: /var/local/groupware/var/ldapdump
+              name: {{ .Release.Name }}-ldapdump
+
+          {{- with .Values.ldapdump.nodeSelector }}
+          nodeSelector:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          {{- with .Values.ldapdump.affinity }}
+          affinity:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          {{- with .Values.ldapdump.tolerations }}
+          tolerations:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          restartPolicy: Never
+
+          volumes:
+          - name: {{ .Release.Name }}-ldapdump
+            persistentVolumeClaim:
+              claimName: eionet-ldapdump
+{{- end }}

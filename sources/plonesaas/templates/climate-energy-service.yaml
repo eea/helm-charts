@@ -1,0 +1,19 @@
+{{- if .Values.climateEnergy.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: climate-energy
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: climate-energy
+
+spec:
+  type: ClusterIP
+  ports:
+  - name: "3000"
+    port: 3000
+    targetPort: 3000
+  selector:
+    {{- include "appl.selectorLabels" . | nindent 4 }}
+    component: climate-energy
+{{- end }}

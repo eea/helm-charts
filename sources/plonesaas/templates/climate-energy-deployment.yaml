@@ -1,0 +1,72 @@
+{{- if .Values.climateEnergy.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: climate-energy
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: climate-energy
+
+spec:
+  replicas: {{ .Values.climateEnergy.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: climate-energy
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: climate-energy
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      containers:
+      - name: frontend
+        image: eeacms/climate-energy-frontend:2.26.0
+        env:
+        - name: PORT
+          value: "3000"
+        - name: TZ
+          value: "{{ .Values.timezone }}"
+        {{- range $key, $value := .Values.climateEnergy.environment }}
+        - name: {{ $key }}
+          value: {{ $value | quote }}
+        {{- end }}
+
+        ports:
+        - containerPort: 3000
+          name: webui
+
+        livenessProbe:
+          tcpSocket:
+            port: webui
+          periodSeconds: 15
+          timeoutSeconds: 2
+
+        startupProbe:
+          tcpSocket:
+            port: webui
+          failureThreshold: 12
+          periodSeconds: 10
+          timeoutSeconds: 2
+
+        resources:
+          {{- toYaml .Values.climateEnergy.resources | nindent 10 }}
+
+      {{- with .Values.climateEnergy.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.climateEnergy.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.climateEnergy.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}

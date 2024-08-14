@@ -1,0 +1,30 @@
+{{- if .Values.industry.enabled -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: industry
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: industry
+  {{- with .Values.industry.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: {{ .Values.industry.hostname }}
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: industry
+            port:
+              number: 3000
+  tls:
+  - hosts:
+    - {{ .Values.industry.hostname }}
+{{- end }}

@@ -1,0 +1,15 @@
+{{- if .Values.plonesaas.enabled -}}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: plonesaas-src
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: plonesaas-src
+spec:
+  accessModes:
+  - ReadOnlyMany
+  resources:
+    requests:
+      storage: 100Mi
+{{- end }}

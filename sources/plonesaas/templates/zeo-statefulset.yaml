@@ -1,0 +1,99 @@
+{{- if .Values.plonesaas.enabled -}}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: zeo
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: zeo
+spec:
+  replicas: 1
+  serviceName: zeo
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: zeo
+  template:
+    metadata:
+      {{- with .Values.zeo.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: zeo
+    spec:
+      terminationGracePeriodSeconds: 10
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.zeo.podSecurityContext | nindent 8 }}
+      containers:
+        - name: zeo
+          securityContext:
+            {{- toYaml .Values.zeo.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args:
+          - zeo
+          ports:
+            - name: zeo
+              containerPort: 8080
+              protocol: TCP
+
+          env:
+          - name: CRON_JOBS
+            value: 0 23 * * Sat /plone/instance/bin/zeopack
+          - name: RESTART_CRON
+            value: 0 1 * * Sun
+          - name: TZ
+            value: "{{ .Values.timezone }}"
+          - name: ZOPE_MODE
+            value: zeo
+
+          volumeMounts:
+          - mountPath: /data
+            name: zeodata
+
+          startupProbe:
+            tcpSocket:
+              port: 8080
+            timeoutSeconds: 6
+            failureThreshold: 60
+            periodSeconds: 10
+
+          livenessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 10
+
+          resources:
+            {{- toYaml .Values.zeo.resources | nindent 12 }}
+
+      {{- with .Values.zeo.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.zeo.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.zeo.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+  volumeClaimTemplates:
+  - metadata:
+      name: zeodata
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 100Gi
+{{- end }}

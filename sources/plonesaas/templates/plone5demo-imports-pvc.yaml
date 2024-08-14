@@ -1,0 +1,16 @@
+{{- if .Values.plonesaas.enabled -}}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: plone5demo-imports
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: imports
+spec:
+  accessModes:
+  - ReadWriteOnce
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 10Gi
+{{- end }}

@@ -1,0 +1,18 @@
+{{- if and .Values.plonesaas.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: varnish
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: varnish
+
+spec:
+  ports:
+  - name: dashboard
+    port: 6085
+    targetPort: 6085
+  selector:
+    {{- include "appl.selectorLabels" . | nindent 4 }}
+    component: varnish
+{{- end }}

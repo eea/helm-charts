@@ -1,0 +1,32 @@
+{{- if .Values.plonesaas.enabled -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: plonesaas
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: plonesaas
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /VirtualHostBase/https/{{ .Values.plonesaas.hostname }}:443/$1
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    {{- with .Values.plonesaas.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: {{ .Values.plonesaas.hostname }}
+    http:
+      paths:
+      - backend:
+          service:
+            name: backend
+            port:
+              number: 6081
+        path: /(.*)
+        pathType: ImplementationSpecific
+  tls:
+  - hosts:
+    - {{ .Values.plonesaas.hostname }}
+{{- end }}

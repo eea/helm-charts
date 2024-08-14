@@ -1,0 +1,19 @@
+{{- if .Values.plonesaas.enabled -}}
+{{/* Varnish requires that a service called 'haproxy' exists. It fails on any other value for BACKENDS */}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: haproxy
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: plone
+
+spec:
+  ports:
+  - name: "8080"
+    port: 8080
+    targetPort: 8080
+  selector:
+    {{- include "appl.selectorLabels" . | nindent 4 }}
+    component: plone
+{{- end }}

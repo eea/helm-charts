@@ -1,0 +1,73 @@
+{{- if .Values.industry.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: industry
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: industry
+
+spec:
+  replicas: {{ .Values.industry.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: industry
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: industry
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      containers:
+      - name: frontend
+        image: eeacms/industry-frontend:3.25.0
+        env:
+        - name: PORT
+          value: "3000"
+        - name: TZ
+          value: "{{ .Values.timezone }}"
+        {{- range $key, $value := .Values.industry.environment }}
+        - name: {{ $key }}
+          value: {{ $value | quote }}
+        {{- end }}
+
+        ports:
+        - containerPort: 3000
+          name: webui
+
+        livenessProbe:
+          tcpSocket:
+            port: webui
+          periodSeconds: 15
+          timeoutSeconds: 2
+
+        startupProbe:
+          tcpSocket:
+            port: webui
+          failureThreshold: 12
+          periodSeconds: 10
+          timeoutSeconds: 2
+
+        resources:
+          {{- toYaml .Values.industry.resources | nindent 10 }}
+
+      {{- with .Values.industry.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.industry.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.industry.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+{{- end }}

@@ -1,0 +1,254 @@
+
+corsAllowOrigin: https://plonesaas.eea.europa.eu,https://forest.eea.europa.eu
+mode: production
+
+image:
+  repository: eeacms/plonesaas
+  pullPolicy: Always
+  tag: ""
+
+imagePullSecrets: []
+
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: false
+  annotations: {}
+  name: ""
+
+timezone: Europe/Copenhagen
+
+externalBackend:
+  enabled: true
+  name: kvm-prod4-f01.eea.europa.eu
+
+ldapdump:
+  enabled: false
+  schedule: "53 8-18 * * 1-5"
+  securityContext: {}
+
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  resources:
+    limits:
+      memory: 1Gi
+
+mediaserver:
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  podAnnotations: {}
+  podSecurityContext: {}
+  securityContext: {}
+  resources:
+    limits:
+      memory: 128Mi
+    requests:
+      memory: 128Mi
+
+# NGINX replaces mediaserver as the latter is too old
+nginx:
+  fullnameOverride: mediaserver
+  serverBlock: |-
+    server {
+      listen   8080;
+      server_name  eionet.europa.eu www.eionet.europa.eu;
+
+      location /styles {
+        root /app;
+        sendfile on;
+        tcp_nopush on;
+        gzip on;
+        gzip_types text/plain application/x-javascript text/css;
+        expires 1d;
+      }
+    }
+  staticSitePVC: eionet-staticfiles
+  service:
+    type: ClusterIP
+    ports:
+      http: 8080
+      https: 8443
+  resources:
+    limits:
+      memory: 128Mi
+    requests:
+      memory: 128Mi
+
+
+memcached:
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  podAnnotations: {}
+  podSecurityContext: {}
+  securityContext: {}
+  resources:
+    limits:
+      memory: 1Gi
+    requests:
+      memory: 1Gi
+
+memcachedflush:
+  schedule: "0 0 3 * *"
+  securityContext: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  resources: {}
+
+
+# Deploys the whole zeo backend stack and sets up an ingress
+plonesaas:
+  enabled: false
+  hostname: plonesaas.eea.europa.eu
+  annotations: {}
+  service:
+    annotations: {}
+    externalTrafficPolicy: Cluster
+    type: ClusterIP
+    port: 6081
+
+varnish:
+  resources:
+    limits:
+      memory: 4Gi
+    requests:
+      memory: 4Gi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  environment:
+    AUTOKILL_CRON: 0 2 * * *
+    BACKENDS: haproxy
+    BACKENDS_PORT: 8080
+
+debug:
+  resources:
+    limits:
+      memory: 4Gi
+    requests:
+      memory: 4Gi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  podAnnotations: {}
+  podSecurityContext: {}
+  securityContext: {}
+  environment: {}
+
+plone:
+  resources:
+    limits:
+      memory: 4Gi
+    requests:
+      memory: 4Gi
+  replicaCount: 3
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  podAnnotations: {}
+  podSecurityContext: {}
+  securityContext: {}
+  environment: {}
+
+postfix:
+  fullnameOverride: "postfix"
+  serverName: plonesaas.eea.europa.eu
+  mtpPass: ''
+  mtpPort: ''
+  mtpRelay: ''
+  mtpUser: ''
+
+zeo:
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  podAnnotations: {}
+  podSecurityContext: {}
+  securityContext: {}
+  resources:
+    limits:
+      memory: 4Gi
+    requests:
+      memory: 4Gi
+
+#
+#
+# Clients
+# 
+# 
+circularity:
+  enabled: false
+  hostname: circularity.eea.europa.eu
+  annotations: {}
+
+climateEnergy:
+  enabled: false
+  hostname: climate-energy.eea.europa.eu
+  replicaCount: 1
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  resources:
+    limits:
+      memory: 1Gi
+    requests:
+      memory: 1Gi
+  environment:
+    API_PATH: https://climate-energy.eea.europa.eu/api
+    INTERNAL_API_PATH: http://backend:6081/energy
+    SENTRY_ORG: eea
+    SENTRY_PROJECT: climate-energy-eea-europa-eu
+    SENTRY_RELEASE: 2.26.0
+    VOLTO_ROBOTSTXT: |
+      User-agent: *
+      Disallow: /api
+      Disallow: /*login$$
+
+      Sitemap: https://climate-energy.eea.europa.eu/sitemap.xml.gz
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: 100m
+
+epanet:
+  enabled: false
+  hostname: epanet.eea.europa.eu
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: 100m
+
+ias:
+  enabled: false
+  hostname: ias.eea.europa.eu
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: 100m
+
+industry:
+  enabled: false
+  hostname: industry.eea.europa.eu
+  replicaCount: 1
+  resources:
+    limits:
+      memory: 1Gi
+    requests:
+      memory: 1Gi
+  environment:
+    RAZZLE_BACKEND_NAME: eea.docker.plonesaas
+    RAZZLE_FRONTEND_VERSION: 3.25.0
+    RAZZLE_INTERNAL_API_PATH: http://backend:6081/eprtr
+    RAZZLE_SENTRY_RELEASE: 3.25.0
+    SENTRY_ORG: eea
+    SENTRY_PROJECT: industry-eea-europa-eu
+    SENTRY_RELEASE: 3.25.0
+    SENTRY_URL: https://sentry.eea.europa.eu
+    VOLTO_ROBOTSTXT: |
+      # https://industry.eea.europa.eu
+      User-agent: *
+      Disallow: /api
+      Disallow: /*login$$
+
+      Sitemap: https://industry.eea.europa.eu/sitemap.xml.gz
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: 100m
+

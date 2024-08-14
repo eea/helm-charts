@@ -1,0 +1,86 @@
+{{- if .Values.plonesaas.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: debug
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: debug
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: debug
+
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: debug
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      containers:
+      - name: debug
+        image: eeacms/plonesaas-devel
+        args:
+        - /debug.sh
+        env:
+        - name: BACKEND_VERSION
+          value: "{{ .Values.image.tag | default .Chart.AppVersion }}"
+        - name: CORS_ALLOW_ORIGIN
+          value: "{{ .Values.corsAllowOrigin }}"
+        - name: SENTRY_RELEASE
+          value: "{{ .Values.image.tag | default .Chart.AppVersion }}"
+        - name: TZ
+          value: "{{ .Values.timezone }}"
+        - name: ZEO_ADDRESS
+          value: zeo:8080
+        - name: ZOPE_MODE
+          value: zeo_client
+        {{- range $key, $value := .Values.debug.environment }}
+        - name: {{ $key }}
+          value: {{ $value | quote }}
+        {{- end }}
+
+        ports:
+        - containerPort: 8080
+
+        resources:
+          {{- toYaml .Values.plone.resources | nindent 10 }}
+
+        stdin: true
+        tty: true
+
+        volumeMounts:
+        - mountPath: /plone/instance/src
+          name: plonesaas-src
+        - mountPath: /data
+          name: plonesaas-zeocache
+
+      {{- with .Values.plone.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.plone.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.plone.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+      volumes:
+      - name: plonesaas-src
+        persistentVolumeClaim:
+          claimName: plonesaas-src
+      - name: plonesaas-zeocache
+        emptyDir:
+          sizeLimit: 16Gi
+{{- end }}

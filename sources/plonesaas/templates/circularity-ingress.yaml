@@ -1,0 +1,33 @@
+{{- if .Values.circularity.enabled -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: circularity
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: circularity
+
+  annotations:
+    nginx.ingress.kubernetes.io/permanent-redirect: https://www.eea.europa.eu/en/circularity/$1
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    {{- with .Values.circularity.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: {{ .Values.circularity.hostname }}
+    http:
+      paths:
+      - backend:
+          service:
+            name: backend
+            port:
+              number: 6081
+        path: /(.*)
+        pathType: ImplementationSpecific
+  tls:
+  - hosts:
+    - {{ .Values.circularity.hostname }}
+{{- end }}

@@ -1,0 +1,32 @@
+{{- if .Values.ias.enabled -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ias
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: ias
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /VirtualHostBase/https/{{ .Values.ias.hostname }}:443/ias/VirtualHostRoot/$1
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    {{- with .Values.ias.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: {{ .Values.ias.hostname }}
+    http:
+      paths:
+      - backend:
+          service:
+            name: backend
+            port:
+              number: 6081
+        path: /(.*)
+        pathType: ImplementationSpecific
+  tls:
+  - hosts:
+    - {{ .Values.ias.hostname }}
+{{- end }}

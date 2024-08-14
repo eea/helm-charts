@@ -1,0 +1,30 @@
+{{- if .Values.climateEnergy.enabled -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: climate-energy-api
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: climate-energy-api
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /VirtualHostBase/https/{{ .Values.climateEnergy.hostname }}:443/energy/VirtualHostRoot/_vh_api/$1
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    # http-request set-path /VirtualHostBase/https/climate-energy.eea.europa.eu:443/energy/VirtualHostRoot/_vh_api/%[path,regsub(\/api,,g)]
+
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: {{ .Values.climateEnergy.hostname }}
+    http:
+      paths:
+      - path: /api(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: backend
+            port:
+              number: 6081
+  tls:
+  - hosts:
+    - {{ .Values.climateEnergy.hostname }}
+{{- end }}
