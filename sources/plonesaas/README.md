@@ -19,6 +19,9 @@ This chart deployes the PloneSaaS app together with several frontends as Ingress
 ## Releases
 
 <dl>
-  <dt>Version 0.1.0</dt>
-  <dd>Initial release.</dd>
+  <dt>Version 2.4.1 - 15 August 2024</dt>
+  <dd>Fix issue with /++api++/ path. The pluses were parsed with regex.</dd>
+
+  <dt>Version 2.4.0</dt>
+  <dd>Initial release. Version matching Rancher 1 catalog version.</dd>
 </dl> 
