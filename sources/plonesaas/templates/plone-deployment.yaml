@@ -62,10 +62,11 @@ spec:
           successThreshold: 1
 
         startupProbe:
-          tcpSocket:
+          httpGet:
+            path: /
             port: 8080
           failureThreshold: 30
-          periodSeconds: 20
+          periodSeconds: 30
           timeoutSeconds: 5
 
         resources:

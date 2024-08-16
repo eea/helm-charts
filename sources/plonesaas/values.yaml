@@ -146,6 +146,12 @@ plone:
     requests:
       memory: 4Gi
   replicaCount: 3
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 6
+    # targetCPUUtilizationPercentage: 80
+    targetMemoryUtilizationPercentage: 60
   nodeSelector: {}
   tolerations: []
   affinity: {}
@@ -209,20 +215,17 @@ climateEnergy:
       Disallow: /*login$$
 
       Sitemap: https://climate-energy.eea.europa.eu/sitemap.xml.gz
-  annotations:
-    nginx.ingress.kubernetes.io/proxy-body-size: 100m
+  annotations: {}
 
 epanet:
   enabled: false
   hostname: epanet.eea.europa.eu
-  annotations:
-    nginx.ingress.kubernetes.io/proxy-body-size: 100m
+  annotations: {}
 
 ias:
   enabled: false
   hostname: ias.eea.europa.eu
-  annotations:
-    nginx.ingress.kubernetes.io/proxy-body-size: 100m
+  annotations: {}
 
 industry:
   enabled: false
@@ -249,6 +252,5 @@ industry:
       Disallow: /*login$$
 
       Sitemap: https://industry.eea.europa.eu/sitemap.xml.gz
-  annotations:
-    nginx.ingress.kubernetes.io/proxy-body-size: 100m
+  annotations: {}
 

@@ -19,6 +19,11 @@ This chart deployes the PloneSaaS app together with several frontends as Ingress
 ## Releases
 
 <dl>
+  <dt>Version 2.4.2 - 16 August 2024</dt>
+  <dd>Implement autoscaling for plone pods.
+  Increase the timeout for plone startup to 900 seconds.
+  Remove the default `nginx.ingress.kubernetes.io/proxy-body-size: 100m` from Ingress annotations.</dd>
+
   <dt>Version 2.4.1 - 15 August 2024</dt>
   <dd>Fix issue with /++api++/ path. The pluses were parsed with regex.</dd>
 
