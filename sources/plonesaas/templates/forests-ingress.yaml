@@ -2,12 +2,13 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: forest
+  name: forests
   labels:
     {{- include "appl.labels" . | nindent 4 }}
-    component: forest
+    component: forests
   annotations:
-    nginx.ingress.kubernetes.io/permanent-redirect: https://{{ .Values.forest.hostname }}
+    nginx.ingress.kubernetes.io/permanent-redirect: https://{{ .Values.forest.hostname }}/$1
+    nginx.ingress.kubernetes.io/use-regex: "true"
 
 spec:
   ingressClassName: nginx
@@ -15,8 +16,8 @@ spec:
   - host: forests.eea.europa.eu
     http:
       paths:
-      - path: /
-        pathType: Prefix
+      - path: /(.*)
+        pathType: ImplementationSpecific
         backend:
           service:
             name: forest

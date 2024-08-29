@@ -21,6 +21,9 @@ This chart deployes the PloneSaaS app together with several frontends as Ingress
 ## Releases
 
 <dl>
+  <dt>Version 2.4.4 - 29 August 2024</dt>
+  <dd>Added "forests" redirection. Activated with forest.enabled.</dd>
+
   <dt>Version 2.4.3 - 29 August 2024</dt>
   <dd>Added the forest frontend. Made it possible to deactivate the debug instance. Both disabled by default.</dd>
 
