@@ -126,6 +126,7 @@ varnish:
     BACKENDS_PORT: 8080
 
 debug:
+  enabled: false
   resources:
     limits:
       memory: 4Gi
@@ -220,6 +221,38 @@ climateEnergy:
 epanet:
   enabled: false
   hostname: epanet.eea.europa.eu
+  annotations: {}
+
+forest:
+  enabled: false
+  hostname: forest.eea.europa.eu
+  replicaCount: 1
+  resources:
+    limits:
+      memory: 2Gi
+    requests:
+      memory: 2Gi
+  environment:
+    RAZZLE_BACKEND_NAME: eea.docker.plonesaas
+    RAZZLE_FRONTEND_VERSION: 2.28.2
+    RAZZLE_INTERNAL_API_PATH: http://backend:6081/eprtr
+    RAZZLE_SENTRY_RELEASE: 2.28.2
+    SENTRY_ORG: eea
+    SENTRY_PROJECT: forest-eea-europa-eu
+    SENTRY_RELEASE: 2.28.2
+    SENTRY_URL: https://sentry.eea.europa.eu
+    VOLTO_ROBOTSTXT: |
+      # https://forest.eea.europa.eu
+      # Define access-restrictions for robots/spiders
+      # http://www.robotstxt.org/wc/norobots.html
+
+      # By default we allow robots to access all areas of our site
+      # already accessible to anonymous users
+
+      User-agent: *
+      Disallow:
+      Sitemap: https://forest.eea.europa.eu/sitemap.xml.gz
+
   annotations: {}
 
 ias:

@@ -1,0 +1,73 @@
+{{- if .Values.forest.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: forest
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: forest
+
+spec:
+  replicas: {{ .Values.forest.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: forest
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: forest
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      containers:
+      - name: frontend
+        image: eeacms/forests-frontend:2.28.2
+        env:
+        - name: PORT
+          value: "3000"
+        - name: TZ
+          value: "{{ .Values.timezone }}"
+        {{- range $key, $value := .Values.forest.environment }}
+        - name: {{ $key }}
+          value: {{ $value | quote }}
+        {{- end }}
+
+        ports:
+        - containerPort: 3000
+          name: webui
+
+        livenessProbe:
+          tcpSocket:
+            port: webui
+          periodSeconds: 15
+          timeoutSeconds: 2
+
+        startupProbe:
+          tcpSocket:
+            port: webui
+          failureThreshold: 12
+          periodSeconds: 10
+          timeoutSeconds: 2
+
+        resources:
+          {{- toYaml .Values.forest.resources | nindent 10 }}
+
+      {{- with .Values.forest.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.forest.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.forest.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+{{- end }}

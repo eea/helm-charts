@@ -12,13 +12,18 @@ This chart deployes the PloneSaaS app together with several frontends as Ingress
 | ldapdump.enabled | bool | false | Activate extraction of LDAP account on a periodic basis |
 | circularity.enabled | bool | false | Activate the circularity Ingress |
 | climateEnergy.enabled | bool | false | Activate the climateEnergy Ingress |
+| debug.enabled | bool | false | Activate the Plone debug instance |
 | epanet.enabled | bool | false | Activate the epanet Ingress |
+| forest.enabled | bool | false | Activate the forest Ingress |
 | ias.enabled | bool | false | Activate the ias Ingress |
 | industry.enabled | bool | false | Activate the industry Ingress |
 
 ## Releases
 
 <dl>
+  <dt>Version 2.4.3 - 29 August 2024</dt>
+  <dd>Added the forest frontend. Made it possible to deactivate the debug instance. Both disabled by default.</dd>
+
   <dt>Version 2.4.2 - 16 August 2024</dt>
   <dd>Implement autoscaling for plone pods.
   Increase the timeout for plone startup to 900 seconds.

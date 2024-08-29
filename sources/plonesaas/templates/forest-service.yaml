@@ -1,0 +1,17 @@
+{{- if .Values.forest.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: forest
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: forest
+spec:
+  ports:
+  - name: "3000"
+    port: 3000
+    targetPort: 3000
+  selector:
+    {{- include "appl.selectorLabels" . | nindent 4 }}
+    component: forest
+{{- end }}

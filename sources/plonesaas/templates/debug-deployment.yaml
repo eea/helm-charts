@@ -1,4 +1,4 @@
-{{- if .Values.plonesaas.enabled -}}
+{{- if and .Values.plonesaas.enabled .Values.debug.enabled -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -52,7 +52,7 @@ spec:
         - containerPort: 8080
 
         resources:
-          {{- toYaml .Values.plone.resources | nindent 10 }}
+          {{- toYaml .Values.debug.resources | nindent 10 }}
 
         stdin: true
         tty: true
@@ -63,15 +63,15 @@ spec:
         - mountPath: /data
           name: plonesaas-zeocache
 
-      {{- with .Values.plone.nodeSelector }}
+      {{- with .Values.debug.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.plone.affinity }}
+      {{- with .Values.debug.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.plone.tolerations }}
+      {{- with .Values.debug.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
