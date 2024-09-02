@@ -1,3 +1,6 @@
+{{/*
+  Only allow pods in same namespace to connect to the database.
+  Deny outgoing connections from the database, including dns. */}}
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
