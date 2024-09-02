@@ -9,6 +9,9 @@ for logging. Defaults to false.
 ## Releases
 
 <dl>
+  <dt>Version 2.0.1 - 2 September 2024</dt>
+  <dd>Simpler network security policy.</dd>
+
   <dt>Version 2.0.0</dt>
   <dd>Postfix image updated to version 3.5-1.0.</dd>
   <dd>Network policies: Only allow postfix to be used from same namespace.
