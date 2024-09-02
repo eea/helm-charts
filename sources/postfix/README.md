@@ -9,6 +9,11 @@ for logging. Defaults to false.
 ## Releases
 
 <dl>
+  <dt>Version 2.0.0</dt>
+  <dd>Postfix image updated to version 3.5-1.0.</dd>
+  <dd>Network policies: Only allow postfix to be used from same namespace.
+    Only allow outgoing to defined mtpPort and DNS resolution.</dd>
+
   <dt>Version 1.1.0</dt>
   <dd>Can now set a dryrun flag.</dd>
 
