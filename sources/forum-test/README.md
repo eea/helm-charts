@@ -6,6 +6,9 @@ This chart is configured for production. Must run in its own namespace.
 
 <dl>
 
+  <dt>Version 1.0.1 - 3 September 2024</dt>
+  <dd>Upgrade postfix version to 2.0.1.</dd>
+
   <dt>Version 1.0.0 - 2 September 2024</dt>
   <dd>Upgrade postfix version to 2.0.0.</dd>
 
