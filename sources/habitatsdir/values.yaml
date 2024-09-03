@@ -61,14 +61,11 @@ ldap:
 staticPath: /article1X/static
 scriptName: /article1X
 
+# Annotations MUST be {}
 ingress:
   enabled: false
   className: "nginx"
-  annotations:
-    nginx.ingress.kubernetes.io/configuration-snippet: |
-      more_set_headers 'X-XSS-Protection: 1; mode=block'
-        'X-Frame-Options: SAMEORIGIN'
-        'Referrer-Policy: no-referrer';
+  annotations: {}
   hosts:
     - host: nature-art17.eionet.europa.eu
       paths:

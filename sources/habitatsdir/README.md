@@ -25,6 +25,12 @@ To set the app up for Article 12 do:
 
 <dl>
 
+  <dt>Version 0.4.3 - 3 September 2024</dt>
+  <dd>Reverted incorrect use of values.yaml file. Updated version of postfix subchart to 2.0.0.</dd>
+
+  <dt>Version 0.4.2</dt>
+  <dd>Upgraded art17 ingress.</dd>
+
   <dt>Version 0.4.1</dt>
   <dd>Update eeacms/art17-consultation and eeacms/art12-viewer<dd>
 
