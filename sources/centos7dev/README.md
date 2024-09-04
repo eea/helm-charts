@@ -11,6 +11,9 @@ under /mnt. The volume claims must exist already.
 ## Releases
 
 <dl>
+  <dt>Version 1.0.3 - 4 September 2024</dt>
+  <dd>Upgrade to AlmaLinux 9.4.</dd>
+
   <dt>Version 1.0.2</dt>
   <dd>Added ldap clients.</dd>
 
