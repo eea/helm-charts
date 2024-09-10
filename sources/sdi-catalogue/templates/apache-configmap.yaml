@@ -133,8 +133,8 @@ data:
             RequestHeader set X-Forwarded-Prefix "/validator"
             RequestHeader set X-Forwarded-Proto "https"
             RequestHeader set X-Forwarded-For "{{ .Values.serverName }}"
-            ProxyPass http://validator:8080/validator/
-            ProxyPassReverse http://validator:8080/validator/
+            ProxyPass http://validator:8080/validator
+            ProxyPassReverse http://validator:8080/validator
         </Location>
 
         <Location /datashare>
