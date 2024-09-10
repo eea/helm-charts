@@ -8,8 +8,8 @@ questions:
 - variable: mounts
   type: multiline
   default: []
-  description: PVCs of volumes to mount
-  label: Enter the names of the Persistent Volume Claims. They will be mounted under /mnt
+  description: Comma-separated list of PVCs of volumes to mount under /mnt
+  label: Enter the names of the Persistent Volume Claims.
 
 - variable: timezone
   type: string
