@@ -20,6 +20,10 @@ When the application was running on Rancher 1.6, it had a container, which ran t
 ## Releases
 
 <dl>
+
+  <dt>Version 0.6.7 - 10 September 2024</dt>
+  <dd>Update GN to 295bd177. EEA / Thesaurus / Update ROD https://taskman.eionet.europa.eu/issues/270841</dd>
+
   <dt>Version 0.6.6 - 10 September 2024</dt>
   <dd>Update inspire validator image to 2024.2</dd>
 
