@@ -20,6 +20,10 @@ When the application was running on Rancher 1.6, it had a container, which ran t
 ## Releases
 
 <dl>
+  <dt>Version 0.6.5 - 10 September 2024</dt>
+  <dd>Made sysctl updates optional, as the values are the default on the nodes now.</dd>
+  <dd>Upgraded the postfix container.</dd>
+
   <dt>Version 0.6.4 - 08 August 2024</dt>
   <dd>Upgraded GN to b1adafc2.
     <ul>

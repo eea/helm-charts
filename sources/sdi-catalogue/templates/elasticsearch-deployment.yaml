@@ -27,6 +27,7 @@ spec:
       {{- end }}
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
 
+      {{- if .Values.elasticsearch.sysctlImage.enabled }}
       initContainers:
       - name: sysctl-m
         image: rawmind/alpine-sysctl:0.2-1
@@ -38,6 +39,7 @@ spec:
         resources: {}
         securityContext:
           privileged: true
+      {{- end }}
 
       containers:
       - name: elasticsearch

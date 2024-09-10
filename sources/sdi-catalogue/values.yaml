@@ -79,6 +79,8 @@ cron:
 
 elasticsearch:
   password: changeme
+  sysctlImage:
+    enabled: true
   resources:
     requests:
       memory: 3Gi
