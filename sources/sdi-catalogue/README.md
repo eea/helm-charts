@@ -20,6 +20,9 @@ When the application was running on Rancher 1.6, it had a container, which ran t
 ## Releases
 
 <dl>
+  <dt>Version 0.6.6 - 10 September 2024</dt>
+  <dd>Update inspire validator image to 2024.2</dd>
+
   <dt>Version 0.6.5 - 10 September 2024</dt>
   <dd>Made sysctl updates optional, as the values are the default on the nodes now.</dd>
   <dd>Upgraded the postfix container.</dd>
