@@ -11,6 +11,9 @@ under /mnt. The volume claims must exist already.
 ## Releases
 
 <dl>
+  <dt>Version 1.0.4 - 10 September 2024</dt>
+  <dd>Added questions.yaml from [Rancher documentation](https://ranchermanager.docs.rancher.com/how-to-guides/new-user-guides/helm-charts-in-rancher/create-apps)</dd>
+
   <dt>Version 1.0.3 - 4 September 2024</dt>
   <dd>Upgrade to AlmaLinux 9.4.</dd>
 
