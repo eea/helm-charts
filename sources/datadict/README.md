@@ -5,6 +5,9 @@ This chart is configured for production use.
 ## Releases
 
 <dl>
+  <dt>Version 1.3.1</dt>
+  <dd>XSS fix, migration from archiva repositoy to maven package repository.</dd>
+  
   <dt>Version 1.3.0</dt>
   <dd>Added mail forwarder pod. Usage to be specified in mailHost.</dd>
 
