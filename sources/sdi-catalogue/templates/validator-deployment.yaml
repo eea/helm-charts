@@ -39,6 +39,8 @@ spec:
         volumeMounts:
         - mountPath: /etf
           name: sdi-validator
+        - mountPath: /etc/network/interfaces
+          name: validator-config
 
       restartPolicy: Always
 
@@ -46,3 +48,8 @@ spec:
       - name: sdi-validator
         persistentVolumeClaim:
           claimName: sdi-validator
+      - name: validator-config
+        configMap:
+          defaultMode: 0644
+          optional: false
+          name: validator-config
