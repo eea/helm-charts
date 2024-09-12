@@ -5,6 +5,9 @@ This chart is configured for production use.
 ## Releases
 
 <dl>
+  <dt>Version 1.3.2 - 12 September 2024</dt>
+  <dd>Updated mail forwarder subchart to 2.0.1.</dd>
+
   <dt>Version 1.3.1</dt>
   <dd>XSS fix, migration from archiva repositoy to maven package repository.</dd>
   
