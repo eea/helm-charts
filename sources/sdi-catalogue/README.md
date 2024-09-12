@@ -11,7 +11,6 @@ When the application was running on Rancher 1.6, it had a container, which ran t
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | cron.enabled | bool | false | Use the old crontab mechanism |
-| cleanupTransfer.enabled | bool | false | Remove files in ShareIT |
 | syncNcApache.enabled | bool | false | Sync NextCloud files with Apache |
 | webdavMetadata.enabled | bool | false | Update webdav meta data |
 | serverName | string | sdi.eea.europa.eu | Name of the server |
@@ -20,6 +19,9 @@ When the application was running on Rancher 1.6, it had a container, which ran t
 ## Releases
 
 <dl>
+  <dt>Version 0.6.11 - 12 September 2024</dt>
+  <dd>Remove shareit job</dd>
+
   <dt>Version 0.6.10 - 12 September 2024</dt>
   <dd>Fix validator ConfigMap mount point</dd>
 
