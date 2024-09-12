@@ -20,6 +20,9 @@ When the application was running on Rancher 1.6, it had a container, which ran t
 ## Releases
 
 <dl>
+  <dt>Version 0.6.10 - 12 September 2024</dt>
+  <dd>Fix validator ConfigMap mount point</dd>
+
   <dt>Version 0.6.9 - 12 September 2024</dt>
   <dd>Add missing /etc/network/interfaces to validator pod as ConfigMap</dd>
 

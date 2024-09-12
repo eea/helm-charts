@@ -41,6 +41,7 @@ spec:
           name: sdi-validator
         - mountPath: /etc/network/interfaces
           name: validator-config
+          subPath: interfaces
 
       restartPolicy: Always
 
@@ -53,3 +54,6 @@ spec:
           defaultMode: 0644
           optional: false
           name: validator-config
+          items:
+            - key: interfaces
+              path: interfaces
