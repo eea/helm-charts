@@ -34,6 +34,8 @@ spec:
         - containerPort: 8090
         resources:
           {{- toYaml .Values.validator.resources | nindent 10 }}
+        securityContext:
+          privileged: true
         volumeMounts:
         - mountPath: /etf
           name: sdi-validator
