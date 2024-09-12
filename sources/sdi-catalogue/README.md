@@ -19,6 +19,10 @@ When the application was running on Rancher 1.6, it had a container, which ran t
 ## Releases
 
 <dl>
+
+  <dt>Version 0.6.12 - 12 September 2024</dt>
+  <dd>Update GN to cef73a4c</dd>
+
   <dt>Version 0.6.11 - 12 September 2024</dt>
   <dd>Remove shareit job</dd>
 
