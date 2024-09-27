@@ -1,0 +1,147 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Release.Name }}-client
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: client
+spec:
+  replicas: {{ .Values.esclient.replicaCount }}
+  serviceName: {{ .Release.Name }}-client
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: client
+
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: client
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
+      {{- if .Values.updateSysctl }}
+      initContainers:
+        - name: max-map-count-setter
+          image: docker.io/bash:5.2.21
+          resources:
+            limits:
+              cpu: 100m
+              memory: 32Mi
+          securityContext:
+            privileged: true
+            runAsUser: 0
+          command: ['/usr/local/bin/bash', '-e', '-c', 'echo {{ .Values.sysctlVmMaxMapCount}} > /proc/sys/vm/max_map_count']
+      {{- end }}
+
+      containers:
+      - name: {{ .Release.Name }}-client
+        {{- if .Values.useXPack }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        {{- else }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}-oss"
+        {{- end }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+ 
+        env:
+        - name: ENABLE_READONLY_REST
+          value: "true"
+        - name: ES_JAVA_OPTS
+          value: {{ .Values.esJavaOpts }}
+        {{- if .Values.enableReadonlyRest }}
+        - name: RW_USER
+          value: {{ .Values.readWriteUser }}
+        - name: RO_USER
+          value: {{ .Values.readOnlyUser }}
+        - name: KIBANA_USER
+          value: {{ .Values.kibana.user }}
+        - name: RW_PASSWORD
+          value: {{ .Values.readWritePassword }}
+        - name: RO_PASSWORD
+          value: {{ .Values.readOnlyPassword }}
+        - name: KIBANA_PASSWORD
+          value: {{ .Values.kibana.password }}
+        {{- end }}
+        - name: KIBANA_HOSTNAME
+          value: kibana
+        - name: bootstrap.memory_lock
+          value: "false"
+        - name: discovery.zen.ping.unicast.hosts
+          value: {{ .Release.Name }}-master
+
+        - name: cluster.name
+          value: {{ .Release.Name }}-cluster
+        - name: http.enabled
+          value: "true"
+        - name: node.data
+          value: "false"
+        - name: node.master
+          value: "false"
+        - name: node.name
+          value: "${HOSTNAME}"
+#         valueFrom:
+#           fieldRef:
+#             fieldPath: metadata.name
+
+        {{- if .Values.useXPack }}
+        - name: xpack.graph.enabled
+          value: "false"
+        - name: xpack.ml.enabled
+          value: "false"
+
+        - name: xpack.monitoring.enabled
+          value: "{{ .Values.useMonitoring }}"
+        {{- if .Values.useMonitoring }}
+        - name: xpack.monitoring.collection.enabled
+          value: "true"
+        {{- end }}
+
+        - name: xpack.security.enabled
+          value: "false"
+        - name: xpack.watcher.enabled
+          value: "false"
+        {{- end }}
+
+        - name: TZ
+          value: {{ .Values.timezone }}
+
+        ports:
+        - containerPort: 9200
+        resources:
+          {{- toYaml .Values.esclient.resources | nindent 10 }}
+
+        securityContext:
+          capabilities:
+            add:
+            - IPC_LOCK
+        volumeMounts:
+        - mountPath: /usr/share/elasticsearch/data
+          name: esworkdata
+
+      restartPolicy: Always
+
+      volumes:
+      {{- if not .Values.esclient.persistence.enabled }}
+      - name: esworkdata
+        emptyDir:
+          sizeLimit: 1Gi
+      {{- else }}
+      - name: esworkdata
+        volumeClaimName:
+          claimName: esworkdata
+
+  volumeClaimTemplates:
+  - metadata:
+      name: esworkdata
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: {{ .Values.esclient.persistence.size }}
+  {{- end }}

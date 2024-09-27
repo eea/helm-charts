@@ -1,0 +1,51 @@
+{{-  if .Values.kibana.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kibana
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: kibana
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: kibana
+
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: kibana
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
+      containers:
+      - name: kibana
+        image: eeacms/elk-kibana:6.8.22-1
+        env:
+        - name: ELASTICSEARCH_REQUESTTIMEOUT
+          value: "300000"
+        - name: ELASTICSEARCH_URL
+          value: http://{{ .Release.Name }}-client:{{ .Values.esclient.service.port }}
+        - name: KIBANA_RW_USERNAME
+          value: {{ .Values.kibana.user }}
+        - name: KIBANA_RW_PASSWORD
+          value: {{ .Values.kibana.password }}
+        - name: NODE_OPTIONS
+          value: --max-old-space-size=1024
+        - name: TZ
+          value: {{ .Values.timezone }}
+
+        ports:
+         - containerPort: 5601
+
+        resources:
+          {{- toYaml .Values.kibana.resources | nindent 10 }}
+
+{{- end }}

@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cerebro
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: cerebro
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: cerebro
+
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: cerebro
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
+      containers:
+      - name: cerebro
+        image: eeacms/cerebro:0.9.0
+        env:
+        - name: BASIC_AUTH_PWD
+          value: "{{ .Values.cerebro.password }}"
+        - name: BASIC_AUTH_USER
+          value: "{{ .Values.cerebro.user }}"
+        - name: CEREBRO_PORT
+          value: "9000"
+        {{- if .Values.enableReadonlyRest }}
+        - name: ELASTIC_PASSWORD
+          value: "{{ .Values.readWritePassword }}"
+        - name: ELASTIC_USER
+          value: "{{ .Values.readWriteUser }}"
+        {{- end }}
+        - name: ELASTIC_URL
+          value: http://{{ .Release.Name }}-client:{{ .Values.esclient.service.port }}
+        - name: TZ
+          value: Europe/Copenhagen
+
+        ports:
+        - containerPort: 9000
+
+        resources:
+          {{- toYaml .Values.cerebro.resources | nindent 10 }}
+
+      restartPolicy: Always

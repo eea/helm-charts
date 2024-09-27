@@ -1,0 +1,132 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Release.Name }}-master
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: master
+spec:
+  replicas: {{ .Values.esmaster.replicaCount }}
+  serviceName: {{ .Release.Name }}-master
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: master
+
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: master
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
+      {{- if .Values.updateSysctl }}
+      initContainers:
+        - name: max-map-count-setter
+          image: docker.io/bash:5.2.21
+          resources:
+            limits:
+              cpu: 100m
+              memory: 32Mi
+          securityContext:
+            privileged: true
+            runAsUser: 0
+          command: ['/usr/local/bin/bash', '-e', '-c', 'echo {{ .Values.sysctlVmMaxMapCount}} > /proc/sys/vm/max_map_count']
+      {{- end }}
+
+ 
+      containers:
+      - name: {{ .Release.Name }}-master
+        {{- if .Values.useXPack  }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        {{- else }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}-oss"
+        {{- end }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+
+        env:
+        - name: cluster.name
+          value: {{ .Release.Name }}-cluster
+        - name: node.name
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: bootstrap.memory_lock
+          value: "false"
+        - name: ES_JAVA_OPTS
+          value: {{ .Values.esJavaOpts }}
+        - name: discovery.zen.minimum_master_nodes
+          value: "{{ .Values.esmaster.minimumMasterNodes }}"
+        - name: discovery.zen.ping.unicast.hosts
+          value: {{ .Release.Name }}-master
+        - name: http.enabled
+          value: "false"
+        - name: node.data
+          value: "false"
+        - name: node.master
+          value: "true"
+        {{- if .Values.useXPack }}
+        - name: xpack.graph.enabled
+          value: "false"
+        - name: xpack.ml.enabled
+          value: "false"
+
+        - name: xpack.monitoring.enabled
+          value: "{{ .Values.useMonitoring }}"
+        {{- if .Values.useMonitoring }}
+        - name: xpack.monitoring.collection.enabled
+          value: "true"
+        {{- end }}
+
+        - name: xpack.security.enabled
+          value: "false"
+        - name: xpack.watcher.enabled
+          value: "false"
+        {{- end }}
+        - name: ENABLE_READONLY_REST
+          value: "{{ .Values.enableReadonlyRest }}"
+        - name: TZ
+          value: {{ .Values.timezone }}
+
+        ports:
+        - containerPort: 9200
+
+        resources:
+          {{- toYaml .Values.esmaster.resources | nindent 10 }}
+
+        securityContext:
+          capabilities:
+            add:
+            - IPC_LOCK
+
+        volumeMounts:
+        - mountPath: /usr/share/elasticsearch/data
+          name: esworkdata
+
+      restartPolicy: Always
+
+      volumes:
+      {{- if not .Values.esmaster.persistence.enabled }}
+      - name: esworkdata
+        emptyDir:
+          sizeLimit: 1Gi
+      {{- else }}
+      - name: esworkdata
+        volumeClaimName:
+          claimName: esworkdata
+
+  volumeClaimTemplates:
+  - metadata:
+      name: esworkdata
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: {{ .Values.esmaster.persistence.size }}
+  {{- end }}

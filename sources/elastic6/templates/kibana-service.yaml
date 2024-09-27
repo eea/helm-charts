@@ -1,0 +1,18 @@
+{{-  if .Values.kibana.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: kibana
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: kibana
+
+spec:
+  type: {{ .Values.kibana.service.type }}
+  ports:
+  - port: {{ .Values.kibana.service.port }}
+    targetPort: 5601
+  selector:
+    {{- include "appl.selectorLabels" . | nindent 4 }}
+    component: kibana
+{{- end }}

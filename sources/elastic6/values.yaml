@@ -1,0 +1,150 @@
+
+image:
+  repository: eeacms/elastic
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+# Enable ElasticSearch monitoring
+useMonitoring: false
+# Install free X-PACK modules on elastic containers
+useXPack: true
+updateSysctl: false
+
+esJavaOpts: -Xmx512m -Xms512m
+sysctlVmMaxMapCount: 262144
+
+enableReadonlyRest: true
+readOnlyUser: ro
+readOnlyPassword: rotest
+readWriteUser: rw
+readWritePassword: rwtest
+keyPassword: ''
+keystorePassword: ''
+timezone: Europe/Copenhagen
+
+cerebro:
+  user: admin
+  password: secret
+  # Used in cookies, generate it with `pwgen  -y 64  | head -n 1` or `openssl rand -base64 32`
+  secret: ''
+  # Use ClusterIP if you don't want the Cerebro web interface exposed on the server
+  service:
+    type: ClusterIP
+    port: 9000
+  resources:
+    requests:
+      memory: 512Mi
+    limits:
+      memory: 512Mi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  podAnnotations: {}
+
+clusterhealth:
+  resources:
+    requests:
+      memory: 8Mi
+    limits:
+      memory: 64Mi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  podAnnotations: {}
+  podSecurityContext: {}
+
+esclient:
+  replicaCount: 1
+  # ElasticSearch client exposed port
+  service:
+    type: ClusterIP
+    port: 9200
+  resources:
+    requests:
+      memory: 1512Mi
+    limits:
+      memory: 1512Mi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  podAnnotations: {}
+  podSecurityContext: {}
+  persistence:
+    enabled: true
+    size: 1Gi
+
+esmaster:
+  replicaCount: 1
+  minimumMasterNodes: 1
+  resources:
+    requests:
+      memory: 1512Mi
+    limits:
+      memory: 1512Mi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  podAnnotations: {}
+  podSecurityContext: {}
+  persistence:
+    enabled: true
+    size: 1Gi
+
+esworker:
+  replicaCount: 2
+  resources:
+    requests:
+      memory: 1512Mi
+    limits:
+      memory: 1512Mi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  podAnnotations: {}
+  podSecurityContext: {}
+  persistence:
+    enabled: true
+    size: 1Gi
+
+kibana:
+  enabled: true
+  user: kibana
+  password: kibanatest
+  # Use ClusterIP if you don't want the Kibana web interface exposed on the server
+  service:
+    type: ClusterIP
+    port: 5601
+  resources:
+    requests:
+      memory: 1Gi
+    limits:
+      memory: 2Gi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  podAnnotations: {}
+  podSecurityContext: {}
+

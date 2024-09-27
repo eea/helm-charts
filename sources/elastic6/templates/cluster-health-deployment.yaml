@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cluster-health
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: cluster-health
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: cluster-health
+
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: cluster-health
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
+      containers:
+      - name: cluster-health
+        image: eeacms/esclusterhealth:1.1
+        env:
+        - name: ES_PASSWORD
+          value: "{{ .Values.readOnlyPassword }}"
+        - name: ES_URL
+          value: http://{{ .Release.Name }}-client:{{ .Values.esclient.service.port }}
+        - name: ES_USER
+          value: "{{ .Values.readOnlyUser }}"
+        - name: PORT
+          value: "12345"
+
+        ports:
+        - containerPort: 12345
+
+        livenessProbe:
+          tcpSocket:
+            port: 12345
+          initialDelaySeconds: 60
+          periodSeconds: 10
+
+        resources:
+          {{- toYaml .Values.clusterhealth.resources | nindent 10 }}
+
