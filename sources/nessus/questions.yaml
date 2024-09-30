@@ -1,0 +1,31 @@
+questions:
+- variable: linkingKey
+  type: string
+  default: true
+  description: You must retrieve the agent linking key from Tenable Vulnerability Management.
+  label: Nessus Agent linking key.
+
+- variable: listentoHostport
+  type: boolean
+  default: false
+  label: Use the host's network namespace
+  description: The pod will see the current node's network, not the Kubernetes-internal network. 
+
+- variable: scannerName
+  type: string
+  default: ""
+  label: Scanner name
+  description: Defaults to release name.
+
+- variable: adminName
+  type: string
+  default: ""
+  label: Administrator name
+  description: Username for admin user creation. If not provided, defaults to admin.
+
+- variable: adminPwd
+  type: string
+  default: ""
+  label: Administrator password
+  description: Password for admin user creation. If not provided, a password will be generated.
+

@@ -8,6 +8,12 @@ Tenable.io linking key
 ## Releases
 
 <dl>
+  <dt>0.2.7 - 30 Sept. 2024</dt>
+  <dd>Added questionnaire.</dd>
+
+  <dt>0.2.6 - 2 Sept. 2024</dt>
+  <dd>Updated image for the Nessus scanner container.</dd>
+
   <dt>0.2.5</dt>
   <dd>Declared for documentation purpose that Nessus opens port 8834.</dd>
 
