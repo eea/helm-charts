@@ -1,10 +1,13 @@
-# Emission Review Tool - Effort Sharing Decision
+# Emission Review Tool - NEC Directive
 
 The EMRT(EEA Emission Review Tool) is a web-based tool hosted by the EEA to facilitate quality checks and reviews of national emission inventories reported by EU Member States.
 
 # Releases
 
 <dl>
+
+  <dt>Version 0.4.0 - 30/9-2024</dt>
+  <dd>Added zeoserver.enabled flag to create zeoserver in the application.</dd>
 
   <dt>Version 0.3.9 - 05/9-2024</dt>
   <dd>Upgraded memcached to 7.4.13, upgraded postfix to 2.0.1.</dd>
