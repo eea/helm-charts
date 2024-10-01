@@ -8,6 +8,9 @@ Tenable.io linking key
 ## Releases
 
 <dl>
+  <dt>0.2.8 - 1 Oct. 2024</dt>
+  <dd>Increased Nessus image version.</dd>
+
   <dt>0.2.7 - 30 Sept. 2024</dt>
   <dd>Added questionnaire.</dd>
 
