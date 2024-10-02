@@ -19,6 +19,9 @@ When the application was running on Rancher 1.6, it had a container, which ran t
 ## Releases
 
 <dl>
+  <dt>Version 0.6.14 - 02 October 2024</dt>
+  <dd>Update GN to 3afedac5. EEA / Editor / Statistical data / Add action when missing unit of measure or ref period.</dd>
+  
   <dt>Version 0.6.13 - 01 October 2024</dt>
   <dd>Update GN to b6d6d7da</dd>
 
