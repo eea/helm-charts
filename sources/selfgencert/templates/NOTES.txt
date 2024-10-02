@@ -1,0 +1,4 @@
+You have generated a self-signed certificate with the primary name {{ .Values.commonName | default .Release.Name }}
+and the alternative names: {{ toString .Values.alternativeNames }} and IP numbers: {{ toString .Values.alternativeNames }}.
+
+It expires 10 years from {{ now | date "2006-01-02" }}.

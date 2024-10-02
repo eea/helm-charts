@@ -4,13 +4,21 @@ metadata:
   name: {{ include "appl.fullname" . }}
   labels:
     {{- include "appl.labels" . | nindent 4 }}
-    component: httpd
+  {{- with .Values.service.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   type: {{ .Values.service.type }}
+  {{- if (or (eq .Values.service.type "LoadBalancer") (eq .Values.service.type "NodePort")) }}
+  externalTrafficPolicy: {{ .Values.service.externalTrafficPolicy | quote }}
+  {{- end }}
   ports:
     - port: {{ .Values.service.port }}
       targetPort: 80
       protocol: TCP
+    - port: {{ .Values.service.tlsPort }}
+      targetPort: 443
+      protocol: TCP
   selector:
     {{- include "appl.selectorLabels" . | nindent 4 }}
-    component: httpd

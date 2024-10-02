@@ -23,7 +23,7 @@ spec:
       {{- end }}
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
       containers:
-      - name: {{ .Release.Name }}
+      - name: {{ .Values.loadBalancer.hostname | default .Release.Name }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
         ports:
         - containerPort: 80
@@ -35,6 +35,29 @@ spec:
 #         value: "en_US.UTF-8"
         - name: LDAP_URL
           value:  "{{ .Values.ldapUrl }}"
+        {{- if .Values.loadBalancer.redirectHTTP }}
+        - name: REDIRECT_HTTP
+          value: "true"
+        {{- end }}
+        {{- if .Values.loadBalancer.secretName }}
+        - name: SSL_CERT
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.loadBalancer.secretName }}
+              key: tls.crt
+        - name: SSL_KEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.loadBalancer.secretName }}
+              key: tls.key
+        {{- end }}
+        {{- if .Values.loadBalancer.chainCerts }}
+        - name: SSL_CHAIN_CERTS
+          valueFrom:
+            configMapKeyRef:
+              name: {{  .Values.loadBalancer.chainCerts }}
+              key: cacerts.pem
+        {{- end }}
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
         securityContext:

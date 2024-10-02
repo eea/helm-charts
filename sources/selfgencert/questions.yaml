@@ -1,0 +1,16 @@
+questions:
+- variable: secretName
+  type: string
+  label: Name of the Secret object to create
+
+- variable: commonName
+  type: string
+  default: true
+  description: Primary DNS name of service
+  label: Enter the hostname of the URL you connect with
+
+- variable: duration
+  type: int
+  default: 3650
+  label: Duration in days
+

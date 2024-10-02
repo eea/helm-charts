@@ -34,7 +34,17 @@ datavolume:
 
 service:
   type: ClusterIP
+  externalTrafficPolicy: Cluster
+  annotations: {}
   port: 80
+  tlsPort: 443
+
+loadBalancer:
+  redirectHTTP: true
+  secretName: ''
+  chainCerts: ''
+  # Used for http redirection
+  hostname: svn.eionet.europa.eu
 
 ingress:
   enabled: false
