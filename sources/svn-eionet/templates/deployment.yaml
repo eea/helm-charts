@@ -22,19 +22,26 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
+      initContainers:
+      - name: create-public
+        image: busybox:1.36
+        command: ['sh', '-c', 'mkdir -p /var/local/svn/public']
+        volumeMounts:
+        - mountPath: /var/local/svn
+          name: {{ .Release.Name }}-svndata
+
       containers:
-      - name: {{ .Values.loadBalancer.hostname | default .Release.Name }}
+      - name: {{ .Release.Name }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
         ports:
         - containerPort: 80
           protocol: TCP
         env:
-#       - name: TZ
-#         value: "Europe/Copenhagen"
-#       - name: LANG
-#         value: "en_US.UTF-8"
         - name: LDAP_URL
           value:  "{{ .Values.ldapUrl }}"
+        - name: SERVER_NAME
+          value: {{ .Values.loadBalancer.hostname | default .Release.Name }}
         {{- if .Values.loadBalancer.redirectHTTP }}
         - name: REDIRECT_HTTP
           value: "true"

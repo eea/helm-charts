@@ -17,8 +17,10 @@ spec:
     - port: {{ .Values.service.port }}
       targetPort: 80
       protocol: TCP
+      name: http
     - port: {{ .Values.service.tlsPort }}
       targetPort: 443
       protocol: TCP
+      name: https
   selector:
     {{- include "appl.selectorLabels" . | nindent 4 }}

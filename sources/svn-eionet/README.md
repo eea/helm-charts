@@ -1,8 +1,11 @@
-#Eionet Subversion
+# Eionet Subversion
 
 This chart is configured for production.
 
 <dl>
+  <dt>Version 1.0.0 - 2 Oct 2024</dt>
+  <dd>Implemented ability to work without a frontend Ingress.</dd>
+
   <dt>Version 0.2.1 - 6 Aug 2024</dt>
   <dd>Added network security policy to only allow the ingress to connect.</dd>
 
