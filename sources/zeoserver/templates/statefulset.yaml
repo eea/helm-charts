@@ -34,8 +34,8 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
-            - name: zeo
-              containerPort: {{ .Values.service.port }}
+            - name: zeoport
+              containerPort: 8100
               protocol: TCP
 
           env:
@@ -46,18 +46,19 @@ spec:
           - mountPath: /data
             name: zeodata
 
+          # Waits for 20 minutes
           startupProbe:
             tcpSocket:
-              port: 8100
+              port: zeoport
             timeoutSeconds: 6
             failureThreshold: 60
-            periodSeconds: 10
+            periodSeconds: 20
 
           livenessProbe:
             tcpSocket:
-              port: 8100
+              port: zeoport
             initialDelaySeconds: 10
-            periodSeconds: 10
+            periodSeconds: 20
 
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
