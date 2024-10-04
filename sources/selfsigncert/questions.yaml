@@ -2,11 +2,12 @@ questions:
 - variable: secretName
   type: string
   label: Name of the Secret object to create
+  description: Optional: defaults to name of release.
 
 - variable: commonName
   type: string
-  description: Primary DNS name of service
-  label: Enter the hostname of the URL you connect with
+  description: DNS name of service
+  label: Enter the fully qualified hostname of the service
 
 - variable: duration
   type: int
