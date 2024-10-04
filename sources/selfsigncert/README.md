@@ -15,6 +15,9 @@ This chart will generate a self-signed certificate with a duration of 10 years. 
 ## Releases
 
 <dl>
+  <dt>0.2.1 - 4 Oct. 2024</dt>
+  <dd>Declare that it deploys on both Linux and Windows.</dd>
+
   <dt>0.2.0 - 4 Oct. 2024</dt>
   <dd>Improvements to questions.yaml.</dd>
 
