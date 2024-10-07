@@ -20,6 +20,9 @@ This chart is configured for production use.
   <dt>Version 1.0.0 (future)</dt>
   <dd>First version to be used in production.</dd> 
 
+  <dt>Version 0.3.1</dt>
+  <dd>XSS fixes, NPE fix. Switch from archiva repo to GitHub packages.</dd>
+
   <dt>Version 0.3.0</dt>
   <dd>Use new more secure image version for administration container. Also make it optional to enable. Disabled by default.</dd>
 
