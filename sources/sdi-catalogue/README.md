@@ -19,6 +19,12 @@ When the application was running on Rancher 1.6, it had a container, which ran t
 ## Releases
 
 <dl>
+
+  <dt>Version 0.6.15 - 07 October 2024</dt>
+  <dd>Update GN to e1fde81a. EEA / Statistical dataset / Default to EEA list of unit of measure.</dd>
+  <dd>Keyword / Not capitalize and do not display thesaurus if no keywords.</dd>
+  <dd>EEA / SDMX / Fix XPath for other constraints mapping.</dd>
+
   <dt>Version 0.6.14 - 02 October 2024</dt>
   <dd>Update GN to 3afedac5. EEA / Editor / Statistical data / Add action when missing unit of measure or ref period.</dd>
   
