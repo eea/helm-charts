@@ -37,6 +37,8 @@ spec:
         ports:
         - containerPort: 80
           protocol: TCP
+        - containerPort: 443
+          protocol: TCP
         env:
         - name: LDAP_URL
           value:  "{{ .Values.ldapUrl }}"

@@ -3,6 +3,9 @@
 This chart is configured for production.
 
 <dl>
+  <dt>Version 1.0.1 - 8 Oct 2024</dt>
+  <dd>Upgraded application version to 2.2, which changes rewrite rule to use `HTTP_HOST`.</dd>
+
   <dt>Version 1.0.0 - 2 Oct 2024</dt>
   <dd>Implemented ability to work without a frontend Ingress.</dd>
 
