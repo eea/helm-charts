@@ -1,7 +1,8 @@
+{{-  if .Values.cerebro.enabled -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: cerebro
+  name: {{ .Release.Name }}-cerebro
   labels:
     {{- include "appl.labels" . | nindent 4 }}
     component: cerebro
@@ -52,3 +53,4 @@ spec:
           {{- toYaml .Values.cerebro.resources | nindent 10 }}
 
       restartPolicy: Always
+{{- end }}

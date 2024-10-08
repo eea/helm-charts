@@ -2,7 +2,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: kibana
+  name: {{ .Release.Name }}-kibana
   labels:
     {{- include "appl.labels" . | nindent 4 }}
     component: kibana

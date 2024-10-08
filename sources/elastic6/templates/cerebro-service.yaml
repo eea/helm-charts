@@ -1,7 +1,8 @@
+{{-  if .Values.cerebro.enabled -}}
 apiVersion: v1
 kind: Service
 metadata:
-  name: cerebro
+  name: {{ .Release.Name }}-cerebro
   labels:
     {{- include "appl.labels" . | nindent 4 }}
     component: cerebro
@@ -14,4 +15,4 @@ spec:
   selector:
     {{- include "appl.selectorLabels" . | nindent 4 }}
     component: cerebro
-
+{{- end }}

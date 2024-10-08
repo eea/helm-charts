@@ -7,6 +7,9 @@ This chart is configured for production.
 
 <dl>
 
+  <dt>Version 0.2.0 - 08 October 2024</dt>
+  <dd>Fix volume claim template for elasticsearch pods.</dd>
+
   <dt>Version 0.1.0</dt>
   <dd>Initial version.</dd>
 
