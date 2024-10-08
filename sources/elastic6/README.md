@@ -6,6 +6,8 @@ This chart is configured for production.
 ## Releases
 
 <dl>
+  <dt>Version 0.2.1 - 08 October 2024</dt>
+  <dd>ES-client did not connect to Kibana.</dd>
 
   <dt>Version 0.2.0 - 08 October 2024</dt>
   <dd>Fix volume claim template for elasticsearch pods.</dd>

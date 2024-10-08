@@ -67,8 +67,10 @@ spec:
         - name: KIBANA_PASSWORD
           value: {{ .Values.kibana.password }}
         {{- end }}
+        {{-  if .Values.kibana.enabled }}
         - name: KIBANA_HOSTNAME
-          value: kibana
+          value: {{ .Release.Name }}-kibana
+        {{- end }}
         - name: bootstrap.memory_lock
           value: "false"
         - name: discovery.zen.ping.unicast.hosts
