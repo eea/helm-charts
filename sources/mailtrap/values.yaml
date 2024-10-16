@@ -1,0 +1,44 @@
+
+image:
+  repository: eaudeweb/mailtrap
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+hostname: mailtrap.01dev.eea.europa.eu
+
+ingress:
+  enabled: true
+  annotations:  
+
+timezone: Europe/Copenhagen
+
+imagePullSecrets: []
+
+serviceAccount:
+  create: false
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+securityContext: {}
+
+service:
+  name: smtp
+  port: 25
+
+webservice:
+  name: http
+  port: 80
+    
+resources: 
+  requests:
+    memory: 128Mi
+  limits:
+    memory: 128Mi
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
