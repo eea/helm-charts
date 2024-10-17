@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "appl.fullname" . }}
+  name: {{ include "appl.fullname" . }}-mailtrap-depl
   labels:
     {{- include "appl.labels" . | nindent 4 }}
     component: mailtrap
@@ -30,7 +30,7 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
 
       containers:
-      - name: {{ include "appl.name" . }}
+      - name: {{ include "appl.name" . }}-mailtrap
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
 

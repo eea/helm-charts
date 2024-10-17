@@ -6,10 +6,11 @@ image:
   tag: ""
 
 hostname: mailtrap.01dev.eea.europa.eu
-
+  
 ingress:
   enabled: true
   annotations:  
+  certificate: mailtrap.01dev.eea.europa.eu-tls
 
 timezone: Europe/Copenhagen
 

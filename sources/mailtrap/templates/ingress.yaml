@@ -2,7 +2,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: mailtrap
+  name: {{ include "appl.fullname" . }}-ingress-mailtrap
   labels:
     {{- include "appl.labels" . | nindent 4 }}
     component: mailtrap
@@ -21,11 +21,12 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: mailtrap
+            name: {{ include "appl.fullname" . }}-mailtrap-svc
             port:
-              number: 80
+              number: {{ .Values.webservice.port }}
   tls:
   - hosts:
     - {{ .Values.hostname }}
+    secretName: {{ .Values.ingress.certificate }}
 {{- end }}
 
