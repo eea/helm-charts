@@ -1,0 +1,76 @@
+{{- if .Values.memcached.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{- include "appl.labels" . | nindent 4 }}-memcached-dpl
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: memcached
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: memcached
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: memcached
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
+      containers:
+      - name: {{- include "appl.labels" . | nindent 4 }}-memcached
+        image: memcached:1.6.31-alpine
+        args:
+        - -m
+        - "{{ .Values.memcached.cache_size_m }}"
+        {{- if .Values.memcached.slab_page_size }}
+        - -I
+        - "{{ .Values.memcached.slab_page_size }}"
+        {{- end }}
+        env:
+        - name: TZ
+          value: "{{ .Values.timezone }}"
+
+        ports:
+        - containerPort: 11211
+
+        livenessProbe:
+          tcpSocket:
+            port: 11211
+          periodSeconds: 20
+          timeoutSeconds: 3
+          successThreshold: 1
+
+        startupProbe:
+          tcpSocket:
+            port: 11211
+          failureThreshold: 9
+          periodSeconds: 10
+          timeoutSeconds: 3
+
+        resources:
+          {{- toYaml .Values.memcached.resources | nindent 10 }}
+
+      {{- with .Values.memcached.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.memcached.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.memcached.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+      restartPolicy: Always
+{{- end }}
