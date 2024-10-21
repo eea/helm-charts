@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ .Release.Name }}-sessions-storage
+  name: {{ include "appl.fullname" . }}-sessions-storage
   labels:
     {{- include "appl.labels" . | nindent 4 }}
-    component: {{ .Release.Name }}-sessions-storage
+    app.kubernetes.io/component: zope-sessions-storage
   annotations:
     "helm.sh/resource-policy": keep
 spec:

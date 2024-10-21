@@ -4,7 +4,7 @@ metadata:
   name: {{ include "appl.fullname" . }}-instance
   labels:
     {{- include "appl.labels" . | nindent 4 }}
-    component: instance
+    app.kubernetes.io/component: zope
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.instance.replicaCount }}
@@ -12,12 +12,12 @@ spec:
   selector:
     matchLabels:
       {{- include "appl.selectorLabels" . | nindent 6 }}
-      component: instance
+      app.kubernetes.io/component: zope
   template:
     metadata:
       labels:
         {{- include "appl.selectorLabels" . | nindent 8 }}
-        component: instance
+        app.kubernetes.io/component: zope
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -26,7 +26,7 @@ spec:
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
 
       containers:
-      - name: {{ .Release.Name }}
+      - name: {{ include "appl.fullname" . }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
 
@@ -87,11 +87,11 @@ spec:
 
         volumeMounts:
           - mountPath: /opt/zope/var/zip_cache
-            name: {{ .Release.Name }}-zipcache-storage
+            name: {{ include "appl.fullname" . }}-zipcache-storage
           - mountPath: /sessions
-            name: {{ .Release.Name }}-sessions-storage
+            name: {{ include "appl.fullname" . }}-sessions-storage
           - mountPath: /tmp
-            name: {{ .Release.Name }}-tmpdir-storage
+            name: {{ include "appl.fullname" . }}-tmpdir-storage
 
         livenessProbe:
           httpGet:
@@ -120,12 +120,12 @@ spec:
 
       restartPolicy: Always
       volumes:
-        - name: {{ .Release.Name }}-zipcache-storage
+        - name: {{ include "appl.fullname" . }}-zipcache-storage
           persistentVolumeClaim:
-            claimName: {{ .Release.Name }}-zipcache-storage
-        - name: {{ .Release.Name }}-sessions-storage
+            claimName: {{ include "appl.fullname" . }}-zipcache-storage
+        - name: {{ include "appl.fullname" . }}-sessions-storage
           persistentVolumeClaim:
-            claimName: {{ .Release.Name }}-sessions-storage
-        - name: {{ .Release.Name }}-tmpdir-storage
+            claimName: {{ include "appl.fullname" . }}-sessions-storage
+        - name: {{ include "appl.fullname" . }}-tmpdir-storage
           persistentVolumeClaim:
-            claimName: {{ .Release.Name }}-tmpdir-storage
+            claimName: {{ include "appl.fullname" . }}-tmpdir-storage
