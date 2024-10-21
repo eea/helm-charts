@@ -1,16 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "rn-local-converters.fullname" . }}
+  name: {{ include "appl.fullname" . }}
   labels:
-    {{- include "rn-local-converters.labels" . | nindent 4 }}
+    {{- include "appl.labels" . | nindent 4 }}
+    app.kubernetes.io/component: local-converters
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "rn-local-converters.selectorLabels" . | nindent 6 }}
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: local-converters
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -18,16 +20,17 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "rn-local-converters.labels" . | nindent 8 }}
+        {{- include "appl.labels" . | nindent 8 }}
         {{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
+        app.kubernetes.io/component: local-converters
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "rn-local-converters.serviceAccountName" . }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
