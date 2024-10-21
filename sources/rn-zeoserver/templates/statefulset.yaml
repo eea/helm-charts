@@ -1,15 +1,17 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ include "rn-zeoserver.fullname" . }}
+  name: {{ include "appl.fullname" . }}
   labels:
-    {{- include "rn-zeoserver.labels" . | nindent 4 }}
+    {{- include "appl.labels" . | nindent 4 }}
+    app.kubernetes.io/component: zeoserver
 spec:
   replicas: 1
   serviceName: zeo
   selector:
     matchLabels:
-      {{- include "rn-zeoserver.selectorLabels" . | nindent 6 }}
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: zeoserver
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -17,14 +19,15 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "rn-zeoserver.selectorLabels" . | nindent 8 }}
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: zeoserver
     spec:
       terminationGracePeriodSeconds: 10
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "rn-zeoserver.serviceAccountName" . }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
