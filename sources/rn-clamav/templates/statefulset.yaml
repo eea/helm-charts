@@ -1,9 +1,10 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ include "rn-clamav.fullname" . }}
+  name: {{ include "appl.fullname" . }}
   labels:
-    {{- include "rn-clamav.labels" . | nindent 4 }}
+    {{- include "appl.labels" . | nindent 4 }}
+    app.kubernetes.io/component: security
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
@@ -11,7 +12,8 @@ spec:
   serviceName: clamav
   selector:
     matchLabels:
-      {{- include "rn-clamav.selectorLabels" . | nindent 6 }}
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: security
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -19,16 +21,17 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "rn-clamav.labels" . | nindent 8 }}
+        {{- include "appl.labels" . | nindent 8 }}
         {{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
+        app.kubernetes.io/component: security
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "rn-clamav.serviceAccountName" . }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
