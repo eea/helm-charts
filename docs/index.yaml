@@ -3,7 +3,7 @@ entries:
   archiva:
   - apiVersion: v2
     appVersion: v2.2.7
-    created: "2024-10-22T16:18:35.43588+03:00"
+    created: "2024-10-22T16:21:37.514457+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -21,7 +21,7 @@ entries:
     version: 0.2.0
   - apiVersion: v2
     appVersion: v2.2.7
-    created: "2024-10-22T16:18:35.434893+03:00"
+    created: "2024-10-22T16:21:37.513828+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -40,7 +40,7 @@ entries:
   archives:
   - apiVersion: v2
     appVersion: archives-22.09.06
-    created: "2024-10-22T16:18:35.441218+03:00"
+    created: "2024-10-22T16:21:37.519077+03:00"
     dependencies:
     - condition: postfix.enabled
       name: postfix
@@ -59,7 +59,7 @@ entries:
     version: 0.2.4
   - apiVersion: v2
     appVersion: archives-22.09.06
-    created: "2024-10-22T16:18:35.440003+03:00"
+    created: "2024-10-22T16:21:37.517934+03:00"
     dependencies:
     - condition: postfix.enabled
       name: postfix
@@ -78,7 +78,7 @@ entries:
     version: 0.2.3
   - apiVersion: v2
     appVersion: archives-22.09.06
-    created: "2024-10-22T16:18:35.439158+03:00"
+    created: "2024-10-22T16:21:37.51704+03:00"
     dependencies:
     - condition: postfix.enabled
       name: postfix
@@ -97,7 +97,7 @@ entries:
     version: 0.2.2
   - apiVersion: v2
     appVersion: archives-22.09.06
-    created: "2024-10-22T16:18:35.43808+03:00"
+    created: "2024-10-22T16:21:37.516192+03:00"
     dependencies:
     - condition: postfix.enabled
       name: postfix
@@ -116,7 +116,7 @@ entries:
     version: 0.2.1
   - apiVersion: v2
     appVersion: archives-22.09.06
-    created: "2024-10-22T16:18:35.437109+03:00"
+    created: "2024-10-22T16:21:37.515327+03:00"
     dependencies:
     - condition: postfix.enabled
       name: postfix
@@ -135,7 +135,7 @@ entries:
     version: 0.2.0
   casservice:
   - apiVersion: v2
-    created: "2024-10-22T16:18:35.442767+03:00"
+    created: "2024-10-22T16:21:37.520139+03:00"
     description: Single Sign On with the CAS protocol
     digest: 5be1d6354919b61525637a27e4aa58520f24f8bb76924c86cd3bdf33cfa3ec57
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/casservice/logo_eionet.png
@@ -149,7 +149,7 @@ entries:
     - casservice-1.0.1.tgz
     version: 1.0.1
   - apiVersion: v2
-    created: "2024-10-22T16:18:35.442218+03:00"
+    created: "2024-10-22T16:21:37.519665+03:00"
     description: Single Sign On with the CAS protocol
     digest: 3f394c5b0584e0951e77f3735fc791323d9e92a472a9fe0d33bddcd7c0a8a985
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/casservice/logo_eionet.png
@@ -165,7 +165,7 @@ entries:
   cdr:
   - apiVersion: v2
     appVersion: 6.7.3-193
-    created: "2024-10-22T16:18:35.486563+03:00"
+    created: "2024-10-22T16:21:37.560805+03:00"
     dependencies:
     - alias: zeoserver
       name: rn-zeoserver
@@ -196,7 +196,7 @@ entries:
     version: 0.1.9
   - apiVersion: v2
     appVersion: 6.7.3-193
-    created: "2024-10-22T16:18:35.483051+03:00"
+    created: "2024-10-22T16:21:37.556747+03:00"
     dependencies:
     - alias: zeoserver
       name: rn-zeoserver
@@ -227,7 +227,7 @@ entries:
     version: 0.1.8
   - apiVersion: v2
     appVersion: 6.7.3-193
-    created: "2024-10-22T16:18:35.478981+03:00"
+    created: "2024-10-22T16:21:37.553106+03:00"
     dependencies:
     - alias: zeoserver
       name: rn-zeoserver
@@ -258,7 +258,7 @@ entries:
     version: 0.1.7
   - apiVersion: v2
     appVersion: 6.7.3-193
-    created: "2024-10-22T16:18:35.474571+03:00"
+    created: "2024-10-22T16:21:37.549043+03:00"
     dependencies:
     - name: rn-zeoserver
       repository: https://eea.github.io/helm-charts
@@ -285,7 +285,7 @@ entries:
     version: 0.1.6
   - apiVersion: v2
     appVersion: 6.7.3-193
-    created: "2024-10-22T16:18:35.470241+03:00"
+    created: "2024-10-22T16:21:37.545343+03:00"
     dependencies:
     - name: rn-zeoserver
       repository: https://eea.github.io/helm-charts
@@ -312,7 +312,7 @@ entries:
     version: 0.1.5
   - apiVersion: v2
     appVersion: 6.7.3-193
-    created: "2024-10-22T16:18:35.466161+03:00"
+    created: "2024-10-22T16:21:37.541495+03:00"
     dependencies:
     - name: rn-zeoserver
       repository: https://eea.github.io/helm-charts
@@ -339,7 +339,7 @@ entries:
     version: 0.1.4
   - apiVersion: v2
     appVersion: 6.7.3-193
-    created: "2024-10-22T16:18:35.461702+03:00"
+    created: "2024-10-22T16:21:37.53742+03:00"
     dependencies:
     - name: rn-zeoserver
       repository: https://eea.github.io/helm-charts
@@ -366,7 +366,7 @@ entries:
     version: 0.1.3
   - apiVersion: v2
     appVersion: 6.7.3-193
-    created: "2024-10-22T16:18:35.45715+03:00"
+    created: "2024-10-22T16:21:37.53333+03:00"
     dependencies:
     - name: rn-zeoserver
       repository: https://eea.github.io/helm-charts
@@ -393,7 +393,7 @@ entries:
     version: 0.1.2
   - apiVersion: v2
     appVersion: 6.7.3-193
-    created: "2024-10-22T16:18:35.452657+03:00"
+    created: "2024-10-22T16:21:37.529108+03:00"
     dependencies:
     - name: rn-zeoserver
       repository: https://eea.github.io/helm-charts
@@ -420,7 +420,7 @@ entries:
     version: 0.1.1
   - apiVersion: v2
     appVersion: 6.7.3-193
-    created: "2024-10-22T16:18:35.447855+03:00"
+    created: "2024-10-22T16:21:37.524586+03:00"
     dependencies:
     - name: rn-zeoserver
       repository: https://eea.github.io/helm-charts
@@ -448,7 +448,7 @@ entries:
   centos7dev:
   - apiVersion: v2
     appVersion: 3.0.3
-    created: "2024-10-22T16:18:35.489122+03:00"
+    created: "2024-10-22T16:21:37.562184+03:00"
     description: ALMA Linux (formerly CentOS 7) image with Java and Python development
       tools
     digest: acbdf2f82a0f2c6464345a2a8a7f45bc86f4541d188395b0e785324603147ff6
@@ -467,7 +467,7 @@ entries:
     version: 1.0.5
   - apiVersion: v2
     appVersion: 3.0.3
-    created: "2024-10-22T16:18:35.488754+03:00"
+    created: "2024-10-22T16:21:37.56195+03:00"
     description: ALMA Linux (formerly CentOS 7) image with Java and Python development
       tools
     digest: 1d8502feb07ebe400171b6b8b11794fa4b7c31d4cbda1bd4b1951c75099a90e8
@@ -486,7 +486,7 @@ entries:
     version: 1.0.4
   - apiVersion: v2
     appVersion: 3.0.3
-    created: "2024-10-22T16:18:35.488424+03:00"
+    created: "2024-10-22T16:21:37.561716+03:00"
     description: ALMA Linux (formerly CentOS 7) image with Java and Python development
       tools
     digest: 70693315ffc62de736dc693afb6f3c91b131d8e5c92331e8b0960aa99ea67587
@@ -505,7 +505,7 @@ entries:
     version: 1.0.3
   - apiVersion: v2
     appVersion: 3.0.2
-    created: "2024-10-22T16:18:35.48795+03:00"
+    created: "2024-10-22T16:21:37.561498+03:00"
     description: ALMA Linux (formerly CentOS 7) image with Java and Python development
       tools
     digest: 21115564e4cfa1030b06754f73d0fc6fb80b3ebb8a44eed08c4edfa23fc61338
@@ -524,7 +524,7 @@ entries:
     version: 1.0.2
   - apiVersion: v2
     appVersion: 3.0.0
-    created: "2024-10-22T16:18:35.487531+03:00"
+    created: "2024-10-22T16:21:37.561279+03:00"
     description: ALMA Linux (formerly CentOS 7) image with Java and Python development
       tools
     digest: 33f89f207bf1f088ea5e677cbed7eb9abc76e07c9b2a8e93daac6410242e11ed
@@ -543,7 +543,7 @@ entries:
     version: 1.0.1
   - apiVersion: v2
     appVersion: 3.0.0
-    created: "2024-10-22T16:18:35.486964+03:00"
+    created: "2024-10-22T16:21:37.561051+03:00"
     description: ALMA Linux (formerly CentOS 7) image with Java and Python development
       tools
     digest: 9147a4a1c09b9ec5e65d7c775882e21e2a871626edd60f708c9b55a4866db135
@@ -563,7 +563,7 @@ entries:
   contreg:
   - apiVersion: v2
     appVersion: 2024-08-07T1752
-    created: "2024-10-22T16:18:35.495091+03:00"
+    created: "2024-10-22T16:21:37.566791+03:00"
     description: Reportnet Content Registry
     digest: ca4033ef40f1444289128d45819a7364e3d8cbf80e43da1ff9672ec6d636826f
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/contreg/logo_eionet.png
@@ -576,7 +576,7 @@ entries:
     version: 0.3.1
   - apiVersion: v2
     appVersion: 2023-03-15T1412
-    created: "2024-10-22T16:18:35.494055+03:00"
+    created: "2024-10-22T16:21:37.565864+03:00"
     description: Reportnet Content Registry
     digest: a46a1b9b2a794cbf21975a1c420a24cbf7029682630a64256fe82815cfb74e3b
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/contreg/logo_eionet.png
@@ -589,7 +589,7 @@ entries:
     version: 0.3.0
   - apiVersion: v2
     appVersion: 2023-03-15T1412
-    created: "2024-10-22T16:18:35.493445+03:00"
+    created: "2024-10-22T16:21:37.565323+03:00"
     description: Reportnet Content Registry
     digest: 75e15d098ce20dd7e60642024088b5bfdd108180b0c827ed81f3ade909d7adb1
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/contreg/logo_eionet.png
@@ -602,7 +602,7 @@ entries:
     version: 0.2.5
   - apiVersion: v2
     appVersion: 2023-03-15T1412
-    created: "2024-10-22T16:18:35.492788+03:00"
+    created: "2024-10-22T16:21:37.564808+03:00"
     description: Reportnet Content Registry
     digest: 56431f2016826b143c6bf7ffe85482d85b768f8c18b9ee2f0309a35621fc56b9
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/contreg/logo_eionet.png
@@ -615,7 +615,7 @@ entries:
     version: 0.2.4
   - apiVersion: v2
     appVersion: 2023-03-15T1412
-    created: "2024-10-22T16:18:35.491939+03:00"
+    created: "2024-10-22T16:21:37.564294+03:00"
     description: Reportnet Content Registry
     digest: ad12bee1820f34ab619885eaf19337445d247775fb18dbf37c681015ddf3ba38
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/contreg/logo_eionet.png
@@ -628,7 +628,7 @@ entries:
     version: 0.2.3
   - apiVersion: v2
     appVersion: 2023-03-15T1412
-    created: "2024-10-22T16:18:35.491347+03:00"
+    created: "2024-10-22T16:21:37.563772+03:00"
     description: Reportnet Content Registry
     digest: b83256e7c8fce9f4ac9fc6b1b83447f866041ba7c282273d8ea4e28238c55607
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/contreg/logo_eionet.png
@@ -641,7 +641,7 @@ entries:
     version: 0.2.2
   - apiVersion: v2
     appVersion: 2023-03-15T1412
-    created: "2024-10-22T16:18:35.490645+03:00"
+    created: "2024-10-22T16:21:37.563234+03:00"
     description: Reportnet Content Registry
     digest: bd7b9b8b16c147de1e003f4f91785104f86d6caae82118ef1f78135a2c0a50ad
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/contreg/logo_eionet.png
@@ -654,7 +654,7 @@ entries:
     version: 0.2.1
   - apiVersion: v2
     appVersion: 2023-03-15T1412
-    created: "2024-10-22T16:18:35.48994+03:00"
+    created: "2024-10-22T16:21:37.56272+03:00"
     description: Reportnet Content Registry
     digest: b6d12e1ffd1972a0a1db11e66a7f6a0412fbffc3be6b01fb9bfc4cbc490fa2ee
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/contreg/logo_eionet.png
@@ -668,7 +668,7 @@ entries:
   databridge:
   - apiVersion: v2
     appVersion: 24.0.1-apache
-    created: "2024-10-22T16:18:35.495913+03:00"
+    created: "2024-10-22T16:21:37.567264+03:00"
     description: Transfer files
     digest: 68da9d13e075273f0ba4121584b93595076d4fdd592935418e8de27f1cfbe59e
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/databridge/arrows.svg
@@ -681,7 +681,7 @@ entries:
     version: 0.1.1
   - apiVersion: v2
     appVersion: 24.0.1-apache
-    created: "2024-10-22T16:18:35.495556+03:00"
+    created: "2024-10-22T16:21:37.56703+03:00"
     description: Transfer files
     digest: 9a4e0825fe2ebb2ba79f37a6d8acda3824acb2774f66a1b029ca62de26e05f8d
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/databridge/arrows.svg
@@ -695,7 +695,7 @@ entries:
   datadict:
   - apiVersion: v2
     appVersion: 2024-08-07T1821
-    created: "2024-10-22T16:18:35.504594+03:00"
+    created: "2024-10-22T16:21:37.573834+03:00"
     dependencies:
     - condition: postfix.enabled
       name: postfix
@@ -713,7 +713,7 @@ entries:
     version: 1.3.2
   - apiVersion: v2
     appVersion: 2024-08-07T1821
-    created: "2024-10-22T16:18:35.503494+03:00"
+    created: "2024-10-22T16:21:37.572899+03:00"
     dependencies:
     - condition: postfix.enabled
       name: postfix
@@ -731,7 +731,7 @@ entries:
     version: 1.3.1
   - apiVersion: v2
     appVersion: 2024-04-09T1544
-    created: "2024-10-22T16:18:35.502031+03:00"
+    created: "2024-10-22T16:21:37.57194+03:00"
     dependencies:
     - condition: postfix.enabled
       name: postfix
@@ -749,7 +749,7 @@ entries:
     version: 1.3.0
   - apiVersion: v2
     appVersion: 2024-04-09T1544
-    created: "2024-10-22T16:18:35.5012+03:00"
+    created: "2024-10-22T16:21:37.571196+03:00"
     description: Reportnet Data Dictionary
     digest: 6d5ad2ff3dbf5a0c18fe8f2a3f657959700149d7cb7d8359f5001d399d89e522
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/datadict/logo_eionet.png
@@ -762,7 +762,7 @@ entries:
     version: 1.2.5
   - apiVersion: v2
     appVersion: 2024-01-09T1823
-    created: "2024-10-22T16:18:35.500469+03:00"
+    created: "2024-10-22T16:21:37.570697+03:00"
     description: Reportnet Data Dictionary
     digest: 5680473edb476bfe2a78efc9880b7c063fd7b72e84a3f3cca224e1c45709484a
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/datadict/logo_eionet.png
@@ -775,7 +775,7 @@ entries:
     version: 1.2.4
   - apiVersion: v2
     appVersion: 2024-01-09T1823
-    created: "2024-10-22T16:18:35.499747+03:00"
+    created: "2024-10-22T16:21:37.570209+03:00"
     description: Reportnet Data Dictionary
     digest: 2d020cd7c0de30ee1e2686b028df9decf5cfc439d9d440b6c8e27c72dc121fe8
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/datadict/logo_eionet.png
@@ -788,7 +788,7 @@ entries:
     version: 1.2.3
   - apiVersion: v2
     appVersion: 2023-05-17T1558
-    created: "2024-10-22T16:18:35.498978+03:00"
+    created: "2024-10-22T16:21:37.569712+03:00"
     description: Reportnet Data Dictionary
     digest: 587d6f6bb990cf6a025858951db4a64350549a37e4257fa29de51e2698f3142c
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/datadict/logo_eionet.png
@@ -801,7 +801,7 @@ entries:
     version: 1.2.2
   - apiVersion: v2
     appVersion: 2023-05-17T1558
-    created: "2024-10-22T16:18:35.498293+03:00"
+    created: "2024-10-22T16:21:37.569215+03:00"
     description: Reportnet Data Dictionary
     digest: cf5222da0da438935ff7a91401397f53dfc2559b46fb1ee2c96e53cedfcb3075
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/datadict/logo_eionet.png
@@ -814,7 +814,7 @@ entries:
     version: 1.2.1
   - apiVersion: v2
     appVersion: 2023-05-17T1558
-    created: "2024-10-22T16:18:35.497523+03:00"
+    created: "2024-10-22T16:21:37.568729+03:00"
     description: Reportnet Data Dictionary
     digest: f9ce82a246f5883f75b109a94bfa03707b3a5fe7f875a90fd652b59fb9f7b4c7
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/datadict/logo_eionet.png
@@ -827,7 +827,7 @@ entries:
     version: 1.2.0
   - apiVersion: v2
     appVersion: 2023-05-17T1558
-    created: "2024-10-22T16:18:35.496986+03:00"
+    created: "2024-10-22T16:21:37.568253+03:00"
     description: Reportnet Data Dictionary
     digest: 9f697cc0fd9ffa4e086195d49a99a2229f720558542cd0fc0f6f4a5f5c86e728
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/datadict/logo_eionet.png
@@ -840,7 +840,7 @@ entries:
     version: 1.1.1
   - apiVersion: v2
     appVersion: 2023-05-17T1558
-    created: "2024-10-22T16:18:35.496445+03:00"
+    created: "2024-10-22T16:21:37.567756+03:00"
     description: Reportnet Data Dictionary
     digest: 816c6141bf59b3e5f75c97029daa3449fe5dcdc336a76c706ca3d28453e39b1f
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/datadict/logo_eionet.png
@@ -854,7 +854,7 @@ entries:
   eggrepo:
   - apiVersion: v2
     appVersion: "2.3"
-    created: "2024-10-22T16:18:35.510099+03:00"
+    created: "2024-10-22T16:21:37.577842+03:00"
     description: Python egg server is a tiny webfront to a local sourcecode archive
       distribution directory. Also known as eggrepo.
     digest: eefb96494a41399ea145ae5f87a94d7bb570233d1ac950e1e850dd57b435af01
@@ -869,7 +869,7 @@ entries:
     version: 0.2.3
   - apiVersion: v2
     appVersion: "2.3"
-    created: "2024-10-22T16:18:35.508723+03:00"
+    created: "2024-10-22T16:21:37.57686+03:00"
     description: Python egg server is a tiny webfront to a local sourcecode archive
       distribution directory. Also known as eggrepo.
     digest: 41dcc36b24d78df5b376bd9e82d459efe3e42e6416e49e481ac9440947af5494
@@ -884,7 +884,7 @@ entries:
     version: 0.2.2
   - apiVersion: v2
     appVersion: "2.3"
-    created: "2024-10-22T16:18:35.507407+03:00"
+    created: "2024-10-22T16:21:37.575868+03:00"
     description: Python egg server is a tiny webfront to a local sourcecode archive
       distribution directory. Also known as eggrepo.
     digest: fa88e2201439165824d943bd30e28e3c3c38f8f455030f343a55104a29af7474
@@ -899,7 +899,7 @@ entries:
     version: 0.2.1
   - apiVersion: v2
     appVersion: "2.3"
-    created: "2024-10-22T16:18:35.506038+03:00"
+    created: "2024-10-22T16:21:37.57487+03:00"
     description: Python egg server is a tiny webfront to a local sourcecode archive
       distribution directory. Also known as eggrepo.
     digest: 0ed91db535fc0077f4f04e5cd02d574f630a48d71b1bda6eec9ee9a0917b0b24
@@ -915,7 +915,7 @@ entries:
   eionet-gemet:
   - apiVersion: v2
     appVersion: 2.2.1
-    created: "2024-10-22T16:18:35.531327+03:00"
+    created: "2024-10-22T16:21:37.596647+03:00"
     dependencies:
     - name: postgresql
       repository: https://charts.bitnami.com/bitnami
@@ -932,7 +932,7 @@ entries:
     version: 0.5.2
   - apiVersion: v2
     appVersion: 2.2.1
-    created: "2024-10-22T16:18:35.527844+03:00"
+    created: "2024-10-22T16:21:37.593576+03:00"
     dependencies:
     - name: postgresql
       repository: https://charts.bitnami.com/bitnami
@@ -949,7 +949,7 @@ entries:
     version: 0.5.1
   - apiVersion: v2
     appVersion: 2.2.1
-    created: "2024-10-22T16:18:35.524449+03:00"
+    created: "2024-10-22T16:21:37.590077+03:00"
     dependencies:
     - name: postgresql
       repository: https://charts.bitnami.com/bitnami
@@ -966,7 +966,7 @@ entries:
     version: 0.5.0
   - apiVersion: v2
     appVersion: 2.2.1
-    created: "2024-10-22T16:18:35.52068+03:00"
+    created: "2024-10-22T16:21:37.586986+03:00"
     dependencies:
     - name: postgresql
       repository: https://charts.bitnami.com/bitnami
@@ -983,7 +983,7 @@ entries:
     version: 0.4.0
   - apiVersion: v2
     appVersion: 2.2.1
-    created: "2024-10-22T16:18:35.516758+03:00"
+    created: "2024-10-22T16:21:37.583601+03:00"
     dependencies:
     - name: postgresql
       repository: https://charts.bitnami.com/bitnami
@@ -1000,7 +1000,7 @@ entries:
     version: 0.3.0
   - apiVersion: v2
     appVersion: 2.2.1
-    created: "2024-10-22T16:18:35.513309+03:00"
+    created: "2024-10-22T16:21:37.580444+03:00"
     description: Eionet GEMET
     digest: 1cdd0ff45c095221d21b9dfb4ebe61a64ecbe655bc9854fcc348242b57b54398
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/eionet-gemet/icon.svg
@@ -1013,7 +1013,7 @@ entries:
     version: 0.2.0
   - apiVersion: v2
     appVersion: 2.2.1
-    created: "2024-10-22T16:18:35.512732+03:00"
+    created: "2024-10-22T16:21:37.579672+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -1034,7 +1034,7 @@ entries:
     version: 0.1.1
   - apiVersion: v2
     appVersion: 2.2.1
-    created: "2024-10-22T16:18:35.511631+03:00"
+    created: "2024-10-22T16:21:37.57876+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -1056,7 +1056,7 @@ entries:
   eionetldap:
   - apiVersion: v2
     appVersion: v4.1
-    created: "2024-10-22T16:18:35.536484+03:00"
+    created: "2024-10-22T16:21:37.600166+03:00"
     description: LDAP Service and database for Eionet
     digest: 4dbbc2a92156ffcbe0be32cc880d48ece97e7e7899573f557349f5377a033dbe
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/eionetldap/icon.png
@@ -1070,7 +1070,7 @@ entries:
     version: 1.2.2
   - apiVersion: v2
     appVersion: v4.1
-    created: "2024-10-22T16:18:35.536032+03:00"
+    created: "2024-10-22T16:21:37.599838+03:00"
     description: LDAP Service and database for Eionet
     digest: c95a5e9a2ef088539b297ecccaf169f4540e363c3603e7a3264f9151e51fb830
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/eionetldap/icon.png
@@ -1084,7 +1084,7 @@ entries:
     version: 1.2.1
   - apiVersion: v2
     appVersion: v4.1
-    created: "2024-10-22T16:18:35.535483+03:00"
+    created: "2024-10-22T16:21:37.599523+03:00"
     description: LDAP Service and database for Eionet
     digest: b167bea9edae6a60d6066428b5b1bc78321af014719670f06ceeffc9fd4c5782
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/eionetldap/icon.png
@@ -1098,7 +1098,7 @@ entries:
     version: 1.2.0-alpha1
   - apiVersion: v2
     appVersion: v4.1
-    created: "2024-10-22T16:18:35.53505+03:00"
+    created: "2024-10-22T16:21:37.599203+03:00"
     description: LDAP Service and database for Eionet
     digest: aff7a94b0c5f5d3cc3ac13aca60cdbfbf599fc55b5849164bae84174cbc616de
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/eionetldap/icon.png
@@ -1112,7 +1112,7 @@ entries:
     version: 1.2.0-alpha.1
   - apiVersion: v2
     appVersion: v3.3
-    created: "2024-10-22T16:18:35.53448+03:00"
+    created: "2024-10-22T16:21:37.598876+03:00"
     description: LDAP Service and database for Eionet
     digest: e3f1eb6aab94b8a975ae3da000df0f06c12bea75a1f350584d379e79e829bc51
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/eionetldap/icon.png
@@ -1126,7 +1126,7 @@ entries:
     version: 1.1.3
   - apiVersion: v2
     appVersion: v3.3
-    created: "2024-10-22T16:18:35.533867+03:00"
+    created: "2024-10-22T16:21:37.598559+03:00"
     description: LDAP Service and database for Eionet
     digest: ed3daf467394789e05031a520d8ec62e3285c52ea106e4508a638fe69b204445
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/eionetldap/icon.png
@@ -1140,7 +1140,7 @@ entries:
     version: 1.1.2
   - apiVersion: v2
     appVersion: v3.2
-    created: "2024-10-22T16:18:35.533182+03:00"
+    created: "2024-10-22T16:21:37.598229+03:00"
     description: LDAP Service and database for Eionet
     digest: 5889feda1164a41dad2695e885cafed64b98d639593f9ddbdf20ac34c4cf1b2b
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/eionetldap/icon.png
@@ -1154,7 +1154,7 @@ entries:
     version: 1.1.1
   - apiVersion: v2
     appVersion: v3.0
-    created: "2024-10-22T16:18:35.53273+03:00"
+    created: "2024-10-22T16:21:37.597587+03:00"
     description: LDAP Service and database for Eionet
     digest: b6b3c603eea9813f3ae3fdc745b7844c3fb2d848cba9f456d9244f8ee1887df3
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/eionetldap/icon.png
@@ -1168,7 +1168,7 @@ entries:
     version: 1.1.0
   - apiVersion: v2
     appVersion: v3.0
-    created: "2024-10-22T16:18:35.532275+03:00"
+    created: "2024-10-22T16:21:37.597277+03:00"
     description: LDAP Service and database for Eionet
     digest: 31252349014df1b9aa902e62290bdc0c301cdcef69f4adbb5c4db6d4d77db2c0
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/eionetldap/icon.png
@@ -1182,7 +1182,7 @@ entries:
     version: 1.0.1
   - apiVersion: v2
     appVersion: v3.0
-    created: "2024-10-22T16:18:35.531808+03:00"
+    created: "2024-10-22T16:21:37.596962+03:00"
     description: LDAP Service and database for Eionet
     digest: f6329a3925427c823559c50f208efaa5133b4fbb672ec99b52af4398aafeb72e
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/eionetldap/icon.png
@@ -1197,7 +1197,7 @@ entries:
   elastic6:
   - apiVersion: v2
     appVersion: 6.8-1.2
-    created: "2024-10-22T16:18:35.540853+03:00"
+    created: "2024-10-22T16:21:37.603814+03:00"
     description: EEA Elasticsearch 6 cluster to be used by elastic apps
     digest: f49997cf33d5a708c3eb0d887e883a2ff32c76adad70cceb8d5815f537a9cfca
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/elastic6/elastic-engine.png
@@ -1210,7 +1210,7 @@ entries:
     version: 0.2.2
   - apiVersion: v2
     appVersion: 6.8-1.2
-    created: "2024-10-22T16:18:35.539828+03:00"
+    created: "2024-10-22T16:21:37.602602+03:00"
     description: EEA Elasticsearch 6 cluster to be used by elastic apps
     digest: f9a8f5d53c231c1fc284734dfc4c42a5c3c1d436b8916d3a0157d2acf251bc9f
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/elastic6/elastic-engine.png
@@ -1223,7 +1223,7 @@ entries:
     version: 0.2.1
   - apiVersion: v2
     appVersion: 6.8-1.2
-    created: "2024-10-22T16:18:35.538683+03:00"
+    created: "2024-10-22T16:21:37.601816+03:00"
     description: EEA Elasticsearch 6 cluster to be used by elastic apps
     digest: 4c91c8b9f41140bfff39742982acf7e128105e6883b43e932a9c277ccac7e240
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/elastic6/elastic-engine.png
@@ -1236,7 +1236,7 @@ entries:
     version: 0.2.0
   - apiVersion: v2
     appVersion: 6.8-1.2
-    created: "2024-10-22T16:18:35.537655+03:00"
+    created: "2024-10-22T16:21:37.601029+03:00"
     description: EEA Elasticsearch 6 cluster to be used by elastic apps
     digest: bebe4e11b65054f8fdca43677ac0c5b2237f48193162ec943341399c1b48c0af
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/elastic6/elastic-engine.png
@@ -1250,7 +1250,7 @@ entries:
   emrt-esd:
   - apiVersion: v2
     appVersion: 18.1.23-1-1.74.6
-    created: "2024-10-22T16:18:35.561826+03:00"
+    created: "2024-10-22T16:21:37.622308+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -1274,7 +1274,7 @@ entries:
     version: 0.2.7
   - apiVersion: v2
     appVersion: 18.1.23-1-1.74.6
-    created: "2024-10-22T16:18:35.559109+03:00"
+    created: "2024-10-22T16:21:37.619605+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -1298,7 +1298,7 @@ entries:
     version: 0.2.6
   - apiVersion: v2
     appVersion: 18.1.23-1-1.74.5
-    created: "2024-10-22T16:18:35.556267+03:00"
+    created: "2024-10-22T16:21:37.6173+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -1322,7 +1322,7 @@ entries:
     version: 0.2.5
   - apiVersion: v2
     appVersion: 18.1.23-1-1.74.5
-    created: "2024-10-22T16:18:35.553307+03:00"
+    created: "2024-10-22T16:21:37.614639+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -1346,7 +1346,7 @@ entries:
     version: 0.2.4
   - apiVersion: v2
     appVersion: 18.1.23-1-1.74.5
-    created: "2024-10-22T16:18:35.551087+03:00"
+    created: "2024-10-22T16:21:37.612546+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -1370,7 +1370,7 @@ entries:
     version: 0.2.3
   - apiVersion: v2
     appVersion: 18.1.23-1-1.74.4
-    created: "2024-10-22T16:18:35.54846+03:00"
+    created: "2024-10-22T16:21:37.610417+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -1394,7 +1394,7 @@ entries:
     version: 0.2.2
   - apiVersion: v2
     appVersion: 18.1.23-1-1.74.4
-    created: "2024-10-22T16:18:35.545986+03:00"
+    created: "2024-10-22T16:21:37.607965+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -1418,7 +1418,7 @@ entries:
     version: 0.2.1
   - apiVersion: v2
     appVersion: 18.1.23-1-1.74.3
-    created: "2024-10-22T16:18:35.543486+03:00"
+    created: "2024-10-22T16:21:37.605884+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -1443,7 +1443,7 @@ entries:
   emrt-necd:
   - apiVersion: v2
     appVersion: plone-2.5.51
-    created: "2024-10-22T16:18:35.590458+03:00"
+    created: "2024-10-22T16:21:37.647397+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -1468,7 +1468,7 @@ entries:
     version: 0.4.0
   - apiVersion: v2
     appVersion: plone-2.5.51
-    created: "2024-10-22T16:18:35.587373+03:00"
+    created: "2024-10-22T16:21:37.644604+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -1489,7 +1489,7 @@ entries:
     version: 0.3.9
   - apiVersion: v2
     appVersion: plone-2.5.51
-    created: "2024-10-22T16:18:35.584757+03:00"
+    created: "2024-10-22T16:21:37.642398+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -1510,7 +1510,7 @@ entries:
     version: 0.3.8
   - apiVersion: v2
     appVersion: plone-2.5.51
-    created: "2024-10-22T16:18:35.581796+03:00"
+    created: "2024-10-22T16:21:37.639701+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -1531,7 +1531,7 @@ entries:
     version: 0.3.7
   - apiVersion: v2
     appVersion: plone-2.5.50
-    created: "2024-10-22T16:18:35.579467+03:00"
+    created: "2024-10-22T16:21:37.637739+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -1552,7 +1552,7 @@ entries:
     version: 0.3.6
   - apiVersion: v2
     appVersion: plone-2.5.49
-    created: "2024-10-22T16:18:35.577057+03:00"
+    created: "2024-10-22T16:21:37.635742+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -1573,7 +1573,7 @@ entries:
     version: 0.3.5
   - apiVersion: v2
     appVersion: plone-2.5.48
-    created: "2024-10-22T16:18:35.574463+03:00"
+    created: "2024-10-22T16:21:37.633253+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -1594,7 +1594,7 @@ entries:
     version: 0.3.4
   - apiVersion: v2
     appVersion: plone-2.5.46
-    created: "2024-10-22T16:18:35.57215+03:00"
+    created: "2024-10-22T16:21:37.631264+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -1615,7 +1615,7 @@ entries:
     version: 0.3.3
   - apiVersion: v2
     appVersion: plone-2.5.46
-    created: "2024-10-22T16:18:35.570007+03:00"
+    created: "2024-10-22T16:21:37.629223+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -1636,7 +1636,7 @@ entries:
     version: 0.3.2
   - apiVersion: v2
     appVersion: plone-2.5.46
-    created: "2024-10-22T16:18:35.567628+03:00"
+    created: "2024-10-22T16:21:37.626904+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -1657,7 +1657,7 @@ entries:
     version: 0.3.1
   - apiVersion: v2
     appVersion: plone-2.5.46
-    created: "2024-10-22T16:18:35.564821+03:00"
+    created: "2024-10-22T16:21:37.62464+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -1679,7 +1679,7 @@ entries:
   eni-seis:
   - apiVersion: v2
     appVersion: 20.6.6-9.19
-    created: "2024-10-22T16:18:35.598616+03:00"
+    created: "2024-10-22T16:21:37.654151+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -1698,7 +1698,7 @@ entries:
     version: 0.5.1
   - apiVersion: v2
     appVersion: 20.6.6-9.19
-    created: "2024-10-22T16:18:35.595485+03:00"
+    created: "2024-10-22T16:21:37.651315+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -1717,7 +1717,7 @@ entries:
     version: 0.5.0
   - apiVersion: v2
     appVersion: 20.6.6-9.19
-    created: "2024-10-22T16:18:35.592918+03:00"
+    created: "2024-10-22T16:21:37.649096+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -1733,7 +1733,7 @@ entries:
     version: 0.4.0
   - apiVersion: v2
     appVersion: 20.6.6-9.19
-    created: "2024-10-22T16:18:35.591679+03:00"
+    created: "2024-10-22T16:21:37.648132+03:00"
     description: Implementation of the SEIS principles and practices in the Eastern
       and Southern Partnership countries (ended 2020)
     digest: 2b895c4ef4086dec2aed427373b7b43cfab7b2721cec12d7d6fd7f1c93d26918
@@ -1745,7 +1745,7 @@ entries:
     version: 0.3.0
   eunis:
   - apiVersion: v2
-    created: "2024-10-22T16:18:35.602336+03:00"
+    created: "2024-10-22T16:21:37.656619+03:00"
     description: Information of species, habitat types and protected sites
     digest: 61dd1013180235e902f8ca64f994ec290f66f98ae1cd40346c599701c378efce
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/eunis/logo.png
@@ -1757,7 +1757,7 @@ entries:
     - eunis-1.0.4.tgz
     version: 1.0.4
   - apiVersion: v2
-    created: "2024-10-22T16:18:35.601571+03:00"
+    created: "2024-10-22T16:21:37.656121+03:00"
     description: Information of species, habitat types and protected sites
     digest: 15f2300822416f302e3960e36bc428b49bc7a82eb3cedcbaa33c1a58f9279ea7
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/eunis/logo.png
@@ -1769,7 +1769,7 @@ entries:
     - eunis-1.0.3.tgz
     version: 1.0.3
   - apiVersion: v2
-    created: "2024-10-22T16:18:35.600891+03:00"
+    created: "2024-10-22T16:21:37.655629+03:00"
     description: Information of species, habitat types and protected sites
     digest: 87056a97cec44a4a2af5fd52c28e464d9e7730fb0bdf2f385b7157f54a97e161
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/eunis/logo.png
@@ -1781,7 +1781,7 @@ entries:
     - eunis-1.0.2.tgz
     version: 1.0.2
   - apiVersion: v2
-    created: "2024-10-22T16:18:35.600064+03:00"
+    created: "2024-10-22T16:21:37.655138+03:00"
     description: Information of species, habitat types and protected sites
     digest: f3a851a21cbd6abf6e5aa6ebc108f21ae02ff574bf862fbdb22a83e14e2e8924
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/eunis/logo.png
@@ -1793,7 +1793,7 @@ entries:
     - eunis-1.0.1.tgz
     version: 1.0.1
   - apiVersion: v2
-    created: "2024-10-22T16:18:35.599321+03:00"
+    created: "2024-10-22T16:21:37.654639+03:00"
     description: Information of species, habitat types and protected sites
     digest: 8a13301a2ad0a617e920ba04de439c32be89841606fd1f90b7d62ab35e785b4f
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/eunis/logo.png
@@ -1807,7 +1807,7 @@ entries:
   forum:
   - apiVersion: v2
     appVersion: forum-22.09.06
-    created: "2024-10-22T16:18:35.604004+03:00"
+    created: "2024-10-22T16:21:37.65795+03:00"
     dependencies:
     - condition: postfix.enabled
       name: postfix
@@ -1826,7 +1826,7 @@ entries:
     version: 0.1.1
   - apiVersion: v2
     appVersion: forum-22.09.06
-    created: "2024-10-22T16:18:35.603241+03:00"
+    created: "2024-10-22T16:21:37.657284+03:00"
     dependencies:
     - condition: postfix.enabled
       name: postfix
@@ -1846,7 +1846,7 @@ entries:
   forum-test:
   - apiVersion: v2
     appVersion: forum-test-22.09.06
-    created: "2024-10-22T16:18:35.609903+03:00"
+    created: "2024-10-22T16:21:37.662098+03:00"
     dependencies:
     - condition: postfix.enabled
       name: postfix
@@ -1865,7 +1865,7 @@ entries:
     version: 1.0.1
   - apiVersion: v2
     appVersion: forum-test-22.09.06
-    created: "2024-10-22T16:18:35.608992+03:00"
+    created: "2024-10-22T16:21:37.661445+03:00"
     dependencies:
     - condition: postfix.enabled
       name: postfix
@@ -1884,7 +1884,7 @@ entries:
     version: 1.0.0
   - apiVersion: v2
     appVersion: forum-test-22.09.06
-    created: "2024-10-22T16:18:35.608058+03:00"
+    created: "2024-10-22T16:21:37.660635+03:00"
     dependencies:
     - condition: postfix.enabled
       name: postfix
@@ -1903,7 +1903,7 @@ entries:
     version: 0.1.3
   - apiVersion: v2
     appVersion: forum-test-22.09.06
-    created: "2024-10-22T16:18:35.607323+03:00"
+    created: "2024-10-22T16:21:37.659891+03:00"
     dependencies:
     - condition: postfix.enabled
       name: postfix
@@ -1922,7 +1922,7 @@ entries:
     version: 0.1.2
   - apiVersion: v2
     appVersion: forum-test-22.09.06
-    created: "2024-10-22T16:18:35.606424+03:00"
+    created: "2024-10-22T16:21:37.659239+03:00"
     dependencies:
     - condition: postfix.enabled
       name: postfix
@@ -1941,7 +1941,7 @@ entries:
     version: 0.1.1
   - apiVersion: v2
     appVersion: forum-test-22.09.06
-    created: "2024-10-22T16:18:35.605006+03:00"
+    created: "2024-10-22T16:21:37.658592+03:00"
     dependencies:
     - condition: postfix.enabled
       name: postfix
@@ -1960,7 +1960,7 @@ entries:
     version: 0.1.0
   habitatsdir:
   - apiVersion: v2
-    created: "2024-10-22T16:18:35.623648+03:00"
+    created: "2024-10-22T16:21:37.672007+03:00"
     dependencies:
     - condition: postfix.enabled
       name: postfix
@@ -1979,7 +1979,7 @@ entries:
     - habitatsdir-0.4.3.tgz
     version: 0.4.3
   - apiVersion: v2
-    created: "2024-10-22T16:18:35.621928+03:00"
+    created: "2024-10-22T16:21:37.671054+03:00"
     dependencies:
     - condition: postfix.enabled
       name: postfix
@@ -1998,7 +1998,7 @@ entries:
     - habitatsdir-0.4.2.tgz
     version: 0.4.2
   - apiVersion: v2
-    created: "2024-10-22T16:18:35.62031+03:00"
+    created: "2024-10-22T16:21:37.670111+03:00"
     dependencies:
     - condition: postfix.enabled
       name: postfix
@@ -2017,7 +2017,7 @@ entries:
     - habitatsdir-0.4.1.tgz
     version: 0.4.1
   - apiVersion: v2
-    created: "2024-10-22T16:18:35.618579+03:00"
+    created: "2024-10-22T16:21:37.667915+03:00"
     dependencies:
     - condition: postfix.enabled
       name: postfix
@@ -2036,7 +2036,7 @@ entries:
     - habitatsdir-0.4.0.tgz
     version: 0.4.0
   - apiVersion: v2
-    created: "2024-10-22T16:18:35.617404+03:00"
+    created: "2024-10-22T16:21:37.666969+03:00"
     dependencies:
     - condition: postfix.enabled
       name: postfix
@@ -2055,7 +2055,7 @@ entries:
     - habitatsdir-0.3.3.tgz
     version: 0.3.3
   - apiVersion: v2
-    created: "2024-10-22T16:18:35.615903+03:00"
+    created: "2024-10-22T16:21:37.665987+03:00"
     description: Expert review tool for Nature Directives reporting
     digest: e93d714044dd0793f90ee7f8a5783bb86cb8a58b39a2c85a2e60ed9fc5293fd6
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/habitatsdir/logo.png
@@ -2069,7 +2069,7 @@ entries:
     - habitatsdir-0.3.2.tgz
     version: 0.3.2
   - apiVersion: v2
-    created: "2024-10-22T16:18:35.614548+03:00"
+    created: "2024-10-22T16:21:37.665259+03:00"
     description: Expert review tool for Nature Directives reporting
     digest: 7143f751deb235798e3f492aff3e31a682eb2cfc28030e82a1f79c9341baa7ad
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/habitatsdir/logo.png
@@ -2083,7 +2083,7 @@ entries:
     - habitatsdir-0.3.1.tgz
     version: 0.3.1
   - apiVersion: v2
-    created: "2024-10-22T16:18:35.613454+03:00"
+    created: "2024-10-22T16:21:37.664196+03:00"
     description: Expert review tool for Nature Directives reporting
     digest: 1da01c564b4903dcefc9ebeadfe88304e0de3064dd418dd994497b3eac9aa847
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/habitatsdir/logo.png
@@ -2097,7 +2097,7 @@ entries:
     - habitatsdir-0.3.0.tgz
     version: 0.3.0
   - apiVersion: v2
-    created: "2024-10-22T16:18:35.612362+03:00"
+    created: "2024-10-22T16:21:37.663504+03:00"
     description: Expert review tool for Nature Directives reporting
     digest: c212a7754239816f69d5e24476b6df7de2911bc937ca8a3e09e45db032d00112
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/habitatsdir/logo.png
@@ -2111,7 +2111,7 @@ entries:
     - habitatsdir-0.2.4.tgz
     version: 0.2.4
   - apiVersion: v2
-    created: "2024-10-22T16:18:35.611195+03:00"
+    created: "2024-10-22T16:21:37.662771+03:00"
     description: Expert review tool for Nature Directives reporting
     digest: 15c05f103377c2aa720e60c164211be3d59dffb848f834a23a58afbe13f2d90b
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/habitatsdir/logo.png
@@ -2127,7 +2127,7 @@ entries:
   haproxy:
   - apiVersion: v2
     appVersion: 1.8-1.8
-    created: "2024-10-22T16:18:35.627307+03:00"
+    created: "2024-10-22T16:21:37.674753+03:00"
     description: HAProxy Docker image with docker links and reload support
     digest: abc930062317e80e88ecc371969773ed151829b43397b3cfbf2d441d029ae897
     home: https://github.com/eea/helm-charts/tree/main/sources/haproxy
@@ -2143,7 +2143,7 @@ entries:
     version: 1.8.18
   - apiVersion: v2
     appVersion: 1.8-1.7
-    created: "2024-10-22T16:18:35.626886+03:00"
+    created: "2024-10-22T16:21:37.67435+03:00"
     description: HAProxy Docker image with docker links and reload support
     digest: f4eb1c66c11416c16ac2d158392edce09624978d1bfc6a2b5059cf293ea151cc
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/haproxy/logo_eionet.png
@@ -2156,7 +2156,7 @@ entries:
     version: 1.8.17
   - apiVersion: v2
     appVersion: 1.8-1.6
-    created: "2024-10-22T16:18:35.626402+03:00"
+    created: "2024-10-22T16:21:37.673895+03:00"
     description: HAProxy Docker image with docker links and reload support
     digest: 67d9b605245bd04f336e8ac5a3c06ffaf9ef935c82869fa8d5332a8ef477ccc3
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/haproxy/logo_eionet.png
@@ -2169,7 +2169,7 @@ entries:
     version: 1.8.16
   - apiVersion: v2
     appVersion: 1.8-1.5
-    created: "2024-10-22T16:18:35.626014+03:00"
+    created: "2024-10-22T16:21:37.673627+03:00"
     description: HAProxy Docker image with docker links and reload support
     digest: cf81c2ecba3752503ee74d55699bdbee6db3bef7dd6f20e19d0dad88a95bf56e
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/haproxy/logo_eionet.png
@@ -2182,7 +2182,7 @@ entries:
     version: 1.8.15
   - apiVersion: v2
     appVersion: 1.8-1.4
-    created: "2024-10-22T16:18:35.625725+03:00"
+    created: "2024-10-22T16:21:37.673367+03:00"
     description: HAProxy Docker image with docker links and reload support
     digest: 03480ecf20709a24b7e051a7efcfb1fa546cdf5f3bee5260d7152c8c339b5743
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/haproxy/logo_eionet.png
@@ -2195,7 +2195,7 @@ entries:
     version: 1.8.14
   - apiVersion: v2
     appVersion: 1.8-1.3
-    created: "2024-10-22T16:18:35.625416+03:00"
+    created: "2024-10-22T16:21:37.673098+03:00"
     description: HAProxy Docker image with docker links and reload support
     digest: 022aff4e77fc4974621df09057c6faf007ba38f30d9bac42cbec56a23842f4f2
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/haproxy/logo_eionet.png
@@ -2208,7 +2208,7 @@ entries:
     version: 1.8.13
   - apiVersion: v2
     appVersion: 1.8-1.2
-    created: "2024-10-22T16:18:35.624938+03:00"
+    created: "2024-10-22T16:21:37.672822+03:00"
     description: HAProxy Docker image with docker links and reload support
     digest: 9c617e0b05ac070b7a389f2c9a268a7d1efde403b0861c672777d343749fe0f3
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/haproxy/logo_eionet.png
@@ -2221,7 +2221,7 @@ entries:
     version: 1.8.12
   - apiVersion: v2
     appVersion: 1.8-1.1
-    created: "2024-10-22T16:18:35.624516+03:00"
+    created: "2024-10-22T16:21:37.672557+03:00"
     description: HAProxy Docker image with docker links and reload support
     digest: ea526f4121a0e877e54f4958b0db03de5a9beea3fb68c32761c3105ac23281ea
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/haproxy/logo_eionet.png
@@ -2234,7 +2234,7 @@ entries:
     version: 1.8.11
   - apiVersion: v2
     appVersion: 1.8-1.0
-    created: "2024-10-22T16:18:35.624091+03:00"
+    created: "2024-10-22T16:21:37.672281+03:00"
     description: HAProxy Docker image with docker links and reload support
     digest: 7b939a7dfd52b9e53339b7cddb196dbb4732e684fda782ec1161db20d4fce517
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/haproxy/logo_eionet.png
@@ -2248,7 +2248,7 @@ entries:
   helpdesk-otrs:
   - apiVersion: v2
     appVersion: v6.0.43-openid-05
-    created: "2024-10-22T16:18:35.639473+03:00"
+    created: "2024-10-22T16:21:37.684774+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -2269,7 +2269,7 @@ entries:
     version: 0.5.2
   - apiVersion: v2
     appVersion: v6.0.43-openid-05
-    created: "2024-10-22T16:18:35.636741+03:00"
+    created: "2024-10-22T16:21:37.682887+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -2290,7 +2290,7 @@ entries:
     version: 0.5.1
   - apiVersion: v2
     appVersion: v6.0.43-openid-05
-    created: "2024-10-22T16:18:35.634462+03:00"
+    created: "2024-10-22T16:21:37.680906+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -2311,7 +2311,7 @@ entries:
     version: 0.5.0
   - apiVersion: v2
     appVersion: v6.0.43-openid-05
-    created: "2024-10-22T16:18:35.632122+03:00"
+    created: "2024-10-22T16:21:37.678544+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -2332,7 +2332,7 @@ entries:
     version: 0.4.0
   - apiVersion: v2
     appVersion: v6.0.43-openid-05
-    created: "2024-10-22T16:18:35.629728+03:00"
+    created: "2024-10-22T16:21:37.676678+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -2354,7 +2354,7 @@ entries:
   keycloak-eea:
   - apiVersion: v2
     appVersion: 17.0.0
-    created: "2024-10-22T16:18:35.649785+03:00"
+    created: "2024-10-22T16:21:37.69346+03:00"
     dependencies:
     - condition: haproxy.enabled
       name: haproxy
@@ -2373,7 +2373,7 @@ entries:
     version: 0.5.3
   - apiVersion: v2
     appVersion: 17.0.0
-    created: "2024-10-22T16:18:35.647806+03:00"
+    created: "2024-10-22T16:21:37.691834+03:00"
     dependencies:
     - condition: haproxy.enabled
       name: haproxy
@@ -2391,7 +2391,7 @@ entries:
     version: 0.5.2
   - apiVersion: v2
     appVersion: 17.0.0
-    created: "2024-10-22T16:18:35.645693+03:00"
+    created: "2024-10-22T16:21:37.689931+03:00"
     dependencies:
     - condition: haproxy.enabled
       name: haproxy
@@ -2409,7 +2409,7 @@ entries:
     version: 0.5.1
   - apiVersion: v2
     appVersion: 17.0.0
-    created: "2024-10-22T16:18:35.643626+03:00"
+    created: "2024-10-22T16:21:37.688338+03:00"
     dependencies:
     - condition: haproxy.enabled
       name: haproxy
@@ -2427,7 +2427,7 @@ entries:
     version: 0.5.0
   - apiVersion: v2
     appVersion: 17.0.0
-    created: "2024-10-22T16:18:35.641843+03:00"
+    created: "2024-10-22T16:21:37.686844+03:00"
     dependencies:
     - condition: haproxy.enabled
       name: haproxy
@@ -2445,7 +2445,7 @@ entries:
     version: 0.4.0
   - apiVersion: v2
     appVersion: 17.0.0
-    created: "2024-10-22T16:18:35.639967+03:00"
+    created: "2024-10-22T16:21:37.685098+03:00"
     description: Identity provider based on Keycloak for EEA use
     digest: d1fbd6d05e735a70130d85a253a38e46ddfa2952e4a3a003345ad7e22d81a706
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/keycloak-eea/keycloak.svg
@@ -2459,7 +2459,7 @@ entries:
   landpurchasedatabase:
   - apiVersion: v2
     appVersion: "2101"
-    created: "2024-10-22T16:18:35.650337+03:00"
+    created: "2024-10-22T16:21:37.69389+03:00"
     description: DEM Tool used to collect data from LIFE project that bought land
       on European level to protect Natura 2000 sites in Europe
     digest: ddf1202473ad4280e34dd50f0c36e51ad8e79331a69ebed4983e35705617359c
@@ -2476,7 +2476,7 @@ entries:
   learning:
   - apiVersion: v2
     appVersion: 2.4.62-alpine3.20
-    created: "2024-10-22T16:18:35.655351+03:00"
+    created: "2024-10-22T16:21:37.698112+03:00"
     description: Online training course for the EEAcademy
     digest: f21b7f81e3f15b73ba1fcd9f25c2e60593005905eb2e5793a6769fd034d6d57c
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/learning/icon.svg
@@ -2490,7 +2490,7 @@ entries:
     version: 0.4.3
   - apiVersion: v2
     appVersion: 2.4.58-alpine3.19
-    created: "2024-10-22T16:18:35.654027+03:00"
+    created: "2024-10-22T16:21:37.696842+03:00"
     description: Online training course for the EEAcademy
     digest: 178263694095dc5f03efb4ddc45ad3fb35b569af97a7a0bee3a94abf23853dbf
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/learning/icon.svg
@@ -2504,7 +2504,7 @@ entries:
     version: 0.4.2
   - apiVersion: v2
     appVersion: 2.4.57-alpine
-    created: "2024-10-22T16:18:35.652802+03:00"
+    created: "2024-10-22T16:21:37.695881+03:00"
     description: Online training course for the EEAcademy
     digest: fc2dbe7c0cdb8086180d3a5345aa718ec3d9eeaac4dbf2904b5c72223c40b763
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/learning/icon.svg
@@ -2518,7 +2518,7 @@ entries:
     version: 0.4.1
   - apiVersion: v2
     appVersion: 2.4.57-alpine
-    created: "2024-10-22T16:18:35.651685+03:00"
+    created: "2024-10-22T16:21:37.694928+03:00"
     description: Online training course for the EEAcademy
     digest: fd3363426e8de3fbc0bacfb0b5e8eae22beae76d0dcf0c3b44caebf8e0de6670
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/learning/icon.svg
@@ -2533,7 +2533,7 @@ entries:
   logcentral-logspout:
   - apiVersion: v2
     appVersion: v3.2.6
-    created: "2024-10-22T16:18:35.655922+03:00"
+    created: "2024-10-22T16:21:37.698475+03:00"
     description: EEA - Logspout
     digest: cf16a1705cfa36433430b976fb29d69cf8746ae5a142ec7f8910a93f4560df4e
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/logcentral-logspout/logspout.png
@@ -2548,7 +2548,7 @@ entries:
   login-eea:
   - apiVersion: v2
     appVersion: 17.0.0
-    created: "2024-10-22T16:18:35.669986+03:00"
+    created: "2024-10-22T16:21:37.712228+03:00"
     dependencies:
     - condition: haproxy.enabled
       name: haproxy
@@ -2569,7 +2569,7 @@ entries:
     version: 0.6.2
   - apiVersion: v2
     appVersion: 17.0.0
-    created: "2024-10-22T16:18:35.665354+03:00"
+    created: "2024-10-22T16:21:37.707341+03:00"
     dependencies:
     - condition: haproxy.enabled
       name: haproxy
@@ -2590,7 +2590,7 @@ entries:
     version: 0.6.1
   - apiVersion: v2
     appVersion: 17.0.0
-    created: "2024-10-22T16:18:35.66093+03:00"
+    created: "2024-10-22T16:21:37.703151+03:00"
     dependencies:
     - condition: haproxy.enabled
       name: haproxy
@@ -2612,7 +2612,7 @@ entries:
   mailtrap:
   - apiVersion: v2
     appVersion: "2.4"
-    created: "2024-10-22T16:18:35.670934+03:00"
+    created: "2024-10-22T16:21:37.712786+03:00"
     description: Postfix to trap emails and website to view them
     digest: 5d3bdc00ac7f2059f9c92f0432e42ed46b9f1945be2852fd36bf64ec83375dae
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/mailtrap/mailtrap.png
@@ -2625,7 +2625,7 @@ entries:
     version: 1.0.1
   - apiVersion: v2
     appVersion: "2.4"
-    created: "2024-10-22T16:18:35.670398+03:00"
+    created: "2024-10-22T16:21:37.712507+03:00"
     description: Postfix to trap emails and website to view them
     digest: 9a8ab365b7a49b23ddd45979a9bfefd8faef0cc6c9d33f7b99914f4ad1d3385d
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/mailtrap/mailtrap.png
@@ -2639,7 +2639,33 @@ entries:
   mdr:
   - apiVersion: v2
     appVersion: 3.9.1-206
-    created: "2024-10-22T16:18:35.684553+03:00"
+    created: "2024-10-22T16:21:37.727821+03:00"
+    dependencies:
+    - alias: zeoserver
+      name: rn-zeoserver
+      repository: https://eea.github.io/helm-charts
+      version: 0.1.1
+    - alias: varnish
+      condition: rn-varnish.enabled
+      name: rn-varnish
+      repository: https://eea.github.io/helm-charts
+      version: 0.1.4
+    - alias: local-converters
+      condition: rn-local-converters.enabled
+      name: rn-local-converters
+      repository: https://eea.github.io/helm-charts
+      version: 0.1.2
+    description: A MDR Helm chart for Kubernetes
+    digest: 50909120941de0688e62ef8840b7ca62669999e91157921ac2257918db3a6f97
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/mdr/logo_eionet.png
+    name: mdr
+    type: application
+    urls:
+    - mdr-0.1.4.tgz
+    version: 0.1.4
+  - apiVersion: v2
+    appVersion: 3.9.1-206
+    created: "2024-10-22T16:21:37.724986+03:00"
     dependencies:
     - alias: zeoserver
       name: rn-zeoserver
@@ -2665,7 +2691,7 @@ entries:
     version: 0.1.3
   - apiVersion: v2
     appVersion: 3.9.1-206
-    created: "2024-10-22T16:18:35.681146+03:00"
+    created: "2024-10-22T16:21:37.721638+03:00"
     dependencies:
     - alias: zeoserver
       name: rn-zeoserver
@@ -2691,7 +2717,7 @@ entries:
     version: 0.1.2
   - apiVersion: v2
     appVersion: 3.9.1-206
-    created: "2024-10-22T16:18:35.677913+03:00"
+    created: "2024-10-22T16:21:37.718808+03:00"
     dependencies:
     - name: rn-zeoserver
       repository: https://eea.github.io/helm-charts
@@ -2714,7 +2740,7 @@ entries:
     version: 0.1.1
   - apiVersion: v2
     appVersion: 3.9.1-206
-    created: "2024-10-22T16:18:35.674545+03:00"
+    created: "2024-10-22T16:21:37.715975+03:00"
     dependencies:
     - name: rn-zeoserver
       repository: https://eea.github.io/helm-charts
@@ -2738,7 +2764,7 @@ entries:
   nessus:
   - apiVersion: v2
     appVersion: "1.2"
-    created: "2024-10-22T16:18:35.690504+03:00"
+    created: "2024-10-22T16:21:37.73098+03:00"
     description: Nessus vulnerability scanner
     digest: 5bb185930b70c36612d6d76ea0a795cf2615e0583ba9d3a788d1ac6c9eb19cfb
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/nessus/icon.png
@@ -2751,7 +2777,7 @@ entries:
     version: 0.2.8
   - apiVersion: v2
     appVersion: "1.1"
-    created: "2024-10-22T16:18:35.689466+03:00"
+    created: "2024-10-22T16:21:37.730661+03:00"
     description: Nessus vulnerability scanner
     digest: db3f770984c5b35fc9076e505e531f54ed8cb585d07004c32a3b5b8e198d6f00
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/nessus/icon.png
@@ -2764,7 +2790,7 @@ entries:
     version: 0.2.7
   - apiVersion: v2
     appVersion: "1.1"
-    created: "2024-10-22T16:18:35.688815+03:00"
+    created: "2024-10-22T16:21:37.730309+03:00"
     description: Nessus vulnerability scanner
     digest: c06b61c5f1fc20f016d30473a465fdd3b8200cb2663d3de11606c61762b1aeb1
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/nessus/icon.png
@@ -2777,7 +2803,7 @@ entries:
     version: 0.2.6
   - apiVersion: v2
     appVersion: "1.0"
-    created: "2024-10-22T16:18:35.68821+03:00"
+    created: "2024-10-22T16:21:37.729784+03:00"
     description: Nessus vulnerability scanner
     digest: 7df8b8efb16a4c14a0f3bc66815b948e72ca860edbcd0da0c5500efd625a2aa3
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/nessus/icon.png
@@ -2790,7 +2816,7 @@ entries:
     version: 0.2.5
   - apiVersion: v2
     appVersion: 10.6.3
-    created: "2024-10-22T16:18:35.687334+03:00"
+    created: "2024-10-22T16:21:37.729372+03:00"
     description: Nessus vulnerability scanner
     digest: f404f61a2dd2d2deff5c5ae54240e9d85ad913574387b69bf2f84644a3de3f79
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/nessus/icon.png
@@ -2803,7 +2829,7 @@ entries:
     version: 0.2.4
   - apiVersion: v2
     appVersion: 8.12.0
-    created: "2024-10-22T16:18:35.686948+03:00"
+    created: "2024-10-22T16:21:37.72907+03:00"
     description: Nessus vulnerability scanner
     digest: d2122019936c60ac50e99cd5db5c13e141f0d7d1fa9819a4e81bdc1b39d0ef32
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/nessus/icon.png
@@ -2816,7 +2842,7 @@ entries:
     version: 0.2.3
   - apiVersion: v2
     appVersion: 8.12.0
-    created: "2024-10-22T16:18:35.68656+03:00"
+    created: "2024-10-22T16:21:37.728754+03:00"
     description: Nessus vulnerability scanner
     digest: e89f75091e24e51a9a9289ea4c077eb991f2a958329c0ccbc85fc50618faaec6
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/nessus/icon.png
@@ -2829,7 +2855,7 @@ entries:
     version: 0.2.2
   - apiVersion: v2
     appVersion: 8.12.0
-    created: "2024-10-22T16:18:35.685863+03:00"
+    created: "2024-10-22T16:21:37.728438+03:00"
     description: Nessus vulnerability scanner
     digest: 4270a18016b88aa518d8945aeb19a07cb21af8011257715c84bb2cc37f5b8fa2
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/nessus/icon.png
@@ -2842,7 +2868,7 @@ entries:
     version: 0.2.1
   - apiVersion: v2
     appVersion: 8.12.0
-    created: "2024-10-22T16:18:35.685398+03:00"
+    created: "2024-10-22T16:21:37.728134+03:00"
     description: Nessus vulnerability scanner
     digest: 7b08c64f82ea62bd2addd4307a6553f89ac982c31366904965a5d3869bdb2ac4
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/nessus/icon.png
@@ -2856,7 +2882,7 @@ entries:
   papers:
   - apiVersion: v2
     appVersion: 2018-06-11T1158
-    created: "2024-10-22T16:18:35.692765+03:00"
+    created: "2024-10-22T16:21:37.732415+03:00"
     description: DEM for Air Quality dataflow
     digest: dbcc9be5a912ef39b50dd81a25f5299a1e9d22433c6f90165c16d5936cae6f54
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/papers/logo_eionet.png
@@ -2869,7 +2895,7 @@ entries:
     version: 0.1.3
   - apiVersion: v2
     appVersion: 2018-06-11T1158
-    created: "2024-10-22T16:18:35.692209+03:00"
+    created: "2024-10-22T16:21:37.732062+03:00"
     description: DEM for Air Quality dataflow
     digest: 7a4f713286a14854da511fd9b37504c7a13ac896a4815983ff94c561b7b49fc0
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/papers/logo_eionet.png
@@ -2882,7 +2908,7 @@ entries:
     version: 0.1.2
   - apiVersion: v2
     appVersion: 2018-06-11T1158
-    created: "2024-10-22T16:18:35.691643+03:00"
+    created: "2024-10-22T16:21:37.731714+03:00"
     description: DEM for Air Quality dataflow
     digest: b3b67661f7974e6cb0265b8b21981c3ec5c3080306fc155e466831957efb3062
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/papers/logo_eionet.png
@@ -2895,7 +2921,7 @@ entries:
     version: 0.1.1
   - apiVersion: v2
     appVersion: 2018-06-11T1158
-    created: "2024-10-22T16:18:35.691042+03:00"
+    created: "2024-10-22T16:21:37.731354+03:00"
     description: DEM for Air Quality dataflow
     digest: 9da36d12d207dd130aa19edb7b2adeb470cee15f1bb91ca4b1c0b881438294a6
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/papers/logo_eionet.png
@@ -2909,7 +2935,7 @@ entries:
   plonesaas:
   - apiVersion: v2
     appVersion: 5.2.9-58
-    created: "2024-10-22T16:18:35.709509+03:00"
+    created: "2024-10-22T16:21:37.746895+03:00"
     dependencies:
     - condition: plonesaas.enabled
       name: postfix
@@ -2932,7 +2958,7 @@ entries:
     version: 2.4.4
   - apiVersion: v2
     appVersion: 5.2.9-58
-    created: "2024-10-22T16:18:35.706255+03:00"
+    created: "2024-10-22T16:21:37.744098+03:00"
     dependencies:
     - condition: plonesaas.enabled
       name: postfix
@@ -2955,7 +2981,7 @@ entries:
     version: 2.4.3
   - apiVersion: v2
     appVersion: 5.2.9-58
-    created: "2024-10-22T16:18:35.703002+03:00"
+    created: "2024-10-22T16:21:37.741186+03:00"
     dependencies:
     - condition: plonesaas.enabled
       name: postfix
@@ -2978,7 +3004,7 @@ entries:
     version: 2.4.2
   - apiVersion: v2
     appVersion: 5.2.9-58
-    created: "2024-10-22T16:18:35.69946+03:00"
+    created: "2024-10-22T16:21:37.738282+03:00"
     dependencies:
     - condition: plonesaas.enabled
       name: postfix
@@ -3001,7 +3027,7 @@ entries:
     version: 2.4.1
   - apiVersion: v2
     appVersion: 5.2.9-58
-    created: "2024-10-22T16:18:35.696255+03:00"
+    created: "2024-10-22T16:21:37.735494+03:00"
     dependencies:
     - condition: plonesaas.enabled
       name: postfix
@@ -3025,7 +3051,7 @@ entries:
   postfix:
   - apiVersion: v2
     appVersion: 3.5-1.0
-    created: "2024-10-22T16:18:35.71157+03:00"
+    created: "2024-10-22T16:21:37.748346+03:00"
     description: Mail forwarder
     digest: eaf00fdde50995365e7067a2bc5e4d70a5338f9147761a0908a80e9e25a1385e
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/postfix/mail-forward.png
@@ -3038,7 +3064,7 @@ entries:
     version: 2.0.1
   - apiVersion: v2
     appVersion: 3.5-1.0
-    created: "2024-10-22T16:18:35.711138+03:00"
+    created: "2024-10-22T16:21:37.748069+03:00"
     description: Mail forwarder
     digest: 43ceedc3d04958120757795db64b0ca54cc84c60cd23c3f6cf32c110dcad44c0
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/postfix/mail-forward.png
@@ -3051,7 +3077,7 @@ entries:
     version: 2.0.0
   - apiVersion: v2
     appVersion: 2.10-3.8
-    created: "2024-10-22T16:18:35.710709+03:00"
+    created: "2024-10-22T16:21:37.747793+03:00"
     description: Mail forwarder
     digest: 3348df2948808011ca44bbe7d4fa93f75bfab8116e29ec9762b2f775a1db0baa
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/postfix/mail-forward.png
@@ -3064,7 +3090,7 @@ entries:
     version: 1.1.0
   - apiVersion: v2
     appVersion: 2.10-3.8
-    created: "2024-10-22T16:18:35.710178+03:00"
+    created: "2024-10-22T16:21:37.74734+03:00"
     description: Mail forwarder
     digest: 3094c06c0cfe5df3b60c5bc889d601f2fedcb4c9c3eb91789f04bb597463084a
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/postfix/mail-forward.png
@@ -3078,7 +3104,7 @@ entries:
   projects:
   - apiVersion: v2
     appVersion: projects-23.09.22
-    created: "2024-10-22T16:18:35.715889+03:00"
+    created: "2024-10-22T16:21:37.751698+03:00"
     dependencies:
     - condition: postfix.enabled
       name: postfix
@@ -3097,7 +3123,7 @@ entries:
     version: 0.3.1
   - apiVersion: v2
     appVersion: projects-23.09.22
-    created: "2024-10-22T16:18:35.715113+03:00"
+    created: "2024-10-22T16:21:37.751028+03:00"
     dependencies:
     - condition: postfix.enabled
       name: postfix
@@ -3116,7 +3142,7 @@ entries:
     version: 0.3.0
   - apiVersion: v2
     appVersion: projects-23.09.22
-    created: "2024-10-22T16:18:35.714369+03:00"
+    created: "2024-10-22T16:21:37.750348+03:00"
     dependencies:
     - condition: postfix.enabled
       name: postfix
@@ -3135,7 +3161,7 @@ entries:
     version: 0.2.1
   - apiVersion: v2
     appVersion: projects-23.09.22
-    created: "2024-10-22T16:18:35.713445+03:00"
+    created: "2024-10-22T16:21:37.749685+03:00"
     dependencies:
     - condition: postfix.enabled
       name: postfix
@@ -3154,7 +3180,7 @@ entries:
     version: 0.2.0
   - apiVersion: v2
     appVersion: projects-23.09.22
-    created: "2024-10-22T16:18:35.712514+03:00"
+    created: "2024-10-22T16:21:37.74902+03:00"
     dependencies:
     - condition: postfix.enabled
       name: postfix
@@ -3173,7 +3199,7 @@ entries:
     version: 0.1.0
   rdfdata:
   - apiVersion: v2
-    created: "2024-10-22T16:18:35.717871+03:00"
+    created: "2024-10-22T16:21:37.753313+03:00"
     description: Convert Eurostat and other orgs data to RDF and serve it from a website.
     digest: eeda8ed10a12bb8981e1f6032abf2fa64c687040e02ff17352680e4b58c40cfc
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/rdfdata/rdf.svg
@@ -3186,7 +3212,7 @@ entries:
     - rdfdata-1.0.3.tgz
     version: 1.0.3
   - apiVersion: v2
-    created: "2024-10-22T16:18:35.717373+03:00"
+    created: "2024-10-22T16:21:37.752992+03:00"
     description: Convert Eurostat and other orgs data to RDF and serve it from a website.
     digest: f826864ccc65e236de350d254dcd153669add8e6979900f0ff753ad068a51706
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/rdfdata/rdf.svg
@@ -3199,7 +3225,7 @@ entries:
     - rdfdata-1.0.2.tgz
     version: 1.0.2
   - apiVersion: v2
-    created: "2024-10-22T16:18:35.716874+03:00"
+    created: "2024-10-22T16:21:37.752361+03:00"
     description: Convert Eurostat and other orgs data to RDF and serve it from a website.
     digest: 70fc3bc24cc7576d4379bf29d33fbdc9c228328ec419dfd3dc9d7c18d90cd05b
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/rdfdata/rdf.svg
@@ -3212,7 +3238,7 @@ entries:
     - rdfdata-1.0.1.tgz
     version: 1.0.1
   - apiVersion: v2
-    created: "2024-10-22T16:18:35.716373+03:00"
+    created: "2024-10-22T16:21:37.752021+03:00"
     description: Convert Eurostat and other orgs data to RDF and serve it from a website.
     digest: f496bdaab3282cd43ce0c578f0f36d427679ea5edf121dc702614cad0e2347de
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/rdfdata/rdf.svg
@@ -3227,7 +3253,7 @@ entries:
   rn-celery:
   - apiVersion: v2
     appVersion: 5.2-1.0
-    created: "2024-10-22T16:18:35.718892+03:00"
+    created: "2024-10-22T16:21:37.754178+03:00"
     description: Celery RabbitMQ message consumer
     digest: 271f1fe9db3e68c1f50f7a0838d2bceb8f2371afb64a422a5de3c47ace6971c1
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/rn-celery/celery.png
@@ -3240,7 +3266,7 @@ entries:
     version: 0.1.1
   - apiVersion: v2
     appVersion: 5.2-1.0
-    created: "2024-10-22T16:18:35.718384+03:00"
+    created: "2024-10-22T16:21:37.753738+03:00"
     description: Celery RabbitMQ message consumer
     digest: ac917848cecb83e50bed81231096ffca36ee584d6d01583e5237627d5d95b51d
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/rn-celery/celery.png
@@ -3254,7 +3280,7 @@ entries:
   rn-clamav:
   - apiVersion: v2
     appVersion: 2.6.17
-    created: "2024-10-22T16:18:35.722014+03:00"
+    created: "2024-10-22T16:21:37.755922+03:00"
     description: A Reportnet2 clamav helm chart for Kubernetes
     digest: 57ee09929269d65f9fcc8b8db06777663e48861ed60b4594e3d5351247316b57
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/rn-clamav/ClamAV_Logo.png
@@ -3265,7 +3291,7 @@ entries:
     version: 0.1.2
   - apiVersion: v2
     appVersion: 2.6.17
-    created: "2024-10-22T16:18:35.720909+03:00"
+    created: "2024-10-22T16:21:37.755353+03:00"
     description: A Reportnet2 clamav helm chart for Kubernetes
     digest: 518e80447d413ac996e476f2fc30542191bb51f1250a98ad2d69d00c935ae794
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/rn-clamav/ClamAV_Logo.png
@@ -3276,7 +3302,7 @@ entries:
     version: 0.1.1
   - apiVersion: v2
     appVersion: 2.6.17
-    created: "2024-10-22T16:18:35.719938+03:00"
+    created: "2024-10-22T16:21:37.754772+03:00"
     description: A Reportnet2 clamav helm chart for Kubernetes
     digest: 4af03d64870b802b5ab03fc30cfe1a9a80e703ea7e943fd2bfbedcdc4b7b7d76
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/rn-clamav/ClamAV_Logo.png
@@ -3288,7 +3314,7 @@ entries:
   rn-local-converters:
   - apiVersion: v2
     appVersion: 3.0.7
-    created: "2024-10-22T16:18:35.723354+03:00"
+    created: "2024-10-22T16:21:37.756801+03:00"
     description: A Reportnet2 local converters helm chart for Kubernetes
     digest: 1c11ef21c6b16a7b035240e46736258c452567600c29f2512a94b544b87b981b
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/rn-local-converters/logo_eionet.png
@@ -3299,7 +3325,7 @@ entries:
     version: 0.1.2
   - apiVersion: v2
     appVersion: 3.0.7
-    created: "2024-10-22T16:18:35.722901+03:00"
+    created: "2024-10-22T16:21:37.756504+03:00"
     description: A Reportnet2 local converters helm chart for Kubernetes
     digest: 60ecc581e9669124e48732dde5dd0a0da080055cd0b8c1c4f08a39e572414645
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/rn-local-converters/logo_eionet.png
@@ -3310,7 +3336,7 @@ entries:
     version: 0.1.1
   - apiVersion: v2
     appVersion: 3.0.7
-    created: "2024-10-22T16:18:35.722459+03:00"
+    created: "2024-10-22T16:21:37.756213+03:00"
     description: A Reportnet2 local converters helm chart for Kubernetes
     digest: e51412aa896f37cbd6d46dbb778fbff3933a0b6782df36425e131ae28b6734f2
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/rn-local-converters/logo_eionet.png
@@ -3322,7 +3348,7 @@ entries:
   rn-rabbitmq:
   - apiVersion: v2
     appVersion: 3.7.28-1
-    created: "2024-10-22T16:18:35.724312+03:00"
+    created: "2024-10-22T16:21:37.757309+03:00"
     description: RabbitMQ stack used by Reportnet sites
     digest: 0c41a252371ef2f445c6aa1bee9b95f9f6028bec365564f388122fc18f16b103
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/rn-rabbitmq/rabbitmq.png
@@ -3335,7 +3361,7 @@ entries:
     version: 0.1.1
   - apiVersion: v2
     appVersion: 3.7.28-1
-    created: "2024-10-22T16:18:35.723753+03:00"
+    created: "2024-10-22T16:21:37.75705+03:00"
     description: RabbitMQ stack used by Reportnet sites
     digest: 299ffcdd2ab241b8d568e49dfbf1d97e874fefc35302e3a854df700bc3a0abbd
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/rn-rabbitmq/rabbitmq.png
@@ -3349,7 +3375,7 @@ entries:
   rn-varnish:
   - apiVersion: v2
     appVersion: 2.0-1.1
-    created: "2024-10-22T16:18:35.736335+03:00"
+    created: "2024-10-22T16:21:37.767227+03:00"
     description: A Reportnet2 varnish Helm chart for Kubernetes
     digest: 4a74235d6c45d8bdd6462c2f3c10feffaa76b55d081b6d56414311ecac7eabd0
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/rn-varnish/varnish_logo.png
@@ -3360,7 +3386,7 @@ entries:
     version: 0.1.4
   - apiVersion: v2
     appVersion: 2.0-1.1
-    created: "2024-10-22T16:18:35.733897+03:00"
+    created: "2024-10-22T16:21:37.765267+03:00"
     description: A Reportnet2 varnish Helm chart for Kubernetes
     digest: 9bf999f91e8f5eb19a8fee979a9257f4068caf2ce8f92497cec8d76f0fbb0f46
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/rn-varnish/varnish_logo.png
@@ -3371,7 +3397,7 @@ entries:
     version: 0.1.3
   - apiVersion: v2
     appVersion: 2.0-1.1
-    created: "2024-10-22T16:18:35.731554+03:00"
+    created: "2024-10-22T16:21:37.763332+03:00"
     description: A Reportnet2 varnish Helm chart for Kubernetes
     digest: 8bb5b1d0279fdfe641ba5c121d00a0598bd51a56ce31e41dd229a0201c1d058c
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/rn-varnish/varnish_logo.png
@@ -3382,7 +3408,7 @@ entries:
     version: 0.1.2
   - apiVersion: v2
     appVersion: 2.0-1.1
-    created: "2024-10-22T16:18:35.729218+03:00"
+    created: "2024-10-22T16:21:37.761402+03:00"
     description: A Reportnet2 varnish Helm chart for Kubernetes
     digest: 5cd901e24323b6e096fa5b4bceaa22eb3fa2d29df3fe168e2b2c07800183c7f7
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/rn-varnish/varnish_logo.png
@@ -3393,7 +3419,7 @@ entries:
     version: 0.1.1
   - apiVersion: v2
     appVersion: 2.0-1.1
-    created: "2024-10-22T16:18:35.726637+03:00"
+    created: "2024-10-22T16:21:37.75946+03:00"
     description: A Reportnet2 varnish Helm chart for Kubernetes
     digest: d0da708351ea7e5e89d585ba40efa0ef28b0fc2177a1f765a43a2fb5312d42ac
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/rn-varnish/varnish_logo.png
@@ -3405,7 +3431,7 @@ entries:
   rn-zeoserver:
   - apiVersion: v2
     appVersion: 1.2.0
-    created: "2024-10-22T16:18:35.737182+03:00"
+    created: "2024-10-22T16:21:37.767766+03:00"
     description: A Reportnet2 zeoserver helm chart for Kubernetes
     digest: c151cb2265023e087004a335f1ab20262de39271652a6b20706abe6e130557e2
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/rn-zeoserver/logo_eionet.png
@@ -3416,7 +3442,7 @@ entries:
     version: 0.1.1
   - apiVersion: v2
     appVersion: 1.2.0
-    created: "2024-10-22T16:18:35.73676+03:00"
+    created: "2024-10-22T16:21:37.767505+03:00"
     description: A Reportnet2 zeoserver helm chart for Kubernetes
     digest: 888a0bba3c6f6e946551692b991028cab6b983460644e72d9e84a881f1fa144e
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/rn-zeoserver/logo_eionet.png
@@ -3428,7 +3454,7 @@ entries:
   rod3:
   - apiVersion: v2
     appVersion: 3.11-RELEASE
-    created: "2024-10-22T16:18:35.741986+03:00"
+    created: "2024-10-22T16:21:37.771099+03:00"
     description: Reportnet ROD3
     digest: e27636ab79663291af726c6f517c81f1b50ca74b826dd25f59362599a53ca107
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/rod3/logo_eionet.png
@@ -3441,7 +3467,7 @@ entries:
     version: 0.2.1
   - apiVersion: v2
     appVersion: 3.11-RELEASE
-    created: "2024-10-22T16:18:35.741548+03:00"
+    created: "2024-10-22T16:21:37.770684+03:00"
     description: Reportnet ROD3
     digest: c9fd6f6882616142b8c127905e40d6235eafb6dd62136527313759bd95183673
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/rod3/logo_eionet.png
@@ -3454,7 +3480,7 @@ entries:
     version: 0.2.0
   - apiVersion: v2
     appVersion: 3.11-RELEASE
-    created: "2024-10-22T16:18:35.741111+03:00"
+    created: "2024-10-22T16:21:37.770283+03:00"
     description: Reportnet ROD3
     digest: 6d06fd7e99dcaad13d9621f3faf36d13d853ce5a49771b8562637c1f376e9bbc
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/rod3/logo_eionet.png
@@ -3467,7 +3493,7 @@ entries:
     version: 0.1.7
   - apiVersion: v2
     appVersion: 3.11-RELEASE
-    created: "2024-10-22T16:18:35.740603+03:00"
+    created: "2024-10-22T16:21:37.769905+03:00"
     description: Reportnet ROD3
     digest: 448b9512eb5d29b956bf7fd1bdef5f65eb27ef2373fd27ef030f57cd8cb5e801
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/rod3/logo_eionet.png
@@ -3480,7 +3506,7 @@ entries:
     version: 0.1.6
   - apiVersion: v2
     appVersion: 3.11-RELEASE
-    created: "2024-10-22T16:18:35.739995+03:00"
+    created: "2024-10-22T16:21:37.769403+03:00"
     description: Reportnet ROD3
     digest: d4202c869d28e792989082d71df14bd33028fdf766b1c41e3a9d8d110c429365
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/rod3/logo_eionet.png
@@ -3493,7 +3519,7 @@ entries:
     version: 0.1.5
   - apiVersion: v2
     appVersion: 3.11-RELEASE
-    created: "2024-10-22T16:18:35.739408+03:00"
+    created: "2024-10-22T16:21:37.76886+03:00"
     description: Reportnet ROD3
     digest: 54d2d0024740d30e3599be94b6173727747138016a78432b23d2ce0d8180bbed
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/rod3/logo_eionet.png
@@ -3506,7 +3532,7 @@ entries:
     version: 0.1.4
   - apiVersion: v2
     appVersion: 3.11-RELEASE
-    created: "2024-10-22T16:18:35.738485+03:00"
+    created: "2024-10-22T16:21:37.768492+03:00"
     description: Reportnet ROD3
     digest: a14d9b084486aac0be77f44a904057f76b5d4098cfc597c84605347969cbf67d
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/rod3/logo_eionet.png
@@ -3519,7 +3545,7 @@ entries:
     version: 0.1.3
   - apiVersion: v2
     appVersion: 3.11-RELEASE
-    created: "2024-10-22T16:18:35.737902+03:00"
+    created: "2024-10-22T16:21:37.768128+03:00"
     description: Reportnet ROD3
     digest: 3b063fbae4fca560447baad49942c7cb39d464d64e825e1ee28701c36d732975
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/rod3/logo_eionet.png
@@ -3533,7 +3559,7 @@ entries:
   screenshoteer:
   - apiVersion: v2
     appVersion: "1.7"
-    created: "2024-10-22T16:18:35.742987+03:00"
+    created: "2024-10-22T16:21:37.771979+03:00"
     description: Creates web screenshots and mobile emulations from an API. Useful
       for PDF creations and thumbnails generation of external services added to a
       CMS.
@@ -3549,7 +3575,7 @@ entries:
     version: 1.11.0
   - apiVersion: v2
     appVersion: "1.7"
-    created: "2024-10-22T16:18:35.742486+03:00"
+    created: "2024-10-22T16:21:37.771542+03:00"
     description: Creates web screenshots and mobile emulations from an API. Useful
       for PDF creations and thumbnails generation of external services added to a
       CMS.
@@ -3565,7 +3591,7 @@ entries:
     version: 0.1.1
   sdi-catalogue:
   - apiVersion: v2
-    created: "2024-10-22T16:18:35.780833+03:00"
+    created: "2024-10-22T16:21:37.802188+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -3582,7 +3608,7 @@ entries:
     - sdi-catalogue-0.6.16.tgz
     version: 0.6.16
   - apiVersion: v2
-    created: "2024-10-22T16:18:35.779041+03:00"
+    created: "2024-10-22T16:21:37.801038+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -3599,7 +3625,7 @@ entries:
     - sdi-catalogue-0.6.15.tgz
     version: 0.6.15
   - apiVersion: v2
-    created: "2024-10-22T16:18:35.777804+03:00"
+    created: "2024-10-22T16:21:37.799908+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -3616,7 +3642,7 @@ entries:
     - sdi-catalogue-0.6.14.tgz
     version: 0.6.14
   - apiVersion: v2
-    created: "2024-10-22T16:18:35.776348+03:00"
+    created: "2024-10-22T16:21:37.798779+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -3633,7 +3659,7 @@ entries:
     - sdi-catalogue-0.6.13.tgz
     version: 0.6.13
   - apiVersion: v2
-    created: "2024-10-22T16:18:35.774861+03:00"
+    created: "2024-10-22T16:21:37.797618+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -3650,7 +3676,7 @@ entries:
     - sdi-catalogue-0.6.12.tgz
     version: 0.6.12
   - apiVersion: v2
-    created: "2024-10-22T16:18:35.773365+03:00"
+    created: "2024-10-22T16:21:37.796287+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -3667,7 +3693,7 @@ entries:
     - sdi-catalogue-0.6.11.tgz
     version: 0.6.11
   - apiVersion: v2
-    created: "2024-10-22T16:18:35.771888+03:00"
+    created: "2024-10-22T16:21:37.794981+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -3684,7 +3710,7 @@ entries:
     - sdi-catalogue-0.6.10.tgz
     version: 0.6.10
   - apiVersion: v2
-    created: "2024-10-22T16:18:35.792895+03:00"
+    created: "2024-10-22T16:21:37.812065+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -3701,7 +3727,7 @@ entries:
     - sdi-catalogue-0.6.9.tgz
     version: 0.6.9
   - apiVersion: v2
-    created: "2024-10-22T16:18:35.791358+03:00"
+    created: "2024-10-22T16:21:37.810882+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -3718,7 +3744,7 @@ entries:
     - sdi-catalogue-0.6.8.tgz
     version: 0.6.8
   - apiVersion: v2
-    created: "2024-10-22T16:18:35.790081+03:00"
+    created: "2024-10-22T16:21:37.809649+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -3735,7 +3761,7 @@ entries:
     - sdi-catalogue-0.6.7.tgz
     version: 0.6.7
   - apiVersion: v2
-    created: "2024-10-22T16:18:35.788613+03:00"
+    created: "2024-10-22T16:21:37.808236+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -3752,7 +3778,7 @@ entries:
     - sdi-catalogue-0.6.6.tgz
     version: 0.6.6
   - apiVersion: v2
-    created: "2024-10-22T16:18:35.786793+03:00"
+    created: "2024-10-22T16:21:37.807096+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -3769,7 +3795,7 @@ entries:
     - sdi-catalogue-0.6.5.tgz
     version: 0.6.5
   - apiVersion: v2
-    created: "2024-10-22T16:18:35.785292+03:00"
+    created: "2024-10-22T16:21:37.805952+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -3786,7 +3812,7 @@ entries:
     - sdi-catalogue-0.6.4.tgz
     version: 0.6.4
   - apiVersion: v2
-    created: "2024-10-22T16:18:35.783802+03:00"
+    created: "2024-10-22T16:21:37.80481+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -3803,7 +3829,7 @@ entries:
     - sdi-catalogue-0.6.3.tgz
     version: 0.6.3
   - apiVersion: v2
-    created: "2024-10-22T16:18:35.782323+03:00"
+    created: "2024-10-22T16:21:37.803693+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -3820,7 +3846,7 @@ entries:
     - sdi-catalogue-0.6.2.tgz
     version: 0.6.2
   - apiVersion: v2
-    created: "2024-10-22T16:18:35.770065+03:00"
+    created: "2024-10-22T16:21:37.793829+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -3837,7 +3863,7 @@ entries:
     - sdi-catalogue-0.6.1.tgz
     version: 0.6.1
   - apiVersion: v2
-    created: "2024-10-22T16:18:35.768616+03:00"
+    created: "2024-10-22T16:21:37.792691+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -3854,7 +3880,7 @@ entries:
     - sdi-catalogue-0.6.0.tgz
     version: 0.6.0
   - apiVersion: v2
-    created: "2024-10-22T16:18:35.757032+03:00"
+    created: "2024-10-22T16:21:37.782561+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -3871,7 +3897,7 @@ entries:
     - sdi-catalogue-0.5.17.tgz
     version: 0.5.17
   - apiVersion: v2
-    created: "2024-10-22T16:18:35.755624+03:00"
+    created: "2024-10-22T16:21:37.781544+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -3888,7 +3914,7 @@ entries:
     - sdi-catalogue-0.5.16.tgz
     version: 0.5.16
   - apiVersion: v2
-    created: "2024-10-22T16:18:35.754187+03:00"
+    created: "2024-10-22T16:21:37.780559+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -3905,7 +3931,7 @@ entries:
     - sdi-catalogue-0.5.15.tgz
     version: 0.5.15
   - apiVersion: v2
-    created: "2024-10-22T16:18:35.75308+03:00"
+    created: "2024-10-22T16:21:37.779579+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -3922,7 +3948,7 @@ entries:
     - sdi-catalogue-0.5.14.tgz
     version: 0.5.14
   - apiVersion: v2
-    created: "2024-10-22T16:18:35.751618+03:00"
+    created: "2024-10-22T16:21:37.778584+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -3939,7 +3965,7 @@ entries:
     - sdi-catalogue-0.5.13.tgz
     version: 0.5.13
   - apiVersion: v2
-    created: "2024-10-22T16:18:35.750208+03:00"
+    created: "2024-10-22T16:21:37.777542+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -3956,7 +3982,7 @@ entries:
     - sdi-catalogue-0.5.12.tgz
     version: 0.5.12
   - apiVersion: v2
-    created: "2024-10-22T16:18:35.748862+03:00"
+    created: "2024-10-22T16:21:37.776485+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -3973,7 +3999,7 @@ entries:
     - sdi-catalogue-0.5.11.tgz
     version: 0.5.11
   - apiVersion: v2
-    created: "2024-10-22T16:18:35.747349+03:00"
+    created: "2024-10-22T16:21:37.775091+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -3990,7 +4016,7 @@ entries:
     - sdi-catalogue-0.5.10.tgz
     version: 0.5.10
   - apiVersion: v2
-    created: "2024-10-22T16:18:35.767412+03:00"
+    created: "2024-10-22T16:21:37.791525+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -4007,7 +4033,7 @@ entries:
     - sdi-catalogue-0.5.9.tgz
     version: 0.5.9
   - apiVersion: v2
-    created: "2024-10-22T16:18:35.766244+03:00"
+    created: "2024-10-22T16:21:37.790422+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -4024,7 +4050,7 @@ entries:
     - sdi-catalogue-0.5.8.tgz
     version: 0.5.8
   - apiVersion: v2
-    created: "2024-10-22T16:18:35.764874+03:00"
+    created: "2024-10-22T16:21:37.788926+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -4041,7 +4067,7 @@ entries:
     - sdi-catalogue-0.5.7.tgz
     version: 0.5.7
   - apiVersion: v2
-    created: "2024-10-22T16:18:35.763472+03:00"
+    created: "2024-10-22T16:21:37.787876+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -4058,7 +4084,7 @@ entries:
     - sdi-catalogue-0.5.6.tgz
     version: 0.5.6
   - apiVersion: v2
-    created: "2024-10-22T16:18:35.76199+03:00"
+    created: "2024-10-22T16:21:37.786842+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -4075,7 +4101,7 @@ entries:
     - sdi-catalogue-0.5.5.tgz
     version: 0.5.5
   - apiVersion: v2
-    created: "2024-10-22T16:18:35.760861+03:00"
+    created: "2024-10-22T16:21:37.78584+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -4092,7 +4118,7 @@ entries:
     - sdi-catalogue-0.5.4.tgz
     version: 0.5.4
   - apiVersion: v2
-    created: "2024-10-22T16:18:35.759534+03:00"
+    created: "2024-10-22T16:21:37.784845+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -4109,7 +4135,7 @@ entries:
     - sdi-catalogue-0.5.3.tgz
     version: 0.5.3
   - apiVersion: v2
-    created: "2024-10-22T16:18:35.758376+03:00"
+    created: "2024-10-22T16:21:37.783838+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -4126,7 +4152,7 @@ entries:
     - sdi-catalogue-0.5.2.tgz
     version: 0.5.2
   - apiVersion: v2
-    created: "2024-10-22T16:18:35.745649+03:00"
+    created: "2024-10-22T16:21:37.774068+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -4143,7 +4169,7 @@ entries:
     - sdi-catalogue-0.5.1.tgz
     version: 0.5.1
   - apiVersion: v2
-    created: "2024-10-22T16:18:35.744487+03:00"
+    created: "2024-10-22T16:21:37.773038+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -4162,7 +4188,7 @@ entries:
   sdi-postgres:
   - apiVersion: v2
     appVersion: v9.6_2.4
-    created: "2024-10-22T16:18:35.793536+03:00"
+    created: "2024-10-22T16:21:37.812472+03:00"
     description: Postgres database for loading data (iguana)
     digest: 9a31b8fc84d9bc81415bf688f1bc2c1e795d0fcba9ca9d00c96662c5fa218919
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/sdi-postgres/iguana.png
@@ -4176,7 +4202,7 @@ entries:
     version: 0.1.1
   - apiVersion: v2
     appVersion: v9.6_2.4
-    created: "2024-10-22T16:18:35.793243+03:00"
+    created: "2024-10-22T16:21:37.812272+03:00"
     description: Postgres database for loading data (iguana)
     digest: dcdc09224e53377f092b70adf2f401cd15bdf682c4137d346b37954c7d352808
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/sdi-postgres/iguana.png
@@ -4191,7 +4217,7 @@ entries:
   - annotations:
       catalog.cattle.io/permits-os: linux,windows
     apiVersion: v2
-    created: "2024-10-22T16:18:35.794515+03:00"
+    created: "2024-10-22T16:21:37.813111+03:00"
     description: Generation of self-signed certificate
     digest: 8e99ff482f4d6dfe43e70217c80fd08f7bd179b7ed9504bf91c28c76ff206408
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/selfsigncert/sslicon.png
@@ -4203,7 +4229,7 @@ entries:
     - selfsigncert-0.2.1.tgz
     version: 0.2.1
   - apiVersion: v2
-    created: "2024-10-22T16:18:35.794242+03:00"
+    created: "2024-10-22T16:21:37.812892+03:00"
     description: Generation of self-signed certificate
     digest: 872426ddb373dd3c83bf71c70c9607f97ec9d27147fa094c2b23379df8ffefa7
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/selfsigncert/sslicon.png
@@ -4213,7 +4239,7 @@ entries:
     - selfsigncert-0.2.0.tgz
     version: 0.2.0
   - apiVersion: v2
-    created: "2024-10-22T16:18:35.793839+03:00"
+    created: "2024-10-22T16:21:37.812682+03:00"
     description: Generation of self-signed certificate
     digest: 0558553e6c280b397c74292494978e7414167011ffc2af6c9b530ba6154b5349
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/selfsigncert/sslicon.png
@@ -4225,7 +4251,7 @@ entries:
   share-it:
   - apiVersion: v2
     appVersion: 25.0.12-fpm-alpine
-    created: "2024-10-22T16:18:35.797768+03:00"
+    created: "2024-10-22T16:21:37.815752+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -4242,7 +4268,7 @@ entries:
     version: 0.3.0
   - apiVersion: v2
     appVersion: 25.0.6-fpm-alpine
-    created: "2024-10-22T16:18:35.796978+03:00"
+    created: "2024-10-22T16:21:37.814847+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
@@ -4259,7 +4285,7 @@ entries:
     version: 0.2.0
   - apiVersion: v2
     appVersion: 25.0.6-fpm-alpine
-    created: "2024-10-22T16:18:35.796056+03:00"
+    created: "2024-10-22T16:21:37.814241+03:00"
     description: A NextCloud service for sharing files
     digest: 2ccf3be2c93358d4c3eb5a78a4370fe562c999af9b6aa9abe0ecbb54fb49c7f4
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/share-it/shareit.svg
@@ -4272,7 +4298,7 @@ entries:
     version: 0.1.4
   - apiVersion: v2
     appVersion: 25.0.6-fpm-alpine
-    created: "2024-10-22T16:18:35.795336+03:00"
+    created: "2024-10-22T16:21:37.813878+03:00"
     description: A NextCloud service for sharing files
     digest: aa2035dd7ca18ad8eb75d7051531c3b19cd2c32e6aa9eb7bca7825675e5849b4
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/share-it/shareit.svg
@@ -4285,7 +4311,7 @@ entries:
     version: 0.1.3
   - apiVersion: v2
     appVersion: 25.0.6-fpm-alpine
-    created: "2024-10-22T16:18:35.794927+03:00"
+    created: "2024-10-22T16:21:37.813485+03:00"
     description: A NextCloud service for sharing files
     digest: 9f0cfb6bbb7cf4330ee37e17fd18a677700982374dcb6e049159d0508d2dbe80
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/share-it/shareit.svg
@@ -4299,7 +4325,7 @@ entries:
   sqlservice:
   - apiVersion: v2
     appVersion: 2.4.58-alpine3.19
-    created: "2024-10-22T16:18:35.800221+03:00"
+    created: "2024-10-22T16:21:37.817797+03:00"
     description: Serves RDF files from file system
     digest: 6c179866bce50d62c4e8f1043b7312140883ea16c10d48929463ae046f502a86
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/sqlservice/rdf.svg
@@ -4312,7 +4338,7 @@ entries:
     version: 1.0.1
   - apiVersion: v2
     appVersion: 2.4.57-alpine
-    created: "2024-10-22T16:18:35.799046+03:00"
+    created: "2024-10-22T16:21:37.816797+03:00"
     description: Serves RDF files from file system
     digest: bb0f2f55ab4c8bbd2f92c7fbcd0cd809860ff5a93194a26cb71a6e61237c43b8
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/sqlservice/rdf.svg
@@ -4326,7 +4352,7 @@ entries:
   svn-eionet:
   - apiVersion: v2
     appVersion: "2.2"
-    created: "2024-10-22T16:18:35.802427+03:00"
+    created: "2024-10-22T16:21:37.819177+03:00"
     description: Subversion service for EEA/Eionet
     digest: edb6d7b4f765c85829dd231b7be8162d481d5d83265297b37da29b5f6a72376a
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/svn-eionet/icon.svg
@@ -4340,7 +4366,7 @@ entries:
     version: 1.0.1
   - apiVersion: v2
     appVersion: "2.1"
-    created: "2024-10-22T16:18:35.802068+03:00"
+    created: "2024-10-22T16:21:37.818921+03:00"
     description: Subversion service for EEA/Eionet
     digest: 7a72bdc1336f9ef704be4decadce28343a4d51a82c7d6463823baddd7f337a22
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/svn-eionet/icon.svg
@@ -4354,7 +4380,7 @@ entries:
     version: 1.0.0
   - apiVersion: v2
     appVersion: "2.0"
-    created: "2024-10-22T16:18:35.801696+03:00"
+    created: "2024-10-22T16:21:37.818673+03:00"
     description: Subversion service for EEA/Eionet
     digest: 515a5bb3a958e3f2b3413758ddf141b92bf1a3def434196cbcb675fa6aee95d0
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/svn-eionet/icon.svg
@@ -4368,7 +4394,7 @@ entries:
     version: 0.2.1
   - apiVersion: v2
     appVersion: "2.0"
-    created: "2024-10-22T16:18:35.801335+03:00"
+    created: "2024-10-22T16:21:37.818455+03:00"
     description: Subversion service for EEA/Eionet
     digest: 426dc8c0ee0ecff49ea49e676635184b0b6923a24ba0e308c9ac6b0ad39ad2d1
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/svn-eionet/icon.svg
@@ -4382,7 +4408,7 @@ entries:
     version: 0.2.0
   - apiVersion: v2
     appVersion: "1.5"
-    created: "2024-10-22T16:18:35.80097+03:00"
+    created: "2024-10-22T16:21:37.818237+03:00"
     description: Subversion service for Eionet
     digest: f63c384ce487ade97fdcc73f2bdb41c512de38497108c1785a53d03017a7e484
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/svn-eionet/icon.svg
@@ -4396,7 +4422,7 @@ entries:
     version: 0.1.1
   - apiVersion: v2
     appVersion: "1.5"
-    created: "2024-10-22T16:18:35.800595+03:00"
+    created: "2024-10-22T16:21:37.818018+03:00"
     description: Subversion service for Eionet
     digest: 3e2a3e2dd329f0cfaab7404cfe7e74206e114907ed47dca563a673ce4662c044
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/svn-eionet/icon.svg
@@ -4411,7 +4437,7 @@ entries:
   uns:
   - apiVersion: v2
     appVersion: 2022-05-24T1321
-    created: "2024-10-22T16:18:35.80442+03:00"
+    created: "2024-10-22T16:21:37.820498+03:00"
     dependencies:
     - condition: postfix.enabled
       name: postfix
@@ -4429,7 +4455,7 @@ entries:
     version: 0.2.1
   - apiVersion: v2
     appVersion: 2022-05-24T1321
-    created: "2024-10-22T16:18:35.803155+03:00"
+    created: "2024-10-22T16:21:37.81985+03:00"
     dependencies:
     - condition: postfix.enabled
       name: postfix
@@ -4448,7 +4474,7 @@ entries:
   webforms:
   - apiVersion: v2
     appVersion: 2024-01-11T1138
-    created: "2024-10-22T16:18:35.806392+03:00"
+    created: "2024-10-22T16:21:37.822584+03:00"
     description: Gather data for reporting obligations, using web questionnaires predefined
       by the EEA.
     digest: 0e79ca27944da5356217a985d680d0127ca74c9911bfcbd4885369feb0484009
@@ -4462,7 +4488,7 @@ entries:
     version: 1.0.3
   - apiVersion: v2
     appVersion: 2022-05-24T1320
-    created: "2024-10-22T16:18:35.805897+03:00"
+    created: "2024-10-22T16:21:37.822139+03:00"
     description: Gather data for reporting obligations, using web questionnaires predefined
       by the EEA.
     digest: ac9bd4526b4f73b9cac0d22d5d6e856b60eb6ace0c7d38df16f0f56502be7c2b
@@ -4476,7 +4502,7 @@ entries:
     version: 1.0.2
   - apiVersion: v2
     appVersion: 2022-05-24T1320
-    created: "2024-10-22T16:18:35.805416+03:00"
+    created: "2024-10-22T16:21:37.821708+03:00"
     description: Gather data for reporting obligations, using web questionnaires predefined
       by the EEA.
     digest: 28aa65c58c203eaacc25cac0118ca923318d54a977e2f1ceaa138671bf9ea040
@@ -4490,7 +4516,7 @@ entries:
     version: 1.0.1
   - apiVersion: v2
     appVersion: 2022-05-24T1320
-    created: "2024-10-22T16:18:35.804918+03:00"
+    created: "2024-10-22T16:21:37.821258+03:00"
     description: Gather data for reporting obligations, using web questionnaires predefined
       by the EEA.
     digest: 2170636daf54656fa8fb4b608ec39963d5bb2112a81a5450669a58a3d3afd2d8
@@ -4505,7 +4531,7 @@ entries:
   zeoserver:
   - apiVersion: v2
     appVersion: 2.13.23-alpine
-    created: "2024-10-22T16:18:35.807058+03:00"
+    created: "2024-10-22T16:21:37.82302+03:00"
     description: ZEO Server Docker image based on plone.recipe.zeoserver
     digest: 8d4b4811ac8d56c9e7bbf63e0dda7b2d665bf9cb434de9235e1bf5a5d4fe906d
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/zeoserver/zeo.png
@@ -4516,7 +4542,7 @@ entries:
     version: 0.2.0
   - apiVersion: v2
     appVersion: 2.13.23-alpine
-    created: "2024-10-22T16:18:35.806731+03:00"
+    created: "2024-10-22T16:21:37.822802+03:00"
     description: ZEO Server Docker image based on plone.recipe.zeoserver
     digest: 80ff3e2ce615700e9da18d908dd14e9d17cf9f7ac94336056342ec5d35b6af2e
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/zeoserver/zeo.png
@@ -4525,4 +4551,4 @@ entries:
     urls:
     - zeoserver-0.1.0.tgz
     version: 0.1.0
-generated: "2024-10-22T16:18:35.433754+03:00"
+generated: "2024-10-22T16:21:37.513009+03:00"
