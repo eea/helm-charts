@@ -6,45 +6,40 @@ This chart is almost configured for production use.
 
 ## Values
 
-<dl>
-
-  <dt>rabbitmq</dt>
-  <dd>This can be used to set the rabbitmq host to be used.</dd>.</dd>
-
-</dl>
+- **rabbitmq**: This can be used to set the rabbitmq host to be used.
 
 ## Releases
 
-<dl>
+### Version 0.1.8
+- Updated readme.
+- Moved liveness probes out of the deployment.
 
-  <dt>Version 0.1.7</dt>
-  <dd>Refactoring and cleanup.</dd>
-  <dd>Updated rn-varnish chart to 0.1.4.</dd>
-  <dd>Updated rn-local-converters chart to 0.1.2.</dd>
-  <dd>Updated rn-clamav chart to 0.1.2.</dd>
-  <dd>Updated ingress</dd>
+### Version 0.1.7
+- Refactoring and cleanup.
+- Updated rn-varnish chart to 0.1.4.
+- Updated rn-local-converters chart to 0.1.2.
+- Updated rn-clamav chart to 0.1.2.
+- Updated ingress.
 
-  <dt>Version 0.1.6</dt>
-  <dd>Refactored to be able to install multiple stacks in the same namespace. Due to the chart naming, we can't solely rely on appl.fullname for service naming</dd>
-  <dd>Dropped deployment since it's not needed, we can use RELEASE instead</dd>
-  <dd>Removed storage PVC since it's not needed</dd>
+### Version 0.1.6
+- Refactored to be able to install multiple stacks in the same namespace. Due to the chart naming, we can't solely rely on appl.fullname for service naming.
+- Dropped deployment since it's not needed, we can use RELEASE instead.
+- Removed storage PVC since it's not needed.
 
-  <dt>Version 0.1.5</dt>
-  <dd>Added rabbitmq.create and rabbitmq.name. When create is true, the rabbitmq service will be created.</dd>
+### Version 0.1.5
+- Added rabbitmq.create and rabbitmq.name. When create is true, the rabbitmq service will be created.
 
-  <dt>Version 0.1.4</dt>
-  <dd>Get the image and tag from image section.</dd>
+### Version 0.1.4
+- Get the image and tag from image section.
 
-  <dt>Version 0.1.3</dt>
-  <dd>Changed rabbitmq to externalName.</dd>
+### Version 0.1.3
+- Changed rabbitmq to externalName.
 
-  <dt>Version 0.1.2</dt>
-  <dd>Updated rn-varnish chart to 0.1.3 and fix ingress path</dd>
+### Version 0.1.2
+- Updated rn-varnish chart to 0.1.3 and fix ingress path.
 
-  <dt>Version 0.1.1</dt>
-  <dd>Updated rn-varnish chart to 0.1.2.</dd>
+### Version 0.1.1
+- Updated rn-varnish chart to 0.1.2.
 
-  <dt>Version 0.1.0</dt>
-  <dd>Initial release.</dd>
-
-</dl>
+### Version 0.1.0
+- Initial release.

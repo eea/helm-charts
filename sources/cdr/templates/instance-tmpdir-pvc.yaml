@@ -4,7 +4,7 @@ metadata:
   name: {{ include "appl.fullname" . }}-tmpdir-storage
   labels:
     {{- include "appl.labels" . | nindent 4 }}
-    component: zope-tmpdir-storage
+    app.kubernetes.io/component: zope-tmpdir-storage
   annotations:
     "helm.sh/resource-policy": keep
 spec:
