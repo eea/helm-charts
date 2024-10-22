@@ -15,19 +15,19 @@ This chart is almost configured for production use.
 
 ## Releases
 
-<dl>
+### Version 0.1.3
+- Updated readme.
+- Moved liveness probes out of the deployment.
 
-  <dt>Version 0.1.2</dt>
-  <dd>Refactoring and cleanup.</dd>
-  <dd>Updated rn-varnish chart to 0.1.4.</dd>
-  <dd>Updated rn-local-converters chart to 0.1.2.</dd>
-  <dd>Updated rn-clamav chart to 0.1.2.</dd>
-  <dd>Updated ingress</dd>
+### Version 0.1.2
+- Refactoring and cleanup.
+- Updated rn-varnish chart to 0.1.4.
+- Updated rn-local-converters chart to 0.1.2.
+- Updated rn-clamav chart to 0.1.2.
+- Updated ingress
 
-  <dt>Version 0.1.1</dt>
-  <dd>Removed deployment referrence from README.</dd>
+### Version 0.1.1
+- Removed deployment referrence from README.
 
-  <dt>Version 0.1.0</dt>
-  <dd>Initial release.</dd>
-
-</dl>
+### Version 0.1.0
+- Initial release.

@@ -80,14 +80,9 @@ spec:
           value: "{{ .Values.instance.env.localConvertersHost }}"
 
         livenessProbe:
-          httpGet:
-            path: /
-            port: {{ .Values.instance.port }}
-          initialDelaySeconds: 30
-          periodSeconds: 20
-          failureThreshold: 3
-          timeoutSeconds: 6
-
+          {{- toYaml .Values.livenessProbe | nindent 12 }}
+        readinessProbe:
+          {{- toYaml .Values.readinessProbe | nindent 12 }}
         resources:
           {{- toYaml .Values.instance.resources | nindent 10 }}
 

@@ -20,6 +20,15 @@ instance:
     limits:
       cpu: 500m
       memory: 2Gi
+  livenessProbe:
+    httpGet:
+      path: /
+      port: 8080
+    initialDelaySeconds: 30
+    periodSeconds: 20
+    failureThreshold: 3
+    timeoutSeconds: 6
+  readinessProbe: {}
   env:
     sentryDSN: ""
     zopeThreads: 4
