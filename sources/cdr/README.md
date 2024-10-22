@@ -10,6 +10,9 @@ This chart is almost configured for production use.
 
 ## Releases
 
+### Version 0.1.9
+- Fixed liveness probe and readiness probe in deployment.
+
 ### Version 0.1.8
 - Updated readme.
 - Moved liveness probes out of the deployment.
