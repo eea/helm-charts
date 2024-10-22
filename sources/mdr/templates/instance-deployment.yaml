@@ -26,7 +26,7 @@ spec:
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
 
       containers:
-      - name: {{ .Release.Name }}
+      - name: {{ include "appl.fullname" . }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
 

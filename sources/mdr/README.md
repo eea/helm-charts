@@ -15,6 +15,9 @@ This chart is almost configured for production use.
 
 ## Releases
 
+### Version 0.1.5
+- Fixed instance deployment name.
+
 ### Version 0.1.4
 - Fixed liveness and readiness probes in deployment.
 
