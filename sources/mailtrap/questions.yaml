@@ -1,0 +1,17 @@
+questions:
+  - variable: "hostname"
+    label: "Hostname"
+    description: "The url that is exposed"
+    required: true
+    default: "mail.01dev.eea.europa.eu"
+  
+  - variable: "environment"
+    label: "Select Environment"
+    description: "Choose the environment type for the deployment"
+    type: "enum"
+    required: true
+    options:
+      - "development"
+      - "staging"
+      - "production"
+    default: "development"
