@@ -17,6 +17,13 @@ This chart is almost configured for production use.
 
 <dl>
 
+  <dt>Version 0.1.7</dt>
+  <dd>Refactoring and cleanup.</dd>
+  <dd>Updated rn-varnish chart to 0.1.4.</dd>
+  <dd>Updated rn-local-converters chart to 0.1.2.</dd>
+  <dd>Updated rn-clamav chart to 0.1.2.</dd>
+  <dd>Updated ingress</dd>
+
   <dt>Version 0.1.6</dt>
   <dd>Refactored to be able to install multiple stacks in the same namespace. Due to the chart naming, we can't solely rely on appl.fullname for service naming</dd>
   <dd>Dropped deployment since it's not needed, we can use RELEASE instead</dd>

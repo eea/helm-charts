@@ -5,9 +5,11 @@ metadata:
   name: {{ .Values.rabbitmq.name }}
   labels:
     {{- include "appl.labels" . | nindent 4 }}
+    app.kubernetes.io/component: message-broker
 spec:
   selector:
     {{- include "appl.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: message-broker
   type: ExternalName
   externalName: {{ .Values.rabbitmq.externalName }}
 {{- end }}

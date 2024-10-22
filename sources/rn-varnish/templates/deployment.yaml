@@ -1,14 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "rn-varnish.fullname" . }}
+  name: {{ include "appl.fullname" . }}
   labels:
-    {{- include "rn-varnish.labels" . | nindent 4 }}
+    {{- include "appl.labels" . | nindent 4 }}
+    app.kubernetes.io/component: cache
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "rn-varnish.selectorLabels" . | nindent 6 }}
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: cache
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -16,16 +18,17 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "rn-varnish.labels" . | nindent 8 }}
+        {{- include "appl.labels" . | nindent 8 }}
         {{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
+        app.kubernetes.io/component: cache
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "rn-varnish.serviceAccountName" . }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:

@@ -5,7 +5,7 @@ metadata:
   name: {{ include "appl.fullname" . }}-cron-zeopack
   labels:
     {{- include "appl.labels" . | nindent 4 }}
-    component: cron-zeopack
+    app.kubernetes.io/component: job
 
 spec:
   schedule: "{{ .Values.cronzeopack.schedule }}"
@@ -21,7 +21,7 @@ spec:
           serviceAccountName: {{ include "appl.serviceAccountName" . }}
 
           containers:
-          - name: {{ .Release.Name }}
+          - name: {{ include "appl.fullname" . }}
             image: "{{ .Values.cronzeopack.repository }}:{{ .Values.cronzeopack.tag }}"
             imagePullPolicy: {{ .Values.image.pullPolicy }}
             resources:
@@ -33,7 +33,7 @@ spec:
             - name: TZ
               value: {{ .Values.timezone }}
             - name: PACK_REQUEST
-              value: 'curl -k -X POST -d "days:float=7" -u "{{ .Values.cdrUser }}:{{ .Values.cdrPass }}" "https://{{ .Release.Name }}.eionet.europa.eu/Control_Panel/Database/main/manage_pack" && echo "Successfully called pack"'
+              value: 'curl -k -X POST -d "days:float=7" -u "{{ .Values.cdrUser }}:{{ .Values.cdrPass }}" "https://{{ include "appl.fullname" . }}.eionet.europa.eu/Control_Panel/Database/main/manage_pack" && echo "Successfully called pack"'
           restartPolicy: Never
 
 {{- end }}

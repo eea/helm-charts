@@ -1,9 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "rn-local-converters.fullname" . }}
+  name: {{ include "appl.fullname" . }}
   labels:
-    {{- include "rn-local-converters.labels" . | nindent 4 }}
+    {{- include "appl.labels" . | nindent 4 }}
+    app.kubernetes.io/component: local-converters
 spec:
   type: {{ .Values.service.type }}
   ports:
@@ -12,4 +13,5 @@ spec:
       protocol: TCP
       name: http
   selector:
-    {{- include "rn-local-converters.selectorLabels" . | nindent 4 }}
+    {{- include "appl.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: local-converters

@@ -5,7 +5,7 @@ metadata:
   name: {{ include "appl.fullname" . }}-cron-auto-env-cleanup
   labels:
     {{- include "appl.labels" . | nindent 4 }}
-    component: cron-auto-env-cleanup
+    app.kubernetes.io/component: job
 
 spec:
   schedule: "{{ .Values.cronautoenvcleanup.schedule }}"
@@ -21,7 +21,7 @@ spec:
           serviceAccountName: {{ include "appl.serviceAccountName" . }}
 
           containers:
-          - name: {{ .Release.Name }}
+          - name: {{ include "appl.fullname" . }}
             image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
             imagePullPolicy: {{ .Values.image.pullPolicy }}
             resources:

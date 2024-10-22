@@ -5,7 +5,7 @@ metadata:
   name: {{ include "appl.fullname" . }}-cron-auto-fallin
   labels:
     {{- include "appl.labels" . | nindent 4 }}
-    component: cron-auto-fallin
+    app.kubernetes.io/component: job
 
 spec:
   schedule: "{{ .Values.cronautofallin.schedule }}"
@@ -21,7 +21,7 @@ spec:
           serviceAccountName: {{ include "appl.serviceAccountName" . }}
 
           containers:
-          - name: {{ .Release.Name }}
+          - name: {{ include "appl.fullname" . }}
             image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
             imagePullPolicy: {{ .Values.image.pullPolicy }}
             resources:
@@ -91,21 +91,21 @@ spec:
               value: "{{ .Values.instance.env.localConvertersHost }}"
             volumeMounts:
               - mountPath: /opt/zope/var/zip_cache
-                name: {{ .Release.Name }}-zipcache-storage
+                name: {{ include "appl.fullname" . }}-zipcache-storage
               - mountPath: /sessions
-                name: {{ .Release.Name }}-sessions-storage
+                name: {{ include "appl.fullname" . }}-sessions-storage
               - mountPath: /tmp
-                name: {{ .Release.Name }}-tmpdir-storage
+                name: {{ include "appl.fullname" . }}-tmpdir-storage
 
           restartPolicy: Never
           volumes:
-            - name: {{ .Release.Name }}-zipcache-storage
+            - name: {{ include "appl.fullname" . }}-zipcache-storage
               persistentVolumeClaim:
-                claimName: {{ .Release.Name }}-zipcache-storage
-            - name: {{ .Release.Name }}-sessions-storage
+                claimName: {{ include "appl.fullname" . }}-zipcache-storage
+            - name: {{ include "appl.fullname" . }}-sessions-storage
               persistentVolumeClaim:
-                claimName: {{ .Release.Name }}-sessions-storage
-            - name: {{ .Release.Name }}-tmpdir-storage
+                claimName: {{ include "appl.fullname" . }}-sessions-storage
+            - name: {{ include "appl.fullname" . }}-tmpdir-storage
               persistentVolumeClaim:
-                claimName: {{ .Release.Name }}-tmpdir-storage
+                claimName: {{ include "appl.fullname" . }}-tmpdir-storage
 {{- end }}

@@ -12,6 +12,9 @@ The Reportek local converters is an addon Product for local conversions scripts.
 
 <dl>
 
+  <dt>Version 0.1.2</dt>
+  <dd>Some refactoring and added component label.</dd>
+
   <dt>Version 0.1.1</dt>
   <dd>Added enabled flag.</dd>
 

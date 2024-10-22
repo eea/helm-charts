@@ -11,7 +11,9 @@ cdrPass: ""
 
 instance:
   enabled: true
-  replicaCount: 1
+  repository: eeacms/reportek-cdr
+  tag: ""
+  replicaCount: 2
   port: 8080
   resources:
     requests:
@@ -32,10 +34,10 @@ instance:
     cachePurgingProxyPort: 8080
     cachePurgingVhost: true
     cacheSettingsEnabled: true
-    clamavHost: clamav
+    clamavHost: cdr-clamav
     graylog: ""
     graylogFacility: ""
-    rabbitmqEnabled: false
+    rabbitmqEnabled: true
     rabbitmqHost: ""
     rabbitmqUser: ""
     rabbitmqPass: ""
@@ -44,7 +46,7 @@ instance:
     zipCachePath: /opt/zope/var
     zipCacheThreshold: "100000000"
     zeoAddress: cdr-zeoserver:8100
-    localConvertersHost: cdr-converter
+    localConvertersHost: cdr-local-converters
 
 cronzeopack:
   enabled: false
@@ -93,17 +95,15 @@ cronzipcachecleanup:
     limits:
       memory: 3Gi
 
-rn-zeoserver:
-  fullnameOverride: "cdr-zeoserver"
+zeoserver:
   storage: 10Gi
   storageName: cdr-storage
   resources:
     requests:
       memory: 1Gi
 
-rn-varnish:
+varnish:
   enabled: true
-  fullnameOverride: "cdr-varnish"
   varnishHTTPPort: 8080
   varnishSize: 5G
   varnishBackend: cdr-instance
@@ -122,9 +122,8 @@ rn-varnish:
     failureThreshold: 3
     timeoutSeconds: 6
 
-rn-local-converters:
+local-converters:
   enabled: true
-  fullnameOverride: "cdr-converter"
   resources:
     requests:
       memory: 1.5Gi
@@ -139,9 +138,8 @@ rn-local-converters:
     targetCPUUtilizationPercentage: 80
     targetMemoryUtilizationPercentage: 80
 
-rn-clamav:
+clamav:
   enabled: true
-  fullnameOverride: "cdr-clamav"
   resources:
     requests:
       memory: 3.5Gi
@@ -161,7 +159,7 @@ rn-clamav:
 rabbitmq:
   create: false
   name: rabbitmq
-  externalName:
+  externalName: ""
 
 imagePullSecrets: []
 nameOverride: ""
@@ -183,7 +181,7 @@ service:
   port: 8080
 
 cron:
-  enabled: false
+  enabled: true
 
 ingress:
   enabled: false
@@ -209,6 +207,8 @@ ingress:
       paths:
         - path: /(.*)
           pathType: Prefix
+          serviceName: cdr-varnish
+          servicePort: 8080
   tls:
     - secretName: ""
       hosts:
@@ -217,7 +217,7 @@ ingress:
 autoscaling:
   enabled: false
   minReplicas: 1
-  maxReplicas: 4
+  maxReplicas: 2
   targetCPUUtilizationPercentage: 80
   targetMemoryUtilizationPercentage: 80
 

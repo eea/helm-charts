@@ -2,14 +2,15 @@
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ include "rn-clamav.fullname" . }}
+  name: {{ include "appl.fullname" . }}
   labels:
-    {{- include "rn-clamav.labels" . | nindent 4 }}
+    {{- include "appl.labels" . | nindent 4 }}
+    app.kubernetes.io/component: security
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: StatefulSet
-    name: {{ include "rn-clamav.fullname" . }}
+    name: {{ include "appl.fullname" . }}
   minReplicas: {{ .Values.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.autoscaling.maxReplicas }}
   metrics:

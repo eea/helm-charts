@@ -17,6 +17,13 @@ This chart is almost configured for production use.
 
 <dl>
 
+  <dt>Version 0.1.2</dt>
+  <dd>Refactoring and cleanup.</dd>
+  <dd>Updated rn-varnish chart to 0.1.4.</dd>
+  <dd>Updated rn-local-converters chart to 0.1.2.</dd>
+  <dd>Updated rn-clamav chart to 0.1.2.</dd>
+  <dd>Updated ingress</dd>
+
   <dt>Version 0.1.1</dt>
   <dd>Removed deployment referrence from README.</dd>
 

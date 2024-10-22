@@ -23,6 +23,9 @@ Varnish for Reportek.
 
 <dl>
 
+  <dt>Version 0.1.4</dt>
+  <dd>Some refactoring and added component labels.</dd>
+
   <dt>Version 0.1.3</dt>
   <dd>Removed autoKillCron variable since, using it, causes varnish to no longer respond.</dd>
 
