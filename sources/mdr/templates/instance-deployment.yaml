@@ -4,7 +4,7 @@ metadata:
   name: {{ include "appl.fullname" . }}-instance
   labels:
     {{- include "appl.labels" . | nindent 4 }}
-    component: instance
+    app.kubernetes.io/component: zope
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.instance.replicaCount }}
@@ -12,12 +12,12 @@ spec:
   selector:
     matchLabels:
       {{- include "appl.selectorLabels" . | nindent 6 }}
-      component: instance
+      app.kubernetes.io/component: zope
   template:
     metadata:
       labels:
         {{- include "appl.selectorLabels" . | nindent 8 }}
-        component: instance
+        app.kubernetes.io/component: zope
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
