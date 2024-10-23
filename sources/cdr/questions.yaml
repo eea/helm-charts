@@ -1,0 +1,342 @@
+questions:
+  # Basic Settings
+  - variable: timezone
+    label: "Timezone"
+    type: string
+    default: "Europe/Copenhagen"
+    group: "Basic Settings"
+
+  - variable: instance.replicaCount
+    label: "Number of CDR Replicas"
+    type: int
+    min: 1
+    default: 2
+    group: "Basic Settings"
+
+  - variable: instance.resources.requests.memory
+    label: "Instance Memory Request"
+    type: string
+    default: "2Gi"
+    group: "Basic Settings"
+
+  - variable: instance.resources.requests.cpu
+    label: "Instance CPU Request"
+    type: string
+    default: "500m"
+    group: "Basic Settings"
+
+  # Core Components
+  - variable: zeoserver.storage
+    label: "ZEO Server Storage Size"
+    type: string
+    default: "10Gi"
+    group: "Core Components"
+
+  - variable: cronzeopack.enabled
+    label: "Enable Cron zeopack"
+    type: boolean
+    default: false
+    group: "Core Components"
+
+  - variable: cronzeopack.schedule
+    label: "Cron zeopack Schedule"
+    type: string
+    default: "0 3 * * *"
+    show_if: "cronzeopack.enabled"
+
+  - variable: cronsessionscleanup.enabled
+    label: "Enable Cron sessions cleanup"
+    type: boolean
+    default: false
+    group: "Core Components"
+
+  - variable: cronsessionscleanup.schedule
+    label: "Cron sessions cleanup Schedule"
+    type: string
+    default: "0 0 3 * *"
+    show_if: "cronsessionscleanup.enabled"
+
+  - variable: cronautoenvcleanup.enabled
+    label: "Enable Cron auto env cleanup"
+    type: boolean
+    default: false
+    group: "Core Components"
+
+  - variable: cronautoenvcleanup.schedule
+    label: "Cron auto env cleanup Schedule"
+    type: string
+    default: "45 3 * * *"
+    show_if: "cronautoenvcleanup.enabled"
+
+  - variable: cronautofallin.enabled
+    label: "Enable Cron auto fallin"
+    type: boolean
+    default: false
+    group: "Core Components"
+
+  - variable: cronautofallin.schedule
+    label: "Cron auto fallin Schedule"
+    type: string
+    default: "*/5 * 16 11 *"
+    show_if: "cronautofallin.enabled"
+
+  - variable: cronzipcachecleanup.enabled
+    label: "Enable Cron zip cache cleanup"
+    type: boolean
+    default: false
+    group: "Core Components"
+
+  - variable: cronzipcachecleanup.schedule
+    label: "Cron zip cache cleanup Schedule"
+    type: string
+    default: "0 0 4 * *"
+    show_if: "cronzipcachecleanup.enabled"
+    group: "Core Components"
+
+  # Networking
+  - variable: ingress.enabled
+    label: "Enable Ingress"
+    type: boolean
+    default: false
+    group: "Networking"
+
+  - variable: ingress.hosts[0].host
+    label: "Ingress Hostname"
+    type: string
+    default: "cdr.eionet.europa.eu"
+    group: "Networking"
+    show_if: "ingress.enabled=true"
+
+  # Autoscaling
+  - variable: autoscaling.enabled
+    label: "Enable Autoscaling"
+    type: boolean
+    default: false
+    group: "Autoscaling"
+
+  - variable: autoscaling.minReplicas
+    label: "Minimum Replicas"
+    type: int
+    default: 1
+    group: "Autoscaling"
+    show_if: "autoscaling.enabled=true"
+
+  - variable: autoscaling.maxReplicas
+    label: "Maximum Replicas"
+    type: int
+    default: 2
+    group: "Autoscaling"
+    show_if: "autoscaling.enabled=true"
+
+  # Advanced Settings
+  - variable: cdrUser
+    label: "CDR User"
+    type: string
+    group: "Advanced Settings"
+
+  - variable: cdrPass
+    label: "CDR Password"
+    type: password
+    group: "Advanced Settings"
+
+  - variable: instance.resources.limits.memory
+    label: "Instance Memory Limit"
+    type: string
+    default: "2Gi"
+    group: "Advanced Settings"
+
+  - variable: instance.resources.limits.cpu
+    label: "Instance CPU Limit"
+    type: string
+    default: "500m"
+    group: "Advanced Settings"
+
+  - variable: instance.env.zopeThreads
+    label: "Zope Threads"
+    type: int
+    default: 4
+    group: "Advanced Settings"
+
+  - variable: instance.env.beakerPath
+    label: "Beaker Path"
+    type: string
+    default: "/sessions"
+    group: "Advanced Settings"
+
+  - variable: instance.env.beakerSecret
+    label: "Beaker Secret"
+    type: string
+    default: ""
+    group: "Advanced Settings"
+
+  - variable: instance.env.deploymentHost
+    label: "Deployment Host"
+    type: string
+    default: "cdr.eionet.europa.eu"
+    group: "Advanced Settings"
+
+  - variable: instance.env.cachePurgingEnabled
+    label: "Enable Cache Purging"
+    type: boolean
+    default: true
+    group: "Advanced Settings"
+
+  - variable: instance.env.cachePurgingDomain
+    label: "Cache Purging Domain"
+    type: string
+    default: "cdr.eionet.europa.eu"
+    show_if: "instance.env.cachePurgingEnabled"
+    group: "Advanced Settings"
+
+  - variable: instance.env.cachePurgingVhost
+    label: "Cache Purging Vhost"
+    type: string
+    default: "true"
+    show_if: "instance.env.cachePurgingEnabled"
+    group: "Advanced Settings"
+
+  - variable: instance.env.cachePurgingProxy
+    label: "Cache Purging Proxy"
+    type: string
+    default: "http://cdr-varnish"
+    show_if: "instance.env.cachePurgingEnabled"
+    group: "Advanced Settings"
+
+  - variable: instance.env.cachePurgingProxyPort
+    label: "Cache Purging Proxy Port"
+    type: string
+    default: "8080"
+    show_if: "instance.env.cachePurgingEnabled"
+    group: "Advanced Settings"
+
+  - variable: instance.env.cacheSettingsEnabled
+    label: "Enable Cache Settings"
+    type: boolean
+    default: true
+    show_if: "instance.env.cachePurgingEnabled"
+    group: "Advanced Settings"
+
+  - variable: instance.env.clamavHost
+    label: "ClamAV Host"
+    type: string
+    default: "cdr-clamav"
+    group: "Advanced Settings"
+
+  - variable: instance.env.graylog
+    label: "Graylog"
+    type: string
+    default: ""
+    group: "Advanced Settings"
+
+  - variable: instance.env.graylogFacility
+    label: "Graylog Facility"
+    type: string
+    default: ""
+    group: "Advanced Settings"
+
+  - variable: instance.env.rabbitmqEnabled
+    label: "Enable RabbitMQ"
+    type: boolean
+    default: true
+    group: "Advanced Settings"
+
+  - variable: instance.env.rabbitmqHost
+    label: "RabbitMQ Host"
+    type: string
+    default: "rabbitmq"
+    show_if: "instance.env.rabbitmqEnabled"
+    group: "Advanced Settings"
+
+  - variable: instance.env.rabbitmqUser
+    label: "RabbitMQ User"
+    type: string
+    default: "guest"
+    show_if: "instance.env.rabbitmqEnabled"
+    group: "Advanced Settings"
+
+  - variable: instance.env.rabbitmqPass
+    label: "RabbitMQ Password"
+    type: password
+    default: ""
+    show_if: "instance.env.rabbitmqEnabled"
+    group: "Advanced Settings"
+
+  - variable: instance.env.rabbitmqPort
+    label: "RabbitMQ Port"
+    type: string
+    default: "5672"
+    show_if: "instance.env.rabbitmqEnabled"
+    group: "Advanced Settings"
+
+  - variable: instance.env.zipCacheEnabled
+    label: "Enable ZIP Cache"
+    type: boolean
+    default: true
+    group: "Advanced Settings"
+
+  - variable: instance.env.zipCacheThreshold
+    label: "ZIP Cache Threshold"
+    type: string
+    default: "100000000"
+    show_if: "instance.env.zipCacheEnabled"
+    group: "Advanced Settings"
+
+  - variable: instance.env.localConvertersHost
+    label: "Local Converters Host"
+    type: string
+    default: "cdr-local-converters"
+    group: "Advanced Settings"
+
+  - variable: zeoserver.resources.requests.memory
+    label: "ZEO Server Memory Request"
+    type: string
+    default: "1Gi"
+    group: "Advanced Settings"
+
+  - variable: varnish.resources.requests.memory
+    label: "Varnish Memory Request"
+    type: string
+    default: "5Gi"
+    group: "Advanced Settings"
+
+  - variable: local-converters.resources.requests.memory
+    label: "Local Converters Memory Request"
+    type: string
+    default: "1.5Gi"
+    group: "Advanced Settings"
+
+  - variable: local-converters.resources.requests.cpu
+    label: "Local Converters CPU Request"
+    type: string
+    default: "300m"
+    group: "Advanced Settings"
+
+  - variable: clamav.resources.requests.memory
+    label: "ClamAV Memory Request"
+    type: string
+    default: "3.5Gi"
+    group: "Advanced Settings"
+
+  - variable: clamav.storage
+    label: "ClamAV Storage Size"
+    type: string
+    default: "1Gi"
+    group: "Advanced Settings"
+
+  - variable: rabbitmq.create
+    label: "Create RabbitMQ"
+    type: boolean
+    default: false
+    group: "Advanced Settings"
+
+  - variable: rabbitmq.name
+    label: "RabbitMQ Name"
+    type: string
+    default: "rabbitmq"
+    group: "Advanced Settings"
+
+  - variable: autoscaling.targetCPUUtilizationPercentage
+    label: "Target CPU Utilization Percentage"
+    type: int
+    default: 80
+    group: "Advanced Settings"
