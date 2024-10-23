@@ -10,6 +10,9 @@ This chart is almost configured for production use.
 
 ## Releases
 
+### Version 0.2.0
+- Updated rn-zeoserver chart to 0.1.2.
+
 ### Version 0.1.9
 - Fixed liveness probe and readiness probe in deployment.
 
