@@ -50,18 +50,11 @@ spec:
             name: {{ .Values.storageName }}
 
           startupProbe:
-            tcpSocket:
-              port: 8100
-            timeoutSeconds: 6
-            failureThreshold: 60
-            periodSeconds: 10
-
+            {{- toYaml .Values.startupProbe | nindent 12 }}
           livenessProbe:
-            tcpSocket:
-              port: 8100
-            initialDelaySeconds: 10
-            periodSeconds: 10
-
+            {{- toYaml .Values.livenessProbe | nindent 12 }}
+          readinessProbe:
+            {{- toYaml .Values.readinessProbe | nindent 12 }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
 

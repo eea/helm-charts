@@ -1,6 +1,6 @@
-# Reportnet Local Converters
+# Reportnet Zeoserver
 
-The Reportek zeoserver
+Zeoserver is the Zope server for Reportek
 
 [See more](https://github.com/eea/eea.docker.reportek.zeoserver)
 
@@ -12,12 +12,11 @@ The Reportek zeoserver
 
 ## Releases
 
-<dl>
+### Version 0.1.2
+- Moved startup, liveness, readiness probes into values
 
-  <dt>Version 0.1.1</dt>
-  <dd>Some refactoring done and added component labels.</dd>
+### Version 0.1.1
+- Some refactoring done and added component labels.
 
-  <dt>Version 0.1.0</dt>
-  <dd>Initial release.</dd>
-
-</dl>
+### Version 0.1.0
+- Initial release.
