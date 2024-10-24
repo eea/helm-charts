@@ -13,85 +13,260 @@ questions:
     default: 2
     group: "Basic Settings"
 
+  # Core components
   - variable: instance.resources.requests.memory
     label: "Instance Memory Request"
     type: string
     default: "2Gi"
-    group: "Basic Settings"
+    group: "Core components"
+
+  - variable: instance.resources.limits.memory
+    label: "Instance Memory Limit"
+    type: string
+    default: "2Gi"
+    group: "Core components"
 
   - variable: instance.resources.requests.cpu
     label: "Instance CPU Request"
     type: string
     default: "500m"
-    group: "Basic Settings"
+    group: "Core components"
 
-  # Core Components
+  - variable: instance.resources.limits.cpu
+    label: "Instance CPU Limit"
+    type: string
+    default: "500m"
+    group: "Core components"
+
+  - variable: autoscaling.enabled
+    label: "Enable Autoscaling"
+    type: boolean
+    default: false
+    group: "Core components"
+
+  - variable: autoscaling.minReplicas
+    label: "Minimum Replicas"
+    type: int
+    default: 1
+    group: "Core components"
+    show_if: "autoscaling.enabled=true"
+
+  - variable: autoscaling.maxReplicas
+    label: "Maximum Replicas"
+    type: int
+    default: 2
+    show_if: "autoscaling.enabled=true"
+
+  - variable: autoscaling.targetCPUUtilizationPercentage
+    label: "Target CPU Utilization Percentage"
+    type: int
+    default: 80
+    group: "Core components"
+    show_if: "autoscaling.enabled=true"
+
   - variable: zeoserver.storage
     label: "ZEO Server Storage Size"
     type: string
     default: "10Gi"
-    group: "Core Components"
+    group: "Core components"
 
+  - variable: zeoserver.resources.requests.memory
+    label: "ZEO Server Memory Request"
+    type: string
+    default: "1Gi"
+    group: "Core components"
+
+  - variable: varnish.resources.requests.memory
+    label: "Varnish Memory Request"
+    type: string
+    default: "5Gi"
+    group: "Core components"
+
+  - variable: local-converters.resources.requests.memory
+    label: "Local Converters Memory Request"
+    type: string
+    default: "1.5Gi"
+    group: "Core components"
+
+  - variable: local-converters.resources.requests.cpu
+    label: "Local Converters CPU Request"
+    type: string
+    default: "300m"
+    group: "Core components"
+
+  - variable: local-converters.resources.limits.memory
+    label: "Local Converters Memory Limit"
+    type: string
+    default: "1.5Gi"
+    group: "Core components"
+
+  - variable: local-converters.resources.limits.cpu
+    label: "Local Converters CPU Limit"
+    type: string
+    default: "300m"
+    group: "Core components"
+
+  - variable: local-converters.autoscaling.enabled
+    label: "Enable Autoscaling for Local Converters"
+    type: boolean
+    default: true
+    group: "Core components"
+
+  - variable: local-converters.autoscaling.minReplicas
+    label: "Minimum Replicas for Local Converters"
+    type: int
+    default: 1
+    group: "Core components"
+    show_if: "local-converters.autoscaling.enabled=true"
+
+  - variable: local-converters.autoscaling.maxReplicas
+    label: "Maximum Replicas for Local Converters"
+    type: int
+    default: 2
+    group: "Core components"
+    show_if: "local-converters.autoscaling.enabled=true"
+
+  - variable: local-converters.autoscaling.targetCPUUtilizationPercentage
+    label: "Target CPU Utilization Percentage for Local Converters"
+    type: int
+    default: 80
+    group: "Core components"
+    show_if: "local-converters.autoscaling.enabled=true"
+
+  - variable: clamav.storage
+    label: "ClamAV Storage Size"
+    type: string
+    default: "1Gi"
+    group: "Core components"
+
+  - variable: clamav.resources.requests.memory
+    label: "ClamAV Memory Request"
+    type: string
+    default: "3.5Gi"
+    group: "Core components"
+
+  - variable: clamav.resources.requests.cpu
+    label: "ClamAV CPU Request"
+    type: string
+    default: "300m"
+    group: "Core components"
+
+  - variable: clamav.resources.limits.memory
+    label: "ClamAV Memory Limit"
+    type: string
+    default: "3.5Gi"
+    group: "Core components"
+
+  - variable: clamav.resources.limits.cpu
+    label: "ClamAV CPU Limit"
+    type: string
+    default: "300m"
+    group: "Core components"
+
+  - variable: clamav.autoscaling.enabled
+    label: "Enable Autoscaling for ClamAV"
+    type: boolean
+    default: true
+    group: "Core components"
+
+  - variable: clamav.autoscaling.minReplicas
+    label: "Minimum Replicas for ClamAV"
+    type: int
+    default: 1
+    group: "Core components"
+    show_if: "clamav.autoscaling.enabled=true"
+
+  - variable: clamav.autoscaling.maxReplicas
+    label: "Maximum Replicas for ClamAV"
+    type: int
+    default: 2
+    group: "Core components"
+    show_if: "clamav.autoscaling.enabled=true"
+
+  - variable: clamav.autoscaling.targetCPUUtilizationPercentage
+    label: "Target CPU Utilization Percentage for ClamAV"
+    type: int
+    default: 80
+    group: "Core components"
+    show_if: "clamav.autoscaling.enabled=true"
+
+  - variable: rabbitmq.create
+    label: "Create RabbitMQ"
+    type: boolean
+    default: false
+    group: "Core components"
+
+  - variable: rabbitmq.name
+    label: "RabbitMQ Name"
+    type: string
+    default: "rabbitmq"
+    group: "Core components"
+
+  # Cron jobs
   - variable: cronzeopack.enabled
     label: "Enable Cron zeopack"
     type: boolean
     default: false
-    group: "Core Components"
+    group: "Cron jobs"
 
   - variable: cronzeopack.schedule
     label: "Cron zeopack Schedule"
     type: string
     default: "0 3 * * *"
     show_if: "cronzeopack.enabled"
+    group: "Cron jobs"
 
   - variable: cronsessionscleanup.enabled
     label: "Enable Cron sessions cleanup"
     type: boolean
     default: false
-    group: "Core Components"
+    group: "Cron jobs"
 
   - variable: cronsessionscleanup.schedule
     label: "Cron sessions cleanup Schedule"
     type: string
     default: "0 0 3 * *"
     show_if: "cronsessionscleanup.enabled"
+    group: "Cron jobs"
 
   - variable: cronautoenvcleanup.enabled
     label: "Enable Cron auto env cleanup"
     type: boolean
     default: false
-    group: "Core Components"
+    group: "Cron jobs"
 
   - variable: cronautoenvcleanup.schedule
     label: "Cron auto env cleanup Schedule"
     type: string
     default: "45 3 * * *"
     show_if: "cronautoenvcleanup.enabled"
+    group: "Cron jobs"
 
   - variable: cronautofallin.enabled
     label: "Enable Cron auto fallin"
     type: boolean
     default: false
-    group: "Core Components"
+    group: "Cron jobs"
 
   - variable: cronautofallin.schedule
     label: "Cron auto fallin Schedule"
     type: string
     default: "*/5 * 16 11 *"
     show_if: "cronautofallin.enabled"
+    group: "Cron jobs"
 
   - variable: cronzipcachecleanup.enabled
     label: "Enable Cron zip cache cleanup"
     type: boolean
     default: false
-    group: "Core Components"
+    group: "Cron jobs"
 
   - variable: cronzipcachecleanup.schedule
     label: "Cron zip cache cleanup Schedule"
     type: string
     default: "0 0 4 * *"
     show_if: "cronzipcachecleanup.enabled"
-    group: "Core Components"
+    group: "Cron jobs"
 
   # Networking
   - variable: ingress.enabled
@@ -107,27 +282,6 @@ questions:
     group: "Networking"
     show_if: "ingress.enabled=true"
 
-  # Autoscaling
-  - variable: autoscaling.enabled
-    label: "Enable Autoscaling"
-    type: boolean
-    default: false
-    group: "Autoscaling"
-
-  - variable: autoscaling.minReplicas
-    label: "Minimum Replicas"
-    type: int
-    default: 1
-    group: "Autoscaling"
-    show_if: "autoscaling.enabled=true"
-
-  - variable: autoscaling.maxReplicas
-    label: "Maximum Replicas"
-    type: int
-    default: 2
-    group: "Autoscaling"
-    show_if: "autoscaling.enabled=true"
-
   # Advanced Settings
   - variable: cdrUser
     label: "CDR User"
@@ -137,18 +291,6 @@ questions:
   - variable: cdrPass
     label: "CDR Password"
     type: password
-    group: "Advanced Settings"
-
-  - variable: instance.resources.limits.memory
-    label: "Instance Memory Limit"
-    type: string
-    default: "2Gi"
-    group: "Advanced Settings"
-
-  - variable: instance.resources.limits.cpu
-    label: "Instance CPU Limit"
-    type: string
-    default: "500m"
     group: "Advanced Settings"
 
   - variable: instance.env.zopeThreads
@@ -165,7 +307,7 @@ questions:
 
   - variable: instance.env.beakerSecret
     label: "Beaker Secret"
-    type: string
+    type: password
     default: ""
     group: "Advanced Settings"
 
@@ -285,58 +427,4 @@ questions:
     label: "Local Converters Host"
     type: string
     default: "cdr-local-converters"
-    group: "Advanced Settings"
-
-  - variable: zeoserver.resources.requests.memory
-    label: "ZEO Server Memory Request"
-    type: string
-    default: "1Gi"
-    group: "Advanced Settings"
-
-  - variable: varnish.resources.requests.memory
-    label: "Varnish Memory Request"
-    type: string
-    default: "5Gi"
-    group: "Advanced Settings"
-
-  - variable: local-converters.resources.requests.memory
-    label: "Local Converters Memory Request"
-    type: string
-    default: "1.5Gi"
-    group: "Advanced Settings"
-
-  - variable: local-converters.resources.requests.cpu
-    label: "Local Converters CPU Request"
-    type: string
-    default: "300m"
-    group: "Advanced Settings"
-
-  - variable: clamav.resources.requests.memory
-    label: "ClamAV Memory Request"
-    type: string
-    default: "3.5Gi"
-    group: "Advanced Settings"
-
-  - variable: clamav.storage
-    label: "ClamAV Storage Size"
-    type: string
-    default: "1Gi"
-    group: "Advanced Settings"
-
-  - variable: rabbitmq.create
-    label: "Create RabbitMQ"
-    type: boolean
-    default: false
-    group: "Advanced Settings"
-
-  - variable: rabbitmq.name
-    label: "RabbitMQ Name"
-    type: string
-    default: "rabbitmq"
-    group: "Advanced Settings"
-
-  - variable: autoscaling.targetCPUUtilizationPercentage
-    label: "Target CPU Utilization Percentage"
-    type: int
-    default: 80
     group: "Advanced Settings"
