@@ -15,6 +15,9 @@ This chart is almost configured for production use.
 
 ## Releases
 
+### Version 0.2.3
+- Added additional ingress configuration options in questions.yaml.
+
 ### Version 0.2.2
 - Added zeoserver storageName to questions.yaml.
 

@@ -139,6 +139,38 @@ questions:
     group: "Networking"
     show_if: "ingress.enabled=true"
 
+  - variable: ingress.hosts[0].paths[0].path
+    label: "Ingress Path"
+    type: string
+    default: "/(.*)"
+    group: "Networking"
+    show_if: "ingress.enabled=true"
+
+  - variable: ingress.hosts[0].paths[0].pathType
+    label: "Ingress Path Type"
+    type: enum
+    default: "Prefix"
+    options:
+      - "Exact"
+      - "Prefix"
+      - "ImplementationSpecific"
+    group: "Networking"
+    show_if: "ingress.enabled=true"
+
+  - variable: ingress.hosts[0].paths[0].serviceName
+    label: "Ingress Service Name"
+    type: string
+    default: "mdr"
+    group: "Networking"
+    show_if: "ingress.enabled=true"
+
+  - variable: ingress.hosts[0].paths[0].servicePort
+    label: "Ingress Service Port"
+    type: int
+    default: 8080
+    group: "Networking"
+    show_if: "ingress.enabled=true"
+
   # Advanced Settings
   - variable: mdrUser
     label: "MDR User"
