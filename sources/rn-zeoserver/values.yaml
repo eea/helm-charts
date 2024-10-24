@@ -26,13 +26,11 @@ serviceAccount:
 podAnnotations: {}
 
 podSecurityContext:
-  {}
-  # fsGroup: 2000
-
-securityContext:
   fsGroup: 500
   fsGroupChangePolicy: "OnRootMismatch"
 
+securityContext:
+  {}
   # capabilities:
   #   drop:
   #   - ALL
