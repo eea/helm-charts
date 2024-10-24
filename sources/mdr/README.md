@@ -15,6 +15,9 @@ This chart is almost configured for production use.
 
 ## Releases
 
+### Version 0.2.4
+- Fixed default serviceName in ingress configuration in questions.yaml.
+
 ### Version 0.2.3
 - Added additional ingress configuration options in questions.yaml.
 

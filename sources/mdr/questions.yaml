@@ -160,7 +160,7 @@ questions:
   - variable: ingress.hosts[0].paths[0].serviceName
     label: "Ingress Service Name"
     type: string
-    default: "mdr"
+    default: "mdr-varnish"
     group: "Networking"
     show_if: "ingress.enabled=true"
 
