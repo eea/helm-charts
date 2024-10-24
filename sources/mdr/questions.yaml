@@ -75,6 +75,12 @@ questions:
     default: "10Gi"
     group: "Core components"
 
+  - variable: zeoserver.storageName
+    label: "ZEO Server Storage Name"
+    type: string
+    default: "mdr-storage"
+    group: "Core components"
+
   - variable: zeoserver.resources.requests.memory
     label: "ZEO Server Memory Request"
     type: string
