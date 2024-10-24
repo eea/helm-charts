@@ -21,12 +21,14 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: {{ include "appl.fullname" . }}-mailtrap-svc
+            name: {{ include "appl.fullname" . }}
             port:
               number: {{ .Values.webservice.port }}
+  {{- if .Values.ingress.certificate }}
   tls:
   - hosts:
     - {{ .Values.hostname }}
     secretName: {{ .Values.ingress.certificate }}
+  {{- end  }}    
 {{- end }}
 

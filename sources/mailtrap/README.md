@@ -10,9 +10,11 @@ https://github.com/eaudeweb/edw.docker.mailtrap/tree/master
 ## Releases
 
 <dl>
+  <dt>Version 1.0.2</dt>
+  <dd>Add questions</dd>
 
   <dt>Version 1.0.0</dt>
-  <dd>Production release. Set maxSurge and maxUnavailable to 1.</dd>
+  <dd>First release</dd>
 
 </dl>
 

@@ -5,12 +5,12 @@ image:
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
 
-hostname: mailtrap.01dev.eea.europa.eu
+hostname: val-mailtrap.01dev.eea.europa.eu
   
 ingress:
   enabled: true
   annotations:  
-  certificate: mailtrap.01dev.eea.europa.eu-tls
+  certificate: val-mailtrap.01dev.eea.europa.eu-tls
 
 timezone: Europe/Copenhagen
 
@@ -36,9 +36,9 @@ webservice:
     
 resources: 
   requests:
-    memory: 128Mi
+    memory: 128M
   limits:
-    memory: 128Mi
+    memory: 128M
 
 nodeSelector: {}
 tolerations: []

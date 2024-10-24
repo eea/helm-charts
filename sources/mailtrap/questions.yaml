@@ -1,17 +1,35 @@
 questions:
+  - variable: "ingress.enabled"
+    label: "Expose mailtrap url"
+    type: "enum"
+    options:
+      - "false"
+      - "true"
+    default: "true"
   - variable: "hostname"
     label: "Hostname"
     description: "The url that is exposed"
     required: true
-    default: "mail.01dev.eea.europa.eu"
-  
-  - variable: "environment"
-    label: "Select Environment"
-    description: "Choose the environment type for the deployment"
-    type: "enum"
+    default: "mailtrap.01dev.eea.europa.eu"
+  - variable: "ingress.certificate"
+    label: "Certificate name"
+    description: "If empty, https will not be enabled"
+    default: "mailtrap.01dev.eea.europa.eu-tls"
+  - variable: "resources.requests.memory"
+    label: "Memory reservation mailtrap"
+    default: "128M"
     required: true
-    options:
-      - "development"
-      - "staging"
-      - "production"
-    default: "development"
+    type: "string"      
+  - variable: "resources.limits.memory"
+    label: "Memory limit mailtrap"
+    default: "128M"
+    required: true
+    type: "string"
+  - variable: "imagePullSecrets"
+    label: "Docker login secret"
+    default: '[{"name": "dockerhubsecret"}]'
+    type: 'string'
+  - variable: "image.tag"
+    label: "eeacms/mailtrap version"
+    description: "Overrides the image tag whose default is the chart appVersion"
+    default: ""
