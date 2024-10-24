@@ -1,0 +1,250 @@
+questions:
+  # Basic Settings
+  - variable: timezone
+    label: "Timezone"
+    type: string
+    default: "Europe/Copenhagen"
+    group: "Basic Settings"
+
+  - variable: instance.replicaCount
+    label: "Number of MDR zope instances"
+    type: int
+    min: 1
+    default: 1
+    group: "Basic Settings"
+
+  # Core components
+  - variable: instance.resources.requests.memory
+    label: "Zope instance Memory Request"
+    type: string
+    default: "2Gi"
+    group: "Core components"
+
+  - variable: instance.resources.limits.memory
+    label: "Zope instance Memory Limit"
+    type: string
+    default: "2Gi"
+    group: "Core components"
+
+  - variable: instance.resources.requests.cpu
+    label: "Zope instance CPU Request"
+    type: string
+    default: "500m"
+    group: "Core components"
+
+  - variable: instance.resources.limits.cpu
+    label: "Zope instance CPU Limit"
+    type: string
+    default: "500m"
+    group: "Core components"
+
+  - variable: autoscaling.enabled
+    label: "Enable Zope instances Autoscaling"
+    type: boolean
+    default: false
+    group: "Core components"
+    show_subquestion_if: true
+    subquestions:
+      - variable: autoscaling.minReplicas
+        label: "Minimum Replicas"
+        type: int
+        default: 1
+        group: "Core components"
+
+      - variable: autoscaling.maxReplicas
+        label: "Maximum Replicas"
+        type: int
+        default: 4
+        group: "Core components"
+
+      - variable: autoscaling.targetCPUUtilizationPercentage
+        label: "Target CPU Utilization Percentage"
+        type: int
+        default: 80
+        group: "Core components"
+
+      - variable: autoscaling.targetMemoryUtilizationPercentage
+        label: "Target Memory Utilization Percentage"
+        type: int
+        default: 80
+        group: "Core components"
+
+  - variable: zeoserver.storage
+    label: "ZEO Server Storage Size"
+    type: string
+    default: "10Gi"
+    group: "Core components"
+
+  - variable: zeoserver.resources.requests.memory
+    label: "ZEO Server Memory Request"
+    type: string
+    default: "1Gi"
+    group: "Core components"
+
+  - variable: varnish.resources.requests.memory
+    label: "Varnish Memory Request"
+    type: string
+    default: "1Gi"
+    group: "Core components"
+
+  - variable: varnish.resources.limits.memory
+    label: "Varnish Memory Limit"
+    type: string
+    default: "1Gi"
+    group: "Core components"
+
+  - variable: rabbitmq.create
+    label: "Create RabbitMQ"
+    type: boolean
+    default: false
+    group: "Core components"
+
+  - variable: rabbitmq.name
+    label: "RabbitMQ Name"
+    type: string
+    default: "rabbitmq"
+    group: "Core components"
+
+  # Cron jobs
+  - variable: cronzeopack.enabled
+    label: "Enable Cron zeopack"
+    type: boolean
+    default: false
+    group: "Cron jobs"
+
+  - variable: cronzeopack.schedule
+    label: "Cron zeopack Schedule"
+    type: string
+    default: "0 3 * * *"
+    show_if: "cronzeopack.enabled"
+    group: "Cron jobs"
+
+  # Networking
+  - variable: ingress.enabled
+    label: "Enable Ingress"
+    type: boolean
+    default: false
+    group: "Networking"
+
+  - variable: ingress.hosts[0].host
+    label: "Ingress Hostname"
+    type: string
+    default: "mdr.eionet.europa.eu"
+    group: "Networking"
+    show_if: "ingress.enabled=true"
+
+  # Advanced Settings
+  - variable: mdrUser
+    label: "MDR User"
+    type: string
+    group: "Advanced Settings"
+
+  - variable: mdrPass
+    label: "MDR Password"
+    type: password
+    group: "Advanced Settings"
+
+  - variable: instance.env.zopeThreads
+    label: "Zope Threads"
+    type: int
+    default: 4
+    group: "Advanced Settings"
+
+  - variable: instance.env.deploymentHost
+    label: "Deployment Host"
+    type: string
+    default: "mdr.eionet.europa.eu"
+    group: "Advanced Settings"
+
+  - variable: instance.env.cachePurgingEnabled
+    label: "Enable Cache Purging"
+    type: boolean
+    default: true
+    group: "Advanced Settings"
+
+  - variable: instance.env.cacheSettingsEnabled
+    label: "Enable Cache Settings"
+    type: boolean
+    default: true
+    show_if: "instance.env.cachePurgingEnabled"
+    group: "Advanced Settings"
+
+  - variable: instance.env.cachePurgingDomain
+    label: "Cache Purging Domain"
+    type: string
+    default: "mdr.eionet.europa.eu"
+    show_if: "instance.env.cachePurgingEnabled"
+    group: "Advanced Settings"
+
+  - variable: instance.env.cachePurgingVhost
+    label: "Cache Purging Vhost"
+    type: string
+    default: "true"
+    show_if: "instance.env.cachePurgingEnabled"
+    group: "Advanced Settings"
+
+  - variable: instance.env.cachePurgingProxy
+    label: "Cache Purging Proxy"
+    type: string
+    default: "http://mdr-varnish"
+    show_if: "instance.env.cachePurgingEnabled"
+    group: "Advanced Settings"
+
+  - variable: instance.env.cachePurgingProxyPort
+    label: "Cache Purging Proxy Port"
+    type: string
+    default: "8080"
+    show_if: "instance.env.cachePurgingEnabled"
+    group: "Advanced Settings"
+
+  - variable: instance.env.graylog
+    label: "Graylog"
+    type: string
+    default: ""
+    group: "Advanced Settings"
+
+  - variable: instance.env.graylogFacility
+    label: "Graylog Facility"
+    type: string
+    default: ""
+    group: "Advanced Settings"
+
+  - variable: instance.env.rabbitmqEnabled
+    label: "Enable RabbitMQ"
+    type: boolean
+    default: true
+    group: "Advanced Settings"
+
+  - variable: instance.env.rabbitmqHost
+    label: "RabbitMQ Host"
+    type: string
+    default: "rabbitmq"
+    show_if: "instance.env.rabbitmqEnabled"
+    group: "Advanced Settings"
+
+  - variable: instance.env.rabbitmqUser
+    label: "RabbitMQ User"
+    type: string
+    default: "guest"
+    show_if: "instance.env.rabbitmqEnabled"
+    group: "Advanced Settings"
+
+  - variable: instance.env.rabbitmqPass
+    label: "RabbitMQ Password"
+    type: password
+    default: ""
+    show_if: "instance.env.rabbitmqEnabled"
+    group: "Advanced Settings"
+
+  - variable: instance.env.rabbitmqPort
+    label: "RabbitMQ Port"
+    type: string
+    default: "5672"
+    show_if: "instance.env.rabbitmqEnabled"
+    group: "Advanced Settings"
+
+  - variable: instance.env.localConvertersHost
+    label: "Local Converters Host"
+    type: string
+    default: "mdr-local-converters"
+    group: "Advanced Settings"
