@@ -7,7 +7,7 @@ questions:
     group: "Basic Settings"
 
   - variable: instance.replicaCount
-    label: "Number of CDR Replicas"
+    label: "Number of CDR zope instances"
     type: int
     min: 1
     default: 2
@@ -15,54 +15,53 @@ questions:
 
   # Core components
   - variable: instance.resources.requests.memory
-    label: "Instance Memory Request"
+    label: "Zope instance Memory Request"
     type: string
     default: "2Gi"
     group: "Core components"
 
   - variable: instance.resources.limits.memory
-    label: "Instance Memory Limit"
+    label: "Zope instance Memory Limit"
     type: string
     default: "2Gi"
     group: "Core components"
 
   - variable: instance.resources.requests.cpu
-    label: "Instance CPU Request"
+    label: "Zope instance CPU Request"
     type: string
     default: "500m"
     group: "Core components"
 
   - variable: instance.resources.limits.cpu
-    label: "Instance CPU Limit"
+    label: "Zope instance CPU Limit"
     type: string
     default: "500m"
     group: "Core components"
 
   - variable: autoscaling.enabled
-    label: "Enable Autoscaling"
+    label: "Enable Zope instances Autoscaling"
     type: boolean
     default: false
     group: "Core components"
+    show_subquestion_if: true
+    subquestions:
+      - variable: autoscaling.minReplicas
+        label: "Minimum Replicas"
+        type: int
+        default: 1
+        group: "Core components"
 
-  - variable: autoscaling.minReplicas
-    label: "Minimum Replicas"
-    type: int
-    default: 1
-    group: "Core components"
-    show_if: "autoscaling.enabled=true"
+      - variable: autoscaling.maxReplicas
+        label: "Maximum Replicas"
+        type: int
+        default: 2
+        group: "Core components"
 
-  - variable: autoscaling.maxReplicas
-    label: "Maximum Replicas"
-    type: int
-    default: 2
-    show_if: "autoscaling.enabled=true"
-
-  - variable: autoscaling.targetCPUUtilizationPercentage
-    label: "Target CPU Utilization Percentage"
-    type: int
-    default: 80
-    group: "Core components"
-    show_if: "autoscaling.enabled=true"
+      - variable: autoscaling.targetCPUUtilizationPercentage
+        label: "Target CPU Utilization Percentage"
+        type: int
+        default: 80
+        group: "Core components"
 
   - variable: zeoserver.storage
     label: "ZEO Server Storage Size"
@@ -111,27 +110,23 @@ questions:
     type: boolean
     default: true
     group: "Core components"
-
-  - variable: local-converters.autoscaling.minReplicas
-    label: "Minimum Replicas for Local Converters"
-    type: int
-    default: 1
-    group: "Core components"
-    show_if: "local-converters.autoscaling.enabled=true"
-
-  - variable: local-converters.autoscaling.maxReplicas
-    label: "Maximum Replicas for Local Converters"
-    type: int
-    default: 2
-    group: "Core components"
-    show_if: "local-converters.autoscaling.enabled=true"
-
-  - variable: local-converters.autoscaling.targetCPUUtilizationPercentage
-    label: "Target CPU Utilization Percentage for Local Converters"
-    type: int
-    default: 80
-    group: "Core components"
-    show_if: "local-converters.autoscaling.enabled=true"
+    show_subquestion_if: true
+    subquestions:
+      - variable: local-converters.autoscaling.minReplicas
+        label: "Minimum Replicas for Local Converters"
+        type: int
+        default: 1
+        group: "Core components"
+      - variable: local-converters.autoscaling.maxReplicas
+        label: "Maximum Replicas for Local Converters"
+        type: int
+        default: 2
+        group: "Core components"
+      - variable: local-converters.autoscaling.targetCPUUtilizationPercentage
+        label: "Target CPU Utilization Percentage for Local Converters"
+        type: int
+        default: 80
+        group: "Core components"
 
   - variable: clamav.storage
     label: "ClamAV Storage Size"
@@ -168,27 +163,23 @@ questions:
     type: boolean
     default: true
     group: "Core components"
-
-  - variable: clamav.autoscaling.minReplicas
-    label: "Minimum Replicas for ClamAV"
-    type: int
-    default: 1
-    group: "Core components"
-    show_if: "clamav.autoscaling.enabled=true"
-
-  - variable: clamav.autoscaling.maxReplicas
-    label: "Maximum Replicas for ClamAV"
-    type: int
-    default: 2
-    group: "Core components"
-    show_if: "clamav.autoscaling.enabled=true"
-
-  - variable: clamav.autoscaling.targetCPUUtilizationPercentage
-    label: "Target CPU Utilization Percentage for ClamAV"
-    type: int
-    default: 80
-    group: "Core components"
-    show_if: "clamav.autoscaling.enabled=true"
+    show_subquestion_if: true
+    subquestions:
+      - variable: clamav.autoscaling.minReplicas
+        label: "Minimum Replicas for ClamAV"
+        type: int
+        default: 1
+        group: "Core components"
+      - variable: clamav.autoscaling.maxReplicas
+        label: "Maximum Replicas for ClamAV"
+        type: int
+        default: 2
+        group: "Core components"
+      - variable: clamav.autoscaling.targetCPUUtilizationPercentage
+        label: "Target CPU Utilization Percentage for ClamAV"
+        type: int
+        default: 80
+        group: "Core components"
 
   - variable: rabbitmq.create
     label: "Create RabbitMQ"
@@ -323,6 +314,13 @@ questions:
     default: true
     group: "Advanced Settings"
 
+  - variable: instance.env.cacheSettingsEnabled
+    label: "Enable Cache Settings"
+    type: boolean
+    default: true
+    show_if: "instance.env.cachePurgingEnabled"
+    group: "Advanced Settings"
+
   - variable: instance.env.cachePurgingDomain
     label: "Cache Purging Domain"
     type: string
@@ -348,13 +346,6 @@ questions:
     label: "Cache Purging Proxy Port"
     type: string
     default: "8080"
-    show_if: "instance.env.cachePurgingEnabled"
-    group: "Advanced Settings"
-
-  - variable: instance.env.cacheSettingsEnabled
-    label: "Enable Cache Settings"
-    type: boolean
-    default: true
     show_if: "instance.env.cachePurgingEnabled"
     group: "Advanced Settings"
 
