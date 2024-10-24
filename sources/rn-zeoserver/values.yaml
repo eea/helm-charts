@@ -30,7 +30,9 @@ podSecurityContext:
   # fsGroup: 2000
 
 securityContext:
-  {}
+  fsGroup: 500
+  fsGroupChangePolicy: "OnRootMismatch"
+
   # capabilities:
   #   drop:
   #   - ALL

@@ -12,6 +12,9 @@ Zeoserver is the Zope server for Reportek
 
 ## Releases
 
+### Version 0.1.3
+- Added default fsgroup to security context.
+
 ### Version 0.1.2
 - Moved startup, liveness, readiness probes into values
 
