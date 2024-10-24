@@ -9,6 +9,7 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /VirtualHostBase/https/{{ .Values.climateEnergy.hostname }}:443/energy/VirtualHostRoot/_vh_api/$1
     nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: 100m
     # http-request set-path /VirtualHostBase/https/climate-energy.eea.europa.eu:443/energy/VirtualHostRoot/_vh_api/%[path,regsub(\/api,,g)]
 
 spec:
