@@ -14,13 +14,30 @@ Create your package or update the source. For the example we will call the packa
     mkdir toypackage _or helm create toypackage_
     cd toypackage
     _... create Chart.yaml, values.yaml etc. If updating, remember to increase version number in Chart.yaml_
+
+Check package:
+
     helm lint .
+
+Update dependecies:
     helm dependencies update _if you have changed the chart dependencies_
+
+Update/Release docs:
+
+    ./update_docs.sh toypackage
+
+or
+
     git pull
     git add .
     cd ../../docs
+    mkdir -p temp
+    cd temp
     helm package ../sources/toypackage
-    helm repo index .
+    helm repo index --merge ../index.yaml .
+    mv * ../
+    cd ..
+    rm temp
     git add .
     git commit
     git push
