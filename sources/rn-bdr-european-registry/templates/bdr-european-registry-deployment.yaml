@@ -1,0 +1,145 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "appl.fullname" . }}
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    app.kubernetes.io/component: european-cache-registry
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: european-cache-registry
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "appl.labels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        app.kubernetes.io/component: european-cache-registry
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          env:
+            - name: TZ
+              value: {{ .Values.timezone }}
+            - name: API_PASSWORD
+              value: {{ .Values.apiPassword | quote }}
+            - name: API_TOKEN
+              value: {{ .Values.apiToken | quote }}
+            - name: API_USER
+              value: {{ .Values.apiUser | quote }}
+            - name: AUTO_VERIFY_ALL_COMPANIES
+              value: {{ .Values.autoVerifyAllCompanies | quote }}
+            - name: AUTO_VERIFY_NEW_COMPANIES
+              value: {{ .Values.autoVerifyNewCompanies | quote }}
+            - name: BASE_URL
+              value: {{ .Values.baseUrl | quote }}
+            - name: BASE_URL_FGAS
+              value: {{ .Values.baseUrlFgas | quote }}
+            - name: BASE_URL_ODS
+              value: {{ .Values.baseUrlOds | quote }}
+            - name: BDR_API_KEY
+              value: {{ .Values.bdrApiKey | quote }}
+            - name: BDR_API_URL
+              value: {{ .Values.bdrApiUrl | quote }}
+            - name: BDR_ENDPOINT_PASSWORD
+              value: {{ .Values.bdrEndpointPassword | quote }}
+            - name: BDR_ENDPOINT_URL
+              value: {{ .Values.bdrEndpointUrl | quote }}
+            - name: BDR_ENDPOINT_USER
+              value: {{ .Values.bdrEndpointUser | quote }}
+            - name: BDR_HELPDESK_MAIL
+              value: {{ .Values.bdrHelpDeskMail | quote }}
+            - name: BDR_HOST
+              value: {{ .Values.bdrHost | quote }}
+            - name: DB_HOST
+              value: {{ .Values.dbHost | quote }}
+            - name: DB_NAME
+              value: {{ .Values.dbName | quote }}
+            - name: DB_PASS
+              value: {{ .Values.dbPass | quote }}
+            - name: DB_SCHEMA
+              value: {{ .Values.dbSchema | quote }}
+            - name: DB_USER
+              value: {{ .Values.dbUser | quote }}
+            - name: DEBUG
+              value: {{ .Values.debug | quote }}
+            - name: FLASK_APP
+              value: {{ .Values.flaskApp | quote }}
+            - name: FUZZ_LIMIT
+              value: {{ .Values.fuzzLimit | quote }}
+            - name: HTTPS_VERIFY
+              value: {{ .Values.httpsVerify | quote }}
+            - name: LOG_FILE
+              value: {{ .Values.logFile | quote }}
+            - name: MAILS_SENDER_NAME
+              value: {{ .Values.mailsSenderName | quote }}
+            - name: MAIL_SERVER
+              value: {{ .Values.mailServer | quote }}
+            - name: MAIL_SUPPRESS_SEND
+              value: {{ .Values.mailSuppressSend | quote }}
+            - name: MANUAL_VERIFY_ALL_COMPANIES
+              value: {{ .Values.manualVerifyAllCompanies | quote }}
+            - name: POSTGRES_ADDR
+              value: {{ .Values.dbHost | quote }}
+            - name: REQUESTS_CA_BUNDLE
+              value: {{ .Values.requestsCaBundle | quote }}
+            - name: SEND_MATCHING_MAILS
+              value: {{ .Values.sendMatchingMails | quote }}
+            - name: SENTRY_DSN
+              value: {{ .Values.sentryDsn | quote }}
+            - name: STOCKS_API_TOKEN
+              value: {{ .Values.stocksApiToken | quote }}
+            - name: STOCKS_API_URL
+              value: {{ .Values.stocksApiUrl | quote }}
+            - name: STOCKS_INCLUDE_TESTDATA
+              value: {{ .Values.stocksIncludeTestdata | quote }}
+          livenessProbe:
+            {{- toYaml .Values.livenessProbe | nindent 12 }}
+          readinessProbe:
+            {{- toYaml .Values.readinessProbe | nindent 12 }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - mountPath: /var/local/european.cache.registry/instance/extra
+              name: {{ include "appl.fullname" . }}-settings
+      volumes:
+        - name: {{ include "appl.fullname" . }}-settings
+          persistentVolumeClaim:
+            claimName: {{ include "appl.fullname" . }}-settings
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
