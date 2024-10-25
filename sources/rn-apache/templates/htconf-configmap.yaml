@@ -1,0 +1,96 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "appl.fullname" . }}-htconf
+
+data:
+  vh-my-app.conf: |-
+    TraceEnable off
+    <VirtualHost *:80>
+      ServerAdmin {{ .Values.serverAdmin }}
+      ServerName {{ .Values.serverName }}
+      AddDefaultCharset UTF-8
+      CustomLog /var/log/bdr_access combined
+
+      # Remove the X-Forwarded-Host header because the ingress controller seems
+      # to be copying this value in the HOST header ending up
+      # with host.com, host.com in the HOST header
+      RequestHeader unset X-Forwarded-Host
+
+      Header set Access-Control-Allow-Origin "{{ .Values.defaultWebformsUrl }}"
+      Header set Access-Control-Allow-Credentials true
+
+      Header set Content-Security-Policy "default-src 'self' blob: data: https://*.eionet.europa.eu; connect-src 'self' https://matomo.eea.europa.eu https://*.eionet.europa.eu http://*.eionet.europa.eu; font-src 'self' data: https://maxcdn.bootstrapcdn.com https://cdnjs.cloudflare.com/ https://fonts.gstatic.com/ https://*.eea.europa.eu; frame-src 'self'  https://ec.europa.eu/ https://*.eea.europa.eu http://*.eea.europa.eu http://*.eionet.europa.eu https://*.eionet.europa.eu; img-src http: https: blob: data:; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: data: https://*.eionet.europa.eu https://ajax.googleapis.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://*.eionet.europa.eu https://maxcdn.bootstrapcdn.com; report-uri {{ .Values.sentryReportUri }}"
+      Header set X-Content-Type-Options nosniff
+      Header set Referrer-Policy strict-origin-when-cross-origin
+      Header set Feature-Policy "accelerometer 'none'; ambient-light-sensor 'none'; autoplay 'none'; camera 'none'; encrypted-media 'none'; fullscreen 'self'; geolocation 'none'; gyroscope 'none'; magnetometer 'none'; microphone 'none'; midi 'none'; payment 'none'; picture-in-picture 'none'; speaker 'none'; sync-xhr 'self'; usb 'none'; vr 'none'"
+      Header set Expect-CT 'max-age=604800, report-uri="{{ .Values.sentryReportUri }}"
+      Header set X-Frame-Options SAMEORIGIN
+      Header set X-Xss-Protection 0
+      Header set Strict-Transport-Security 'max-age=2592000;'
+      Header set Server HTTPS
+      Header edit Set-Cookie ^(.*)$ $1;HttpOnly;Secure
+
+      SSLProxyEngine on
+
+      RewriteEngine on
+
+      TimeOut {{ .Values.timeout }}
+      ProxyTimeout {{ .Values.proxyTimeout }}
+
+      RewriteCond %{QUERY_STRING} ^came_from=http(.*)$
+      RewriteCond %{QUERY_STRING} !^came_from=https(:|%3A)//{{ .Values.serverName }}/(.*)$
+      RewriteRule (.*) https://%{SERVER_NAME}? [L]
+
+      RewriteCond %{REQUEST_URI} /Converters/run_conversion
+      RewriteCond %{QUERY_STRING} ^(.*)file(=|%3D)http(.*)$
+      RewriteRule (.*) https://%{SERVER_NAME}? [L]
+
+      RewriteCond %{REQUEST_URI}  !/notifications-static
+      RewriteRule ^/notifications(/|.*)$ {{ .Values.bdrRegistryNotificationsUrl }}$1 [P,NE,L]
+
+      RewriteCond %{REQUEST_URI}  !/registry-static
+      RewriteRule ^/registry(/|.*)$ {{ .Values.bdrRegistryUrl }}$1 [P,NE,L]
+
+      RewriteRule /webq/(.*) {{ .Values.defaultWebformsUrl }}/$1?base_uri=https://{{ .Values.serverName }}/webq/ [P,L,QSA]
+
+      {{- range $webform := .Values.webforms }}
+      {{- if $webform.enabled }}
+      RewriteRule /{{ $webform.endpoint }}(.*) {{ $webform.webformsURL }}/$1 [P,L,NC]
+      {{- end }}
+      {{- end }}
+
+      RewriteCond %{REQUEST_URI}  !/registry-static
+      RewriteCond %{REQUEST_URI}  !/notifications-static
+      RewriteRule /(.*) http://{{ .Values.zopeBackend }}:8080/VirtualHostBase/https/{{ .Values.serverName }}:443/$1 [P]
+
+      Alias /notifications-static /var/local/bdr.registry.notifications/static
+      <Location /notifications>
+            Require all granted
+            <IfModule mod_headers.c>
+                  RequestHeader set X-Forwarded-Script-Name "/notifications"
+            </IfModule>
+      </Location>
+
+      <Directory /var/local/bdr.registry.notifications/static>
+            Options +FollowSymLinks
+            AllowOverride all
+            Require all granted
+            LogLevel crit
+      </Directory>
+
+      Alias /registry-static /bdrreg/static
+      <Location /registry>
+            Require all granted
+            <IfModule mod_headers.c>
+                  RequestHeader set X-Forwarded-Script-Name "/registry"
+            </IfModule>
+      </Location>
+
+      <Directory /bdrreg/static>
+            Options +FollowSymLinks
+            AllowOverride all
+            Require all granted
+            LogLevel crit
+      </Directory>
+    </VirtualHost>

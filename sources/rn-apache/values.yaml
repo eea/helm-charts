@@ -1,0 +1,84 @@
+replicaCount: 1
+
+image:
+  repository: eeacms/apache
+  pullPolicy: IfNotPresent
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+# These are used to populate the serverName and some rewrites in the htconf
+serverName: "replace.me"
+serverAdmin: "helpdesk@replace.me"
+
+# The default webforms url is used to populate the default webforms in the htconf
+defaultWebformsUrl: "https://webforms.replace.me"
+
+# Additional webforms endpoints to be used in the htconf
+webforms:
+  - endpoint: "odsformsNilDev"
+    enabled: false
+    webformsURL: "http://replace.me/ODSFormsNILDev"
+  - endpoint: "odsformsDev"
+    enabled: false
+    webformsURL: "http://replace.me/ODSFormsDev"
+
+# The url of the bdr registry, notifications and zope backend for the rewrite rules
+bdrRegistryUrl: ""
+bdrRegistryNotificationsUrl: ""
+zopeBackend: "instance"
+timeout: 30
+proxyTimeout: 30
+# The sentry report uri is used to populate the sentry report in the htconf
+sentryReportUri: ""
+
+serviceAccount:
+  create: false
+  automount: true
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+podLabels: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+
+service:
+  type: ClusterIP
+  port: 80
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+# This is to setup the liveness and readiness probes more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
+livenessProbe:
+  httpGet:
+    path: /
+    port: http
+readinessProbe:
+  httpGet:
+    path: /
+    port: http
+
+volumes: []
+volumeMounts: []
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
