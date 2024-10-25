@@ -1,0 +1,135 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "appl.fullname" . }}
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    app.kubernetes.io/component: auth
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: auth
+
+  strategy:
+    type: Recreate
+
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: auth
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+      - name: {{ include "appl.fullname" . }}
+        securityContext:
+          {{- toYaml .Values.securityContext | nindent 12 }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        ports:
+        - containerPort: 389
+          protocol: TCP
+        - containerPort: 636
+          protocol: TCP
+        env:
+        {{- if .Values.ldifSeedURL }}
+        - name: LDIF_SEED_URL
+          value: {{ .Values.ldifSeedURL }}
+        {{- end }}
+        - name: LANG
+          value: "C"
+        - name: LDAPSERVERS
+          value: "ldap:/// ldaps:///"
+        - name: LDAP_UID
+          value: "55"
+        - name: LDAP_GID
+          value: "55"
+        - name: SLAPD_ACIS
+          valueFrom:
+            configMapKeyRef:
+              name: {{ include "appl.fullname" . }}-conf
+              key: acis.inc
+        - name: SLAPD_CONF
+          valueFrom:
+            configMapKeyRef:
+              name: {{ include "appl.fullname" . }}-conf
+              key: slapd.inc
+        - name: SLAPD_DATABASE
+          valueFrom:
+            configMapKeyRef:
+              name: {{ include "appl.fullname" . }}-conf
+              key: slapd.db
+        - name: SLAPD_DEBUG_LEVEL
+          value: "{{ .Values.debugLevel }}"
+        - name: SLAPD_INCLUDES
+          valueFrom:
+            configMapKeyRef:
+              name: {{ include "appl.fullname" . }}-conf
+              key: includes.inc
+        - name: SSL_CA_CERTS
+          valueFrom:
+            configMapKeyRef:
+              name: {{ include "appl.fullname" . }}-conf
+              key: cacerts.pem
+        - name: TZ
+          value: "{{ .Values.timezone }}"
+
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
+        securityContext:
+          {{- toYaml .Values.securityContext | nindent 12 }}
+
+        volumeMounts:
+        - mountPath: /var/lib/ldap
+          name: {{ include "appl.fullname" . }}-ldapdb
+
+        livenessProbe:
+          tcpSocket:
+            port: 389
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        # Alternatively, for full verification of health:
+        # exec:
+        #   command:
+        #   - ldapsearch
+        #   - -Zx
+        #   - -h
+        #   - localhost
+        #   - -b
+        #   - o=EIONET,l=Europe
+        #   - objectClass=organization
+
+        startupProbe:
+          failureThreshold: 20
+          initialDelaySeconds: 10
+          periodSeconds: 20
+          successThreshold: 1
+          tcpSocket:
+            port: 389
+          timeoutSeconds: 1
+
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+
+      volumes:
+      - name: {{ include "appl.fullname" . }}-ldapdb
+        persistentVolumeClaim:
+          claimName: {{ include "appl.fullname" . }}-ldapdb

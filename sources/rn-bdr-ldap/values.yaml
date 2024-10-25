@@ -1,0 +1,74 @@
+# Default values
+
+image:
+  repository: eeacms/ldapservice
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+rootDN: "REPLACEME"
+rootPW: "REPLACEME"
+bdrrootDN: "REPLACEME"
+bdrrootPW: "REPLACEME"
+
+debugLevel: 256
+
+syncreplRid: ""
+
+syncURL: ldaps://ldap2.eionet.europa.eu
+syncDN: cn=Replicator,o=EIONET,l=Europe
+syncPW: "REPLACEME"
+syncInterval: "01:00:00:00"
+
+#  file:/var/lib/ldap/load_ldif/eionet-ldapDB.ldif
+ldifSeedURL: ""
+
+timezone: Europe/Copenhagen
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext:
+  fsGroup: 55
+  fsGroupChangePolicy: "OnRootMismatch"
+
+securityContext:
+  {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: ClusterIP
+  externalTrafficPolicy: Cluster
+  annotations: {}
+  # metallb.universe.tf/loadBalancerIPs: 10.50.7.41
+  ldapPort: 389
+  ldapsPort: 636
+
+resources:
+  requests:
+    memory: 4Gi
+  limits:
+    memory: 4Gi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

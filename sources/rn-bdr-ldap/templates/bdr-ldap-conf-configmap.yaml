@@ -1,0 +1,129 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "appl.fullname" . }}-conf
+
+data:
+  slapd.inc: |
+    allow bind_v2
+    sizelimit       10
+    timelimit       3600
+    idletimeout     600
+    pidfile /var/run/openldap/slapd.pid
+    argsfile /var/run/openldap/slapd.args
+    disallow bind_anon
+    require authc
+
+  acis.inc: |
+    # Sample security restrictions
+    # Require integrity protection (prevent hijacking)
+    # Require 112-bit (3DES or better) encryption for updates
+    # Require 63-bit encryption for simple bind
+    # security ssf=1 update_ssf=112 simple_bind=64
+
+    ##########################
+    # ACIs
+    ##########################
+    # Ordering:
+    #   Slapd stops with the first <what> selector that matches the entry and/or attribute.
+    #       by dn="uid=_admin,ou=Users,o=EIONET,l=Europe" write
+
+    access to attrs=userPassword
+            by dn={{ .Values.rootDN | quote }} write
+            by dn="cn=Account Administrator,o=EIONET,l=Europe" write
+            by dn={{ .Values.bdrrootDN | quote }} write
+            by dn={{ .Values.syncDN | quote }} write
+            by self write
+            by * auth
+
+    access to dn.subtree="ou=Business Reporters,o=EIONET,l=Europe"
+            by dn={{ .Values.rootDN | quote }} write
+            by dn={{ .Values.bdrrootDN | quote }} write
+            by dn="cn=Account Administrator,o=EIONET,l=Europe" write
+            by self write
+            by users read
+            by anonymous read
+            by * auth
+
+    # Must come last
+    access to *
+            by dn={{ .Values.rootDN | quote }} write
+            by dn={{ .Values.syncDN | quote }} write
+            by self write
+            by users read
+            by anonymous read
+            by * auth
+
+
+  slapd.db: |
+    #######################################################################
+    # Business reporters
+    #######################################################################
+    database        mdb
+    maxsize 10737418240
+    suffix          "ou=Business Reporters,o=EIONET,l=Europe"
+    subordinate
+    directory       /var/lib/ldap/bdr
+
+    # Indices to maintain for this database
+    index objectClass,uid                   eq,pres
+    index cn,mail,surname,givenname         eq,pres,sub
+    index   uniqueMember                    pres
+    index   entryUUID                       eq
+
+    limits anonymous  size.hard=100 size.hard=soft
+    limits users      size.hard=100 size.hard=soft time=3600
+
+    #######################################################################
+    # Eionet users
+    #######################################################################
+
+    database  mdb
+    maxsize 10737418240
+    suffix    "o=EIONET,l=Europe"
+    rootdn    {{ .Values.rootDN | quote }}
+    # Cleartext passwords, especially for the rootdn, should
+    # be avoided.  See slappasswd(8) and slapd.conf(5) for details.
+    # Use of strong authentication encouraged.
+    # rootpw    secret
+
+    rootpw         {{ .Values.rootPW }}
+
+
+    # The database directory MUST exist prior to running slapd AND
+    # should only be accessible by the slapd and slap tools.
+    # Mode 700 recommended.
+    directory /var/lib/ldap/eionet
+
+    # Indices to maintain for this database
+    index objectClass,uid                   eq,pres
+    index cn,mail,surname,givenname         eq,pres,sub
+    index   uniqueMember                    eq,pres
+    index   entryUUID                       eq
+
+    #limits anonymous  size.hard=10000 size.hard=soft
+    #limits users      size.hard=10000 size.hard=soft time=3600
+    # Password for the Accounts browser is "bixelome".
+    limits  dn.exact="uid=_bdradmin,ou=Users,o=EIONET,l=Europe" size=unlimited
+
+    syncrepl    rid={{ .Values.syncreplRid }}
+            provider={{ .Values.syncURL }}
+            type=refreshOnly
+            interval={{ .Values.syncInterval }}
+            searchbase="ou=Users,o=EIONET,l=Europe"
+            filter="(objectClass=*)"
+            attrs="*"
+            scope=sub
+            schemachecking=off
+            bindmethod=simple
+            binddn="cn=Replicator,o=EIONET,l=Europe"
+            credentials={{ .Values.syncPW | quote }}
+    updateref  {{ .Values.syncURL }}
+  includes.inc: |
+    include /etc/openldap/schema/core.schema
+    include /etc/openldap/schema/cosine.schema
+    include /etc/openldap/schema/inetorgperson.schema
+    include /etc/openldap/schema/eionet.schema
+    include /etc/openldap/schema/nis.schema
+  cacerts.pem: |
+    {{- .Files.Get "cacerts.pem" | nindent 4 }}
