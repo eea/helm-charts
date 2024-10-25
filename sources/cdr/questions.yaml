@@ -81,6 +81,18 @@ questions:
     default: "5Gi"
     group: "Core components"
 
+  - variable: varnish.varnishBackend
+    label: "Varnish Backend"
+    type: string
+    default: "cdr-instance"
+    group: "Core components"
+
+  - variable: varnish.varnishBackendPort
+    label: "Varnish Backend Port"
+    type: string
+    default: "8080"
+    group: "Core components"
+
   - variable: local-converters.resources.requests.memory
     label: "Local Converters Memory Request"
     type: string
