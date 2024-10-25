@@ -176,14 +176,14 @@ questions:
     show_if: "ingress.enabled=true"
 
   - variable: ingress.hosts[0].paths[0].serviceName
-    label: "Ingress Service Name"
+    label: "Ingress Backend Service Name"
     type: string
     default: "mdr-varnish"
     group: "Networking"
     show_if: "ingress.enabled=true"
 
   - variable: ingress.hosts[0].paths[0].servicePort
-    label: "Ingress Service Port"
+    label: "Ingress Backend Service Port"
     type: int
     default: 8080
     group: "Networking"
@@ -303,4 +303,10 @@ questions:
     label: "Local Converters Host"
     type: string
     default: "mdr-local-converters"
+    group: "Advanced Settings"
+
+  - variable: instance.env.zeoAddress
+    label: "ZEO Address"
+    type: string
+    default: "mdr-zeoserver:8100"
     group: "Advanced Settings"
