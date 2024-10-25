@@ -1,0 +1,153 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "appl.fullname" . }}
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    app.kubernetes.io/component: bdr-registry-notifications
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: bdr-registry-notifications
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "appl.labels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        app.kubernetes.io/component: bdr-registry-notifications
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          env:
+            - name: ALLOWED_HOSTS
+              value: {{ .Values.allowedHosts | quote }}
+            - name: APP_REVERSE_PROXY
+              value: {{ .Values.appReverseProxy | quote }}
+            - name: BCC
+              value: {{ .Values.bcc }}
+            - name: BDR_API_PASSWORD
+              value: {{ .Values.bdrApiPassword | quote }}
+            - name: BDR_API_USER
+              value: {{ .Values.bdrApiUser | quote }}
+            - name: BDR_REGISTRY_TOKEN
+              value: {{ .Values.bdrRegistryToken | quote }}
+            - name: BDR_SERVER_URL
+              value: {{ .Values.bdrServerUrl | quote }}
+            - name: BDR_SIDEMENU_URL
+              value: {{ .Values.bdrSidemenuUrl | quote }}
+            - name: DATABASES_ENGINE
+              value: {{ .Values.databasesEngine | quote }}
+            - name: DATABASES_HOST
+              value: {{ .Values.databasesHost | quote }}
+            - name: DATABASES_NAME
+              value: {{ .Values.databasesName | quote }}
+            - name: DATABASES_PASSWORD
+              value: {{ .Values.databasesPassword | quote }}
+            - name: DATABASES_USER
+              value: {{ .Values.databasesUser | quote }}
+            - name: DEBUG
+              value: {{ .Values.debug | quote }}
+            - name: DJANGO_COLLECT_STATIC
+              value: {{ .Values.djangoCollectStatic | quote }}
+            - name: DJANGO_LOAD_FIXTURES
+              value: {{ .Values.djangoLoadFixtures | quote }}
+            - name: DJANGO_MIGRATE
+              value: {{ .Values.djangoMigrate | quote }}
+            - name: ECR_ACCEPTED_COMPANIES_STATUS
+              value: {{ .Values.ecrAcceptedCompaniesStatus | quote }}
+            - name: ECR_COMPANY_PATH
+              value: {{ .Values.ecrCompanyPath | quote }}
+            - name: ECR_DOMAINS
+              value: {{ .Values.ecrDomains | quote }}
+            - name: ECR_PERSON_PATH
+              value: {{ .Values.ecrPersonPath | quote }}
+            - name: ECR_REGISTRY_TOKEN
+              value: {{ .Values.ecrRegistryToken | quote }}
+            - name: ECR_REGISTRY_URL
+              value: {{ .Values.ecrRegistryUrl | quote }}
+            - name: EMAIL_BACKEND
+              value: {{ .Values.emailBackend | quote }}
+            - name: EMAIL_HOST
+              value: {{ .Values.emailHost | quote }}
+            - name: EMAIL_PORT
+              value: {{ .Values.emailPort | quote }}
+            - name: EMAIL_SENDER
+              value: {{ .Values.emailSender | quote }}
+            - name: FRAME_COOKIES
+              value: {{ .Values.frameCookies | quote }}
+            - name: FRAME_URL
+              value: {{ .Values.frameUrl | quote }}
+            - name: FRAME_VERIFY_SSL
+              value: {{ .Values.frameVerifySsl | quote }}
+            - name: MAIL_HOST
+              value: {{ .Values.mailHost | quote }}
+            - name: SENTRY_DSN
+              value: {{ .Values.sentryDsn | quote }}
+            - name: SITE_URL
+              value: {{ .Values.siteUrl | quote }}
+            - name: STATIC_ROOT
+              value: {{ .Values.staticRoot | quote }}
+            - name: STATIC_URL
+              value: {{ .Values.staticUrl | quote }}
+            - name: TZ
+              value: {{ .Values.timezone }}
+            - name: USE_SIDEMENU
+              value: {{ .Values.useSidemenu | quote }}
+            - name: USE_ZOPE_LAYOUT
+              value: {{ .Values.useZopeLayout | quote }}
+            - name: USE_ZOPE_LOGIN
+              value: {{ .Values.useZopeLogin | quote }}
+            - name: UWSGI_PORT
+              value: {{ .Values.service.port | quote }}
+            - name: POSTGRES_ADDR
+              value: {{ .Values.databasesHost | quote }}
+          livenessProbe:
+            {{- toYaml .Values.livenessProbe | nindent 12 }}
+          readinessProbe:
+            {{- toYaml .Values.readinessProbe | nindent 12 }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - mountPath: /var/local/bdr.registry.notifications/static
+              name: {{ include "appl.fullname" . }}-static
+      volumes:
+        - name: {{ include "appl.fullname" . }}-static
+          persistentVolumeClaim:
+            claimName: {{ include "appl.fullname" . }}-static
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
