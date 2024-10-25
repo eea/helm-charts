@@ -15,6 +15,9 @@ This chart is almost configured for production use.
 
 ## Releases
 
+### Version 0.2.10
+- Added sentryDSN variable in questions.yaml.
+
 ### Version 0.2.9
 - Added zeoAddress variable in questionstions.yaml and relabeled ingress backend service name.
 

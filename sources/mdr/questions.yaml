@@ -265,6 +265,12 @@ questions:
     default: ""
     group: "Advanced Settings"
 
+  - variable: instance.env.sentryDSN
+    label: "Sentry DSN"
+    type: string
+    default: ""
+    group: "Advanced Settings"
+
   - variable: instance.env.rabbitmqEnabled
     label: "Enable RabbitMQ"
     type: boolean
