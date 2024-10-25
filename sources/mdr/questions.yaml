@@ -99,6 +99,24 @@ questions:
     default: "1Gi"
     group: "Core components"
 
+  - variable: varnish.resources.requests.cpu
+    label: "Varnish CPU Request"
+    type: string
+    default: "100m"
+    group: "Core components"
+
+  - variable: varnish.varnishBackend
+    label: "Varnish Backend"
+    type: string
+    default: "mdr-instance"
+    group: "Core components"
+
+  - variable: varnish.varnishBackendPort
+    label: "Varnish Backend Port"
+    type: string
+    default: "8080"
+    group: "Core components"
+
   - variable: rabbitmq.create
     label: "Create RabbitMQ"
     type: boolean
