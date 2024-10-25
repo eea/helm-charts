@@ -10,6 +10,9 @@ This chart is almost configured for production use.
 
 ## Releases
 
+### Version 0.2.7
+- Added zeoAddress to questions.yaml and re-labeled ingress backend service name.
+
 ### Version 0.2.6
 - Added varnish backend configuration in questions.yaml.
 
