@@ -399,6 +399,12 @@ questions:
     default: "cdr-clamav"
     group: "Advanced Settings"
 
+  - variable: instance.env.sentryDSN
+    label: "Sentry DSN"
+    type: string
+    default: ""
+    group: "Advanced Settings"
+
   - variable: instance.env.graylog
     label: "Graylog"
     type: string
