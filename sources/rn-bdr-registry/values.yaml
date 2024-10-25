@@ -1,0 +1,107 @@
+replicaCount: 1
+
+image:
+  repository: eeacms/reportek.bdr-registry
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+timezone: Europe/Copenhagen
+adminAllBdrTables: ""
+allowedHosts: ""
+authLdapBaseDn: ""
+authLdapBindDn: ""
+authLdapBindPassword: ""
+authLdapServerUri: ""
+bdrApiAuthPassword: ""
+bdrApiAuthUser: ""
+bdrApiPortalUrl: ""
+bdrAuditLogFile: /bdrreg/logs/trace.log
+bdrEmailFrom: bdr-registration@replace.me
+bdrHelpdeskEmail: helpdesk@replace.me
+bdrRegPort: "12300"
+bdrReportekOrganisationUrl: ""
+bdrReverseProxy: "True"
+bdrServerUrl: https://replace.me/
+bdrSidemenuUrl: ""
+databasesEngine: django.db.backends.postgresql_psycopg2
+databasesHost: ""
+databasesName: ""
+databasesPassword: ""
+databasesUser: ""
+debug: "True"
+emailBackend: post_office.EmailBackend
+emailHost: postfix
+emailPort: '25'
+enableHdvEditing: "True"
+enableHdvResimEditing: "False"
+frameCookies: ""
+frameUrl: ""
+frameVerifySsl: "False"
+hdvEmailFrom: HDV-test-monitoring@replace.me
+ldapEditDn: ""
+ldapEditPassword: ""
+sentryDsn: ""
+siteUrl: /registry/
+staticRoot: /bdrreg/static
+staticUrl: /registry-static/
+useSidemenu: "True"
+useZopeLogin: "True"
+
+serviceAccount:
+  create: false
+  annotations: {}
+  name: ""
+
+
+podAnnotations: {}
+podLabels: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+
+service:
+  type: ClusterIP
+  port: 12300
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+readinessProbe:
+  tcpSocket:
+    port: http
+  initialDelaySeconds: 15
+  periodSeconds: 10
+livenessProbe:
+  tcpSocket:
+    port: http
+  initialDelaySeconds: 15
+  periodSeconds: 10
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 2
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
