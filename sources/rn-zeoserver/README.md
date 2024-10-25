@@ -12,6 +12,9 @@ Zeoserver is the Zope server for Reportek
 
 ## Releases
 
+### Version 0.1.5
+- Added initContainer to create storage directories.
+
 ### Version 0.1.4
 - fsGroup is a pod level security context. Moved it to podSecurityContext.
 
