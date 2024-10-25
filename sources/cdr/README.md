@@ -10,6 +10,9 @@ This chart is almost configured for production use.
 
 ## Releases
 
+### Version 0.2.5
+- Updated rn-zeoserver chart to 0.1.5.
+
 ### Version 0.2.4
 - Added additional ingress configuration options in questions.yaml.
 
