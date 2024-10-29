@@ -10,6 +10,9 @@ This chart is almost configured for production use.
 
 ## Releases
 
+### Version 0.2.10
+- Fixed SSRF on Converters/run_conversion.
+
 ### Version 0.2.9
 - Added nginx server snippet to ingress to prevent SSRF on Converters/run_conversion.
 

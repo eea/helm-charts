@@ -202,10 +202,8 @@ ingress:
     nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/rewrite-target: /VirtualHostBase/https/cdr.eionet.europa.eu:443/VirtualHostRoot/$1
     nginx.ingress.kubernetes.io/server-snippet: |
-      location /Converters/run_conversion {
-          if ($query_string ~ "^(.*)file(=|%3D)http(.*)$") {
-              return 403;  # Return Forbidden
-          }
+      if ($request_uri ~ "^/Converters/run_conversion.*file(=|%3D)http.*$") {
+          return 403;
       }
     nginx.ingress.kubernetes.io/configuration-snippet: |
       more_set_headers 'X-Frame-Options: SAMEORIGIN'
@@ -221,7 +219,7 @@ ingress:
     - host: cdr.eionet.europa.eu
       paths:
         - path: /(.*)
-          pathType: Prefix
+          pathType: ImplementationSpecific
           serviceName: cdr-varnish
           servicePort: 8080
   tls:
