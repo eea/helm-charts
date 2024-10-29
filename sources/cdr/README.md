@@ -10,6 +10,9 @@ This chart is almost configured for production use.
 
 ## Releases
 
+### Version 0.2.13
+- questions.yaml updates.
+
 ### Version 0.2.12
 - More updates to the questions.yaml related to ingress.
 
