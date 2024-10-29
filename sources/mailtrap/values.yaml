@@ -10,7 +10,7 @@ hostname: val-mailtrap.01dev.eea.europa.eu
 ingress:
   enabled: true
   annotations:  
-  certificate: val-mailtrap.01dev.eea.europa.eu-tls
+  certificate: key-01dev-letsencrypt
 
 timezone: Europe/Copenhagen
 
@@ -21,7 +21,9 @@ serviceAccount:
   annotations: {}
   name: ""
 
-podAnnotations: {}
+podAnnotations: { 
+  cert-manager.io/cluster-issuer: 01dev-eea-letsencrypt
+}
 
 podSecurityContext: {}
 securityContext: {}
