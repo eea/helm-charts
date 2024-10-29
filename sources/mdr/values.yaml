@@ -137,6 +137,10 @@ ingress:
     nginx.ingress.kubernetes.io/proxy-send-timeout: "120"
     nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/rewrite-target: /VirtualHostBase/https/mdr.eionet.europa.eu:443/VirtualHostRoot/$1
+    nginx.ingress.kubernetes.io/server-snippet: |
+      if ($request_uri ~ "^/Converters/run_conversion.*file(=|%3D)http.*$") {
+          return 403;
+      }
     nginx.ingress.kubernetes.io/configuration-snippet: |
       more_set_headers 'X-Frame-Options: SAMEORIGIN'
        'Strict-Transport-Security max-age=15768000'
@@ -151,10 +155,9 @@ ingress:
     - host: mdr.eionet.europa.eu
       paths:
         - path: /(.*)
-          pathType: Prefix
+          pathType: ImplementationSpecific
           serviceName: mdr-varnish
           servicePort: 8080
-
   tls:
     - secretName: ""
       hosts:

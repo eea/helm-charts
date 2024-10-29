@@ -150,24 +150,24 @@ questions:
     default: false
     group: "Networking"
 
-  - variable: ingress.hosts[0].host
+  - variable: ingress.hosts.0.host
     label: "Ingress Hostname"
     type: string
     default: "mdr.eionet.europa.eu"
     group: "Networking"
     show_if: "ingress.enabled=true"
 
-  - variable: ingress.hosts[0].paths[0].path
+  - variable: ingress.hosts.0.paths.0.path
     label: "Ingress Path"
     type: string
     default: "/(.*)"
     group: "Networking"
     show_if: "ingress.enabled=true"
 
-  - variable: ingress.hosts[0].paths[0].pathType
+  - variable: ingress.hosts.0.paths.0.pathType
     label: "Ingress Path Type"
     type: enum
-    default: "Prefix"
+    default: "ImplementationSpecific"
     options:
       - "Exact"
       - "Prefix"
@@ -175,14 +175,14 @@ questions:
     group: "Networking"
     show_if: "ingress.enabled=true"
 
-  - variable: ingress.hosts[0].paths[0].serviceName
+  - variable: ingress.hosts.0.paths.0.serviceName
     label: "Ingress Backend Service Name"
     type: string
     default: "mdr-varnish"
     group: "Networking"
     show_if: "ingress.enabled=true"
 
-  - variable: ingress.hosts[0].paths[0].servicePort
+  - variable: ingress.hosts.0.paths.0.servicePort
     label: "Ingress Backend Service Port"
     type: int
     default: 8080
