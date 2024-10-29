@@ -33,7 +33,7 @@ or
     cd ../../docs
     mkdir -p temp
     cd temp
-    helm package ../sources/toypackage
+    helm package ../../sources/toypackage
     helm repo index --merge ../index.yaml .
     mv * ../
     cd ..
