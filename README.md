@@ -31,7 +31,7 @@ or
     git pull
     git add .
     cd ../../docs
-    mkdir -p temp
+    mkdir temp
     cd temp
     helm package ../../sources/toypackage
     helm repo index --merge ../index.yaml .
