@@ -1,0 +1,37 @@
+image:
+  repository: eeacms/centos7dev
+  pullPolicy: IfNotPresent
+  tag: ""
+
+networkSecurity:
+  enabled: true
+
+timezone: Europe/Copenhagen
+
+# Enter the names of the Persistent Volume Claims.
+# They will be mounted under /mnt
+mounts: []
+#- eionet-ldapdump
+#- sqlservice-varlocal
+
+resources:
+  limits:
+    memory: 128Mi
+  requests:
+    memory: 64Mi
+
+nameOverride: ""
+
+fullnameOverride: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+
+securityContext: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

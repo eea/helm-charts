@@ -1,0 +1,15 @@
+Enjoy you Alma Linux development image ({{ .Chart.AppVersion }})
+
+{{- if .Values.networkSecurity.enabled -}}
+This pod has network security enabled. This means you can not
+connect to anything outside the namespace - including the Internet.
+
+This is to prevent lateral migration. If you need Internet access,
+then redeploy with:
+
+    networkSecurity:
+      enabled: false
+
+But don't keep it as default - just like you would use `sudo` temporarily
+for root access on a Linux VM.
+{{- end }}

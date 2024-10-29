@@ -1,0 +1,17 @@
+questions:
+- variable: networkSecurity.enabled
+  type: boolean
+  default: true
+  description: Only allow pod to talk to other pods in same namespace
+  label: Block pod from accessing the Internet
+
+- variable: mounts
+  type: multiline
+  default: []
+  description: Comma-separated list of PVCs of volumes to mount under /mnt
+  label: Enter the names of the Persistent Volume Claims.
+
+- variable: timezone
+  type: string
+  default: Europe/Copenhagen
+  label: Time zone
