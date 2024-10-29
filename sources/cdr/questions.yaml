@@ -278,44 +278,62 @@ questions:
     default: false
     group: "Networking"
 
-  - variable: ingress.hosts[0].host
-    label: "Ingress Hostname"
-    type: string
-    default: "cdr.eionet.europa.eu"
+  - variable: ingress.hosts
+    label: "Ingress Hosts"
+    description: "Ingress hosts configuration"
+    type: list
+    default: []
     group: "Networking"
     show_if: "ingress.enabled=true"
+    subquestions:
+      - variable: host
+        label: "Host"
+        description: "Hostname for the ingress"
+        type: string
+        default: "cdr.eionet.europa.eu"
+      - variable: paths
+        label: "Paths"
+        description: "Path configuration"
+        type: list
+        subquestions:
+          - variable: path
+            label: "Path"
+            type: string
+            default: "/(.*)"
+          - variable: pathType
+            label: "Path Type"
+            type: string
+            default: "ImplementationSpecific"
+          - variable: serviceName
+            label: "Service Name"
+            type: string
+            default: "cdr-varnish"
+          - variable: servicePort
+            label: "Service Port"
+            type: int
+            default: 8080
 
-  - variable: ingress.hosts[0].paths[0].path
-    label: "Ingress Path"
-    type: string
-    default: "/(.*)"
+  - variable: ingress.tls
+    label: "TLS Configuration"
+    description: "TLS configuration for ingress"
+    type: list
+    default: []
     group: "Networking"
     show_if: "ingress.enabled=true"
-
-  - variable: ingress.hosts[0].paths[0].pathType
-    label: "Ingress Path Type"
-    type: enum
-    default: "Prefix"
-    options:
-      - "Exact"
-      - "Prefix"
-      - "ImplementationSpecific"
-    group: "Networking"
-    show_if: "ingress.enabled=true"
-
-  - variable: ingress.hosts[0].paths[0].serviceName
-    label: "Ingress Backend Service Name"
-    type: string
-    default: "cdr-varnish"
-    group: "Networking"
-    show_if: "ingress.enabled=true"
-
-  - variable: ingress.hosts[0].paths[0].servicePort
-    label: "Ingress Backend Service Port"
-    type: int
-    default: 8080
-    group: "Networking"
-    show_if: "ingress.enabled=true"
+    subquestions:
+      - variable: secretName
+        label: "Secret Name"
+        type: string
+        default: ""
+      - variable: hosts
+        label: "TLS Hosts"
+        type: list
+        default: []
+        subquestions:
+          - variable: host
+            label: "Host"
+            type: string
+            default: "cdr.eionet.europa.eu"
 
   # Advanced Settings
   - variable: cdrUser

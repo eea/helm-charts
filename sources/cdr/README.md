@@ -10,6 +10,9 @@ This chart is almost configured for production use.
 
 ## Releases
 
+### Version 0.2.11
+- Updated questions.yaml for ingress.
+
 ### Version 0.2.10
 - Fixed SSRF on Converters/run_conversion.
 
