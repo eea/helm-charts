@@ -37,7 +37,7 @@ or
     helm repo index --merge ../index.yaml .
     mv * ../
     cd ..
-    rm temp
+    rmdir temp
     git add .
     git commit
     git push
