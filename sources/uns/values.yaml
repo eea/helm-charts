@@ -12,7 +12,11 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
-casService: "https://unsdev.eionet.europa.eu"
+unsUrl: "https://unsdev.eionet.europa.eu"
+
+casFilter:
+  serverName: unsdev.eionet.europa.eu
+  domain: unsdev.eionet.europa.eu
 
 log4jConfiguration: "/opt/log/log4j2-gelf.xml"
 
@@ -53,7 +57,7 @@ ldap:
 # or use "uns-mailfwd" to send to a proxy.
 smtp:
   host: ""
- 
+
 jabber:
   host: ""
 
@@ -88,23 +92,21 @@ tolerations: []
 
 affinity: {}
 
-database:
-  securityContext: {}
-  resources:
-    requests:
-      memory: 100Mi
-    limits:
-      memory: 800Mi
-  database: uns
-  username: unsuser
-  password: REPLACEME
-  rootpw: REPLACEME
-  command: []
-  storage: 5Gi
-  storageClassName: ""
-  nodeSelector: {}
-  tolerations: []
-  affinity: {}
+# See https://artifacthub.io/packages/helm/bitnami/mariadb
+mariadb:
+  auth:
+    rootPassword: REPLACEME
+    database: uns
+    username: unsuser
+    password: REPLACEME
+  primary:
+    resources:
+      requests:
+        memory: 100Mi
+      limits:
+        memory: 800Mi
+    persistence:
+      size: 5Gi
 
 # We set up a mailforwarder that can authenticate to the real mail relay.
 postfix:

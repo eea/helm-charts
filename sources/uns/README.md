@@ -12,6 +12,9 @@ set the values in the database section.
 
 <dl>
 
+  <dt>Version 0.3.0</dt>
+  <dd>Switch to mariadb subchart.</dd>
+
   <dt>Version 0.2.1 - 20 Aug. 2024</dt>
   <dd>Upgrade postfix subchart to 1.1.0.</dd>
 
