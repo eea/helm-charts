@@ -79,29 +79,6 @@ varnish:
     AUTOKILL_CRON:
 
 
-debug:
-  enabled: false
-  resources:
-    limits:
-      memory: 4Gi
-    requests:
-      memory: 4Gi
-  nodeSelector: {}
-  tolerations: []
-  affinity: {}
-  podAnnotations: {}
-  podSecurityContext: {}
-  securityContext: {}
-  environment: {}
-
-
-postfix:
-  fullnameOverride: "postfix"
-  serverName: plonesaas.eea.europa.eu
-  mtpPass: ''
-  mtpPort: ''
-  mtpRelay: ''
-  mtpUser: ''
 
 
 
