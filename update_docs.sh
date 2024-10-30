@@ -10,7 +10,7 @@ git pull
 
 echo "Starting release on $1"
 cd sources/$1
-version=$(grep "version:" Chart.yaml | awk -F":" '{print $2}')
+version=$(grep "^version:" Chart.yaml | head -n 1 | awk -F":" '{print $2}')
 echo "Version is $version"
 
 echo "Continue? Enter for yes"
