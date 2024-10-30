@@ -19,12 +19,12 @@ questions:
     label: "Memory reservation mailtrap"
     default: "128M"
     required: true
-    type: "string"      
+    type: "password"
   - variable: "resources.limits.memory"
     label: "Memory limit mailtrap"
-    default: "128M"
+    default: ""
     required: true
-    type: "string"
+    type: "service"
   - variable: "image.tag"
     label: "eeacms/mailtrap version"
     description: "Overrides the image tag whose default is the chart appVersion"
