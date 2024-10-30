@@ -28,7 +28,7 @@ spec:
             command:
             - sh
             - -c
-            - echo 'flush_all' | nc {{- include "appl.labels" . }}-memcached 11211
+            - echo 'flush_all' | nc {{ include "appl.fullname" . }}-memcached 11211
 
             resources:
               {{- toYaml .Values.memcachedflush.resources | nindent 14 }}

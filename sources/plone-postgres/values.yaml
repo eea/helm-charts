@@ -69,14 +69,14 @@ backupstorage:
   size: 10G  
 
 memcached:
-  enabled: false
+  enabled: true
   service-name: memcached
   securityContext: {}
   resources:
     requests:
-      memory: 2048m
-    limit:
-      memory: 2048m
+      memory: 2048M
+    limits:
+      memory: 2048M
   #needs < = memory request and limit
   cache_size_m: 2048
   slab_page_size: 50m
@@ -87,7 +87,7 @@ memcached:
   podAnnotations: {}
 
 memcachedflush:
-  enabled: false
+  enabled: true
   schedule: "0 0 3 * *"
   securityContext: {}
   nodeSelector: {}

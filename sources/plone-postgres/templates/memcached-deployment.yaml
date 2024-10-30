@@ -2,7 +2,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{- include "appl.labels" . | nindent 4 }}-memcached-dpl
+  name: {{ include "appl.fullname" . }}-memcached-dpl
   labels:
     {{- include "appl.labels" . | nindent 4 }}
     component: memcached
@@ -26,7 +26,7 @@ spec:
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
 
       containers:
-      - name: {{- include "appl.labels" . | nindent 4 }}-memcached
+      - name: {{ include "appl.fullname" . }}-memcached
         image: memcached:1.6.31-alpine
         args:
         - -m
