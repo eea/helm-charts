@@ -1,0 +1,35 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: advisory-board-api
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: advisory-board-api
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /VirtualHostBase/https/{{ .Values.plone.hostname }}:443/advisory/++api++/VirtualHostRoot/$1
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: 100m
+  {{- with .Values.ingress.annotations }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: {{ .Values.plone.hostname }}
+    http:
+      paths:
+      - path: /api(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: varnish
+            port:
+              number: 8080
+  {{- if .Values.ingress.certificate }}
+  tls:
+  - hosts:
+    - {{ .Values.plone.hostname }}
+    secretName: {{ .Values.ingress.certificate }}
+  {{- end  }}
+   

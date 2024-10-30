@@ -1,0 +1,85 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "appl.fullname" . }}-plone
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: plone
+
+spec:
+  replicas: {{ .Values.plone.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: plone
+
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: plone
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      containers:
+      - name: plone
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        env:
+        - name: SERVER_NAME
+          value: "{{ .Values.plone.hostname }}"
+        - name: SENTRY_SITE
+          value: "{{ .Values.plone.hostname }}"
+        - name: GRAYLOG_FACILITY
+          value: "{{ .Values.plone.hostname }}"
+        - name: BACKEND_VERSION
+          value: "{{ .Values.image.tag | default .Chart.AppVersion }}"
+        - name: SENTRY_RELEASE
+          value: "{{ .Values.image.tag | default .Chart.AppVersion }}"
+        - name: TZ
+          value: "{{ .Values.timezone }}"
+        - name: RELSTORAGE_DSN
+          value: "host='postgres' dbname='{{ .Values.plone.database.POSTGRES_DB }}' user='{{ .Values.plone.database.POSTGRES_USER }}' password='{{ .Values.plone.database.POSTGRES_PASSWORD }}'"
+        {{- range $key, $value := .Values.plone.environment }}
+        - name: {{ $key }}
+          value: {{ $value | quote }}
+        {{- end }}
+
+        ports:
+        - containerPort: 8080
+
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          periodSeconds: 60
+          timeoutSeconds: 5
+          successThreshold: 1
+
+        startupProbe:
+          httpGet:
+            path: /
+            port: 8080
+          failureThreshold: 30
+          periodSeconds: 30
+          timeoutSeconds: 5
+
+        resources:
+          {{- toYaml .Values.plone.resources | nindent 10 }}
+
+      {{- with .Values.plone.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.plone.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.plone.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+
