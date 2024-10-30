@@ -33,7 +33,7 @@ spec:
         - name: CATALINA_OPTS
           value: >-
             "-Dlog4j.configurationFile={{ .Values.log4jConfiguration }}"
-            "-Ddb.host={{ .Release.Name }}-db-0.{{ .Release.Name }}-db"
+            "-Ddb.host={{ .Release.Name }}-mariadb"
             "-Ddb.url=jdbc:mysql://{{ .Release.Name }}-mariadb:3306/{{ .Values.mariadb.auth.database }}?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&createDatabaseIfNotExist=true"
             "-Ddb.user={{ .Values.mariadb.auth.username }}"
             "-Ddb.password={{ .Values.mariadb.auth.password }}"
