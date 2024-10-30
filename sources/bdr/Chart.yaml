@@ -1,0 +1,57 @@
+apiVersion: v2
+name: bdr
+description: A BDR Helm chart for Kubernetes
+icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/bdr/logo_eionet.png
+
+type: application
+
+version: 0.1.0
+
+appVersion: "5.9.4-193"
+
+dependencies:
+  - name: rn-zeoserver
+    version: 0.1.5
+    repository: https://eea.github.io/helm-charts
+    alias: zeoserver
+  - name: rn-local-converters
+    version: 0.1.1
+    repository: https://eea.github.io/helm-charts
+    condition: rn-local-converters.enabled
+    alias: local-converters
+  - name: rn-clamav
+    version: 0.1.1
+    repository: https://eea.github.io/helm-charts
+    condition: rn-clamav.enabled
+    alias: clamav
+  - name: rn-bdr-ldap
+    version: 0.1.0
+    repository: https://eea.github.io/helm-charts
+    alias: ldap
+  - name: rn-bdr-registry
+    version: 0.1.0
+    repository: https://eea.github.io/helm-charts
+    alias: bdr-registry
+  - name: postgresql
+    version: 15.2.8
+    repository: https://charts.bitnami.com/bitnami
+  - name: postfix
+    version: 2.0.1
+    repository: https://eea.github.io/helm-charts
+    condition: postfix.enabled
+  - name: rn-bdr-registry-notifications
+    version: 0.1.0
+    repository: https://eea.github.io/helm-charts
+    alias: bdr-registry-notifications
+  - name: rn-bdr-registry-notifications
+    version: 0.1.0
+    repository: https://eea.github.io/helm-charts
+    alias: bdr-registry-notifications-async
+  - name: rn-bdr-european-registry
+    version: 0.1.0
+    repository: https://eea.github.io/helm-charts
+    alias: european-registry
+  - name: rn-apache
+    version: 0.1.0
+    repository: https://eea.github.io/helm-charts
+    alias: apache

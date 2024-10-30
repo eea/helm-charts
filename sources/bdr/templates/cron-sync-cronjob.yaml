@@ -1,0 +1,42 @@
+{{- range $cronjob := .Values.synccronjobs }}
+{{- if and $.Values.cron.enabled $cronjob.enabled }}
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "appl.fullname" $ }}-{{ $cronjob.name }}
+  labels:
+    {{- include "appl.labels" $ | nindent 4 }}
+    app.kubernetes.io/component: job
+spec:
+  schedule: "{{ $cronjob.schedule }}"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          {{- with $.Values.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          serviceAccountName: {{ include "appl.serviceAccountName" $ }}
+          containers:
+          - name: {{ include "appl.fullname" $ }}
+            image: curlimages/curl:8.10.1
+            imagePullPolicy: {{ $.Values.image.pullPolicy }}
+            resources:
+              requests:
+                memory: 16Mi
+              limits:
+                memory: 16Mi
+            command: 
+            - "/bin/sh"
+            args: ["-c", "$(SYNC_CMD)"]
+            env:
+            - name: TZ
+              value: {{ $.Values.timezone | quote }}
+            - name: SYNC_CMD
+              value: {{ printf "curl --silent --header \"Authorization: %s\" \"%s\"" $cronjob.token $cronjob.syncURL | quote }}
+          restartPolicy: Never
+{{- end }}
+{{- end }}

@@ -1,0 +1,473 @@
+image:
+  repository: eeacms/reportek-bdr
+  pullPolicy: IfNotPresent
+  tag: ""
+
+timezone: Europe/Copenhagen
+
+# used by the cron-zeopack job
+bdrUser: ""
+bdrPass: ""
+
+instance:
+  enabled: true
+  repository: eeacms/reportek-bdr
+  tag: ""
+  replicaCount: 2
+  port: 8080
+  resources:
+    requests:
+      memory: 5Gi
+      cpu: 500m
+    limits:
+      cpu: 500m
+      memory: 5Gi
+  livenessProbe:
+    httpGet:
+      path: /
+      port: 8080
+    initialDelaySeconds: 30
+    periodSeconds: 20
+    failureThreshold: 3
+    timeoutSeconds: 6
+  readinessProbe:
+  env:
+    beakerPath: /sessions
+    beakerSecret: ""
+    sentryDSN: ""
+    zopeThreads: 4
+    deploymentHost: bdr.eionet.europa.eu
+    clamavHost: bdr-clamav
+    graylog: ""
+    graylogFacility: ""
+    rabbitmqEnabled: true
+    rabbitmqHost: ""
+    rabbitmqUser: ""
+    rabbitmqPass: ""
+    rabbitmqPort: 5672
+    zipCacheEnabled: false
+    zipCachePath: /opt/zope/var
+    zipCacheThreshold: "100000000"
+    zeoAddress: bdr-zeoserver:8100
+    localConvertersHost: bdr-local-converters
+
+redis:
+  image:
+    repository: redis
+    pullPolicy: IfNotPresent
+    tag: "alpine3.20"
+  port: 6379
+  resources:
+    requests:
+      memory: 64Mi
+    limits:
+      memory: 64Mi
+  livenessProbe:
+    tcpSocket:
+      port: 6379
+    periodSeconds: 60
+  startupProbe:
+    tcpSocket:
+      port: 6379
+    failureThreshold: 6
+    periodSeconds: 10
+
+cronzeopack:
+  enabled: true
+  schedule: "0 3 * * *"
+  resources:
+    requests:
+      memory: 16Mi
+    limits:
+      memory: 16Mi
+
+cronsessionscleanup:
+  enabled: true
+  schedule: "* 4 * * *"
+  resources:
+    requests:
+      memory: 16Mi
+    limits:
+      memory: 16Mi
+
+synccronjobs:
+  - name: sync-bdr
+    enabled: false
+    schedule: "1-59/5 * * * *"
+    token: ""
+    syncURL: ""
+  - name: sync-fgases
+    enabled: false
+    schedule: "2-59/5 * * * *"
+    token: ""
+    syncURL: ""
+  - name: sync-ods
+    enabled: false
+    schedule: "3-59/5 * * * *"
+    token: ""
+    syncURL: ""
+  - name: sync-licenses
+    enabled: false
+    schedule: "6 0 * * *"
+    token: ""
+    syncURL: ""
+  - name: sync-match
+    enabled: false
+    schedule: "4-59/5 * * * *"
+    token: ""
+    syncURL: ""
+  - name: sync-stocks
+    enabled: false
+    schedule: "0 3 * * *"
+    token: ""
+    syncURL: ""
+  - name: notifications-fetch
+    enabled: false
+    schedule: "15 0 * * *"
+    token: ""
+    syncURL: ""
+
+zeoserver:
+  storage: 150Gi
+  storageName: bdr-storage
+  resources:
+    requests:
+      memory: 2Gi
+
+local-converters:
+  enabled: true
+  resources:
+    requests:
+      memory: 1.5Gi
+      cpu: 500m
+    limits:
+      memory: 1.5Gi
+      cpu: 500m
+  autoscaling:
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 2
+    targetCPUUtilizationPercentage: 80
+    targetMemoryUtilizationPercentage: 80
+
+clamav:
+  enabled: true
+  resources:
+    requests:
+      memory: 3.5Gi
+      cpu: 500m
+    limits:
+      cpu: 500m
+      memory: 3.5Gi
+  storage: 1Gi
+  storageName: bdr-clamav-data
+  autoscaling:
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 2
+    targetCPUUtilizationPercentage: 80
+    targetMemoryUtilizationPercentage: 80
+
+# See https://artifacthub.io/packages/helm/bitnami/postgresql
+postgresql:
+  fullnameOverride: "bdr-postgres"
+  auth:
+    password: ""
+    enablePostgresUser: true
+    postgresPassword: "replaceme"
+    database: ""
+    username: ""
+  primary:
+    persistence:
+      size: 8Gi
+    resources:
+      requests:
+        memory: 1Gi
+        cpu: 1
+      limits:
+        memory: 2Gi
+        cpu: 2
+
+postfix:
+  dryrun: false
+  enabled: true
+  serverName: bdr.eionet.europa.eu
+  mtpPass: ""
+  mtpPort: ""
+  mtpRelay: ""
+  mtpUser: ""
+
+bdr-registry:
+  adminAllBdrTables: "True"
+  allowedHosts: "['bdr.eionet.europa.eu']"
+  authLdapBaseDn: o=EIONET,l=Europe
+  authLdapBindDn: ""
+  authLdapBindPassword: ""
+  authLdapServerUri: ""
+  bdrApiAuthPassword: ""
+  bdrApiAuthUser: ""
+  bdrApiPortalUrl: https://bdr.eionet.europa.eu/api
+  bdrAuditLogFile: /bdrreg/logs/trace.log
+  bdrEmailFrom: ""
+  bdrHelpdeskEmail: ""
+  bdrReportekOrganisationUrl: ""
+  bdrReverseProxy: "True"
+  bdrServerUrl: https://bdr.eionet.europa.eu/
+  bdrSidemenuUrl: ""
+  databasesEngine: django.db.backends.postgresql_psycopg2
+  databasesHost: ""
+  databasesName: ""
+  databasesPassword: ""
+  databasesUser: ""
+  debug: "False"
+  emailBackend: post_office.EmailBackend
+  emailHost: bdr-postfix
+  emailPort: "25"
+  enableHdvEditing: "True"
+  enableHdvResimEditing: "False"
+  frameCookies: ""
+  frameUrl: ""
+  frameVerifySsl: "False"
+  hdvEmailFrom: ""
+  ldapEditDn: ""
+  ldapEditPassword: ""
+  sentryDsn: ""
+  siteUrl: /registry/
+  staticRoot: /bdrreg/static
+  staticUrl: /registry-static/
+  useSidemenu: "True"
+  useZopeLogin: "True"
+
+bdr-registry-notifications:
+  allowedHosts: "['*']"
+  appReverseProxy: "True"
+  bcc: ""
+  bdrApiPassword: ""
+  bdrApiUser: ""
+  bdrRegistryToken: ""
+  bdrRegistryUrl: ""
+  bdrServerUrl: https://bdr.eionet.europa.eu/
+  bdrSidemenuUrl: ""
+  databasesEngine: django.db.backends.postgresql_psycopg2
+  databasesHost: bdr-postgres
+  databasesName: ""
+  databasesPassword: ""
+  databasesUser: ""
+  debug: "False"
+  djangoCollectStatic: "yes"
+  djangoLoadFixtures: "no"
+  djangoMigrate: "no"
+  ecrAcceptedCompaniesStatus: VALID,REVISION
+  ecrCompanyPath: /undertaking/[domain]/list
+  ecrDomains: FGAS,ODS
+  ecrPersonPath: /user/list
+  ecrRegistryToken: ""
+  ecrRegistryUrl: ""
+  emailBackend: django.core.mail.backends.smtp.EmailBackend
+  emailHost: bdr-postfix
+  emailPort: "25"
+  emailSender: ""
+  frameCookies: ""
+  frameUrl: ""
+  frameVerifySsl: "False"
+  mailHost: bdr-postfix:25
+  sentryDsn: ""
+  siteUrl: /notifications/
+  staticRoot: /var/local/bdr.registry.notifications/static
+  staticUrl: /notifications-static/
+  tz: Europe/Copenhagen
+  useSidemenu: "True"
+  useZopeLayout: "True"
+  useZopeLogin: "True"
+  service:
+    port: 12301
+
+bdr-registry-notifications-async:
+  allowedHosts: "['*']"
+  appReverseProxy: "True"
+  bcc: ""
+  bdrApiPassword: ""
+  bdrApiUser: ""
+  bdrRegistryToken: ""
+  bdrRegistryUrl: ""
+  bdrServerUrl: https://bdr.eionet.europa.eu/
+  bdrSidemenuUrl: ""
+  databasesEngine: django.db.backends.postgresql_psycopg2
+  databasesHost: ""
+  databasesName: ""
+  databasesPassword: ""
+  databasesUser: ""
+  debug: "False"
+  djangoCollectStatic: "no"
+  djangoLoadFixtures: "no"
+  djangoMigrate: "no"
+  ecrAcceptedCompaniesStatus: VALID,REVISION
+  ecrCompanyPath: ""
+  ecrDomains: FGAS,ODS
+  ecrPersonPath: ""
+  ecrRegistryToken: ""
+  ecrRegistryUrl: ""
+  emailBackend: django.core.mail.backends.smtp.EmailBackend
+  emailHost: bdr-postfix
+  emailPort: "25"
+  emailSender: ""
+  frameCookies: ""
+  frameUrl: ""
+  frameVerifySsl: "False"
+  mailHost: bdr-postfix:25
+  redisHost: bdr-redis
+  redisPort: "6379"
+  sentryDsn: ""
+  siteUrl: /notifications/
+  staticRoot: /var/local/bdr.registry.notifications/static
+  staticUrl: /notifications-static/
+  useSidemenu: "True"
+  useZopeLayout: "True"
+  useZopeLogin: "True"
+
+european-registry:
+  apiPassword: ""
+  apiToken: ""
+  apiUser: ""
+  autoVerifyAllCompanies: ODS,FGAS
+  autoVerifyNewCompanies: ODS,FGAS
+  baseUrl: ""
+  baseUrlFgas: ""
+  baseUrlOds: ""
+  bdrApiKey: ""
+  bdrApiUrl: ""
+  bdrEndpointPassword: ""
+  bdrEndpointUrl: https://bdr.eionet.europa.eu
+  bdrEndpointUser: ""
+  bdrHelpDeskMail: ""
+  bdrHost: ""
+  dbHost: ""
+  dbName: ""
+  dbPass: ""
+  dbSchema: postgresql
+  dbUser: ""
+  debug: "False"
+  flaskApp: cache_registry/app.py
+  fuzzLimit: "92"
+  httpsVerify: "True"
+  logFile: EEA_double_check.log
+  mailsSenderName: ""
+  mailServer: bdr-postfix
+  mailSuppressSend: "False"
+  manualVerifyAllCompanies: ""
+  postgresAddr: bdr-postgres
+  requestsCaBundle: /etc/ssl/certs/ca-certificates.crt
+  sendMatchingMails: "True"
+  sentryDsn: ""
+  stocksApiToken: ""
+  stocksApiUrl: ""
+  stocksIncludeTestdata: "Yes"
+
+ldap:
+  rootDN: ""
+  rootPW: ""
+  bdrrootDN: ""
+  bdrrootPW: ""
+
+  debugLevel: 16640
+
+  syncreplRid: ""
+
+  syncURL: ""
+  syncDN: ""
+  syncPW: ""
+  syncInterval: "01:00:00:00"
+  ldifSeedURL: ""
+
+apache:
+  adminAuth:
+    # This should be generated using htpasswd -nb admin yourpassword
+    htpasswd: ""
+  serverName: "bdr.eionet.europa.eu"
+  defaultWebformsUrl: "https://webformsbdr.eionet.europa.eu"
+
+  webforms:
+    - endpoint: "odsformsNil"
+      enabled: true
+      webformsURL: ""
+    - endpoint: "odsforms"
+      enabled: true
+      webformsURL: ""
+
+  bdrRegistryUrl: ""
+  bdrRegistryNotificationsUrl: ""
+  zopeBackend: "bdr-instance"
+  mailTrap: "bdr-postfix"
+  timeout: 30
+  proxyTimeout: 30
+  sentryReportUri: ""
+  volumes:
+    - name: bdr-bdr-registry-notifications-static
+      persistentVolumeClaim:
+        claimName: bdr-bdr-registry-notifications-static
+    - name: bdr-bdr-registry-static
+      persistentVolumeClaim:
+        claimName: bdr-bdr-registry-static
+  volumeMounts:
+    - mountPath: /var/local/bdr.registry.notifications/static
+      name: bdr-bdr-registry-notifications-static
+    - mountPath: /bdrreg/static
+      name: bdr-bdr-registry-static
+
+rabbitmq:
+  create: false
+  name: rabbitmq
+  externalName: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: false
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+
+securityContext: {}
+
+service:
+  type: ClusterIP
+  port: 8080
+
+cron:
+  enabled: true
+
+ingress:
+  enabled: false
+  className: "nginx"
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "1024m"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "480"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "120"
+
+  hosts:
+    - host: bdr.eionet.europa.eu
+      paths:
+        - path: /
+          pathType: Prefix
+          serviceName: bdr-apache
+          servicePort: 80
+  tls:
+    - secretName: ""
+      hosts:
+        - bdr.eionet.europa.eu
+
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 4
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+tolerations: []
+affinity: {}

@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "appl.fullname" . }}-instance
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    app.kubernetes.io/component: zope
+
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.instance.port }}
+      targetPort: {{ .Values.instance.port }}
+      protocol: TCP
+  selector:
+    {{- include "appl.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: zope
