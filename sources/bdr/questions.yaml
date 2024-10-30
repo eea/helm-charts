@@ -1392,6 +1392,13 @@ questions:
     default: "bdr.eionet.europa.eu"
     group: "Apache"
 
+  - variable: apache.adminAuth.htpasswd
+    label: "Apache Admin Authentication"
+    description: "Htpasswd string for BDR registry and notifications admin (generate using 'htpasswd -nb admin yourpassword')"
+    type: password
+    required: true
+    group: "Apache"
+
   - variable: apache.defaultWebformsUrl
     label: "Default Webforms URL"
     description: "URL for default webforms"
