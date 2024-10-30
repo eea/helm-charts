@@ -92,6 +92,11 @@
     - "true"
     - "false"
     required: true
+  - variable: "mailtrap.hostname"
+    label: "Exposed hostname for mailtrap name"
+    description: "DNS name"
+    default: "advisory-board-mailtrap.01dev.europa.eu"
+    type: "string"
 
   - variable: "postfix.enabled"
     label: "Mail"

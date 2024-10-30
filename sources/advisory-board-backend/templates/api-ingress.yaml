@@ -23,7 +23,7 @@ spec:
         pathType: ImplementationSpecific
         backend:
           service:
-            name: varnish
+            name: varnish-backend
             port:
               number: 8080
   {{- if .Values.ingress.certificate }}

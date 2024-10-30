@@ -18,8 +18,8 @@ serviceAccount:
 timezone: Europe/Copenhagen
 
 links:
-  database: namespace.plone-postgres
-  memcached: namespace.plone-postgres-memcached
+  database: plone-postgres.namespace
+  memcached: plone-postgres-memcached.namespace
 
 ingress:
   annotations: {
@@ -100,4 +100,7 @@ postfix:
   mtpUser: ''
 
 
-
+mailtrap:
+  hostname: advisory-board-mailtrap.eea.europa.eu
+  ingress:
+    enabled: true
