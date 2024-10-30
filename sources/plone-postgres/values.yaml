@@ -1,0 +1,98 @@
+# Default values
+
+replicaCount: 1
+
+image:
+  repository: eeacms/postgres
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+timezone: "Europe/Copenhagen"
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+
+postgres:
+  service-name: postgres
+  podAnnotations: {}
+  podSecurityContext: {}
+  securityContext: {}
+  env:
+    SuperUser:
+      Name: "postgres"
+      Password: ""
+    Database: 
+      Name: ""
+      User:
+        Name: ""
+        Password: ""
+    # configuration options, given in multiline
+    Configuration: |-
+        max_connections = 150
+    Crons: |-
+    ReplicationNetwork: ""
+  resources:
+    requests:
+      memory: 4G
+    limits:
+      memory: 4G
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+
+datastorage:
+  size: 10G
+  storageClassName:
+
+archivestorage:
+  enabled: false
+  storageClassName:
+  size: 10G
+
+backupstorage:
+  enabled: false
+  storageClassName:
+  size: 10G  
+
+memcached:
+  enabled: false
+  service-name: memcached
+  securityContext: {}
+  resources:
+    requests:
+      memory: 2048m
+    limit:
+      memory: 2048m
+  #needs < = memory request and limit
+  cache_size_m: 2048
+  slab_page_size: 50m
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  pullPolicy: IfNotPresent
+  podAnnotations: {}
+
+memcachedflush:
+  enabled: false
+  schedule: "0 0 3 * *"
+  securityContext: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  resources: {}
+
+

@@ -1,0 +1,133 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "appl.fullname" . }}-postgres-ss
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: postgres
+spec:
+  replicas: 1
+  serviceName: {{ include "appl.fullname" . }}
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: postgres
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: postgres
+    spec:
+      terminationGracePeriodSeconds: 10
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      containers:
+      - name: {{ include "appl.fullname" . }}-postgres
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - containerPort: 5432
+          protocol: TCP
+        env:
+        - name: TZ
+          value: "{{ .Values.timezone }}"
+        - name: POSTGRES_USER
+          value: "{{ .Values.postgres.env.SuperUser.Name }}"
+        - name: POSTGRES_PASSWORD
+          value: "{{ .Values.postgres.env.SuperUser.Password }}"
+        - name: POSTGRES_DBNAME
+          value: "{{ .Values.postgres.env.Database.Name }}"
+        - name: POSTGRES_DBUSER
+          value: "{{ .Values.postgres.env.Database.User.Name }}"
+        - name: POSTGRES_DBPASS
+          value: "{{ .Values.postgres.env.Database.User.Password }}"
+        - name: POSTGRES_CONFIG
+          value: "{{ .Values.postgres.env.Configuration }}"
+        - name: POSTGRES_CRONS
+          value: "{{ .Values.postgres.env.Crons }}"
+        - name: POSTGRES_REPLICATION_NETWORK
+          value: "{{ .Values.postgres.env.ReplicationNetwork }}"
+        securityContext:
+          {{- toYaml .Values.postgres.env.securityContext | nindent 10 }}
+        volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          name: {{ include "appl.fullname" . }}-psqldata
+        {{- if .Values.backupstorage.enabled }}    
+        - mountPath: /postgresql.backup
+          name:  {{ include "appl.fullname" . }}-psqldata-backup
+        {{- end }}
+        {{- if .Values.archivestorage.enabled }}
+        - mountPath: /var/lib/postgresql/archive
+          name:  {{ include "appl.fullname" . }}-psqldata-archive
+        {{- end }}
+        livenessProbe:
+          tcpSocket:
+            port: 5432
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        readinessProbe:
+          tcpSocket:
+            port: 5432
+          initialDelaySeconds: 5
+          periodSeconds: 20
+        resources:
+          {{- toYaml .Values.postgres.resources | nindent 10 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+  volumeClaimTemplates:
+
+  - metadata:
+      name: {{ include "appl.fullname" . }}-psqldata
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      {{- if .Values.datastorage.storageClassName }}
+      storageClass: "{{ .Values.datastorage.storageClassName }}"
+      {{- end }}
+      resources:
+        requests:
+          storage: "{{ .Values.datastorage.size }}"
+
+  {{- if .Values.backupstorage.enabled }}
+  - metadata:
+      name: {{ include "appl.fullname" . }}-psqldata-backup
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      {{- if .Values.backupstorage.storageClassName }}
+      storageClass: "{{ .Values.backupstorage.storageClassName }}"
+      {{- end }}
+      resources:
+        requests:
+          storage: "{{ .Values.backupstorage.size }}"
+  {{- end }}
+
+  {{- if .Values.archivestorage.enabled }}
+  - metadata:
+      name: {{ include "appl.fullname" . }}-psqldata-archive
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      {{- if .Values.archivestorage.storageClassName }}
+      storageClass: "{{ .Values.archivestorage.storageClassName }}"
+      {{- end }}
+      resources:
+        requests:
+          storage: "{{ .Values.archivestorage.size }}"
+  {{- end }}
+
+            

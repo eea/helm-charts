@@ -1,0 +1,112 @@
+  questions:
+  - variable: "postgres.env.SuperUser.Name"
+    label: "Super User name"
+    default: "postgres"
+    type: "string"
+    required: true
+  - variable: "postgres.env.SuperUser.Password"
+    label: "Super User password"
+    default: "postgres"
+    type: "password"
+    required: true
+  - variable: "postgres.env.Database.Name"
+    label: "DB names"
+    description: "Space separated databases names to create on first run"
+    default: "datafs zasync"
+    type: "string"
+    required: true
+  - variable: "postgres.env.Database.User.Name"
+    label: "PostgreSQL databases owner name"
+    default: "zope"
+    type: "string"
+    required: true
+  - variable: "postgres.env.Database.User.Password"
+    label: "PostgreSQL databases owner password"
+    default: "zope"
+    type: "password"
+    required: true
+  - variable: "timezone"
+    label: "Time zone"
+    default: "Europe/Copenhagen"
+    required: true
+    type: "string"
+  - variable: "datastorage.size"
+    label: "Data volume size"
+    description: "Volume size for PostgreSQL data"
+    default: "100G"
+    type: "string"
+    required: true
+  - variable: "backupstorage.enabled"
+    label: "Backup volume enabled"
+    type: "enum"
+    options:
+      - "false"
+      - "true"
+    default: "false"
+  - variable: "backupstorage.size"
+    label: "Backup volume size"
+    description: "Volume name for PostgreSQL backup mount"
+    default: "100G"
+    type: "string"
+    required: true
+  - variable: "archivestorage.enabled"
+    label: "PostgreSQL WAL archive volume enabled"
+    type: "enum" 
+    options:
+      - "false"
+      - "true"
+    default: "false"
+  - variable: "archivestorage.size"
+    label: "PostgreSQL WAL archive volume size"
+    default: "10G"
+    type: "string"
+    required: true
+
+  - variable: "postgres.env.ReplicationNetwork"
+    label: "Replication network"
+    description: "Restrict replication only on this network (e.g.: 172.168.0.0/16)"
+    default: ""
+    type: "string"
+  - variable: "postgres.env.Configuration"
+    label: "PostgreSQL config"
+    description: "Multiline additional PostgreSQL configuration"
+    type: "multiline"
+    default: |-
+      max_connections = 150
+  - variable: "postgres.env.Crons"
+    label: "Maintenance cron jobs"
+    description: "Line separated list of cron jobs (e.g. Backup DB @nightly, Cleanup archive WALs @hourly, etc.). Use `crontab` syntax"
+    type: "multiline"
+    default: |-
+      # Backup datafs DB daily at midnight. Un-comment the following lines to apply.
+      # @daily postgres /postgresql.restore/database-backup.sh datafs
+  - variable: "postgres.resources.requests.memory"
+    label: "Memory reservation postgres"
+    default: "4G"
+    required: true
+    type: "string"
+  - variable: "postgres.resources.limits.memory"
+    label: "Memory limit postgres"
+    default: "4G"
+    required: true
+    type: "string"
+
+  - variable: "memcached.enabled"
+    label: "Create memcached"
+    type: "enum"
+    options:
+      - "false"
+      - "true"
+    default: "true"
+
+  - variable: "memcached.cache_size_m"
+    label: "Cache size, in mb"
+    description: "Memcached size"
+    default: 2048
+    required: true
+    type: "int"
+  - variable: "FLUSH_MEMCACHED_CRON"
+    label: "Crontab schedule to flush memcached cache, UTC"
+    description: "Can be empty, otherwise use format - https://www.freeformatter.com/cron-expression-generator-quartz.html"
+    default: "0 0 3 * * *"
+    type: "string"
