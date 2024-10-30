@@ -1,6 +1,12 @@
-#!/bin/sh
+#!/bin/bash
 
-if [ -z "$1" ] || [ ! -d sources/$1 ]; then
+chart="$1"
+if [[ $1 == sources/* ]]; then 
+	chart=$(echo $1 | awk -F'/' '{print $2}')
+fi
+
+
+if [ -z "$chart" ] || [ ! -d sources/$chart ]; then
     echo "Please give the paramater the directory from sources"
     exit 1
 fi
@@ -8,8 +14,8 @@ fi
 git pull
 
 
-echo "Starting release on $1"
-cd sources/$1
+echo "Starting release on $chart"
+cd sources/$chart
 version=$(grep "^version:" Chart.yaml | head -n 1 | awk -F":" '{print $2}')
 echo "Version is $version"
 
@@ -28,7 +34,7 @@ fi
 cd ../../docs
 mkdir -p temp
 cd temp
-helm package ../../sources/$1
+helm package ../../sources/$chart
 helm repo index --merge ../index.yaml .
 mv * ../
 cd ..
@@ -37,7 +43,7 @@ rm temp
 
 cd ..
 git diff docs/index.yaml
-git add sources/$1
+git add sources/$chart
 git add docs/
 
 git status
@@ -45,7 +51,7 @@ git status
 echo "Git commit & push? Enter for yes"
 read variable
 if [ -z "$variable" ]; then
-	git commit -m "Release on $1 version $version"
+	git commit -m "Release on $chart version $version"
 	git push
 fi
 

@@ -24,9 +24,19 @@ Update dependecies:
 
 Update/Release docs:
 
+Can be called by the name or the path of the chart directory:
+
     ./update_docs.sh toypackage
 
 or
+    ./update_docs.sh sources/toypackage/
+
+or
+
+    ./update_docs.sh sources/toypackage
+
+
+The script does:
 
     git pull
     git add .
