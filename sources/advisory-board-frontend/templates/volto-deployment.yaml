@@ -1,0 +1,81 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "appl.fullname" . }}-volto
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: volto
+
+spec:
+  replicas: {{ .Values.volto.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: volto
+
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: volto
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      containers:
+      - name: volto
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        env:
+        - name: PORT
+          value: 3000
+        - name: RAZZLE_SENTRY_RELEASE
+          value: "{{ .Values.image.tag | default .Chart.AppVersion }}"
+        - name: RAZZLE_FRONTEND_VERSION
+          value: "{{ .Values.image.tag | default .Chart.AppVersion }}"
+        - name: SENTRY_RELEASE
+          value: "{{ .Values.image.tag | default .Chart.AppVersion }}"
+        - name: TZ
+          value: "{{ .Values.timezone }}"
+        {{- range $key, $value := .Values.volto.environment }}
+        - name: {{ $key }}
+          value: {{ $value | quote }}
+        {{- end }}
+
+        ports:
+        - containerPort: 3000
+
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 3000
+          periodSeconds: 60
+          timeoutSeconds: 5
+          successThreshold: 1
+
+        startupProbe:
+          httpGet:
+            path: /
+            port: 3000
+          failureThreshold: 30
+          periodSeconds: 30
+          timeoutSeconds: 5
+
+        resources:
+          {{- toYaml .Values.volto.resources | nindent 10 }}
+
+      {{- with .Values.volto.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.volto.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.volto.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+

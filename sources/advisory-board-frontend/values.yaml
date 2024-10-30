@@ -1,0 +1,107 @@
+
+
+image:
+  repository: eeacms/advisory-board-frontend
+  pullPolicy: Always
+  tag: ""
+
+imagePullSecrets: []
+
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: false
+  annotations: {}
+  name: ""
+
+timezone: Europe/Copenhagen
+
+
+ingress:
+  annotations: {
+    cert-manager.io/cluster-issuer: 01dev-eea-letsencrypt
+  }
+  certificate: key-01dev-letsencrypt
+
+volto:
+  hostname: plone.eea.europa.eu
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 6
+    # targetCPUUtilizationPercentage: 80
+    targetMemoryUtilizationPercentage: 60
+  replicaCount: 1
+  resources:
+    limits:
+      memory: 2Gi
+    requests:
+      memory: 2Gi
+  environment:
+    SENTRY_URL: 
+    SENTRY_AUTH_TOKEN: 
+    SENTRY_ORG: 
+    SENTRY_PROJECT: 
+    RAZZLE_SENTRY_DSN: 
+      #  SENTRY_RELEASE: '1.9.0'
+      RAZZLE_BACKEND_NAME: 'advisory-board-backend'
+        #RAZZLE_SENTRY_RELEASE: '1.9.0'
+        #RAZZLE_FRONTEND_VERSION: '1.9.0'
+    RAZZLE_ALLOWED_CORS_DESTINATIONS: 
+    RAZZLE_MATOMO_URL:
+    RAZZLE_MATOMO_SITE_ID: 
+    RAZZLE_MATOMO_SECOND_SITE_ID:
+    RAZZLE_MATOMO_SECOND_TRACKER_URL: 
+    RAZZLE_INTERNAL_API_PATH: 
+    VOLTO_ROBOTSTXT: 
+    RAZZLE_DISABLE_DRAFT_WATERMARK: 
+
+  annotations: {}
+  
+varnish:
+  resources:
+    limits:
+      memory: 3Gi
+    requests:
+      memory: 3Gi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  environment:
+    VARNISH_SIZE: 
+    VARNISH_DNS_TTL: '20s'
+    VARNISH_BERESP_TTL: 
+    VARNISH_BERESP_GRACE: 
+    VARNISH_BERESP_KEEP: 
+    VARNISH_GZIP_ENABLED: 
+    VARNISH_GZIP_JSON_ENABLED: 
+    AUTOKILL_CRON:
+
+
+debug:
+  enabled: false
+  resources:
+    limits:
+      memory: 4Gi
+    requests:
+      memory: 4Gi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  podAnnotations: {}
+  podSecurityContext: {}
+  securityContext: {}
+  environment: {}
+
+
+postfix:
+  fullnameOverride: "postfix"
+  serverName: plonesaas.eea.europa.eu
+  mtpPass: ''
+  mtpPort: ''
+  mtpRelay: ''
+  mtpUser: ''
+
+
+

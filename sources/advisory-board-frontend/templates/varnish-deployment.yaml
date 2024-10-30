@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: varnish
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: varnish
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: varnish
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: varnish
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      containers:
+      - name: varnish
+        image: eeacms/plone-varnish:7.5-1.0
+        env:
+        - name: TZ
+          value: "{{ .Values.timezone }}"
+        - name: VARNISH_BACKEND
+          value: "frontend"
+        - name: VARNISH_BACKEND_PORT
+          value: '3000'
+        - name: VARNISH_HTTP_PORT
+          value: '3000'
+        {{- range $key, $value := .Values.varnish.environment }}
+        - name: {{ $key }}
+          value: {{ $value | quote }}
+        {{- end }}
+
+        ports:
+        - containerPort: 3000
+
+        livenessProbe:
+          tcpSocket:
+            port: 3000
+          periodSeconds: 20
+          timeoutSeconds: 3
+          successThreshold: 1
+
+        startupProbe:
+          tcpSocket:
+            port: 3000
+          failureThreshold: 12
+          periodSeconds: 10
+          timeoutSeconds: 3
+
+
+        resources:
+          {{- toYaml .Values.varnish.resources | nindent 10 }}
+
+      {{- with .Values.varnish.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.varnish.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.varnish.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always

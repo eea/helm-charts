@@ -1,0 +1,31 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: advisory-board
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: advisory-board-frontend
+  {{- with .Values.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: {{ .Values.volto.hostname }}
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        frontend:
+          service:
+            name: varnish-frontend
+            port:
+              number: 3000
+  {{- if .Values.ingress.certificate }}
+  tls:
+  - hosts:
+    - {{ .Values.volto.hostname }}
+    secretName: {{ .Values.ingress.certificate }}
+  {{- end  }}
