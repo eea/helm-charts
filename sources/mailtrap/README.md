@@ -10,7 +10,7 @@ https://github.com/eaudeweb/edw.docker.mailtrap/tree/master
 ## Releases
 
 <dl>
-  <dt>Version 1.0.2</dt>
+  <dt>Version 1.0.3</dt>
   <dd>Add questions</dd>
 
   <dt>Version 1.0.0</dt>
