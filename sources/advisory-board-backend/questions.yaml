@@ -10,13 +10,13 @@
   - variable: "links.memcached"
     label: "Memcached"
     description: "Memcached service for python caching"
-    type: "service"
+    type: "string"
     required: true
 
   - variable: "links.database"
     label: "PostgreSQL"
     description: "PostgreSQL DB backend"
-    type: "service"
+    type: "string"
     required: true
 
   - variable: "plone.database.POSTGRES_DB"
@@ -35,7 +35,7 @@
   - variable: "plone.database.POSTGRES_PASSWORD"
     label: "PostgreSQL password"
     description: "PostgreSQL password"
-    type: "password"
+    type: "string"
     default: "zope"
     required: true
 
@@ -121,7 +121,7 @@
   - variable: "postfix.mtpPass"
     label: "Postfix password"
     description: "Password used for MTP_USER"
-    type: "password"
+    type: "string"
 
 
 
