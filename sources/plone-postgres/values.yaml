@@ -33,12 +33,12 @@ postgres:
   env:
     SuperUser:
       Name: "postgres"
-      Password: ""
+      Password: "postgres"
     Database: 
-      Name: ""
+      Name: "test"
       User:
-        Name: ""
-        Password: ""
+        Name: "test"
+        Password: "test"
     # configuration options, given in multiline
     Configuration: |-
         max_connections = 150

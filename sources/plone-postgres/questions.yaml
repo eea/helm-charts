@@ -7,7 +7,7 @@
   - variable: "postgres.env.SuperUser.Password"
     label: "Super User password"
     default: "postgres"
-    type: "password"
+    type: "string"
     required: true
   - variable: "postgres.env.Database.Name"
     label: "DB names"
@@ -23,7 +23,7 @@
   - variable: "postgres.env.Database.User.Password"
     label: "PostgreSQL databases owner password"
     default: "zope"
-    type: "password"
+    type: "string"
     required: true
   - variable: "timezone"
     label: "Time zone"
