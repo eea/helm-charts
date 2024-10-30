@@ -1,4 +1,4 @@
-{{- if .Values.memcachedflush.enabled -}}
+{{- if and .Values.memcached.enabled (.Values.memcachedflush.schedule) -}}
 apiVersion: batch/v1
 kind: CronJob
 metadata:

@@ -40,9 +40,9 @@
     label: "Backup volume enabled"
     type: "enum"
     options:
-      - "false"
-      - "true"
-    default: "false"
+      - false
+      - true
+    default: false
   - variable: "backupstorage.size"
     label: "Backup volume size"
     description: "Volume name for PostgreSQL backup mount"
@@ -53,9 +53,9 @@
     label: "PostgreSQL WAL archive volume enabled"
     type: "enum" 
     options:
-      - "false"
-      - "true"
-    default: "false"
+      - false
+      - true
+    default: false
   - variable: "archivestorage.size"
     label: "PostgreSQL WAL archive volume size"
     default: "10G"
@@ -95,9 +95,9 @@
     label: "Create memcached"
     type: "enum"
     options:
-      - "false"
-      - "true"
-    default: "true"
+      - false
+      - true
+    default: true
 
   - variable: "memcached.cache_size_m"
     label: "Cache size, in mb"
@@ -111,8 +111,8 @@
     default: "50m"
     type: "string"
 
-  - variable: "FLUSH_MEMCACHED_CRON"
+  - variable: "memcachedflush.schedule"
     label: "Crontab schedule to flush memcached cache, UTC"
     description: "Can be empty, otherwise use format - https://www.freeformatter.com/cron-expression-generator-quartz.html"
-    default: "0 0 3 * * *"
+    default: "0 0 3 * *"
     type: "string"
