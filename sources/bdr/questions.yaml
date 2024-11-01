@@ -707,8 +707,11 @@ questions:
   # BDR Registry Configuration
   - variable: bdr-registry.adminAllBdrTables
     description: "Enable admin access to all BDR tables"
-    type: boolean
-    default: true
+    type: enum
+    default: "True"
+    options:
+      - "True"
+      - "False"
     group: "BDR Registry"
 
   - variable: bdr-registry.allowedHosts
@@ -777,10 +780,34 @@ questions:
     default: ""
     group: "BDR Registry"
 
+  - variable: bdr-registry.bdrReverseProxy
+    description: "Enable reverse proxy support"
+    type: enum
+    default: "True"
+    options:
+      - "True"
+      - "False"
+    group: "BDR Registry"
+
+  - variable: bdr-registry.bdrServerUrl
+    description: "Base URL for the BDR server"
+    type: string
+    default: ""
+    group: "BDR Registry"
+
+  - variable: bdr-registry.bdrSidemenuUrl
+    description: "Base URL for the BDR sidemenu"
+    type: string
+    default: ""
+    group: "BDR Registry"
+
   - variable: bdr-registry.debug
     description: "Enable debug mode"
-    type: boolean
-    default: false
+    type: enum
+    default: "False"
+    options:
+      - "True"
+      - "False"
     group: "BDR Registry"
 
   - variable: bdr-registry.databasesEngine
@@ -833,14 +860,20 @@ questions:
 
   - variable: bdr-registry.enableHdvEditing
     description: "Enable HDV editing functionality"
-    type: boolean
-    default: true
+    type: enum
+    default: "True"
+    options:
+      - "True"
+      - "False"
     group: "BDR Registry"
 
   - variable: bdr-registry.enableHdvResimEditing
     description: "Enable HDV RESIM editing functionality"
-    type: boolean
-    default: false
+    type: enum
+    default: "False"
+    options:
+      - "True"
+      - "False"
     group: "BDR Registry"
 
   - variable: bdr-registry.sentryDsn
@@ -869,14 +902,20 @@ questions:
 
   - variable: bdr-registry.useSidemenu
     description: "Enable side menu functionality"
-    type: boolean
-    default: true
+    type: enum
+    default: "True"
+    options:
+      - "True"
+      - "False"
     group: "BDR Registry"
 
   - variable: bdr-registry.useZopeLogin
     description: "Enable Zope login functionality"
-    type: boolean
-    default: true
+    type: enum
+    default: "True"
+    options:
+      - "True"
+      - "False"
     group: "BDR Registry"
 
   - variable: bdr-registry-notifications.allowedHosts
@@ -887,8 +926,11 @@ questions:
 
   - variable: bdr-registry-notifications.appReverseProxy
     description: "Enable reverse proxy support"
+    type: enum
     default: "True"
-    type: boolean
+    options:
+      - "True"
+      - "False"
     group: "BDR Registry Notifications"
 
   - variable: bdr-registry-notifications.bdrServerUrl
@@ -911,26 +953,38 @@ questions:
 
   - variable: bdr-registry-notifications.debug
     description: "Enable Django debug mode"
+    type: enum
     default: "False"
-    type: boolean
+    options:
+      - "True"
+      - "False"
     group: "BDR Registry Notifications"
 
   - variable: bdr-registry-notifications.djangoCollectStatic
     description: "Run Django collectstatic on startup"
+    type: enum
     default: "yes"
-    type: string
+    options:
+      - "yes"
+      - "no"
     group: "BDR Registry Notifications"
 
   - variable: bdr-registry-notifications.djangoLoadFixtures
     description: "Load Django fixtures on startup"
+    type: enum
     default: "no"
-    type: string
+    options:
+      - "yes"
+      - "no"
     group: "BDR Registry Notifications"
 
   - variable: bdr-registry-notifications.djangoMigrate
     description: "Run Django migrations on startup"
+    type: enum
     default: "no"
-    type: string
+    options:
+      - "yes"
+      - "no"
     group: "BDR Registry Notifications"
 
   - variable: bdr-registry-notifications.ecrAcceptedCompaniesStatus
@@ -965,8 +1019,11 @@ questions:
 
   - variable: bdr-registry-notifications.frameVerifySsl
     description: "Verify SSL certificates for frame requests"
+    type: enum
     default: "False"
-    type: boolean
+    options:
+      - "True"
+      - "False"
     group: "BDR Registry Notifications"
 
   - variable: bdr-registry-notifications.mailHost
@@ -1001,20 +1058,29 @@ questions:
 
   - variable: bdr-registry-notifications.useSidemenu
     description: "Enable side menu"
+    type: enum
     default: "True"
-    type: boolean
+    options:
+      - "True"
+      - "False"
     group: "BDR Registry Notifications"
 
   - variable: bdr-registry-notifications.useZopeLayout
     description: "Use Zope layout"
+    type: enum
     default: "True"
-    type: boolean
+    options:
+      - "True"
+      - "False"
     group: "BDR Registry Notifications"
 
   - variable: bdr-registry-notifications.useZopeLogin
     description: "Use Zope login"
+    type: enum
     default: "True"
-    type: boolean
+    options:
+      - "True"
+      - "False"
     group: "BDR Registry Notifications"
 
   - variable: bdr-registry-notifications.service.port
@@ -1031,8 +1097,11 @@ questions:
 
   - variable: bdr-registry-notifications-async.appReverseProxy
     description: "Enable/disable reverse proxy support"
+    type: enum
     default: "True"
-    type: boolean
+    options:
+      - "True"
+      - "False"
     group: "BDR Registry Notifications Async"
 
   - variable: bdr-registry-notifications-async.bdrServerUrl
@@ -1045,21 +1114,18 @@ questions:
     description: "Username for BDR API authentication"
     default: ""
     type: string
-    required: true
     group: "BDR Registry Notifications Async"
 
   - variable: bdr-registry-notifications-async.bdrApiPassword
     description: "Password for BDR API authentication"
     default: ""
     type: password
-    required: true
     group: "BDR Registry Notifications Async"
 
   - variable: bdr-registry-notifications-async.bdrRegistryToken
     description: "Authentication token for BDR Registry"
     default: ""
     type: password
-    required: true
     group: "BDR Registry Notifications Async"
 
   - variable: bdr-registry-notifications-async.databasesEngine
@@ -1072,34 +1138,33 @@ questions:
     description: "Database host address"
     default: ""
     type: string
-    required: true
     group: "BDR Registry Notifications Async"
 
   - variable: bdr-registry-notifications-async.databasesName
     description: "Database name"
     default: ""
     type: string
-    required: true
     group: "BDR Registry Notifications Async"
 
   - variable: bdr-registry-notifications-async.databasesUser
     description: "Database user"
     default: ""
     type: string
-    required: true
     group: "BDR Registry Notifications Async"
 
   - variable: bdr-registry-notifications-async.databasesPassword
     description: "Database password"
     default: ""
     type: password
-    required: true
     group: "BDR Registry Notifications Async"
 
   - variable: bdr-registry-notifications-async.debug
     description: "Enable Django debug mode"
+    type: enum
     default: "False"
-    type: boolean
+    options:
+      - "True"
+      - "False"
     group: "BDR Registry Notifications Async"
 
   - variable: bdr-registry-notifications-async.ecrAcceptedCompaniesStatus
@@ -1136,7 +1201,6 @@ questions:
     description: "Email address used as sender"
     default: ""
     type: string
-    required: true
     group: "BDR Registry Notifications Async"
 
   - variable: bdr-registry-notifications-async.redisHost
@@ -1171,41 +1235,47 @@ questions:
 
   - variable: bdr-registry-notifications-async.useSidemenu
     description: "Enable/disable side menu"
+    type: enum
     default: "True"
-    type: boolean
+    options:
+      - "True"
+      - "False"
     group: "BDR Registry Notifications Async"
 
   - variable: bdr-registry-notifications-async.useZopeLayout
     description: "Enable/disable Zope layout"
+    type: enum
     default: "True"
-    type: boolean
+    options:
+      - "True"
+      - "False"
     group: "BDR Registry Notifications Async"
 
   - variable: bdr-registry-notifications-async.useZopeLogin
     description: "Enable/disable Zope login"
+    type: enum
     default: "True"
-    type: boolean
+    options:
+      - "True"
+      - "False"
     group: "BDR Registry Notifications Async"
 
   - variable: european-registry.apiPassword
     default: ""
     description: "API password for authentication"
     type: password
-    required: true
     group: "European Registry"
 
   - variable: european-registry.apiToken
     default: ""
     description: "API authentication token"
     type: string
-    required: true
     group: "European Registry"
 
   - variable: european-registry.apiUser
     default: ""
     description: "API username for authentication"
     type: string
-    required: true
     group: "European Registry"
 
   - variable: european-registry.autoVerifyAllCompanies
@@ -1224,42 +1294,36 @@ questions:
     default: ""
     description: "Base URL for the registry"
     type: string
-    required: true
     group: "European Registry"
 
   - variable: european-registry.baseUrlFgas
     default: ""
     description: "Base URL for FGAS registry"
     type: string
-    required: true
     group: "European Registry"
 
   - variable: european-registry.baseUrlOds
     default: ""
     description: "Base URL for ODS registry"
     type: string
-    required: true
     group: "European Registry"
 
   - variable: european-registry.bdrApiKey
     default: ""
     description: "BDR API authentication key"
     type: password
-    required: true
     group: "European Registry"
 
   - variable: european-registry.bdrApiUrl
     default: ""
     description: "BDR API endpoint URL"
     type: string
-    required: true
     group: "European Registry"
 
   - variable: european-registry.bdrEndpointPassword
     default: ""
     description: "BDR endpoint password"
     type: password
-    required: true
     group: "European Registry"
 
   - variable: european-registry.bdrEndpointUrl
@@ -1272,35 +1336,30 @@ questions:
     default: ""
     description: "BDR endpoint username"
     type: string
-    required: true
     group: "European Registry"
 
   - variable: european-registry.bdrHelpDeskMail
     default: ""
     description: "BDR helpdesk email address"
     type: string
-    required: true
     group: "European Registry"
 
   - variable: european-registry.dbHost
     default: ""
     description: "Database host address"
     type: string
-    required: true
     group: "European Registry"
 
   - variable: european-registry.dbName
     default: ""
     description: "Database name"
     type: string
-    required: true
     group: "European Registry"
 
   - variable: european-registry.dbPass
     default: ""
     description: "Database password"
     type: password
-    required: true
     group: "European Registry"
 
   - variable: european-registry.dbSchema
@@ -1313,13 +1372,14 @@ questions:
     default: ""
     description: "Database username"
     type: string
-    required: true
     group: "European Registry"
 
   - variable: european-registry.debug
+    type: enum
     default: "False"
-    description: "Enable debug mode"
-    type: boolean
+    options:
+      - "True"
+      - "False"
     group: "European Registry"
 
   - variable: european-registry.flaskApp
@@ -1335,9 +1395,12 @@ questions:
     group: "European Registry"
 
   - variable: european-registry.httpsVerify
-    default: "True"
     description: "Enable HTTPS verification"
-    type: boolean
+    type: enum
+    default: "True"
+    options:
+      - "True"
+      - "False"
     group: "European Registry"
 
   - variable: european-registry.logFile
@@ -1350,7 +1413,6 @@ questions:
     default: ""
     description: "Name to use for sending emails"
     type: string
-    required: true
     group: "European Registry"
 
   - variable: european-registry.mailServer
@@ -1360,9 +1422,12 @@ questions:
     group: "European Registry"
 
   - variable: european-registry.mailSuppressSend
-    default: "False"
     description: "Suppress email sending"
-    type: boolean
+    type: enum
+    default: "False"
+    options:
+      - "True"
+      - "False"
     group: "European Registry"
 
   - variable: european-registry.manualVerifyAllCompanies
@@ -1384,9 +1449,12 @@ questions:
     group: "European Registry"
 
   - variable: european-registry.sendMatchingMails
-    default: "True"
     description: "Enable sending matching notification emails"
-    type: boolean
+    type: enum
+    default: "True"
+    options:
+      - "True"
+      - "False"
     group: "European Registry"
 
   - variable: european-registry.sentryDsn
@@ -1408,37 +1476,36 @@ questions:
     group: "European Registry"
 
   - variable: european-registry.stocksIncludeTestdata
-    default: "Yes"
     description: "Include test data in stocks"
-    type: boolean
+    type: enum
+    default: "Yes"
+    options:
+      - "Yes"
+      - "No"
     group: "European Registry"
 
   - variable: ldap.rootDN
     label: "Root DN"
     description: "Root Distinguished Name for LDAP"
     type: string
-    required: true
     group: "LDAP Configuration"
 
   - variable: ldap.rootPW
     label: "Root Password"
     description: "Root password for LDAP"
     type: password
-    required: true
     group: "LDAP Configuration"
 
   - variable: ldap.bdrrootDN
     label: "BDR Root DN"
     description: "BDR Root Distinguished Name"
     type: string
-    required: true
     group: "LDAP Configuration"
 
   - variable: ldap.bdrrootPW
     label: "BDR Root Password"
     description: "BDR Root password"
     type: password
-    required: true
     group: "LDAP Configuration"
 
   - variable: ldap.debugLevel

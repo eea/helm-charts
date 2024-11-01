@@ -17,6 +17,9 @@ This chart is almost configured for production use.
 
 <dl>
 
+  <dt>Version 0.1.3</dt>
+  <dd>Questions updates for some strings.</dd>
+
   <dt>Version 0.1.2</dt>
   <dd>Questions updates.</dd>
 
