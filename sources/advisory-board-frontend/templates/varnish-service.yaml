@@ -7,10 +7,11 @@ metadata:
     component: varnish
 
 spec:
+  type: {{ .Values.varnish.serviceType }}
   ports:
   - name: webui
-    port: 3000
-    targetPort: 3000
+    port: {{ .Values.varnish.port }}
+    targetPort: {{ .Values.varnish.port }}
   selector:
     {{- include "appl.selectorLabels" . | nindent 4 }}
     component: varnish

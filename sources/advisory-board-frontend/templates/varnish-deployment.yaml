@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: varnish-frontend
+  name: varnish
   labels:
     {{- include "appl.labels" . | nindent 4 }}
     component: varnish
@@ -30,33 +30,39 @@ spec:
         - name: TZ
           value: "{{ .Values.timezone }}"
         - name: VARNISH_BACKEND
-          value: "frontend"
+          value: "backend"
         - name: VARNISH_BACKEND_PORT
-          value: '3000'
+          value: "{{ .Values.varnish.port }}"
         - name: VARNISH_HTTP_PORT
-          value: '3000'
+          value: "{{ .Values.varnish.port }}"
         {{- range $key, $value := .Values.varnish.environment }}
         - name: {{ $key }}
           value: {{ $value | quote }}
         {{- end }}
 
         ports:
-        - containerPort: 3000
+        - name: http
+          containerPort: "{{ .Values.varnish.port }}"
 
         livenessProbe:
-          tcpSocket:
-            port: 3000
-          periodSeconds: 20
-          timeoutSeconds: 3
-          successThreshold: 1
-
+          httpGet:
+            path: {{ .Values.varnish.livenessProbe.httpGet.path }}
+            port: http
+          initialDelaySeconds: {{ .Values.varnish.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.varnish.livenessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.varnish.livenessProbe.timeoutSeconds }}
+          successThreshold: {{ .Values.varnish.livenessProbe.successThreshold }}
+          failureThreshold: {{ .Values.varnish.livenessProbe.failureThreshold }}
+      
         startupProbe:
-          tcpSocket:
-            port: 3000
-          failureThreshold: 12
-          periodSeconds: 10
-          timeoutSeconds: 3
-
+          httpGet:
+            path: {{ .Values.varnish.startupProbe.httpGet.path }}
+            port: http
+          initialDelaySeconds: {{ .Values.varnish.startupProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.varnish.startupProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.varnish.startupProbe.timeoutSeconds }}
+          successThreshold: {{ .Values.varnish.startupProbe.successThreshold }}
+          failureThreshold: {{ .Values.varnish.startupProbe.failureThreshold }}
 
         resources:
           {{- toYaml .Values.varnish.resources | nindent 10 }}

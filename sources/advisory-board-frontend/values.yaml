@@ -24,7 +24,12 @@ ingress:
   }
   certificate: key-01dev-letsencrypt
 
+links:
+  backend: backend.namespace
+
+    
 volto:
+  serviceType: NodePort
   hostname: plone.eea.europa.eu
   autoscaling:
     enabled: false
@@ -44,22 +49,20 @@ volto:
     SENTRY_ORG: 
     SENTRY_PROJECT: 
     RAZZLE_SENTRY_DSN: 
-      #  SENTRY_RELEASE: '1.9.0'
-      RAZZLE_BACKEND_NAME: 'advisory-board-backend'
-        #RAZZLE_SENTRY_RELEASE: '1.9.0'
-        #RAZZLE_FRONTEND_VERSION: '1.9.0'
+    RAZZLE_BACKEND_NAME: 'advisory-board-backend'
     RAZZLE_ALLOWED_CORS_DESTINATIONS: 
     RAZZLE_MATOMO_URL:
     RAZZLE_MATOMO_SITE_ID: 
     RAZZLE_MATOMO_SECOND_SITE_ID:
     RAZZLE_MATOMO_SECOND_TRACKER_URL: 
-    RAZZLE_INTERNAL_API_PATH: 
+    RAZZLE_INTERNAL_API_PATH: "http://backend:8080/Plone"
     VOLTO_ROBOTSTXT: 
     RAZZLE_DISABLE_DRAFT_WATERMARK: 
 
   annotations: {}
   
 varnish:
+  serviceType: NodePort
   resources:
     limits:
       memory: 3Gi
@@ -77,8 +80,23 @@ varnish:
     VARNISH_GZIP_ENABLED: 
     VARNISH_GZIP_JSON_ENABLED: 
     AUTOKILL_CRON:
-
-
-
+  livenessProbe:
+    httpGet:
+      path: /ok
+      port: http
+    periodSeconds: 10
+    timeoutSeconds: 10
+    initialDelaySeconds: 30
+    failureThreshold: 5
+    successThreshold: 2
+  startupProbe:
+    httpGet:
+      path: /ok
+      port: http
+    periodSeconds: 5
+    timeoutSeconds: 10
+    initialDelaySeconds: 10
+    failureThreshold: 12
+    successThreshold: 1
 
 

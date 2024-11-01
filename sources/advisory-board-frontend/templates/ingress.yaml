@@ -22,7 +22,7 @@ spec:
           service:
             name: varnish-frontend
             port:
-              number: 3000
+              number: {{ .Values.varnish.port }}
   {{- if .Values.ingress.certificate }}
   tls:
   - hosts:

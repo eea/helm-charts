@@ -6,74 +6,116 @@
     default: "demo.eea.europa.eu"
     type: "string"
     required: true
+    group: "General"
+
+  - variable: "links.backend"
+    label: "Backend service"
+    description: "SERVICE.NAMESPACE"
+    type: "string"
+    required: true
+    group: "General"
+      
+  - variable: "varnish.serviceType"
+    label: "Expose varnish"
+    description: "Select NodePort to expose"
+    type: "enum"
+    options:
+      - "NodePort"
+      - "ClusterIP"
+    default: "ClusterIP"  
+    required: true
+    group: "General"
+      
+  - variable: "volto.serviceType"
+    label: "Expose frontend"
+    description: "Select NodePort to expose"
+    type: "enum"
+    options:
+      - "NodePort"
+      - "ClusterIP" 
+    default: "ClusterIP" 
+    required: true
+    group: "General"
 
 
   - variable: "volto.environment.RAZZLE_INTERNAL_API_PATH"
     label: "RAZZLE_INTERNAL_API_PATH"
     description: "Location of Plone site accessible from container"
-    default: "http://varnish-backend:8080/Plone"
+    default: "http://backend:8080/Plone"
     required: true
     type: "string"
+    group: "Volto configuration"
   - variable: "volto.environment.ALLOWED_CORS_DESTINATIONS"
     label: "ALLOWED_CORS_DESTINATIONS"
     description: "Allowed CORS Proxy destinations, e.g.: staging.eea.europa.eu, ims.dev.eea.europa.eu"
     default: ""
     type: "string"
+    group: "Volto configuration"
 
   - variable: "volto.environment.SENTRY_URL"
     label: "Sentry URL"
     description: "Sentry URL"
     type: "string"
     default: "https://sentry.eea.europa.eu"
+    group: "Volto configuration"
   - variable: "volto.environment.SENTRY_AUTH_TOKEN"
     label: "Sentry AUTH token"
     description: "Authentication token for sentry"
     type: "password"
     required: false
+    group: "Volto configuration"
 
   - variable: "volto.environment.SENTRY_ORG"
     label: "Sentry organization"
     description: "Name of the organization in sentry"
     default: "eea"
     type: "string"
+    group: "Volto configuration"
   - variable: "volto.environment.SENTRY_PROJECT"
     label: "Sentry project"
     description: "Name of the project in sentry"
     default: "climate-advisory-board"
     type: "string"
     required: false
+    group: "Volto configuration"
 
   - variable: "volto.environment.RAZZLE_SENTRY_DSN"
     label: "Sentry DSN"
     description: "Sentry client key. If set, Sentry error reporting and User feedback will be enabled. Default is plone-saas DSN."
     type: "string"
     required: false
+    group: "Volto configuration"
   - variable: "volto.environment.VOLTO_ROBOTSTXT"
     label: "robots.txt"
     description: "Setup robots.txt content."
     type: "multiline"
     required: false
+    group: "Volto configuration"
 
   - variable: "volto.environment.RAZZLE_MATOMO_SITE_ID"
     label: "Matomo site id"
     description: "Matomo site id"
     type: "string"
     required: false
+    group: "Volto configuration"
   - variable: "volto.environment.RAZZLE_MATOMO_URL"
     label: "Matomo URL"
     description: "Matomo URL"
     type: "string"
     default: "https://matomo.eea.europa.eu/"
+    group: "Volto configuration"
 
   - variable: "RAZZLE_MATOMO_SECOND_SITE_ID"
     label: "Matomo site id (second ID)"
     description: "Matomo site id (second ID)"
     type: "string"
+    group: "Volto configuration"
   - variable: "volto.environment.RAZZLE_MATOMO_SECOND_TRACKER_URL"
     label: "Matomo URL (second URL)"
     description: "Matomo URL (second URL)"
     type: "string"
     default: "https://webanalytics.europa.eu/ppms.php"
+    group: "Volto configuration"
 
   - variable: "volto.environment.RAZZLE_DISABLE_DRAFT_WATERMARK"
     label: "Draft watermark"
@@ -85,30 +127,44 @@
     - "Hide-All"
     default: "Default"
     required: true
+    group: "Volto configuration"
 
 
+
+  - variable: "varnish.port"
+    label: "Varnish backend/exposed port"
+    description: "To simplify, we use the same port as the web application"
+    type: "int"
+    required: true
+    default: "3000"
+    group: "Varnish configuration"
 
   - variable: "varnish.environment.VARNISH_SIZE"
     label: "Varnish cache size, less then memory limit"
     type: "string"
     default: "2G"
+    group: "Varnish configuration"
 
   - variable: "varnish.environment.VARNISH_BERESP_TTL"
     label: "Varnish object TTL (fresh)"
     description: "https://docs.varnish-software.com/tutorials/object-lifetime/"
     type: "string"
     default: "60s"
+    group: "Varnish configuration"
+      
   - variable: "varnish.environment.VARNISH_BERESP_GRACE"
     label: "Varnish object grace (stale)"
     description: "https://docs.varnish-software.com/tutorials/object-lifetime/"
     type: "string"
     default: "120s"
+    group: "Varnish configuration"
 
   - variable: "varnish.environment.VARNISH_BERESP_KEEP"
     label: "Varnish object KEEP (used in conditional requests)"
     description: "https://docs.varnish-software.com/tutorials/object-lifetime/"
     type: "string"
     default: "120s"
+    group: "Varnish configuration"
   - variable: "varnish.environment.VARNISH_GZIP_ENABLED"
     label: "Enable gzip on text & js content types"
     type: "enum"
@@ -117,6 +173,8 @@
     options:
     - "false"
     - "true"
+    group: "Varnish configuration"
+      
   - variable: "varnish.environment.VARNISH_GZIP_JSON_ENABLED"
     label: "Enable gzip on json content types"
     type: "enum"
@@ -125,32 +183,37 @@
     options:
     - "false"
     - "true"
+    group: "Varnish configuration"
   - variable: "varnish.environment.AUTOKILL_CRON"
     label: "Varnish re-create crontab"
     description: "If empty, will not force a recreation of the container. Uses UTC time, format is linux crontab - for example -  `0 2 * * *` is 02:00 UTC each day"
     type: "string"
-
+    group: "Varnish configuration"
 
   - variable: "volto.resources.requests.memory"
     label: "Volto memory reservation"
     type: "string"
     required: true
-    default: "3g"
+    default: "4G"
+    group: "Memory"
   - variable: "volto.resources.limits.memory"
     label: "Volto memory limit"
     description: ">= memory reservation"
     type: "string"
     required: true
-    default: "3g"
+    default: "4G"
+    group: "Memory"
   - variable: "varnish.resources.requests.memory"
     label: "Varnish memory reservation"
     type: "string"
     required: true
-    default: "3g"
+    default: "2G"
+    group: "Memory"
   - variable: "varnish.resources.limits.memory"
     label: "Varnish memory limit"
     description: ">= memory reservation"
     type: "string"
     required: true
-    default: "3g"
+    default: "2G"
+    group: "Memory"
 
