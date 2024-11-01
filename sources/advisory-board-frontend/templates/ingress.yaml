@@ -20,7 +20,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: varnish-frontend
+            name: {{ .Values.varnish.serviceName }}
             port:
               number: {{ .Values.varnish.port }}
   {{- if .Values.ingress.certificate }}

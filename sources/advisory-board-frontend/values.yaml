@@ -63,6 +63,7 @@ volto:
   
 varnish:
   serviceType: NodePort
+  serviceName: varnish-frontend
   resources:
     limits:
       memory: 3Gi
