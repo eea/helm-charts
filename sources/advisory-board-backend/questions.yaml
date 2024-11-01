@@ -22,6 +22,40 @@
     required: true
     group: "General"
 
+  - variable: "varnish.serviceType"
+    label: "Expose varnish"
+    description: "Select NodePort to expose"
+    type: "enum"
+    options:
+      - "NodePort"
+      - "ClusterIP"
+    default: "ClusterIP"
+    required: true
+    group: "General"
+
+  - variable: "plone.serviceType"
+    label: "Expose plone"
+    description: "Select NodePort to expose"
+    type: "enum"
+    options:
+      - "NodePort"
+      - "ClusterIP"
+    default: "ClusterIP"
+    required: true
+    group: "General"
+
+  - variable: "debug.serviceType"
+    label: "Expose debug"
+    description: "Select NodePort to expose"
+    type: "enum"
+    options:
+      - "NodePort"
+      - "ClusterIP"
+    default: "ClusterIP"
+    required: true
+    group: "General"
+      
+
   - variable: "plone.database.POSTGRES_DB"
     label: "PostgreSQL database name"
     type: "string"
@@ -211,7 +245,7 @@
     label: "Plone memory reservation"
     type: "string"
     required: true
-    default: "3g"
+    default: "4G"
     group: "Memory"
 
   - variable: "plone.resources.limits.memory"
@@ -219,19 +253,19 @@
     description: ">= memory reservation"
     type: "string"
     required: true
-    default: "3g"
+    default: "4G"
     group: "Memory"
   - variable: "varnish.resources.requests.memory"
     label: "Varnish memory reservation"
     type: "string"
     required: true
-    default: "3g"
+    default: "2G"
     group: "Memory"
   - variable: "varnish.resources.limits.memory"
     label: "Varnish memory limit"
     description: ">= memory reservation"
     type: "string"
     required: true
-    default: "3g"
+    default: "2G"
     group: "Memory"
 

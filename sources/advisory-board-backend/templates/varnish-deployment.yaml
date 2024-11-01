@@ -32,31 +32,37 @@ spec:
         - name: VARNISH_BACKEND
           value: "backend"
         - name: VARNISH_BACKEND_PORT
-          value: '8080'
+          value: "{{ .Values.varnish.port }}"
         - name: VARNISH_HTTP_PORT
-          value: '8080'
+          value: "{{ .Values.varnish.port }}"
         {{- range $key, $value := .Values.varnish.environment }}
         - name: {{ $key }}
           value: {{ $value | quote }}
         {{- end }}
 
         ports:
-        - containerPort: 8080
+        - name: http
+          containerPort: "{{ .Values.varnish.port }}"
 
         livenessProbe:
-          tcpSocket:
-            port: 8080
-          periodSeconds: 20
-          timeoutSeconds: 3
-          successThreshold: 1
-
+          httpGet:
+            path: {{ .Values.varnish.livenessProbe.httpGet.path }}
+            port: http
+          initialDelaySeconds: {{ .Values.varnish.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.varnish.livenessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.varnish.livenessProbe.timeoutSeconds }}
+          successThreshold: {{ .Values.varnish.livenessProbe.successThreshold }}
+          failureThreshold: {{ .Values.varnish.livenessProbe.failureThreshold }}
+      
         startupProbe:
-          tcpSocket:
-            port: 8080
-          failureThreshold: 12
-          periodSeconds: 10
-          timeoutSeconds: 3
-
+          httpGet:
+            path: {{ .Values.varnish.startupProbe.httpGet.path }}
+            port: http
+          initialDelaySeconds: {{ .Values.varnish.startupProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.varnish.startupProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.varnish.startupProbe.timeoutSeconds }}
+          successThreshold: {{ .Values.varnish.startupProbe.successThreshold }}
+          failureThreshold: {{ .Values.varnish.startupProbe.failureThreshold }}
 
         resources:
           {{- toYaml .Values.varnish.resources | nindent 10 }}
