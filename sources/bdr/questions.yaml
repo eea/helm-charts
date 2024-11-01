@@ -1,189 +1,199 @@
 questions:
-  # Basic Settings
-  - group: "Basic settings"
-    questions:
-      - variable: timezone
-        label: "Timezone"
-        description: "Set the timezone for the application"
-        type: string
-        default: "Europe/Copenhagen"
+  - variable: timezone
+    label: "Timezone"
+    description: "Set the timezone for the application"
+    type: string
+    default: "Europe/Copenhagen"
+    group: "Basic settings"
 
-      - variable: instance.replicaCount
-        label: "Number of BDR instances"
-        description: "Number of BDR application replicas to run"
+  - variable: instance.replicaCount
+    label: "Number of BDR instances"
+    description: "Number of BDR application replicas to run"
+    type: int
+    min: 1
+    max: 10
+    default: 2
+    group: "Basic settings"
+
+  - variable: instance.resources.requests.memory
+    label: "Instance Memory Request"
+    description: "Minimum memory allocation for BDR instance"
+    type: string
+    default: "5Gi"
+    group: "Instance Configuration"
+
+  - variable: instance.resources.limits.memory
+    label: "Instance Memory Limit"
+    description: "Maximum memory allocation for BDR instance"
+    type: string
+    default: "5Gi"
+    group: "Instance Configuration"
+
+  - variable: instance.resources.requests.cpu
+    label: "Instance CPU Request"
+    description: "Minimum CPU allocation for BDR instance"
+    type: string
+    default: "500m"
+    group: "Instance Configuration"
+
+  - variable: instance.resources.limits.cpu
+    label: "Instance CPU Limit"
+    description: "Maximum CPU allocation for BDR instance"
+    type: string
+    default: "500m"
+    group: "Instance Configuration"
+
+  - variable: instance.env.zopeThreads
+    label: "Zope Threads"
+    description: "Number of Zope threads"
+    type: int
+    default: 4
+    group: "Instance Configuration"
+
+  - variable: instance.env.beakerPath
+    label: "Beaker Path"
+    description: "Path for session storage"
+    type: string
+    default: "/sessions"
+    group: "Instance Configuration"
+
+  - variable: instance.env.beakerSecret
+    label: "Beaker Secret"
+    description: "Secret key for session encryption"
+    type: password
+    required: true
+    group: "Instance Configuration"
+
+  - variable: instance.env.deploymentHost
+    label: "Deployment Host"
+    description: "Hostname for deployment"
+    type: string
+    default: "bdr.eionet.europa.eu"
+    group: "Instance Configuration"
+
+  - variable: instance.env.sentryDSN
+    label: "Sentry DSN"
+    description: "Data Source Name for Sentry error tracking"
+    type: string
+    group: "Instance Configuration"
+
+  - variable: instance.env.clamavHost
+    label: "ClamAV Host"
+    description: "Hostname for ClamAV service"
+    type: string
+    default: "bdr-clamav"
+    group: "Instance Configuration"
+
+  - variable: instance.env.graylog
+    label: "Graylog Server"
+    description: "Graylog server address"
+    type: string
+    group: "Instance Configuration"
+
+  - variable: instance.env.graylogFacility
+    label: "Graylog Facility"
+    description: "Graylog facility name"
+    type: string
+    group: "Instance Configuration"
+
+  - variable: instance.env.rabbitmqEnabled
+    label: "Enable RabbitMQ"
+    description: "Enable RabbitMQ integration"
+    type: boolean
+    default: true
+    group: "Instance Configuration"
+    show_subquestion_if: true
+    subquestions:
+      - variable: instance.env.rabbitmqHost
+        label: "RabbitMQ Host"
+        description: "RabbitMQ server hostname"
+        type: string
+        default: "rabbitmq"
+        group: "Instance Configuration"
+
+      - variable: instance.env.rabbitmqUser
+        label: "RabbitMQ Username"
+        description: "RabbitMQ authentication username"
+        type: string
+        default: "guest"
+        group: "Instance Configuration"
+
+      - variable: instance.env.rabbitmqPass
+        label: "RabbitMQ Password"
+        description: "RabbitMQ authentication password"
+        type: password
+        group: "Instance Configuration"
+
+      - variable: instance.env.rabbitmqPort
+        label: "RabbitMQ Port"
+        description: "RabbitMQ server port"
+        type: string
+        default: "5672"
+        group: "Instance Configuration"
+
+  - variable: instance.env.zipCacheEnabled
+    label: "Enable ZIP Cache"
+    description: "Enable caching for ZIP files"
+    type: boolean
+    default: false
+    group: "Instance Configuration"
+    show_subquestion_if: true
+    subquestions:
+      - variable: instance.env.zipCachePath
+        label: "ZIP Cache Path"
+        description: "Path for ZIP file cache"
+        type: string
+        default: "/opt/zope/var"
+        group: "Instance Configuration"
+
+      - variable: instance.env.zipCacheThreshold
+        label: "ZIP Cache Threshold"
+        description: "Size threshold for ZIP cache"
+        type: string
+        default: "100000000"
+        group: "Instance Configuration"
+
+  - variable: autoscaling.enabled
+    label: "Enable Autoscaling"
+    description: "Enable automatic scaling of BDR instances"
+    type: boolean
+    default: true
+    group: "Instance Configuration"
+    show_subquestion_if: true
+    subquestions:
+      - variable: autoscaling.minReplicas
+        label: "Minimum Replicas"
+        description: "Minimum number of BDR replicas"
         type: int
         min: 1
-        max: 10
-        default: 2
+        default: 1
+        group: "Instance Configuration"
 
-  - group: "Instance Configuration"
-    questions:
-      - variable: instance.resources.requests.memory
-        label: "Instance Memory Request"
-        description: "Minimum memory allocation for BDR instance"
-        type: string
-        default: "5Gi"
-
-      - variable: instance.resources.limits.memory
-        label: "Instance Memory Limit"
-        description: "Maximum memory allocation for BDR instance"
-        type: string
-        default: "5Gi"
-
-      - variable: instance.resources.requests.cpu
-        label: "Instance CPU Request"
-        description: "Minimum CPU allocation for BDR instance"
-        type: string
-        default: "500m"
-
-      - variable: instance.resources.limits.cpu
-        label: "Instance CPU Limit"
-        description: "Maximum CPU allocation for BDR instance"
-        type: string
-        default: "500m"
-
-      # Instance Environment Variables
-      - variable: instance.env.zopeThreads
-        label: "Zope Threads"
-        description: "Number of Zope threads"
+      - variable: autoscaling.maxReplicas
+        label: "Maximum Replicas"
+        description: "Maximum number of BDR replicas"
         type: int
+        min: 1
         default: 4
+        group: "Instance Configuration"
 
-      - variable: instance.env.beakerPath
-        label: "Beaker Path"
-        description: "Path for session storage"
-        type: string
-        default: "/sessions"
+      - variable: autoscaling.targetCPUUtilizationPercentage
+        label: "Target CPU Utilization Percentage"
+        description: "CPU utilization threshold for scaling"
+        type: int
+        min: 1
+        max: 100
+        default: 80
+        group: "Instance Configuration"
 
-      - variable: instance.env.beakerSecret
-        label: "Beaker Secret"
-        description: "Secret key for session encryption"
-        type: password
-        required: true
-
-      - variable: instance.env.deploymentHost
-        label: "Deployment Host"
-        description: "Hostname for deployment"
-        type: string
-        default: "bdr.eionet.europa.eu"
-
-      - variable: instance.env.sentryDSN
-        label: "Sentry DSN"
-        description: "Data Source Name for Sentry error tracking"
-        type: string
-
-      - variable: instance.env.clamavHost
-        label: "ClamAV Host"
-        description: "Hostname for ClamAV service"
-        type: string
-        default: "bdr-clamav"
-
-      - variable: instance.env.graylog
-        label: "Graylog Server"
-        description: "Graylog server address"
-        type: string
-
-      - variable: instance.env.graylogFacility
-        label: "Graylog Facility"
-        description: "Graylog facility name"
-        type: string
-
-      - variable: instance.env.rabbitmqEnabled
-        label: "Enable RabbitMQ"
-        description: "Enable RabbitMQ integration"
-        type: boolean
-        default: true
-        show_subquestion_if: true
-        subquestions:
-          - variable: instance.env.rabbitmqHost
-            label: "RabbitMQ Host"
-            description: "RabbitMQ server hostname"
-            type: string
-            default: "rabbitmq"
-            group: "Instance Configuration"
-
-          - variable: instance.env.rabbitmqUser
-            label: "RabbitMQ Username"
-            description: "RabbitMQ authentication username"
-            type: string
-            default: "guest"
-            group: "Instance Configuration"
-
-          - variable: instance.env.rabbitmqPass
-            label: "RabbitMQ Password"
-            description: "RabbitMQ authentication password"
-            type: password
-            group: "Instance Configuration"
-
-          - variable: instance.env.rabbitmqPort
-            label: "RabbitMQ Port"
-            description: "RabbitMQ server port"
-            type: string
-            default: "5672"
-            group: "Instance Configuration"
-
-      - variable: instance.env.zipCacheEnabled
-        label: "Enable ZIP Cache"
-        description: "Enable caching for ZIP files"
-        type: boolean
-        default: false
-        show_subquestion_if: true
-        subquestions:
-          - variable: instance.env.zipCachePath
-            label: "ZIP Cache Path"
-            description: "Path for ZIP file cache"
-            type: string
-            default: "/opt/zope/var"
-            group: "Instance Configuration"
-
-          - variable: instance.env.zipCacheThreshold
-            label: "ZIP Cache Threshold"
-            description: "Size threshold for ZIP cache"
-            type: string
-            default: "100000000"
-            group: "Instance Configuration"
-
-      # Autoscaling Configuration
-      - variable: autoscaling.enabled
-        label: "Enable Autoscaling"
-        description: "Enable automatic scaling of BDR instances"
-        type: boolean
-        default: true
-        show_subquestion_if: true
-        subquestions:
-          - variable: autoscaling.minReplicas
-            label: "Minimum Replicas"
-            description: "Minimum number of BDR replicas"
-            type: int
-            min: 1
-            default: 1
-            group: "Instance Configuration"
-
-          - variable: autoscaling.maxReplicas
-            label: "Maximum Replicas"
-            description: "Maximum number of BDR replicas"
-            type: int
-            min: 1
-            default: 4
-            group: "Instance Configuration"
-
-          - variable: autoscaling.targetCPUUtilizationPercentage
-            label: "Target CPU Utilization Percentage"
-            description: "CPU utilization threshold for scaling"
-            type: int
-            min: 1
-            max: 100
-            default: 80
-            group: "Instance Configuration"
-
-          - variable: autoscaling.targetMemoryUtilizationPercentage
-            label: "Target Memory Utilization Percentage"
-            description: "Memory utilization threshold for scaling"
-            type: int
-            min: 1
-            max: 100
-            default: 80
-            group: "Instance Configuration"
+      - variable: autoscaling.targetMemoryUtilizationPercentage
+        label: "Target Memory Utilization Percentage"
+        description: "Memory utilization threshold for scaling"
+        type: int
+        min: 1
+        max: 100
+        default: 80
+        group: "Instance Configuration"
 
   # Cron Jobs
   - variable: cronzeopack.enabled
@@ -695,694 +705,766 @@ questions:
         group: "Postfix"
 
   # BDR Registry Configuration
-  - group: "BDR Registry"
-    questions:
-      - variable: bdr-registry.adminAllBdrTables
-        description: "Enable admin access to all BDR tables"
-        type: boolean
-        default: true
-        group: "BDR Registry"
-
-      - variable: bdr-registry.allowedHosts
-        description: "List of allowed hosts for the BDR registry"
-        type: string
-        default: "['bdr.eionet.europa.eu']"
-        group: "BDR Registry"
-
-      - variable: bdr-registry.authLdapBaseDn
-        description: "LDAP base DN for authentication"
-        type: string
-        default: "o=EIONET,l=Europe"
-        group: "BDR Registry"
-
-      - variable: bdr-registry.authLdapBindDn
-        description: "LDAP bind DN for authentication"
-        type: string
-        default: ""
-        group: "BDR Registry"
-
-      - variable: bdr-registry.authLdapBindPassword
-        description: "LDAP bind password for authentication"
-        type: password
-        default: ""
-        group: "BDR Registry"
-
-      - variable: bdr-registry.authLdapServerUri
-        description: "LDAP server URI for authentication"
-        type: string
-        default: ""
-        group: "BDR Registry"
-
-      - variable: bdr-registry.bdrApiAuthPassword
-        description: "Password for BDR API authentication"
-        type: password
-        default: ""
-        group: "BDR Registry"
-
-      - variable: bdr-registry.bdrApiAuthUser
-        description: "Username for BDR API authentication"
-        type: string
-        default: ""
-        group: "BDR Registry"
-
-      - variable: bdr-registry.bdrApiPortalUrl
-        description: "URL for the BDR API portal"
-        type: string
-        default: "https://bdr.eionet.europa.eu/api"
-        group: "BDR Registry"
-
-      - variable: bdr-registry.bdrAuditLogFile
-        description: "Path to the BDR audit log file"
-        type: string
-        default: "/bdrreg/logs/trace.log"
-        group: "BDR Registry"
-
-      - variable: bdr-registry.bdrEmailFrom
-        description: "Email address used as sender for BDR communications"
-        type: string
-        default: ""
-        group: "BDR Registry"
-
-      - variable: bdr-registry.bdrHelpdeskEmail
-        description: "Email address for BDR helpdesk"
-        type: string
-        default: ""
-        group: "BDR Registry"
-
-      - variable: bdr-registry.debug
-        description: "Enable debug mode"
-        type: boolean
-        default: false
-        group: "BDR Registry"
-
-      - variable: bdr-registry.databasesEngine
-        description: "Database engine to be used"
-        type: string
-        default: "django.db.backends.postgresql_psycopg2"
-        group: "BDR Registry"
-
-      - variable: bdr-registry.databasesHost
-        description: "Database host address"
-        type: string
-        default: ""
-        group: "BDR Registry"
-
-      - variable: bdr-registry.databasesName
-        description: "Database name"
-        type: string
-        default: ""
-        group: "BDR Registry"
-
-      - variable: bdr-registry.databasesPassword
-        description: "Database password"
-        type: password
-        default: ""
-        group: "BDR Registry"
-
-      - variable: bdr-registry.databasesUser
-        description: "Database username"
-        type: string
-        default: ""
-        group: "BDR Registry"
-
-      - variable: bdr-registry.emailBackend
-        description: "Email backend service"
-        type: string
-        default: "post_office.EmailBackend"
-        group: "BDR Registry"
-
-      - variable: bdr-registry.emailHost
-        description: "Email server host"
-        type: string
-        default: "bdr-postfix"
-        group: "BDR Registry"
-
-      - variable: bdr-registry.emailPort
-        description: "Email server port"
-        type: string
-        default: "25"
-        group: "BDR Registry"
-
-      - variable: bdr-registry.enableHdvEditing
-        description: "Enable HDV editing functionality"
-        type: boolean
-        default: true
-        group: "BDR Registry"
-
-      - variable: bdr-registry.enableHdvResimEditing
-        description: "Enable HDV RESIM editing functionality"
-        type: boolean
-        default: false
-        group: "BDR Registry"
-
-      - variable: bdr-registry.sentryDsn
-        description: "Sentry DSN for error tracking"
-        type: string
-        default: ""
-        group: "BDR Registry"
-
-      - variable: bdr-registry.siteUrl
-        description: "Base URL path for the registry"
-        type: string
-        default: "/registry/"
-        group: "BDR Registry"
-
-      - variable: bdr-registry.staticRoot
-        description: "Root directory for static files"
-        type: string
-        default: "/bdrreg/static"
-        group: "BDR Registry"
-
-      - variable: bdr-registry.staticUrl
-        description: "URL path for static files"
-        type: string
-        default: "/registry-static/"
-        group: "BDR Registry"
-
-      - variable: bdr-registry.useSidemenu
-        description: "Enable side menu functionality"
-        type: boolean
-        default: true
-        group: "BDR Registry"
-
-      - variable: bdr-registry.useZopeLogin
-        description: "Enable Zope login functionality"
-        type: boolean
-        default: true
-        group: "BDR Registry"
-
-  # BDR Registry Notifications Configuration
-  - group: "BDR Registry Notifications"
-    questions:
-      - variable: bdr-registry-notifications.allowedHosts
-        description: "List of allowed hosts for Django's ALLOWED_HOSTS setting"
-        default: "['*']"
-        type: string
-
-      - variable: bdr-registry-notifications.appReverseProxy
-        description: "Enable reverse proxy support"
-        default: "True"
-        type: boolean
-
-      - variable: bdr-registry-notifications.bdrServerUrl
-        description: "Base URL for BDR server"
-        default: "https://bdr.eionet.europa.eu/"
-        type: string
-
-      - variable: bdr-registry-notifications.databasesEngine
-        description: "Django database engine"
-        default: "django.db.backends.postgresql_psycopg2"
-        type: string
-
-      - variable: bdr-registry-notifications.databasesHost
-        description: "PostgreSQL database host"
-        default: "bdr-postgres"
-        type: string
-
-      - variable: bdr-registry-notifications.debug
-        description: "Enable Django debug mode"
-        default: "False"
-        type: boolean
-
-      - variable: bdr-registry-notifications.djangoCollectStatic
-        description: "Run Django collectstatic on startup"
-        default: "yes"
-        type: string
-
-      - variable: bdr-registry-notifications.djangoLoadFixtures
-        description: "Load Django fixtures on startup"
-        default: "no"
-        type: string
-
-      - variable: bdr-registry-notifications.djangoMigrate
-        description: "Run Django migrations on startup"
-        default: "no"
-        type: string
-
-      - variable: bdr-registry-notifications.ecrAcceptedCompaniesStatus
-        description: "Accepted company status values for ECR"
-        default: "VALID,REVISION"
-        type: string
-
-      - variable: bdr-registry-notifications.ecrDomains
-        description: "ECR domains"
-        default: "FGAS,ODS"
-        type: string
-
-      - variable: bdr-registry-notifications.emailBackend
-        description: "Django email backend"
-        default: "django.core.mail.backends.smtp.EmailBackend"
-        type: string
-
-      - variable: bdr-registry-notifications.emailHost
-        description: "SMTP server hostname"
-        default: "bdr-postfix"
-        type: string
-
-      - variable: bdr-registry-notifications.emailPort
-        description: "SMTP server port"
-        default: "25"
-        type: string
-
-      - variable: bdr-registry-notifications.frameVerifySsl
-        description: "Verify SSL certificates for frame requests"
-        default: "False"
-        type: boolean
-
-      - variable: bdr-registry-notifications.mailHost
-        description: "Mail server host and port"
-        default: "bdr-postfix:25"
-        type: string
-
-      - variable: bdr-registry-notifications.siteUrl
-        description: "Base URL path for the application"
-        default: "/notifications/"
-        type: string
-
-      - variable: bdr-registry-notifications.staticRoot
-        description: "Directory for collected static files"
-        default: "/var/local/bdr.registry.notifications/static"
-        type: string
-
-      - variable: bdr-registry-notifications.staticUrl
-        description: "URL path for static files"
-        default: "/notifications-static/"
-        type: string
-
-      - variable: bdr-registry-notifications.tz
-        description: "Application timezone"
-        default: "Europe/Copenhagen"
-        type: string
-
-      - variable: bdr-registry-notifications.useSidemenu
-        description: "Enable side menu"
-        default: "True"
-        type: boolean
-
-      - variable: bdr-registry-notifications.useZopeLayout
-        description: "Use Zope layout"
-        default: "True"
-        type: boolean
-
-      - variable: bdr-registry-notifications.useZopeLogin
-        description: "Use Zope login"
-        default: "True"
-        type: boolean
-
-      - variable: bdr-registry-notifications.service.port
-        description: "Service port number"
-        default: 12301
-        type: int
-
-  - group: "BDR Registry Notifications Async"
-    questions:
-      - variable: bdr-registry-notifications-async.allowedHosts
-        description: "List of allowed hosts for Django's ALLOWED_HOSTS setting"
-        default: "['*']"
-        type: string
-
-      - variable: bdr-registry-notifications-async.appReverseProxy
-        description: "Enable/disable reverse proxy support"
-        default: "True"
-        type: boolean
-
-      - variable: bdr-registry-notifications-async.bdrServerUrl
-        description: "Base URL for the BDR server"
-        default: "https://bdr.eionet.europa.eu/"
-        type: string
-
-      - variable: bdr-registry-notifications-async.bdrApiUser
-        description: "Username for BDR API authentication"
-        default: ""
-        type: string
-        required: true
-
-      - variable: bdr-registry-notifications-async.bdrApiPassword
-        description: "Password for BDR API authentication"
-        default: ""
-        type: password
-        required: true
-
-      - variable: bdr-registry-notifications-async.bdrRegistryToken
-        description: "Authentication token for BDR Registry"
-        default: ""
-        type: password
-        required: true
-
-      - variable: bdr-registry-notifications-async.databasesEngine
-        description: "Database engine for Django"
-        default: "django.db.backends.postgresql_psycopg2"
-        type: string
-
-      - variable: bdr-registry-notifications-async.databasesHost
-        description: "Database host address"
-        default: ""
-        type: string
-        required: true
-
-      - variable: bdr-registry-notifications-async.databasesName
-        description: "Database name"
-        default: ""
-        type: string
-        required: true
-
-      - variable: bdr-registry-notifications-async.databasesUser
-        description: "Database user"
-        default: ""
-        type: string
-        required: true
-
-      - variable: bdr-registry-notifications-async.databasesPassword
-        description: "Database password"
-        default: ""
-        type: password
-        required: true
-
-      - variable: bdr-registry-notifications-async.debug
-        description: "Enable Django debug mode"
-        default: "False"
-        type: boolean
-
-      - variable: bdr-registry-notifications-async.ecrAcceptedCompaniesStatus
-        description: "Accepted status values for ECR companies"
-        default: "VALID,REVISION"
-        type: string
-
-      - variable: bdr-registry-notifications-async.ecrDomains
-        description: "ECR domains to handle"
-        default: "FGAS,ODS"
-        type: string
-
-      - variable: bdr-registry-notifications-async.emailBackend
-        description: "Django email backend configuration"
-        default: "django.core.mail.backends.smtp.EmailBackend"
-        type: string
-
-      - variable: bdr-registry-notifications-async.emailHost
-        description: "SMTP server hostname"
-        default: "bdr-postfix"
-        type: string
-
-      - variable: bdr-registry-notifications-async.emailPort
-        description: "SMTP server port"
-        default: "25"
-        type: string
-
-      - variable: bdr-registry-notifications-async.emailSender
-        description: "Email address used as sender"
-        default: ""
-        type: string
-        required: true
-
-      - variable: bdr-registry-notifications-async.redisHost
-        description: "Redis server hostname"
-        default: "bdr-redis"
-        type: string
-
-      - variable: bdr-registry-notifications-async.redisPort
-        description: "Redis server port"
-        default: "6379"
-        type: string
-
-      - variable: bdr-registry-notifications-async.sentryDsn
-        description: "Sentry DSN for error tracking"
-        default: ""
-        type: string
-
-      - variable: bdr-registry-notifications-async.siteUrl
-        description: "Base URL path for the application"
-        default: "/notifications/"
-        type: string
-
-      - variable: bdr-registry-notifications-async.staticUrl
-        description: "URL path for static files"
-        default: "/notifications-static/"
-        type: string
-
-      - variable: bdr-registry-notifications-async.useSidemenu
-        description: "Enable/disable side menu"
-        default: "True"
-        type: boolean
-
-      - variable: bdr-registry-notifications-async.useZopeLayout
-        description: "Enable/disable Zope layout"
-        default: "True"
-        type: boolean
-
-      - variable: bdr-registry-notifications-async.useZopeLogin
-        description: "Enable/disable Zope login"
-        default: "True"
-        type: boolean
-
-  # European Registry Configuration
-  - group: "European Registry"
-    questions:
-      - variable: european-registry.apiPassword
-        default: ""
-        description: "API password for authentication"
-        type: password
-        required: true
-
-      - variable: european-registry.apiToken
-        default: ""
-        description: "API authentication token"
-        type: string
-        required: true
-
-      - variable: european-registry.apiUser
-        default: ""
-        description: "API username for authentication"
-        type: string
-        required: true
-
-      - variable: european-registry.autoVerifyAllCompanies
-        default: "ODS,FGAS"
-        description: "Comma-separated list of company types to auto-verify"
-        type: string
-
-      - variable: european-registry.autoVerifyNewCompanies
-        default: "ODS,FGAS"
-        description: "Comma-separated list of new company types to auto-verify"
-        type: string
-
-      - variable: european-registry.baseUrl
-        default: ""
-        description: "Base URL for the registry"
-        type: string
-        required: true
-
-      - variable: european-registry.baseUrlFgas
-        default: ""
-        description: "Base URL for FGAS registry"
-        type: string
-        required: true
-
-      - variable: european-registry.baseUrlOds
-        default: ""
-        description: "Base URL for ODS registry"
-        type: string
-        required: true
-
-      - variable: european-registry.bdrApiKey
-        default: ""
-        description: "BDR API authentication key"
-        type: password
-        required: true
-
-      - variable: european-registry.bdrApiUrl
-        default: ""
-        description: "BDR API endpoint URL"
-        type: string
-        required: true
-
-      - variable: european-registry.bdrEndpointPassword
-        default: ""
-        description: "BDR endpoint password"
-        type: password
-        required: true
-
-      - variable: european-registry.bdrEndpointUrl
-        default: "https://bdr.eionet.europa.eu"
-        description: "BDR endpoint URL"
-        type: string
-
-      - variable: european-registry.bdrEndpointUser
-        default: ""
-        description: "BDR endpoint username"
-        type: string
-        required: true
-
-      - variable: european-registry.bdrHelpDeskMail
-        default: ""
-        description: "BDR helpdesk email address"
-        type: string
-        required: true
-
-      - variable: european-registry.dbHost
-        default: ""
-        description: "Database host address"
-        type: string
-        required: true
-
-      - variable: european-registry.dbName
-        default: ""
-        description: "Database name"
-        type: string
-        required: true
-
-      - variable: european-registry.dbPass
-        default: ""
-        description: "Database password"
-        type: password
-        required: true
-
-      - variable: european-registry.dbSchema
-        default: "postgresql"
-        description: "Database schema type"
-        type: string
-
-      - variable: european-registry.dbUser
-        default: ""
-        description: "Database username"
-        type: string
-        required: true
-
-      - variable: european-registry.debug
-        default: "False"
-        description: "Enable debug mode"
-        type: boolean
-
-      - variable: european-registry.flaskApp
-        default: "cache_registry/app.py"
-        description: "Flask application path"
-        type: string
-
-      - variable: european-registry.fuzzLimit
-        default: "92"
-        description: "Fuzzy matching limit percentage"
-        type: string
-
-      - variable: european-registry.httpsVerify
-        default: "True"
-        description: "Enable HTTPS verification"
-        type: boolean
-
-      - variable: european-registry.logFile
-        default: "EEA_double_check.log"
-        description: "Log file name"
-        type: string
-
-      - variable: european-registry.mailsSenderName
-        default: ""
-        description: "Name to use for sending emails"
-        type: string
-        required: true
-
-      - variable: european-registry.mailServer
-        default: "bdr-postfix"
-        description: "Mail server hostname"
-        type: string
-
-      - variable: european-registry.mailSuppressSend
-        default: "False"
-        description: "Suppress email sending"
-        type: boolean
-
-      - variable: european-registry.manualVerifyAllCompanies
-        default: ""
-        description: "Companies requiring manual verification"
-        type: string
-
-      - variable: european-registry.postgresAddr
-        default: "bdr-postgres"
-        description: "PostgreSQL server address"
-        type: string
-
-      - variable: european-registry.requestsCaBundle
-        default: "/etc/ssl/certs/ca-certificates.crt"
-        description: "Path to CA certificates bundle"
-        type: string
-
-      - variable: european-registry.sendMatchingMails
-        default: "True"
-        description: "Enable sending matching notification emails"
-        type: boolean
-
-      - variable: european-registry.sentryDsn
-        default: ""
-        description: "Sentry DSN for error tracking"
-        type: string
-
-      - variable: european-registry.stocksApiToken
-        default: ""
-        description: "API token for stocks service"
-        type: string
-
-      - variable: european-registry.stocksApiUrl
-        default: ""
-        description: "URL for stocks API service"
-        type: string
-
-      - variable: european-registry.stocksIncludeTestdata
-        default: "Yes"
-        description: "Include test data in stocks"
-        type: boolean
-
-  # LDAP Configuration
-  - group: "LDAP Configuration"
-    questions:
-      - variable: ldap.rootDN
-        label: "Root DN"
-        description: "Root Distinguished Name for LDAP"
-        type: string
-        group: "LDAP"
-        required: true
-
-      - variable: ldap.rootPW
-        label: "Root Password"
-        description: "Root password for LDAP"
-        type: password
-        group: "LDAP"
-        required: true
-
-      - variable: ldap.bdrrootDN
-        label: "BDR Root DN"
-        description: "BDR Root Distinguished Name"
-        type: string
-        group: "LDAP"
-        required: true
-
-      - variable: ldap.bdrrootPW
-        label: "BDR Root Password"
-        description: "BDR Root password"
-        type: password
-        group: "LDAP"
-        required: true
-
-      - variable: ldap.debugLevel
-        label: "Debug Level"
-        description: "LDAP debug level"
-        type: string
-        default: "16640"
-        group: "LDAP"
-
-      - variable: ldap.syncURL
-        label: "Sync URL"
-        description: "URL for LDAP synchronization"
-        type: string
-        group: "LDAP"
-
-      - variable: ldap.syncDN
-        label: "Sync DN"
-        description: "Distinguished Name for sync operations"
-        type: string
-        group: "LDAP"
-
-      - variable: ldap.syncPW
-        label: "Sync Password"
-        description: "Password for sync operations"
-        type: password
-        group: "LDAP"
+  - variable: bdr-registry.adminAllBdrTables
+    description: "Enable admin access to all BDR tables"
+    type: boolean
+    default: true
+    group: "BDR Registry"
+
+  - variable: bdr-registry.allowedHosts
+    description: "List of allowed hosts for the BDR registry"
+    type: string
+    default: "['bdr.eionet.europa.eu']"
+    group: "BDR Registry"
+
+  - variable: bdr-registry.authLdapBaseDn
+    description: "LDAP base DN for authentication"
+    type: string
+    default: "o=EIONET,l=Europe"
+    group: "BDR Registry"
+
+  - variable: bdr-registry.authLdapBindDn
+    description: "LDAP bind DN for authentication"
+    type: string
+    default: ""
+    group: "BDR Registry"
+
+  - variable: bdr-registry.authLdapBindPassword
+    description: "LDAP bind password for authentication"
+    type: password
+    default: ""
+    group: "BDR Registry"
+
+  - variable: bdr-registry.authLdapServerUri
+    description: "LDAP server URI for authentication"
+    type: string
+    default: ""
+    group: "BDR Registry"
+
+  - variable: bdr-registry.bdrApiAuthPassword
+    description: "Password for BDR API authentication"
+    type: password
+    default: ""
+    group: "BDR Registry"
+
+  - variable: bdr-registry.bdrApiAuthUser
+    description: "Username for BDR API authentication"
+    type: string
+    default: ""
+    group: "BDR Registry"
+
+  - variable: bdr-registry.bdrApiPortalUrl
+    description: "URL for the BDR API portal"
+    type: string
+    default: "https://bdr.eionet.europa.eu/api"
+    group: "BDR Registry"
+
+  - variable: bdr-registry.bdrAuditLogFile
+    description: "Path to the BDR audit log file"
+    type: string
+    default: "/bdrreg/logs/trace.log"
+    group: "BDR Registry"
+
+  - variable: bdr-registry.bdrEmailFrom
+    description: "Email address used as sender for BDR communications"
+    type: string
+    default: ""
+    group: "BDR Registry"
+
+  - variable: bdr-registry.bdrHelpdeskEmail
+    description: "Email address for BDR helpdesk"
+    type: string
+    default: ""
+    group: "BDR Registry"
+
+  - variable: bdr-registry.debug
+    description: "Enable debug mode"
+    type: boolean
+    default: false
+    group: "BDR Registry"
+
+  - variable: bdr-registry.databasesEngine
+    description: "Database engine to be used"
+    type: string
+    default: "django.db.backends.postgresql_psycopg2"
+    group: "BDR Registry"
+
+  - variable: bdr-registry.databasesHost
+    description: "Database host address"
+    type: string
+    default: ""
+    group: "BDR Registry"
+
+  - variable: bdr-registry.databasesName
+    description: "Database name"
+    type: string
+    default: ""
+    group: "BDR Registry"
+
+  - variable: bdr-registry.databasesPassword
+    description: "Database password"
+    type: password
+    default: ""
+    group: "BDR Registry"
+
+  - variable: bdr-registry.databasesUser
+    description: "Database username"
+    type: string
+    default: ""
+    group: "BDR Registry"
+
+  - variable: bdr-registry.emailBackend
+    description: "Email backend service"
+    type: string
+    default: "post_office.EmailBackend"
+    group: "BDR Registry"
+
+  - variable: bdr-registry.emailHost
+    description: "Email server host"
+    type: string
+    default: "bdr-postfix"
+    group: "BDR Registry"
+
+  - variable: bdr-registry.emailPort
+    description: "Email server port"
+    type: string
+    default: "25"
+    group: "BDR Registry"
+
+  - variable: bdr-registry.enableHdvEditing
+    description: "Enable HDV editing functionality"
+    type: boolean
+    default: true
+    group: "BDR Registry"
+
+  - variable: bdr-registry.enableHdvResimEditing
+    description: "Enable HDV RESIM editing functionality"
+    type: boolean
+    default: false
+    group: "BDR Registry"
+
+  - variable: bdr-registry.sentryDsn
+    description: "Sentry DSN for error tracking"
+    type: string
+    default: ""
+    group: "BDR Registry"
+
+  - variable: bdr-registry.siteUrl
+    description: "Base URL path for the registry"
+    type: string
+    default: "/registry/"
+    group: "BDR Registry"
+
+  - variable: bdr-registry.staticRoot
+    description: "Root directory for static files"
+    type: string
+    default: "/bdrreg/static"
+    group: "BDR Registry"
+
+  - variable: bdr-registry.staticUrl
+    description: "URL path for static files"
+    type: string
+    default: "/registry-static/"
+    group: "BDR Registry"
+
+  - variable: bdr-registry.useSidemenu
+    description: "Enable side menu functionality"
+    type: boolean
+    default: true
+    group: "BDR Registry"
+
+  - variable: bdr-registry.useZopeLogin
+    description: "Enable Zope login functionality"
+    type: boolean
+    default: true
+    group: "BDR Registry"
+
+  - variable: bdr-registry-notifications.allowedHosts
+    description: "List of allowed hosts for Django's ALLOWED_HOSTS setting"
+    default: "['*']"
+    type: string
+    group: "BDR Registry Notifications"
+
+  - variable: bdr-registry-notifications.appReverseProxy
+    description: "Enable reverse proxy support"
+    default: "True"
+    type: boolean
+    group: "BDR Registry Notifications"
+
+  - variable: bdr-registry-notifications.bdrServerUrl
+    description: "Base URL for BDR server"
+    default: "https://bdr.eionet.europa.eu/"
+    type: string
+    group: "BDR Registry Notifications"
+
+  - variable: bdr-registry-notifications.databasesEngine
+    description: "Django database engine"
+    default: "django.db.backends.postgresql_psycopg2"
+    type: string
+    group: "BDR Registry Notifications"
+
+  - variable: bdr-registry-notifications.databasesHost
+    description: "PostgreSQL database host"
+    default: "bdr-postgres"
+    type: string
+    group: "BDR Registry Notifications"
+
+  - variable: bdr-registry-notifications.debug
+    description: "Enable Django debug mode"
+    default: "False"
+    type: boolean
+    group: "BDR Registry Notifications"
+
+  - variable: bdr-registry-notifications.djangoCollectStatic
+    description: "Run Django collectstatic on startup"
+    default: "yes"
+    type: string
+    group: "BDR Registry Notifications"
+
+  - variable: bdr-registry-notifications.djangoLoadFixtures
+    description: "Load Django fixtures on startup"
+    default: "no"
+    type: string
+    group: "BDR Registry Notifications"
+
+  - variable: bdr-registry-notifications.djangoMigrate
+    description: "Run Django migrations on startup"
+    default: "no"
+    type: string
+    group: "BDR Registry Notifications"
+
+  - variable: bdr-registry-notifications.ecrAcceptedCompaniesStatus
+    description: "Accepted company status values for ECR"
+    default: "VALID,REVISION"
+    type: string
+    group: "BDR Registry Notifications"
+
+  - variable: bdr-registry-notifications.ecrDomains
+    description: "ECR domains"
+    default: "FGAS,ODS"
+    type: string
+    group: "BDR Registry Notifications"
+
+  - variable: bdr-registry-notifications.emailBackend
+    description: "Django email backend"
+    default: "django.core.mail.backends.smtp.EmailBackend"
+    type: string
+    group: "BDR Registry Notifications"
+
+  - variable: bdr-registry-notifications.emailHost
+    description: "SMTP server hostname"
+    default: "bdr-postfix"
+    type: string
+    group: "BDR Registry Notifications"
+
+  - variable: bdr-registry-notifications.emailPort
+    description: "SMTP server port"
+    default: "25"
+    type: string
+    group: "BDR Registry Notifications"
+
+  - variable: bdr-registry-notifications.frameVerifySsl
+    description: "Verify SSL certificates for frame requests"
+    default: "False"
+    type: boolean
+    group: "BDR Registry Notifications"
+
+  - variable: bdr-registry-notifications.mailHost
+    description: "Mail server host and port"
+    default: "bdr-postfix:25"
+    type: string
+    group: "BDR Registry Notifications"
+
+  - variable: bdr-registry-notifications.siteUrl
+    description: "Base URL path for the application"
+    default: "/notifications/"
+    type: string
+    group: "BDR Registry Notifications"
+
+  - variable: bdr-registry-notifications.staticRoot
+    description: "Directory for collected static files"
+    default: "/var/local/bdr.registry.notifications/static"
+    type: string
+    group: "BDR Registry Notifications"
+
+  - variable: bdr-registry-notifications.staticUrl
+    description: "URL path for static files"
+    default: "/notifications-static/"
+    type: string
+    group: "BDR Registry Notifications"
+
+  - variable: bdr-registry-notifications.tz
+    description: "Application timezone"
+    default: "Europe/Copenhagen"
+    type: string
+    group: "BDR Registry Notifications"
+
+  - variable: bdr-registry-notifications.useSidemenu
+    description: "Enable side menu"
+    default: "True"
+    type: boolean
+    group: "BDR Registry Notifications"
+
+  - variable: bdr-registry-notifications.useZopeLayout
+    description: "Use Zope layout"
+    default: "True"
+    type: boolean
+    group: "BDR Registry Notifications"
+
+  - variable: bdr-registry-notifications.useZopeLogin
+    description: "Use Zope login"
+    default: "True"
+    type: boolean
+    group: "BDR Registry Notifications"
+
+  - variable: bdr-registry-notifications.service.port
+    description: "Service port number"
+    default: 12301
+    type: int
+    group: "BDR Registry Notifications"
+
+  - variable: bdr-registry-notifications-async.allowedHosts
+    description: "List of allowed hosts for Django's ALLOWED_HOSTS setting"
+    default: "['*']"
+    type: string
+    group: "BDR Registry Notifications Async"
+
+  - variable: bdr-registry-notifications-async.appReverseProxy
+    description: "Enable/disable reverse proxy support"
+    default: "True"
+    type: boolean
+    group: "BDR Registry Notifications Async"
+
+  - variable: bdr-registry-notifications-async.bdrServerUrl
+    description: "Base URL for the BDR server"
+    default: "https://bdr.eionet.europa.eu/"
+    type: string
+    group: "BDR Registry Notifications Async"
+
+  - variable: bdr-registry-notifications-async.bdrApiUser
+    description: "Username for BDR API authentication"
+    default: ""
+    type: string
+    required: true
+    group: "BDR Registry Notifications Async"
+
+  - variable: bdr-registry-notifications-async.bdrApiPassword
+    description: "Password for BDR API authentication"
+    default: ""
+    type: password
+    required: true
+    group: "BDR Registry Notifications Async"
+
+  - variable: bdr-registry-notifications-async.bdrRegistryToken
+    description: "Authentication token for BDR Registry"
+    default: ""
+    type: password
+    required: true
+    group: "BDR Registry Notifications Async"
+
+  - variable: bdr-registry-notifications-async.databasesEngine
+    description: "Database engine for Django"
+    default: "django.db.backends.postgresql_psycopg2"
+    type: string
+    group: "BDR Registry Notifications Async"
+
+  - variable: bdr-registry-notifications-async.databasesHost
+    description: "Database host address"
+    default: ""
+    type: string
+    required: true
+    group: "BDR Registry Notifications Async"
+
+  - variable: bdr-registry-notifications-async.databasesName
+    description: "Database name"
+    default: ""
+    type: string
+    required: true
+    group: "BDR Registry Notifications Async"
+
+  - variable: bdr-registry-notifications-async.databasesUser
+    description: "Database user"
+    default: ""
+    type: string
+    required: true
+    group: "BDR Registry Notifications Async"
+
+  - variable: bdr-registry-notifications-async.databasesPassword
+    description: "Database password"
+    default: ""
+    type: password
+    required: true
+    group: "BDR Registry Notifications Async"
+
+  - variable: bdr-registry-notifications-async.debug
+    description: "Enable Django debug mode"
+    default: "False"
+    type: boolean
+    group: "BDR Registry Notifications Async"
+
+  - variable: bdr-registry-notifications-async.ecrAcceptedCompaniesStatus
+    description: "Accepted status values for ECR companies"
+    default: "VALID,REVISION"
+    type: string
+    group: "BDR Registry Notifications Async"
+
+  - variable: bdr-registry-notifications-async.ecrDomains
+    description: "ECR domains to handle"
+    default: "FGAS,ODS"
+    type: string
+    group: "BDR Registry Notifications Async"
+
+  - variable: bdr-registry-notifications-async.emailBackend
+    description: "Django email backend configuration"
+    default: "django.core.mail.backends.smtp.EmailBackend"
+    type: string
+    group: "BDR Registry Notifications Async"
+
+  - variable: bdr-registry-notifications-async.emailHost
+    description: "SMTP server hostname"
+    default: "bdr-postfix"
+    type: string
+    group: "BDR Registry Notifications Async"
+
+  - variable: bdr-registry-notifications-async.emailPort
+    description: "SMTP server port"
+    default: "25"
+    type: string
+    group: "BDR Registry Notifications Async"
+
+  - variable: bdr-registry-notifications-async.emailSender
+    description: "Email address used as sender"
+    default: ""
+    type: string
+    required: true
+    group: "BDR Registry Notifications Async"
+
+  - variable: bdr-registry-notifications-async.redisHost
+    description: "Redis server hostname"
+    default: "bdr-redis"
+    type: string
+    group: "BDR Registry Notifications Async"
+
+  - variable: bdr-registry-notifications-async.redisPort
+    description: "Redis server port"
+    default: "6379"
+    type: string
+    group: "BDR Registry Notifications Async"
+
+  - variable: bdr-registry-notifications-async.sentryDsn
+    description: "Sentry DSN for error tracking"
+    default: ""
+    type: string
+    group: "BDR Registry Notifications Async"
+
+  - variable: bdr-registry-notifications-async.siteUrl
+    description: "Base URL path for the application"
+    default: "/notifications/"
+    type: string
+    group: "BDR Registry Notifications Async"
+
+  - variable: bdr-registry-notifications-async.staticUrl
+    description: "URL path for static files"
+    default: "/notifications-static/"
+    type: string
+    group: "BDR Registry Notifications Async"
+
+  - variable: bdr-registry-notifications-async.useSidemenu
+    description: "Enable/disable side menu"
+    default: "True"
+    type: boolean
+    group: "BDR Registry Notifications Async"
+
+  - variable: bdr-registry-notifications-async.useZopeLayout
+    description: "Enable/disable Zope layout"
+    default: "True"
+    type: boolean
+    group: "BDR Registry Notifications Async"
+
+  - variable: bdr-registry-notifications-async.useZopeLogin
+    description: "Enable/disable Zope login"
+    default: "True"
+    type: boolean
+    group: "BDR Registry Notifications Async"
+
+  - variable: european-registry.apiPassword
+    default: ""
+    description: "API password for authentication"
+    type: password
+    required: true
+    group: "European Registry"
+
+  - variable: european-registry.apiToken
+    default: ""
+    description: "API authentication token"
+    type: string
+    required: true
+    group: "European Registry"
+
+  - variable: european-registry.apiUser
+    default: ""
+    description: "API username for authentication"
+    type: string
+    required: true
+    group: "European Registry"
+
+  - variable: european-registry.autoVerifyAllCompanies
+    default: "ODS,FGAS"
+    description: "Comma-separated list of company types to auto-verify"
+    type: string
+    group: "European Registry"
+
+  - variable: european-registry.autoVerifyNewCompanies
+    default: "ODS,FGAS"
+    description: "Comma-separated list of new company types to auto-verify"
+    type: string
+    group: "European Registry"
+
+  - variable: european-registry.baseUrl
+    default: ""
+    description: "Base URL for the registry"
+    type: string
+    required: true
+    group: "European Registry"
+
+  - variable: european-registry.baseUrlFgas
+    default: ""
+    description: "Base URL for FGAS registry"
+    type: string
+    required: true
+    group: "European Registry"
+
+  - variable: european-registry.baseUrlOds
+    default: ""
+    description: "Base URL for ODS registry"
+    type: string
+    required: true
+    group: "European Registry"
+
+  - variable: european-registry.bdrApiKey
+    default: ""
+    description: "BDR API authentication key"
+    type: password
+    required: true
+    group: "European Registry"
+
+  - variable: european-registry.bdrApiUrl
+    default: ""
+    description: "BDR API endpoint URL"
+    type: string
+    required: true
+    group: "European Registry"
+
+  - variable: european-registry.bdrEndpointPassword
+    default: ""
+    description: "BDR endpoint password"
+    type: password
+    required: true
+    group: "European Registry"
+
+  - variable: european-registry.bdrEndpointUrl
+    default: "https://bdr.eionet.europa.eu"
+    description: "BDR endpoint URL"
+    type: string
+    group: "European Registry"
+
+  - variable: european-registry.bdrEndpointUser
+    default: ""
+    description: "BDR endpoint username"
+    type: string
+    required: true
+    group: "European Registry"
+
+  - variable: european-registry.bdrHelpDeskMail
+    default: ""
+    description: "BDR helpdesk email address"
+    type: string
+    required: true
+    group: "European Registry"
+
+  - variable: european-registry.dbHost
+    default: ""
+    description: "Database host address"
+    type: string
+    required: true
+    group: "European Registry"
+
+  - variable: european-registry.dbName
+    default: ""
+    description: "Database name"
+    type: string
+    required: true
+    group: "European Registry"
+
+  - variable: european-registry.dbPass
+    default: ""
+    description: "Database password"
+    type: password
+    required: true
+    group: "European Registry"
+
+  - variable: european-registry.dbSchema
+    default: "postgresql"
+    description: "Database schema type"
+    type: string
+    group: "European Registry"
+
+  - variable: european-registry.dbUser
+    default: ""
+    description: "Database username"
+    type: string
+    required: true
+    group: "European Registry"
+
+  - variable: european-registry.debug
+    default: "False"
+    description: "Enable debug mode"
+    type: boolean
+    group: "European Registry"
+
+  - variable: european-registry.flaskApp
+    default: "cache_registry/app.py"
+    description: "Flask application path"
+    type: string
+    group: "European Registry"
+
+  - variable: european-registry.fuzzLimit
+    default: "92"
+    description: "Fuzzy matching limit percentage"
+    type: string
+    group: "European Registry"
+
+  - variable: european-registry.httpsVerify
+    default: "True"
+    description: "Enable HTTPS verification"
+    type: boolean
+    group: "European Registry"
+
+  - variable: european-registry.logFile
+    default: "EEA_double_check.log"
+    description: "Log file name"
+    type: string
+    group: "European Registry"
+
+  - variable: european-registry.mailsSenderName
+    default: ""
+    description: "Name to use for sending emails"
+    type: string
+    required: true
+    group: "European Registry"
+
+  - variable: european-registry.mailServer
+    default: "bdr-postfix"
+    description: "Mail server hostname"
+    type: string
+    group: "European Registry"
+
+  - variable: european-registry.mailSuppressSend
+    default: "False"
+    description: "Suppress email sending"
+    type: boolean
+    group: "European Registry"
+
+  - variable: european-registry.manualVerifyAllCompanies
+    default: ""
+    description: "Companies requiring manual verification"
+    type: string
+    group: "European Registry"
+
+  - variable: european-registry.postgresAddr
+    default: "bdr-postgres"
+    description: "PostgreSQL server address"
+    type: string
+    group: "European Registry"
+
+  - variable: european-registry.requestsCaBundle
+    default: "/etc/ssl/certs/ca-certificates.crt"
+    description: "Path to CA certificates bundle"
+    type: string
+    group: "European Registry"
+
+  - variable: european-registry.sendMatchingMails
+    default: "True"
+    description: "Enable sending matching notification emails"
+    type: boolean
+    group: "European Registry"
+
+  - variable: european-registry.sentryDsn
+    default: ""
+    description: "Sentry DSN for error tracking"
+    type: string
+    group: "European Registry"
+
+  - variable: european-registry.stocksApiToken
+    default: ""
+    description: "API token for stocks service"
+    type: string
+    group: "European Registry"
+
+  - variable: european-registry.stocksApiUrl
+    default: ""
+    description: "URL for stocks API service"
+    type: string
+    group: "European Registry"
+
+  - variable: european-registry.stocksIncludeTestdata
+    default: "Yes"
+    description: "Include test data in stocks"
+    type: boolean
+    group: "European Registry"
+
+  - variable: ldap.rootDN
+    label: "Root DN"
+    description: "Root Distinguished Name for LDAP"
+    type: string
+    required: true
+    group: "LDAP Configuration"
+
+  - variable: ldap.rootPW
+    label: "Root Password"
+    description: "Root password for LDAP"
+    type: password
+    required: true
+    group: "LDAP Configuration"
+
+  - variable: ldap.bdrrootDN
+    label: "BDR Root DN"
+    description: "BDR Root Distinguished Name"
+    type: string
+    required: true
+    group: "LDAP Configuration"
+
+  - variable: ldap.bdrrootPW
+    label: "BDR Root Password"
+    description: "BDR Root password"
+    type: password
+    required: true
+    group: "LDAP Configuration"
+
+  - variable: ldap.debugLevel
+    label: "Debug Level"
+    description: "LDAP debug level"
+    type: string
+    default: "16640"
+    group: "LDAP Configuration"
+
+  - variable: ldap.syncURL
+    label: "Sync URL"
+    description: "URL for LDAP synchronization"
+    type: string
+    group: "LDAP Configuration"
+
+  - variable: ldap.syncDN
+    label: "Sync DN"
+    description: "Distinguished Name for sync operations"
+    type: string
+    group: "LDAP Configuration"
+
+  - variable: ldap.syncPW
+    label: "Sync Password"
+    description: "Password for sync operations"
+    type: password
+    group: "LDAP Configuration"
 
   # Apache Configuration
   - variable: apache.serverName
@@ -1458,21 +1540,21 @@ questions:
   - variable: ingress.hosts.0.host
     label: "Ingress Hostname"
     type: string
-    default: "cdr.eionet.europa.eu"
+    default: "bdr.eionet.europa.eu"
     group: "Networking"
     show_if: "ingress.enabled=true"
 
   - variable: ingress.hosts.0.paths.0.path
     label: "Ingress Path"
     type: string
-    default: "/(.*)"
+    default: "/"
     group: "Networking"
     show_if: "ingress.enabled=true"
 
   - variable: ingress.hosts.0.paths.0.pathType
     label: "Ingress Path Type"
     type: enum
-    default: "ImplementationSpecific"
+    default: "Prefix"
     options:
       - "Exact"
       - "Prefix"
@@ -1483,13 +1565,13 @@ questions:
   - variable: ingress.hosts.0.paths.0.serviceName
     label: "Ingress Backend Service Name"
     type: string
-    default: "cdr-varnish"
+    default: "bdr-apache"
     group: "Networking"
     show_if: "ingress.enabled=true"
 
   - variable: ingress.hosts.0.paths.0.servicePort
     label: "Ingress Backend Service Port"
     type: int
-    default: 8080
+    default: 80
     group: "Networking"
     show_if: "ingress.enabled=true"

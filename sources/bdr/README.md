@@ -17,6 +17,9 @@ This chart is almost configured for production use.
 
 <dl>
 
+  <dt>Version 0.1.2</dt>
+  <dd>Questions updates.</dd>
+
   <dt>Version 0.1.1</dt>
   <dd>Added htpasswd question.</dd>
 
