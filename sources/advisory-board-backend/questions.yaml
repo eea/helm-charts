@@ -7,6 +7,23 @@
     type: "string"
     required: true
     group: "General"
+
+  - variable: "ingress.certificate"
+    label: "Certificate name"
+    description: "Use a new name for letsencrypt certificates, for existing certificate write the correct name for the domain"
+    default: "demo.eea.europa.eu-tls"
+    type: "string"
+    required: true
+    group: "General"
+    
+  - variable: "ingress.annotations"
+    label: "Ingress annotations"
+    description: "Use the default for letsencrypt certificates, configure HTTP HEADERS here"
+    default: |-
+      cert-manager.io/cluster-issuer: 01dev-eea-letsencrypt
+    type: "annotations"
+    required: true
+    group: "General"
       
   - variable: "links.memcached"
     label: "Memcached service"
