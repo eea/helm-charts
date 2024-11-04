@@ -178,9 +178,9 @@
   - variable: "varnish.port"
     label: "Varnish backend/exposed port"
     description: "To simplify, we use the same port as the web application"
-    type: "string"
+    type: "int"
     required: true
-    default: "8080"
+    default: 8080
     group: "Varnish configuration"
 
   - variable: "varnish.environment.VARNISH_SIZE"
