@@ -17,6 +17,9 @@ This chart is almost configured for production use.
 
 <dl>
 
+  <dt>Version 0.1.6</dt>
+  <dd>Removed bdr-sync job and updated questions.yaml.</dd>
+
   <dt>Version 0.1.5</dt>
   <dd>Fixed cron-sync-cronjob.yaml template.</dd>
 

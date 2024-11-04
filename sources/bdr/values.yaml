@@ -91,12 +91,6 @@ cronsessionscleanup:
       memory: 16Mi
 
 synccronjobs:
-  - name: sync-bdr
-    enabled: false
-    schedule: "1-59/5 * * * *"
-    token: ""
-    syncURL: ""
-    backoffLimit: 1
   - name: sync-fgases
     enabled: false
     schedule: "2-59/5 * * * *"

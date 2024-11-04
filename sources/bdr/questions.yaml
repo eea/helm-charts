@@ -227,229 +227,245 @@ questions:
         group: "Cron Jobs"
 
   # Sync Jobs
-  # BDR Sync
-  - variable: synccronjobs.0.enabled
-    default: false
-    description: "Enable BDR sync cronjob"
-    label: "Enable BDR Sync"
-    type: boolean
-    group: "Sync Jobs"
-
-  - variable: synccronjobs.0.schedule
-    default: "1-59/5 * * * *"
-    description: "Cron schedule for BDR sync"
-    label: "BDR Sync Schedule"
-    type: string
-    group: "Sync Jobs"
-    show_if: "synccronjobs.0.enabled=true"
-
-  - variable: synccronjobs.0.token
-    default: ""
-    description: "Authentication token for BDR sync"
-    label: "BDR Sync Token"
-    type: string
-    group: "Sync Jobs"
-    show_if: "synccronjobs.0.enabled=true"
-
-  - variable: synccronjobs.0.syncURL
-    default: ""
-    description: "URL endpoint for BDR sync"
-    label: "BDR Sync URL"
-    type: string
-    group: "Sync Jobs"
-    show_if: "synccronjobs.0.enabled=true"
-
   # F-gases Sync
-  - variable: synccronjobs.1.enabled
+  - variable: synccronjobs.0.enabled
     default: false
     description: "Enable F-gases sync cronjob"
     label: "Enable F-gases Sync"
     type: boolean
     group: "Sync Jobs"
 
-  - variable: synccronjobs.1.schedule
+  - variable: synccronjobs.0.schedule
     default: "2-59/5 * * * *"
     description: "Cron schedule for F-gases sync"
     label: "F-gases Sync Schedule"
     type: string
     group: "Sync Jobs"
-    show_if: "synccronjobs.1.enabled=true"
+    show_if: "synccronjobs.0.enabled=true"
 
-  - variable: synccronjobs.1.token
+  - variable: synccronjobs.0.token
     default: ""
     description: "Authentication token for F-gases sync"
     label: "F-gases Sync Token"
     type: string
     group: "Sync Jobs"
-    show_if: "synccronjobs.1.enabled=true"
+    show_if: "synccronjobs.0.enabled=true"
 
-  - variable: synccronjobs.1.syncURL
+  - variable: synccronjobs.0.syncURL
     default: ""
     description: "URL endpoint for F-gases sync"
     label: "F-gases Sync URL"
     type: string
     group: "Sync Jobs"
-    show_if: "synccronjobs.1.enabled=true"
+    show_if: "synccronjobs.0.enabled=true"
+
+  - variable: synccronjobs.0.backoffLimit
+    default: 1
+    description: "Number of retries before giving up on a failed sync"
+    label: "F-gases Sync Backoff Limit"
+    type: int
+    group: "Sync Jobs"
+    show_if: "synccronjobs.0.enabled=true"
 
   # ODS Sync
-  - variable: synccronjobs.2.enabled
+  - variable: synccronjobs.1.enabled
     default: false
     description: "Enable ODS sync cronjob"
     label: "Enable ODS Sync"
     type: boolean
     group: "Sync Jobs"
 
-  - variable: synccronjobs.2.schedule
+  - variable: synccronjobs.1.schedule
     default: "3-59/5 * * * *"
     description: "Cron schedule for ODS sync"
     label: "ODS Sync Schedule"
     type: string
     group: "Sync Jobs"
-    show_if: "synccronjobs.2.enabled=true"
+    show_if: "synccronjobs.1.enabled=true"
 
-  - variable: synccronjobs.2.token
+  - variable: synccronjobs.1.token
     default: ""
     description: "Authentication token for ODS sync"
     label: "ODS Sync Token"
     type: string
     group: "Sync Jobs"
-    show_if: "synccronjobs.2.enabled=true"
+    show_if: "synccronjobs.1.enabled=true"
 
-  - variable: synccronjobs.2.syncURL
+  - variable: synccronjobs.1.syncURL
     default: ""
     description: "URL endpoint for ODS sync"
     label: "ODS Sync URL"
     type: string
     group: "Sync Jobs"
-    show_if: "synccronjobs.2.enabled=true"
+    show_if: "synccronjobs.1.enabled=true"
+
+  - variable: synccronjobs.1.backoffLimit
+    default: 1
+    description: "Number of retries before giving up on a failed sync"
+    label: "ODS Sync Backoff Limit"
+    type: int
+    group: "Sync Jobs"
+    show_if: "synccronjobs.1.enabled=true"
 
   # Licenses Sync
-  - variable: synccronjobs.3.enabled
+  - variable: synccronjobs.2.enabled
     default: false
     description: "Enable licenses sync cronjob"
     label: "Enable Licenses Sync"
     type: boolean
     group: "Sync Jobs"
 
-  - variable: synccronjobs.3.schedule
+  - variable: synccronjobs.2.schedule
     default: "6 0 * * *"
     description: "Cron schedule for licenses sync"
     label: "Licenses Sync Schedule"
     type: string
     group: "Sync Jobs"
-    show_if: "synccronjobs.3.enabled=true"
+    show_if: "synccronjobs.2.enabled=true"
 
-  - variable: synccronjobs.3.token
+  - variable: synccronjobs.2.token
     default: ""
     description: "Authentication token for licenses sync"
     label: "Licenses Sync Token"
     type: string
     group: "Sync Jobs"
-    show_if: "synccronjobs.3.enabled=true"
+    show_if: "synccronjobs.2.enabled=true"
 
-  - variable: synccronjobs.3.syncURL
+  - variable: synccronjobs.2.syncURL
     default: ""
     description: "URL endpoint for licenses sync"
     label: "Licenses Sync URL"
     type: string
     group: "Sync Jobs"
-    show_if: "synccronjobs.3.enabled=true"
+    show_if: "synccronjobs.2.enabled=true"
+
+  - variable: synccronjobs.2.backoffLimit
+    default: 5
+    description: "Number of retries before giving up on a failed sync"
+    label: "Licenses Sync Backoff Limit"
+    type: int
+    group: "Sync Jobs"
+    show_if: "synccronjobs.2.enabled=true"
 
   # Match Sync
-  - variable: synccronjobs.4.enabled
+  - variable: synccronjobs.3.enabled
     default: false
     description: "Enable match sync cronjob"
     label: "Enable Match Sync"
     type: boolean
     group: "Sync Jobs"
 
-  - variable: synccronjobs.4.schedule
+  - variable: synccronjobs.3.schedule
     default: "4-59/5 * * * *"
     description: "Cron schedule for match sync"
     label: "Match Sync Schedule"
     type: string
     group: "Sync Jobs"
-    show_if: "synccronjobs.4.enabled=true"
+    show_if: "synccronjobs.3.enabled=true"
 
-  - variable: synccronjobs.4.token
+  - variable: synccronjobs.3.token
     default: ""
     description: "Authentication token for match sync"
     label: "Match Sync Token"
     type: string
     group: "Sync Jobs"
-    show_if: "synccronjobs.4.enabled=true"
+    show_if: "synccronjobs.3.enabled=true"
 
-  - variable: synccronjobs.4.syncURL
+  - variable: synccronjobs.3.syncURL
     default: ""
     description: "URL endpoint for match sync"
     label: "Match Sync URL"
     type: string
     group: "Sync Jobs"
-    show_if: "synccronjobs.4.enabled=true"
+    show_if: "synccronjobs.3.enabled=true"
+
+  - variable: synccronjobs.3.backoffLimit
+    default: 1
+    description: "Number of retries before giving up on a failed sync"
+    label: "Match Sync Backoff Limit"
+    type: int
+    group: "Sync Jobs"
+    show_if: "synccronjobs.3.enabled=true"
 
   # Stocks Sync
-  - variable: synccronjobs.5.enabled
+  - variable: synccronjobs.4.enabled
     default: false
     description: "Enable stocks sync cronjob"
     label: "Enable Stocks Sync"
     type: boolean
     group: "Sync Jobs"
 
-  - variable: synccronjobs.5.schedule
+  - variable: synccronjobs.4.schedule
     default: "0 3 * * *"
     description: "Cron schedule for stocks sync"
     label: "Stocks Sync Schedule"
     type: string
     group: "Sync Jobs"
-    show_if: "synccronjobs.5.enabled=true"
+    show_if: "synccronjobs.4.enabled=true"
 
-  - variable: synccronjobs.5.token
+  - variable: synccronjobs.4.token
     default: ""
     description: "Authentication token for stocks sync"
     label: "Stocks Sync Token"
     type: string
     group: "Sync Jobs"
-    show_if: "synccronjobs.5.enabled=true"
+    show_if: "synccronjobs.4.enabled=true"
 
-  - variable: synccronjobs.5.syncURL
+  - variable: synccronjobs.4.syncURL
     default: ""
     description: "URL endpoint for stocks sync"
     label: "Stocks Sync URL"
     type: string
     group: "Sync Jobs"
-    show_if: "synccronjobs.5.enabled=true"
+    show_if: "synccronjobs.4.enabled=true"
+
+  - variable: synccronjobs.4.backoffLimit
+    default: 5
+    description: "Number of retries before giving up on a failed sync"
+    label: "Stocks Sync Backoff Limit"
+    type: int
+    group: "Sync Jobs"
+    show_if: "synccronjobs.4.enabled=true"
 
   # Notifications Fetch
-  - variable: synccronjobs.6.enabled
+  - variable: synccronjobs.5.enabled
     default: false
     description: "Enable notifications fetch cronjob"
     label: "Enable Notifications Fetch"
     type: boolean
     group: "Sync Jobs"
 
-  - variable: synccronjobs.6.schedule
+  - variable: synccronjobs.5.schedule
     default: "15 0 * * *"
     description: "Cron schedule for notifications fetch"
     label: "Notifications Fetch Schedule"
     type: string
     group: "Sync Jobs"
-    show_if: "synccronjobs.6.enabled=true"
+    show_if: "synccronjobs.5.enabled=true"
 
-  - variable: synccronjobs.6.token
+  - variable: synccronjobs.5.token
     default: ""
     description: "Authentication token for notifications fetch"
     label: "Notifications Fetch Token"
     type: string
     group: "Sync Jobs"
-    show_if: "synccronjobs.6.enabled=true"
+    show_if: "synccronjobs.5.enabled=true"
 
-  - variable: synccronjobs.6.syncURL
+  - variable: synccronjobs.5.syncURL
     default: ""
     description: "URL endpoint for notifications fetch"
     label: "Notifications Fetch URL"
     type: string
     group: "Sync Jobs"
-    show_if: "synccronjobs.6.enabled=true"
+    show_if: "synccronjobs.5.enabled=true"
+
+  - variable: synccronjobs.5.backoffLimit
+    default: 1
+    description: "Number of retries before giving up on a failed sync"
+    label: "Notifications Fetch Backoff Limit"
+    type: int
+    group: "Sync Jobs"
+    show_if: "synccronjobs.5.enabled=true"
 
   # ZEO Server Configuration
   - variable: zeoserver.storage
