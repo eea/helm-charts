@@ -22,9 +22,8 @@ links:
   memcached: plone-postgres-memcached.namespace
 
 ingress:
-  annotations: {
+  annotations: 
     cert-manager.io/cluster-issuer: 01dev-eea-letsencrypt
-  }
   certificate: key-01dev-letsencrypt
 
 plone:
@@ -55,7 +54,34 @@ plone:
     STATIC_BANNER_ENABLED: ''
     DYNAMIC_BANNER_ENABLED: ''
   annotations: {}
-  
+  livenessProbe:
+    httpGet:
+      path: /ok
+      port: http
+    periodSeconds: 20
+    timeoutSeconds: 10
+    initialDelaySeconds: 30
+    failureThreshold: 6
+    successThreshold: 1
+  startupProbe:
+    httpGet:
+      path: /ok
+      port: http
+    periodSeconds: 5
+    timeoutSeconds: 10
+    initialDelaySeconds: 10
+    failureThreshold: 12
+    successThreshold: 1
+  readinessProbe:
+    httpGet:
+      path: /ok
+      port: http
+    periodSeconds: 15
+    timeoutSeconds: 10
+    initialDelaySeconds: 60
+    failureThreshold: 4
+    successThreshold: 2
+    
 varnish:
   serviceType: ClusterIP
   serviceName: varnish-backend
