@@ -31,9 +31,9 @@ spec:
           command: ["/bin/sh"]
           {{- if .Values.mounts }}
           volumeMounts:
-          {{- range $mounts }}
-          - mountPath: /mnt/{{ . }}
-            name: {{ . }}
+          {{- range $index, $mnt := $mounts }}
+          - mountPath: /mnt/{{ $mnt }}
+            name: mnt{{ $index }}
           {{- end }}
           {{- end }}
 
@@ -65,10 +65,10 @@ spec:
 
       {{- if .Values.mounts }}
       volumes:
-      {{- range $mounts }}
-      - name: {{ . }}
+      {{- range $index, $mnt := $mounts }}
+      - name: mnt{{ $index }}
         persistentVolumeClaim:
-          claimName: {{ . }}
+          claimName: {{ $mnt }}
       {{- end }}
       {{- end }}
 

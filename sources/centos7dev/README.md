@@ -11,6 +11,9 @@ under /mnt. The volume claims must exist already.
 ## Releases
 
 <dl>
+  <dt>Version 1.0.6 - 04 November 2024</dt>
+  <dd>Use indexed name to allow mounts longer than 63 chars</dd>
+
   <dt>Version 1.0.5 - 10 September 2024</dt>
   <dd>Allow mounts to be specified as comma-separated list.</dd>
 
