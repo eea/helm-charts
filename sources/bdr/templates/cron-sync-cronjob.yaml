@@ -13,18 +13,19 @@ spec:
   concurrencyPolicy: Forbid
   jobTemplate:
     spec:
+      backoffLimit: {{ $cronjob.backoffLimit }}
+      podFailurePolicy:
+        rules:
+        - action: Count  # Count towards the backoffLimit
+          onExitCodes:
+            operator: NotIn
+            values: [0]  # Any non-zero exit code
+        - action: Count  # Count pod failures towards backoffLimit
+          onPodConditions:
+          - type: DisruptionTarget
+            status: "True"
       template:
         spec:
-          backoffLimit: {{ .cronjob.backoffLimit }}
-          podFailurePolicy:
-            rules:
-            - action: Count  # Count towards the backoffLimit
-              onExitCodes:
-                operator: NotIn
-                values: [0]  # Any non-zero exit code
-            - action: Count  # Count pod failures towards backoffLimit
-              onPodConditions:
-              - type: DisruptionTarget
           {{- with $.Values.imagePullSecrets }}
           imagePullSecrets:
             {{- toYaml . | nindent 8 }}
