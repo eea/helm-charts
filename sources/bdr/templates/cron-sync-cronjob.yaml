@@ -15,6 +15,16 @@ spec:
     spec:
       template:
         spec:
+          backoffLimit: {{ .cronjob.backoffLimit }}
+          podFailurePolicy:
+            rules:
+            - action: Count  # Count towards the backoffLimit
+              onExitCodes:
+                operator: NotIn
+                values: [0]  # Any non-zero exit code
+            - action: Count  # Count pod failures towards backoffLimit
+              onPodConditions:
+              - type: DisruptionTarget
           {{- with $.Values.imagePullSecrets }}
           imagePullSecrets:
             {{- toYaml . | nindent 8 }}
@@ -29,7 +39,7 @@ spec:
                 memory: 16Mi
               limits:
                 memory: 16Mi
-            command: 
+            command:
             - "/bin/sh"
             args: ["-c", "$(SYNC_CMD)"]
             env:

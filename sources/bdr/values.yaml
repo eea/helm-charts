@@ -96,36 +96,43 @@ synccronjobs:
     schedule: "1-59/5 * * * *"
     token: ""
     syncURL: ""
+    backoffLimit: 1
   - name: sync-fgases
     enabled: false
     schedule: "2-59/5 * * * *"
     token: ""
     syncURL: ""
+    backoffLimit: 1
   - name: sync-ods
     enabled: false
     schedule: "3-59/5 * * * *"
     token: ""
     syncURL: ""
+    backoffLimit: 1
   - name: sync-licenses
     enabled: false
     schedule: "6 0 * * *"
     token: ""
     syncURL: ""
+    backoffLimit: 5
   - name: sync-match
     enabled: false
     schedule: "4-59/5 * * * *"
     token: ""
     syncURL: ""
+    backoffLimit: 1
   - name: sync-stocks
     enabled: false
     schedule: "0 3 * * *"
     token: ""
     syncURL: ""
+    backoffLimit: 5
   - name: notifications-fetch
     enabled: false
     schedule: "15 0 * * *"
     token: ""
     syncURL: ""
+    backoffLimit: 5
 
 zeoserver:
   storage: 150Gi
