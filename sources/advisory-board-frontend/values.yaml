@@ -73,14 +73,14 @@ varnish:
   tolerations: []
   affinity: {}
   environment:
-    VARNISH_SIZE: 
+    VARNISH_SIZE: '2G'
     VARNISH_DNS_TTL: '20s'
-    VARNISH_BERESP_TTL: 
-    VARNISH_BERESP_GRACE: 
-    VARNISH_BERESP_KEEP: 
-    VARNISH_GZIP_ENABLED: 
-    VARNISH_GZIP_JSON_ENABLED: 
-    AUTOKILL_CRON:
+    VARNISH_DNS_TTL: '20s'
+    VARNISH_BERESP_TTL: '60s'
+    VARNISH_BERESP_GRACE: '120s'
+    VARNISH_BERESP_KEEP: '120s'
+    VARNISH_GZIP_ENABLED: 'false'
+    AUTOKILL_CRON: ''
   livenessProbe:
     httpGet:
       path: /ok
@@ -89,7 +89,7 @@ varnish:
     timeoutSeconds: 10
     initialDelaySeconds: 30
     failureThreshold: 5
-    successThreshold: 2
+    successThreshold: 1
   startupProbe:
     httpGet:
       path: /ok

@@ -42,7 +42,7 @@ spec:
 
         ports:
         - name: http
-          containerPort: "{{ .Values.varnish.port }}"
+          containerPort: {{ .Values.varnish.port }}
 
         livenessProbe:
           httpGet:
