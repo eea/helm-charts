@@ -7,11 +7,14 @@ This chart deployes the Climate Advisory Board frontend app
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| debug.enabled | bool | false | Activate the Plone debug instance |
+| links.backend | string | NAME.NAMESPACE | Service name for varnish for backend instance, followed by the namespace. |
 
 ## Releases
 
 <dl>
+  <dt>Version 1.0.1</dt>
+  <dd>Add http probes to volto</dd>
+
   <dt>Version 1.0.0</dt>
   <dd>Initial release. Version matching Rancher 1 catalog version.</dd>
 </dl> 
