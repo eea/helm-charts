@@ -12,6 +12,9 @@ This chart deployes the Climate Advisory Board backend app
 ## Releases
 
 <dl>
+  <dt>Version 1.0.1</dt>
+  <dd>Questions update</dd>
+
   <dt>Version 1.0.0</dt>
   <dd>Initial release. Version matching Rancher 1 catalog version.</dd>
 </dl> 

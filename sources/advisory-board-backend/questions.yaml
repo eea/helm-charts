@@ -24,7 +24,7 @@
 
   - variable: "varnish.serviceType"
     label: "Expose varnish"
-    description: "Select NodePort to expose"
+    description: "Select NodePort to expose varnish"
     type: "enum"
     options:
       - "NodePort"
@@ -35,7 +35,7 @@
 
   - variable: "plone.serviceType"
     label: "Expose plone"
-    description: "Select NodePort to expose"
+    description: "Select NodePort to expose plone"
     type: "enum"
     options:
       - "NodePort"
@@ -46,7 +46,7 @@
 
   - variable: "debug.serviceType"
     label: "Expose debug"
-    description: "Select NodePort to expose"
+    description: "Select NodePort to expose debug"
     type: "enum"
     options:
       - "NodePort"
@@ -54,6 +54,7 @@
     default: "ClusterIP"
     required: true
     group: "General"
+    show_if: "debug.enabled=true"
       
 
   - variable: "plone.database.POSTGRES_DB"
@@ -134,13 +135,6 @@
     type: "boolean"
     required: true
     group: "General"
-    show_subquestion_if: true
-    subquestions:
-    - variable: "debug.expose"
-      label: "Expose port 8080"
-      default: false
-      type: "boolean"
-      required: true
 
   - variable: "postfix.enabled"
     label: "Postfix enabled"
@@ -255,6 +249,20 @@
     required: true
     default: "4G"
     group: "Memory"
+  - variable: "debug.resources.requests.memory"
+    label: "Debug memory reservation"
+    type: "string"
+    required: true
+    default: "4G"
+    group: "Memory"
+
+  - variable: "debug.resources.limits.memory"
+    label: "Debug memory limit"
+    description: ">= memory reservation"
+    type: "string"
+    required: true
+    default: "4G"
+
   - variable: "varnish.resources.requests.memory"
     label: "Varnish memory reservation"
     type: "string"
