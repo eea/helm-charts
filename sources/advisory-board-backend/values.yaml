@@ -59,6 +59,7 @@ plone:
 varnish:
   serviceType: ClusterIP
   serviceName: varnish-backend
+  backend: "backend"
   port: 8080
   resources:
     limits:

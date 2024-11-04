@@ -47,8 +47,10 @@ spec:
         - name: RELSTORAGE_DSN
           value: "host='postgres' dbname='{{ .Values.plone.database.POSTGRES_DB }}' user='{{ .Values.plone.database.POSTGRES_USER }}' password='{{ .Values.plone.database.POSTGRES_PASSWORD }}'"
         {{- range $key, $value := .Values.plone.environment }}
+        {{- if ($value) }}
         - name: {{ $key }}
           value: {{ $value | quote }}
+        {{- end }}
         {{- end }}
 
         ports:

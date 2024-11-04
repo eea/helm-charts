@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: varnish
+  name: {{ include "appl.fullname" . }}-varnish
   labels:
     {{- include "appl.labels" . | nindent 4 }}
     component: varnish
@@ -30,14 +30,16 @@ spec:
         - name: TZ
           value: "{{ .Values.timezone }}"
         - name: VARNISH_BACKEND
-          value: "backend"
+          value: "{{ .Values.varnish.backend }}"
         - name: VARNISH_BACKEND_PORT
           value: "{{ .Values.varnish.port }}"
         - name: VARNISH_HTTP_PORT
           value: "{{ .Values.varnish.port }}"
         {{- range $key, $value := .Values.varnish.environment }}
+        {{- if ($value) }}
         - name: {{ $key }}
           value: {{ $value | quote }}
+        {{- end }}
         {{- end }}
 
         ports:
