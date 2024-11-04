@@ -64,6 +64,8 @@ volto:
 varnish:
   serviceType: NodePort
   serviceName: varnish-frontend
+  port: 3000
+  backend: "frontend"
   resources:
     limits:
       memory: 3Gi
