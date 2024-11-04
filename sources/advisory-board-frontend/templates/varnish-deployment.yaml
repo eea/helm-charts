@@ -30,7 +30,7 @@ spec:
         - name: TZ
           value: "{{ .Values.timezone }}"
         - name: VARNISH_BACKEND
-          value: "backend"
+          value: "advisory-board-backend"
         - name: VARNISH_BACKEND_PORT
           value: "{{ .Values.varnish.port }}"
         - name: VARNISH_HTTP_PORT
