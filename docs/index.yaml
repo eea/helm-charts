@@ -700,6 +700,37 @@ entries:
   cdr:
   - apiVersion: v2
     appVersion: 6.7.3-194
+    created: "2024-11-05T12:02:46.91008+02:00"
+    dependencies:
+    - alias: zeoserver
+      name: rn-zeoserver
+      repository: https://eea.github.io/helm-charts
+      version: 0.1.5
+    - alias: varnish
+      condition: rn-varnish.enabled
+      name: rn-varnish
+      repository: https://eea.github.io/helm-charts
+      version: 0.1.4
+    - alias: local-converters
+      condition: rn-local-converters.enabled
+      name: rn-local-converters
+      repository: https://eea.github.io/helm-charts
+      version: 0.1.2
+    - alias: clamav
+      condition: rn-clamav.enabled
+      name: rn-clamav
+      repository: https://eea.github.io/helm-charts
+      version: 0.1.2
+    description: A CDR Helm chart for Kubernetes
+    digest: d3be7fc5271c272818d1727da87b74d1a660471fbed1c75380bd0ed04645fd02
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/cdr/logo_eionet.png
+    name: cdr
+    type: application
+    urls:
+    - cdr-0.2.14.tgz
+    version: 0.2.14
+  - apiVersion: v2
+    appVersion: 6.7.3-194
     created: "2024-11-05T11:57:22.057635+02:00"
     dependencies:
     - alias: zeoserver
@@ -6161,4 +6192,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2024-11-05T11:59:46.128618+02:00"
+generated: "2024-11-05T12:02:46.905593+02:00"
