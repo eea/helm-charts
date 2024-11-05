@@ -15,6 +15,9 @@ This chart is almost configured for production use.
 
 ## Releases
 
+### Version 0.2.12
+- Updated rn-varnish chart to 0.1.5.
+
 ### Version 0.2.11
 - Updated appVersion to 3.9.1-207.
 

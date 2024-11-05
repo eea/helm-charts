@@ -5,7 +5,7 @@ icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/mdr/logo_ei
 
 type: application
 
-version: 0.2.11
+version: 0.2.12
 
 appVersion: "3.9.1-207"
 
@@ -15,7 +15,7 @@ dependencies:
     repository: https://eea.github.io/helm-charts
     alias: zeoserver
   - name: rn-varnish
-    version: 0.1.4
+    version: 0.1.5
     repository: https://eea.github.io/helm-charts
     condition: rn-varnish.enabled
     alias: varnish
