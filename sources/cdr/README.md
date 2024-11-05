@@ -10,6 +10,10 @@ This chart is almost configured for production use.
 
 ## Releases
 
+### Version 0.2.15
+- Updated rn-clamav chart to 0.1.3.
+- Updated rn-varnish chart to 0.1.5.
+
 ### Version 0.2.14
 - Updated appVersion to 6.7.3-194.
 
