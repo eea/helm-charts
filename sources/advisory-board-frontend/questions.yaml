@@ -23,13 +23,6 @@
     required: true
     group: "General"
     
-  - variable: "ingress.annotations"
-    label: "Ingress annotations"
-    description: "Use the default for letsencrypt certificates on dev, configure HTTP HEADERS here"
-    type: "annotations"
-    required: true
-    group: "General"
-    
   - variable: "varnish.serviceType"
     label: "Expose varnish"
     description: "Select NodePort to expose"
