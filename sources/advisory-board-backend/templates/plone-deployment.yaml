@@ -50,24 +50,45 @@ spec:
         {{- end }}
 
         ports:
-        - containerPort: 8080
+        - name: http
+          containerPort: 8080
 
+        {{- if (.Values.volto.livenessProbe.httpGet.path) }}
         livenessProbe:
           httpGet:
-            path: /
-            port: 8080
-          periodSeconds: 60
-          timeoutSeconds: 5
-          successThreshold: 1
+            path: {{ .Values.volto.livenessProbe.httpGet.path }}
+            port: http
+          initialDelaySeconds: {{ .Values.volto.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.volto.livenessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.volto.livenessProbe.timeoutSeconds }}
+          successThreshold: {{ .Values.volto.livenessProbe.successThreshold }}
+          failureThreshold: {{ .Values.volto.livenessProbe.failureThreshold }}
+        {{- end }}
 
+        {{- if (.Values.volto.startupProbe.httpGet.path) }}
         startupProbe:
           httpGet:
-            path: /
-            port: 8080
-          failureThreshold: 30
-          periodSeconds: 30
-          timeoutSeconds: 5
+            path: {{ .Values.volto.startupProbe.httpGet.path }}
+            port: http
+          initialDelaySeconds: {{ .Values.volto.startupProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.volto.startupProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.volto.startupProbe.timeoutSeconds }}
+          successThreshold: {{ .Values.volto.startupProbe.successThreshold }}
+          failureThreshold: {{ .Values.volto.startupProbe.failureThreshold }}
+        {{- end }}
 
+        {{- if (.Values.volto.readinessProbe.httpGet.path) }}
+        readinessProbe:
+          httpGet:
+            path: {{ .Values.volto.readinessProbe.httpGet.path }}
+            port: http
+          initialDelaySeconds: {{ .Values.volto.readinessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.volto.readinessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.volto.readinessProbe.timeoutSeconds }}
+          successThreshold: {{ .Values.volto.readinessProbe.successThreshold }}
+          failureThreshold: {{ .Values.volto.readinessProbe.failureThreshold }}
+        {{- end }}
+                   
         resources:
           {{- toYaml .Values.plone.resources | nindent 10 }}
 
