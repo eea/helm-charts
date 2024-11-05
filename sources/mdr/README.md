@@ -15,6 +15,9 @@ This chart is almost configured for production use.
 
 ## Releases
 
+### Version 0.2.11
+- Updated appVersion to 3.9.1-207.
+
 ### Version 0.2.10
 - Added sentryDSN variable in questions.yaml.
 
