@@ -10,7 +10,7 @@
 
   - variable: "links.backend"
     label: "Backend service"
-    description: "SERVICE.NAMESPACE"
+    description: "Varnish backend service, format SERVICE.NAMESPACE"
     type: "string"
     required: true
     group: "General"
@@ -26,8 +26,6 @@
   - variable: "ingress.annotations"
     label: "Ingress annotations"
     description: "Use the default for letsencrypt certificates on dev, configure HTTP HEADERS here"
-    default: |-
-      cert-manager.io/cluster-issuer: 01dev-eea-letsencrypt
     type: "annotations"
     required: true
     group: "General"
