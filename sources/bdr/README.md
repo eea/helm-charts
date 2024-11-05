@@ -6,39 +6,36 @@ This chart is almost configured for production use.
 
 ## Values
 
-<dl>
-
-  <dt>rabbitmq</dt>
-  <dd>This can be used to set the rabbitmq host to be used.</dd>.</dd>
-
-</dl>
+### rabbitmq
+This can be used to set the rabbitmq host to be used.
 
 ## Releases
 
-<dl>
+### Version 0.1.8
+- Updated rn-cclamav to 0.1.3
+- Updated rn-bdr-registry to 0.1.1
+- Updated README
 
-  <dt>Version 0.1.7</dt>
-  <dd>Updated appVersion to 5.9.4-194.</dd>
+### Version 0.1.7
+- Updated appVersion to 5.9.4-194
 
-  <dt>Version 0.1.6</dt>
-  <dd>Removed bdr-sync job and updated questions.yaml.</dd>
+### Version 0.1.6
+- Removed bdr-sync job and updated questions.yaml
 
-  <dt>Version 0.1.5</dt>
-  <dd>Fixed cron-sync-cronjob.yaml template.</dd>
+### Version 0.1.5
+- Fixed cron-sync-cronjob.yaml template
 
-  <dt>Version 0.1.4</dt>
-  <dd>Tweaked sync cronjobs with custom backoffLimit.</dd>
+### Version 0.1.4
+- Tweaked sync cronjobs with custom backoffLimit
 
-  <dt>Version 0.1.3</dt>
-  <dd>Questions updates for some strings.</dd>
+### Version 0.1.3
+- Questions updates for some strings
 
-  <dt>Version 0.1.2</dt>
-  <dd>Questions updates.</dd>
+### Version 0.1.2
+- Questions updates
 
-  <dt>Version 0.1.1</dt>
-  <dd>Added htpasswd question.</dd>
+### Version 0.1.1
+- Added htpasswd question
 
-  <dt>Version 0.1.0</dt>
-  <dd>Initial release.</dd>
-
-</dl>
+### Version 0.1.0
+- Initial release
