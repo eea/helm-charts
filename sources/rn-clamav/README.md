@@ -16,6 +16,9 @@ Clamav scanner for Reportek.
 
 <dl>
 
+  <dt>Version 0.1.3</dt>
+  <dd>Updated appVersion to 2.6.20.</dd>
+
   <dt>Version 0.1.2</dt>
   <dd>Some refactoring and added component label.</dd>
 
