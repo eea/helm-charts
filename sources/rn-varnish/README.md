@@ -23,6 +23,9 @@ Varnish for Reportek.
 
 <dl>
 
+  <dt>Version 0.1.5</dt>
+  <dd>Updated appVersion to 7.5-1.0.</dd>
+
   <dt>Version 0.1.4</dt>
   <dd>Some refactoring and added component labels.</dd>
 
