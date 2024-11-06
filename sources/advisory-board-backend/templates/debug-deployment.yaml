@@ -26,7 +26,7 @@ spec:
       {{- end }}
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
       containers:
-      - name: plone
+      - name: debug
         image: eeacms/advisory-board-backend-devel
         imagePullPolicy: Always
         args:
