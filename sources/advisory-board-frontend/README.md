@@ -12,6 +12,9 @@ This chart deployes the Climate Advisory Board frontend app
 ## Releases
 
 <dl>
+  <dt>Version 1.0.2</dt>
+  <dd>Rename services to be frontend- </dd>
+
   <dt>Version 1.0.1</dt>
   <dd>Add http probes to volto</dd>
 

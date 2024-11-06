@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "appl.fullname" . }}-volto
+  name: frontend-dpl-volto
   labels:
     {{- include "appl.labels" . | nindent 4 }}
     component: volto
@@ -48,7 +48,7 @@ spec:
         ports:
         - containerPort: 3000
 
-        {{- if (.Values.volto.livenessProbe.httpGet.path) }}
+        {{- if (.Values.volto.livenessProbe) }}
         livenessProbe:
           httpGet:
             path: {{ .Values.volto.livenessProbe.httpGet.path }}
@@ -60,7 +60,7 @@ spec:
           failureThreshold: {{ .Values.volto.livenessProbe.failureThreshold }}
         {{- end }}
 
-        {{- if (.Values.volto.startupProbe.httpGet.path) }}
+        {{- if (.Values.volto.startupProbe) }}
         startupProbe:
           httpGet:
             path: {{ .Values.volto.startupProbe.httpGet.path }}
@@ -72,7 +72,7 @@ spec:
           failureThreshold: {{ .Values.volto.startupProbe.failureThreshold }}
         {{- end }}
 
-        {{- if (.Values.volto.readinessProbe.httpGet.path) }}
+        {{- if (.Values.volto.readinessProbe) }}
         readinessProbe:
           httpGet:
             path: {{ .Values.volto.readinessProbe.httpGet.path }}

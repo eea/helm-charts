@@ -37,7 +37,7 @@ ingress:
     nginx.ingress.kubernetes.io/proxy-send-timeout: '120'
     
 links:
-  backend: backend.namespace
+  backend: backend-varnish.advisory-board
 
     
 volto:
@@ -67,7 +67,7 @@ volto:
     RAZZLE_MATOMO_SITE_ID: 
     RAZZLE_MATOMO_SECOND_SITE_ID:
     RAZZLE_MATOMO_SECOND_TRACKER_URL: 
-    RAZZLE_INTERNAL_API_PATH: "http://advisory-board-backend:8080/Plone"
+    RAZZLE_INTERNAL_API_PATH: "http://backend:8080/Plone"
     VOLTO_ROBOTSTXT: 
     RAZZLE_DISABLE_DRAFT_WATERMARK: 
   annotations: {}
@@ -101,9 +101,9 @@ volto:
   
 varnish:
   serviceType: NodePort
-  serviceName: varnish-frontend
+  serviceName: frontend-varnish
   port: 3000
-  backend: "frontend"
+  backend: "frontend-volto"
   resources:
     limits:
       memory: 3Gi
