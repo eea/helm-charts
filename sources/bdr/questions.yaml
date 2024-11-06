@@ -247,7 +247,7 @@ questions:
     default: ""
     description: "Authentication token for F-gases sync"
     label: "F-gases Sync Token"
-    type: string
+    type: password
     group: "Sync Jobs"
     show_if: "synccronjobs.0.enabled=true"
 
@@ -287,7 +287,7 @@ questions:
     default: ""
     description: "Authentication token for ODS sync"
     label: "ODS Sync Token"
-    type: string
+    type: password
     group: "Sync Jobs"
     show_if: "synccronjobs.1.enabled=true"
 
@@ -327,7 +327,7 @@ questions:
     default: ""
     description: "Authentication token for licenses sync"
     label: "Licenses Sync Token"
-    type: string
+    type: password
     group: "Sync Jobs"
     show_if: "synccronjobs.2.enabled=true"
 
@@ -367,7 +367,7 @@ questions:
     default: ""
     description: "Authentication token for match sync"
     label: "Match Sync Token"
-    type: string
+    type: password
     group: "Sync Jobs"
     show_if: "synccronjobs.3.enabled=true"
 
@@ -407,7 +407,7 @@ questions:
     default: ""
     description: "Authentication token for stocks sync"
     label: "Stocks Sync Token"
-    type: string
+    type: password
     group: "Sync Jobs"
     show_if: "synccronjobs.4.enabled=true"
 
@@ -447,7 +447,7 @@ questions:
     default: ""
     description: "Authentication token for notifications fetch"
     label: "Notifications Fetch Token"
-    type: string
+    type: password
     group: "Sync Jobs"
     show_if: "synccronjobs.5.enabled=true"
 

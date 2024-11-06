@@ -11,6 +11,9 @@ This can be used to set the rabbitmq host to be used.
 
 ## Releases
 
+### Version 0.1.9
+- Converted sync jobs token question to password.
+
 ### Version 0.1.8
 - Updated rn-cclamav to 0.1.3
 - Updated rn-bdr-registry to 0.1.1
