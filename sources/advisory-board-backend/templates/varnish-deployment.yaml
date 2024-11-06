@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "appl.fullname" . }}-varnish
+  name: {{ .Release.Name }}-dpl-varnish
   labels:
     {{- include "appl.labels" . | nindent 4 }}
     component: varnish
@@ -46,6 +46,7 @@ spec:
         - name: http
           containerPort: {{ .Values.varnish.port }}
 
+        {{- if (.Values.varnish.livenessProbe) }}
         livenessProbe:
           httpGet:
             path: {{ .Values.varnish.livenessProbe.httpGet.path }}
@@ -55,7 +56,8 @@ spec:
           timeoutSeconds: {{ .Values.varnish.livenessProbe.timeoutSeconds }}
           successThreshold: {{ .Values.varnish.livenessProbe.successThreshold }}
           failureThreshold: {{ .Values.varnish.livenessProbe.failureThreshold }}
-      
+        {{- end }}
+        {{- if (.Values.varnish.startupProbe) }}
         startupProbe:
           httpGet:
             path: {{ .Values.varnish.startupProbe.httpGet.path }}
@@ -65,6 +67,7 @@ spec:
           timeoutSeconds: {{ .Values.varnish.startupProbe.timeoutSeconds }}
           successThreshold: {{ .Values.varnish.startupProbe.successThreshold }}
           failureThreshold: {{ .Values.varnish.startupProbe.failureThreshold }}
+        {{- end }}
 
         resources:
           {{- toYaml .Values.varnish.resources | nindent 10 }}

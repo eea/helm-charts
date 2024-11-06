@@ -1,9 +1,9 @@
-{{- if  .Values.debug.enabled -}}
+{{- if  .Values.debug.enabled }}
 
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "appl.fullname" . }}-debug
+  name: {{ .Release.Name }}-dpl-debug
   labels:
     {{- include "appl.labels" . | nindent 4 }}
     component: debug

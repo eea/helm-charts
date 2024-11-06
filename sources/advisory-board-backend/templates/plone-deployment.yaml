@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "appl.fullname" . }}-plone
+  name: {{ .Release.Name }}-dpl-plone
   labels:
     {{- include "appl.labels" . | nindent 4 }}
     component: plone
@@ -53,7 +53,7 @@ spec:
         - name: http
           containerPort: 8080
 
-        {{- if (.Values.plone.livenessProbe.httpGet.path) }}
+        {{- if (.Values.plone.livenessProbe) }}
         livenessProbe:
           httpGet:
             path: {{ .Values.plone.livenessProbe.httpGet.path }}
@@ -65,7 +65,7 @@ spec:
           failureThreshold: {{ .Values.plone.livenessProbe.failureThreshold }}
         {{- end }}
 
-        {{- if (.Values.plone.startupProbe.httpGet.path) }}
+        {{- if (.Values.plone.startupProbe) }}
         startupProbe:
           httpGet:
             path: {{ .Values.plone.startupProbe.httpGet.path }}
@@ -77,7 +77,7 @@ spec:
           failureThreshold: {{ .Values.plone.startupProbe.failureThreshold }}
         {{- end }}
 
-        {{- if (.Values.plone.readinessProbe.httpGet.path) }}
+        {{- if (.Values.plone.readinessProbe) }}
         readinessProbe:
           httpGet:
             path: {{ .Values.plone.readinessProbe.httpGet.path }}

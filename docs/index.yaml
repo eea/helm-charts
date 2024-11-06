@@ -3,6 +3,30 @@ entries:
   advisory-board-backend:
   - apiVersion: v2
     appVersion: 6.0.11-5
+    created: "2024-11-06T10:32:08.886409148+02:00"
+    dependencies:
+    - alias: postfix
+      condition: debug.enabled
+      name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 1.1.0
+    - condition: debug.enabled
+      name: mailtrap
+      repository: https://eea.github.io/helm-charts
+      version: 1.0.1
+    description: Climate advisory backend
+    digest: fb8785bfb51accc06e0d0e394a5e69395883ba21bf5f7e1bf8e1dc93fc868942
+    home: https://github.com/eea/advisory-board-backend
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/advisory-board-backend/volto.png
+    keywords:
+    - CMS
+    name: advisory-board-backend
+    type: application
+    urls:
+    - advisory-board-backend-1.0.2.tgz
+    version: 1.0.2
+  - apiVersion: v2
+    appVersion: 6.0.11-5
     created: "2024-11-05T12:18:54.927722014+02:00"
     dependencies:
     - alias: postfix
@@ -6360,4 +6384,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2024-11-05T16:11:57.6273427+02:00"
+generated: "2024-11-06T10:32:08.88494355+02:00"

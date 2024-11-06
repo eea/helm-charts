@@ -23,9 +23,9 @@ spec:
         pathType: ImplementationSpecific
         backend:
           service:
-            name: varnish-backend
+            name: {{ .Values.varnish.serviceName }}
             port:
-              number: 8080
+              number: {{ .Values.varnish.port }}
   {{- if .Values.ingress.certificate }}
   tls:
   - hosts:

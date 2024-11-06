@@ -23,23 +23,23 @@ spec:
         pathType: ImplementationSpecific
         backend:
           service:
-            name: varnish-backend
+            name: {{ .Values.varnish.serviceName }}
             port:
-              number: 8080
+              number: { .Values.varnish.port }}
       - path: /google85dc6cec8f1329e5.html(.*)
         pathType: ImplementationSpecific
         backend:
           service:
-            name: varnish-backend
+            name: {{ .Values.varnish.serviceName }}
             port:
-              number: 8080
+              number: { .Values.varnish.port }}
       - path: /.well-known/microsoft-identity-association.json(.*)
         pathType: ImplementationSpecific
         backend:
           service:
-            name: varnish-backend
+            name: {{ .Values.varnish.serviceName }}
             port:
-              number: 8080
+              number: {{ .Values.varnish.port }}
   {{- if .Values.ingress.certificate }}
   tls:
   - hosts:

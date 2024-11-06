@@ -257,7 +257,7 @@
     label: "Plone memory reservation"
     type: "string"
     required: true
-    default: "4G"
+    default: "4Gi"
     group: "Memory"
 
   - variable: "plone.resources.limits.memory"
@@ -265,13 +265,13 @@
     description: ">= memory reservation"
     type: "string"
     required: true
-    default: "4G"
+    default: "4Gi"
     group: "Memory"
   - variable: "debug.resources.requests.memory"
     label: "Debug memory reservation"
     type: "string"
     required: true
-    default: "4G"
+    default: "4Gi"
     group: "Memory"
 
   - variable: "debug.resources.limits.memory"
@@ -279,19 +279,19 @@
     description: ">= memory reservation"
     type: "string"
     required: true
-    default: "4G"
+    default: "4Gi"
 
   - variable: "varnish.resources.requests.memory"
     label: "Varnish memory reservation"
     type: "string"
     required: true
-    default: "2G"
+    default: "2Gi"
     group: "Memory"
   - variable: "varnish.resources.limits.memory"
     label: "Varnish memory limit"
     description: ">= memory reservation"
     type: "string"
     required: true
-    default: "2G"
+    default: "2Gi"
     group: "Memory"
 

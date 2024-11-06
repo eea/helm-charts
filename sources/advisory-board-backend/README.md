@@ -12,6 +12,9 @@ This chart deployes the Climate Advisory Board backend app
 ## Releases
 
 <dl>
+  <dt>Version 1.0.2</dt>
+  <dd>Rename components to backend- </dd>
+
   <dt>Version 1.0.1</dt>
   <dd>Questions update</dd>
 

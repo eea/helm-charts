@@ -1,7 +1,8 @@
+{{- if .Values.debug.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: debug-backend
+  name: backend-debug
   labels:
     {{- include "appl.labels" . | nindent 4 }}
     component: debug
@@ -15,3 +16,4 @@ spec:
   selector:
     {{- include "appl.selectorLabels" . | nindent 4 }}
     component: debug
+{{- end }}
