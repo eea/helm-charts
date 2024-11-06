@@ -1,0 +1,34 @@
+{{- if and .Values.mailtrap.httpenabled .Values.mailtrap.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "appl.fullname" . }}-mailtrap
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: postfix
+  {{- with .Values.mailtrap.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: {{ .Values.mailtrap.ingress.hostname }}
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ include "appl.fullname" . }}
+            port:
+              number: 80
+  {{- if (.Values.mailtrap.ingress.certificate) }}
+  tls:
+  - hosts:
+    - {{ .Values.mailtrap.ingress.hostname }}
+    secretName: {{ .Values.mailtrap.ingress.certificate }}
+  {{- end  }}    
+{{- end }}
+

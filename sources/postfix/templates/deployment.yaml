@@ -4,6 +4,7 @@ metadata:
   name: {{ include "appl.fullname" . }}
   labels:
     {{- include "appl.labels" . | nindent 4 }}
+    component: postfix
 
 spec:
   replicas: {{ .Values.replicaCount }}
@@ -16,10 +17,12 @@ spec:
   selector:
     matchLabels:
       {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: postfix
   template:
     metadata:
       labels:
         {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: postfix
       {{- with .Values.podAnnotations }}
       annotations:
         {{- toYaml . | nindent 8 }}
@@ -34,9 +37,9 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
 
       containers:
-      - name: {{ include "appl.name" . }}
+      - name: postfix
         {{- if .Values.dryrun }}
-        image: marcelesser/smtp-sink:latest
+        image: eaudeweb/mailtrap:2.4
         {{- else }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
         {{- end }}
@@ -64,17 +67,14 @@ spec:
         securityContext:
           {{- toYaml .Values.securityContext | nindent 10 }}
 
-#       livenessProbe:
-#         tcpSocket:
-#           port: 25
-#         periodSeconds: 60
-
+        {{- if (.Values.livenessProbe) }}
+        livenessProbe:
+          {{- toYaml .Values.livenessProbe | nindent 10 }}
+        {{- end }}
+        {{- if (.Values.startupProbe) }}
         startupProbe:
-          tcpSocket:
-            port: 25
-          failureThreshold: 6
-          periodSeconds: 10
-
+          {{- toYaml .Values.startupProbe | nindent 10 }}
+        {{- end }}
 
       {{- with .Values.nodeSelector }}
       nodeSelector:

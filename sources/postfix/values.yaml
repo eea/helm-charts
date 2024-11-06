@@ -1,8 +1,18 @@
-enabled: true
-
-replicaCount: 1
 
 dryrun: false
+replicaCount: 1
+
+serviceName: ""
+
+mailtrap:
+  httpenabled: false
+  serviceType: NodePort
+  ingress:
+    enabled: false
+    hostname: mailtrap.01dev.eea.europa.eu
+    annotations:
+      cert-manager.io/cluster-issuer: 01dev-eea-letsencrypt
+    certificate: mailtrap.01dev.eea.europa.eu-tls
 
 image:
   repository: eeacms/postfix
@@ -37,12 +47,30 @@ service:
   type: ClusterIP
   port: 25
 
-resources: {}
-# requests:
-#   memory: 64Mi
-# limits:
-#   memory: 64Mi
+resources:
+  requests:
+    memory: 128Mi
+  limits:
+    memory: 128Mi
 
 nodeSelector: {}
 tolerations: []
 affinity: {}
+
+livenessProbe:
+  tcpSocket:
+    port: 25
+  periodSeconds: 20
+  timeoutSeconds: 3
+  initialDelaySeconds: 20
+  failureThreshold: 3
+  successThreshold: 1
+
+startupProbe:
+  tcpSocket:
+    port: 25
+  periodSeconds: 5
+  timeoutSeconds: 3
+  initialDelaySeconds: 15
+  failureThreshold: 15
+  successThreshold: 1

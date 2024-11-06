@@ -1,0 +1,85 @@
+questions:
+
+  - variable: "serviceName"
+    label: "Postfix service name"
+    description: "Default is application full name ( application-postfix ) "
+    default: ""
+    type: "string"
+  - variable: "dryrun"
+    label: "Run in development mode"
+    description: "If checked, will not send emails, but use mailtrap to catch them"
+    default: false
+    type: "boolean"
+    required: true
+    show_subquestion_if: false
+    subquestions:
+    - variable: "mtpRelay"
+      label: "Postfix relay"
+      required: true
+      description: "Postfix SMTP relay"
+      type: "string"
+      default: "ironports.eea.europa.eu"
+    - variable: "mtpPort"
+      label: "Postfix relay port"
+      description: "Postfix SMTP relay port"
+      type: "int"
+      required: true
+      default: 8587
+    - variable: "mtpUser"
+      label: "Postfix user"
+      description: "Without authentication, emails will not be sent"
+      type: "string"
+      required: true
+    - variable: "mtpPass"
+      label: "Postfix password"
+      description: "Without authentication, emails will not be sent"
+      type: "string"
+      required: true
+
+
+  - variable: "mailtrap.httpenabled"
+    label: "Create mailtrap service for port 80"
+    description: "Keep unchecked if you don't want to view the emails in a webinterface"
+    type: "boolean"
+    default: false
+    required: true
+    show_if: "dryrun"
+    show_subquestion_if: true
+    subquestions:
+    - variable: "mailtrap.serviceType"
+      label: "Mailtrap service type"
+      description: "Select NodePort to expose mailtrap on port"
+      type: "enum"
+      options:
+        - "NodePort"
+        - "ClusterIP"
+      default: "ClusterIP"
+      required: true
+    - variable: "mailtrap.ingress.enabled"
+      label: "Add mailtrap url in ingress"
+      default: false
+      type: "boolean"
+      required: true
+  
+  - variable: "mailtrap.ingress.hostname"
+    label: "Mailtrap URL"
+    show_if: "mailtrap.ingress.enabled"
+    required: true
+    type: "string"  
+    default: "mailtrap.01dev.eea.europa.eu"
+  - variable: "mailtrap.ingress.certificate"
+    label: "Mailtrap certificate name"
+    show_if: "mailtrap.ingress.enabled"
+    description: "If empty, https will not be enabled"
+    default: "mailtrap.01dev.eea.europa.eu-tls"
+
+  - variable: "resources.requests.memory"
+    label: "Memory reservation"
+    default: "128Mi"
+    required: true
+    type: "string" 
+  - variable: "resources.limits.memory"
+    label: "Memory limit"
+    default: "128Mi"
+    required: true
+    type: "string"

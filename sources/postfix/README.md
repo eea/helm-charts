@@ -9,6 +9,9 @@ for logging. Defaults to false.
 ## Releases
 
 <dl>
+  <dt>Version 3.0.0 - 5 November 2024</dt>
+  <dd>Add questions, mailtrap for development apps with ingress support</dd>
+
   <dt>Version 2.0.1 - 2 September 2024</dt>
   <dd>Simpler network security policy.</dd>
 

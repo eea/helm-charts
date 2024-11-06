@@ -3,17 +3,20 @@
   Only allow outgoing to defined mtpPort and DNS resolution.
   If mtpPort is not defined, then don't restrict outgoing.
 */}}
+{{- if not (.Values.dryrun) }}
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: {{ include "appl.fullname" . }}
   labels:
     {{- include "appl.labels" . | nindent 4 }}
+    component: postfix
 
 spec:
   podSelector:
     matchLabels:
       {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: postfix
 
   policyTypes:
   - Ingress
@@ -38,4 +41,4 @@ spec:
     ports:
     - protocol: TCP
       port: 25
-
+{{- end }}
