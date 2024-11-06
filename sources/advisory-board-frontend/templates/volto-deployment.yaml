@@ -50,38 +50,17 @@ spec:
 
         {{- if (.Values.volto.livenessProbe) }}
         livenessProbe:
-          httpGet:
-            path: {{ .Values.volto.livenessProbe.httpGet.path }}
-            port: http
-          initialDelaySeconds: {{ .Values.volto.livenessProbe.initialDelaySeconds }}
-          periodSeconds: {{ .Values.volto.livenessProbe.periodSeconds }}
-          timeoutSeconds: {{ .Values.volto.livenessProbe.timeoutSeconds }}
-          successThreshold: {{ .Values.volto.livenessProbe.successThreshold }}
-          failureThreshold: {{ .Values.volto.livenessProbe.failureThreshold }}
+          {{- toYaml .Values.volto.livenessProbe | nindent 10 }}
         {{- end }}
 
         {{- if (.Values.volto.startupProbe) }}
         startupProbe:
-          httpGet:
-            path: {{ .Values.volto.startupProbe.httpGet.path }}
-            port: http
-          initialDelaySeconds: {{ .Values.volto.startupProbe.initialDelaySeconds }}
-          periodSeconds: {{ .Values.volto.startupProbe.periodSeconds }}
-          timeoutSeconds: {{ .Values.volto.startupProbe.timeoutSeconds }}
-          successThreshold: {{ .Values.volto.startupProbe.successThreshold }}
-          failureThreshold: {{ .Values.volto.startupProbe.failureThreshold }}
+          {{- toYaml .Values.volto.startupProbe | nindent 10 }}
         {{- end }}
 
         {{- if (.Values.volto.readinessProbe) }}
         readinessProbe:
-          httpGet:
-            path: {{ .Values.volto.readinessProbe.httpGet.path }}
-            port: http
-          initialDelaySeconds: {{ .Values.volto.readinessProbe.initialDelaySeconds }}
-          periodSeconds: {{ .Values.volto.readinessProbe.periodSeconds }}
-          timeoutSeconds: {{ .Values.volto.readinessProbe.timeoutSeconds }}
-          successThreshold: {{ .Values.volto.readinessProbe.successThreshold }}
-          failureThreshold: {{ .Values.volto.readinessProbe.failureThreshold }}
+          {{- toYaml .Values.volto.readinessProbe | nindent 10 }}
         {{- end }}
 
         resources:

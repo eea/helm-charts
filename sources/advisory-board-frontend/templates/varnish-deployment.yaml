@@ -39,33 +39,20 @@ spec:
         {{- if ($value) }}
         - name: {{ $key }}
           value: {{ $value | quote }}
-        {{- end }}    
+        {{- end }}
         {{- end }}
 
         ports:
         - name: http
           containerPort: {{ .Values.varnish.port }}
+
         {{- if (.Values.varnish.livenessProbe) }}
         livenessProbe:
-          httpGet:
-            path: {{ .Values.varnish.livenessProbe.httpGet.path }}
-            port: http
-          initialDelaySeconds: {{ .Values.varnish.livenessProbe.initialDelaySeconds }}
-          periodSeconds: {{ .Values.varnish.livenessProbe.periodSeconds }}
-          timeoutSeconds: {{ .Values.varnish.livenessProbe.timeoutSeconds }}
-          successThreshold: {{ .Values.varnish.livenessProbe.successThreshold }}
-          failureThreshold: {{ .Values.varnish.livenessProbe.failureThreshold }}
+          {{- toYaml .Values.varnish.livenessProbe | nindent 10 }}
         {{- end }}
         {{- if (.Values.varnish.startupProbe) }}
         startupProbe:
-          httpGet:
-            path: {{ .Values.varnish.startupProbe.httpGet.path }}
-            port: http
-          initialDelaySeconds: {{ .Values.varnish.startupProbe.initialDelaySeconds }}
-          periodSeconds: {{ .Values.varnish.startupProbe.periodSeconds }}
-          timeoutSeconds: {{ .Values.varnish.startupProbe.timeoutSeconds }}
-          successThreshold: {{ .Values.varnish.startupProbe.successThreshold }}
-          failureThreshold: {{ .Values.varnish.startupProbe.failureThreshold }}
+          {{- toYaml .Values.varnish.startupProbe | nindent 10 }}
         {{- end }}
 
         resources:
