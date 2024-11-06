@@ -142,15 +142,21 @@ debug:
 
 
 postfix:
-  fullnameOverride: "postfix"
+  fullnameOverride: ''
+  dryrun: false
   serverName: plone.eea.europa.eu
   mtpPass: ''
   mtpPort: ''
   mtpRelay: ''
   mtpUser: ''
-
-
-mailtrap:
-  hostname: advisory-board-mailtrap.eea.europa.eu
-  ingress:
-    enabled: true
+  serviceName: 'postfix'
+  mailtrap:
+    httpenabled: false
+    serviceType: NodePort
+    ingress:
+      enabled: false
+      hostname: mailtrap.01dev.eea.europa.eu
+      annotations:
+        cert-manager.io/cluster-issuer: 01dev-eea-letsencrypt
+      certificate: mailtrap.01dev.eea.europa.eu-tls
+    

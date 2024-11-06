@@ -55,38 +55,17 @@ spec:
 
         {{- if (.Values.plone.livenessProbe) }}
         livenessProbe:
-          httpGet:
-            path: {{ .Values.plone.livenessProbe.httpGet.path }}
-            port: http
-          initialDelaySeconds: {{ .Values.plone.livenessProbe.initialDelaySeconds }}
-          periodSeconds: {{ .Values.plone.livenessProbe.periodSeconds }}
-          timeoutSeconds: {{ .Values.plone.livenessProbe.timeoutSeconds }}
-          successThreshold: {{ .Values.plone.livenessProbe.successThreshold }}
-          failureThreshold: {{ .Values.plone.livenessProbe.failureThreshold }}
+          {{- toYaml .Values.plone.livenessProbe | nindent 10 }}
         {{- end }}
 
         {{- if (.Values.plone.startupProbe) }}
         startupProbe:
-          httpGet:
-            path: {{ .Values.plone.startupProbe.httpGet.path }}
-            port: http
-          initialDelaySeconds: {{ .Values.plone.startupProbe.initialDelaySeconds }}
-          periodSeconds: {{ .Values.plone.startupProbe.periodSeconds }}
-          timeoutSeconds: {{ .Values.plone.startupProbe.timeoutSeconds }}
-          successThreshold: {{ .Values.plone.startupProbe.successThreshold }}
-          failureThreshold: {{ .Values.plone.startupProbe.failureThreshold }}
+          {{- toYaml .Values.plone.startupProbe | nindent 10 }}
         {{- end }}
 
         {{- if (.Values.plone.readinessProbe) }}
         readinessProbe:
-          httpGet:
-            path: {{ .Values.plone.readinessProbe.httpGet.path }}
-            port: http
-          initialDelaySeconds: {{ .Values.plone.readinessProbe.initialDelaySeconds }}
-          periodSeconds: {{ .Values.plone.readinessProbe.periodSeconds }}
-          timeoutSeconds: {{ .Values.plone.readinessProbe.timeoutSeconds }}
-          successThreshold: {{ .Values.plone.readinessProbe.successThreshold }}
-          failureThreshold: {{ .Values.plone.readinessProbe.failureThreshold }}
+          {{- toYaml .Values.plone.readinessProbe | nindent 10 }}
         {{- end }}
                    
         resources:

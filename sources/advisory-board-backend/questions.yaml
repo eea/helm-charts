@@ -153,42 +153,6 @@
     required: true
     group: "General"
 
-  - variable: "postfix.enabled"
-    label: "Postfix enabled"
-    description: "If not checked, will use mailtrap"
-    default: true
-    type: "boolean"
-    required: true
-    group: "General"
-    show_subquestion_if: true
-    subquestions:  
-    - variable: "postfix.mtpRelay"
-      label: "Postfix relay"
-      description: "Postfix SMTP relay"
-      type: "string"
-      default: "ironports.eea.europa.eu"
-    - variable: "postfix.mtpPort"
-      label: "Postfix relay port"
-      description: "Postfix SMTP relay port"
-      type: "int"
-      default: 8587
-    - variable: "postfix.mtpUser"
-      label: "Postfix user"
-      description: "User used to send email"
-      type: "string"
-    - variable: "postfix.mtpPass"
-      label: "Postfix password"
-      description: "Password used for MTP_USER"
-      type: "string"
-  
-
-    - variable: "mailtrap.hostname"
-    label: "Exposed hostname for mailtrap name"
-    description: "DNS name"
-    default: "advisory-board-mailtrap.01dev.europa.eu"
-    type: "string"
-    show_if: "postfix.enabled=false"
-    group: "General"
 
 
 
@@ -294,4 +258,86 @@
     required: true
     default: "2Gi"
     group: "Memory"
+
+  - variable: "postfix.serviceName"
+    label: "Postfix service name"
+    description: "Default is application full name ( application-postfix ) "
+    default: ""
+    type: "string"
+    group: "Mail"
+  - variable: "postfix.dryrun"
+    label: "Run in development mode"
+    description: "If checked, will not send emails, but use mailtrap to catch them"
+    default: false
+    type: "boolean"
+    required: true
+    show_subquestion_if: false
+    group: "Mail"
+    subquestions:
+    - variable: "postfix.mtpRelay"
+      label: "Postfix relay"
+      required: true
+      description: "Postfix SMTP relay"
+      type: "string"
+      default: "ironports.eea.europa.eu"
+    - variable: "postfix.mtpPort"
+      label: "Postfix relay port"
+      description: "Postfix SMTP relay port"
+      type: "int"
+      required: true
+      default: 8587
+    - variable: "postfix.mtpUser"
+      label: "Postfix user"
+      description: "Without authentication, emails will not be sent"
+      type: "string"
+      required: true
+    - variable: "postfix.mtpPass"
+      label: "Postfix password"
+      description: "Without authentication, emails will not be sent"
+      type: "string"
+      required: true
+    - variable: "postfix.serverName"
+      label: "Application url"
+      type: "string"
+      required: true
+
+
+  - variable: "postfix.mailtrap.httpenabled"
+    label: "Create mailtrap service for port 80"
+    description: "Keep unchecked if you don't want to view the emails in a webinterface"
+    type: "boolean"
+    default: false
+    required: true
+    show_if: "dryrun"
+    show_subquestion_if: true
+    group: "Mail"
+    subquestions:
+    - variable: "postfix.mailtrap.serviceType"
+      label: "Mailtrap service type"
+      description: "Select NodePort to expose mailtrap on port"
+      type: "enum"
+      options:
+        - "NodePort"
+        - "ClusterIP"
+      default: "ClusterIP"
+      required: true
+    - variable: "postfix.mailtrap.ingress.enabled"
+      label: "Add mailtrap url in ingress"
+      default: false
+      type: "boolean"
+      required: true
+  
+  - variable: "postfix.mailtrap.ingress.hostname"
+    label: "Mailtrap URL"
+    show_if: "mailtrap.ingress.enabled"
+    required: true
+    type: "string"  
+    default: "mailtrap.01dev.eea.europa.eu"
+    group: "Mail"
+  - variable: "postfix.mailtrap.ingress.certificate"
+    label: "Mailtrap certificate name"
+    show_if: "mailtrap.ingress.enabled"
+    description: "If empty, https will not be enabled"
+    default: "mailtrap.01dev.eea.europa.eu-tls"
+    group: "Mail"
 
