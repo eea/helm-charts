@@ -35,6 +35,10 @@ questions:
       description: "Without authentication, emails will not be sent"
       type: "string"
       required: true
+    - variable: "serverName"
+      label: "Application url"
+      type: "string"
+      required: true
 
 
   - variable: "mailtrap.httpenabled"
