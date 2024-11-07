@@ -10,6 +10,9 @@ This chart is almost configured for production use.
 
 ## Releases
 
+### Version 0.3.0
+- Added webforms to the list of services.
+
 ### Version 0.2.15
 - Updated rn-clamav chart to 0.1.3.
 - Updated rn-varnish chart to 0.1.5.

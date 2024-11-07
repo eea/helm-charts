@@ -1,0 +1,57 @@
+{{- range .Values.webforms }}
+{{- if .enabled }}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "appl.fullname" $ }}-{{ .name }}
+  labels:
+    {{- include "appl.labels" $ | nindent 4 }}
+    app.kubernetes.io/component: ingress-external
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: {{ .ingress.rewriteTarget }}
+    nginx.ingress.kubernetes.io/proxy-body-size: {{ .ingress.proxyBodySize | quote }}
+    nginx.ingress.kubernetes.io/backend-protocol: {{ .ingress.backendProtocol }}
+    nginx.ingress.kubernetes.io/ssl-verify: {{ .ingress.sslVerify | quote }}
+    nginx.ingress.kubernetes.io/upstream-vhost: {{ .ingress.headers.host }}
+    nginx.ingress.kubernetes.io/proxy-read-timeout: {{ .ingress.proxyReadTimeout | quote }}
+    nginx.ingress.kubernetes.io/proxy-send-timeout: {{ .ingress.proxySendTimeout | quote }}
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      {{- if .ingress.headers.addXClientIP }}
+      proxy_set_header X-Client-IP $remote_addr;
+      {{- end }}
+      {{- if .ingress.headers.addXForwardedHost }}
+      proxy_set_header X-Forwarded-Host $host;
+      {{- end }}
+      proxy_set_header X-Forwarded-Proto $scheme;
+      proxy_set_header X-Forwarded-Port $server_port;
+spec:
+  ingressClassName: {{ $.Values.ingress.className }}
+  {{- if $.Values.ingress.tls }}
+  tls:
+    {{- range $.Values.ingress.tls }}
+    - hosts:
+        {{- range .hosts }}
+        - {{ . | quote }}
+        {{- end }}
+      secretName: {{ .secretName }}
+    {{- end }}
+  {{- end }}
+  rules:
+    {{- $externalService := . }}
+    {{- range $.Values.ingress.hosts }}
+    - host: {{ .host | quote }}
+      http:
+        paths:
+          - path: {{ $externalService.ingress.path }}
+            pathType: {{ $externalService.ingress.pathType }}
+            backend:
+              service:
+                name: {{ $externalService.service.name }}
+                port:
+                  number: {{ $externalService.service.port | int }}
+    {{- end }}
+{{- end }}
+{{- end }}
