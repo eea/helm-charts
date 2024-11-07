@@ -1,4 +1,6 @@
 {{- $labels := ( include "appl.labels" . ) -}}
+{{- $hostname := .Values.volto.hostname -}}
+{{- $varnish := .Values.varnish -}}
 {{- range $index, $redirect := .Values.ingressredirects }}
 {{- if ($redirect.enabled) }}
 apiVersion: networking.k8s.io/v1
@@ -9,7 +11,7 @@ metadata:
     {{- $labels | nindent 4 }}
     component: advisory-board-frontend
   annotations:
-    nginx.ingress.kubernetes.io/permanent-redirect: https://{{ .Values.volto.hostname }}
+    nginx.ingress.kubernetes.io/permanent-redirect: https://{{ $hostname }}
   {{- with $redirect.annotations }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
@@ -24,9 +26,9 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: {{ .Values.varnish.serviceName }}
+            name: {{ $varnish.serviceName }}
             port:
-              number: {{ .Values.varnish.port }}
+              number: {{ $varnish.port }}
   {{- if $redirect.certificate }}
   tls:
   - hosts:
