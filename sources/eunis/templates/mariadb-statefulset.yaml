@@ -1,0 +1,93 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Release.Name }}-mariadb
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: mariadb
+
+spec:
+  replicas: 1
+  serviceName: {{ .Release.Name }}-mariadb
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: mariadb
+
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: mariadb
+    spec:
+      terminationGracePeriodSeconds: 10
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
+      containers:
+      - name: {{ .Release.Name }}-mariadb
+        image: mariadb:11.4
+        ports:
+        - containerPort: 3306
+          name: mysql
+          protocol: TCP
+
+        env:
+        - name: MYSQL_DATABASE
+          value: "{{ .Values.mariadb.database }}"
+        - name: MYSQL_PASSWORD
+          value: "{{ .Values.mariadb.password }}"
+        - name: MYSQL_ROOT_PASSWORD
+          value: "{{ .Values.mariadb.rootpw }}"
+        - name: MYSQL_USER
+          value: "{{ .Values.mariadb.username }}"
+        - name: TZ
+          value: "{{ .Values.timezone }}"
+        securityContext:
+          {{- toYaml .Values.mariadb.securityContext | nindent 10 }}
+        volumeMounts:
+        - mountPath: /var/lib/mysql
+          name: {{ .Release.Name }}-mariadb
+
+        livenessProbe:
+          tcpSocket:
+            port: mysql
+          initialDelaySeconds: 15
+          periodSeconds: 20
+          
+        {{- with .Values.mariadb.args }}
+        args:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        resources:
+          {{- toYaml .Values.mariadb.resources | nindent 10 }}
+
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+
+  volumeClaimTemplates:
+  - metadata:
+      name: {{ .Release.Name }}-mariadb
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      {{- if .Values.mariadb.storageClassName }}
+      storageClass: "{{ .Values.mariadb.storageClassName }}"
+      {{- end }}
+      resources:
+        requests:
+          storage: "{{ .Values.mariadb.storage }}"

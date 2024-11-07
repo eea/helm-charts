@@ -96,6 +96,23 @@ database:
   storage: 10Gi
   storageClassName: ""
 
+mariadb:
+  securityContext: {}
+  resources:
+    requests:
+      memory: 1Gi
+  #   cpu: 100m
+    limits:
+      memory: 1Gi
+  #   cpu: 100m
+  database: eunis
+  username: eunisuser
+  password: REPLACEME
+  rootpw: REPLACEME
+  args: []
+  storage: 10Gi
+  storageClassName: ""
+
 buildsw:
   enabled: false
   resources:
