@@ -40,7 +40,7 @@ helm package ../../sources/$chart
 helm repo index --merge ../index.yaml .
 mv * ../
 cd ..
-rm temp
+rm -rf temp
 
 
 cd ..
