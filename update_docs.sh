@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 chart="$1"
 if [[ $1 == sources/* ]]; then 
 	chart=$(echo $1 | awk -F'/' '{print $2}')
