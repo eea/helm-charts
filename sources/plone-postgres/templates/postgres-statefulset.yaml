@@ -1,13 +1,13 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ include "appl.fullname" . }}-ss
+  name: {{ .Release.Name }}-postgres-ss
   labels:
     {{- include "appl.labels" . | nindent 4 }}
     component: postgres
 spec:
   replicas: 1
-  serviceName: {{ include "appl.fullname" . }}
+  serviceName: {{ .Release.Name }}-postgres
   selector:
     matchLabels:
       {{- include "appl.selectorLabels" . | nindent 6 }}
@@ -25,7 +25,7 @@ spec:
       {{- end }}
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
       containers:
-      - name: {{ include "appl.fullname" . }}
+      - name: postgres
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
@@ -41,9 +41,9 @@ spec:
         - name: POSTGRES_DBNAME
           value: "{{ .Values.postgres.env.Database.Name }}"
         - name: POSTGRES_DBUSER
-          value: "{{ .Values.postgres.env.Database.User.Name }}"
+          value: "{{ .Values.postgres.env.Database.UserName }}"
         - name: POSTGRES_DBPASS
-          value: "{{ .Values.postgres.env.Database.User.Password }}"
+          value: "{{ .Values.postgres.env.Database.Password }}"
         - name: POSTGRES_CONFIG
           value: "{{ .Values.postgres.env.Configuration }}"
         - name: POSTGRES_CRONS
@@ -54,27 +54,28 @@ spec:
           {{- toYaml .Values.postgres.env.securityContext | nindent 10 }}
         volumeMounts:
         - mountPath: /var/lib/postgresql/data
-          name: {{ include "appl.fullname" . }}-psqldata
-        {{- if .Values.backupstorage.enabled }}    
+          name: psqldata
+        {{- if .Values.backupstorage.enabled }}
         - mountPath: /postgresql.backup
-          name:  {{ include "appl.fullname" . }}-psqldata-backup
+          name:  psqldata-backup
         {{- end }}
         {{- if .Values.archivestorage.enabled }}
         - mountPath: /var/lib/postgresql/archive
-          name:  {{ include "appl.fullname" . }}-psqldata-archive
+          name:  psqldata-archive
         {{- end }}
+
+        {{- if (.Values.postgres.livenessProbe) }}
         livenessProbe:
-          tcpSocket:
-            port: 5432
-          initialDelaySeconds: 15
-          periodSeconds: 20
-        readinessProbe:
-          tcpSocket:
-            port: 5432
-          initialDelaySeconds: 5
-          periodSeconds: 20
+          {{- toYaml .Values.postgres.livenessProbe | nindent 10 }}
+        {{- end }}
+        {{- if (.Values.postgres.startupProbe) }}
+        startupProbe:
+          {{- toYaml .Values.postgres.startupProbe | nindent 10 }}
+        {{- end }}
+
         resources:
           {{- toYaml .Values.postgres.resources | nindent 10 }}
+
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -91,7 +92,7 @@ spec:
   volumeClaimTemplates:
 
   - metadata:
-      name: {{ include "appl.fullname" . }}-psqldata
+      name: psqldata
     spec:
       accessModes:
       - ReadWriteOnce
@@ -104,7 +105,7 @@ spec:
 
   {{- if .Values.backupstorage.enabled }}
   - metadata:
-      name: {{ include "appl.fullname" . }}-psqldata-backup
+      name: psqldata-backup
     spec:
       accessModes:
       - ReadWriteOnce
@@ -118,7 +119,7 @@ spec:
 
   {{- if .Values.archivestorage.enabled }}
   - metadata:
-      name: {{ include "appl.fullname" . }}-psqldata-archive
+      name: psqldata-archive
     spec:
       accessModes:
       - ReadWriteOnce

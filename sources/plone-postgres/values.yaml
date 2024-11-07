@@ -26,7 +26,6 @@ serviceAccount:
 
 
 postgres:
-  service-name: postgres
   podAnnotations: {}
   podSecurityContext: {}
   securityContext: {}
@@ -36,9 +35,8 @@ postgres:
       Password: "postgres"
     Database: 
       Name: "test"
-      User:
-        Name: "test"
-        Password: "test"
+      UserName: "test"
+      Password: "test"
     # configuration options, given in multiline
     Configuration: |-
         max_connections = 150
@@ -46,12 +44,27 @@ postgres:
     ReplicationNetwork: ""
   resources:
     requests:
-      memory: 4G
+      memory: 4Gi
     limits:
-      memory: 4G
+      memory: 4Gi
   nodeSelector: {}
   tolerations: []
   affinity: {}
+  livenessProbe:
+    tcpSocket:
+      port: 5432
+    periodSeconds: 5
+    timeoutSeconds: 2
+    successThreshold: 1
+    failureThreshold: 5
+  startupProbe:
+    tcpSocket:
+      port: 5432
+    failureThreshold: 15
+    periodSeconds: 5
+    initialDelaySeconds: 10
+    timeoutSeconds: 2
+    successThreshold: 1
 
 
 datastorage:
@@ -66,17 +79,16 @@ archivestorage:
 backupstorage:
   enabled: false
   storageClassName:
-  size: 10G  
+  size: 10G
 
 memcached:
   enabled: true
-  service-name: memcached
   securityContext: {}
   resources:
     requests:
-      memory: 2048M
+      memory: 2048Mi
     limits:
-      memory: 2048M
+      memory: 2048Mi
   #needs < = memory request and limit
   cache_size_m: 2048
   slab_page_size: 50m
@@ -85,6 +97,20 @@ memcached:
   affinity: {}
   pullPolicy: IfNotPresent
   podAnnotations: {}
+  livenessProbe:
+    tcpSocket:
+      port: 11211
+    periodSeconds: 10
+    timeoutSeconds: 3
+    successThreshold: 1
+    failureThreshold: 5
+  startupProbe:
+    tcpSocket:
+      port: 11211
+    failureThreshold: 9
+    periodSeconds: 10
+    timeoutSeconds: 3
+    successThreshold: 1
 
 memcachedflush:
   schedule: "0 0 3 * *"

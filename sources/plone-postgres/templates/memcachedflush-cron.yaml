@@ -2,7 +2,7 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: {{ include "appl.fullname" . }}-memcachedflush
+  name: {{ .Release.Name }}-memcachedflush
   labels:
     {{- include "appl.labels" . | nindent 4 }}
     component: memcachedflush

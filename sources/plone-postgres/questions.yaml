@@ -1,4 +1,18 @@
   questions:
+  - variable: "image.tag"
+    label: "eeacms/postgres image version"
+    type: enum
+    default: ""
+    options:
+      - "16.4-1.1"
+      - "15.8-1.1"
+      - "14.13-2.1"
+      - "13.16-2.1"
+      - "12.20-2.1"
+      - "11.19-4.1"
+      - "10.23-4.2"
+    description: "Use for newer versions of postgres, default is empty"
+    group: "General"
   - variable: "postgres.env.SuperUser.Name"
     label: "Super User name"
     default: "postgres"
@@ -18,23 +32,20 @@
     type: "string"
     required: true
     group: "Database configuration"
-  - variable: "postgres.env.Database.User.Name"
+  - variable: "postgres.env.Database.UserName"
     label: "PostgreSQL databases owner name"
     default: "zope"
     type: "string"
     required: true
     group: "Database configuration"
-  - variable: "postgres.env.Database.User.Password"
+  - variable: "postgres.env.Database.Password"
     label: "PostgreSQL databases owner password"
     default: "zope"
     type: "string"
     required: true
     group: "Database configuration"
-  - variable: "timezone"
-    label: "Time zone"
-    default: "Europe/Copenhagen"
-    required: true
-    type: "string"
+
+
   - variable: "datastorage.size"
     label: "Data volume size"
     description: "Volume size for PostgreSQL data"
@@ -90,24 +101,13 @@
       # Backup datafs DB daily at midnight. Un-comment the following lines to apply.
       # @daily postgres /postgresql.restore/database-backup.sh datafs
     group: "Database configuration"
-  - variable: "postgres.resources.requests.memory"
-    label: "Memory reservation postgres"
-    default: "4G"
-    required: true
-    type: "string"
-    group: "Memory"
-  - variable: "postgres.resources.limits.memory"
-    label: "Memory limit postgres"
-    default: "4G"
-    required: true
-    type: "string"
-    group: "Memory"
 
   - variable: "memcached.enabled"
     label: "Create memcached"
     type: "boolean"
     default: true
     show_subquestion_if: true
+    group: "Memcached"
     subquestions:
     - variable: "memcached.cache_size_m"
       label: "Cache size, in mb"
@@ -124,3 +124,37 @@
       description: "Can be empty, otherwise use format - https://www.freeformatter.com/cron-expression-generator-quartz.html"
       default: "0 0 3 * *"
       type: "string"
+
+  - variable: "timezone"
+    label: "Time zone"
+    default: "Europe/Copenhagen"
+    required: true
+    type: "string"
+    group: "General"
+  - variable: "postgres.resources.requests.memory"
+    label: "Memory reservation postgres"
+    default: "4Gi"
+    required: true
+    type: "string"
+    group: "General"
+  - variable: "postgres.resources.limits.memory"
+    label: "Memory limit postgres"
+    default: "4Gi"
+    required: true
+    type: "string"
+    group: "General"
+  - variable: "memcached.resources.requests.memory"
+    label: "Memory reservation memcached"
+    default: "2Gi"
+    required: true
+    type: "string"
+    group: "General"
+    show_if: "memcached.enabled=true"
+  - variable: "memcached.resources.limits.memory"
+    label: "Memory limit memcached"
+    description: "Must be bigger than cache size"
+    default: "2Gi"
+    required: true
+    type: "string"
+    group: "General"
+    show_if: "memcached.enabled=true"

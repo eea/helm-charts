@@ -2,7 +2,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "appl.fullname" . }}-memcached-dpl
+  name: {{ .Release.Name }}-memcached-dpl
   labels:
     {{- include "appl.labels" . | nindent 4 }}
     component: memcached
@@ -26,12 +26,12 @@ spec:
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
 
       containers:
-      - name: {{ include "appl.fullname" . }}-memcached
+      - name: memcached
         image: memcached:1.6.31-alpine
         args:
         - -m
         - "{{ .Values.memcached.cache_size_m }}"
-        {{- if .Values.memcached.slab_page_size }}
+        {{- if (.Values.memcached.slab_page_size) }}
         - -I
         - "{{ .Values.memcached.slab_page_size }}"
         {{- end }}
@@ -42,19 +42,14 @@ spec:
         ports:
         - containerPort: 11211
 
+        {{- if (.Values.memcached.livenessProbe) }}
         livenessProbe:
-          tcpSocket:
-            port: 11211
-          periodSeconds: 20
-          timeoutSeconds: 3
-          successThreshold: 1
-
+          {{- toYaml .Values.memcached.livenessProbe | nindent 10 }}
+        {{- end }}
+        {{- if (.Values.memcached.startupProbe) }}
         startupProbe:
-          tcpSocket:
-            port: 11211
-          failureThreshold: 9
-          periodSeconds: 10
-          timeoutSeconds: 3
+          {{- toYaml .Values.memcached.startupProbe | nindent 10 }}
+        {{- end }}
 
         resources:
           {{- toYaml .Values.memcached.resources | nindent 10 }}
