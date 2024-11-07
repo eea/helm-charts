@@ -35,7 +35,15 @@ ingress:
     nginx.ingress.kubernetes.io/proxy-body-size: 1024m
     nginx.ingress.kubernetes.io/proxy-read-timeout: '480'
     nginx.ingress.kubernetes.io/proxy-send-timeout: '120'
-    
+   
+ingressredirects:
+- enabled: false
+  certificate: www.plone.eea.europa.eu-tls
+  annotations:
+    cert-manager.io/cluster-issuer: 01dev-eea-letsencrypt
+  hostname: www.plone.eea.europa.eu    
+
+
 links:
   backend: backend-varnish.advisory-board
 
