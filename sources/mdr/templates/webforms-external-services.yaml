@@ -1,0 +1,15 @@
+{{- range .Values.webforms }}
+{{- if .enabled }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .service.name }}
+  labels:
+    {{- include "appl.labels" $ | nindent 4 }}
+    app.kubernetes.io/component: {{ .name }}
+spec:
+  type: ExternalName
+  externalName: {{ .service.externalName }}
+{{- end }}
+{{- end }}

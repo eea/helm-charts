@@ -33,7 +33,7 @@ spec:
             - name: TZ
               value: {{ .Values.timezone }}
             - name: PACK_REQUEST
-              value: 'curl -k -X POST -d "days:float=7" -u "{{ .Values.cdrUser }}:{{ .Values.cdrPass }}" "https://{{ include "appl.fullname" . }}.eionet.europa.eu/Control_Panel/Database/main/manage_pack" && echo "Successfully called pack"'
+              value: 'curl -k -X POST -d "days:float=7" -u "{{ .Values.mdrUser }}:{{ .Values.mdrPass }}" "https://{{ include "appl.fullname" . }}.eionet.europa.eu/Control_Panel/Database/main/manage_pack" && echo "Successfully called pack"'
           restartPolicy: Never
 
 {{- end }}
