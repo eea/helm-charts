@@ -1,3 +1,4 @@
+{{- $labels := ( include "appl.labels" . ) -}}
 {{- range $index, $redirect := .Values.ingressredirects }}
 {{- if ($redirect.enabled) }}
 apiVersion: networking.k8s.io/v1
@@ -5,7 +6,7 @@ kind: Ingress
 metadata:
   name: advisory-board-redirect-{{ $index }}
   labels:
-    {{- include "appl.labels" . | nindent 4 }}
+    {{- $labels | nindent 4 }}
     component: advisory-board-frontend
   annotations:
     nginx.ingress.kubernetes.io/permanent-redirect: https://{{ .Values.volto.hostname }}
