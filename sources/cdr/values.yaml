@@ -192,6 +192,27 @@ service:
 cron:
   enabled: true
 
+webforms:
+  - name: webforms
+    enabled: false
+    service:
+      name: webforms-external
+      externalName: webforms.eionet.europa.eu
+      port: 443
+    ingress:
+      path: /webforms(/|$)(.*)
+      pathType: ImplementationSpecific
+      rewriteTarget: /$2
+      proxyBodySize: "10m"
+      proxyReadTimeout: "60"
+      proxySendTimeout: "60"
+      backendProtocol: "HTTPS"
+      sslVerify: true
+      headers:
+        host: webforms.eionet.europa.eu
+        addXClientIP: true
+        addXForwardedHost: true
+
 ingress:
   enabled: false
   className: "nginx"

@@ -10,6 +10,9 @@ This chart is almost configured for production use.
 
 ## Releases
 
+### Version 0.3.2
+- Fixed values mix-up.
+
 ### Version 0.3.1
 - Fixed the webforms related questions.
 
