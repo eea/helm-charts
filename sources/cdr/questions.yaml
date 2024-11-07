@@ -318,38 +318,38 @@ questions:
     show_if: "ingress.enabled=true"
 
   # Webforms Configuration
-  - variable: webforms.enabled
+  - variable: webforms.0.enabled
     label: "Enable Webforms Integration"
     type: boolean
     default: false
     group: "Webforms"
     description: "Enable or disable the webforms external service integration"
 
-  - variable: webforms.service.name
+  - variable: webforms.0.service.name
     label: "Webforms Service Name"
     type: string
     default: "webforms-external"
     group: "Webforms"
-    show_if: "webforms.enabled=true"
+    show_if: "webforms.0.enabled=true"
     description: "Name of the Kubernetes service for webforms"
 
-  - variable: webforms.service.externalName
+  - variable: webforms.0.service.externalName
     label: "Webforms External Host"
     type: string
     default: "webforms.eionet.europa.eu"
     group: "Webforms"
-    show_if: "webforms.enabled=true"
+    show_if: "webforms.0.enabled=true"
     description: "External hostname of the webforms service"
 
-  - variable: webforms.ingress.path
+  - variable: webforms.0.ingress.path
     label: "Webforms Path"
     type: string
     default: "/webforms(/|$)(.*)"
     group: "Webforms"
-    show_if: "webforms.enabled=true"
+    show_if: "webforms.0.enabled=true"
     description: "URL path pattern for webforms requests"
 
-  - variable: webforms.ingress.pathType
+  - variable: webforms.0.ingress.pathType
     label: "Path Type"
     type: enum
     options:
@@ -358,55 +358,55 @@ questions:
       - "Exact"
     default: "ImplementationSpecific"
     group: "Webforms"
-    show_if: "webforms.enabled=true"
+    show_if: "webforms.0.enabled=true"
     description: "Kubernetes ingress path type"
 
-  - variable: webforms.ingress.rewriteTarget
+  - variable: webforms.0.ingress.rewriteTarget
     label: "Rewrite Target"
     type: string
     default: "/$2"
     group: "Webforms"
-    show_if: "webforms.enabled=true"
+    show_if: "webforms.0.enabled=true"
     description: "Target pattern for URL rewriting"
 
-  - variable: webforms.ingress.proxyBodySize
+  - variable: webforms.0.ingress.proxyBodySize
     label: "Maximum Request Body Size"
     type: string
     default: "10m"
     group: "Webforms"
-    show_if: "webforms.enabled=true"
+    show_if: "webforms.0.enabled=true"
     description: "Maximum allowed size of the client request body"
 
-  - variable: webforms.ingress.proxyReadTimeout
+  - variable: webforms.0.ingress.proxyReadTimeout
     label: "Proxy Read Timeout"
     type: string
     default: "60"
     group: "Webforms"
-    show_if: "webforms.enabled=true"
+    show_if: "webforms.0.enabled=true"
     description: "Timeout for reading a response from the proxied server"
 
-  - variable: webforms.ingress.proxySendTimeout
+  - variable: webforms.0.ingress.proxySendTimeout
     label: "Proxy Send Timeout"
     type: string
     default: "60"
     group: "Webforms"
-    show_if: "webforms.enabled=true"
+    show_if: "webforms.0.enabled=true"
     description: "Timeout for transmitting a request to the proxied server"
 
-  - variable: webforms.ingress.sslVerify
+  - variable: webforms.0.ingress.sslVerify
     label: "Verify SSL Certificate"
     type: boolean
     default: true
     group: "Webforms"
-    show_if: "webforms.enabled=true"
+    show_if: "webforms.0.enabled=true"
     description: "Enable SSL certificate verification for backend connection"
 
-  - variable: webforms.ingress.headers.host
+  - variable: webforms.0.ingress.headers.host
     label: "Host Header"
     type: string
     default: "webforms.eionet.europa.eu"
     group: "Webforms"
-    show_if: "webforms.enabled=true"
+    show_if: "webforms.0.enabled=true"
     description: "Host header to be sent to the backend service"
 
   # Advanced Settings

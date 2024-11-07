@@ -10,6 +10,9 @@ This chart is almost configured for production use.
 
 ## Releases
 
+### Version 0.3.1
+- Fixed the webforms related questions.
+
 ### Version 0.3.0
 - Added webforms to the list of services.
 
