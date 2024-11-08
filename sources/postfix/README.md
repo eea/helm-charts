@@ -4,7 +4,26 @@ This service listens on port 25 for emails. It then sends them to a upstream
 MTA using authentication.
 
 If the `dryrun` flag is set to true, the mails will not get sent, but sent to stdout
-for logging. Defaults to false.
+for logging. Defaults to false. Access to the web interface that displays the collected emails 
+is by default disabled. See **Values** for details
+
+When `dryrun` is false, `mtpRelay`, `mtpPort`, `mtpUser` and `mtpPass` are mandatory 
+in order to succesfully send emails.
+
+## Values
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| debug.enable | bool | false | Set true to install the mailtrap image instead of the postfix one |
+| mailtrap.httpenabled | bool | false | Set true to enable the http service in order to view the web interface |
+| mailtrap.serviceType | string | NodePort | NodePort to expose the service, ClusterIP if you want to use "kubectl port-forward" |
+| mailtrap.ingress.enabled | bool | false | Set true to enable ingress |
+| mailtrap.ingress.hostname | string | mailtrap.01dev.eea.europa.eu | Unique url for your application, must resolve to the cluster frontend |
+| mailtrap.ingress.certificate | string | mailtrap.01dev.eea.europa.eu-tls | Unique name for certificate |
+| mailtrap.ingress.annotations | string | cert-manager.io/cluster-issuer: 01dev-eea-letsencrypt | Mandatory configuration for letsencrypt to work |
+
+
+
 
 ## Releases
 
