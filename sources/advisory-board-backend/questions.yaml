@@ -116,6 +116,12 @@
     required: false
     default: ""
     group: "Plone configuration"
+  - variable: "plone.environment.SENTRY_ENVIRONMENT"
+    label: "Sentry Environment"
+    description: "Sentry log field, set to rancher cluster"
+    type: "string"
+    required: true
+    default: "01dev"
   - variable: "plone.environment.CORS_ALLOW_ORIGIN"
     label: "CORS ALLOW ORIGIN"
     type: "string"
