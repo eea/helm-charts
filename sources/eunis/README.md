@@ -19,7 +19,10 @@ You can run `helm test eunis` to verify the system is working correctly.
 ## Releases
 
 <dl>
-  <dt>Version 1.1.0 - 11 Nov. 2024</dt>
+  <dt>Version 1.1.1 - 8 Nov. 2024<dt>
+  <dd>Removed old mariadb 5</dd>
+
+  <dt>Version 1.1.0 - 7 Nov. 2024</dt>
   <dd>Added mariadb service to upgrade database</dd>
 
   <dt>Version 1.0.4 - 9 Aug. 2024</dt>

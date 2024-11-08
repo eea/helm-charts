@@ -79,23 +79,6 @@ tolerations: []
 
 affinity: {}
 
-database:
-  securityContext: {}
-  resources:
-    requests:
-      memory: 1Gi
-  #   cpu: 100m
-    limits:
-      memory: 1Gi
-  #   cpu: 100m
-  database: eunis
-  username: eunisuser
-  password: REPLACEME
-  rootpw: REPLACEME
-  args: []
-  storage: 10Gi
-  storageClassName: ""
-
 mariadb:
   securityContext: {}
   resources:
@@ -109,7 +92,24 @@ mariadb:
   username: eunisuser
   password: REPLACEME
   rootpw: REPLACEME
-  args: []
+  args:
+  - mariadbd
+  - --max_allowed_packet=128M
+  - --character_set_server=utf8
+  - --binlog_cache_size=32M
+  - --max_heap_table_size=64M
+  - --performance_schema=OFF
+  - --tmp_table_size=64M
+  - --query_cache_limit=32M
+  - --query_cache_size=64M
+  - --innodb_file_per_table=ON
+  - --innodb_buffer_pool_instances=2
+  - --innodb_buffer_pool_size=2G
+  - --innodb_data_file_path=ibdata1:10M:autoextend
+  - --innodb_log_buffer_size=8M
+  - --innodb_log_file_size=48M
+  - --innodb_log_files_in_group=3
+  - --innodb_max_dirty_pages_pct=90
   storage: 10Gi
   storageClassName: ""
 
