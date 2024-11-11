@@ -258,6 +258,20 @@ questions:
     show_if: "cronautofallin.enabled"
     group: "Cron jobs"
 
+  - variable: cronautofallin.env.scheduleStart
+    label: "Cron auto fallin Schedule Start"
+    type: string
+    default: "2019-11-04"
+    show_if: "cronautofallin.enabled"
+    group: "Cron jobs"
+
+  - variable: cronautofallin.env.schedulePeriod
+    label: "Cron auto fallin Schedule Period"
+    type: string
+    default: "yearly"
+    show_if: "cronautofallin.enabled"
+    group: "Cron jobs"
+
   - variable: cronzipcachecleanup.enabled
     label: "Enable Cron zip cache cleanup"
     type: boolean

@@ -89,6 +89,10 @@ spec:
               value: "{{ .Values.instance.env.zopeThreads }}"
             - name: LOCAL_CONVERTERS_HOST
               value: "{{ .Values.instance.env.localConvertersHost }}"
+            - name: SCHEDULE_START
+              values: "{{ .Values.cronautofallin.env.scheduleStart }}"
+            - name: SCHEDULE_PERIOD
+              values: "{{ .Values.cronautofallin.env.schedulePeriod }}"
             volumeMounts:
               - mountPath: /opt/zope/var/zip_cache
                 name: {{ include "appl.fullname" . }}-zipcache-storage
