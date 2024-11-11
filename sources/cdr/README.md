@@ -10,6 +10,9 @@ This chart is almost configured for production use.
 
 ## Releases
 
+### Version 0.3.4
+- Removed repository and tag from instance in values.yaml.
+
 ### Version 0.3.3
 - Added missing env variables for cronautofallin.
 
