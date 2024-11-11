@@ -28,6 +28,9 @@ in order to succesfully send emails.
 ## Releases
 
 <dl>
+  <dt>Version 3.0.1 - 11 November 2024</dt>
+  <dd>Added network security policy for mailtrap web interface.</dd>
+
   <dt>Version 3.0.0 - 5 November 2024</dt>
   <dd>Add questions, mailtrap for development apps with ingress support</dd>
 
