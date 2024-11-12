@@ -314,7 +314,7 @@
     type: "boolean"
     default: false
     required: true
-    show_if: "dryrun"
+    show_if: "postfix.dryrun"
     show_subquestion_if: true
     group: "Mail"
     subquestions:
@@ -335,14 +335,14 @@
   
   - variable: "postfix.mailtrap.ingress.hostname"
     label: "Mailtrap URL"
-    show_if: "mailtrap.ingress.enabled"
+    show_if: "postfix.mailtrap.ingress.enabled"
     required: true
     type: "string"  
     default: "mailtrap.01dev.eea.europa.eu"
     group: "Mail"
   - variable: "postfix.mailtrap.ingress.certificate"
     label: "Mailtrap certificate name"
-    show_if: "mailtrap.ingress.enabled"
+    show_if: "postfix.mailtrap.ingress.enabled"
     description: "If empty, https will not be enabled"
     default: "mailtrap.01dev.eea.europa.eu-tls"
     group: "Mail"
