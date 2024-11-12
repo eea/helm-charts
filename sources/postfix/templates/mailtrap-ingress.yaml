@@ -21,7 +21,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: {{ include "appl.fullname" . }}
+            name: {{ .Values.serviceName | default (include "appl.fullname" .) }}
             port:
               number: 80
   {{- if (.Values.mailtrap.ingress.certificate) }}
