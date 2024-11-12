@@ -122,6 +122,7 @@
     type: "string"
     required: true
     default: "01dev"
+    group: "Plone configuration"
   - variable: "plone.environment.CORS_ALLOW_ORIGIN"
     label: "CORS ALLOW ORIGIN"
     type: "string"
@@ -250,7 +251,7 @@
     type: "string"
     required: true
     default: "4Gi"
-
+    group: "Memory"
   - variable: "varnish.resources.requests.memory"
     label: "Varnish memory reservation"
     type: "string"
