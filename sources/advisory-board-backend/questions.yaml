@@ -16,15 +16,6 @@
     required: true
     group: "General"
     
-  - variable: "ingress.annotations"
-    label: "Ingress annotations"
-    description: "Use the default for letsencrypt certificates, configure HTTP HEADERS here"
-    default: |-
-      cert-manager.io/cluster-issuer: 01dev-eea-letsencrypt
-    type: "multiline"
-    required: true
-    group: "General"
-      
   - variable: "links.memcached"
     label: "Memcached service"
     description: "Memcached service for python caching, SERVICE.NAMESPACE"
