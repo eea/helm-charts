@@ -31,17 +31,17 @@ spec:
             - run
             - /opt/zope/bin/auto_env_cleanup
             - --inactive_for
-            - "30"
+            - '30'
             - --limit
-            - "10"
+            - '10'
             env:
             - name: SENTRY_DSN
-              value: "{{ .Values.instance.env.sentryDSN }}"
+              value: '{{ .Values.instance.env.sentryDSN }}'
             - name: DEPLOYMENT_HOST
-              value: "{{ .Values.instance.env.deploymentHost }}"
+              value: '{{ .Values.instance.env.deploymentHost }}'
             - name: TZ
-              value: {{ .Values.timezone }}
+              value: '{{ .Values.timezone }}'
             - name: ZEO_ADDRESS
-              value: "{{ .Values.instance.env.zeoAddress }}"
+              value: '{{ .Values.instance.env.zeoAddress }}'
           restartPolicy: Never
 {{- end }}
