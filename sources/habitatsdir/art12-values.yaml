@@ -2,17 +2,17 @@ image:
   repository: eeacms/art12-viewer
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "2.7.6"
+  tag: "2.7.7"
 
 imagePullSecrets: []
 
 timezone: Europe/Copenhagen
 
-localPdfUrlPrefix: "https://www.eionet.europa.eu/article12"
-mapUrlPrefix: "https://www.eionet.europa.eu/article12"
-pdfUrlPrefix: 'https://forum.eionet.europa.eu/article-12-birds-directive/library/2008-2012-reporting/species-factsheets'
+localPdfUrlPrefix: "https://nature-art12.eionet.europa.eu/article12"
+mapUrlPrefix: "https://nature-art12.eionet.europa.eu/article12"
+pdfUrlPrefix: "https://cmshare.eea.europa.eu/s/Lxygobjdwdt6Xx9/download?path=/article-12-birds-directive/2008-2012-reporting/species-factsheets"
 
-passwordReset: 'https://www.eionet.europa.eu/password-reset'
+passwordReset: "https://www.eionet.europa.eu/password-reset"
 bindName: art12_eu
 flaskApp: "art12/app.py"
 serverName: art12.eionet.europa.eu
