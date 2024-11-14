@@ -39,56 +39,60 @@ spec:
             - --workflow
             - AQ_eReporting_E1a
             - --env_year_offset
-            - "-1"
+            - '-1'
             env:
             - name: BEAKER_PATH
-              value: "{{ .Values.instance.env.beakerPath }}"
+              value: '{{ .Values.instance.env.beakerPath }}'
             - name: BEAKER_SECRET
-              value: "{{ .Values.instance.env.beakerSecret }}"
+              value: '{{ .Values.instance.env.beakerSecret }}'
             - name: CACHE_PURGING_DOMAIN
-              value: "{{ .Values.instance.env.cachePurgingDomain }}"
+              value: '{{ .Values.instance.env.cachePurgingDomain }}'
             - name: CACHE_PURGING_ENABLED
-              value: "{{ .Values.instance.env.cachePurgingEnabled }}"
+              value: '{{ .Values.instance.env.cachePurgingEnabled }}'
             - name: CACHE_PURGING_PROXY
-              value: "{{ .Values.instance.env.cachePurgingProxy }}"
+              value: '{{ .Values.instance.env.cachePurgingProxy }}'
             - name: CACHE_PURGING_PROXY_PORT
-              value: "{{ .Values.instance.env.cachePurgingProxyPort }}"
+              value: '{{ .Values.instance.env.cachePurgingProxyPort }}'
             - name: CACHE_PURGING_VHOST
-              value: "{{ .Values.instance.env.cachePurgingVhost }}"
+              value: '{{ .Values.instance.env.cachePurgingVhost }}'
             - name: CACHE_SETTINGS_ENABLED
-              value: "{{ .Values.instance.env.cacheSettingsEnabled }}"
+              value: '{{ .Values.instance.env.cacheSettingsEnabled }}'
             - name: CLAMAV_HOST
-              value: "{{ .Values.instance.env.clamavHost }}"
+              value: '{{ .Values.instance.env.clamavHost }}'
             - name: GRAYLOG
-              value: "{{ .Values.instance.env.graylog }}"
+              value: '{{ .Values.instance.env.graylog }}'
             - name: GRAYLOG_FACILITY
-              value: "{{ .Values.instance.env.graylogFacility }}"
+              value: '{{ .Values.instance.env.graylogFacility }}'
             - name: RABBITMQ_ENABLED
-              value: "{{ .Values.instance.env.rabbitmqEnabled }}"
+              value: '{{ .Values.instance.env.rabbitmqEnabled }}'
             - name: RABBITMQ_HOST
-              value: "{{ .Values.instance.env.rabbitmqHost }}"
+              value: '{{ .Values.instance.env.rabbitmqHost }}'
             - name: RABBITMQ_PASS
-              value: "{{ .Values.instance.env.rabbitmqPass }}"
+              value: '{{ .Values.instance.env.rabbitmqPass }}'
             - name: RABBITMQ_PORT
-              value: "{{ .Values.instance.env.rabbitmqPort }}"
+              value: '{{ .Values.instance.env.rabbitmqPort }}'
             - name: RABBITMQ_USER
-              value: "{{ .Values.instance.env.rabbitmqUser }}"
+              value: '{{ .Values.instance.env.rabbitmqUser }}'
             - name: SENTRY_DSN
-              value: "{{ .Values.instance.env.sentryDSN }}"
+              value: '{{ .Values.instance.env.sentryDSN }}'
             - name: TZ
-              value: {{ .Values.timezone }}
+              value: '{{ .Values.timezone }}'
             - name: ZEO_ADDRESS
-              value: "{{ .Values.instance.env.zeoAddress }}"
+              value: '{{ .Values.instance.env.zeoAddress }}'
             - name: ZIP_CACHE_ENABLED
-              value: "{{ .Values.instance.env.zipCacheEnabled }}"
+              value: '{{ .Values.instance.env.zipCacheEnabled }}'
             - name: ZIP_CACHE_PATH
-              value: "{{ .Values.instance.env.zipCachePath }}"
+              value: '{{ .Values.instance.env.zipCachePath }}'
             - name: ZIP_CACHE_THRESHOLD
-              value: "{{ .Values.instance.env.zipCacheThreshold }}"
+              value: '{{ .Values.instance.env.zipCacheThreshold }}'
             - name: ZOPE_THREADS
-              value: "{{ .Values.instance.env.zopeThreads }}"
+              value: '{{ .Values.instance.env.zopeThreads }}'
             - name: LOCAL_CONVERTERS_HOST
-              value: "{{ .Values.instance.env.localConvertersHost }}"
+              value: '{{ .Values.instance.env.localConvertersHost }}'
+            - name: SCHEDULE_START
+              value: '{{ .Values.cronautofallin.env.scheduleStart }}'
+            - name: SCHEDULE_PERIOD
+              value: '{{ .Values.cronautofallin.env.schedulePeriod }}'
             volumeMounts:
               - mountPath: /opt/zope/var/zip_cache
                 name: {{ include "appl.fullname" . }}-zipcache-storage

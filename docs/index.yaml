@@ -3,13 +3,13 @@ entries:
   advisory-board-backend:
   - apiVersion: v2
     appVersion: 6.0.11-5
-    created: "2024-11-08T17:59:11.019052205+02:00"
+    created: "2024-11-12T18:57:31.665786532+02:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
-      version: 3.0.0
+      version: 3.0.2
     description: Climate advisory backend
-    digest: 6b5b72158ff3583775d4a323feae173c73e7bf1597ad8a13f769aec9b6e0d664
+    digest: 5510309a70e377709fec499f2dc064f1288a0074b057253fd06afca71d038cff
     home: https://github.com/eea/advisory-board-backend
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/advisory-board-backend/volto.png
     keywords:
@@ -862,6 +862,99 @@ entries:
     - casservice-1.0.0.tgz
     version: 1.0.0
   cdr:
+  - apiVersion: v2
+    appVersion: 6.7.3-194
+    created: "2024-11-12T15:12:40.58667+02:00"
+    dependencies:
+    - alias: zeoserver
+      name: rn-zeoserver
+      repository: https://eea.github.io/helm-charts
+      version: 0.1.5
+    - alias: varnish
+      condition: rn-varnish.enabled
+      name: rn-varnish
+      repository: https://eea.github.io/helm-charts
+      version: 0.1.5
+    - alias: local-converters
+      condition: rn-local-converters.enabled
+      name: rn-local-converters
+      repository: https://eea.github.io/helm-charts
+      version: 0.1.2
+    - alias: clamav
+      condition: rn-clamav.enabled
+      name: rn-clamav
+      repository: https://eea.github.io/helm-charts
+      version: 0.1.3
+    description: A CDR Helm chart for Kubernetes
+    digest: dd9b73f5d66fa776093546309b46a942d6041b0340a301050755cce527c9e4e3
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/cdr/logo_eionet.png
+    name: cdr
+    type: application
+    urls:
+    - cdr-0.3.5.tgz
+    version: 0.3.5
+  - apiVersion: v2
+    appVersion: 6.7.3-194
+    created: "2024-11-11T12:49:01.474173+02:00"
+    dependencies:
+    - alias: zeoserver
+      name: rn-zeoserver
+      repository: https://eea.github.io/helm-charts
+      version: 0.1.5
+    - alias: varnish
+      condition: rn-varnish.enabled
+      name: rn-varnish
+      repository: https://eea.github.io/helm-charts
+      version: 0.1.5
+    - alias: local-converters
+      condition: rn-local-converters.enabled
+      name: rn-local-converters
+      repository: https://eea.github.io/helm-charts
+      version: 0.1.2
+    - alias: clamav
+      condition: rn-clamav.enabled
+      name: rn-clamav
+      repository: https://eea.github.io/helm-charts
+      version: 0.1.3
+    description: A CDR Helm chart for Kubernetes
+    digest: 081948c2ba24c2c83a062a637d15fbc22eb9a47e340dbca3d1e30ceba8c74609
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/cdr/logo_eionet.png
+    name: cdr
+    type: application
+    urls:
+    - cdr-0.3.4.tgz
+    version: 0.3.4
+  - apiVersion: v2
+    appVersion: 6.7.3-194
+    created: "2024-11-11T12:36:15.208154+02:00"
+    dependencies:
+    - alias: zeoserver
+      name: rn-zeoserver
+      repository: https://eea.github.io/helm-charts
+      version: 0.1.5
+    - alias: varnish
+      condition: rn-varnish.enabled
+      name: rn-varnish
+      repository: https://eea.github.io/helm-charts
+      version: 0.1.5
+    - alias: local-converters
+      condition: rn-local-converters.enabled
+      name: rn-local-converters
+      repository: https://eea.github.io/helm-charts
+      version: 0.1.2
+    - alias: clamav
+      condition: rn-clamav.enabled
+      name: rn-clamav
+      repository: https://eea.github.io/helm-charts
+      version: 0.1.3
+    description: A CDR Helm chart for Kubernetes
+    digest: 9b209cd2cc163ace95a8a4723099343a5e0300edbb25c1e27e1ae9f191ee3d0c
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/cdr/logo_eionet.png
+    name: cdr
+    type: application
+    urls:
+    - cdr-0.3.3.tgz
+    version: 0.3.3
   - apiVersion: v2
     appVersion: 6.7.3-194
     created: "2024-11-07T20:48:12.519776+02:00"
@@ -3291,6 +3384,25 @@ entries:
     version: 0.1.0
   habitatsdir:
   - apiVersion: v2
+    created: "2024-11-13T12:43:57.578396+02:00"
+    dependencies:
+    - condition: postfix.enabled
+      name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 2.0.0
+    description: Expert review tool for Nature Directives reporting
+    digest: c29df248a10281914a07144671c58b6a32f27200841d20784b2877a410472975
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/habitatsdir/logo.png
+    keywords:
+    - Reportnet
+    - Biodiversity
+    - Nature directives
+    name: habitatsdir
+    type: application
+    urls:
+    - habitatsdir-0.4.5.tgz
+    version: 0.4.5
+  - apiVersion: v2
     created: "2024-10-31T16:44:47.273192+02:00"
     dependencies:
     - condition: postfix.enabled
@@ -4529,10 +4641,23 @@ entries:
     version: 0.1.0
   nessus:
   - apiVersion: v2
-    appVersion: "1.2"
-    created: "2024-10-31T16:44:47.4598152+02:00"
+    appVersion: "1.3"
+    created: "2024-11-12T15:20:12.937351212+02:00"
     description: Nessus vulnerability scanner
-    digest: 5bb185930b70c36612d6d76ea0a795cf2615e0583ba9d3a788d1ac6c9eb19cfb
+    digest: bd17946fde2c2ac788685e1d917259e7dfd3946d0041f574f22d312d3633b057
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/nessus/icon.png
+    keywords:
+    - Scanner
+    name: nessus
+    type: application
+    urls:
+    - nessus-0.2.9.tgz
+    version: 0.2.9
+  - apiVersion: v2
+    appVersion: "1.3"
+    created: "2024-11-12T15:17:35.237946175+02:00"
+    description: Nessus vulnerability scanner
+    digest: d929234f26145bfe0456dcdfa7774cd64fa6bb949f982a7d984580525185f78d
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/nessus/icon.png
     keywords:
     - Scanner
@@ -4842,6 +4967,32 @@ entries:
     - plonesaas-2.4.0.tgz
     version: 2.4.0
   postfix:
+  - apiVersion: v2
+    appVersion: 3.5-1.0
+    created: "2024-11-12T18:56:25.04690328+02:00"
+    description: Mail forwarder
+    digest: 4c561db94a90cf1683730ca62e195f8411697398e64a20d7a3d45ee6a8bce0d1
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/postfix/mail-forward.png
+    keywords:
+    - Mail
+    name: postfix
+    type: application
+    urls:
+    - postfix-3.0.2.tgz
+    version: 3.0.2
+  - apiVersion: v2
+    appVersion: 3.5-1.0
+    created: "2024-11-12T18:03:39.405843929+02:00"
+    description: Mail forwarder
+    digest: c491c3e24db9f77acf5207e6c7805f9b29fedb9026ff1ebaf468fe91585120cc
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/postfix/mail-forward.png
+    keywords:
+    - Mail
+    name: postfix
+    type: application
+    urls:
+    - postfix-3.0.1.tgz
+    version: 3.0.1
   - apiVersion: v2
     appVersion: 3.5-1.0
     created: "2024-11-06T17:01:16.424187771+02:00"
@@ -6636,4 +6787,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2024-11-08T17:59:11.014608669+02:00"
+generated: "2024-11-13T12:43:57.575275+02:00"

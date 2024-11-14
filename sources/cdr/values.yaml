@@ -11,8 +11,6 @@ cdrPass: ""
 
 instance:
   enabled: true
-  repository: eeacms/reportek-cdr
-  tag: ""
   replicaCount: 2
   port: 8080
   resources:
@@ -89,6 +87,9 @@ cronautoenvcleanup:
 cronautofallin:
   enabled: false
   schedule: "*/5 * 16 11 *"
+  env:
+    scheduleStart: ""
+    schedulePeriod: ""
   resources:
     requests:
       memory: 2.5Gi

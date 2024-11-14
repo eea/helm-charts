@@ -16,15 +16,6 @@
     required: true
     group: "General"
     
-  - variable: "ingress.annotations"
-    label: "Ingress annotations"
-    description: "Use the default for letsencrypt certificates, configure HTTP HEADERS here"
-    default: |-
-      cert-manager.io/cluster-issuer: 01dev-eea-letsencrypt
-    type: "annotations"
-    required: true
-    group: "General"
-      
   - variable: "links.memcached"
     label: "Memcached service"
     description: "Memcached service for python caching, SERVICE.NAMESPACE"
@@ -122,6 +113,7 @@
     type: "string"
     required: true
     default: "01dev"
+    group: "Plone configuration"
   - variable: "plone.environment.CORS_ALLOW_ORIGIN"
     label: "CORS ALLOW ORIGIN"
     type: "string"
@@ -250,7 +242,7 @@
     type: "string"
     required: true
     default: "4Gi"
-
+    group: "Memory"
   - variable: "varnish.resources.requests.memory"
     label: "Varnish memory reservation"
     type: "string"
@@ -314,7 +306,7 @@
     type: "boolean"
     default: false
     required: true
-    show_if: "dryrun"
+    show_if: "postfix.dryrun"
     show_subquestion_if: true
     group: "Mail"
     subquestions:
@@ -335,14 +327,14 @@
   
   - variable: "postfix.mailtrap.ingress.hostname"
     label: "Mailtrap URL"
-    show_if: "mailtrap.ingress.enabled"
+    show_if: "postfix.mailtrap.ingress.enabled"
     required: true
     type: "string"  
     default: "mailtrap.01dev.eea.europa.eu"
     group: "Mail"
   - variable: "postfix.mailtrap.ingress.certificate"
     label: "Mailtrap certificate name"
-    show_if: "mailtrap.ingress.enabled"
+    show_if: "postfix.mailtrap.ingress.enabled"
     description: "If empty, https will not be enabled"
     default: "mailtrap.01dev.eea.europa.eu-tls"
     group: "Mail"

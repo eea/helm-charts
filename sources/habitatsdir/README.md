@@ -24,6 +24,9 @@ To set the app up for Article 12 do:
 ## Releases
 
 <dl>
+  <dt>Version 0.4.5 - 13 November 2024</dt>
+  <dd>Upgraded eeacms/art12-viewer</dd>
+
   <dt>Version 0.4.4 - 30 October 2024</dt>
   <dd>Upgraded eeacms/art12-viewer</dd>
 

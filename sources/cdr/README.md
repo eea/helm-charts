@@ -10,6 +10,15 @@ This chart is almost configured for production use.
 
 ## Releases
 
+### Version 0.3.5
+- Converted template values to use single quotes to handle special characters.
+
+### Version 0.3.4
+- Removed repository and tag from instance in values.yaml.
+
+### Version 0.3.3
+- Added missing env variables for cronautofallin.
+
 ### Version 0.3.2
 - Fixed values mix-up.
 
