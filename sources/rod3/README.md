@@ -25,6 +25,9 @@ This chart is configured for production use.
 
 <dl>
 
+  <dt>Version 0.2.2</dt>
+  <dd>SQL injection fixes, libraries updates, newer tomcat image.</dd>
+
   <dt>Version 0.2.1</dt>
   <dd>Use names for network security policies that allow other apps to have the same.</dd>
 
