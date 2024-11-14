@@ -6,6 +6,10 @@ The EMRT(EEA Emission Review Tool) is a web-based tool hosted by the EEA to faci
 
 <dl>
 
+  <dt>Version 1.0.0 - 14/11-2024</dt>
+  <dd>Zeoserver is no longer on a separate host. Took out the flag.</dd>
+  <dd>Upgraded postfix subchart to 3.0.2.</dd>
+
   <dt>Version 0.4.0 - 30/9-2024</dt>
   <dd>Added zeoserver.enabled flag to create zeoserver in the application.</dd>
 
