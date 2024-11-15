@@ -3,16 +3,16 @@ image:
   repository: eeacms/art17-consultation
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "3.4.7"
+  tag: "3.4.12"
 
 imagePullSecrets: []
 
 timezone: Europe/Copenhagen
 
-factsheetsRemoteUrl: 'https://forum.eionet.europa.eu/habitat-art17report/library/2007-2012-reporting/factsheets/'
+factsheetsRemoteUrl: 'https://cmshare.eea.europa.eu/s/Lxygobjdwdt6Xx9/download?path='
 localPdfUrlPrefix: ""
 mapUrlPrefix: ""
-pdfUrlPrefix: 'https://www.eionet.europa.eu/article17'
+pdfUrlPrefix: 'https://nature-art17.eionet.europa.eu/article17/'
 
 bindName: art17_eu
 flaskApp: "art17/app.py"
