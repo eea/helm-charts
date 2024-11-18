@@ -12,6 +12,9 @@ set the values in the database section.
 
 <dl>
 
+  <dt>Version 0.3.2</dt>
+  <dd>Notification generation fix, Upgrade postfix subchart to 3.0.2.</dd>
+
   <dt>Version 0.3.1</dt>
   <dd>Upgrade postfix subchart to 2.0.1, dependencies update, ClassCastException fix.</dd>
 
