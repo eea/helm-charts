@@ -11,6 +11,9 @@ This can be used to set the rabbitmq host to be used.
 
 ## Releases
 
+### Version 0.1.10
+- Updated rn-local-converters, rn-clamav
+
 ### Version 0.1.9
 - Converted sync jobs token question to password.
 
