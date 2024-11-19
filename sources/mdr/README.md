@@ -15,6 +15,9 @@ This chart is almost configured for production use.
 
 ## Releases
 
+### Version 0.3.1
+- Updated rn-local-converters
+
 ### Version 0.3.0
 - Added webforms support.
 - Fixed zeopack values.
