@@ -2,7 +2,7 @@
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ include "appl.fullname" . }}
+  name: {{ include "appl.fullname" . }}-hpa
   labels:
     {{- include "appl.labels" . | nindent 4 }}
     app.kubernetes.io/component: security
