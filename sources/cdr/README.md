@@ -10,6 +10,9 @@ This chart is almost configured for production use.
 
 ## Releases
 
+### Version 0.3.6
+- Updated rn-clamav and rn-local-converters
+
 ### Version 0.3.5
 - Converted template values to use single quotes to handle special characters.
 
