@@ -94,8 +94,10 @@ spec:
             - name: SCHEDULE_PERIOD
               value: '{{ .Values.cronautofallin.env.schedulePeriod }}'
             volumeMounts:
+              {{- if .Values.instance.env.zipCacheEnabled }}
               - mountPath: /opt/zope/var/zip_cache
                 name: {{ include "appl.fullname" . }}-zipcache-storage
+              {{- end }}
               - mountPath: /sessions
                 name: {{ include "appl.fullname" . }}-sessions-storage
               - mountPath: /tmp
@@ -103,9 +105,11 @@ spec:
 
           restartPolicy: Never
           volumes:
+            {{- if .Values.instance.env.zipCacheEnabled }}
             - name: {{ include "appl.fullname" . }}-zipcache-storage
               persistentVolumeClaim:
                 claimName: {{ include "appl.fullname" . }}-zipcache-storage
+            {{- end }}
             - name: {{ include "appl.fullname" . }}-sessions-storage
               persistentVolumeClaim:
                 claimName: {{ include "appl.fullname" . }}-sessions-storage

@@ -10,6 +10,9 @@ This chart is almost configured for production use.
 
 ## Releases
 
+### Version 0.3.7
+- Conditionally create and mount zip_cache pvc/pv if zipCacheEnabled is true.
+
 ### Version 0.3.6
 - Updated rn-clamav and rn-local-converters
 
