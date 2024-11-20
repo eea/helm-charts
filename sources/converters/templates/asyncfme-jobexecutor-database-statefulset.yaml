@@ -1,0 +1,83 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Release.Name }}-asyncfmedb
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: asyncfmedb
+spec:
+  replicas: 1
+  serviceName: {{ .Release.Name }}-asyncfmedb
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: asyncfmedb
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: asyncfmedb
+    spec:
+      terminationGracePeriodSeconds: 10
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+      - name: {{ .Release.Name }}-asyncfmedb
+        ports:
+        - name: asyncfmedb
+          containerPort: 3306
+          protocol: TCP
+        image: mysql:8.0.28
+        env:
+        - name: MYSQL_DATABASE
+          value: "{{ .Values.asyncFmeJobExecutorDatabase.database }}"
+        - name: MYSQL_PASSWORD
+          value: "{{ .Values.asyncFmeJobExecutorDatabase.password }}"
+        - name: MYSQL_ROOT_PASSWORD
+          value: "{{ .Values.asyncFmeJobExecutorDatabase.rootpw }}"
+        - name: MYSQL_USER
+          value: "{{ .Values.asyncFmeJobExecutorDatabase.username }}"
+
+        volumeMounts:
+        - mountPath: /var/lib/mysql
+          name: {{ .Release.Name }}-asyncfmedb
+
+        livenessProbe:
+          tcpSocket:
+            port: 3306
+          initialDelaySeconds: 15
+          periodSeconds: 20
+
+        resources:
+          {{- toYaml .Values.asyncFmeJobExecutorDatabase.resources | nindent 10 }}
+
+      restartPolicy: Always
+
+      {{- with .Values.asyncFmeJobExecutorDatabase.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.asyncFmeJobExecutorDatabase.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.asyncFmeJobExecutorDatabase.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+  volumeClaimTemplates:
+  - metadata:
+      name: {{ .Release.Name }}-asyncfmedb
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: {{ .Values.asyncFmeJobExecutorDatabase.storage }}
+

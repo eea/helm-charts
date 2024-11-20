@@ -1,0 +1,152 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-heavy-jobexecutor
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: heavy-jobexecutor
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: heavy-jobexecutor
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "appl.labels" . | nindent 8 }}
+        component: heavy-jobexecutor
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Release.Name }}-heavy-jobexecutor
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.jobExecutor.repository }}:{{ .Values.image.jobExecutor.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: tomcat
+              containerPort: {{ .Values.service.tomcat.port }}
+              protocol: TCP
+          env:
+          - name: rancher.pod.name
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: rancher.jobExecutor.type
+            value: "1"
+          - name: dd.url
+            value: "{{ .Values.ddUrl }}/"
+          - name: env.converters.url
+            value: "https://{{ .Values.hostname }}/"
+          - name: converters.restapi.token
+            value: {{ .Values.convertersRestApiToken }}
+          - name: dd.restapi.token
+            value: {{ .Values.ddRestApiToken }}
+          - name: fme_user
+            value: {{ .Values.fme.user }}
+          - name: fme_user_password
+            value: {{ .Values.fme.password }}
+          - name: fme_token
+            value: {{ .Values.fme.token }}
+          - name: fme_synchronous_token
+            value: {{ .Values.fme.synchronousToken }}
+          - name: fme_retry_hours
+            value: "{{ .Values.fme.retryHours }}"
+          - name: spring.rabbitmq.host
+            value: {{ .Values.rabbitMQ.host }}
+          - name: spring.rabbitmq.password
+            value: {{ .Values.rabbitMQ.password }}
+          - name: spring.rabbitmq.port
+            value: "{{ .Values.rabbitMQ.port }}"
+          - name: spring.rabbitmq.username
+            value: {{ .Values.rabbitMQ.username }}
+          - name: heartBeat.request.rabbitmq.exchange
+            value: {{ .Values.rabbitMQ.heartBeatRequestExchange }}
+          - name: heartBeat.response.rabbitmq.routingKey
+            value: {{ .Values.rabbitMQ.workerHeartBeatResponseRoutingKey }}
+          - name: job.rabbitmq.jobsResultExchange
+            value: {{ .Values.rabbitMQ.mainWorkersExchange }}
+          - name: job.rabbitmq.jobsResultRoutingKey
+            value: {{ .Values.rabbitMQ.jobsResultsRoutingkey }}
+          - name: job.rabbitmq.listeningQueue
+            value: {{ .Values.rabbitMQ.heavyWorkersJobsQueue }}
+          - name: job.rabbitmq.workerStatusRoutingKey
+            value: {{ .Values.rabbitMQ.workerStatusRoutingkey }}
+          - name: rabbitmq.dead.letter.exchange
+            value: {{ .Values.rabbitMQ.deadLetterExchange }}
+          - name: rabbitmq.dead.letter.routingKey
+            value: {{ .Values.rabbitMQ.deadLetterRoutingKey }}
+          - name: JAVA_TOOL_OPTIONS
+            value: -Xss4m -Xmx5g
+          - name: cache.temp.dir
+            value: /opt/cache
+          - name: logFilePath
+            value: /opt/xmlconv
+          - name: logging.config
+            value: file:/opt/xmlconv/executorLogback.xml
+          - name: queries.folder
+            value: /opt/xmlconv/queries
+          - name: queryLogRetentionDays
+            value: "60"
+          - name: response.timeout.ms
+            value: "5000"
+          - name: tmp.folder
+            value: /opt/xmlconv/tmp
+          - name: xmlfile.folder
+            value: /opt/xmlconv/xmlfile
+          - name: xsl.folder
+            value: /opt/xmlconv/xsl
+          # Wait for up to 3 minutes
+          startupProbe:
+            httpGet:
+              path: /
+              port: tomcat
+            failureThreshold: 18
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: tomcat
+            periodSeconds: 20
+          readinessProbe:
+            httpGet:
+              path: /
+              port: tomcat
+            periodSeconds: 20
+          resources:
+            {{- toYaml .Values.jobExecutorHeavyResources | nindent 12 }}
+          volumeMounts:
+          - mountPath: /opt/xmlconv
+            name: {{ .Release.Name }}-files
+      volumes:
+      - name: {{ .Release.Name }}-files
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-files
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

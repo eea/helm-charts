@@ -1,0 +1,220 @@
+# Default values for converters.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: eeacms/xmlconv
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+  jobExecutor:
+    repository: eeacms/converters-jobexecutor
+    tag: "2022-05-27T0957"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+hostname: converters.eionet.europa.eu
+crHost: cr.eionet.europa.eu
+ddUrl: https://dd.eionet.europa.eu
+cdrUrl: https://cdr.eionet.europa.eu
+jwtSecret: REPLACEME
+longRunningJobsThreshold: 14400000
+basexXqueryTimeLimit: 10000
+maxLightJobExecutorContainersAllowed: 30
+maxHeavyJobExecutorContainersAllowed: 8
+convertersGraylog: https://logs.eea.europa.eu/streams/583be61eb758eb65614834fd/search?rangetype=absolute&fields=message%2Csource&width=1848&highlightMessage=&q=
+jobExecutorGraylog: https://logs.eea.europa.eu/streams/616ebafa2461c900148a5d3a/search?rangetype=absolute&fields=message%2Csource&width=1848&highlightMessage=&q=
+jobExecutorRequestsUrl: http://asyncFmeJobExecutor.converters-eionet:8078
+ddRestApiToken: REPLACEME
+convertersRestApiToken: REPLACEME
+
+fme:
+  user: ReportNet
+  password: REPLACEME
+  token: REPLACEME
+  synchronousToken: REPLACEME
+  retryHours: 10
+
+uns:
+  url: https://uns.eionet.europa.eu
+  channel: 15985216645662251
+  alertsChannel: 16460347900162339
+  username: convertersNotif
+  password: REPLACEME
+  restUsername: xmlconv
+  restPassword: REPLACEME
+
+rabbitMQ:
+  host: converters-all-rabbitmq-rabbitmq-1
+  port: 5672
+  username: admin
+  password: REPLACEME
+  workersJobsQueue: convertersProd-workers-jobs-queue
+  workersJobsResultsQueue: convertersProd-workers-jobs-results-queue
+  workersStatusQueue: convertersProd-workers-status-queue
+  workerHeartBeatResponseQueue: convertersProd-worker-heart-beat-response-queue
+  heartBeatRequestExchange: convertersProd-heart-beat-request-exchange
+  mainXmlconvJobsExchange: convertersProd-main-jobs-exchange
+  mainWorkersExchange: convertersProd-main-workers-exchange
+  jobsRoutingkey: convertersProd-job-routing-key
+  jobsResultsRoutingkey: convertersProd-job-result-routing-key
+  workerStatusRoutingkey: convertersProd-worker-status-routing-key
+  workerHeartBeatResponseRoutingKey: convertersProd-worker-heart-beat-response-routing-key
+  deadLetterQueue: convertersProd-dead-letter-queue
+  deadLetterExchange: convertersProd-workers-dead-letter-exchange
+  deadLetterRoutingKey: convertersProd-workers-dead-letter-routing-key
+  heavyWorkersJobsQueue: convertersProd-workers-heavy-jobs-queue
+  mainXmlconvHeavyJobsExchange: convertersProd-main-xmlconv-heavy-jobs-exchange
+  heavyJobsRoutingkey: convertersProd-xmlconv-job-heavy-routingKey
+  workersFmeSyncJobsQueue: convertersProd-workers-sync-fme-jobs-queue
+  xmlconvSyncFmeJobsExchange: convertersProd-xmlconv-sync-fme-jobs-exchange
+  syncFmeJobsRoutingkey: convertersProd-xmlconv-sync-fme-jobs-routingKey
+  workersFmeAsyncJobsQueue: convertersProd-workers-async-fme-jobs-queue
+  xmlconvAsyncFmeJobsExchange: convertersProd-xmlconv-async-fme-jobs-exchange
+  asyncFmeJobsRoutingkey: convertersProd-xmlconv-async-fme-jobs-routingKey
+  healthQueue: convertersProd-health-queue
+  healthExchange: convertersProd-health-exchange
+  healthRoutingKey: convertersProd-health-routingKey
+  cdrRequestQueue: convertersProd_request_queue
+  cdrRequestExchange: convertersProd_request_exchange
+  cdrRequestRoutingKey: convertersProd_request_routingKey
+  cdrResultsQueue: convertersProd_results_queue
+  cdrResultsExchange: convertersProd_results_exchange
+  cdrResultsRoutingKey: convertersProd_results_routingKey
+  cdrDeadLetterQueue: convertersProd_dead_letter_queue
+  cdrDeadLetterExchange: convertersProd_dead_letter_exchange
+  cdrDeadLetterRoutingKey: convertersProd_dead_letter_routingKey
+  cdrHost: cdrRabbitmq
+  cdrPort: 5672
+  cdrUsername: cr_ping
+  cdrPassword: REPLACEME
+
+rancher:
+  apiUrl: https://kvm-rancher-s2.eea.europa.eu/v2-beta/projects/1a8
+  apiAccessKey: 52CFDC73ECE2934EA6E2
+  apiSecretKey: REPLACEME
+  enableJobExecutorScheduledTask: true
+  apiLightJobExecServiceId: 1s2044
+  apiHeavyJobExecServiceId: 1s2174
+  apiSyncFmeJobExecServiceId: 1s2254
+  apiAsyncFmeJobExecServiceId: 1s2253
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Automatically mount a ServiceAccount's API credentials?
+  automount: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+podLabels: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  tomcat:
+    type: ClusterIP
+    port: 8080
+  database:
+    type: None
+    port: 3306
+  asyncfmedatabase:
+    type: None
+    port: 3306
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resources:
+   limits:
+     memory: 8Gi
+
+jobExecutorResources:
+  limits:
+     memory: 1.5Gi
+
+jobExecutorHeavyResources:
+  limits:
+     memory: 6Gi
+
+syncFmejobExecutorResources:
+  limits:
+     memory: 0.5Gi
+
+asyncFmejobExecutorResources:
+  limits:
+     memory: 0.5Gi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+database:
+  resources:
+    requests:
+      memory: 2Gi
+    limits:
+      memory: 4Gi
+  database: converters
+  username: convapp
+  password: REPLACEME
+  rootpw: REPLACEME
+  parameters: "autoReconnect=true&characterEncoding=UTF-8&emptyStringsConvertToZero=false&jdbcCompliantTruncation=false&serverTimezone=Europe/Copenhagen"
+  storage: 4Gi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+asyncFmeJobExecutorDatabase:
+  resources:
+    requests:
+      memory: 1Gi
+    limits:
+      memory: 2Gi
+  database: jobExecutor
+  username: jobExecutorProd
+  password: REPLACEME
+  rootpw: REPLACEME
+  storage: 2Gi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}

@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "appl.fullname" . }}
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: tomcat
+spec:
+  type: {{ .Values.service.tomcat.type }}
+  ports:
+    - port: {{ .Values.service.tomcat.port }}
+      targetPort: tomcat
+      protocol: TCP
+      name: tomcat
+  selector:
+    {{- include "appl.selectorLabels" . | nindent 4 }}
+    component: tomcat

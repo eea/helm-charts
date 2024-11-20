@@ -1,0 +1,193 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "appl.fullname" . }}
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: tomcat
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: tomcat
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "appl.labels" . | nindent 8 }}
+        component: tomcat
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Release.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: tomcat
+              containerPort: {{ .Values.service.tomcat.port }}
+              protocol: TCP
+          env:
+          - name: rancher.pod.name
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: logFilePath
+            value: /opt/xmlconv
+          - name: queryLogRetainAll
+            value: "false"
+          - name: queryLogRetentionDays
+            value: P60D
+          - name: CATALINA_OPTS
+            value: >-
+              "-Xss4m"
+              "-Xmx7g"
+              "-Dapp.host={{ .Values.hostname }}"
+              "-Dconfig.gdem.url=https://{{ .Values.hostname }}"
+              "-Dconfig.db.jdbcurl=jdbc:mysql://{{ .Release.Name }}-db:{{ .Values.service.database.port }}/{{ .Values.database.database }}?{{ .Values.database.parameters }}"
+              "-Dconfig.db.driver=com.mysql.jdbc.Driver"
+              "-Dconfig.db.user={{ .Values.database.username }}"
+              "-Dconfig.db.password={{ .Values.database.password }}"
+              "-Dconfig.log.file=/opt/xmlconv/log/xmlconv.log"
+              "-Dconfig.heavy.threshold=10485760"
+              "-Dconfig.dd.url={{ .Values.ddUrl }}"
+              "-Dconfig.dd.rpc.url={{ .Values.ddUrl }}/rpcrouter"
+              "-Dconfig.cr.sparql.endpoint=https://{{ .Values.crHost }}/sparql"
+              "-Dconfig.cdr.url={{ .Values.cdrUrl }}"
+              "-Dconfig.isRancher=1"
+              "-Dconfig.hostname=$HOSTNAME"
+              "-Dconfig.cr.host=https://{{ .Values.crHost }}"
+              "-Dconfig.cr.mockCrUrl=http://mockxquerydelay.ewxdevel1dub.eionet.europa.eu"
+              "-Donfig.enableXqueryCrCallsInterception=false"
+              "-Djava.security.egd=file:/dev/./urandom"
+              "-Dapp.home=/opt/xmlconv"
+              "-Dlogback.configurationFile=/opt/xmlconv/logback.xml"
+              "-Djwt.secret={{ .Values.jwtSecret }}"
+              "-Denv.uns.url={{ .Values.uns.url }}"
+              "-Denv.uns.xml.rpc.server.url={{ .Values.uns.url }}/rpcrouter"
+              "-Denv.uns.channel.name={{ .Values.uns.channel }}"
+              "-Denv.uns.alerts.channel.name={{ .Values.uns.alertsChannel }}"
+              "-Denv.uns.subscriptions.url={{ .Values.uns.url }}/subscriptions/subscriptions.jsf"
+              "-Denv.uns.username={{ .Values.uns.username }}"
+              "-Denv.uns.password={{ .Values.uns.password }}"
+              "-Duns.sendNotification.method=/v2/uns/event/legacy/sendNotification/"
+              "-Duns.rest.username={{ .Values.uns.restUsername }}"
+              "-Duns.rest.password={{ .Values.uns.restPassword }}"
+              "-Denv.long.running.jobs.threshold= {{ .Values.longRunningJobsThreshold }}"
+              "-Denv.xquery.http.endpoints={{ .Values.crHost }}"
+              "-Denv.basex.xquery.timeLimit={{ .Values.basexXqueryTimeLimit }}"
+              "-Dldap.url=ldaps://ldap6.eionet.europa.eu:636/"
+              "-Denv.rabbitmq.host={{ .Values.rabbitMQ.host }}"
+              "-Denv.rabbitmq.port={{ .Values.rabbitMQ.port }}"
+              "-Denv.rabbitmq.username={{ .Values.rabbitMQ.username }}"
+              "-Denv.rabbitmq.password={{ .Values.rabbitMQ.password }}"
+              "-Denv.rabbitmq.workers.jobs.queue={{ .Values.rabbitMQ.workersJobsQueue }}"
+              "-Denv.rabbitmq.workers.jobs.results.queue={{ .Values.rabbitMQ.workersJobsResultsQueue }}"
+              "-Denv.rabbitmq.workers.status.queue={{ .Values.rabbitMQ.workersStatusQueue }}"
+              "-Denv.rabbitmq.worker.heartBeat.response.queue={{ .Values.rabbitMQ.workerHeartBeatResponseQueue }}"
+              "-Denv.rabbitmq.xmlconv.heartBeat.request.exchange={{ .Values.rabbitMQ.heartBeatRequestExchange }}"
+              "-Denv.rabbitmq.main.xmlconv.jobs.exchange={{ .Values.rabbitMQ.mainXmlconvJobsExchange }}"
+              "-Denv.rabbitmq.main.workers.exchange={{ .Values.rabbitMQ.mainWorkersExchange }}"
+              "-Denv.rabbitmq.jobs.routingkey={{ .Values.rabbitMQ.jobsRoutingkey }}"
+              "-Denv.rabbitmq.jobs.results.routingkey={{ .Values.rabbitMQ.jobsResultsRoutingkey }}"
+              "-Denv.rabbitmq.worker.status.routingkey={{ .Values.rabbitMQ.workerStatusRoutingkey }}"
+              "-Denv.rabbitmq.worker.heartBeat.response.routingKey={{ .Values.rabbitMQ.workerHeartBeatResponseRoutingKey }}"
+              "-Denv.rabbitmq.dead.letter.queue={{ .Values.rabbitMQ.deadLetterQueue }}"
+              "-Denv.rabbitmq.dead.letter.exchange={{ .Values.rabbitMQ.deadLetterExchange }}"
+              "-Denv.rabbitmq.dead.letter.routingKey={{ .Values.rabbitMQ.deadLetterRoutingKey }}"
+              "-Denv.rabbitmq.heavy.workers.jobs.queue={{ .Values.rabbitMQ.heavyWorkersJobsQueue }}"
+              "-Denv.rabbitmq.main.xmlconv.heavy.jobs.exchange={{ .Values.rabbitMQ.mainXmlconvHeavyJobsExchange }}"
+              "-Denv.rabbitmq.heavy.jobs.routingkey={{ .Values.rabbitMQ.heavyJobsRoutingkey }}"
+              "-Denv.rabbitmq.workers.fme.sync.jobs.queue={{ .Values.rabbitMQ.workersFmeSyncJobsQueue }}"
+              "-Denv.rabbitmq.xmlconv.sync.fme.jobs.exchange={{ .Values.rabbitMQ.xmlconvSyncFmeJobsExchange }}"
+              "-Denv.rabbitmq.sync.fme.jobs.routingkey={{ .Values.rabbitMQ.syncFmeJobsRoutingkey }}"
+              "-Denv.rabbitmq.workers.fme.async.jobs.queue={{ .Values.rabbitMQ.workersFmeAsyncJobsQueue }}"
+              "-Denv.rabbitmq.xmlconv.async.fme.jobs.exchange={{ .Values.rabbitMQ.xmlconvAsyncFmeJobsExchange }}"
+              "-Denv.rabbitmq.async.fme.jobs.routingkey={{ .Values.rabbitMQ.asyncFmeJobsRoutingkey }}"
+              "-Denv.rabbitmq.health.queue={{ .Values.rabbitMQ.healthQueue }}"
+              "-Denv.rabbitmq.health.exchange={{ .Values.rabbitMQ.healthExchange }}"
+              "-Denv.rabbitmq.health.routingKey={{ .Values.rabbitMQ.healthRoutingKey }}"
+              "-Denv.rabbitmq.cdr.request.queue={{ .Values.rabbitMQ.cdrRequestQueue }}"
+              "-Denv.rabbitmq.cdr.request.exchange={{ .Values.rabbitMQ.cdrRequestExchange }}"
+              "-Denv.rabbitmq.cdr.request.routingKey={{ .Values.rabbitMQ.cdrRequestRoutingKey }}"
+              "-Denv.rabbitmq.cdr.results.queue={{ .Values.rabbitMQ.cdrResultsQueue }}"
+              "-Denv.rabbitmq.cdr.results.exchange={{ .Values.rabbitMQ.cdrResultsExchange }}"
+              "-Denv.rabbitmq.cdr.results.routingKey={{ .Values.rabbitMQ.cdrResultsRoutingKey }}"
+              "-Denv.rabbitmq.cdr.dead.letter.queue={{ .Values.rabbitMQ.cdrDeadLetterQueue }}"
+              "-Denv.rabbitmq.cdr.dead.letter.exchange={{ .Values.rabbitMQ.cdrDeadLetterExchange }}"
+              "-Denv.rabbitmq.cdr.dead.letter.routingKey={{ .Values.rabbitMQ.cdrDeadLetterRoutingKey }}"
+              "-Denv.rancher.api.url={{ .Values.rancher.apiUrl }}"
+              "-Denv.rancher.api.accessKey={{ .Values.rancher.apiAccessKey }}"
+              "-Denv.rancher.api.secretKey={{ .Values.rancher.apiSecretKey }}"
+              "-Denv.enable.jobExecutor.rancher.scheduled.task={{ .Values.rancher.enableJobExecutorScheduledTask }}"
+              "-Denv.rancher.api.light.jobExec.service.id={{ .Values.rancher.apiLightJobExecServiceId }}"
+              "-Denv.rancher.api.heavy.jobExec.service.id={{ .Values.rancher.apiHeavyJobExecServiceId }}"
+              "-Denv.rancher.api.sync.fme.jobExec.service.id={{ .Values.rancher.apiSyncFmeJobExecServiceId }}"
+              "-Denv.rancher.api.async.fme.jobExec.service.id={{ .Values.rancher.apiAsyncFmeJobExecServiceId}}"
+              "-Denv.cdr.rabbitmq.host={{ .Values.rabbitMQ.cdrHost }}"
+              "-Denv.cdr.rabbitmq.port={{ .Values.rabbitMQ.cdrPort }}"
+              "-Denv.cdr.rabbitmq.username={{ .Values.rabbitMQ.cdrUsername }}"
+              "-Denv.cdr.rabbitmq.password={{ .Values.rabbitMQ.cdrPassword }}"
+              "-Denv.max.light.jobExecutor.containers.allowed={{ .Values.maxLightJobExecutorContainersAllowed }}"
+              "-Denv.max.heavy.jobExecutor.containers.allowed={{ .Values.maxHeavyJobExecutorContainersAllowed }}"
+              "-Denv.converters.graylog={{ .Values.convertersGraylog }}"
+              "-Denv.jobExecutor.graylog={{ .Values.jobExecutorGraylog }}"
+              "-DjobExecutor.requests.url={{ .Values.jobExecutorRequestsUrl }}"
+              "-Denv.fme.user={{ .Values.fme.user }}"
+              "-Denv.fme.password={{ .Values.fme.password }}"
+              "-Denv.fme.token={{ .Values.fme.token }}"
+          # Wait for up to 3 minutes to all liquibase to finish
+          startupProbe:
+            httpGet:
+              path: /
+              port: tomcat
+            failureThreshold: 18
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: tomcat
+            periodSeconds: 20
+          readinessProbe:
+            httpGet:
+              path: /
+              port: tomcat
+            periodSeconds: 20
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+          - mountPath: /opt/xmlconv
+            name: {{ .Release.Name }}-files
+
+      volumes:
+      - name: {{ .Release.Name }}-files
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-files
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
