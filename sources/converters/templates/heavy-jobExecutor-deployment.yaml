@@ -115,18 +115,18 @@ spec:
           # Wait for up to 3 minutes
           startupProbe:
             httpGet:
-              path: /
+              path: /actuator/health
               port: tomcat
             failureThreshold: 18
             periodSeconds: 10
           livenessProbe:
             httpGet:
-              path: /
+              path: /actuator/health
               port: tomcat
             periodSeconds: 20
           readinessProbe:
             httpGet:
-              path: /
+              path: /actuator/health
               port: tomcat
             periodSeconds: 20
           resources:
