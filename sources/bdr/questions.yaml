@@ -77,6 +77,18 @@ questions:
     type: string
     group: "Instance Configuration"
 
+  - variable: instance.env.sentrySite
+    label: "Sentry Site"
+    type: string
+    default: "bdr.eionet.europa.eu"
+    group: "Instance Configuration"
+
+  - variable: instance.env.sentryEnvironment
+    label: "Sentry Environment"
+    type: string
+    default: "production"
+    group: "Instance Configuration"
+
   - variable: instance.env.clamavHost
     label: "ClamAV Host"
     description: "Hostname for ClamAV service"

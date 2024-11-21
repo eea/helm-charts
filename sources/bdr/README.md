@@ -11,6 +11,10 @@ This can be used to set the rabbitmq host to be used.
 
 ## Releases
 
+### Version 0.1.11
+- Added additional sentry related env variables
+- Single quoted env variables in instance deployment
+
 ### Version 0.1.10
 - Updated rn-local-converters, rn-clamav
 
