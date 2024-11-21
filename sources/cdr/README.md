@@ -10,6 +10,9 @@ This chart is almost configured for production use.
 
 ## Releases
 
+### Version 0.3.9
+- Added computed sentry release
+
 ### Version 0.3.8
 - Added sentrySite and sentryEnvironment variables.
 
