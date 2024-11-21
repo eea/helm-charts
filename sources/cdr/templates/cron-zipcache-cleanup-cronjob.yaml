@@ -33,6 +33,10 @@ spec:
             env:
             - name: SENTRY_DSN
               value: '{{ .Values.instance.env.sentryDSN }}'
+            - name: SENTRY_SITE
+              value: '{{ .Values.instance.env.sentrySite }}'
+            - name: SENTRY_ENVIRONMENT
+              value: '{{ .Values.instance.env.sentryEnvironment }}'
             - name: DEPLOYMENT_HOST
               value: '{{ .Values.instance.env.deploymentHost }}'
             - name: TZ

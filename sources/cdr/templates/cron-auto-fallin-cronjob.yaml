@@ -75,6 +75,10 @@ spec:
               value: '{{ .Values.instance.env.rabbitmqUser }}'
             - name: SENTRY_DSN
               value: '{{ .Values.instance.env.sentryDSN }}'
+            - name: SENTRY_SITE
+              value: '{{ .Values.instance.env.sentrySite }}'
+            - name: SENTRY_ENVIRONMENT
+              value: '{{ .Values.instance.env.sentryEnvironment }}'
             - name: TZ
               value: '{{ .Values.timezone }}'
             - name: ZEO_ADDRESS

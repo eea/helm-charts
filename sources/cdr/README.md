@@ -10,6 +10,9 @@ This chart is almost configured for production use.
 
 ## Releases
 
+### Version 0.3.8
+- Added sentrySite and sentryEnvironment variables.
+
 ### Version 0.3.7
 - Conditionally create and mount zip_cache pvc/pv if zipCacheEnabled is true.
 
