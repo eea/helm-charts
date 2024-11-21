@@ -15,6 +15,10 @@ This chart is almost configured for production use.
 
 ## Releases
 
+### Version 0.3.2
+- Added additional sentry related env variables
+- Single quoted env variables in instance deployment
+
 ### Version 0.3.1
 - Updated rn-local-converters
 

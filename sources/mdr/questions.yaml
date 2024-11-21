@@ -363,6 +363,18 @@ questions:
     default: ""
     group: "Advanced Settings"
 
+  - variable: instance.env.sentrySite
+    label: "Sentry Site"
+    type: string
+    default: "cdr.eionet.europa.eu"
+    group: "Advanced Settings"
+
+  - variable: instance.env.sentryEnvironment
+    label: "Sentry Environment"
+    type: string
+    default: "production"
+    group: "Advanced Settings"
+
   - variable: instance.env.rabbitmqEnabled
     label: "Enable RabbitMQ"
     type: boolean

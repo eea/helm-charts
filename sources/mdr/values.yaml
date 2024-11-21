@@ -30,7 +30,11 @@ instance:
     timeoutSeconds: 6
   readinessProbe:
   env:
+    beakerPath:
+    beakerSecret:
     sentryDSN: ""
+    sentrySite: "mdr.eionet.europa.eu"
+    sentryEnvironment: "production"
     zopeThreads: 4
     deploymentHost: mdr.eionet.europa.eu
     cachePurgingDomain: mdr.eionet.europa.eu
