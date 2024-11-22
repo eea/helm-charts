@@ -11,6 +11,9 @@ This can be used to set the rabbitmq host to be used.
 
 ## Releases
 
+### Version 0.1.12
+- Updated rn-bdr-ldap to 0.1.1
+
 ### Version 0.1.11
 - Added additional sentry related env variables
 - Single quoted env variables in instance deployment

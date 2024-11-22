@@ -1512,6 +1512,13 @@ questions:
       - "No"
     group: "European Registry"
 
+  - variable: ldap.storage
+    label: "LDAP DB Storage Size"
+    description: "The PVC storage size for the LDAP DB"
+    default: "1Gi"
+    type: string
+    group: "LDAP Configuration"
+
   - variable: ldap.rootDN
     label: "Root DN"
     description: "Root Distinguished Name for LDAP"
