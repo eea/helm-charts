@@ -16,6 +16,11 @@ serverAdmin: "helpdesk@replace.me"
 # The default webforms url is used to populate the default webforms in the htconf
 defaultWebformsUrl: "https://webforms.replace.me"
 
+mailtrap:
+  enabled: false
+  path: "/mailtrap"
+  host: "mailtrap"
+
 # Additional webforms endpoints to be used in the htconf
 webforms:
   - endpoint: "odsformsNilDev"
@@ -43,7 +48,8 @@ serviceAccount:
 podAnnotations: {}
 podLabels: {}
 
-podSecurityContext: {}
+podSecurityContext:
+  {}
   # fsGroup: 2000
 
 securityContext: {}
@@ -52,7 +58,8 @@ service:
   type: ClusterIP
   port: 80
 
-resources: {}
+resources:
+  {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
   # resources, such as Minikube. If you do want to specify resources, uncomment the following

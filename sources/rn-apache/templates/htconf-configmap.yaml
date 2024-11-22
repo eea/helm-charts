@@ -60,6 +60,10 @@ data:
       {{- end }}
       {{- end }}
 
+      {{- if .Values.mailtrap.enabled }}
+      RewriteRule ^/{{ .Values.mailtrap.path }}/(.*)  http://{{ .Values.mailtrap.host }}/$1 [P,L]
+      {{- end }}
+
       RewriteCond %{REQUEST_URI}  !/registry-static
       RewriteCond %{REQUEST_URI}  !/notifications-static
       RewriteRule /(.*) http://{{ .Values.zopeBackend }}:8080/VirtualHostBase/https/{{ .Values.serverName }}:443/$1 [P]

@@ -4,9 +4,7 @@ BDR Apache Chart for BDR
 
 ## Releases
 
-<dl>
-
-  <dt>Version 0.1.0</dt>
-  <dd>Initial release.</dd>
-
-</dl>
+- ### Version 0.1.1
+  - Added mailtrap configuration
+- ### Version 0.1.0
+  - Initial release.
