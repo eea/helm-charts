@@ -11,8 +11,6 @@ bdrPass: ""
 
 instance:
   enabled: true
-  repository: eeacms/reportek-bdr
-  tag: ""
   replicaCount: 2
   port: 8080
   resources:
@@ -192,13 +190,15 @@ postgresql:
         cpu: 2
 
 postfix:
+  fullnameOverride: ""
   dryrun: false
-  enabled: true
   serverName: bdr.eionet.europa.eu
   mtpPass: ""
   mtpPort: ""
   mtpRelay: ""
   mtpUser: ""
+  mailtrap:
+    httpenabled: false
 
 bdr-registry:
   adminAllBdrTables: "True"
@@ -397,6 +397,11 @@ apache:
     - endpoint: "odsforms"
       enabled: true
       webformsURL: ""
+
+  mailtrap:
+    enabled: false
+    path: "mailtrap"
+    service: ""
 
   bdrRegistryUrl: ""
   bdrRegistryNotificationsUrl: ""

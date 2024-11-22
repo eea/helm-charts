@@ -732,6 +732,32 @@ questions:
         type: string
         group: "Postfix"
 
+  - variable: "postfix.mailtrap.httpenabled"
+    label: "Create mailtrap service for port 80"
+    description: "Keep unchecked if you don't want to view the emails in a webinterface"
+    type: "boolean"
+    default: false
+    required: true
+    show_if: "postfix.dryrun"
+    show_subquestion_if: true
+    group: "Postfix"
+    subquestions:
+      - variable: "postfix.mailtrap.serviceType"
+        label: "Mailtrap service type"
+        description: "Select NodePort to expose mailtrap on port"
+        type: "enum"
+        options:
+          - "NodePort"
+          - "ClusterIP"
+        default: "ClusterIP"
+        required: true
+      - variable: "apache.mailtrap.path"
+        label: "Mailtrap path"
+        description: "Path to Mailtrap for the hostname. It will be prefixed with /"
+        type: "string"
+        default: "mailtrap"
+        required: true
+
   # BDR Registry Configuration
   - variable: bdr-registry.adminAllBdrTables
     description: "Enable admin access to all BDR tables"

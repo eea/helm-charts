@@ -11,6 +11,11 @@ This can be used to set the rabbitmq host to be used.
 
 ## Releases
 
+### Version 0.1.13
+- Updated rn-apache to 0.1.3
+- Updated postfix to 3.0.2
+- Added mailtrap specific values and questions
+
 ### Version 0.1.12
 - Updated rn-bdr-ldap to 0.1.1
 
