@@ -4,9 +4,8 @@ LDAP Service Chart for BDR
 
 ## Releases
 
-<dl>
+- ### Version 0.1.1
+  - Expose the pvc storage size in the values.yaml(default *storage: 1Gi*)
 
-  <dt>Version 0.1.0</dt>
-  <dd>Initial release.</dd>
-
-</dl>
+- ### Version 0.1.0
+  - Initial release.
