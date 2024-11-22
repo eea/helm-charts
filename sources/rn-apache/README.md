@@ -4,6 +4,9 @@ BDR Apache Chart for BDR
 
 ## Releases
 
+- ### Version 0.1.3
+  - Tweaked the mailtrap rewrite rule
+
 - ### Version 0.1.2
   - Renamed mailtrap host to service so that it's clearer that it requires the service name
 
