@@ -2,66 +2,44 @@
 
 The EMRT(EEA Emission Review Tool) is a web-based tool hosted by the EEA to facilitate quality checks and reviews of national emission inventories reported by EU Member States.
 
-# Releases
+## Releases
 
-<dl>
+### Version 1.0.1 - 25/11-2024
+Removed default targetMemoryUtilizationPercentage as it would be added when not needed.
 
-  <dt>Version 1.0.0 - 14/11-2024</dt>
-  <dd>Zeoserver is no longer on a separate host. Took out the flag.</dd>
-  <dd>Upgraded postfix subchart to 3.0.2.</dd>
+### Version 1.0.0 - 14/11-2024
+Zeoserver is no longer on a separate host. Took out the flag.
+Upgraded postfix subchart to 3.0.2.
 
-  <dt>Version 0.4.0 - 30/9-2024</dt>
-  <dd>Added zeoserver.enabled flag to create zeoserver in the application.</dd>
+### Version 0.4.0 - 30/9-2024
+Added zeoserver.enabled flag to create zeoserver in the application.
 
-  <dt>Version 0.3.9 - 05/9-2024</dt>
-  <dd>Upgraded memcached to 7.4.13, upgraded postfix to 2.0.1.</dd>
+### Version 0.3.9 - 05/9-2024
+Upgraded memcached to 7.4.13, upgraded postfix to 2.0.1.
 
-  <dt>Version 0.3.8 - 20/6-2024</dt>
-  <dd>Upgraded memcached to 7.4.7, upgraded postfix to 1.1.0.</dd>
+### Version 0.3.8 - 20/6-2024
+Upgraded memcached to 7.4.7, upgraded postfix to 1.1.0.
 
-  <dt>Version 0.3.7</dt>
-  <dd>Upgrade to plone-2.5.51</dd>
+### Version 0.3.7
+Upgrade to plone-2.5.51
 
-  <dt>Version 0.3.6</dt>
-  <dd>Upgrade to plone-2.5.50</dd>
+### Version 0.3.6
+Upgrade to plone-2.5.50
 
-  <dt>Version 0.3.5</dt>
-  <dd>Upgrade to plone-2.5.49</dd>
+### Version 0.3.5
+Upgrade to plone-2.5.49
 
-  <dt>Version 0.3.4</dt>
-  <dd>Upgrade to plone-2.5.48</dd>
+### Version 0.3.4
+Upgrade to plone-2.5.48
 
-  <dt>Version 0.3.3</dt>
-  <dd>Change to rolling upgrades for Plone.</dd>
+### Version 0.3.3
+Change to rolling upgrades for Plone.
 
-  <dt>Version 0.3.2</dt>
-  <dd>Set a variable path to probe. Increase timeout to 2 seconds.</dd>
+### Version 0.3.2
+Set a variable path to probe. Increase timeout to 2 seconds.
 
-  <dt>Version 0.3.1</dt>
-  <dd>Fix crontab job. Refs #260926 .</dd>
+### Version 0.3.1
+Fix crontab job. Refs #260926.
 
-  <dt>Version 0.3.0</dt>
-  <dd>Upgraded to plone-2.5.46, added 2024 snapshot. Refs #260926 .</dd>
-
-  <dt>Version 0.2.0</dt>
-  <dd>Removed the haproxy, as Kubernetes does loadbalancing via a ClusterIP.
-      Added autoscaling option.
-      Added health checks to plone.</dd>
-
-  <dt>Version 0.1.4</dt>
-  <dd>Subcharts must comply with x.y.z versioning.</dd>
-
-  <dt>Version 0.1.3</dt>
-  <dd>Use haproxy subchart.</dd>
-
-  <dt>Version 0.1.2</dt>
-  <dd>Set VirtualHostBase in Ingress configuration. </dd>
-
-  <dt>Version 0.1.1</dt>
-  <dd>Use app-version from chart.</dd>
-
-  <dt>Version 0.1.0</dt>
-  <dd>Initial version.</dd>
-
-</dl>
-
+### Version 0.3.0
+Upgraded to plone-2.5.46, added 2024 snapshot. Refs #260926 .

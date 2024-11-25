@@ -9,7 +9,7 @@ keywords:
 - Reportnet
 - Emmission
 
-version: 1.0.0
+version: 1.0.1
 
 # Version for the main container
 appVersion: "plone-2.5.51"
@@ -17,7 +17,7 @@ appVersion: "plone-2.5.51"
 # Remember to do helm dep up .
 dependencies:
   - name: postfix
-    version: 3.0.2
+    version: 3.0.3
     repository: https://eea.github.io/helm-charts
   - name: zeoserver
     version: 0.1.0
