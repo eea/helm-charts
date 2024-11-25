@@ -1,10 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "appl.fullname" . }}
+  name: {{ include "postfix.fullname" . }}
   labels:
-    {{- include "appl.labels" . | nindent 4 }}
-    component: postfix
+    {{- include "postfix.labels" . | nindent 4 }}
 
 spec:
   replicas: {{ .Values.replicaCount }}
@@ -16,13 +15,11 @@ spec:
 
   selector:
     matchLabels:
-      {{- include "appl.selectorLabels" . | nindent 6 }}
-      component: postfix
+      {{- include "postfix.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "appl.selectorLabels" . | nindent 8 }}
-        component: postfix
+        {{- include "postfix.selectorLabels" . | nindent 8 }}
       {{- with .Values.podAnnotations }}
       annotations:
         {{- toYaml . | nindent 8 }}
@@ -32,7 +29,7 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      serviceAccountName: {{ include "postfix.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
 

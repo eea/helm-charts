@@ -27,29 +27,31 @@ in order to succesfully send emails.
 
 ## Releases
 
-<dl>
-  <dt>Version 3.0.2 - 12 November 2024</dt>
-  <dd>Updated the network security policy for mailtrap web interface.</dd>
+### Version 3.0.3 - 25 November 2024
+- Reverted the addition of `component: postfix` to labels. If you have already upgraded to
+version 3.0, then delete the Deployment resource before upgrading to 3.0.3.
+- Changed the names of the macros to coexist better when a subchart.
 
-  <dt>Version 3.0.1 - 11 November 2024</dt>
-  <dd>Added network security policy for mailtrap web interface.</dd>
+### Version 3.0.2 - 12 November 2024
+- Updated the network security policy for mailtrap web interface.
 
-  <dt>Version 3.0.0 - 5 November 2024</dt>
-  <dd>Add questions, mailtrap for development apps with ingress support</dd>
+### Version 3.0.1 - 11 November 2024
+- Added network security policy for mailtrap web interface.
 
-  <dt>Version 2.0.1 - 2 September 2024</dt>
-  <dd>Simpler network security policy.</dd>
+### Version 3.0.0 - 5 November 2024
+- Add questions, mailtrap for development apps with ingress support
 
-  <dt>Version 2.0.0</dt>
-  <dd>Postfix image updated to version 3.5-1.0.</dd>
-  <dd>Network policies: Only allow postfix to be used from same namespace.
-    Only allow outgoing to defined mtpPort and DNS resolution.</dd>
+### Version 2.0.1 - 2 September 2024
+- Simpler network security policy.
 
-  <dt>Version 1.1.0</dt>
-  <dd>Can now set a dryrun flag.</dd>
+### Version 2.0.0
+- Postfix image updated to version 3.5-1.0.
+- Network policies: Only allow postfix to be used from same namespace.
+    Only allow outgoing to defined mtpPort and DNS resolution.
 
-  <dt>Version 1.0.0</dt>
-  <dd>Production release. Set maxSurge and maxUnavailable to 1.</dd>
+### Version 1.1.0
+- Can now set a dryrun flag.
 
-</dl>
+### Version 1.0.0
+- Production release. Set maxSurge and maxUnavailable to 1.
 
