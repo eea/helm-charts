@@ -26,7 +26,7 @@ spec:
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
       containers:
       - name: frontend
-        image: eeacms/industry-frontend:3.25.0
+        image: eeacms/industry-frontend:3.29.0
         env:
         - name: PORT
           value: "3000"

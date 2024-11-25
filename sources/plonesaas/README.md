@@ -21,7 +21,8 @@ This chart deployes the PloneSaaS app together with several frontends as Ingress
 ## Releases
 
 <dl>
-  <dt>Unreleased</dt>
+  <dt>Version 2.4.5 - 29 August 2024</dt>
+  <dd>Updated industry deployment image from eeacms/industry-frontend:3.25.0 to eeacms/industry-frontend:3.29.0</dd>
   <dd>Added `nginx.ingress.kubernetes.io/proxy-body-size: 100m` to `climate-energy-api-ingress.yaml` and `industry-api.ingress.yaml`, refs #279315</dd>
 
   <dt>Version 2.4.4 - 29 August 2024</dt>
