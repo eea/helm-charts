@@ -5,7 +5,7 @@ icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/bdr/logo_ei
 
 type: application
 
-version: 0.1.14
+version: 0.1.15
 
 appVersion: "5.9.4-194"
 
@@ -40,7 +40,7 @@ dependencies:
     repository: https://eea.github.io/helm-charts
     condition: postfix.enabled
   - name: rn-bdr-registry-notifications
-    version: 0.1.1
+    version: 0.1.2
     repository: https://eea.github.io/helm-charts
     alias: bdr-registry-notifications
   - name: rn-bdr-registry-notifications
