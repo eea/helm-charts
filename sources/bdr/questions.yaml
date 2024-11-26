@@ -1086,6 +1086,12 @@ questions:
     type: string
     group: "BDR Registry Notifications"
 
+  - variable: bdr-registry-notifications.notificationsToken
+    description: "BDR Registry Notifications authentication token"
+    default: ""
+    type: password
+    group: "BDR Registry Notifications"
+
   - variable: bdr-registry-notifications.siteUrl
     description: "Base URL path for the application"
     default: "/notifications/"
@@ -1255,6 +1261,12 @@ questions:
     description: "Email address used as sender"
     default: ""
     type: string
+    group: "BDR Registry Notifications Async"
+
+  - variable: bdr-registry-notifications-async.notificationsToken
+    description: "BDR Registry Notifications Async authentication token"
+    default: ""
+    type: password
     group: "BDR Registry Notifications Async"
 
   - variable: bdr-registry-notifications-async.redisHost

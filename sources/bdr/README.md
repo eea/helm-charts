@@ -11,6 +11,10 @@ This can be used to set the rabbitmq host to be used.
 
 ## Releases
 
+### Version 0.1.14
+- Updated rn-bdr-registry-notifications to 0.1.1
+- Updated postfix to 3.0.3
+
 ### Version 0.1.13
 - Updated rn-apache to 0.1.3
 - Updated postfix to 3.0.2
