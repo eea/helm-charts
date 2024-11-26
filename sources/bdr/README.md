@@ -11,6 +11,9 @@ This can be used to set the rabbitmq host to be used.
 
 ## Releases
 
+### Version 0.1.16
+- Updated rn-bdr-registry-notifications to 0.1.3
+
 ### Version 0.1.15
 - Updated rn-bdr-registry-notifications to 0.1.2 to add support for deploymentArgs in registry-notifications-async
 
