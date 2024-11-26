@@ -106,6 +106,8 @@ spec:
               value: {{ .Values.frameVerifySsl | quote }}
             - name: MAIL_HOST
               value: {{ .Values.mailHost | quote }}
+            - name: NOTIFICATIONS_TOKEN
+              value: {{ .Values.notificationsToken | quote }}
             - name: SENTRY_DSN
               value: {{ .Values.sentryDsn | quote }}
             - name: SITE_URL

@@ -4,9 +4,9 @@ BDR Registry Notifications Service Chart for BDR
 
 ## Releases
 
-<dl>
 
-  <dt>Version 0.1.0</dt>
-  <dd>Initial release.</dd>
+### Version 0.1.1
+- Added Notifications Token env variable
 
-</dl>
+### Version 0.1.0
+- Initial release.
