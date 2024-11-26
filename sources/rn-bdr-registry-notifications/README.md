@@ -4,6 +4,9 @@ BDR Registry Notifications Service Chart for BDR
 
 ## Releases
 
+### Version 0.1.3
+- Added redisHost and redisPort env variables in deployment
+
 ### Version 0.1.2
 - Added deploymentArgs to values.yaml
 

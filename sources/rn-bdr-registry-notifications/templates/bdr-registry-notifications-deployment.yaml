@@ -114,6 +114,10 @@ spec:
               value: {{ .Values.mailHost | quote }}
             - name: NOTIFICATIONS_TOKEN
               value: {{ .Values.notificationsToken | quote }}
+            - name: REDIS_HOST
+              value: {{ .Values.redisHost | quote }}
+            - name: REDIS_PORT
+              value: {{ .Values.redisPort | quote }}
             - name: SENTRY_DSN
               value: {{ .Values.sentryDsn | quote }}
             - name: SITE_URL
