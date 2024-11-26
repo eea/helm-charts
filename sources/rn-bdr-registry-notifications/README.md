@@ -4,6 +4,8 @@ BDR Registry Notifications Service Chart for BDR
 
 ## Releases
 
+### Version 0.1.2
+- Added deploymentArgs to values.yaml
 
 ### Version 0.1.1
 - Added Notifications Token env variable
