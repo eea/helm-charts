@@ -4,6 +4,9 @@ BDR Registry Notifications Service Chart for BDR
 
 ## Releases
 
+### Version 0.1.4
+- Added basic livenessprobe for qcluster operation.
+
 ### Version 0.1.3
 - Added redisHost and redisPort env variables in deployment
 

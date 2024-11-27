@@ -138,10 +138,23 @@ spec:
               value: {{ .Values.service.port | quote }}
             - name: POSTGRES_ADDR
               value: {{ .Values.databasesHost | quote }}
+          {{- if .Values.deploymentArgs }}
+          livenessProbe:
+            exec:
+              command:
+              - /bin/sh
+              - -c
+              - "cd /var/local/bdr.registry.notifications && python manage.py qinfo | grep 'Clusters' | cut -d'W' -f1 | grep -o '[0-9]\\+' | grep -q '^[1-9]'"
+            initialDelaySeconds: 60
+            periodSeconds: 60
+            timeoutSeconds: 10
+            failureThreshold: 3
+          {{ else}}
           livenessProbe:
             {{- toYaml .Values.livenessProbe | nindent 12 }}
           readinessProbe:
             {{- toYaml .Values.readinessProbe | nindent 12 }}
+          {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
