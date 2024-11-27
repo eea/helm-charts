@@ -2,49 +2,31 @@
 
 The EMRT(EEA Emission Review Tool) is a web-based tool hosted by the EEA to facilitate quality checks and reviews of national emission inventories reported by EU Member States.
 
-# Releases
+## Releases
 
-<dl>
+### Version 1.0.0 - 27/11-2024
+- Upgraded postfix to 3.0.3
 
-  <dt>Version 0.2.7 - 05/9-2024</dt>
-  <dd>Upgraded memcached to 7.4.13, upgraded postfix to 2.0.1.</dd>
+### Version 0.2.7 - 05/9-2024
+- Upgraded memcached to 7.4.13, upgraded postfix to 2.0.1.
 
-  <dt>Version 0.2.6</dt>
-  <dd>Updated app version to 18.1.23-1-1.74.6.</pp>
+### Version 0.2.6
+- Updated app version to 18.1.23-1-1.74.6.
 
-  <dt>Version 0.2.5 - 20/6-2024</dt>
-  <dd>Upgraded memcached chart to 7.4.7, upgraded postfix chart to 1.1.0.</dd>
+### Version 0.2.5 - 20/6-2024
+- Upgraded memcached chart to 7.4.7, upgraded postfix chart to 1.1.0.
 
-  <dt>Version 0.2.4</dt>
-  <dd>Change Plone to rolling update.</dd>
+### Version 0.2.4
+- Change Plone to rolling update.
 
-  <dt>Version 0.2.3</dt>
-  <dd>Updated app version to 18.1.23-1-1.74.5.</pp>
+### Version 0.2.3
+- Updated app version to 18.1.23-1-1.74.5.
 
-  <dt>Version 0.2.2</dt>
-  <dd>Added health checks to plone.</pp>
+### Version 0.2.2
+- Added health checks to plone.
 
-  <dt>Version 0.2.1</dt>
-  <dd>Updated app version to 18.1.23-1-1.74.4.</dd>
+### Version 0.2.1
+- Updated app version to 18.1.23-1-1.74.4.
 
-  <dt>Version 0.2.0</dt>
-  <dd>Removed the haproxy, as Kubernetes does loadbalancing via a ClusterIP.
-      Added autoscaling option.</dd>
-
-  <dt>Version 0.1.4</dt>
-  <dd>Subcharts must comply with x.y.z versioning.</dd>
-
-  <dt>Version 0.1.3</dt>
-  <dd>Use haproxy subchart.</dd>
-
-  <dt>Version 0.1.2</dt>
-  <dd>Set VirtualHostBase in Ingress configuration. </dd>
-
-  <dt>Version 0.1.1</dt>
-  <dd>Use app-version from chart.</dd>
-
-  <dt>Version 0.1.0</dt>
-  <dd>Initial version.</dd>
-
-</dl>
-
+### Version 0.2.0
+- Removed the haproxy, as Kubernetes does loadbalancing via a ClusterIP.  Added autoscaling option.
