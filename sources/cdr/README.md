@@ -10,6 +10,9 @@ This chart is almost configured for production use.
 
 ## Releases
 
+### Version 0.3.10
+- Updated appVersion to 6.7.3-195.
+
 ### Version 0.3.9
 - Added computed sentry release
 
