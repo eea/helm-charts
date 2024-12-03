@@ -130,12 +130,14 @@ spec:
               value: {{ .Values.useZopeLogin | quote }}
             - name: POSTGRES_ADDR
               value: {{ .Values.databasesHost | quote }}
+          {{- if not .Values.debugTail }}
           livenessProbe:
             {{- toYaml .Values.livenessProbe | nindent 12 }}
           readinessProbe:
             {{- toYaml .Values.readinessProbe | nindent 12 }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          {{- end }}
           volumeMounts:
             - mountPath: /bdrreg/static
               name: {{ include "appl.fullname" . }}-static

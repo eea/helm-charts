@@ -4,6 +4,8 @@ BDR Registry Service Chart for BDR
 
 ## Releases
 
+### Version 0.1.3
+- Disabled probes when debugTail is enabled.
 
 ### Version 0.1.2
 - Added debugTail flag.
