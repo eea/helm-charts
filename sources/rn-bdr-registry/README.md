@@ -4,12 +4,12 @@ BDR Registry Service Chart for BDR
 
 ## Releases
 
-<dl>
 
-  <dt>Version 0.1.1</dt>
-  <dd>Updated appVersion to 1.8.9</dd>
+### Version 0.1.2
+- Added debugTail flag.
 
-  <dt>Version 0.1.0</dt>
-  <dd>Initial release.</dd>
+### Version 0.1.1
+- Updated appVersion to 1.8.9
 
-</dl>
+### Version 0.1.0
+- Initial release.

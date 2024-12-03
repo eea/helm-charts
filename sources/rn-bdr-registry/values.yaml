@@ -10,6 +10,8 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
+# Set this to true to tail keeping the container running
+debugTail: false
 timezone: Europe/Copenhagen
 adminAllBdrTables: ""
 allowedHosts: ""
@@ -36,7 +38,7 @@ databasesUser: ""
 debug: "True"
 emailBackend: post_office.EmailBackend
 emailHost: postfix
-emailPort: '25'
+emailPort: "25"
 enableHdvEditing: "True"
 enableHdvResimEditing: "False"
 frameCookies: ""
@@ -57,11 +59,11 @@ serviceAccount:
   annotations: {}
   name: ""
 
-
 podAnnotations: {}
 podLabels: {}
 
-podSecurityContext: {}
+podSecurityContext:
+  {}
   # fsGroup: 2000
 
 securityContext: {}
@@ -70,7 +72,8 @@ service:
   type: ClusterIP
   port: 12300
 
-resources: {}
+resources:
+  {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
