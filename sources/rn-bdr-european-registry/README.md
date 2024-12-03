@@ -4,6 +4,9 @@ BDR European Registry Service Chart for BDR
 
 ## Releases
 
+### Version 0.1.3
+- Disabled liveness and readiness probes when debugTail is enabled.
+
 ### Version 0.1.2
 - Fixed debugTail default flag.
 
