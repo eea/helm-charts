@@ -4,6 +4,9 @@ BDR Registry Notifications Service Chart for BDR
 
 ## Releases
 
+### Version 0.1.5
+- Added debugTail to values.yaml.
+
 ### Version 0.1.4
 - Added basic livenessprobe for qcluster operation.
 

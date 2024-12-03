@@ -38,10 +38,15 @@ spec:
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          {{- if .Values.debugTail }}
+          command: ["/bin/sh", "-c"]
+          args: ["tail -f /dev/null"]
+          {{- else }}
           {{- if .Values.deploymentArgs }}
           args:
           {{- range .Values.deploymentArgs }}
           - {{ . }}
+          {{- end }}
           {{- end }}
           {{- end }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
