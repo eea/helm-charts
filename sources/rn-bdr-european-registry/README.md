@@ -4,6 +4,9 @@ BDR European Registry Service Chart for BDR
 
 ## Releases
 
+### Version 0.1.2
+- Fixed debugTail default flag.
+
 ### Version 0.1.1
 - Added debugTail flag.
 
