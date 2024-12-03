@@ -4,6 +4,9 @@ BDR Registry Notifications Service Chart for BDR
 
 ## Releases
 
+### Version 0.1.6
+- Disabled probes when debugTail is enabled.
+
 ### Version 0.1.5
 - Added debugTail to values.yaml.
 

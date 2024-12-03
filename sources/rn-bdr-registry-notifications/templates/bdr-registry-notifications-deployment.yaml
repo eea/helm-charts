@@ -143,6 +143,7 @@ spec:
               value: {{ .Values.service.port | quote }}
             - name: POSTGRES_ADDR
               value: {{ .Values.databasesHost | quote }}
+          {{- if not .Values.debugTail }}
           {{- if .Values.deploymentArgs }}
           livenessProbe:
             exec:
@@ -159,6 +160,7 @@ spec:
             {{- toYaml .Values.livenessProbe | nindent 12 }}
           readinessProbe:
             {{- toYaml .Values.readinessProbe | nindent 12 }}
+          {{- end }}
           {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
