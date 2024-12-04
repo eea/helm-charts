@@ -11,6 +11,9 @@ This can be used to set the rabbitmq host to be used.
 
 ## Releases
 
+### Version 0.1.21
+- Updated appVersion to 5.9.4-197
+
 ### Version 0.1.20
 - Updated rn-bdr-registry-notifications to 0.1.6
 - Updated rn-bdr-registry to 0.1.3
