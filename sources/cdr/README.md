@@ -10,6 +10,9 @@ This chart is almost configured for production use.
 
 ## Releases
 
+### Version 0.3.12
+- Updated appVersion to 6.7.3-197.
+
 ### Version 0.3.11
 - Updated appVersion to 6.7.3-196.
 
