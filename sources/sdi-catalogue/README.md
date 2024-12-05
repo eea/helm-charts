@@ -19,6 +19,9 @@ When the application was running on Rancher 1.6, it had a container, which ran t
 ## Releases
 
 <dl>
+  <dt>Version 0.6.17 - 05 December 2024</dt>
+  <dd>Update GN to 8152c023.</dd>
+
   <dt>Version 0.6.16 - 21 October 2024</dt>
   <dd>Update GN to 4314733c.</dd>
   <dd>Record view / More like this / Add filter option.</dd>
