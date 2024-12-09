@@ -31,6 +31,9 @@ in order to succesfully send emails.
 
 ## Releases
 
+### Version 3.0.6 - 09 December 2024
+- Fixed mailtrap expected envinronment variable
+
 ### Version 3.0.5 - 09 December 2024
 - Renamed mailtrap specific environment variables
 

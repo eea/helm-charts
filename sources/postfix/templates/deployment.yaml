@@ -55,8 +55,8 @@ spec:
         {{- if .Values.dryrun }}
         - name: MT_USER
           value: {{ .Values.mailtrap.mtUser }}
-        - name: MT_PASS
-          value: {{ .Values.mailtrap.mtPass }}
+        - name: MT_PASSWD
+          value: {{ .Values.mailtrap.mtPasswd }}
         - name: MT_MAILBOX_LIMIT
           value: "{{ .Values.mailtrap.mtMailboxLimit }}"
         - name: MT_MESSAGE_LIMIT
