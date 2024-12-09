@@ -61,7 +61,7 @@ data:
       {{- end }}
 
       {{- if .Values.mailtrap.enabled }}
-      RewriteRule ^/{{ .Values.mailtrap.path }}(/|.*)$  http://{{ .Values.mailtrap.service }}/$1 [P,L]
+      RewriteRule ^/{{ .Values.mailtrap.path }}(/|.*)$  http://{{ .Values.mailtrap.service }}$1 [P,L]
       {{- end }}
 
       RewriteCond %{REQUEST_URI}  !/registry-static
