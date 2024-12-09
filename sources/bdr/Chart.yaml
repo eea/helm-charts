@@ -5,7 +5,7 @@ icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/bdr/logo_ei
 
 type: application
 
-version: 0.1.23
+version: 0.1.24
 
 appVersion: "5.9.4-197"
 
@@ -36,7 +36,7 @@ dependencies:
     version: 15.2.8
     repository: https://charts.bitnami.com/bitnami
   - name: postfix
-    version: 3.0.4
+    version: 3.0.5
     repository: https://eea.github.io/helm-charts
     condition: postfix.enabled
   - name: rn-bdr-registry-notifications
