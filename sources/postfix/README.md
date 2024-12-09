@@ -16,10 +16,10 @@ in order to succesfully send emails.
 |-----|------|---------|-------------|
 | debug.enable | bool | false | Set true to install the mailtrap image instead of the postfix one |
 | mailtrap.httpenabled | bool | false | Set true to enable the http service in order to view the web interface |
-| mailtrap.MT_USER | string | mailtrap | Mailtrap username for the web interface |
-| mailtrap.MT_PASS | string | mailtrap | Mailtrap password for the web interface |
-| mailtrap.MT_MAILBOX_LIMIT | string | 51200000 | Mailtrap maximum number of mails |
-| mailtrap.MT_MESSAGE_LIMIT | string | 10240000 | Mailtrap maximum size of a mail |
+| mailtrap.mtUser | string | mailtrap | Mailtrap username for the web interface |
+| mailtrap.mtPass | string | mailtrap | Mailtrap password for the web interface |
+| mailtrap.mtMailboxLimit | string | 51200000 | Mailtrap maximum number of mails |
+| mailtrap.mtMessageLimit | string | 10240000 | Mailtrap maximum number of bytes |
 | mailtrap.serviceType | string | NodePort | NodePort to expose the service, ClusterIP if you want to use "kubectl port-forward" |
 | mailtrap.ingress.enabled | bool | false | Set true to enable ingress |
 | mailtrap.ingress.hostname | string | mailtrap.01dev.eea.europa.eu | Unique url for your application, must resolve to the cluster frontend |
@@ -30,6 +30,9 @@ in order to succesfully send emails.
 
 
 ## Releases
+
+### Version 3.0.5 - 09 December 2024
+- Renamed mailtrap specific environment variables
 
 ### Version 3.0.4 - 09 December 2024
 - Added environment variables for mailtrap web interface.

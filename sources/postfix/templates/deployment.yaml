@@ -54,13 +54,13 @@ spec:
           value: "{{ .Values.timezone }}"
         {{- if .Values.dryrun }}
         - name: MT_USER
-          value: {{ .Values.mailtrap.MT_USER }}
+          value: {{ .Values.mailtrap.mtUser }}
         - name: MT_PASS
-          value: {{ .Values.mailtrap.MT_PASS }}
+          value: {{ .Values.mailtrap.mtPass }}
         - name: MT_MAILBOX_LIMIT
-          value: "{{ .Values.mailtrap.MT_MAILBOX_LIMIT }}"
+          value: "{{ .Values.mailtrap.mtMailboxLimit }}"
         - name: MT_MESSAGE_LIMIT
-          value: "{{ .Values.mailtrap.MT_MESSAGE_LIMIT }}"
+          value: "{{ .Values.mailtrap.mtMessageLimit }}"
         {{- else }}
         - name: MTP_HOST
           value: {{ .Values.serverName }}
