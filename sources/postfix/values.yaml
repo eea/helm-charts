@@ -1,4 +1,3 @@
-
 dryrun: false
 replicaCount: 1
 
@@ -7,6 +6,10 @@ serviceName: ""
 mailtrap:
   httpenabled: false
   serviceType: NodePort
+  MT_USER: mailtrap
+  MT_PASS: mailtrap
+  MT_MAILBOX_LIMIT: '51200000'
+  MT_MESSAGE_LIMIT: '10240000'
   ingress:
     enabled: false
     hostname: mailtrap.01dev.eea.europa.eu

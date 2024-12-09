@@ -50,6 +50,18 @@ spec:
           name: http
 
         env:
+        - name: TZ
+          value: "{{ .Values.timezone }}"
+        {{- if .Values.dryrun }}
+        - name: MT_USER
+          value: {{ .Values.mailtrap.MT_USER }}
+        - name: MT_PASS
+          value: {{ .Values.mailtrap.MT_PASS }}
+        - name: MT_MAILBOX_LIMIT
+          value: "{{ .Values.mailtrap.MT_MAILBOX_LIMIT }}"
+        - name: MT_MESSAGE_LIMIT
+          value: "{{ .Values.mailtrap.MT_MESSAGE_LIMIT }}"
+        {{- else }}
         - name: MTP_HOST
           value: {{ .Values.serverName }}
         - name: MTP_PASS
@@ -60,8 +72,7 @@ spec:
           value: {{ .Values.mtpRelay }}
         - name: MTP_USER
           value: {{ .Values.mtpUser }}
-        - name: TZ
-          value: "{{ .Values.timezone }}"
+        {{- end }}
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
         securityContext:
