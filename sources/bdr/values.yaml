@@ -275,6 +275,8 @@ bdr-registry-notifications:
   frameVerifySsl: "False"
   mailHost: bdr-postfix:25
   notificationsToken: ""
+  redisHost: bdr-redis
+  redisPort: "6379"
   sentryDsn: ""
   siteUrl: /notifications/
   staticRoot: /var/local/bdr.registry.notifications/static
