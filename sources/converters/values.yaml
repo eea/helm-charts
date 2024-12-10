@@ -49,45 +49,10 @@ uns:
   restPassword: REPLACEME
 
 rabbitMQ:
-  host: converters-all-rabbitmq-rabbitmq-1
+  host: converters-rabbitmq.reportnet2.svc.cluster.local
   port: 5672
   username: admin
   password: REPLACEME
-  workersJobsQueue: convertersProd-workers-jobs-queue
-  workersJobsResultsQueue: convertersProd-workers-jobs-results-queue
-  workersStatusQueue: convertersProd-workers-status-queue
-  workerHeartBeatResponseQueue: convertersProd-worker-heart-beat-response-queue
-  heartBeatRequestExchange: convertersProd-heart-beat-request-exchange
-  mainXmlconvJobsExchange: convertersProd-main-jobs-exchange
-  mainWorkersExchange: convertersProd-main-workers-exchange
-  jobsRoutingkey: convertersProd-job-routing-key
-  jobsResultsRoutingkey: convertersProd-job-result-routing-key
-  workerStatusRoutingkey: convertersProd-worker-status-routing-key
-  workerHeartBeatResponseRoutingKey: convertersProd-worker-heart-beat-response-routing-key
-  deadLetterQueue: convertersProd-dead-letter-queue
-  deadLetterExchange: convertersProd-workers-dead-letter-exchange
-  deadLetterRoutingKey: convertersProd-workers-dead-letter-routing-key
-  heavyWorkersJobsQueue: convertersProd-workers-heavy-jobs-queue
-  mainXmlconvHeavyJobsExchange: convertersProd-main-xmlconv-heavy-jobs-exchange
-  heavyJobsRoutingkey: convertersProd-xmlconv-job-heavy-routingKey
-  workersFmeSyncJobsQueue: convertersProd-workers-sync-fme-jobs-queue
-  xmlconvSyncFmeJobsExchange: convertersProd-xmlconv-sync-fme-jobs-exchange
-  syncFmeJobsRoutingkey: convertersProd-xmlconv-sync-fme-jobs-routingKey
-  workersFmeAsyncJobsQueue: convertersProd-workers-async-fme-jobs-queue
-  xmlconvAsyncFmeJobsExchange: convertersProd-xmlconv-async-fme-jobs-exchange
-  asyncFmeJobsRoutingkey: convertersProd-xmlconv-async-fme-jobs-routingKey
-  healthQueue: convertersProd-health-queue
-  healthExchange: convertersProd-health-exchange
-  healthRoutingKey: convertersProd-health-routingKey
-  cdrRequestQueue: convertersProd_request_queue
-  cdrRequestExchange: convertersProd_request_exchange
-  cdrRequestRoutingKey: convertersProd_request_routingKey
-  cdrResultsQueue: convertersProd_results_queue
-  cdrResultsExchange: convertersProd_results_exchange
-  cdrResultsRoutingKey: convertersProd_results_routingKey
-  cdrDeadLetterQueue: convertersProd_dead_letter_queue
-  cdrDeadLetterExchange: convertersProd_dead_letter_exchange
-  cdrDeadLetterRoutingKey: convertersProd_dead_letter_routingKey
   cdrHost: cdrRabbitmq
   cdrPort: 5672
   cdrUsername: cr_ping

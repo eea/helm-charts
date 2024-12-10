@@ -77,21 +77,21 @@ spec:
           - name: spring.rabbitmq.username
             value: {{ .Values.rabbitMQ.username }}
           - name: heartBeat.request.rabbitmq.exchange
-            value: {{ .Values.rabbitMQ.heartBeatRequestExchange }}
+            value: {{ .Release.Name }}-heart-beat-request-exchange
           - name: heartBeat.response.rabbitmq.routingKey
-            value: {{ .Values.rabbitMQ.workerHeartBeatResponseRoutingKey }}
+            value: {{ .Release.Name }}-worker-heart-beat-response-routing-key
           - name: job.rabbitmq.jobsResultExchange
-            value: {{ .Values.rabbitMQ.mainWorkersExchange }}
+            value: {{ .Release.Name }}-main-workers-exchange
           - name: job.rabbitmq.jobsResultRoutingKey
-            value: {{ .Values.rabbitMQ.jobsResultsRoutingkey }}
+            value: {{ .Release.Name }}-job-result-routing-key
           - name: job.rabbitmq.listeningQueue
-            value: {{ .Values.rabbitMQ.workersFmeSyncJobsQueue }}
+            value: {{ .Release.Name }}-workers-sync-fme-jobs-queue
           - name: job.rabbitmq.workerStatusRoutingKey
-            value: {{ .Values.rabbitMQ.workerStatusRoutingkey }}
+            value: {{ .Release.Name }}-worker-status-routing-key
           - name: rabbitmq.dead.letter.exchange
-            value: {{ .Values.rabbitMQ.deadLetterExchange }}
+            value: {{ .Release.Name }}-workers-dead-letter-exchange
           - name: rabbitmq.dead.letter.routingKey
-            value: {{ .Values.rabbitMQ.deadLetterRoutingKey }}
+            value: {{ .Release.Name }}-workers-dead-letter-routing-key
           - name: JAVA_TOOL_OPTIONS
             value: -Xss4m -Xmx1075m
           - name: cache.temp.dir
