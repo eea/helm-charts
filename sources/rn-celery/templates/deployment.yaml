@@ -1,90 +1,116 @@
+{{- $root := . -}}
+{{- range $worker := .Values.workers }}
+{{- if not $worker.tasks }}
+{{- fail "Each worker must specify tasks" }}
+{{- end }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "appl.fullname" . }}
+  name: {{ include "appl.fullname" $root }}-{{ $worker.name }}
   labels:
-    {{- include "appl.labels" . | nindent 4 }}
-    component: celery
-
+    {{- include "appl.labels" $root | nindent 4 }}
+    app.kubernetes.io/component: celery
+    app.kubernetes.io/worker: {{ $worker.name }}
 spec:
-  replicas: 1
+  replicas: {{ $worker.replicas | default 1 }}
   selector:
     matchLabels:
-      {{- include "appl.selectorLabels" . | nindent 6 }}
-      component: celery
+      {{- include "appl.selectorLabels" $root | nindent 6 }}
+      app.kubernetes.io/component: celery
+      app.kubernetes.io/worker: {{ $worker.name }}
   template:
     metadata:
       labels:
-        {{- include "appl.selectorLabels" . | nindent 8 }}
-        component: celery
+        {{- include "appl.selectorLabels" $root | nindent 8 }}
+        app.kubernetes.io/component: celery
+        app.kubernetes.io/worker: {{ $worker.name }}
     spec:
-      {{- with .Values.imagePullSecrets }}
+      {{- with $root.Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "appl.serviceAccountName" . }}
-
+      serviceAccountName: {{ include "appl.serviceAccountName" $root }}
       containers:
-      - name: {{ .Release.Name }}
-        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
-        ports:
-        - containerPort: 5672
-          protocol: TCP
-        - containerPort: 15672
-          protocol: TCP
+      - name: {{ $worker.name }}
+        image: "{{ $root.Values.image.repository }}:{{ $root.Values.image.tag | default $root.Chart.AppVersion }}"
+        imagePullPolicy: {{ $root.Values.image.pullPolicy }}
         env:
-        {{- if .Values.useRedis }}
+        {{- if $root.Values.redis.enabled }}
         - name: CELERY_BACKEND_URL
-          value: redis://{{ .Values.redisHost }}
+          value: redis://{{ $root.Values.redis.host }}
         {{- end }}
         - name: CELERY_BROKER_URL
-          value: amqp://{{ .Values.rabbitUser }}:{{ .Values.rabbitPass }}@{{ include "rabbit.hostname" . }}
+          value: amqp://{{ $root.Values.rabbitUser }}:{{ $root.Values.rabbitPass }}@{{ include "rabbit.hostname" $root }}
         - name: EVENT_CONSUMER_ARCHIVE_EXPIRY
-          value: "{{ .Values.archiveExpiry }}"
+          value: "{{ $worker.archiveExpiry | default $root.Values.archiveExpiry }}"
         - name: EVENT_CONSUMER_MAX_RETRIES
-          value: "{{ .Values.maxRetries }}"
+          value: "{{ $worker.maxRetries | default $root.Values.maxRetries }}"
         - name: REQUIREMENTS
           value: |
-            {{- .Values.requirements | nindent 12 }}
+            {{- ($worker.requirements | default $root.Values.requirements) | nindent 12 }}
         - name: CONSTRAINTS
           value: |
-            {{- .Values.constraints | nindent 12 }}
+            {{- ($worker.constraints | default $root.Values.constraints) | nindent 12 }}
         - name: TASKS
           value: |
-            {{- .Values.tasks | nindent 12 }}
+            {{- $worker.tasks | nindent 12 }}
         - name: TZ
-          value: {{ .Values.timezone }}
-        {{- toYaml .Values.envVars | nindent 8 }}
-
-        stdin: true
-        tty: true
+          value: {{ $root.Values.timezone }}
+        {{- if $worker.envVars }}
+        {{- toYaml $worker.envVars | nindent 8 }}
+        {{- else if $root.Values.envVars }}
+        {{- toYaml $root.Values.envVars | nindent 8 }}
+        {{- end }}
 
         resources:
-          {{- toYaml .Values.resources | nindent 10 }}
+          {{- toYaml ($worker.resources | default $root.Values.resources) | nindent 10 }}
+
         securityContext:
-          {{- toYaml .Values.securityContext | nindent 10 }}
+          {{- toYaml ($worker.securityContext | default $root.Values.securityContext) | nindent 10 }}
 
-        # Will restart the pods if it is not responding
-#       livenessProbe:
-#         httpGet:
-#           path: /
-#           port: 5672
-#         initialDelaySeconds: 15
-#         periodSeconds: 60
+        {{- if $worker.livenessProbe | default $root.Values.livenessProbe }}
+        livenessProbe:
+          {{- toYaml ($worker.livenessProbe | default $root.Values.livenessProbe) | nindent 10 }}
+        {{- end }}
 
+        {{- if $worker.readinessProbe | default $root.Values.readinessProbe }}
+        readinessProbe:
+          {{- toYaml ($worker.readinessProbe | default $root.Values.readinessProbe) | nindent 10 }}
+        {{- end }}
 
-      {{- with .Values.nodeSelector }}
+      {{- with $root.Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.affinity }}
+
+      {{- with $worker.affinity | default $root.Values.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.tolerations }}
+
+      {{- with $worker.tolerations | default $root.Values.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      restartPolicy: Always
 
+      terminationGracePeriodSeconds: {{ $worker.terminationGracePeriodSeconds | default 30 }}
+      restartPolicy: Always
+---
+{{- if $worker.podDisruptionBudget }}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "appl.fullname" $root }}-{{ $worker.name }}
+  labels:
+    {{- include "appl.labels" $root | nindent 4 }}
+    app.kubernetes.io/component: celery
+    app.kubernetes.io/worker: {{ $worker.name }}
+spec:
+  {{- toYaml $worker.podDisruptionBudget | nindent 2 }}
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" $root | nindent 6 }}
+      app.kubernetes.io/component: celery
+      app.kubernetes.io/worker: {{ $worker.name }}
+{{- end }}
+{{- end }}

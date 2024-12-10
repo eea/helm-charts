@@ -1,24 +1,23 @@
-{{- if .Values.useRedis }}
-{{- if empty (lookup "v1" "Service" .Release.Namespace .Values.redisHost) }}
+{{- if and .Values.redis.enabled .Values.redis.create }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.redisHost }}
+  name: {{ .Values.redis.host }}
   labels:
     {{- include "appl.labels" . | nindent 4 }}
-    component: redis
+    app.kubernetes.io/component: redis
 
 spec:
   replicas: 1
   selector:
     matchLabels:
       {{- include "appl.selectorLabels" . | nindent 6 }}
-      component: redis
+      app.kubernetes.io/component: redis
   template:
     metadata:
       labels:
         {{- include "appl.selectorLabels" . | nindent 8 }}
-        component: redis
+        app.kubernetes.io/component: redis
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -70,5 +69,4 @@ spec:
       - name: tmpdata
         emptyDir: {}
 
-{{- end }}
 {{- end }}
