@@ -28,6 +28,9 @@ expects to find a certificate secret matching the name at `haproxy.extraVolumes.
 
 <dl>
 
+  <dt>Version 0.5.3 - 12-DEC-2024</dt>
+  <dd>Add Perl library LibXSLT to OTRS image.</dd>
+
   <dt>Version 0.5.2 - 28-AUG-2024</dt>
   <dd>Upgrade to HAproxy 3.0.3 via subchart.</dd>
 

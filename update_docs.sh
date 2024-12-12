@@ -9,7 +9,7 @@ fi
 
 
 if [ -z "$chart" ] || [ ! -d sources/$chart ]; then
-    echo "Please give the paramater the directory from sources"
+    echo "Please give the parameter the directory from sources"
     exit 1
 fi
 
@@ -29,7 +29,7 @@ fi
 
 helm lint .
 if [ $(grep "repository" Chart.yaml | wc -l ) -ne 0 ]; then
-   echo "Updating dependecies"
+   echo "Updating dependencies"
    helm dependencies update 
 fi
 
