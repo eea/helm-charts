@@ -4971,6 +4971,27 @@ entries:
     version: 1.8.10
   helpdesk-otrs:
   - apiVersion: v2
+    appVersion: v6.0.43-openid-06
+    created: "2024-12-12T12:06:31.486182651+01:00"
+    dependencies:
+    - name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 1.1.0
+    - condition: haproxy.enabled
+      name: haproxy
+      repository: https://charts.bitnami.com/bitnami
+      version: 2.1.1
+    description: Eionet helpdesk
+    digest: 0a287d71f768a81828a267cf1b9d3e82c76c48a0ff81eb73205cddb77d7cc683
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/helpdesk-otrs/otrs-icon.png
+    keywords:
+    - Tickets
+    name: helpdesk-otrs
+    type: application
+    urls:
+    - helpdesk-otrs-0.5.3.tgz
+    version: 0.5.3
+  - apiVersion: v2
     appVersion: v6.0.43-openid-05
     created: "2024-12-05T18:23:58.999523+01:00"
     dependencies:
@@ -8517,4 +8538,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2024-12-10T15:59:36.045621+02:00"
+generated: "2024-12-12T12:06:31.471028502+01:00"
