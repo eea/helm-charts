@@ -4,6 +4,9 @@ BDR Apache Chart for BDR
 
 ## Releases
 
+### Version 0.1.5
+  - Added matomo in script-src CSP
+
 ### Version 0.1.4
   - Further tweaks to the mailtrap rewrite rule
 
