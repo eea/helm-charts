@@ -11,6 +11,9 @@ This can be used to set the rabbitmq host to be used.
 
 ## Releases
 
+### Version 0.1.26
+- Updated rn-apache to 0.1.5
+
 ### Version 0.1.25
 - Updated postfix to 3.0.6
 
