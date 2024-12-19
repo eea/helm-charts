@@ -127,6 +127,12 @@ synccronjobs:
     token: ""
     syncURL: ""
     backoffLimit: 5
+  - name: sync-auditors
+    enabled: false
+    schedule: "30 * * * *"
+    token: ""
+    syncURL: ""
+    backoffLimit: 5
 
 zeoserver:
   storage: 150Gi

@@ -479,6 +479,46 @@ questions:
     group: "Sync Jobs"
     show_if: "synccronjobs.5.enabled=true"
 
+  # Auditors Fetch
+  - variable: synccronjobs.6.enabled
+    default: false
+    description: "Enable auditors fetch cronjob"
+    label: "Enable Auditors Fetch"
+    type: boolean
+    group: "Sync Jobs"
+
+  - variable: synccronjobs.6.schedule
+    default: "30 * * * *"
+    description: "Cron schedule for auditors fetch"
+    label: "Auditors Fetch Schedule"
+    type: string
+    group: "Sync Jobs"
+    show_if: "synccronjobs.6.enabled=true"
+
+  - variable: synccronjobs.6.token
+    default: ""
+    description: "Authentication token for auditors fetch"
+    label: "Auditors Fetch Token"
+    type: password
+    group: "Sync Jobs"
+    show_if: "synccronjobs.6.enabled=true"
+
+  - variable: synccronjobs.6.syncURL
+    default: ""
+    description: "URL endpoint for auditors fetch"
+    label: "Auditors Fetch URL"
+    type: string
+    group: "Sync Jobs"
+    show_if: "synccronjobs.6.enabled=true"
+
+  - variable: synccronjobs.6.backoffLimit
+    default: 1
+    description: "Number of retries before giving up on a failed sync"
+    label: "Auditors Fetch Backoff Limit"
+    type: int
+    group: "Sync Jobs"
+    show_if: "synccronjobs.6.enabled=true"
+
   # ZEO Server Configuration
   - variable: zeoserver.storage
     label: "ZEO Storage Size"

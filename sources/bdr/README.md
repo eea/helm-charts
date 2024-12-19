@@ -11,6 +11,10 @@ This can be used to set the rabbitmq host to be used.
 
 ## Releases
 
+### Version 0.1.27
+- Updated rn-bdr-european-registry to 0.1.4
+- Added auditors fetch sync job
+
 ### Version 0.1.26
 - Updated rn-apache to 0.1.5
 
