@@ -4,6 +4,9 @@ BDR European Registry Service Chart for BDR
 
 ## Releases
 
+### Version 0.1.4
+- Updated appVersion to 2.4.0.
+
 ### Version 0.1.3
 - Disabled liveness and readiness probes when debugTail is enabled.
 
