@@ -417,6 +417,13 @@ apache:
 
   bdrRegistryUrl: ""
   bdrRegistryNotificationsUrl: ""
+  registriesHealthChecks:
+  - name: "syncfgas-health"
+    enabled: false
+    url: "http://replace.me/log/check_sync/FGAS"
+  - name: "syncods-health"
+    enabled: false
+    url: "http://replace.me/log/check_sync/ODS"
   zopeBackend: "bdr-instance"
   mailTrap: "bdr-postfix"
   timeout: 30
