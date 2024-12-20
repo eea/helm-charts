@@ -33,6 +33,15 @@ webforms:
 # The url of the bdr registry, notifications and zope backend for the rewrite rules
 bdrRegistryUrl: ""
 bdrRegistryNotificationsUrl: ""
+
+registriesHealthChecks:
+  - name: "syncfgas-health"
+    enabled: false
+    url: "http://replace.me/log/check_sync/FGAS"
+  - name: "syncods-health"
+    enabled: false
+    url: "http://replace.me/log/check_sync/ODS"
+
 zopeBackend: "instance"
 timeout: 30
 proxyTimeout: 30

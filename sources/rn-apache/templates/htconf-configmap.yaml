@@ -52,6 +52,12 @@ data:
       RewriteCond %{REQUEST_URI}  !/registry-static
       RewriteRule ^/registry(/|.*)$ {{ .Values.bdrRegistryUrl }}$1 [P,NE,L]
 
+      {{- range $healthcheck := .Values.registriesHealthChecks }}
+      {{- if $healthcheck.enabled }}
+      RewriteRule ^/{{ $healthcheck.name }}(/|.*)$ {{ $healthcheck.url }} [P,NE,L]
+      {{- end }}
+      {{- end }}
+
       RewriteRule /webq/(.*) {{ .Values.defaultWebformsUrl }}/$1?base_uri=https://{{ .Values.serverName }}/webq/ [P,L,QSA]
 
       {{- range $webform := .Values.webforms }}

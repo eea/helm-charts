@@ -4,6 +4,9 @@ BDR Apache Chart for BDR
 
 ## Releases
 
+### Version 0.1.6
+  - Added registries health checks
+
 ### Version 0.1.5
   - Added matomo in script-src CSP
 
