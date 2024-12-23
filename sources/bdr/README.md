@@ -11,6 +11,9 @@ This can be used to set the rabbitmq host to be used.
 
 ## Releases
 
+### Version 0.1.30
+- Updated appVersion to 5.9.4-199
+
 ### Version 0.1.29
 - Updated rn-apache to 0.1.6
 - Added healthchecks for apache in values.yaml
