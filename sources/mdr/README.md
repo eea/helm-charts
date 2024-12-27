@@ -15,6 +15,9 @@ This chart is almost configured for production use.
 
 ## Releases
 
+### Version 0.3.7
+- Updated rn-zeoserver chart to 0.1.6.
+
 ### Version 0.3.6
 - Updated appVersion to 3.9.1-212.
 
