@@ -10,6 +10,9 @@ This chart is almost configured for production use.
 
 ## Releases
 
+### Version 0.3.17
+- Updated rn-zeoserver chart to 0.1.6.
+
 ### Version 0.3.16
 - Fixed cronjob for auto cleanup.
 
