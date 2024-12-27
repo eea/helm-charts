@@ -57,6 +57,15 @@ spec:
         - name: TZ
           value: {{ .Values.timezone }}
 
+        - name: ZEO_UID
+          value: '{{ .Values.zeoUid }}'
+
+        - name: ZEO_GID
+          value: '{{ .Values.zeoGid }}'
+
+        - name: ZEO_PACK_KEEP_OLD
+          value: '{{ .Values.zeoPackKeepOld }}'
+
         volumeMounts:
         - mountPath: /data
           name: {{ .Values.storageName }}

@@ -9,8 +9,14 @@ Zeoserver is the Zope server for Reportek
 - `timezone` - Time zone.
 - `storage` - Size of the persistent volume claim.
 - `storageName` - Name of the persistent volume claim.
+- `zeoUid` - UID of the user running the ZEO server. Defaults to 500.
+- `zeoGid` - GID of the user running the ZEO server. Defaults to 500.
+- `zeoPackKeepOld` - Keep old pack files. Defaults to true.
 
 ## Releases
+
+### Version 0.1.6
+- Added zeoUid, zeoGid and zeoPackKeepOld values.
 
 ### Version 0.1.5
 - Added initContainer to create storage directories.
