@@ -11,6 +11,9 @@ This can be used to set the rabbitmq host to be used.
 
 ## Releases
 
+### Version 0.1.31
+- Updated rn-zeoserver to 0.1.6
+
 ### Version 0.1.30
 - Updated appVersion to 5.9.4-199
 
