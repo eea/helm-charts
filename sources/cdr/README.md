@@ -10,6 +10,9 @@ This chart is almost configured for production use.
 
 ## Releases
 
+### Version 0.3.16
+- Fixed cronjob for auto cleanup.
+
 ### Version 0.3.15
 - Added cronjob for auto cleanup.
 
