@@ -245,6 +245,19 @@ questions:
     show_if: "cronautoenvcleanup.enabled"
     group: "Cron jobs"
 
+  - variable: cronautocleanup.enabled
+    label: "Enable Cron auto cleanup"
+    type: boolean
+    default: false
+    group: "Cron jobs"
+
+  - variable: cronautocleanup.schedule
+    label: "Cron auto cleanup Schedule"
+    type: string
+    default: "45 3 * * *"
+    show_if: "cronautocleanup.enabled"
+    group: "Cron jobs"
+
   - variable: cronautofallin.enabled
     label: "Enable Cron auto fallin"
     type: boolean

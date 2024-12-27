@@ -1,0 +1,78 @@
+{{- if and .Values.cron.enabled .Values.cronautocleanup.enabled }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "appl.fullname" . }}-cron-auto-cleanup
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    app.kubernetes.io/component: job
+
+spec:
+  schedule: "{{ .Values.cronautocleanup.schedule }}"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          {{- with .Values.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
+          containers:
+          - name: {{ include "appl.fullname" . }}
+            image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+            imagePullPolicy: {{ .Values.image.pullPolicy }}
+            resources:
+              {{- toYaml .Values.cronautocleanup.resources | nindent 14 }}
+            command:
+            - /opt/zope/bin/instance
+            - run
+            - /opt/zope/bin/auto_cleanup
+            - --container
+            - /xmlexports/prefills/designation_types
+            - --recursive
+            - true
+            - --c_type
+            - File
+            - --prefix
+            - OLD_
+            - --threshold
+            - '5'
+            env:
+            - name: CACHE_PURGING_DOMAIN
+              value: '{{ .Values.instance.env.cachePurgingDomain }}'
+            - name: CACHE_PURGING_ENABLED
+              value: '{{ .Values.instance.env.cachePurgingEnabled }}'
+            - name: CACHE_PURGING_PROXY
+              value: '{{ .Values.instance.env.cachePurgingProxy }}'
+            - name: CACHE_PURGING_PROXY_PORT
+              value: '{{ .Values.instance.env.cachePurgingProxyPort }}'
+            - name: CACHE_PURGING_VHOST
+              value: '{{ .Values.instance.env.cachePurgingVhost }}'
+            - name: CACHE_SETTINGS_ENABLED
+              value: '{{ .Values.instance.env.cacheSettingsEnabled }}'
+            - name: CLAMAV_HOST
+              value: '{{ .Values.instance.env.clamavHost }}'
+            - name: GRAYLOG
+              value: '{{ .Values.instance.env.graylog }}'
+            - name: GRAYLOG_FACILITY
+              value: '{{ .Values.instance.env.graylogFacility }}'
+            - name: SENTRY_DSN
+              value: '{{ .Values.instance.env.sentryDSN }}'
+            - name: SENTRY_SITE
+              value: '{{ .Values.instance.env.sentrySite }}'
+            - name: SENTRY_ENVIRONMENT
+              value: '{{ .Values.instance.env.sentryEnvironment }}'
+            - name: SENTRY_RELEASE
+              value: '{{ include "appl.chart" . }}:{{ .Chart.AppVersion }}'
+            - name: TZ
+              value: '{{ .Values.timezone }}'
+            - name: ZEO_ADDRESS
+              value: '{{ .Values.instance.env.zeoAddress }}'
+            - name: ZOPE_THREADS
+              value: '{{ .Values.instance.env.zopeThreads }}'
+
+          restartPolicy: Never
+{{- end }}

@@ -10,6 +10,9 @@ This chart is almost configured for production use.
 
 ## Releases
 
+### Version 0.3.15
+- Added cronjob for auto cleanup.
+
 ### Version 0.3.14
 - Updated appVersion to 6.7.3-199.
 
