@@ -13,6 +13,10 @@ Clamav scanner for Reportek.
 
 ## Releases
 
+### Version 0.1.5
+- Added behavior section to hpa.
+- Updated appVersion to 2.6.21.
+
 ### Version 0.1.4
 - Tweaked hpa name
 - Fixed README

@@ -74,8 +74,21 @@ autoscaling:
   enabled: false
   minReplicas: 1
   maxReplicas: 3
-  targetCPUUtilizationPercentage: 80
-  targetMemoryUtilizationPercentage: 80
+  targetCPUUtilizationPercentage: 50
+  targetMemoryUtilizationPercentage: 60
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 300  # 5 minutes to ensure we need to scale down
+      policies:
+      - type: Percent
+        value: 100    # Allow scaling down all unnecessary pods
+        periodSeconds: 300  # But only every 5 minutes
+    scaleUp:
+      stabilizationWindowSeconds: 0    # React quickly to scale up needs
+      policies:
+      - type: Percent
+        value: 100    # Allow doubling the pods
+        periodSeconds: 60   # Every minute
 
 nodeSelector: {}
 
