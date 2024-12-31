@@ -10,6 +10,9 @@ This chart is almost configured for production use.
 
 ## Releases
 
+### Version 0.3.18
+- Updated rn-clamav chart to 0.1.5.
+
 ### Version 0.3.17
 - Updated rn-zeoserver chart to 0.1.6.
 
