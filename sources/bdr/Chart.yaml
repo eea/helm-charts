@@ -5,7 +5,7 @@ icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/bdr/logo_ei
 
 type: application
 
-version: 0.1.31
+version: 0.1.32
 
 appVersion: "5.9.4-199"
 
@@ -20,7 +20,7 @@ dependencies:
     condition: rn-local-converters.enabled
     alias: local-converters
   - name: rn-clamav
-    version: 0.1.4
+    version: 0.1.5
     repository: https://eea.github.io/helm-charts
     condition: rn-clamav.enabled
     alias: clamav

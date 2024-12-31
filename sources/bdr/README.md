@@ -11,6 +11,9 @@ This can be used to set the rabbitmq host to be used.
 
 ## Releases
 
+### Version 0.1.32
+- Updated rn-clamav to 0.1.5
+
 ### Version 0.1.31
 - Updated rn-zeoserver to 0.1.6
 
