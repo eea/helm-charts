@@ -10,6 +10,26 @@ Define RabbitMQ host with namespace
 {{- end }}
 
 {{/*
+Handle multiple credential types
+*/}}
+{{- define "worker.credentials" -}}
+{{- if .credentials }}
+{{- range $cred := .credentials }}
+- name: {{ $cred.envPrefix }}_{{ $cred.envName }}_USER
+  valueFrom:
+    secretKeyRef:
+      name: celery-platform-credentials
+      key: {{ $cred.deployment }}-user
+- name: {{ $cred.envPrefix }}_{{ $cred.envName }}_PASS
+  valueFrom:
+    secretKeyRef:
+      name: celery-platform-credentials
+      key: {{ $cred.deployment }}-pass
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{/*
 Expand the name of the chart.
 */}}
 {{- define "appl.name" -}}

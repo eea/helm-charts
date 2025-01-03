@@ -1,8 +1,5 @@
 {{- $root := . -}}
 {{- range $worker := .Values.workers }}
-{{- if not $worker.tasks }}
-{{- fail "Each worker must specify tasks" }}
-{{- end }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -51,15 +48,21 @@ spec:
         - name: CONSTRAINTS
           value: |
             {{- ($worker.constraints | default $root.Values.constraints) | nindent 12 }}
+        {{- if $worker.credentials }}
+        {{- include "worker.credentials" $worker | nindent 8 }}
+        {{- end }}
         - name: TASKS
-          value: |
-            {{- $worker.tasks | nindent 12 }}
+          valueFrom:
+            configMapKeyRef:
+              name: {{ include "appl.fullname" $root }}-{{ $worker.name }}-task
+              key: task.py
         - name: TZ
           value: {{ $root.Values.timezone }}
+        {{- if $root.Values.envVars }}
+        {{- toYaml $root.Values.envVars | nindent 8 }}
+        {{- end }}
         {{- if $worker.envVars }}
         {{- toYaml $worker.envVars | nindent 8 }}
-        {{- else if $root.Values.envVars }}
-        {{- toYaml $root.Values.envVars | nindent 8 }}
         {{- end }}
 
         resources:

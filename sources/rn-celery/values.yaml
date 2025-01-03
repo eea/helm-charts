@@ -17,12 +17,20 @@ rabbitUser: "guest"
 
 redis:
   enabled: true
-  host: redis
+  host: celery-redis
   create: true
+  resources:
+    requests:
+      memory: 512Mi
+    limits:
+      memory: 512Mi
+  securityContext: {}
 
 envVars:
   - name: RETRY_INTERVAL
     value: "120"
+  - name: FWD_ENDPOINT
+    value: "forwardState"
 
 constraints: |
   nltk==3.4
@@ -30,30 +38,15 @@ archiveExpiry: "31536000000"
 maxRetries: "1000"
 requirements: |
   nltk
+  requests
+  redis
 
 workers:
   - name: ping
-    tasks: |
-      import urllib.request
-
-      @message_handler("sds_queue")
-      def ping(message):
-          action, service, uri = message.split("|")
-          url = "%s?uri=%s" % (service, uri)
-          if action == 'create':
-              url += "&create=True"
-
-          res = ""
-          with urllib.request.urlopen(url, timeout=10) as con:
-              res = con.read()
-
-          if "URL not in catalogue of sources" in res.decode('utf-8') and "create" not in url:
-              url += "&create=True"
-              with urllib.request.urlopen(url, timeout=10) as con:
-                  res = con.read()
-
-          print("Ping %s with result: %s" % (url, res))
-          return res
+    tasksFile: "tasks/ping_task.py"
+    envVars:
+      - name: QUEUE
+        value: "cr_queue"
 
 timezone: Europe/Copenhagen
 
@@ -64,17 +57,15 @@ serviceAccount:
 
 podAnnotations: {}
 
-podSecurityContext:
-  {}
-  # fsGroup: 2000
+podSecurityContext: {}
 
 securityContext: {}
 
 resources:
   requests:
-    memory: 1Gi
+    memory: 512Mi
   limits:
-    memory: 1Gi
+    memory: 512Mi
 
 nodeSelector: {}
 tolerations: []

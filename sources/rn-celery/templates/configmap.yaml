@@ -1,0 +1,14 @@
+{{- range $worker := .Values.workers }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "appl.fullname" $ }}-{{ $worker.name }}-task
+data:
+  task.py: |-
+{{- if $worker.tasksFile }}
+{{ $.Files.Get $worker.tasksFile | indent 4 }}
+{{- else }}
+{{- $worker.tasks | nindent 12 }}
+{{- end }}
+---
+{{- end }}
