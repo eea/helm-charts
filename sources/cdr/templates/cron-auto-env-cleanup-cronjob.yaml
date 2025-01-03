@@ -35,6 +35,38 @@ spec:
                 --inactive_for 30 \
                 --limit 10
             env:
+            - name: BEAKER_PATH
+              value: '{{ .Values.instance.env.beakerPath }}'
+            - name: BEAKER_SECRET
+              value: '{{ .Values.instance.env.beakerSecret }}'
+            - name: CACHE_PURGING_DOMAIN
+              value: '{{ .Values.instance.env.cachePurgingDomain }}'
+            - name: CACHE_PURGING_ENABLED
+              value: '{{ .Values.instance.env.cachePurgingEnabled }}'
+            - name: CACHE_PURGING_PROXY
+              value: '{{ .Values.instance.env.cachePurgingProxy }}'
+            - name: CACHE_PURGING_PROXY_PORT
+              value: '{{ .Values.instance.env.cachePurgingProxyPort }}'
+            - name: CACHE_PURGING_VHOST
+              value: '{{ .Values.instance.env.cachePurgingVhost }}'
+            - name: CACHE_SETTINGS_ENABLED
+              value: '{{ .Values.instance.env.cacheSettingsEnabled }}'
+            - name: CLAMAV_HOST
+              value: '{{ .Values.instance.env.clamavHost }}'
+            - name: GRAYLOG
+              value: '{{ .Values.instance.env.graylog }}'
+            - name: GRAYLOG_FACILITY
+              value: '{{ .Values.instance.env.graylogFacility }}'
+            - name: RABBITMQ_ENABLED
+              value: '{{ .Values.instance.env.rabbitmqEnabled }}'
+            - name: RABBITMQ_HOST
+              value: '{{ .Values.instance.env.rabbitmqHost }}'
+            - name: RABBITMQ_PASS
+              value: '{{ .Values.instance.env.rabbitmqPass }}'
+            - name: RABBITMQ_PORT
+              value: '{{ .Values.instance.env.rabbitmqPort }}'
+            - name: RABBITMQ_USER
+              value: '{{ .Values.instance.env.rabbitmqUser }}'
             - name: SENTRY_DSN
               value: '{{ .Values.instance.env.sentryDSN }}'
             - name: SENTRY_SITE

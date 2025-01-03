@@ -10,6 +10,9 @@ This chart is almost configured for production use.
 
 ## Releases
 
+### Version 0.3.20
+- Added missing env variables for auto env cleanuo.
+
 ### Version 0.3.19
 - Fixed cronjob command for auto fallin, auto env cleanup and auto cleanup.
 
