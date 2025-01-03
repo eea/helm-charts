@@ -27,19 +27,16 @@ spec:
             resources:
               {{- toYaml .Values.cronautofallin.resources | nindent 14 }}
             command:
-            - /opt/zope/bin/instance
-            - run
-            - /opt/zope/bin/auto_fallin
-            - --obligations
-            - "673"
-            - --act_from
-            - FinalFeedback
-            - --act_to
-            - ReleaseAllFeedbacks
-            - --workflow
-            - AQ_eReporting_E1a
-            - --env_year_offset
-            - '-1'
+            - /bin/bash
+            - -c
+            - |
+              /zope-setup.sh && \
+              /opt/zope/bin/instance run /opt/zope/bin/auto_fallin \
+                --obligations 673 \
+                --act_from FinalFeedback \
+                --act_to ReleaseAllFeedbacks \
+                --workflow AQ_eReporting_E1a \
+                --env_year_offset -1
             env:
             - name: BEAKER_PATH
               value: '{{ .Values.instance.env.beakerPath }}'

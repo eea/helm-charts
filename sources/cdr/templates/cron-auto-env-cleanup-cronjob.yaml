@@ -27,13 +27,13 @@ spec:
             resources:
               {{- toYaml .Values.cronautoenvcleanup.resources | nindent 14 }}
             command:
-            - /opt/zope/bin/instance
-            - run
-            - /opt/zope/bin/auto_env_cleanup
-            - --inactive_for
-            - '30'
-            - --limit
-            - '10'
+            - /bin/bash
+            - -c
+            - |
+              /zope-setup.sh && \
+              /opt/zope/bin/instance run /opt/zope/bin/auto_env_cleanup \
+                --inactive_for 30 \
+                --limit 10
             env:
             - name: SENTRY_DSN
               value: '{{ .Values.instance.env.sentryDSN }}'

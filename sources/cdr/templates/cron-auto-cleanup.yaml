@@ -27,19 +27,16 @@ spec:
             resources:
               {{- toYaml .Values.cronautocleanup.resources | nindent 14 }}
             command:
-            - /opt/zope/bin/instance
-            - run
-            - /opt/zope/bin/auto_cleanup
-            - --container
-            - /xmlexports/prefills/designation_types
-            - --recursive
-            - 'true'
-            - --c_type
-            - File
-            - --prefix
-            - OLD_
-            - --threshold
-            - '5'
+            - /bin/bash
+            - -c
+            - |
+              /zope-setup.sh && \
+              /opt/zope/bin/instance run /opt/zope/bin/auto_cleanup \
+                --container /xmlexports/prefills/designation_types \
+                --recursive true \
+                --c_type File \
+                --prefix OLD_ \
+                --threshold 5
             env:
             - name: CACHE_PURGING_DOMAIN
               value: '{{ .Values.instance.env.cachePurgingDomain }}'
