@@ -10,6 +10,9 @@ This chart is almost configured for production use.
 
 ## Releases
 
+### Version 0.3.21
+- Updated appVersion to 6.7.3-200.
+
 ### Version 0.3.20
 - Added missing env variables for auto env cleanuo.
 
