@@ -60,6 +60,8 @@ spec:
               value: {{ .Values.authLdapBindDn | quote }}
             - name: AUTH_LDAP_BIND_PASSWORD
               value: {{ .Values.authLdapBindPassword | quote }}
+            - name: AUTH_LDAP_SERVER_URI
+              value: {{ .Values.authLdapServerUri | quote }}
             - name: BDR_API_AUTH_PASSWORD
               value: {{ .Values.bdrApiAuthPassword | quote}}
             - name: BDR_API_AUTH_USER
