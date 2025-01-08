@@ -11,6 +11,9 @@ This can be used to set the rabbitmq host to be used.
 
 ## Releases
 
+### Version 0.1.34
+- Updated appVersion to 5.9.4-201.
+
 ### Version 0.1.33
 - Updated appVersion to 5.9.4-200.
 
