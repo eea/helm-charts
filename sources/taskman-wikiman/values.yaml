@@ -1,0 +1,54 @@
+# Default values
+
+image:
+  repository: eeacms/redmine-wikiman
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+timezone: "Europe/Copenhagen"
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+
+wikiman:
+  schedule: "0 0 3 * *"
+  resources:
+    limits:
+      memory: 256Mi
+    requests:
+      memory: 256Mi
+  environment:
+    DEBUG_ON: No
+    DOCKERHUB_PASS: from_file
+    DOCKERHUB_USER: eeajenkins
+    ENV_PATH: /data/environment
+    GITHUB_TOKEN: from_file
+    GITLAB_CONFIG: from_file
+    RANCHER_CONFIG: from_file
+    SVN_PASSWORD: from_file
+    SVN_USER: redmine_plugin_installer
+    WIKI_APIKEY: from_file
+    WIKI_CONTAINERS_PAGE: Rancher_containers
+    WIKI_HOSTS_PAGE: Rancher_hosts
+    WIKI_PAGE: Applications
+    WIKI_PROJECT: infrastructure
+    WIKI_SERVER: https://taskman.eionet.europa.eu/    
+  securityContext: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+

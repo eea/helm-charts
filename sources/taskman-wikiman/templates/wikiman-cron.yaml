@@ -1,0 +1,67 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: wikiman
+
+spec:
+  schedule: "{{ .Values.wikiman.schedule }}"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          {{- with .Values.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
+          containers:
+          - name: wikiman
+            image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+            env:
+            - name: TZ
+              value: "{{ .Values.timezone }}"
+            {{- range $key, $value := .Values.wikiman.environment }}
+            {{- if ($value) }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+            {{- end }}
+
+            volumeMounts:
+            - mountPath: /data
+              name: data
+            - mountPath: /logs
+              name: logs
+
+            resources:
+              {{- toYaml .Values.wikiman.resources | nindent 10 }}
+
+            securityContext:
+              {{- toYaml .Values.wikiman.securityContext | nindent 16 }}
+
+          {{- with .Values.wikiman.nodeSelector }}
+          nodeSelector:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          {{- with .Values.wikiman.affinity }}
+          affinity:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          {{- with .Values.wikiman.tolerations }}
+          tolerations:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          restartPolicy: Never
+
+          volumes:
+            - name: data
+              persistentVolumeClaim:
+                claimName: {{ include "appl.fullname" . }}-data-pvc
+            - name: logs
+              persistentVolumeClaim:
+                claimName: {{ include "appl.fullname" . }}-logs-pvc
