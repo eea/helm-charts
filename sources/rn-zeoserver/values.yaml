@@ -51,6 +51,12 @@ zeoUid: 500
 zeoGid: 500
 zeoPackKeepOld: true
 
+# Network Policy configuration
+networkPolicy:
+  # -- Enable network policy
+  enabled: true
+  spec: {}
+
 startupProbe:
   tcpSocket:
     port: 8100

@@ -12,8 +12,13 @@ Zeoserver is the Zope server for Reportek
 - `zeoUid` - UID of the user running the ZEO server. Defaults to 500.
 - `zeoGid` - GID of the user running the ZEO server. Defaults to 500.
 - `zeoPackKeepOld` - Keep old pack files. Defaults to true.
+- `networkPolicy.enabled` - Enable network policy. Defaults to true.
+- `networkPolicy.spec` - Additional network policy specifications. Defaults to {}.
 
 ## Releases
+
+### Version 0.1.7
+- Added NetworkPolicy support
 
 ### Version 0.1.6
 - Added zeoUid, zeoGid and zeoPackKeepOld values.
