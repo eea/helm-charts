@@ -4725,6 +4725,30 @@ entries:
     version: 0.1.0
   emrt-esd:
   - apiVersion: v2
+    appVersion: 18.1.23-1-1.75.2
+    created: "2025-01-13T16:44:24.443280801+02:00"
+    dependencies:
+    - name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.0.3
+    - name: zeoserver
+      repository: https://eea.github.io/helm-charts
+      version: 0.1.0
+    - name: memcached
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.4.13
+    description: Emission Review Tool - Effort Sharing Decision
+    digest: 96dd2b90f78ddf8c0b8d0b0736b1fe479bf088e76561f2e2207b45b3a40ccc2a
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/emrt-esd/logo_eionet.png
+    keywords:
+    - Reportnet
+    - Emmission
+    name: emrt-esd
+    type: application
+    urls:
+    - emrt-esd-1.1.1.tgz
+    version: 1.1.1
+  - apiVersion: v2
     appVersion: 18.1.23-1-1.75.1
     created: "2024-12-19T14:26:54.64876+01:00"
     dependencies:
@@ -9866,4 +9890,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2025-01-13T16:08:10.875607+02:00"
+generated: "2025-01-13T16:44:24.438088786+02:00"
