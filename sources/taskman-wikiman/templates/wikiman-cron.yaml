@@ -37,6 +37,8 @@ spec:
               name: data
             - mountPath: /logs
               name: logs
+            - mountPath: /GIT
+              name: git
 
             resources:
               {{- toYaml .Values.wikiman.resources | nindent 10 }}
@@ -65,3 +67,7 @@ spec:
             - name: logs
               persistentVolumeClaim:
                 claimName: {{ include "appl.fullname" . }}-logs-pvc
+            - name: git
+              persistentVolumeClaim:
+                claimName: {{ include "appl.fullname" . }}-git-pvc
+                  

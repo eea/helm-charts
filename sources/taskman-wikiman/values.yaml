@@ -31,7 +31,7 @@ wikiman:
     requests:
       memory: 256Mi
   environment:
-    DEBUG_ON: No
+    DEBUG_ON: 'No'
     DOCKERHUB_PASS: from_file
     DOCKERHUB_USER: eeajenkins
     ENV_PATH: /data/environment
@@ -43,6 +43,7 @@ wikiman:
     WIKI_APIKEY: from_file
     WIKI_CONTAINERS_PAGE: Rancher_containers
     WIKI_HOSTS_PAGE: Rancher_hosts
+    WIKI_STACKS_PAGE: Rancher_stacks
     WIKI_PAGE: Applications
     WIKI_PROJECT: infrastructure
     WIKI_SERVER: https://taskman.eionet.europa.eu/    
