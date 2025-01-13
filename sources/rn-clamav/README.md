@@ -10,8 +10,13 @@ Clamav scanner for Reportek.
 - `streamMaxLength` - Maximum stream length.
 - `storage` - Size of the persistent volume claim.
 - `storageName` - Name of the persistent volume claim.
+- `networkPolicy.enabled` - Enable network policy. Defaults to true.
+- `networkPolicy.spec` - Additional network policy specifications. Defaults to {}.
 
 ## Releases
+
+### Version 0.1.6
+- Added NetworkPolicy support.
 
 ### Version 0.1.5
 - Added behavior section to hpa.

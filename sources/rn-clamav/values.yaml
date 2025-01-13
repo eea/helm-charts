@@ -24,6 +24,12 @@ streamMaxLength: "2147483648"
 storage: 3Gi
 storageName: clamav-data
 
+# Network Policy configuration
+networkPolicy:
+  # -- Enable network policy
+  enabled: true
+  spec: {}
+
 serviceAccount:
   create: false
   annotations: {}
