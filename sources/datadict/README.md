@@ -5,20 +5,23 @@ This chart is configured for production use.
 ## Releases
 
 <dl>
+  <dt>Version 1.3.4</dt>
+  <dd>XSS fixes.</dd>
+
   <dt>Version 1.3.3</dt>
   <dd>Security fixes</dd>
-  
+
   <dt>Version 1.3.2 - 12 September 2024</dt>
   <dd>Updated mail forwarder subchart to 2.0.1.</dd>
 
   <dt>Version 1.3.1</dt>
   <dd>XSS fix, migration from archiva repositoy to maven package repository.</dd>
-  
+
   <dt>Version 1.3.0</dt>
   <dd>Added mail forwarder pod. Usage to be specified in mailHost.</dd>
 
   <dt>Version 1.2.5</dt>
-  <dd>Upload RDF API gzip compressed, base64 encoded RDF content, db column type change, 
+  <dd>Upload RDF API gzip compressed, base64 encoded RDF content, db column type change,
       site code allocation service notifications update, xss fix</dd>
 
   <dt>Version 1.2.4</dt>
