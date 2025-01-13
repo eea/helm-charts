@@ -7,12 +7,17 @@ The Reportek local converters is an addon Product for local conversions scripts.
 ## Configuration
 
 - `timezone` - Time zone.
+- `networkPolicy.enabled` - Enable network policy. Defaults to true.
+- `networkPolicy.spec` - Additional network policy specifications. Defaults to {}.
 
 ## Releases
 
+### Version 0.1.4
+- Added NetworkPolicy support.
+
 ### Version 0.1.3
 - Tweaked hpa name.
-- Fixed README
+- Fixed README.
 
 ### Version 0.1.2
 - Some refactoring and added component label.

@@ -36,6 +36,12 @@ securityContext: {}
   # runAsNonRoot: true
   # runAsUser: 1000
 
+# Network Policy configuration
+networkPolicy:
+  # -- Enable network policy
+  enabled: true
+  spec: {}
+
 service:
   type: ClusterIP
   port: 5000
