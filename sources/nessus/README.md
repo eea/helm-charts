@@ -9,6 +9,9 @@ Tenable.io linking key
 
 <dl>
 
+  <dt>0.3.0 - 14 Jan 2025</dt>
+  <dd>Increased Nessus image version (AlmaLinux 9 image used).</dd>
+
   <dt>0.2.9 - 12 Nov 2024</dt>
   <dd>Increased Nessus image version (AlmaLinux updates applied).</dd>
 
