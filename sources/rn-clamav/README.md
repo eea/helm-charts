@@ -15,6 +15,9 @@ Clamav scanner for Reportek.
 
 ## Releases
 
+### Version 0.1.7
+- Renamed network policy metadata component label to network-policy.
+
 ### Version 0.1.6
 - Added NetworkPolicy support.
 
