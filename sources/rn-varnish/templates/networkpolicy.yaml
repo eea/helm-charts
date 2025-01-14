@@ -5,7 +5,7 @@ metadata:
   name: {{ include "appl.fullname" . }}
   labels:
     {{- include "appl.labels" . | nindent 4 }}
-    app.kubernetes.io/component: cache
+    app.kubernetes.io/component: network-policy
 spec:
   podSelector:
     matchLabels:

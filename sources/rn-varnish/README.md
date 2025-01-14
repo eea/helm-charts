@@ -63,6 +63,9 @@ networkPolicy:
 
 ## Releases
 
+### Version 0.1.8
+- Renamed network policy metadata component label to network-policy.
+
 ### Version 0.1.7
 - Added additional ingress/egress rules support
 
