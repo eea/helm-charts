@@ -12,6 +12,9 @@ The Reportek local converters is an addon Product for local conversions scripts.
 
 ## Releases
 
+### Version 0.1.5
+- Renamed network policy metadata component label to network-policy.
+
 ### Version 0.1.4
 - Added NetworkPolicy support.
 
