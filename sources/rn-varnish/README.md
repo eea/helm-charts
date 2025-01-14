@@ -19,9 +19,52 @@ Varnish for Reportek.
 - `varnishBERESPGrace` - Grace period for BERESP.
 - `varnishBERESPKeep` - Keep period for BERESP.
 - `networkPolicy.enabled` - Enable network policy. Defaults to true.
-- `networkPolicy.spec` - Additional network policy specifications. Defaults to {}.
+- `networkPolicy.additionalIngress` - Additional ingress rules to be added to the default ones. Defaults to [].
+- `networkPolicy.additionalEgress` - Additional egress rules to be added to the default ones. Defaults to [].
+- `networkPolicy.spec` - Additional network policy specifications to be merged with the policy. **Note**: Defining `ingress` or `egress` in spec will completely override the default rules and `additional*` rules. Defaults to {}.
+
+Default network policy includes:
+- Ingress:
+  - Allow access from ingress-nginx in kube-system namespace
+  - Allow access from same namespace
+- Egress:
+  - Allow DNS resolution (kube-dns/coredns in kube-system namespace)
+
+Example using additionalIngress/Egress (adds to defaults):
+```yaml
+networkPolicy:
+  additionalIngress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: frontend
+  additionalEgress:
+    - to:
+        - podSelector:
+            matchLabels:
+              app: backend
+```
+
+Example using spec (overrides defaults):
+```yaml
+networkPolicy:
+  spec:
+    ingress:
+      - from:
+          - podSelector:
+              matchLabels:
+                app: custom-frontend
+    egress:
+      - to:
+          - podSelector:
+              matchLabels:
+                app: custom-backend
+```
 
 ## Releases
+
+### Version 0.1.7
+- Added additional ingress/egress rules support
 
 ### Version 0.1.6
 - Added NetworkPolicy support

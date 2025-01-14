@@ -26,7 +26,44 @@ serviceAccount:
 networkPolicy:
   # -- Enable network policy
   enabled: true
+  # -- Additional ingress rules to be added to the default ones
+  additionalIngress: []
+    # - from:
+    #     - podSelector:
+    #         matchLabels:
+    #           app: frontend
+    #     - namespaceSelector:
+    #         matchLabels:
+    #           name: other-namespace
+    #   ports:
+    #     - protocol: TCP
+    #       port: 8080
+
+  # -- Additional egress rules to be added to the default ones
+  additionalEgress: []
+    # - to:
+    #     - podSelector:
+    #         matchLabels:
+    #           app: backend
+    #     - namespaceSelector:
+    #         matchLabels:
+    #           name: other-namespace
+    #   ports:
+    #     - protocol: TCP
+    #       port: 5000
+
+  # -- Additional network policy specifications to be merged with the policy
   spec: {}
+    # ingress:
+    #   - from:
+    #       - podSelector:
+    #           matchLabels:
+    #             app: another-app
+    # egress:
+    #   - to:
+    #       - podSelector:
+    #           matchLabels:
+    #             app: another-backend
 
 podAnnotations: {}
 podLabels: {}
