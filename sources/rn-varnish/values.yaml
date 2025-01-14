@@ -22,6 +22,12 @@ serviceAccount:
   annotations: {}
   name: ""
 
+# Network Policy configuration
+networkPolicy:
+  # -- Enable network policy
+  enabled: true
+  spec: {}
+
 podAnnotations: {}
 podLabels: {}
 

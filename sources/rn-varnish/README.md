@@ -18,27 +18,28 @@ Varnish for Reportek.
 - `varnishBERESPTTL` - TTL for BERESP.
 - `varnishBERESPGrace` - Grace period for BERESP.
 - `varnishBERESPKeep` - Keep period for BERESP.
+- `networkPolicy.enabled` - Enable network policy. Defaults to true.
+- `networkPolicy.spec` - Additional network policy specifications. Defaults to {}.
 
 ## Releases
 
-<dl>
+### Version 0.1.6
+- Added NetworkPolicy support
 
-  <dt>Version 0.1.5</dt>
-  <dd>Updated appVersion to 7.5-1.0.</dd>
+### Version 0.1.5
+- Updated appVersion to 7.5-1.0
 
-  <dt>Version 0.1.4</dt>
-  <dd>Some refactoring and added component labels.</dd>
+### Version 0.1.4
+- Some refactoring and added component labels
 
-  <dt>Version 0.1.3</dt>
-  <dd>Removed autoKillCron variable since, using it, causes varnish to no longer respond.</dd>
+### Version 0.1.3
+- Removed autoKillCron variable since, using it, causes varnish to no longer respond
 
-  <dt>Version 0.1.2</dt>
-  <dd>Changed default port to 8080.</dd>
+### Version 0.1.2
+- Changed default port to 8080
 
-  <dt>Version 0.1.1</dt>
-  <dd>Added enabled flag.</dd>
+### Version 0.1.1
+- Added enabled flag
 
-  <dt>Version 0.1.0</dt>
-  <dd>Initial release.</dd>
-
-</dl>
+### Version 0.1.0
+- Initial release
