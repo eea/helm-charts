@@ -34,10 +34,8 @@ spec:
           port: 53
     - to:
         - ipBlock:
-            cidr: 0.0.0.0/0
+            cidr: 104.16.0.0/12
       ports:
-        - protocol: TCP
-          port: 80
         - protocol: TCP
           port: 443
   {{- with .Values.networkPolicy.spec }}
