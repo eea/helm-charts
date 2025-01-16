@@ -47,6 +47,8 @@ spec:
         volumeMounts:
         - mountPath: /var/lib/mysql
           name: {{ .Release.Name }}-database
+        - mountPath: /shared
+          name: {{ .Release.Name }}-database-shared
 
         livenessProbe:
           tcpSocket:
@@ -81,4 +83,12 @@ spec:
       resources:
         requests:
           storage: {{ .Values.database.storage }}
+  - metadata:
+      name: {{ .Release.Name }}-database-shared
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: {{ .Values.database.sharedStorage }}
 
