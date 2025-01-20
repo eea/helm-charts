@@ -136,7 +136,7 @@ spec:
               "-Denv.rancher.master.url={{ .Values.rancher.masterUrl }}"
               "-Denv.rancher.namespace={{ .Values.rancher.namespace }}"
               "-Denv.rancher.auth.token={{ .Values.rancher.authToken }}"
-              "-Denv.rancher.converters.deployment.name={{ .Release.Name }}-jobexecutor"
+              "-Denv.rancher.converters.deployment.name={{ .Release.Name }}"
               "-Denv.rancher.light.jobExec.deployment.name={{ .Release.Name }}-jobexecutor"
               "-Denv.rancher.heavy.jobExec.deployment.name={{ .Release.Name }}-heavy-jobexecutor"
               "-Denv.rancher.sync.fme.jobExec.deployment.name={{ .Release.Name }}-syncfme-jobexecutor"
