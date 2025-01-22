@@ -49,14 +49,10 @@ uns:
   restPassword: REPLACEME
 
 rabbitMQ:
-  host: converters-rabbitmq.reportnet2.svc.cluster.local
+  host: rabbitmq.reportnet2.svc.cluster.local
   port: 5672
   username: admin
   password: REPLACEME
-  cdrHost: cdrRabbitmq
-  cdrPort: 5672
-  cdrUsername: cr_ping
-  cdrPassword: REPLACEME
 
 rancher:
   enableJobExecutorScheduledTask: true
