@@ -4,6 +4,9 @@ BDR Registry Service Chart for BDR
 
 ## Releases
 
+### Version 0.1.5
+- Updated appVersion to 1.8.10
+
 ### Version 0.1.4
 - Added missing authLdapServerUri to deployment template.
 
