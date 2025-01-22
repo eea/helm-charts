@@ -139,6 +139,9 @@ workers:
 
 ## Releases
 
+### Version 0.2.1
+- Added missing deployment in fwd_envelopes_task
+
 ### Version 0.2.0
 - Added support for defining tasks in external Python files with `tasksFile`
 - Enhanced documentation with examples

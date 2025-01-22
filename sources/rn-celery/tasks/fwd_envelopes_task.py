@@ -28,7 +28,12 @@ class Config:
 
     CREDENTIALS = {}  # type: Dict[str, Dict[str, str]]
     DEPLOYMENT_MAPPING = {
-        "CDR": {"DEV": "cdrdev", "TEST": "cdrtest", "SANDBOX": "cdrsandbox"},
+        "CDR": {
+            "DEV": "cdrdev",
+            "TEST": "cdrtest",
+            "SANDBOX": "cdrsandbox",
+            "PROD": "cdr",
+        },
         "BDR": {"DEV": "bdr-dev", "TEST": "bdr-test", "PROD": "bdr"},
         "MDR": {"TEST": "mdr-test", "PROD": "mdr"},
     }
