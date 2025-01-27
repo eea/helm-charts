@@ -13,6 +13,7 @@ spec:
       app.kubernetes.io/component: zeoserver
   policyTypes:
     - Ingress
+    - Egress
   ingress:
     - from:
         - namespaceSelector:
@@ -21,6 +22,7 @@ spec:
       ports:
         - protocol: TCP
           port: {{ .Values.service.port }}
+  egress: []
   {{- with .Values.networkPolicy.spec }}
     {{- toYaml . | nindent 2 }}
   {{- end }}

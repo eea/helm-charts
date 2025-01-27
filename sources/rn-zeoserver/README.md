@@ -17,6 +17,9 @@ Zeoserver is the Zope server for Reportek
 
 ## Releases
 
+### Version 0.1.9
+- Added deny all egress by default.
+
 ### Version 0.1.8
 - Renamed network policy metadata component label to network-policy.
 
