@@ -1,0 +1,9 @@
+{{- /*
+This template validates that the required Role exists in the namespace
+before proceeding with the install/upgrade.
+*/ -}}
+{{- $roleName := printf "%s-role" .Release.Name -}}
+{{- $role := lookup "rbac.authorization.k8s.io/v1" "Role" .Release.Namespace $roleName -}}
+{{- if not $role }}
+{{- fail (printf "The required Role '%s' does not exist in the namespace '%s'. Installation/upgrade cannot proceed." $roleName .Release.Namespace) -}}
+{{- end }}
