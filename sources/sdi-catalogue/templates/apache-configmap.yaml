@@ -74,6 +74,11 @@ data:
                 Require ip {{ . }}
                 {{- end }}
                 {{- end }}
+                {{- if .Values.privilegedHosts }}
+                {{- range .Values.privilegedHosts }}
+                Require host {{ . }}
+                {{- end }}
+                {{- end }}
                 
                 {{- if or .Values.privilegedGroups .Values.privilegedUsers }} 
                 ## Allow access for authenticated users
