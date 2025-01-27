@@ -8,9 +8,20 @@ The Reportek local converters is an addon Product for local conversions scripts.
 
 - `timezone` - Time zone.
 - `networkPolicy.enabled` - Enable network policy. Defaults to true.
-- `networkPolicy.spec` - Additional network policy specifications. Defaults to {}.
+- `networkPolicy.additionalIngress` - Additional ingress rules to be added to the default ones. Defaults to [].
+- `networkPolicy.additionalEgress` - Additional egress rules to be added to the default ones. Defaults to [].
+- `networkPolicy.spec` - Additional network policy specifications to be merged with the policy. **Note**: Defining `ingress` or `egress` in spec will completely override the default rules and `additional*` rules. Defaults to {}.
+
+Default network policy includes:
+- Ingress:
+  - Allow access from the same namespace.
+- Egress:
+  - Default deny.
 
 ## Releases
+
+### Version 0.1.6
+- Increase granularity of the network policy.
 
 ### Version 0.1.5
 - Renamed network policy metadata component label to network-policy.
