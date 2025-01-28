@@ -80,6 +80,9 @@ rn-varnish: # Assuming you named your rn-varnish subchart "rn-varnish"
 
 ## Releases
 
+### Version 0.1.10
+- Fixed nintend for backendSelectorLabels in networkpolicy template.
+
 ### Version 0.1.9
 - Set networkPolicy enabled to false by default.
 - Added backendSelectorLabels to select the backend pods.
