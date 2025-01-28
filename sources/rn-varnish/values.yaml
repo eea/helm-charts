@@ -25,7 +25,7 @@ serviceAccount:
 # Network Policy configuration
 networkPolicy:
   # -- Enable network policy
-  enabled: true
+  enabled: false
   # -- Additional ingress rules to be added to the default ones
   additionalIngress: []
     # - from:
@@ -64,6 +64,9 @@ networkPolicy:
     #       - podSelector:
     #           matchLabels:
     #             app: another-backend
+  backendSelectorLabels: {} # Labels to match the backend pods
+    # app: my-backend-app  # Example labels (parent chart should replace these)
+    # component: backend
 
 podAnnotations: {}
 podLabels: {}
@@ -99,8 +102,8 @@ varnishHTTPPort: 8080
 varnishHTTPSPort: {}
 varnishSize: 2G
 varnishCFGContent: {}
-varnishBackend: haproxy
-varnishBackendPort: 5000
+varnishBackend: backend
+varnishBackendPort: 8080
 varnishDNSTTL: {}
 varnishBERESPTTL: {}
 varnishBERESPGrace: {}

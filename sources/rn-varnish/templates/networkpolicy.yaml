@@ -52,6 +52,16 @@ spec:
           port: 53
         - protocol: TCP
           port: 53
+    # Allow egress to backend based on selector labels
+    {{- if and .Values.varnishBackend .Values.varnishBackendPort .Values.networkPolicy.backendSelectorLabels }}
+    - to:
+        - podSelector:
+            matchLabels:
+              {{- toYaml .Values.networkPolicy.backendSelectorLabels | nindent 8 }}
+      ports:
+        - protocol: TCP
+          port: {{ .Values.varnishBackendPort | int }}
+    {{- end }}
     {{- with .Values.networkPolicy.additionalEgress }}
     {{- toYaml . | nindent 4 }}
     {{- end }}

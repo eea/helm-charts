@@ -18,10 +18,11 @@ Varnish for Reportek.
 - `varnishBERESPTTL` - TTL for BERESP.
 - `varnishBERESPGrace` - Grace period for BERESP.
 - `varnishBERESPKeep` - Keep period for BERESP.
-- `networkPolicy.enabled` - Enable network policy. Defaults to true.
+- `networkPolicy.enabled` - Enable network policy. Defaults to false.
 - `networkPolicy.additionalIngress` - Additional ingress rules to be added to the default ones. Defaults to [].
 - `networkPolicy.additionalEgress` - Additional egress rules to be added to the default ones. Defaults to [].
 - `networkPolicy.spec` - Additional network policy specifications to be merged with the policy. **Note**: Defining `ingress` or `egress` in spec will completely override the default rules and `additional*` rules. Defaults to {}.
+- `backendSelectorLabels` - Labels to select the backend pods.
 
 Default network policy includes:
 - Ingress:
@@ -29,6 +30,7 @@ Default network policy includes:
   - Allow access from same namespace
 - Egress:
   - Allow DNS resolution (kube-dns/coredns in kube-system namespace)
+  - Allow access to the backend pods. These need to be defined in the backendSelectorLabels.
 
 Example using additionalIngress/Egress (adds to defaults):
 ```yaml
@@ -61,7 +63,26 @@ networkPolicy:
                 app: custom-backend
 ```
 
+Example in parent chart's `values.yaml`:
+
+Assuming your parent chart defines a backend service whose pods have the labels `app: my-backend-app` and `component: backend`, you would configure your parent chart's `values.yaml` like this:
+
+```yaml
+rn-varnish: # Assuming you named your rn-varnish subchart "rn-varnish"
+  networkPolicy:
+    enabled: true
+    backendSelectorLabels:
+      app: my-backend-app
+      component: backend
+  varnishBackend: my-backend-service # Name of your backend service in the parent chart
+  varnishBackendPort: 8080
+```
+
 ## Releases
+
+### Version 0.1.9
+- Set networkPolicy enabled to false by default.
+- Added backendSelectorLabels to select the backend pods.
 
 ### Version 0.1.8
 - Renamed network policy metadata component label to network-policy.
