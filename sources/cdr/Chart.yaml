@@ -5,27 +5,27 @@ icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/cdr/logo_ei
 
 type: application
 
-version: 0.3.23
+version: 0.3.30
 
-appVersion: "6.7.3-202"
+appVersion: "6.7.3-204"
 
 dependencies:
   - name: rn-zeoserver
-    version: 0.1.6
+    version: 0.1.9
     repository: https://eea.github.io/helm-charts
     alias: zeoserver
   - name: rn-varnish
-    version: 0.1.5
+    version: 0.1.10
     repository: https://eea.github.io/helm-charts
     condition: rn-varnish.enabled
     alias: varnish
   - name: rn-local-converters
-    version: 0.1.3
+    version: 0.1.6
     repository: https://eea.github.io/helm-charts
     condition: rn-local-converters.enabled
     alias: local-converters
   - name: rn-clamav
-    version: 0.1.5
+    version: 0.1.8
     repository: https://eea.github.io/helm-charts
     condition: rn-clamav.enabled
     alias: clamav

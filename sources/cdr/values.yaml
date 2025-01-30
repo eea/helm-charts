@@ -9,6 +9,9 @@ timezone: Europe/Copenhagen
 cdrUser: ""
 cdrPass: ""
 
+defaultNetworkPolicyDeny:
+  enabled: false
+
 instance:
   enabled: true
   replicaCount: 2
@@ -29,6 +32,7 @@ instance:
     failureThreshold: 3
     timeoutSeconds: 6
   readinessProbe:
+  networkPolicy: {}
   env:
     beakerPath: /sessions
     beakerSecret: ""

@@ -1,0 +1,90 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "appl.fullname" . }}-instance
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    app.kubernetes.io/component: network-policy
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: zope
+
+  policyTypes:
+  - Ingress
+  - Egress
+
+  ingress:
+      # Allow ingress from the same namespace
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .Release.Namespace }}
+  egress:
+    # Allow DNS resolution
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+          podSelector: # Target specific DNS pods within kube-system
+            matchLabels:
+              k8s-app: kube-dns # DNS resolution pod
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+
+    # Allow egress to zeoserver
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/instance: {{ .Release.Name }}
+              app.kubernetes.io/component: zeoserver
+      ports:
+        - protocol: TCP
+          port: {{ .Values.zeoserver.port | default 8100 }}
+    # Allow egress to varnish
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/instance: {{ .Release.Name }}
+              app.kubernetes.io/component: cache
+      ports:
+        - protocol: TCP
+          port: {{ .Values.varnish.varnishHTTPPort | default 8080 }}
+    # Allow egress to local-converters
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/instance: {{ .Release.Name }}
+              app.kubernetes.io/component: local-converters
+      ports:
+        - protocol: TCP
+          port: 5000
+    # Allow egress to clamav
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/instance: {{ .Release.Name }}
+              app.kubernetes.io/component: security
+      ports:
+        - protocol: TCP
+          port: {{ .Values.clamav.port | default 3310 }}
+
+    # Allow egress to various services defined in values.yaml
+    {{- if and .Values.instance.networkPolicy.egress .Values.instance.networkPolicy.egress.ipBlocks }}
+    - to:
+      {{- range .Values.instance.networkPolicy.egress.ipBlocks }}
+      - ipBlock:
+          cidr: {{ . }}
+      {{- end }}
+      {{- if .Values.instance.networkPolicy.egress.ports }}
+      ports:
+        {{- range .Values.instance.networkPolicy.egress.ports }}
+        - protocol: {{ .protocol }}
+          port: {{ .port }}
+        {{- end }}
+      {{- end }}
+    {{- end }}
