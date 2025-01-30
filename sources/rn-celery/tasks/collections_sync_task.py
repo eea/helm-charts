@@ -23,7 +23,7 @@ class Config:
     REDIS_HOST = os.environ.get(
         "CELERY_BACKEND_URL", "redis://celery-redis"
     ).split("redis://")[-1]
-    REDIS_PORT = int(os.environ.get("REDIS_PORT", 6379))
+    REDIS_PORT = 6379
     COL_SYNC_DEPL = os.environ.get(
         "COL_SYNC_DEPL",
         "http://localhost:8000",

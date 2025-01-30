@@ -23,7 +23,7 @@ class Config:
     REDIS_HOST = os.environ.get(
         "CELERY_BACKEND_URL", "redis://celery-redis"
     ).split("redis://")[-1]
-    REDIS_PORT = int(os.environ.get("REDIS_PORT", 6379))
+    REDIS_PORT = 6379
     FWD_ENDPOINT = os.environ.get("FWD_ENDPOINT", "forwardState")
 
     CREDENTIALS = {}  # type: Dict[str, Dict[str, str]]
