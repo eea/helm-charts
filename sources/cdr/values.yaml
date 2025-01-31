@@ -32,7 +32,27 @@ instance:
     failureThreshold: 3
     timeoutSeconds: 6
   readinessProbe:
-  networkPolicy: {}
+  networkPolicy:
+    egress:
+      # IP-based rules for services not yet migrated to Kubernetes
+      ipBlocks: []
+        # - 10.50.4.0/24  # Example: Legacy service network
+      ports: []
+        # - protocol: TCP
+        #   port: 443     # Example: HTTPS
+
+      # Selector-based rules for services running in Kubernetes
+      rawRules: []
+        # - to:
+        #     - namespaceSelector:
+        #         matchLabels:
+        #           kubernetes.io/metadata.name: other-namespace
+        #       podSelector:
+        #         matchLabels:
+        #           app.kubernetes.io/name: service-name
+        #     ports:
+        #       - port: 8080
+        #         protocol: TCP
   env:
     beakerPath: /sessions
     beakerSecret: ""
