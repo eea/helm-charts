@@ -24,6 +24,9 @@ To set the app up for Article 12 do:
 ## Releases
 
 <dl>
+  <dt>Version 0.4.7 - 03 February 2025</dt>
+  <dd>Upgraded eeacms/eeacms/art17-consultation</dd>
+
   <dt>Version 0.4.6 - 15 November 2024</dt>
   <dd>Upgraded eeacms/eeacms/art17-consultation</dd>
 
