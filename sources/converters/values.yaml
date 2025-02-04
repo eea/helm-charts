@@ -28,7 +28,7 @@ maxLightJobExecutorContainersAllowed: 30
 maxHeavyJobExecutorContainersAllowed: 8
 convertersGraylog: https://logs.eea.europa.eu/streams/583be61eb758eb65614834fd/search?rangetype=absolute&fields=message%2Csource&width=1848&highlightMessage=&q=
 jobExecutorGraylog: https://logs.eea.europa.eu/streams/616ebafa2461c900148a5d3a/search?rangetype=absolute&fields=message%2Csource&width=1848&highlightMessage=&q=
-jobExecutorRequestsUrl: http://asyncFmeJobExecutor.converters-eionet:8078
+jobExecutorRequestsUrl: http://converters-asyncfme-jobexecutor.reportnet2.svc.cluster.local:8080
 ddRestApiToken: REPLACEME
 convertersRestApiToken: REPLACEME
 
@@ -161,7 +161,7 @@ database:
   username: convapp
   password: REPLACEME
   rootpw: REPLACEME
-  parameters: "autoReconnect=true&characterEncoding=UTF-8&emptyStringsConvertToZero=false&jdbcCompliantTruncation=false&serverTimezone=Europe/Copenhagen"
+  parameters: "autoReconnect=true&characterEncoding=UTF-8&emptyStringsConvertToZero=false&jdbcCompliantTruncation=false&serverTimezone=Europe/Copenhagen&createDatabaseIfNotExist=true"
   storage: 4Gi
   sharedStorage: 1Gi
   nodeSelector: {}
