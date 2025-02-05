@@ -19,6 +19,9 @@ When the application was running on Rancher 1.6, it had a container, which ran t
 ## Releases
 
 <dl>
+  <dt>Version 0.6.22 - 05 February 2025</dt>
+  <dd>Update GN to 6c72fe0c.</dd>
+
   <dt>Version 0.6.21 - 27 January 2025</dt>
   <dd>Update GN to 66a77c30.</dd>
   <dd>Add the option to allow ciertain hosts to bypass the Basic Auth in Apache.</dd>
