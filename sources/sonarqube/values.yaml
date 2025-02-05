@@ -1,0 +1,40 @@
+# Default values for Sonarqube
+
+image:
+  repository: sonarqube
+  tag: "10.3.0.82913"
+  ## Specify a imagePullPolicy
+  ## ref: https://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images
+  ##
+  pullPolicy: IfNotPresent
+  ## Optionally specify an array of imagePullSecrets.
+  ## Secrets must be manually created in the namespace.
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+  ## e.g:
+  ## pullSecrets:
+  ##   - myRegistryKeySecretName
+  ##
+  pullSecrets: []
+  ## Enable debug mode
+  ##
+  debug: false
+
+service:
+  type: ClusterIP
+  port: 9000
+
+ingress:
+  enabled: false
+
+persistence:
+  enabled: true
+  accessMode: ReadWriteOnce
+  size: 10Gi
+
+resources:
+  requests:
+    memory: "2Gi"
+    cpu: "500m"
+  limits:
+    memory: "4Gi"
+    cpu: "2"
