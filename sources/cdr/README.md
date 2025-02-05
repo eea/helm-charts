@@ -53,6 +53,9 @@ To customize the network policies, you should modify the `instance.networkPolicy
 
 ## Releases
 
+### Version 0.3.32
+- Updated ingress's CSP header.
+
 ### Version 0.3.31
 - Improved instance network security policy template to allow for more flexibility.
 
