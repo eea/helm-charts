@@ -19,6 +19,9 @@ When the application was running on Rancher 1.6, it had a container, which ran t
 ## Releases
 
 <dl>
+  <dt>Version 0.6.22 - 06 February 2025</dt>
+  <dd>Update GN to 28973fb1.</dd>
+  
   <dt>Version 0.6.22 - 05 February 2025</dt>
   <dd>Update GN to 6c72fe0c.</dd>
 
