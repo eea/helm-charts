@@ -441,6 +441,11 @@ apache:
       name: bdr-bdr-registry-notifications-static
     - mountPath: /bdrreg/static
       name: bdr-bdr-registry-static
+  resources:
+    limits:
+      memory: 96Mi
+    requests:
+      memory: 64Mi
 
 rabbitmq:
   create: false

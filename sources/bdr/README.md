@@ -11,6 +11,9 @@ This can be used to set the rabbitmq host to be used.
 
 ## Releases
 
+### Version 0.1.37
+- Added apache resources config options in questions and values.
+
 ### Version 0.1.36
 - Updated appVersion to 5.9.4-204.
 - Updated rn-bdr-registry to 0.1.5.
