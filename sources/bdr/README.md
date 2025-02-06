@@ -11,6 +11,10 @@ This can be used to set the rabbitmq host to be used.
 
 ## Releases
 
+### Version 0.1.38
+- Grouped apache resources config options in questions, in the Apache group.
+- Made zeopack curl request verbose.
+
 ### Version 0.1.37
 - Added apache resources config options in questions and values.
 

@@ -1659,11 +1659,14 @@ questions:
     default: "64M"
     required: false
     type: string
+    group: "Apache"
+
   - variable: "apache.resources.limits.memory"
     label: "Apache memory limit"
     default: "96M"
     required: false
     type: string
+    group: "Apache"
 
   - variable: apache.adminAuth.htpasswd
     label: "Apache Admin Authentication"
