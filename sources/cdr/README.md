@@ -10,38 +10,50 @@ This Helm chart deploys Kubernetes Network Policies to enhance the security of t
 
 **Key Network Policy Configurations:**
 
-*   **Instance Pod Egress (`instance.networkPolicy.egress` in `values.yaml`):**  Configures outbound traffic from the `cdr-instance` pods. You can modify the `ipBlocks` and `ports` lists to control the destination IP ranges and ports that the CDR instances are allowed to connect to. By default, this is configured to allow egress to required services in the same app. Services like LDAP, HTTPS, Graylog, and RabbitMQ need to be specified via the `ipBlocks` and `ports` lists or `rawRules`.
+*   **Instance Pod Egress (`instance.networkPolicy.egress` in `values.yaml`):**  Configures outbound traffic from the `cdr-instance` pods. You can configure egress rules in two ways:
 
-For more complex scenarios and greater control, you can now use the `instance.networkPolicy.egress.rawRules` list. This allows you to define individual egress rules using the full power of Kubernetes NetworkPolicy `to` specifications. You can mix and match rule types within this list, including:
+    1. Using `ipBlockRules`: Define IP-based rules with specific ports for each CIDR block:
+    ```yaml
+    instance:
+      networkPolicy:
+        egress:
+          ipBlockRules:
+            - cidr: 10.50.4.0/24  # Legacy service network
+              ports:
+                - protocol: TCP
+                  port: 443     # HTTPS
+                - protocol: TCP
+                  port: 80      # HTTP
+            - cidr: 10.50.5.0/24  # Another network
+              ports:
+                - protocol: TCP
+                  port: 5432    # PostgreSQL
+    ```
 
-  *   **IP Block Rules:** Target egress traffic to specific IP address ranges.
-  *   **Namespace Selector Rules:** Target pods in other namespaces based on namespace labels and pod labels.
-  *   **Pod Selector Rules:** Target pods within the same namespace based on pod labels.
-  *   **Service Account Selector Rules (Advanced):**  Target pods based on their service accounts (for more advanced scenarios).
+    2. Using `rawRules`: For more complex scenarios, define individual egress rules using the full power of Kubernetes NetworkPolicy `to` specifications:
+    ```yaml
+    instance:
+      networkPolicy:
+        egress:
+          rawRules:
+            - to:
+                - namespaceSelector:
+                    matchLabels:
+                      kubernetes.io/metadata.name: other-namespace
+                  podSelector:
+                    matchLabels:
+                      app.kubernetes.io/name: service-name
+              ports:
+                - port: 8080
+                  protocol: TCP
+    ```
 
-  ```yaml
-  instance:
-    networkPolicy:
-      egress:
-        ipBlocks:
-          - 10.50.4.0/24
-          - ...
-        ports:
-          - protocol: TCP
-            port: 443
-          - ...
-        rawRules:
-          - to:
-              - namespaceSelector:
-                  matchLabels:
-                    kubernetes.io/metadata.name: other-namespace
-                podSelector:
-                  matchLabels:
-                    app.kubernetes.io/name: service-name
-            ports:
-              - port: 8080
-                protocol: TCP
-  ```
+    You can use `rawRules` to define:
+    *   **IP Block Rules:** Target egress traffic to specific IP address ranges
+    *   **Namespace Selector Rules:** Target pods in other namespaces based on namespace labels and pod labels
+    *   **Pod Selector Rules:** Target pods within the same namespace based on pod labels
+    *   **Service Account Selector Rules (Advanced):** Target pods based on their service accounts
+
 
 *   **Varnish Pod Network Policy (`varnish.networkPolicy` in `values.yaml`):** Defines additional ingress and egress rules for the `cdr-varnish` pods.  You can use `varnish.networkPolicy.additionalIngress` and `varnish.networkPolicy.additionalEgress` in `values.yaml` to add custom rules on top of the base policy defined in the templates.
 
@@ -52,6 +64,9 @@ For more complex scenarios and greater control, you can now use the `instance.ne
 To customize the network policies, you should modify the `instance.networkPolicy.egress` and `varnish.networkPolicy` sections within your `values.yaml` file.  Refer to the Kubernetes Network Policy documentation for details on how to define rules using `ipBlock`, `namespaceSelector`, `podSelector`, ports, and protocols.
 
 ## Releases
+
+### Version 0.3.40
+- Improved network policy configuration by allowing per-CIDR port specifications in ipBlockRules
 
 ### Version 0.3.33
 - Fixed url in CSP header.
