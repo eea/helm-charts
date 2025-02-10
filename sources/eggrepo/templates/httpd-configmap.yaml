@@ -5,17 +5,17 @@ metadata:
 
 data:
   vh-my-app.conf: |-
+    {{- if .Values.rewriteUrl }}
     <VirtualHost *:80>
-      ServerName eggrepo.apps.eea.europa.eu
+      ServerName {{ .Values.rewriteUrl }}
       RewriteEngine On
-      RewriteRule ^(.*)$ https://eggrepo.eea.europa.eu$1 [R=permanent,L]
+      RewriteRule ^(.*)$ https://{{ .Values.url }}$1 [R=permanent,L]
     </VirtualHost>
+    {{- end }}
     <VirtualHost *:80>
       ServerAdmin helpdesk@eea.europa.eu
-      ServerName eggrepo.eea.europa.eu
-      #RequestHeader unset X-Forwarded-Host
-      #RequestHeader unset X-Forwarded-For
-      ProxyAddHeaders Off
+      ServerName {{ .Values.url }}
+      #ProxyAddHeaders Off
 
       <LocationMatch "^/(?!(simple|pypi|(.+)\.gif|(.+)\.jpg|(.+)\.css|(.+)\.gz|(.+)\.zip))">
 
@@ -33,14 +33,8 @@ data:
       RewriteRule ^/pypi(.*) http://pypi.python.org/simple$1 [R=permanent,L]
 
       #ProxyPreserveHost On
-      ProxyPass / http://{{ .Release.Name }}-repo-0.{{ .Release.Name }}-repo:9090/
-      ProxyPassReverse / http://{{ .Release.Name }}-repo-0.{{ .Release.Name }}-repo:9090/
+      ProxyPass / http://{{ .Release.Name }}-repo:9090/
+      ProxyPassReverse / http://{{ .Release.Name }}-repo:9090/
 
     </VirtualHost>
 
-# httpd.conf: |-
-#   x{ .Files.Get "htconf/httpd.conf" | nindent 4 }}
-# mime.types: |-
-#   x{ .Files.Get "htconf/mime.types" | nindent 4 }}
-# magic: |-
-#   x{ .Files.Get "htconf/magic" | nindent 4 }}

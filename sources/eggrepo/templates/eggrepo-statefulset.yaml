@@ -48,20 +48,39 @@ spec:
           initialDelaySeconds: 5
           periodSeconds: 20
         resources:
-          {{- toYaml .Values.resources | nindent 10 }}
-      {{- with .Values.nodeSelector }}
+          {{- toYaml .Values.eggrepo.resources | nindent 10 }}
+        securityContext:
+          {{- toYaml .Values.eggrepo.securityContext | nindent 12 }}
+
+        {{- if (.Values.eggrepo.livenessProbe) }}
+        livenessProbe:
+          {{- toYaml .Values.eggrepo.livenessProbe | nindent 10 }}
+        {{- end }}
+
+        {{- if (.Values.eggrepo.startupProbe) }}
+        startupProbe:
+          {{- toYaml .Values.eggrepo.startupProbe | nindent 10 }}
+        {{- end }}
+
+        {{- if (.Values.eggrepo.readinessProbe) }}
+        readinessProbe:
+          {{- toYaml .Values.eggrepo.readinessProbe | nindent 10 }}
+        {{- end }}
+
+      {{- with .Values.eggrepo.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.affinity }}
+      {{- with .Values.eggrepo.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.tolerations }}
+      {{- with .Values.eggrepo.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       restartPolicy: Always
+
   volumeClaimTemplates:
   - metadata:
       name: {{ .Release.Name }}-eggrepo
