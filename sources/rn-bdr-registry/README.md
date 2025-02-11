@@ -10,6 +10,9 @@ Network Policy:
 
 ## Releases
 
+### Version 0.1.7
+- Updated appVersion to 1.8.11.
+
 ### Version 0.1.6
 - Added support for custom network policies.
 
