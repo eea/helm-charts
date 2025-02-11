@@ -11,6 +11,9 @@ This can be used to set the rabbitmq host to be used.
 
 ## Releases
 
+### Version 0.1.39
+- Updated rn-bdr-registry to 0.1.7
+
 ### Version 0.1.38
 - Grouped apache resources config options in questions, in the Apache group.
 - Made zeopack curl request verbose.
