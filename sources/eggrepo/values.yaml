@@ -48,20 +48,13 @@ service:
   port: 80
 
 ingress:
-  enabled: false
+  enabled: true
   className: ""
   annotations: {}
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
-  hosts:
-    - host: eggrepo.eea.europa.eu
-      paths:
-        - path: /
-          pathType: Prefix
-  tls:
-    - secretName: ''
-      hosts:
-        - eggrepo.eea.europa.eu
+  tls: true
+
 
 eggrepo:
   resources:
@@ -72,7 +65,7 @@ eggrepo:
   livenessProbe:
     httpGet:
       path: /
-      port: 80
+      port: 9090
     periodSeconds: 20
     timeoutSeconds: 10
     initialDelaySeconds: 30
@@ -81,7 +74,7 @@ eggrepo:
   startupProbe:
     httpGet:
       path: /
-      port: 80
+      port: 9090
     periodSeconds: 5
     timeoutSeconds: 10
     initialDelaySeconds: 10
@@ -90,7 +83,7 @@ eggrepo:
   readinessProbe:
     httpGet:
       path: /
-      port: 80
+      port: 9090
     periodSeconds: 15
     timeoutSeconds: 10
     initialDelaySeconds: 60
