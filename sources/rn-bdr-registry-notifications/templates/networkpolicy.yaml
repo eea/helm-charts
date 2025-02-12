@@ -10,7 +10,7 @@ spec:
   podSelector:
     matchLabels:
       {{- include "appl.selectorLabels" . | nindent 6 }}
-      app.kubernetes.io/component: bdr-registry
+      app.kubernetes.io/component: bdr-registry-notifications
   policyTypes:
     - Ingress
     - Egress

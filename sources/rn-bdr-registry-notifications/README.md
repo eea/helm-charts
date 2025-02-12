@@ -10,6 +10,9 @@ Network Policy:
 
 ## Releases
 
+### Version 0.1.8
+- Fixed component label in networkpolicy.
+
 ### Version 0.1.7
 - Added networkpolicy template.
 
