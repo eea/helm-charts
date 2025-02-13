@@ -12,6 +12,9 @@ This chart deployes the Climate Advisory Board backend app
 ## Releases
 
 <dl>
+  <dt>Version 1.1.1</dt>
+  <dd>Release of dependent chart postfix:3.0.6</dd>
+
   <dt>Version 1.0.3</dt>
   <dd>Added `SENTRY_ENVIRONMENT` variable</dd>
 
