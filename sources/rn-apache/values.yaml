@@ -63,6 +63,16 @@ podSecurityContext:
 
 securityContext: {}
 
+# Network Policy configuration
+networkPolicy:
+  # -- Enable network policy
+  enabled: false
+  additionalIngress: []
+  # -- Additional ingress rules
+  additionalEgress: []
+  # -- Additional egress rules
+  spec: {}
+
 service:
   type: ClusterIP
   port: 80
