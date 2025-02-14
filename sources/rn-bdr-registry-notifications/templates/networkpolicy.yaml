@@ -96,6 +96,14 @@ spec:
         - protocol: TCP
           port: 25
     - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/component: redis
+              app.kubernetes.io/instance: {{ .Release.Name }}
+      ports:
+        - protocol: TCP
+          port: 25
+    - to:
         - ipBlock:
             cidr: 0.0.0.0/0
       ports:

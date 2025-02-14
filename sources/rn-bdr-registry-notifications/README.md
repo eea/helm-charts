@@ -10,6 +10,9 @@ Network Policy:
 
 ## Releases
 
+### Version 0.1.9
+- Allow egress to redis.
+
 ### Version 0.1.8
 - Fixed component label in networkpolicy.
 
