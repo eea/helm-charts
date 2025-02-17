@@ -102,7 +102,7 @@ spec:
               app.kubernetes.io/instance: {{ .Release.Name }}
       ports:
         - protocol: TCP
-          port: 25
+          port: 6379
     - to:
         - ipBlock:
             cidr: 0.0.0.0/0

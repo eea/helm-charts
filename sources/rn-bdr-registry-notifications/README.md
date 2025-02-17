@@ -10,6 +10,9 @@ Network Policy:
 
 ## Releases
 
+### Version 0.1.10
+- Fixed port for redis service egress.
+
 ### Version 0.1.9
 - Allow egress to redis.
 
