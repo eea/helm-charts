@@ -19,6 +19,9 @@ When the application was running on Rancher 1.6, it had a container, which ran t
 ## Releases
 
 <dl>
+  <dt>Version 0.6.26 - 17 February 2025</dt>
+  <dd>Share data directory between GN5 and GN46.</dd>
+
   <dt>Version 0.6.25 - 14 February 2025</dt>
   <dd>Add GN5.</dd>
 

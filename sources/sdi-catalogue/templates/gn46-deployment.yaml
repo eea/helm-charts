@@ -48,7 +48,7 @@ spec:
           {{- toYaml .Values.gn46.resources | nindent 10 }}
         volumeMounts:
         - mountPath: /catalogue-data
-          name: sdi-gn46-data
+          name: sdi-gn5-data
 
       {{- with .Values.nodeSelector }}
       nodeSelector:
@@ -65,7 +65,7 @@ spec:
       restartPolicy: Always
 
       volumes:
-      - name: sdi-gn46-data
+      - name: sdi-gn5-data
         persistentVolumeClaim:
-          claimName: sdi-gn46-data
+          claimName: sdi-gn5-data
  

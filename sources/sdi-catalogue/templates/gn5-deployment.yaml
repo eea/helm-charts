@@ -27,7 +27,7 @@ spec:
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
       containers:
       - name: gn5
-        image: juanluisrp/geonetwork5:frontend-exp-indexrecord-b5249e52e
+        image: juanluisrp/geonetwork5:frontend-exp-indexrecord-5f7aec57ca
         env:
         - name: SERVER_PORT
           value: "{{ .Values.gn5.server.port }}"
@@ -37,6 +37,8 @@ spec:
           value: {{ .Values.gn5.database.username }}
         - name: SPRING_DATASOURCE_PASSWORD  
           value: {{ .Values.gn5.database.password }}
+        - name: GEONETWORK_DIRECTORY_DATA
+          value: {{ .Values.gn5.directory.data }}
         - name: GEONETWORK_URL
           value: {{ .Values.gn5.gnUrl }}
         - name: GEONETWORK_INDEX_URL

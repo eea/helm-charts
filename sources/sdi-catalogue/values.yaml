@@ -227,6 +227,8 @@ gn5:
     url: "{{ .Values.gn5.index.protocol }}://{{ .Values.gn5.index.host }}:{{ .Values.gn5.index.port }}"
     indexPrefix: gn5
     indexRecordName: gn-records5
+  directory:
+    data: /catalogue-data/data
   gn4Url: http://gn46:8080/geonetwork
   coreUrl: http://gn46:8080/geonetwork
   baseUrl: http://gn46:8080/geonetwork
