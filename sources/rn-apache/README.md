@@ -10,6 +10,9 @@ Network Policy:
 
 ## Releases
 
+### Version 0.1.8
+- Added default timezone configuration.
+
 ### Version 0.1.7
 - Updated to Apache 2.4-3.4-alpine.
 - Added network policy configuration.
