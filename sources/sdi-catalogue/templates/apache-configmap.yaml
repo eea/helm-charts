@@ -119,7 +119,6 @@ data:
         RewriteRule ^/catalogue/srv/(.*)/csw-(.*) /catalogue/$2/eng/csw  [L,R]
 
         <Location /catalogue>
-            ProxyPreserveHost On
             AllowOverride None
 
             ## Reverse proxy configuration
@@ -132,6 +131,22 @@ data:
             ProxyPass http://public-catalogue:8080/catalogue
             ProxyPassReverse http://public-catalogue:8080/catalogue
         </Location>
+
+        {{- if .Values.gn5.enabled }}
+        <Location /geonetwork>
+            AllowOverride None
+
+            ## Reverse proxy configuration
+            ProxyPreserveHost On
+            {{- if .Values.apache.protectedWithBasicAuth}}
+            <IfModule mod_headers.c>
+                RequestHeader unset Authorization
+            </IfModule>
+            {{- end }}
+            ProxyPass http://gn5:8080/geonetwork
+            ProxyPassReverse http://gn-5:8080/geonetwork
+        </Location>
+        {{- end }}
 
 
         <Location /validator>

@@ -1,0 +1,85 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gn5
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: gn5
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: gn5
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: gn5
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      containers:
+      - name: gn5
+        image: juanluisrp/geonetwork5:frontend-exp-indexrecord-b5249e52e
+        env:
+        - name: SERVER_PORT
+          value: "{{ .Values.gn5.server.port }}"
+        - name: SPRING_DATASOURCE_URL
+          value: jdbc:postgresql://{{ .Values.gn5.database.host }}:{{ .Values.gn5.database.port }}/{{ .Values.gn5.database.dbname }}
+        - name: SPRING_DATASOURCE_USERNAME
+          value: {{ .Values.gn5.database.username }}
+        - name: SPRING_DATASOURCE_PASSWORD  
+          value: {{ .Values.gn5.database.password }}
+        - name: GEONETWORK_URL
+          value: {{ .Values.gn5.gnUrl }}
+        - name: GEONETWORK_INDEX_URL
+          value: "{{ tpl  .Values.gn5.index.url . }}"
+        - name: GEONETWORK_INDEX_INDEXPREFIX
+          value: {{ .Values.gn5.index.indexPrefix }}
+        - name: GEONETWORK_INDEX_INDEXRECORDNAME
+          value: {{ .Values.gn5.index.indexRecordName }}
+        - name: GEONETWORK_4_URL
+          value: {{ .Values.gn5.gn4Url }}
+        - name: GEONETWORK_CORE_URL
+          value: {{ .Values.gn5.coreUrl }}
+        - name: GN5_BASE_URL
+          value: {{ .Values.gn5.baseUrl }}
+        - name: GN4_BASE_URL  
+          value: {{ .Values.gn5.gn4baseUrl }}
+        - name: JAVA_OPTS
+          value: -Dfile.encoding=UTF-8
+
+        ports:
+        - containerPort: 8080
+        resources:
+          {{- toYaml .Values.gn5.resources | nindent 10 }}
+        volumeMounts:
+        - mountPath: /catalogue-data
+          name: sdi-gn5-data
+
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+
+      volumes:
+      - name: sdi-gn5-data
+        persistentVolumeClaim:
+          claimName: sdi-gn5-data
+ 

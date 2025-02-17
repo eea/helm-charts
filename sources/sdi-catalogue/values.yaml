@@ -208,5 +208,51 @@ webdavMetadata:
   nodeSelector: {}
   tolerations: []
   affinity: {}
-  
+
+gn5:
+  enabled: true
+  gnUrl: http://localhost:8080
+  server:
+    port: 8080
+  database:
+    host: postgres-geonetwork
+    port: 5432
+    dbname: ''
+    username: ''
+    password: ''
+  index:
+    host: elasticsearch
+    port: 9200
+    protocol: http
+    url: "{{ .Values.gn5.index.protocol }}://{{ .Values.gn5.index.host }}:{{ .Values.gn5.index.port }}"
+    indexPrefix: gn5
+    indexRecordName: gn-records5
+  gn4Url: http://gn46:8080/geonetwork
+  coreUrl: http://gn46:8080/geonetwork
+  baseUrl: http://gn46:8080/geonetwork
+  gn4baseUrl: http://geonetwork
+  resources:
+    requests:
+      memory: 2Gi
+    limits:
+      memory: 4Gi  
+
+gn46:
+  webapp_context: /geonetwork
+  geonetwork_dir: /catalogue-data
+  catalogue_name: catalogue
+  jvm_max_memory: 2G
+  db_type: postgres
+  formatter_dir: "{{ .Values.gn46.geonetwork_dir }}/data/formatter"
+  schema_dir: /opt/geonetwork/WEB-INF/data/config/schema_plugins
+  index_config_dir: /opt/geonetwork/WEB-INF/data/config/index
+  resources_dir: "{{ .Values.gn46.geonetwork_dir }}/resources"
+  es_host: elasticsearch
+  es_port: 9200
+  es_protocol: http
+  es_url: "{{ .Values.gn46.es_protocol }}://{{ .Values.gn46.es_host }}:{{ .Values.gn46.es_port }}"
+  es_index_records: gn5-records
+  es_features_proxy: "{{ .Values.gn46.es_protocol }}://{{ .Values.gn46.es_host }}:{{ .Values.gn46.es_port}}/gn5-features/{_}"
+  dashboardproxy_targeturi: http://kibana:5601
+  security_type: gn5
 
