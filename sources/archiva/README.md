@@ -2,18 +2,19 @@
 
 This chart is (almost) configured for production.
 
-# Releases
+## Releases
 
-<dl>
+### Version 0.3.0
+Upgrade postfix to a version with fewer vulnerabilities.
 
-  <dt>Version 0.2.0</dt>
-  <dd>Use StatefulSet instead of deployment to ensure prober upgrade.</dd>
+### Version 0.2.0
+Use StatefulSet instead of deployment to ensure prober upgrade.
 
-  <dt>Version 0.1.1</dt>
-  <dd>Use postfix subchart.</dd>
+### Version 0.1.1
+Use postfix subchart.
 
-  <dt>Version 0.1.0</dt>
-  <dd>Initial version.</dd>
+### Version 0.1.0
+Initial version.
 
 </dl>
 
