@@ -5,6 +5,9 @@ This chart is configured for production use.
 ## Releases
 
 <dl>
+  <dt>Version 1.3.5</dt>
+  <dd>Tomcat upgrade to 9.0.99. Helpdesk email update. Postfix upgrade.</dd>
+
   <dt>Version 1.3.4</dt>
   <dd>XSS fixes.</dd>
 
