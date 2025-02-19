@@ -4,12 +4,77 @@ The Business Data Repository is part of the Reportnet architecture. The Business
 
 This chart is almost configured for production use.
 
+## Network Security Policies
+
+This Helm chart deploys Kubernetes Network Policies to enhance the security of the CDR application. If `defaultNetworkPolicyDeny` is enabled, these policies enforce a **whitelist** approach, meaning that network traffic is only allowed if explicitly permitted.
+
+**Key Network Policy Configurations:**
+
+*   **Instance Pod Egress (`instance.networkPolicy.egress` in `values.yaml`):**  Configures outbound traffic from the `cdr-instance` pods. You can configure egress rules in two ways:
+
+    1. Using `ipBlockRules`: Define IP-based rules with specific ports for each CIDR block:
+    ```yaml
+    instance:
+      networkPolicy:
+        egress:
+          ipBlockRules:
+            - cidr: 10.50.4.0/24  # Legacy service network
+              ports:
+                - protocol: TCP
+                  port: 443     # HTTPS
+                - protocol: TCP
+                  port: 80      # HTTP
+            - cidr: 10.50.5.0/24  # Another network
+              ports:
+                - protocol: TCP
+                  port: 5432    # PostgreSQL
+    ```
+
+    2. Using `rawRules`: For more complex scenarios, define individual egress rules using the full power of Kubernetes NetworkPolicy `to` specifications:
+    ```yaml
+    instance:
+      networkPolicy:
+        egress:
+          rawRules:
+            - to:
+                - namespaceSelector:
+                    matchLabels:
+                      kubernetes.io/metadata.name: other-namespace
+                  podSelector:
+                    matchLabels:
+                      app.kubernetes.io/name: service-name
+              ports:
+                - port: 8080
+                  protocol: TCP
+    ```
+
+    You can use `rawRules` to define:
+    *   **IP Block Rules:** Target egress traffic to specific IP address ranges
+    *   **Namespace Selector Rules:** Target pods in other namespaces based on namespace labels and pod labels
+    *   **Pod Selector Rules:** Target pods within the same namespace based on pod labels
+    *   **Service Account Selector Rules (Advanced):** Target pods based on their service accounts
+
+*   **Default Deny Policies:** The chart includes deny Network Policies (`netsecpol-ingress-default.yaml` and `netsecpol-egress-default.yaml`) that, when enabled with `defaultNetworkPolicyDeny.enabled: true`, block all ingress and egress traffic unless overridden by more specific policies. This ensures a secure starting point and encourages explicit definition of allowed traffic.
+
+**Modifying Network Policies:**
+
+To customize the network policies, you should modify the `instance.networkPolicy.egress` sections within your `values.yaml` file.  Refer to the Kubernetes Network Policy documentation for details on how to define rules using `ipBlock`, `namespaceSelector`, `podSelector`, ports, and protocols.
+
 ## Values
 
 ### rabbitmq
 This can be used to set the rabbitmq host to be used.
 
 ## Releases
+
+### Version 0.1.50
+- Added support for customizing the network policies.
+- Updated rn-bdr-registry to 0.1.7.
+- Updated rn-bdr-registry-notifications to 0.1.7.
+- Updated rn-apache to 0.1.8.
+- Updated rn-bdr-ldap to 0.1.2.
+- Updated rn-clamav to 0.1.8.
+- Updated rn-zeoserver to 0.1.9.
 
 ### Version 0.1.40
 - Updated rn-bdr-european-registry to 0.1.6

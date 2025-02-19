@@ -9,6 +9,9 @@ timezone: Europe/Copenhagen
 bdrUser: ""
 bdrPass: ""
 
+defaultNetworkPolicyDeny:
+  enabled: false
+
 instance:
   enabled: true
   replicaCount: 2
@@ -29,6 +32,26 @@ instance:
     failureThreshold: 3
     timeoutSeconds: 6
   readinessProbe:
+  networkPolicy:
+      egress:
+        ipBlockRules:
+          # - cidr: 10.50.4.0/24  # Example: Legacy service network
+          #   ports:
+          #     - protocol: TCP
+          #       port: 443     # HTTPS
+          #     - protocol: TCP
+          #       port: 80      # HTTP
+        rawRules: []
+          # - to:
+          #     - namespaceSelector:
+          #         matchLabels:
+          #           kubernetes.io/metadata.name: other-namespace
+          #       podSelector:
+          #         matchLabels:
+          #           app.kubernetes.io/name: service-name
+          #   ports:
+          #     - port: 8080
+          #       protocol: TCP
   env:
     beakerPath: /sessions
     beakerSecret: ""
