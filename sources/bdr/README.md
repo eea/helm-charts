@@ -67,6 +67,9 @@ This can be used to set the rabbitmq host to be used.
 
 ## Releases
 
+### Version 0.1.52
+- Added security policy for redis.
+
 ### Version 0.1.51
 - Updated appVersion to 5.9.4-205.
 
