@@ -332,6 +332,63 @@ entries:
   bdr:
   - apiVersion: v2
     appVersion: 5.9.4-206
+    created: "2025-02-24T11:14:29.734405+02:00"
+    dependencies:
+    - alias: zeoserver
+      name: rn-zeoserver
+      repository: https://eea.github.io/helm-charts
+      version: 0.1.9
+    - alias: local-converters
+      condition: rn-local-converters.enabled
+      name: rn-local-converters
+      repository: https://eea.github.io/helm-charts
+      version: 0.1.6
+    - alias: clamav
+      condition: rn-clamav.enabled
+      name: rn-clamav
+      repository: https://eea.github.io/helm-charts
+      version: 0.1.8
+    - alias: ldap
+      name: rn-bdr-ldap
+      repository: https://eea.github.io/helm-charts
+      version: 0.1.2
+    - alias: bdr-registry
+      name: rn-bdr-registry
+      repository: https://eea.github.io/helm-charts
+      version: 0.1.7
+    - name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 15.2.8
+    - condition: postfix.enabled
+      name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.0.6
+    - alias: bdr-registry-notifications
+      name: rn-bdr-registry-notifications
+      repository: https://eea.github.io/helm-charts
+      version: 0.1.10
+    - alias: bdr-registry-notifications-async
+      name: rn-bdr-registry-notifications
+      repository: https://eea.github.io/helm-charts
+      version: 0.1.10
+    - alias: european-registry
+      name: rn-bdr-european-registry
+      repository: https://eea.github.io/helm-charts
+      version: 0.1.7
+    - alias: apache
+      name: rn-apache
+      repository: https://eea.github.io/helm-charts
+      version: 0.1.8
+    description: A BDR Helm chart for Kubernetes
+    digest: 1f24a8c5ff330d3f3887524dcadbbd056b3dfd8e74f9421536b9d80c8a8af940
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/bdr/logo_eionet.png
+    name: bdr
+    type: application
+    urls:
+    - bdr-0.1.54.tgz
+    version: 0.1.54
+  - apiVersion: v2
+    appVersion: 5.9.4-206
     created: "2025-02-21T12:20:58.545466+02:00"
     dependencies:
     - alias: zeoserver
@@ -11442,4 +11499,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2025-02-24T10:03:35.328933454+01:00"
+generated: "2025-02-24T11:14:29.70567+02:00"

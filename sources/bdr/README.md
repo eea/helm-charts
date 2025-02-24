@@ -67,6 +67,9 @@ This can be used to set the rabbitmq host to be used.
 
 ## Releases
 
+### Version 0.1.54
+- Updated rn-bdr-european-registry to 0.1.7
+
 ### Version 0.1.53
 - Updated appVersion to 5.9.4-206.
 
