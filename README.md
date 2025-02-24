@@ -19,17 +19,19 @@ Check package:
 
     helm lint .
 
+_Might raise errors if dependencies were changed. If that happens, run __helm dependencies update__ first_
+
 Update dependecies:
-    helm dependencies update _if you have changed the chart dependencies_
+
+    helm dependencies update 
+    
+_if you have changed the chart dependencies_
 
 Update/Release docs:
 
 Can be called by the name or the path of the chart directory:
 
     ./update_docs.sh toypackage
-
-or
-    ./update_docs.sh sources/toypackage/
 
 or
 
