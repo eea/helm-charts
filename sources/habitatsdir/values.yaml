@@ -94,25 +94,6 @@ static:
     limits:
       memory: 64Mi
 
-mysql:
-  securityContext: {}
-  resources:
-    requests:
-      memory: 100Mi
-    limits:
-      memory: 800Mi
-  database: art17prod
-  username: art17prod
-  password: REPLACEME
-  rootpw: REPLACEME
-  command: []
-# - mysqld
-# - --user=mysql
-# - --character-set-server=utf8mb4
-# - --collation-server=utf8mb4_unicode_ci
-  storage: 5Gi
-  storageClassName: ""
-
 postgres:
   securityContext: {}
   resources:
