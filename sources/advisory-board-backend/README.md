@@ -11,20 +11,23 @@ This chart deployes the Climate Advisory Board backend app
 
 ## Releases
 
-<dl>
-  <dt>Version 1.1.1</dt>
-  <dd>Release of dependent chart postfix:3.0.6</dd>
-  <dd>:warning: Breaking changes - manually remove the postix deployment before upgrade</dd>
+### Version 1.2.0 - 25 February 2025
+- Automated release of eeacms/advisory-board-backend:6.0.13-14
 
-  <dt>Version 1.0.3</dt>
-  <dd>Added `SENTRY_ENVIRONMENT` variable</dd>
 
-  <dt>Version 1.0.2</dt>
-  <dd>Rename components to backend- </dd>
+### Version 1.1.1
+- Release of dependent chart postfix:3.0.6
+- :warning: Breaking changes - manually remove the postix deployment before upgrade
 
-  <dt>Version 1.0.1</dt>
-  <dd>Questions update</dd>
+### Version 1.0.3
+- Added `SENTRY_ENVIRONMENT` variable
 
-  <dt>Version 1.0.0</dt>
-  <dd>Initial release. Version matching Rancher 1 catalog version.</dd>
-</dl> 
+### Version 1.0.2
+- Rename components to backend- 
+
+### Version 1.0.1
+- Questions update
+
+### Version 1.0.0
+- Initial release. Version matching Rancher 1 catalog version.
+
