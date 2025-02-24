@@ -13,6 +13,7 @@ if [ -z "$chart" ] || [ ! -d sources/$chart ]; then
     exit 1
 fi
 
+
 git pull
 
 
@@ -21,10 +22,12 @@ cd sources/$chart
 version=$(grep "^version:" Chart.yaml | head -n 1 | awk -F":" '{print $2}')
 echo "Version is $version"
 
-echo "Continue? Enter for yes"
-read variable
-if [ -n "$variable" ]; then
+if [ -z "$CI" ]; then
+  echo "Continue? Enter for yes"
+  read variable
+  if [ -n "$variable" ]; then
 	exit 1
+  fi
 fi
 
 helm lint .
@@ -50,14 +53,18 @@ git add docs/
 
 git status
 
-echo "Git commit & push? Enter for yes"
-read variable
-if [ -z "$variable" ]; then
+
+if [ -z "$CI" ]; then
+  echo "Git commit & push? Enter for yes"
+  read variable
+  if [ -z "$variable" ]; then
 	git commit -m "Release on $chart version $version"
 	git push
+  fi
+else
+    git commit -m "$HELM_UPGRADE_MESSAGE in $chart"
+    git push
 fi
-
-
 
 
 
