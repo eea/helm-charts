@@ -54,6 +54,10 @@ spec:
             value: "false"
           - name: queryLogRetentionDays
             value: P60D
+          - name: XQueryUser
+            value: {{ .Values.xquery.user }}
+          - name: XQueryPassword
+            value: {{ .Values.xquery.password }}
           - name: CATALINA_OPTS
             value: >-
               "-Xss4m"

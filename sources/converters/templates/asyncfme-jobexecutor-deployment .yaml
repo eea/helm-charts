@@ -120,6 +120,10 @@ spec:
             value: "true"
           - name: spring.autoconfigure.exclude
             value: ""
+          - name: XQueryUser
+            value: {{ .Values.xquery.user }}
+          - name: XQueryPassword
+            value: {{ .Values.xquery.password }}
           # Wait for up to 3 minutes
           startupProbe:
             httpGet:
