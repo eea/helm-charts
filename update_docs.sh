@@ -62,7 +62,7 @@ if [ -z "$CI" ]; then
 	git push
   fi
 else
-    git commit -m "$HELM_UPGRADE_MESSAGE in $chart"
+    git commit -m "$HELM_COMMIT_MESSAGE in $chart"
     git push
 fi
 
