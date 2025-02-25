@@ -67,6 +67,10 @@ This can be used to set the rabbitmq host to be used.
 
 ## Releases
 
+### Version 0.1.60
+- Updated appVersion to 5.9.4-209.
+- Added european-registry-sync to be used for cronjobs sync offloading.
+
 ### Version 0.1.55
 - Updated appVersion to 5.9.4-208.
 

@@ -5,9 +5,9 @@ icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/bdr/logo_ei
 
 type: application
 
-version: 0.1.55
+version: 0.1.60
 
-appVersion: "5.9.4-208"
+appVersion: "5.9.4-209"
 
 dependencies:
   - name: rn-zeoserver
@@ -51,6 +51,10 @@ dependencies:
     version: 0.1.7
     repository: https://eea.github.io/helm-charts
     alias: european-registry
+  - name: rn-bdr-european-registry
+    version: 0.1.7
+    repository: https://eea.github.io/helm-charts
+    alias: european-registry-sync
   - name: rn-apache
     version: 0.1.8
     repository: https://eea.github.io/helm-charts

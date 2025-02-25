@@ -401,6 +401,44 @@ european-registry:
   stocksApiUrl: ""
   stocksIncludeTestdata: "Yes"
 
+european-registry-sync:
+  apiPassword: ""
+  apiToken: ""
+  apiUser: ""
+  autoVerifyAllCompanies: ODS,FGAS
+  autoVerifyNewCompanies: ODS,FGAS
+  baseUrl: ""
+  baseUrlFgas: ""
+  baseUrlOds: ""
+  bdrApiKey: ""
+  bdrApiUrl: ""
+  bdrEndpointPassword: ""
+  bdrEndpointUrl: https://bdr.eionet.europa.eu
+  bdrEndpointUser: ""
+  bdrHelpDeskMail: ""
+  bdrHost: ""
+  dbHost: ""
+  dbName: ""
+  dbPass: ""
+  dbSchema: postgresql
+  dbUser: ""
+  debug: "False"
+  flaskApp: cache_registry/app.py
+  fuzzLimit: "92"
+  httpsVerify: "True"
+  logFile: EEA_double_check.log
+  mailsSenderName: ""
+  mailServer: bdr-postfix
+  mailSuppressSend: "False"
+  manualVerifyAllCompanies: ""
+  postgresAddr: bdr-postgres
+  requestsCaBundle: /etc/ssl/certs/ca-certificates.crt
+  sendMatchingMails: "True"
+  sentryDsn: ""
+  stocksApiToken: ""
+  stocksApiUrl: ""
+  stocksIncludeTestdata: "Yes"
+
 ldap:
   storage: 1Gi
   rootDN: ""
