@@ -4,6 +4,12 @@ The EMRT(EEA Emission Review Tool) is a web-based tool hosted by the EEA to faci
 
 ## Releases
 
+### Version 1.2.2
+- Updated app version to 18.1.23-1-1.76.1.
+
+### Version 1.2.1
+- Implementing increase of nginx.ingress.kubernetes.io/proxy-body-size [andreicenja]
+
 ### Version 1.2.0
 - Updated app version to 18.1.23-1-1.76.0.
 
