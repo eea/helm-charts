@@ -12,7 +12,7 @@ This chart deployes the Climate Advisory Board backend app
 ## Releases
 
 ### Version 1.2.0 - 25 February 2025
-- Automated release of eeacms/advisory-board-backend:6.0.13-14
+- Automated release of [eeacms/advisory-board-backend:6.0.13-14](https://github.com/eea/advisory-board-backend/releases)
 
 
 ### Version 1.1.1
