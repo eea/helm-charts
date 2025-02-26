@@ -65,6 +65,9 @@ To customize the network policies, you should modify the `instance.networkPolicy
 
 ## Releases
 
+### Version 0.3.22
+- Updated appVersion to 3.9.1-224.
+
 ### Version 0.3.21
 - Updated appVersion to 3.9.1-219.
 - Made cronjob for zeopack more verbose.
