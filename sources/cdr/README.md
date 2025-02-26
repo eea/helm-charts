@@ -65,6 +65,9 @@ To customize the network policies, you should modify the `instance.networkPolicy
 
 ## Releases
 
+### Version 0.3.41
+- Updated appVersion to 6.7.3-211.
+
 ### Version 0.3.40
 - Improved network policy configuration by allowing per-CIDR port specifications in ipBlockRules
 
