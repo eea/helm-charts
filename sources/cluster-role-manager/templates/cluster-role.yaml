@@ -1,0 +1,13 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  annotations:
+    field.cattle.io/description: {{ .Values.clusterRole.description }}
+  name: {{ .Values.clusterRole.name }}
+rules:
+  {{- range .Values.clusterRole.rules }}
+  - apiGroups: {{ toJson .apiGroups }}
+    resources: {{ toJson .resources }}
+    verbs: {{ toJson .verbs }}
+  {{- end }}
+
