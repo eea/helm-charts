@@ -1,0 +1,23 @@
+# Default values
+
+
+clusterRole:
+  name: "pod-reader"
+  description: "To introspect Rancher2 resources and generate Redmine/Taskman wiki pages"
+  rules:
+    - apiGroups: [""]
+      resources: ["pods", "services"]
+      verbs: ["get", "list", "watch"]
+    - apiGroups: ["apps"]
+      resources: ["deployments"]
+      verbs: ["get", "list", "watch"]
+
+clusterRoleBinding:
+  name: "read-pods-global"
+  creator: "username"
+  serviceAccount:
+    name: "taskman-wikiman"
+    namespace: "wikiman"
+
+
+
