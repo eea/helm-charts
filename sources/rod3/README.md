@@ -25,6 +25,9 @@ This chart is configured for production use.
 
 <dl>
 
+  <dt>Version 0.2.3/dt>
+  <dd>Updated helpdesk email address.</dd>
+
   <dt>Version 0.2.2</dt>
   <dd>SQL injection fixes, libraries updates, newer tomcat image.</dd>
 

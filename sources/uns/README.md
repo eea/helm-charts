@@ -12,6 +12,9 @@ set the values in the database section.
 
 <dl>
 
+  <dt>Version 0.3.5</dt>
+  <dd>Updated helpdesk email address.</dd>
+
   <dt>Version 0.3.4</dt>
   <dd>UTF-8 charset for plain/html email body.</dd>
 

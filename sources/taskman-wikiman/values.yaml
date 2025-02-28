@@ -25,6 +25,8 @@ serviceAccount:
 
 wikiman:
   schedule: "0 0 3 * *"
+  keepSuccessfulPods: 3
+  keepFailedPods: 5
   resources:
     limits:
       memory: 256Mi

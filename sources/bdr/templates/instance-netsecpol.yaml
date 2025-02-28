@@ -1,0 +1,146 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "appl.fullname" . }}-instance
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    app.kubernetes.io/component: network-policy
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: zope
+
+  policyTypes:
+  - Ingress
+  - Egress
+
+  ingress:
+    # Allow ingress from the same namespace
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .Release.Namespace }}
+
+  egress:
+    # Default egress rules (DNS, zeoserver, varnish, etc.)
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/instance: {{ .Release.Name }}
+              app.kubernetes.io/component: zeoserver
+      ports:
+        - protocol: TCP
+          port: {{ default 8100 (index .Values "zeoserver" "port") }}
+
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/instance: {{ .Release.Name }}
+              app.kubernetes.io/component: apache
+      ports:
+        - protocol: TCP
+          port: {{ default 80 (index .Values "apache" "service" "port") }}
+
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/instance: {{ .Release.Name }}
+              app.kubernetes.io/component: bdr-registry-notifications
+      ports:
+        - protocol: TCP
+          port: {{ default 12301 (index .Values "bdr-registry-notifications" "service" "port") }}
+
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/instance: {{ .Release.Name }}
+              app.kubernetes.io/component: bdr-registry
+      ports:
+        - protocol: TCP
+          port: {{ default 12300 (index .Values "bdr-registry" "service" "port") }}
+
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/instance: {{ .Release.Name }}
+              app.kubernetes.io/component: european-cache-registry
+      ports:
+        - protocol: TCP
+          port: {{ default 5000 (index .Values "european-registry" "service" "port") }}
+
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/instance: {{ .Release.Name }}
+              app.kubernetes.io/component: auth
+      ports:
+        - protocol: TCP
+          port: 389
+        - protocol: TCP
+          port: 636
+
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/instance: {{ .Release.Name }}
+              app.kubernetes.io/component: local-converters
+      ports:
+        - protocol: TCP
+          port: 5000
+
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/instance: {{ .Release.Name }}
+              app.kubernetes.io/component: security
+      ports:
+        - protocol: TCP
+          port: {{ default 3310 (index .Values "clamav" "port") }}
+
+    {{- if and (hasKey .Values "instance") (hasKey (index .Values "instance") "networkPolicy") }}
+    {{- if and (hasKey (index .Values "instance" "networkPolicy") "egress") (hasKey (index .Values "instance" "networkPolicy" "egress") "ipBlockRules") }}
+    # IP Block based egress rules
+    {{- range (index .Values "instance" "networkPolicy" "egress" "ipBlockRules") }}
+    - to:
+        - ipBlock:
+            cidr: {{ .cidr }}
+      ports:
+      {{- range .ports }}
+        - protocol: {{ .protocol }}
+          port: {{ .port }}
+      {{- end }}
+    {{- end }}
+    {{- end }}
+    {{- end }}
+
+    {{- if and (hasKey .Values "instance") (hasKey (index .Values "instance") "networkPolicy") }}
+    {{- if and (hasKey (index .Values "instance" "networkPolicy") "egress") (hasKey (index .Values "instance" "networkPolicy" "egress") "rawRules") }}
+    # Raw egress rules
+    {{- range (index .Values "instance" "networkPolicy" "egress" "rawRules") }}
+    - to:
+      {{- range .to }}
+      - {{ . | toYaml | nindent 8 | trim }}
+      {{- end }}
+      {{- if .ports }}
+      ports:
+      {{- range .ports }}
+      - {{ . | toYaml | nindent 8 | trim }}
+      {{- end }}
+      {{- end }}
+    {{- end }}
+    {{- end }}
+    {{- end }}

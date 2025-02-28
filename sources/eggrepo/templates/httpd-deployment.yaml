@@ -24,7 +24,7 @@ spec:
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
       containers:
       - name: {{ .Release.Name }}-httpd
-        image: "{{ .Values.apache.image }}"
+        image: "{{ .Values.httpd.image }}"
         ports:
         - containerPort: 80
           protocol: TCP
@@ -37,28 +37,34 @@ spec:
               name: {{ .Release.Name }}-htconf
               key: vh-my-app.conf
         resources:
-          {{- toYaml .Values.resources | nindent 10 }}
+          {{- toYaml .Values.httpd.resources | nindent 10 }}
         securityContext:
-          {{- toYaml .Values.securityContext | nindent 12 }}
+          {{- toYaml .Values.httpd.securityContext | nindent 12 }}
+
+        {{- if (.Values.httpd.livenessProbe) }}
         livenessProbe:
-          tcpSocket:
-            port: 80
-          initialDelaySeconds: 15
-          periodSeconds: 20
+          {{- toYaml .Values.httpd.livenessProbe | nindent 10 }}
+        {{- end }}
+
+        {{- if (.Values.httpd.startupProbe) }}
+        startupProbe:
+          {{- toYaml .Values.httpd.startupProbe | nindent 10 }}
+        {{- end }}
+
+        {{- if (.Values.httpd.readinessProbe) }}
         readinessProbe:
-          tcpSocket:
-            port: 80
-          initialDelaySeconds: 5
-          periodSeconds: 20
-      {{- with .Values.nodeSelector }}
+          {{- toYaml .Values.httpd.readinessProbe | nindent 10 }}
+        {{- end }}
+
+      {{- with .Values.httpd.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.affinity }}
+      {{- with .Values.httpd.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.tolerations }}
+      {{- with .Values.httpd.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}

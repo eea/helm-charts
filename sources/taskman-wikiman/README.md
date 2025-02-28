@@ -28,6 +28,9 @@ The stack needs a rancher_crontab stack to start it according to the Run Schedul
 ## Releases
 
 <dl>
+  <dt>Version 1.1.2</dt>
+  <dd>Add limits to keep pods history</dd>
+
   <dt>Version 1.1.0</dt>
   <dd>Add volume to keep GIT directory between runs</dd>
 

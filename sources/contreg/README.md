@@ -18,7 +18,10 @@ This chart is configured for production use.
 <dl>
 
   <dt>Version 1.0.0 (future)</dt>
-  <dd>First version to be used in production.</dd> 
+  <dd>First version to be used in production.</dd>
+
+  <dt>Version 0.3.2</dt>
+  <dd>Updated helpdesk email address, ui update.</dd>
 
   <dt>Version 0.3.1</dt>
   <dd>XSS fixes, NPE fix. Switch from archiva repo to GitHub packages.</dd>
@@ -31,7 +34,7 @@ This chart is configured for production use.
 
   <dt>Version 0.2.4</dt>
   <dd>String variable values fix.</dd>
-  
+
   <dt>Version 0.2.3</dt>
   <dd>Placeholders and updated values for environmental variables.</dd>
 

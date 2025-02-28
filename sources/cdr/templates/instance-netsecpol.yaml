@@ -73,18 +73,18 @@ spec:
         - protocol: TCP
           port: {{ .Values.clamav.port | default 3310 }}
 
-    {{- if and .Values.instance.networkPolicy.egress .Values.instance.networkPolicy.egress.ipBlocks .Values.instance.networkPolicy.egress.ports }}
+    {{- if and .Values.instance.networkPolicy.egress .Values.instance.networkPolicy.egress.ipBlockRules }}
     # IP Block based egress rules
+    {{- range .Values.instance.networkPolicy.egress.ipBlockRules }}
     - to:
-      {{- range .Values.instance.networkPolicy.egress.ipBlocks }}
-      - ipBlock:
-          cidr: {{ . }}
-      {{- end }}
+        - ipBlock:
+            cidr: {{ .cidr }}
       ports:
-      {{- range .Values.instance.networkPolicy.egress.ports }}
+      {{- range .ports }}
         - protocol: {{ .protocol }}
           port: {{ .port }}
       {{- end }}
+    {{- end }}
     {{- end }}
 
     {{- if .Values.instance.networkPolicy.egress.rawRules }}

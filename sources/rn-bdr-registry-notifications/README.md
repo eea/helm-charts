@@ -2,7 +2,25 @@
 
 BDR Registry Notifications Service Chart for BDR
 
+Network Policy:
+- `networkPolicy.enabled` - Enable network policy. Defaults to false.
+- `networkPolicy.additionalIngress` - Additional ingress rules to be added to the default ones. Defaults to [].
+- `networkPolicy.additionalEgress` - Additional egress rules to be added to the default ones. Defaults to [].
+- `networkPolicy.spec` - Additional network policy specifications to be merged with the policy. **Note**: Defining `ingress` or `egress` in spec will completely override the default rules and `additional*` rules. Defaults to {}.
+
 ## Releases
+
+### Version 0.1.10
+- Fixed port for redis service egress.
+
+### Version 0.1.9
+- Allow egress to redis.
+
+### Version 0.1.8
+- Fixed component label in networkpolicy.
+
+### Version 0.1.7
+- Added networkpolicy template.
 
 ### Version 0.1.6
 - Disabled probes when debugTail is enabled.
