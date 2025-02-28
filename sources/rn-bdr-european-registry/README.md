@@ -2,7 +2,22 @@
 
 BDR European Registry Service Chart for BDR
 
+Network Policy:
+- `networkPolicy.enabled` - Enable network policy. Defaults to false.
+- `networkPolicy.additionalIngress` - Additional ingress rules to be added to the default ones. Defaults to [].
+- `networkPolicy.additionalEgress` - Additional egress rules to be added to the default ones. Defaults to [].
+- `networkPolicy.spec` - Additional network policy specifications to be merged with the policy. **Note**: Defining `ingress` or `egress` in spec will completely override the default rules and `additional*` rules. Defaults to {}.
+
 ## Releases
+
+### Version 0.1.7
+- Updated appVersion to 2.4.2.
+
+### Version 0.1.6
+- Updated appVersion to 2.4.1.
+
+### Version 0.1.5
+- Added network policy support.
 
 ### Version 0.1.4
 - Updated appVersion to 2.4.0.

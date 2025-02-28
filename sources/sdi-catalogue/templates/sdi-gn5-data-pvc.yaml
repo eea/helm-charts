@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: sdi-gn5-data
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: sdi-gn5-data
+  annotations:
+    "helm.sh/resource-policy": keep
+
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi

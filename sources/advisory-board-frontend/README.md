@@ -11,13 +11,14 @@ This chart deployes the Climate Advisory Board frontend app
 
 ## Releases
 
-<dl>
-  <dt>Version 1.0.2</dt>
-  <dd>Rename services to be frontend- </dd>
+### Version 1.2.0 - 24 February 2025
+- Automated release of eeacms/advisory-board-frontend:1.12.0
 
-  <dt>Version 1.0.1</dt>
-  <dd>Add http probes to volto</dd>
+### Version 1.0.2 
+- Rename services to be frontend
 
-  <dt>Version 1.0.0</dt>
-  <dd>Initial release. Version matching Rancher 1 catalog version.</dd>
-</dl> 
+### Version 1.0.1
+- Add http probes to volto
+
+### Version 1.0.0
+- Initial release. Version matching Rancher 1 catalog version.

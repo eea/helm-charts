@@ -59,6 +59,16 @@ serviceAccount:
   annotations: {}
   name: ""
 
+# Network Policy configuration
+networkPolicy:
+  # -- Enable network policy
+  enabled: false
+  additionalIngress: []
+  # -- Additional ingress rules
+  additionalEgress: []
+  # -- Additional egress rules
+  spec: {}
+
 podAnnotations: {}
 podLabels: {}
 

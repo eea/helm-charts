@@ -2,22 +2,22 @@
 
 ## Releases
 
-<dl>
+### Version 1.0.0
+Upgrade of postfix to a version with fewer vulnerabilities.
 
-  <dt>Version 0.5.1</dt>
-  <dd>Set pathType to ImplementationSpecific. Update memcached chart to 7.4.7.</dd>
+### Version 0.5.1
+Set pathType to ImplementationSpecific. Update memcached chart to 7.4.7.
 
-  <dt>Version 0.5.0</dt>
-  <dd>Use subchart for memcached.</dd>
+### Version 0.5.0
+Use subchart for memcached.
 
-  <dt>Version 0.4.0</dt>
-  <dd>Use subchart for postfix.</dd>
+### Version 0.4.0
+Use subchart for postfix.
 
-  <dt>Version 0.3.0</dt>
-  <dd>Added network security policies. Activated autoscaling as default.</dd>
+### Version 0.3.0
+Added network security policies. Activated autoscaling as default.
 
-  <dt>Version 0.1.0</dt>
-  <dd>Initial version.</dd>
+### Version 0.1.0
+Initial version.
 
-</dl>
 

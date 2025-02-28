@@ -138,6 +138,10 @@ workers:
 ```
 
 ## Releases
+
+### Version 0.2.3
+- Added missing deployment in fwd_envelopes_task
+
 ### Version 0.2.2
 - Fixed tasks redis port reading from env vars
 

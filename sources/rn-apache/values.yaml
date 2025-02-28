@@ -47,6 +47,7 @@ timeout: 30
 proxyTimeout: 30
 # The sentry report uri is used to populate the sentry report in the htconf
 sentryReportUri: ""
+timezone: Europe/Copenhagen
 
 serviceAccount:
   create: false
@@ -62,6 +63,16 @@ podSecurityContext:
   # fsGroup: 2000
 
 securityContext: {}
+
+# Network Policy configuration
+networkPolicy:
+  # -- Enable network policy
+  enabled: false
+  additionalIngress: []
+  # -- Additional ingress rules
+  additionalEgress: []
+  # -- Additional egress rules
+  spec: {}
 
 service:
   type: ClusterIP

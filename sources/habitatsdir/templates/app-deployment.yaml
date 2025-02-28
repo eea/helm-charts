@@ -97,11 +97,6 @@ spec:
         - name: MIGRATE
           value: "no"
 
-        - name: MYSQL_ADDR
-          value: {{ .Release.Name }}-mysql-0.{{ .Release.Name }}-mysql
-        - name: MYSQL_ROOT_PASSWORD
-          value: "{{ .Values.mysql.rootpw }}"
-                   
         {{- if .Values.pdfUrlPrefix }}
         - name: PDF_DESTINATION
           value: factsheets/

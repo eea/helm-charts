@@ -14,6 +14,9 @@ fullnameOverride: ""
 timezone: Europe/Copenhagen
 ldapServer: ldap.eionet.europa.eu
 
+rewriteUrl: eggrepo.apps.eea.europa.eu
+url: eggrepo.eea.europa.eu
+
 commandArgs: ''
 #commandArgs:
 #  - "cluerelmgr-server"
@@ -39,60 +42,93 @@ podSecurityContext: {}
   # fsGroup: 2000
 
 securityContext: {}
-  # capabilities:
-  #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
 
 service:
   type: ClusterIP
   port: 80
 
 ingress:
-  enabled: false
+  enabled: true
   className: ""
   annotations: {}
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
-  hosts:
-    - host: eggrepo.eea.europa.eu
-      paths:
-        - path: /
-          pathType: Prefix
-  tls:
-    - secretName: ''
-      hosts:
-        - eggrepo.eea.europa.eu
+  tls: true
 
-resources:
-  requests:
-    memory: 2Gi
-#   cpu: 100m
-  limits:
-    memory: 2Gi
-#   cpu: 100m
 
-nodeSelector: {}
+eggrepo:
+  resources:
+    requests:
+      memory: 2Gi
+    limits:
+      memory: 2Gi
+  livenessProbe:
+    httpGet:
+      path: /
+      port: 9090
+    periodSeconds: 20
+    timeoutSeconds: 10
+    initialDelaySeconds: 30
+    failureThreshold: 6
+    successThreshold: 1
+  startupProbe:
+    httpGet:
+      path: /
+      port: 9090
+    periodSeconds: 5
+    timeoutSeconds: 10
+    initialDelaySeconds: 10
+    failureThreshold: 12
+    successThreshold: 1
+  readinessProbe:
+    httpGet:
+      path: /
+      port: 9090
+    periodSeconds: 15
+    timeoutSeconds: 10
+    initialDelaySeconds: 60
+    failureThreshold: 4
+    successThreshold: 2
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
 
-tolerations: []
-
-affinity: {}
-
-apache:
+httpd:
   image: eeacms/apache:2.4-2.9
   securityContext: {}
-    # capabilities:
-    #   drop:
-    #   - ALL
-    # readOnlyRootFilesystem: true
-    # runAsNonRoot: true
-    # runAsUser: 999
   resources:
     requests:
       memory: 512Mi
-  #   cpu: 100m
     limits:
       memory: 512Mi
-  #   cpu: 100m
+  livenessProbe:
+    httpGet:
+      path: /
+      port: 80
+    periodSeconds: 20
+    timeoutSeconds: 10
+    initialDelaySeconds: 30
+    failureThreshold: 6
+    successThreshold: 1
+  startupProbe:
+    httpGet:
+      path: /
+      port: 80
+    periodSeconds: 5
+    timeoutSeconds: 10
+    initialDelaySeconds: 10
+    failureThreshold: 12
+    successThreshold: 1
+  readinessProbe:
+    httpGet:
+      path: /
+      port: 80
+    periodSeconds: 15
+    timeoutSeconds: 10
+    initialDelaySeconds: 60
+    failureThreshold: 4
+    successThreshold: 2
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+        

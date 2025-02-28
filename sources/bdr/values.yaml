@@ -9,6 +9,9 @@ timezone: Europe/Copenhagen
 bdrUser: ""
 bdrPass: ""
 
+defaultNetworkPolicyDeny:
+  enabled: false
+
 instance:
   enabled: true
   replicaCount: 2
@@ -29,6 +32,26 @@ instance:
     failureThreshold: 3
     timeoutSeconds: 6
   readinessProbe:
+  networkPolicy:
+      egress:
+        ipBlockRules:
+          # - cidr: 10.50.4.0/24  # Example: Legacy service network
+          #   ports:
+          #     - protocol: TCP
+          #       port: 443     # HTTPS
+          #     - protocol: TCP
+          #       port: 80      # HTTP
+        rawRules: []
+          # - to:
+          #     - namespaceSelector:
+          #         matchLabels:
+          #           kubernetes.io/metadata.name: other-namespace
+          #       podSelector:
+          #         matchLabels:
+          #           app.kubernetes.io/name: service-name
+          #   ports:
+          #     - port: 8080
+          #       protocol: TCP
   env:
     beakerPath: /sessions
     beakerSecret: ""
@@ -378,6 +401,44 @@ european-registry:
   stocksApiUrl: ""
   stocksIncludeTestdata: "Yes"
 
+european-registry-sync:
+  apiPassword: ""
+  apiToken: ""
+  apiUser: ""
+  autoVerifyAllCompanies: ODS,FGAS
+  autoVerifyNewCompanies: ODS,FGAS
+  baseUrl: ""
+  baseUrlFgas: ""
+  baseUrlOds: ""
+  bdrApiKey: ""
+  bdrApiUrl: ""
+  bdrEndpointPassword: ""
+  bdrEndpointUrl: https://bdr.eionet.europa.eu
+  bdrEndpointUser: ""
+  bdrHelpDeskMail: ""
+  bdrHost: ""
+  dbHost: ""
+  dbName: ""
+  dbPass: ""
+  dbSchema: postgresql
+  dbUser: ""
+  debug: "False"
+  flaskApp: cache_registry/app.py
+  fuzzLimit: "92"
+  httpsVerify: "True"
+  logFile: EEA_double_check.log
+  mailsSenderName: ""
+  mailServer: bdr-postfix
+  mailSuppressSend: "False"
+  manualVerifyAllCompanies: ""
+  postgresAddr: bdr-postgres
+  requestsCaBundle: /etc/ssl/certs/ca-certificates.crt
+  sendMatchingMails: "True"
+  sentryDsn: ""
+  stocksApiToken: ""
+  stocksApiUrl: ""
+  stocksIncludeTestdata: "Yes"
+
 ldap:
   storage: 1Gi
   rootDN: ""
@@ -441,6 +502,11 @@ apache:
       name: bdr-bdr-registry-notifications-static
     - mountPath: /bdrreg/static
       name: bdr-bdr-registry-static
+  resources:
+    limits:
+      memory: 96Mi
+    requests:
+      memory: 64Mi
 
 rabbitmq:
   create: false

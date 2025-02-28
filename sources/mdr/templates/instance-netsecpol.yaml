@@ -1,0 +1,95 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "appl.fullname" . }}-instance
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    app.kubernetes.io/component: network-policy
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: zope
+
+  policyTypes:
+  - Ingress
+  - Egress
+
+  ingress:
+    # Allow ingress from the same namespace
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .Release.Namespace }}
+
+  egress:
+    # Default egress rules (DNS, zeoserver, varnish, etc.)
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/instance: {{ .Release.Name }}
+              app.kubernetes.io/component: zeoserver
+      ports:
+        - protocol: TCP
+          port: {{ .Values.zeoserver.port | default 8100 }}
+
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/instance: {{ .Release.Name }}
+              app.kubernetes.io/component: cache
+      ports:
+        - protocol: TCP
+          port: {{ .Values.varnish.varnishHTTPPort | default 8080 }}
+
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/instance: {{ .Release.Name }}
+              app.kubernetes.io/component: local-converters
+      ports:
+        - protocol: TCP
+          port: 5000
+
+    {{- if and .Values.instance.networkPolicy.egress .Values.instance.networkPolicy.egress.ipBlockRules }}
+    # IP Block based egress rules
+    {{- range .Values.instance.networkPolicy.egress.ipBlockRules }}
+    - to:
+        - ipBlock:
+            cidr: {{ .cidr }}
+      ports:
+      {{- range .ports }}
+        - protocol: {{ .protocol }}
+          port: {{ .port }}
+      {{- end }}
+    {{- end }}
+    {{- end }}
+
+    {{- if .Values.instance.networkPolicy.egress.rawRules }}
+    # Raw egress rules
+    {{- range .Values.instance.networkPolicy.egress.rawRules }}
+    - to:
+      {{- range .to }}
+      - {{ . | toYaml | nindent 8 | trim }}
+      {{- end }}
+      {{- if .ports }}
+      ports:
+      {{- range .ports }}
+      - {{ . | toYaml | nindent 8 | trim }}
+      {{- end }}
+      {{- end }}
+    {{- end }}
+    {{- end }}
