@@ -1,8 +1,8 @@
 # Default values for Sonarqube
 
 image:
-  repository: sonarqube
-  tag: "10.3.0.82913"
+  repository: eeacms/sonarqube
+  tag: "10.6.0"
   ## Specify a imagePullPolicy
   ## ref: https://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images
   ##
@@ -19,6 +19,35 @@ image:
   ##
   debug: false
 
+db:
+  image: eeacms/postgres:14.13-2.1
+  host: db
+  user: sonar
+  password: sonar
+  database: sonar
+  adminUser: postgres
+  adminPassword: sonar
+
+postfix:
+  image: eeacms/postfix:3.5-1.0
+  relay: ironports.eea.europa.eu
+  port: 8587
+  user: postfix_user
+  password: postfix_pass
+
+environment:
+  TZ: "Europe/Copenhagen"
+  POSTGRES_DB: "{{ .Values.db.database }}"
+  POSTGRES_USER: "{{ .Values.db.user }}"
+  POSTGRES_PASSWORD: "{{ .Values.db.password }}"
+  POSTGRES_ADMIN_USER: "{{ .Values.db.adminUser }}"
+  POSTGRES_ADMIN_PASSWORD: "{{ .Values.db.adminPassword }}"
+  SONARQUBE_JDBC_URL: "jdbc:postgresql://{{ .Values.db.host }}:5432/{{ .Values.db.database }}"
+  POSTFIX_RELAY: "{{ .Values.postfix.relay }}"
+  POSTFIX_PORT: "{{ .Values.postfix.port }}"
+  POSTFIX_USER: "{{ .Values.postfix.user }}"
+  POSTFIX_PASS: "{{ .Values.postfix.password }}"
+
 service:
   type: ClusterIP
   port: 9000
@@ -30,6 +59,11 @@ persistence:
   enabled: true
   accessMode: ReadWriteOnce
   size: 10Gi
+  external: true
+  volume_sonarqubedata: sonarqubedata
+  volume_sonarqubeextensions: sonarqubeextensions
+  db_storage_driver: netapp
+  front_storage_driver: netapp
 
 resources:
   requests:

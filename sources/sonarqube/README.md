@@ -18,7 +18,7 @@
 ## Variables
 
 * *SonarQube web jvm options* - used on SonarQube application
-* *Sonarqube database name* - used by SonarQube 
+* *Sonarqube database name* - used by SonarQube
 * *Sonarqube database user* - the user used by SonarQube to connect to the database
 * *Sonarqube database password* - the password used by SonarQube to connect to the database
 * *Postgres SuperUser*, *Postgres SuperUser Password* - the Postgres user credentials with administrative access
