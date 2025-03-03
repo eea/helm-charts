@@ -182,6 +182,14 @@ data:
             {{- end }}
         </Location>
 
+    #   Allow CORS for the download endpoint
+    #   https://taskman.eionet.europa.eu/issues/285084
+        <LocationMatch "^/datashare/s/.*/download$">
+            Header set Access-Control-Allow-Origin "*"
+            Header set Access-Control-Allow-Methods "GET, POST, OPTIONS"
+            Header set Access-Control-Allow-Headers "Content-Type, Authorization"
+        </LocationMatch>
+
     #    SSLProxyEngine On
 
         <Location /data>
