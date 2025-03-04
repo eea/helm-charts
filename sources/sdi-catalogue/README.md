@@ -19,6 +19,9 @@ When the application was running on Rancher 1.6, it had a container, which ran t
 ## Releases
 
 <dl>
+  <dt>Version 0.6.30 - 04 March 2025</dt>
+  <dd>Update GN to 5c376d1e.</dd>
+
   <dt>Version 0.6.29 - 03 March 2025</dt>
   <dd>Enable CORS for Nextcloud Share link download endpoint.</dd>
 
