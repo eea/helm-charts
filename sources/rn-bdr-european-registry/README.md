@@ -10,6 +10,9 @@ Network Policy:
 
 ## Releases
 
+### Version 0.1.8
+- Updated appVersion to 2.4.3.
+
 ### Version 0.1.7
 - Updated appVersion to 2.4.2.
 
