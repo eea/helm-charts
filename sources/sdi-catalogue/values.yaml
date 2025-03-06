@@ -21,6 +21,7 @@ privilegedUsers:
   - ostlanic
   - rodrijua
   - roug
+  - garcijos
 privilegedGroups:
   - cn=eea-staff,cn=eea,ou=Roles,o=EIONET,l=Europe
   - cn=eionet-etc-data,cn=eionet-etc,cn=eionet,ou=Roles,o=EIONET,l=Europe
@@ -242,6 +243,7 @@ gn5:
 gn46:
   webapp_context: /geonetwork
   geonetwork_dir: /catalogue-data
+  geonetwork_data_dir: /var/local/gis_sdi/datastore
   catalogue_name: catalogue
   jvm_max_memory: 2G
   db_type: postgres
