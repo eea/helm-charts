@@ -19,6 +19,8 @@ When the application was running on Rancher 1.6, it had a container, which ran t
 ## Releases
 
 <dl>
+  <dt>Version 0.6.32 - 06 March 2025</dt>
+  <dd>GN 4.6.x - Custom datastore.</dd>
 
   <dt>Version 0.6.31 - 04 March 2025</dt>
   <dd>Use a switch to enable/disable GN5/GN46x services.</dd>
