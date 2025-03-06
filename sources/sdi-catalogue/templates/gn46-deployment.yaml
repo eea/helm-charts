@@ -28,7 +28,7 @@ spec:
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
       containers:
       - name: gn46
-        image: eeacms/eea-geonetwork@sha256:75642303255561dbd862fce48bed3c7c7616317d7492f7c6a14dffae68745221
+        image: eeacms/eea-geonetwork@sha256:aff75501379e99bf8f9f945379762ba0f2859e0ed76b0de859a42e9103b6c203
         env:
         - name: WEBAPP_CONTEXT_PATH
           value: {{ .Values.gn46.webapp_context }}
@@ -39,7 +39,7 @@ spec:
         - name: JAVA_OPTIONS
           value: "-Djava.security.egd=file:/dev/./urandom -Djava.awt.headless=true -Xms512M -Xss512M -Xmx{{ .Values.gn46.jvm_max_memory }} -XX:+UseConcMarkSweepGC -Dorg.eclipse.jetty.annotations.AnnotationParser.LEVEL=OFF"
         - name: GN_CONFIG_PROPERTIES
-          value: "-Dgeonetwork.security.type={{ .Values.gn46.security_type }} -Dgeonetwork.dir={{ .Values.gn46.geonetwork_dir }} -Dgeonetwork.data.dir={{ .Values.gn46.geonetwork_data_dir }} -Dgeonetwork.db.type={{ .Values.gn46.db_type }} -Dgeonetwork.schema.dir={{ .Values.gn46.schema_dir }} -Dgeonetwork.formatter.dir={{ tpl .Values.gn46.formatter_dir . }} -Dgeonetwork.indexConfig.dir={{ .Values.gn46.index_config_dir }} -Dgeonetwork.resources.dir={{ tpl .Values.gn46.resources_dir . }} -Des.host={{ .Values.gn46.es_host }} -Des.port={{ .Values.gn46.es_port }} -Des.protocol={{ .Values.gn46.es_protocol }} -Des.index.records={{ .Values.gn46.es_index_records }} -Des.url={{ tpl .Values.gn46.es_url . }} -Dgeonetwork.ESFeaturesProxy.targetUri={{ tpl .Values.gn46.es_features_proxy .}} -Dkb.url=http://kibana:5601 -Dgeonetwork.HttpDashboardProxy.targetUri={{ .Values.gn46.dashboardproxy_targeturi }}"
+          value: "-Dgeonetwork.security.type={{ .Values.gn46.security_type }} -Dgeonetwork.dir={{ .Values.gn46.geonetwork_dir }} -Dgeonetwork.db.type={{ .Values.gn46.db_type }} -Dgeonetwork.schema.dir={{ .Values.gn46.schema_dir }} -Dgeonetwork.formatter.dir={{ tpl .Values.gn46.formatter_dir . }} -Dgeonetwork.indexConfig.dir={{ .Values.gn46.index_config_dir }} -Dgeonetwork.resources.dir={{ tpl .Values.gn46.resources_dir . }} -Des.host={{ .Values.gn46.es_host }} -Des.port={{ .Values.gn46.es_port }} -Des.protocol={{ .Values.gn46.es_protocol }} -Des.index.records={{ .Values.gn46.es_index_records }} -Des.url={{ tpl .Values.gn46.es_url . }} -Dgeonetwork.ESFeaturesProxy.targetUri={{ tpl .Values.gn46.es_features_proxy .}} -Dkb.url=http://kibana:5601 -Dgeonetwork.HttpDashboardProxy.targetUri={{ .Values.gn46.dashboardproxy_targeturi }}"
         # To configure the database connection parameters fill the values in /catalogue-data/config/db.properties
         # To configure the LDAP connection options fill the values in /catalogue-data/config/security.properties
 
