@@ -138,11 +138,6 @@ data:
 
             ## Reverse proxy configuration
             ProxyPreserveHost On
-            {{- if .Values.apache.protectedWithBasicAuth}}
-            <IfModule mod_headers.c>
-                RequestHeader unset Authorization
-            </IfModule>
-            {{- end }}
             ProxyPass http://gn5:8080/geonetwork
             ProxyPassReverse http://gn-5:8080/geonetwork
         </Location>

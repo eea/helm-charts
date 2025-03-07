@@ -19,6 +19,9 @@ When the application was running on Rancher 1.6, it had a container, which ran t
 ## Releases
 
 <dl>
+  <dt>Version 0.6.34 - 07 March 2025</dt>
+  <dd>GN5 - Removed basic auth for GN5.</dd>
+
   <dt>Version 0.6.33 - 06 March 2025</dt>
   <dd>GN 4.6.x - Custom datastore rollback.</dd>
 
