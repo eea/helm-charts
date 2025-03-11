@@ -12,4 +12,4 @@ This chart deployes the European Industrial Emissions Portal backend app
 
 ### Version 1.0.0
 
-- Initial release. Version matching Rancher 1 catalog version.
+- Initial release.
