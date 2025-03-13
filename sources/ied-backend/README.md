@@ -10,6 +10,9 @@ This chart deployes the European Industrial Emissions Portal backend app
 
 ## Releases
 
+### Version 1.2.0 - 13 March 2025
+- Automated release of [eeacms/ied-backend:6.0.13-1](https://github.com/eea/ied-backend/releases)
+
 ### Version 1.1.0 - 12 March 2025
 - Automated release of [eeacms/ied-backend:1.0.1](https://github.com/eea/ied-backend/releases)
 
