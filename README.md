@@ -27,6 +27,36 @@ Update dependecies:
     
 _if you have changed the chart dependencies_
 
+
+Update Readme/Version Increase:
+
+After you did some changes in an existing helm chart, don't commit yet, use the `increase_version_helm.sh` to prepare to release a new version of helm chart
+
+Variables:
+
+* `HELM_VERSION_TYPE` - increases the current version of the chart with  "MINOR", "MAJOR", "PATCH", default "PATCH" 
+* `HELM_UPGRADE_MESSAGE` - mandatory, changelog message that will be put in README.md
+* `HELM_ADD_COMMIT_LINK_README` - will first create a commit with the changes in the chart, then add the commit link in the README, together with the author of the commit, default "yes"
+* `HELM_COMMIT_MESSAGE` - used in case you want to use a different commit message than the one in README.md, defaults to `HELM_UPGRADE_MESSAGE`
+
+
+   cd sources/toypackage
+   
+   HELM_UPGRADE_MESSAGE="Added a new variable in values.yaml" ../../increase_version_helm.sh  
+
+This will first do a commit with your changes and the message "Added a new variable in values.yaml".
+Then it will "PATCH" increase the Chart version  0.1.1 -> 0.1.2, 1.2.9 -> 1.2.10, etc
+Then it will add a changelog entry in README.md file with the following structure:
+
+    ## Releases
+
+    ### Version NEW_VERSION - DATE
+    - HELM_UPGRADE_MESSAGE [AUTHOR - [`COMMIT`](COMMIT_LINK)]
+
+
+
+
+
 Update/Release docs:
 
 Can be called by the name or the path of the chart directory:
@@ -53,6 +83,15 @@ The script does:
     git add .
     git commit
     git push
+
+
+## Subcharts update after release
+
+If you manually released a chart that is also used as a subchart in another chart, you can use this script to update all helm charts from sources directory that contain it:
+
+    ./release_subchart.sh sources/YOUR_NEWLY_RELEASED_CHART
+
+
 
 ## Deploying Helm charts
 
