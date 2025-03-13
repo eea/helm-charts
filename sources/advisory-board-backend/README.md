@@ -11,6 +11,9 @@ This chart deployes the Climate Advisory Board backend app
 
 ## Releases
 
+### Version 1.3.0 - 13 March 2025
+- Automated release of [eeacms/advisory-board-backend:6.0.13-16](https://github.com/eea/advisory-board-backend/releases)
+
 ### Version 1.2.1 - 12 March 2025
 - Automated release of [eeacms/plone-varnish:7.6-1.0](https://github.com/eea/plone-varnish/releases)
 
