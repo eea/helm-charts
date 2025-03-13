@@ -10,6 +10,9 @@ Network Policy:
 
 ## Releases
 
+### Version 0.2.0 - 13 March 2025
+- Automated release of [eeacms/apache:2.4-3.4](https://github.com/eea/eea.docker.apache/releases) [EEA Jenkins - [`418c9ac`](https://github.com/eea/helm-charts/commit/418c9ac646b7ba0462fe828081653286d7b1dfce)]
+
 ### Version 0.1.8
 - Added default timezone configuration.
 
