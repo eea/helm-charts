@@ -4,32 +4,35 @@ This chart is (almost) configured for production.
 
 ## Releases
 
-<dl>
-  <dt>Version 0.5.2 - 13 August 2024</dt>
-  <dd>Made it the address of the backend configurable.</dd>
+### Version 0.5.3 - 13 March 2025
+- Automated release of [eeacms/apache:2.4-3.4](https://github.com/eea/eea.docker.apache/releases) [EEA Jenkins - [`36a7b01`](https://github.com/eea/helm-charts/commit/36a7b016db51559df4a1bd443d71133d82e1a12d)]
 
-  <dt>Version 0.5.1 - 13 August 2024</dt>
-  <dd>Made replica count for webserver configurable.</dd>
 
-  <dt>Version 0.5.0 - 7 August 2024</dt>
-  <dd>Moved the security headers to standard Ingress annotations.</dd>
+### Version 0.5.2 - 13 August 2024
+- Made it the address of the backend configurable.
 
-  <dt>Version 0.4.0 - 14 June 2024</dt>
-  <dd>Implemented autoscaling for the gemet pod.</dd>
+### Version 0.5.1 - 13 August 2024
+- Made replica count for webserver configurable.
 
-  <dt>Version 0.3.0</dt>
-  <dd>Replaced the home-made postgres deployment with bitnami dependency.</dd>
+### Version 0.5.0 - 7 August 2024
+- Moved the security headers to standard Ingress annotations.
 
-  <dt>Version 0.2.0</dt>
-  <dd>Removed mysql database, postfix, zope and zeo.</dd>
+### Version 0.4.0 - 14 June 2024
+- Implemented autoscaling for the gemet pod.
 
-  <dt>Version 0.1.1</dt>
-  <dd>Set UTF-8 and LANG environment variable on database pods.</dd>
+### Version 0.3.0
+- Replaced the home-made postgres deployment with bitnami dependency.
 
-  <dt>Version 0.1.0</dt>
-  <dd>Initial version.</dd>
+### Version 0.2.0
+- Removed mysql database, postfix, zope and zeo.
 
-</dl>
+### Version 0.1.1
+- Set UTF-8 and LANG environment variable on database pods.
+
+### Version 0.1.0
+- Initial version.
+
+
 
 ## Deployment
 
