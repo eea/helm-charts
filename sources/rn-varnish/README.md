@@ -80,6 +80,9 @@ rn-varnish: # Assuming you named your rn-varnish subchart "rn-varnish"
 
 ## Releases
 
+### Version 0.2.0 - 14 March 2025
+- Automated release of [eeacms/reportek-varnish:7.6-1.0](https://github.com/eea/eea.docker.varnish-reportek/releases) [EEA Jenkins - [`4df4331`](https://github.com/eea/helm-charts/commit/4df433174ed03a473195b47e34a19d3c178b775e)]
+
 ### Version 0.1.10
 - Fixed nintend for backendSelectorLabels in networkpolicy template.
 
