@@ -78,6 +78,10 @@ spec:
           value: '{{ .Values.instance.env.zopeThreads }}'
         - name: LOCAL_CONVERTERS_HOST
           value: '{{ .Values.instance.env.localConvertersHost }}'
+        - name: EVENT_LOG_LEVEL
+          value: '{{ .Values.instance.env.eventLogLevel }}'
+        - name: ACCESS_LOG_LEVEL
+          value: '{{ .Values.instance.env.accessLogLevel }}'
 
         volumeMounts:
           - mountPath: /sessions
