@@ -67,6 +67,9 @@ This can be used to set the rabbitmq host to be used.
 
 ## Releases
 
+### Version 0.2.2 - 17 March 2025
+- Updated rn-bdr-european-registry to 0.1.11
+
 ### Version 0.2.1 - 14 March 2025
 - Added event and access log levels
 
