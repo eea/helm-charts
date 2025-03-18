@@ -18,36 +18,17 @@ You can run `helm test eunis` to verify the system is working correctly.
 
 ## Releases
 
-<dl>
-  <dt>Version 1.1.1 - 8 Nov. 2024<dt>
-  <dd>Removed old mariadb 5</dd>
-
-  <dt>Version 1.1.0 - 7 Nov. 2024</dt>
-  <dd>Added mariadb service to upgrade database</dd>
-
-  <dt>Version 1.0.4 - 9 Aug. 2024</dt>
-  <dd>Removed default annotations for Ingress.</dd>
-
-  <dt>Version 1.0.3 - 9 Aug. 2024</dt>
-  <dd>Added startup and readyness probes. Made them optional.</dd>
-
-  <dt>Version 1.0.2</dt>
-  <dd>Made buildsw optional, and disabled by default.</dd>
-
-  <dt>Version 1.0.1</dt>
-  <dd>Added security policy to deny outward connections from database.</dd>
-
-  <dt>Version 1.0.0</dt>
-  <dd>Removed readyness probe.</dd>
-
-  <dt>Version 0.2.0</dt>
-  <dd>Added network security policies.</dd>
-
-  <dt>Version 0.1.3</dt>
-  <dd>First version to be used in production.</dd>
-
-  <dt>Version 0.1.0</dt>
-  <dd>Initial version.</dd>
-
-</dl>
+| Version | Comment |
+| ------- | ------- |
+| Version 1.2.0 - 18 Mar. 2025 | More lax network security policy for Tomcat |
+| Version 1.1.1 - 8 Nov. 2024 | Removed old mariadb 5 |
+| Version 1.1.0 - 7 Nov. 2024 | Added mariadb service to upgrade database |
+| Version 1.0.4 - 9 Aug. 2024 | Removed default annotations for Ingress. |
+| Version 1.0.3 - 9 Aug. 2024 | Added startup and readyness probes. Made them optional. |
+| Version 1.0.2 | Made buildsw optional, and disabled by default. |
+| Version 1.0.1 | Added security policy to deny outward connections from database. |
+| Version 1.0.0 | Removed readyness probe. |
+| Version 0.2.0 | Added network security policies. |
+| Version 0.1.3 | First version to be used in production. |
+| Version 0.1.0 | Initial version. |
 
