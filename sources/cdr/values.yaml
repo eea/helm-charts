@@ -21,7 +21,6 @@ instance:
       memory: 2Gi
       cpu: 500m
     limits:
-      cpu: 500m
       memory: 2Gi
   livenessProbe:
     httpGet:
@@ -174,12 +173,10 @@ local-converters:
       cpu: 300m
     limits:
       memory: 1.5Gi
-      cpu: 300m
   autoscaling:
     enabled: false
     minReplicas: 1
     maxReplicas: 2
-    targetCPUUtilizationPercentage: 80
     targetMemoryUtilizationPercentage: 80
 
 clamav:
@@ -189,8 +186,8 @@ clamav:
       memory: 3.5Gi
       cpu: 300m
     limits:
-      cpu: 300m
       memory: 3.5Gi
+      cpu: 1
   storage: 1Gi
   storageName: cdr-clamav-data
   autoscaling:
@@ -287,7 +284,6 @@ autoscaling:
   enabled: false
   minReplicas: 1
   maxReplicas: 2
-  targetCPUUtilizationPercentage: 80
   targetMemoryUtilizationPercentage: 80
 
 nodeSelector: {}
