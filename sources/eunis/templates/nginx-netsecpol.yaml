@@ -1,5 +1,5 @@
 #
-# Allow NGINX to contact the frontend service.
+# Allow any to contact the frontend service on port 8080.
 #
 {{- if .Values.ingress.enabled }}
 apiVersion: networking.k8s.io/v1
@@ -18,11 +18,7 @@ spec:
   - Ingress
 
   ingress:
-  - from:
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: kube-system
-      podSelector:
-        matchLabels:
-          app.kubernetes.io/name: rke2-ingress-nginx
+  - ports:
+    - port: 8080
+      protocol: TCP
 {{- end }}
