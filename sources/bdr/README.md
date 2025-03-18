@@ -67,6 +67,9 @@ This can be used to set the rabbitmq host to be used.
 
 ## Releases
 
+### Version 0.3.0 - 18 March 2025
+- Automated release of [eeacms/reportek-bdr:5.9.4-216](https://github.com/eea/eea.docker.reportek.bdr-instance/releases) [EEA Jenkins - [`44c9394`](https://github.com/eea/helm-charts/commit/44c9394bbfd2627e34888b9e9aa16b8b9ef55a4c)]
+
 ### Version 0.2.4 - 18 March 2025
 - Removed most cpu limits except for clamav
 
