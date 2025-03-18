@@ -67,6 +67,9 @@ This can be used to set the rabbitmq host to be used.
 
 ## Releases
 
+### Version 0.2.4 - 18 March 2025
+- Removed most cpu limits except for clamav
+
 ### Version 0.2.3 - 18 March 2025
 - Updated appVersion to 5.9.4-215
 

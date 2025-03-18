@@ -36,13 +36,6 @@ questions:
     default: "500m"
     group: "Instance Configuration"
 
-  - variable: instance.resources.limits.cpu
-    label: "Instance CPU Limit"
-    description: "Maximum CPU allocation for BDR instance"
-    type: string
-    default: "500m"
-    group: "Instance Configuration"
-
   - variable: instance.env.zopeThreads
     label: "Zope Threads"
     description: "Number of Zope threads"
@@ -187,15 +180,6 @@ questions:
         type: int
         min: 1
         default: 4
-        group: "Instance Configuration"
-
-      - variable: autoscaling.targetCPUUtilizationPercentage
-        label: "Target CPU Utilization Percentage"
-        description: "CPU utilization threshold for scaling"
-        type: int
-        min: 1
-        max: 100
-        default: 80
         group: "Instance Configuration"
 
       - variable: autoscaling.targetMemoryUtilizationPercentage
@@ -571,13 +555,6 @@ questions:
         default: "500m"
         group: "Local Converters"
 
-      - variable: local-converters.resources.limits.cpu
-        label: "CPU Limit"
-        description: "Maximum CPU allocation for converters"
-        type: string
-        default: "500m"
-        group: "Local Converters"
-
       - variable: local-converters.autoscaling.enabled
         label: "Enable Autoscaling"
         description: "Enable autoscaling for converters"
@@ -596,12 +573,6 @@ questions:
             label: "Maximum Replicas"
             type: int
             default: 2
-            group: "Local Converters"
-
-          - variable: local-converters.autoscaling.targetCPUUtilizationPercentage
-            label: "Target CPU Utilization"
-            type: int
-            default: 80
             group: "Local Converters"
 
   # ClamAV Configuration
