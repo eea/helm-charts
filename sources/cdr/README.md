@@ -65,6 +65,9 @@ To customize the network policies, you should modify the `instance.networkPolicy
 
 ## Releases
 
+### Version 0.5.1 - 18 March 2025
+- Removed most cpu limits except for clamav
+
 ### Version 0.5.0 - 17 March 2025
 - Automated release of [eeacms/reportek-cdr:6.7.3-215](https://github.com/eea/eea.docker.reportek.cdr-instance/releases) [EEA Jenkins - [`103685a`](https://github.com/eea/helm-charts/commit/103685a6b143551e4472fa9751762d5f6c50c7d1)]
 

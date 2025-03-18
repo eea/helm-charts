@@ -32,12 +32,6 @@ questions:
     default: "500m"
     group: "Core components"
 
-  - variable: instance.resources.limits.cpu
-    label: "Zope instance CPU Limit"
-    type: string
-    default: "500m"
-    group: "Core components"
-
   - variable: autoscaling.enabled
     label: "Enable Zope instances Autoscaling"
     type: boolean
@@ -55,12 +49,6 @@ questions:
         label: "Maximum Replicas"
         type: int
         default: 2
-        group: "Core components"
-
-      - variable: autoscaling.targetCPUUtilizationPercentage
-        label: "Target CPU Utilization Percentage"
-        type: int
-        default: 80
         group: "Core components"
 
   - variable: zeoserver.storage
@@ -111,12 +99,6 @@ questions:
     default: "1.5Gi"
     group: "Core components"
 
-  - variable: local-converters.resources.limits.cpu
-    label: "Local Converters CPU Limit"
-    type: string
-    default: "300m"
-    group: "Core components"
-
   - variable: local-converters.autoscaling.enabled
     label: "Enable Autoscaling for Local Converters"
     type: boolean
@@ -133,11 +115,6 @@ questions:
         label: "Maximum Replicas for Local Converters"
         type: int
         default: 2
-        group: "Core components"
-      - variable: local-converters.autoscaling.targetCPUUtilizationPercentage
-        label: "Target CPU Utilization Percentage for Local Converters"
-        type: int
-        default: 80
         group: "Core components"
 
   - variable: clamav.storage
