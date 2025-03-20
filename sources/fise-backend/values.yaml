@@ -23,6 +23,7 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: 01dev-eea-letsencrypt
   certificate: demo-forest.01dev.eea.europa.eu-tls
+  tls: true
 
 plone:
   annotations: {}
