@@ -13,3 +13,7 @@ This chart deployes the Forest Information System of Europe website backend app
 ### Version 1.0.0
 
 - Initial release.
+
+### Version 1.0.1
+
+- Update values.
