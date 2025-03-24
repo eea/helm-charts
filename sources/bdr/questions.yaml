@@ -101,6 +101,19 @@ questions:
     type: string
     group: "Instance Configuration"
 
+  - variable: instance.env.blobStorageCacheVolumeEnabled
+    label: "Enable Blob Storage Cache Volume"
+    type: boolean
+    default: true
+    group: "Instance Configuration"
+
+  - variable: instance.env.blobStorageCacheVolumeSize
+    label: "Blob Storage Cache Volume Size"
+    type: string
+    default: "1Gi"
+    show_if: "instance.env.blobStorageCacheVolumeEnabled"
+    group: "Instance Configuration"
+
   - variable: instance.env.rabbitmqEnabled
     label: "Enable RabbitMQ"
     description: "Enable RabbitMQ integration"

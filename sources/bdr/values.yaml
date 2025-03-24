@@ -74,6 +74,8 @@ instance:
     zipCacheThreshold: "100000000"
     zeoAddress: bdr-zeoserver:8100
     localConvertersHost: bdr-local-converters
+    blobStorageCacheVolumeEnabled: true
+    blobStorageCacheVolumeSize: 1Gi
 
 redis:
   image:
