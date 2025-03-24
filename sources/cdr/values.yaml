@@ -80,6 +80,9 @@ instance:
     localConvertersHost: cdr-local-converters
     blobStorageCacheVolumeEnabled: true
     blobStorageCacheVolumeSize: 1Gi
+    zeoClientCacheSize: 128MB
+    zeoClientBlobCacheSize: 512MB
+    sessionManagerTimeout: 120 # How long till a session expires in minutes
 
 cronzeopack:
   enabled: false

@@ -102,6 +102,12 @@ spec:
           value: '{{ .Values.instance.env.zipCacheThreshold }}'
         - name: ZOPE_THREADS
           value: '{{ .Values.instance.env.zopeThreads }}'
+        - name: ZEO_CLIENT_CACHE_SIZE
+          value: '{{ .Values.instance.env.zeoClientCacheSize }}'
+        - name: ZEO_CLIENT_BLOB_CACHE_SIZE
+          value: '{{ .Values.instance.env.zeoClientBlobCacheSize }}'
+        - name: SESSION_MANAGER_TIMEOUT
+          value: '{{ .Values.instance.env.sessionManagerTimeout }}'
         - name: LOCAL_CONVERTERS_HOST
           value: '{{ .Values.instance.env.localConvertersHost }}'
 

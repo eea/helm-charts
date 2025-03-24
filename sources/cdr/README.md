@@ -65,6 +65,9 @@ To customize the network policies, you should modify the `instance.networkPolicy
 
 ## Releases
 
+### Version 0.11.2 - 24 March 2025
+- Added zeoClientCacheSize, zeoClientBlobCacheSize, sessionManagerTimeout env variables
+
 ### Version 0.11.1 - 24 March 2025
 - Added blobstorage volume for blobcache
 
