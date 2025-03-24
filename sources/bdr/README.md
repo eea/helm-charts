@@ -67,6 +67,9 @@ This can be used to set the rabbitmq host to be used.
 
 ## Releases
 
+### Version 0.8.1 - 24 March 2025
+- Added blobstorage volume for blobcache
+
 ### Version 0.8.0 - 21 March 2025
 - Automated release of [eeacms/reportek-bdr:5.9.4-221](https://github.com/eea/eea.docker.reportek.bdr-instance/releases) [EEA Jenkins - [`37589ea`](https://github.com/eea/helm-charts/commit/37589ea9caec5e472dd27a59f8d14f925de667e6)]
 
