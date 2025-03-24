@@ -67,6 +67,9 @@ This can be used to set the rabbitmq host to be used.
 
 ## Releases
 
+### Version 0.8.2 - 24 March 2025
+- Added zeoClientCacheSize, zeoClientBlobCacheSize, sessionManagerTimeout env variables
+
 ### Version 0.8.1 - 24 March 2025
 - Added blobstorage volume for blobcache
 

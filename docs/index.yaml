@@ -414,6 +414,67 @@ entries:
   bdr:
   - apiVersion: v2
     appVersion: 5.9.4-221
+    created: "2025-03-24T20:44:06.13851+02:00"
+    dependencies:
+    - alias: zeoserver
+      name: rn-zeoserver
+      repository: https://eea.github.io/helm-charts
+      version: 0.1.9
+    - alias: local-converters
+      condition: rn-local-converters.enabled
+      name: rn-local-converters
+      repository: https://eea.github.io/helm-charts
+      version: 0.1.6
+    - alias: clamav
+      condition: rn-clamav.enabled
+      name: rn-clamav
+      repository: https://eea.github.io/helm-charts
+      version: 0.1.8
+    - alias: ldap
+      name: rn-bdr-ldap
+      repository: https://eea.github.io/helm-charts
+      version: 0.1.2
+    - alias: bdr-registry
+      name: rn-bdr-registry
+      repository: https://eea.github.io/helm-charts
+      version: 0.1.7
+    - name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 15.2.8
+    - condition: postfix.enabled
+      name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.0.6
+    - alias: bdr-registry-notifications
+      name: rn-bdr-registry-notifications
+      repository: https://eea.github.io/helm-charts
+      version: 0.1.10
+    - alias: bdr-registry-notifications-async
+      name: rn-bdr-registry-notifications
+      repository: https://eea.github.io/helm-charts
+      version: 0.1.10
+    - alias: european-registry
+      name: rn-bdr-european-registry
+      repository: https://eea.github.io/helm-charts
+      version: 0.1.11
+    - alias: european-registry-sync
+      name: rn-bdr-european-registry
+      repository: https://eea.github.io/helm-charts
+      version: 0.1.11
+    - alias: apache
+      name: rn-apache
+      repository: https://eea.github.io/helm-charts
+      version: 0.1.8
+    description: A BDR Helm chart for Kubernetes
+    digest: 21153db457cfb15414ff1b3a77082818257a0364e6ac85c97b7638690919717e
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/bdr/logo_eionet.png
+    name: bdr
+    type: application
+    urls:
+    - bdr-0.8.2.tgz
+    version: 0.8.2
+  - apiVersion: v2
+    appVersion: 5.9.4-221
     created: "2025-03-24T19:07:22.811438+02:00"
     dependencies:
     - alias: zeoserver
@@ -13938,4 +13999,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2025-03-24T20:40:25.770191+02:00"
+generated: "2025-03-24T20:44:06.130967+02:00"
