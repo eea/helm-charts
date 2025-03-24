@@ -24,7 +24,21 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
-
+      {{- if .Values.instance.env.blobStorageCacheVolumeEnabled }}
+      initContainers:
+      - name: init-blobstorage
+        image: busybox:stable
+        command:
+          [
+            "sh",
+            "-c",
+            "mkdir -p /blobstorage && chown -R 500:500 /blobstorage",
+          ]
+        volumeMounts:
+        - name: blobstorage
+          mountPath: /blobstorage
+          subPath: blobstorage
+      {{- end }}
       containers:
       - name: {{ include "appl.fullname" . }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -96,6 +110,11 @@ spec:
           - mountPath: /opt/zope/var/zip_cache
             name: {{ include "appl.fullname" . }}-zipcache-storage
         {{- end }}
+        {{- if .Values.instance.env.blobStorageCacheVolumeEnabled }}
+          - mountPath: /opt/zope/var/blobstorage
+            name: blobstorage
+            subPath: blobstorage
+        {{- end }}
           - mountPath: /sessions
             name: {{ include "appl.fullname" . }}-sessions-storage
           - mountPath: /tmp
@@ -127,6 +146,11 @@ spec:
         - name: {{ include "appl.fullname" . }}-zipcache-storage
           persistentVolumeClaim:
             claimName: {{ include "appl.fullname" . }}-zipcache-storage
+        {{- end }}
+        {{- if .Values.instance.env.blobStorageCacheVolumeEnabled }}
+        - name: blobstorage
+          emptyDir:
+            sizeLimit: {{ .Values.instance.env.blobStorageCacheVolumeSize }}
         {{- end }}
         - name: {{ include "appl.fullname" . }}-sessions-storage
           persistentVolumeClaim:
