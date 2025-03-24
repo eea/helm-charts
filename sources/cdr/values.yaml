@@ -78,6 +78,8 @@ instance:
     zipCacheThreshold: "100000000"
     zeoAddress: cdr-zeoserver:8100
     localConvertersHost: cdr-local-converters
+    blobStorageCacheVolumeEnabled: true
+    blobStorageCacheVolumeSize: 1Gi
 
 cronzeopack:
   enabled: false

@@ -583,3 +583,16 @@ questions:
     type: string
     default: "cdr-zeoserver:8100"
     group: "Advanced Settings"
+
+  - variable: instance.env.blobStorageCacheVolumeEnabled
+    label: "Enable Blob Storage Cache Volume"
+    type: boolean
+    default: true
+    group: "Advanced Settings"
+
+  - variable: instance.env.blobStorageCacheVolumeSize
+    label: "Blob Storage Cache Volume Size"
+    type: string
+    default: "1Gi"
+    show_if: "instance.env.blobStorageCacheVolumeEnabled"
+    group: "Advanced Settings"

@@ -65,6 +65,9 @@ To customize the network policies, you should modify the `instance.networkPolicy
 
 ## Releases
 
+### Version 0.11.1 - 24 March 2025
+- Added blobstorage volume for blobcache
+
 ### Version 0.11.0 - 21 March 2025
 - Automated release of [eeacms/reportek-cdr:6.7.3-221](https://github.com/eea/eea.docker.reportek.cdr-instance/releases) [EEA Jenkins - [`63e3356`](https://github.com/eea/helm-charts/commit/63e3356bee3e3531129535244c12e871aa1ab313)]
 
