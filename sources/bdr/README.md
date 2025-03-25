@@ -67,6 +67,9 @@ This can be used to set the rabbitmq host to be used.
 
 ## Releases
 
+### Version 0.9.0 - 25 March 2025
+- Automated release of [eeacms/reportek-bdr:5.9.4-222](https://github.com/eea/eea.docker.reportek.bdr-instance/releases) [EEA Jenkins - [`d30bd18`](https://github.com/eea/helm-charts/commit/d30bd1860cee0820316d50dbc3bea6c01c8c9aa7)]
+
 ### Version 0.8.2 - 24 March 2025
 - Added zeoClientCacheSize, zeoClientBlobCacheSize, sessionManagerTimeout env variables
 
