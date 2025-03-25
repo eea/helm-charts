@@ -65,6 +65,9 @@ To customize the network policies, you should modify the `instance.networkPolicy
 
 ## Releases
 
+### Version 0.12.0 - 25 March 2025
+- Automated release of [eeacms/reportek-cdr:6.7.3-222](https://github.com/eea/eea.docker.reportek.cdr-instance/releases) [EEA Jenkins - [`472fc47`](https://github.com/eea/helm-charts/commit/472fc47ac1933759223c8159cbef75f621b40989)]
+
 ### Version 0.11.2 - 24 March 2025
 - Added zeoClientCacheSize, zeoClientBlobCacheSize, sessionManagerTimeout env variables
 
