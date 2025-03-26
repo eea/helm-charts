@@ -41,7 +41,7 @@ spec:
           {{- toYaml .Values.securityContext | nindent 10 }}
         volumeMounts:
         - mountPath: /var/local/eggrepo
-          name: {{ .Release.Name }}-eggrepo
+          name: eggrepo-data
         readinessProbe:
           tcpSocket:
             port: 9090
@@ -83,7 +83,7 @@ spec:
 
   volumeClaimTemplates:
   - metadata:
-      name: {{ .Release.Name }}-eggrepo
+      name: eggrepo-data
     spec:
       accessModes:
       - ReadWriteOnce

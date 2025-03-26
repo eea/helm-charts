@@ -6,7 +6,7 @@ metadata:
     {{- include "appl.labels" . | nindent 4 }}
     component: eggrepo
 spec:
-  clusterIP: None
+  type: {{ .Values.service.type }}
   ports:
     - port: 9090
       targetPort: 9090

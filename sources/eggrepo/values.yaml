@@ -1,6 +1,6 @@
 # Default values for webforms.
 
-replicaCount: 2
+replicaCount: 1
 
 image:
   repository: eeacms/cluereleasemanager
@@ -18,14 +18,6 @@ rewriteUrl: eggrepo.apps.eea.europa.eu
 url: eggrepo.eea.europa.eu
 
 commandArgs: ''
-#commandArgs:
-#  - "cluerelmgr-server"
-#  - "-p"
-#  - "9090"
-#  - "-b"
-#  - "/var/local/eggrepo/files"
-#  - "-u"
-#  - "https://eggrepo.eea.europa.eu"
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -50,9 +42,15 @@ service:
 ingress:
   enabled: true
   className: ""
-  annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
+  annotations: 
+    cert-manager.io/cluster-issuer: 01dev-eea-letsencrypt
+    nginx.ingress.kubernetes.io/configuration-snippet: |-
+      more_set_headers 'Server HTTPS'
+        'Strict-Transport-Security max-age=31536000; includeSubDomains; preload'
+        'X-Content-Type-Options "nosniff"'
+        'X-XSS-Protection "1; mode=block"'
+        "X-Frame-Options 'SAMEORIGIN'"
+        "Referrer-Policy origin"
   tls: true
 
 
