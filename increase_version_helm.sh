@@ -22,21 +22,36 @@ if [[ ! "$HELM_VERSION_TYPE" == "MINOR" ]] && [[ ! "$HELM_VERSION_TYPE" == "MAJO
     HELM_VERSION_TYPE="PATCH"
 fi
 
-if [ -z "$HELM_UPGRADE_MESSAGE" ] ; then
-	echo "DID NOT receive HELM_UPGRADE_MESSAGE parameter. It's mandatory for README.md and commit"
+if [ -z "$HELM_UPGRADE_MESSAGE" ] && [ -n "$CI" ]; then
+        echo "DID NOT receive HELM_UPGRADE_MESSAGE parameter. It's mandatory for README.md and commit"
         echo "Exiting"
-	exit 1
+        exit 1
 fi
+
+while [ -z "$HELM_UPGRADE_MESSAGE" ] ; do
+
+	  echo "Write HELM_UPGRADE_MESSAGE message"
+	  read HELM_UPGRADE_MESSAGE 
+	  echo "Message is $HELM_UPGRADE_MESSAGE"
+	  echo "Ok? anything to read again the commit message"
+	  read y
+	  if [ -n "$y" ]; then
+              unset HELM_UPGRADE_MESSAGE
+          fi
+done
 
 HELM_COMMIT_MESSAGE="${HELM_COMMIT_MESSAGE:-$HELM_UPGRADE_MESSAGE}"
 HELM_ADD_COMMIT_LINK_README="${HELM_ADD_COMMIT_LINK_README:-yes}"
 
 echo "Found differences, will now start the version increase"
+echo "HELM_VERSION_TYPE is $HELM_VERSION_TYPE"
 echo "Version will be increased with $HELM_VERSION_TYPE"
 echo "Readme message is $HELM_UPGRADE_MESSAGE"
 echo "Commit message is $HELM_COMMIT_MESSAGE"
 
 readme_link=""
+
+helm lint .
 
 if [[ "$HELM_ADD_COMMIT_LINK_README" == "yes" ]]; then
   echo "Will now create a commit only with the changes in the chart used in Changelog"
