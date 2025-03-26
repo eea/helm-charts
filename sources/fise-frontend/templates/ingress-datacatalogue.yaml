@@ -1,0 +1,44 @@
+{{- if .Values.ingress.datacatalogueRedirectUrl }}
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: fise-datacatalogue
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: fise-frontend-datacatalog
+  {{- with .Values.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      if ($request_uri ~* "^/datacatalogue") {
+        return 301 {{ .Values.ingress.datacatalogueRedirectUrl }};
+      }
+    nginx.ingress.kubernetes.io/proxy-body-size: 10m
+    nginx.ingress.kubernetes.io/proxy-read-timeout: '60'
+    nginx.ingress.kubernetes.io/proxy-send-timeout: '60'
+    nginx.ingress.kubernetes.io/ssl-verify: 'true'
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: {{ .Values.volto.hostname }}
+    http:
+      paths:
+      - path: /datacatalogue
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ .Values.varnish.serviceName }}
+            port:
+              number: {{ .Values.varnish.port }}
+  {{- if .Values.ingress.tls }}
+  tls:
+  - hosts:
+    - {{ .Values.volto.hostname }}
+    {{- if .Values.ingress.certificate }}
+    secretName: {{ .Values.ingress.certificate }}
+    {{- end  }}
+  {{- end  }}
+
+{{- end  }}
