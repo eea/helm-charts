@@ -28,6 +28,13 @@ questions:
     type: "string"
     group: "General"
 
+  - variable: "ingress.datacatalogueRedirectUrl"
+    label: "Url of the /datacatalogue path"
+    description: "Leave empty if you don't want to do a redirect"
+    default: "https://datacatalogue-fise.eea.europa.eu/"
+    type: "string"
+    group: "General"
+
   - variable: "varnish.serviceType"
     label: "Expose varnish"
     description: "Select NodePort to expose"
