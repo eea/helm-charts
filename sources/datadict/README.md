@@ -5,6 +5,9 @@ This chart is configured for production use.
 ## Releases
 
 <dl>
+  <dt>Version 1.3.8</dt>
+  <dd>Xalan serializer fix.</dd>
+
   <dt>Version 1.3.7</dt>
   <dd>Libraries upgrades.</dd>
 
