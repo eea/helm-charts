@@ -10,6 +10,9 @@ This chart deployes the Forest Information System of Europe website backend app
 
 ## Releases
 
+### Version 1.0.3 - 31 March 2025
+- Breaking change on ingress, add both configurations for ++api++ ingress [valentinab25 - [`bc1b176`](https://github.com/eea/helm-charts/commit/bc1b1760a0c505c76d74cd1de79737a12f65837c)]
+
 ### Version 1.0.2 - 20 March 2025
 - Add ingress.tls variable, empty certificate name for default [valentinab25 - [`5cceb9b`](https://github.com/eea/helm-charts/commit/5cceb9b60d74a9d703476694a250d0cd2a38c252)]
 
