@@ -10,6 +10,9 @@ This chart deployes the Forest Information System of Europe website backend app
 
 ## Releases
 
+### Version 1.0.4 - 31 March 2025
+- keep only one configuration for ++api++ [valentinab25 - [`caf67b9`](https://github.com/eea/helm-charts/commit/caf67b9051d52256a637d7e33f4df3c1bdcaf175)]
+
 ### Version 1.0.3 - 31 March 2025
 - Breaking change on ingress, add both configurations for ++api++ ingress [valentinab25 - [`bc1b176`](https://github.com/eea/helm-charts/commit/bc1b1760a0c505c76d74cd1de79737a12f65837c)]
 
