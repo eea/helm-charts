@@ -20,6 +20,7 @@ timezone: Europe/Copenhagen
 
 ingress:
   certificate: key-01dev-letsencrypt
+  tls: true
   annotations:
     cert-manager.io/cluster-issuer: 01dev-eea-letsencrypt
     nginx.ingress.kubernetes.io/configuration-snippet: |-
@@ -39,6 +40,7 @@ ingress:
 ingressredirects:
 - enabled: false
   certificate: www.plone.eea.europa.eu-tls
+  tls: true
   annotations:
     cert-manager.io/cluster-issuer: 01dev-eea-letsencrypt
   hostname: www.plone.eea.europa.eu    
