@@ -10,6 +10,9 @@ This chart deployes the Forest Information System of Europe website backend app
 
 ## Releases
 
+### Version 1.1.0 - 01 April 2025
+- Automated release of [eeacms/fise-backend:6.0.13-23](https://github.com/eea/fise-backend/releases) [EEA Jenkins - [`1716746`](https://github.com/eea/helm-charts/commit/1716746e78fef0df4209a1228268bf33a8f70259)]
+
 ### Version 1.0.2 - 20 March 2025
 - Add ingress.tls variable, empty certificate name for default [valentinab25 - [`5cceb9b`](https://github.com/eea/helm-charts/commit/5cceb9b60d74a9d703476694a250d0cd2a38c252)]
 
