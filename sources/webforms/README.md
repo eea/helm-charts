@@ -28,6 +28,9 @@ database:
 ## Release notes
 
 <dl>
+  <dt>Version 1.0.5</dt>
+  <dd>Libraries upgrades.</dd>
+
   <dt>Version 1.0.4</dt>
   <dd>Updated helpdesk email address, ui update.</dd>
 
