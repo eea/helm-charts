@@ -65,7 +65,7 @@ spec:
               "-Dapp.host={{ .Values.hostname }}"
               "-Dconfig.gdem.url=https://{{ .Values.hostname }}"
               "-Dconfig.db.jdbcurl=jdbc:mysql://{{ .Release.Name }}-db:{{ .Values.service.database.port }}/{{ .Values.database.database }}?{{ .Values.database.parameters }}"
-              "-Dconfig.db.driver=com.mysql.jdbc.Driver"
+              "-Dconfig.db.driver=com.mysql.cj.jdbc.Driver"
               "-Dconfig.db.user={{ .Values.database.username }}"
               "-Dconfig.db.password={{ .Values.database.password }}"
               "-Dconfig.log.file=/opt/xmlconv/log/xmlconv.log"
