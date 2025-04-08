@@ -18,6 +18,9 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
+  - host: {{ .Values.plone.hostname }}
+    http:
+      paths:
       - path: /{{ .Values.plone.googleUrl }}(.*)
         pathType: ImplementationSpecific
         backend:
