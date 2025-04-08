@@ -11,6 +11,9 @@ This chart deployes the Climate Advisory Board backend app
 
 ## Releases
 
+### Version 1.4.1 - 08 April 2025
+- Add ingress.tls, plone.site variables, rewrite api-ingress [valentinab25 - [`af3acea`](https://github.com/eea/helm-charts/commit/af3acea1f7d28816aa66ed3cf2813bc5962c7597)]
+
 ### Version 1.4.0 - 01 April 2025
 - Automated release of [eeacms/advisory-board-backend:6.0.13-17](https://github.com/eea/advisory-board-backend/releases) [EEA Jenkins - [`dc92069`](https://github.com/eea/helm-charts/commit/dc920696e09d97e7dd6ba56c1753c6748dbced4f)]
 
