@@ -10,6 +10,9 @@ This chart deployes the Forest Information System of Europe website backend app
 
 ## Releases
 
+### Version 1.1.1 - 08 April 2025
+- Add plone.site variable, rewrite api-ingress using snippet [valentinab25 - [`abb241e`](https://github.com/eea/helm-charts/commit/abb241e489d9e3c6c3e131e331df9985fbc4fb3a)]
+
 ### Version 1.1.0 - 01 April 2025
 - Automated release of [eeacms/fise-backend:6.0.13-23](https://github.com/eea/fise-backend/releases) [EEA Jenkins - [`1716746`](https://github.com/eea/helm-charts/commit/1716746e78fef0df4209a1228268bf33a8f70259)]
 
