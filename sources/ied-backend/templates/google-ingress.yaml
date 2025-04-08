@@ -6,7 +6,7 @@ metadata:
   name: ied-admin
   labels:
     {{- include "appl.labels" . | nindent 4 }}
-    component: ied-admin
+    component: ied-google-admin
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /VirtualHostBase/https/{{ .Values.plone.hostname }}:443/{{ .Values.plone.site }}/VirtualHostRoot/_vh_admin/admin/{{ .Values.plone.googleUrl }}$1
     nginx.ingress.kubernetes.io/use-regex: "true"
