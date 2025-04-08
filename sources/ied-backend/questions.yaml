@@ -15,6 +15,14 @@
     required: true
     group: "General"
 
+  - variable: "plone.googleUrl"
+    label: "Plone google website owner url"
+    description: "Leave empty for no google url"
+    default: "google85dc6cec8f1329e5.html"
+    type: "string"
+    group: "General"
+
+
   - variable: "ingress.tls"
     label: "Enable https"
     default: true
