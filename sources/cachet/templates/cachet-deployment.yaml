@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cachet
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cachet
+  template:
+    metadata:
+      labels:
+        app: cachet
+    spec:
+      containers:
+        - name: cachet
+          image: {{ ternary .Values.clmsCachet.image .Values.cachet.image .Values.clmsCachet.enabled }}
+          ports:
+            - containerPort: 80
+          env:
+            {{- $env := ternary .Values.clmsCachet.env .Values.cachet.env .Values.clmsCachet.enabled }}
+            {{- range $key, $val := $env }}
+            - name: {{ $key }}
+              value: {{ $val | quote }}
+            {{- end }}
+          resources:
+            {{- if .Values.clmsCachet.enabled }}
+            {{- toYaml .Values.clmsCachet.resources | nindent 12 }}
+            {{- else }}
+            {{- toYaml .Values.cachet.resources | nindent 12 }}
+            {{- end }}

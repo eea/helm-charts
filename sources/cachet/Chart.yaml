@@ -1,0 +1,14 @@
+apiVersion: v2
+name: Cachet
+description: Cacahet application
+type: application
+version: 0.6.2
+appVersion: "17.0.0"
+
+dependencies:
+  - name: postfix
+    version: 3.0.6
+    repository: https://eea.github.io/helm-charts
+  - name: postgresql
+    version: 15.2.5
+    repository: https://charts.bitnami.com/bitnami

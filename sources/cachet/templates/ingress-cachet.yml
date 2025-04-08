@@ -1,0 +1,27 @@
+{{- if .Values.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: cachet
+  annotations:
+    {{- toYaml .Values.ingress.annotations | nindent 4 }}
+spec:
+  ingressClassName: {{ .Values.ingress.className | quote }}
+  rules:
+    - host: {{ .Values.cachet.host }}
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: cachet
+                port:
+                  number: 80
+  {{- if .Values.ingress.certificate }}
+  tls:
+    - hosts:
+        - {{ .Values.cachet.host }}
+      secretName: {{ .Values.ingress.certificate }}
+  {{- end }}
+{{- end }}
