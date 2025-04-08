@@ -6,7 +6,7 @@ metadata:
     {{- include "appl.labels" . | nindent 4 }}
     component: advisory-board-admin
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /VirtualHostBase/https/{{ .Values.plone.hostname }}:443/advisory/VirtualHostRoot/_vh_admin/$1
+    nginx.ingress.kubernetes.io/rewrite-target: /VirtualHostBase/https/{{ .Values.plone.hostname }}:443/{{ .Values.plone.site }}/VirtualHostRoot/_vh_admin/$1
     nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/proxy-body-size: 100m
   {{- with .Values.ingress.annotations }}
@@ -40,10 +40,12 @@ spec:
             name: {{ .Values.varnish.serviceName }}
             port:
               number: {{ .Values.varnish.port }}
-  {{- if .Values.ingress.certificate }}
+  {{- if .Values.ingress.tls }}
   tls:
   - hosts:
     - {{ .Values.plone.hostname }}
+    {{- if .Values.ingress.certificate }}
     secretName: {{ .Values.ingress.certificate }}
+    {{- end  }}
   {{- end  }}
    
