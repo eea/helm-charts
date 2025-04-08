@@ -8,6 +8,13 @@
     required: true
     group: "General"
 
+  - variable: "plone.site"
+    label: "Site name"
+    default: "ied"
+    type: "string"
+    required: true
+    group: "General"
+
   - variable: "ingress.tls"
     label: "Enable https"
     default: true
