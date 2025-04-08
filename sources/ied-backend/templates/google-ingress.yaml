@@ -3,7 +3,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: ied-admin
+  name: ied-google-admin
   labels:
     {{- include "appl.labels" . | nindent 4 }}
     component: ied-google-admin
