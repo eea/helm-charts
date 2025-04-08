@@ -1,12 +1,15 @@
-# cachet-service.yaml
 apiVersion: v1
 kind: Service
 metadata:
   name: cachet
+  labels:
+    app: cachet
 spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: 80
+      targetPort: 8000
+      protocol: TCP
+      name: http
   selector:
     app: cachet
-  ports:
-    - name: http
-      port: 80
-      targetPort: 8000
