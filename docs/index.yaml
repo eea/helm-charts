@@ -9330,6 +9330,27 @@ entries:
   helpdesk-otrs:
   - apiVersion: v2
     appVersion: v6.0.43-openid-06
+    created: "2025-04-03T17:55:01.960486615+02:00"
+    dependencies:
+    - name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 1.1.0
+    - condition: haproxy.enabled
+      name: haproxy
+      repository: https://charts.bitnami.com/bitnami
+      version: 2.1.1
+    description: Eionet helpdesk
+    digest: b25f9046eb48b18a2364684486c295476dbf431777b69627a9f2d21514646e2f
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/helpdesk-otrs/otrs-icon.png
+    keywords:
+    - Tickets
+    name: helpdesk-otrs
+    type: application
+    urls:
+    - helpdesk-otrs-0.5.4.tgz
+    version: 0.5.4
+  - apiVersion: v2
+    appVersion: v6.0.43-openid-06
     created: "2025-04-01T08:58:36.089398+02:00"
     dependencies:
     - name: postfix
@@ -9546,6 +9567,20 @@ entries:
     - ied-backend-1.0.1.tgz
     version: 1.0.1
   ied-frontend:
+  - apiVersion: v2
+    appVersion: 0.12.0
+    created: "2025-04-03T11:34:31.307777069Z"
+    description: IED frontend
+    digest: 0ea6da0ffe502504dbd807abcd75f093e7edbfa762eb48fb8f4cda40da78f335
+    home: https://github.com/eea/ied-frontend
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/ied-frontend/ied.png
+    keywords:
+    - CMS
+    name: ied-frontend
+    type: application
+    urls:
+    - ied-frontend-1.7.0.tgz
+    version: 1.7.0
   - apiVersion: v2
     appVersion: 0.11.0
     created: "2025-04-02T08:50:09.394027402Z"
@@ -14725,4 +14760,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2025-04-02T19:01:10.372829074+03:00"
+generated: "2025-04-03T17:55:01.944569518+02:00"
