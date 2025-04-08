@@ -10,6 +10,9 @@ This chart deployes the European Industrial Emissions Portal backend app
 
 ## Releases
 
+### Version 1.4.1 - 08 April 2025
+- Add plone.site variable, rewrite path rewrite for api [valentinab25 - [`a650413`](https://github.com/eea/helm-charts/commit/a6504138608dc802014553d150e0d7d45eede6ff)]
+
 ### Version 1.4.0 - 02 April 2025
 - Allow empty certificate for default one, add tls variable [valentinab25 - [`4495a4c`](https://github.com/eea/helm-charts/commit/4495a4c12ec5772f7dc45a1d1ed3b421f57e5441)]
 
