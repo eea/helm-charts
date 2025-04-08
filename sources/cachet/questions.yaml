@@ -1,135 +1,79 @@
 questions:
-  # General toggle
-  - variable: clmsCachet.enabled
+  - variable: clms.enabled
     label: "Enable CLMS-specific Cachet Configuration"
     type: boolean
     default: false
-    description: "Toggle to deploy an additional Cachet instance with separate database and configuration"
+    description: "Toggle to include CLMS-specific environment variables"
 
-  # Shared Cachet configs
-  - variable: cachet.env.APP_URL
-    label: "Cachet Public URL"
+  - variable: eea.env.APP_URL
+    label: "EEA Cachet Public URL"
     type: string
     required: true
-    default: "http://cachet.local"
-    description: "Public URL of the Cachet instance"
+    default: "status-dev.eea.europa.eu"
+    description: "Public URL of the EEA Cachet instance"
 
-  - variable: cachet.env.APP_KEY
-    label: "App Key"
+  - variable: eea.env.APP_KEY
+    label: "EEA App Key"
     type: string
     required: true
     default: "base64:EXAMPLEKEY=="
-    description: "Application encryption key (32+ character base64 string)"
+    description: "Application encryption key for EEA (32+ character base64 string)"
 
-  - variable: cachet.env.DB_DATABASE
-    label: "Main Cachet Database Name"
-    type: string
-    required: true
-    default: "cachet"
-    description: "PostgreSQL database name used by the main Cachet instance"
-
-  - variable: cachet.env.DB_USERNAME
-    label: "Database Username"
-    type: string
-    required: true
-    default: "postgres"
-    description: "Username to access PostgreSQL"
-
-  - variable: cachet.env.DB_PASSWORD
-    label: "Database Password"
-    type: password
-    required: true
-    description: "Password to access PostgreSQL"
-
-  - variable: cachet.env.DB_PREFIX
-    label: "Database Table Prefix"
+  - variable: eea.env.DB_PREFIX
+    label: "EEA DB Table Prefix"
     type: string
     default: "chq_"
+    required: true
+    description: "Prefix for EEA tables in shared DB"
+
+  - variable: eea.env.MAIL_NAME
+    label: "EEA Mail From Name"
+    type: string
+    required: true
+    default: "EEA Systems Status"
+    description: "Sender name for EEA"
+
+  - variable: clms.env.APP_URL
+    label: "CLMS Cachet Public URL"
+    type: string
     required: false
-    description: "Optional prefix for Cachet DB tables"
+    default: "clms-status-dev.eea.europa.eu"
+    description: "Public URL of the CLMS Cachet instance"
 
-  - variable: cachet.env.MAIL_ADDRESS
-    label: "Mail From Address"
+  - variable: clms.env.APP_KEY
+    label: "CLMS App Key"
     type: string
-    required: true
-    default: "noreply@eea.europa.eu"
-    description: "Sender email address used in outgoing mails"
+    required: false
+    default: "base64:CLMSKEY=="
+    description: "App encryption key for CLMS instance"
 
-  - variable: cachet.env.MAIL_NAME
-    label: "Mail From Name"
+  - variable: clms.env.DB_PREFIX
+    label: "CLMS DB Table Prefix"
     type: string
-    required: true
-    default: "Cachet Status Page"
-    description: "Sender name used in outgoing mails"
+    default: "clms_"
+    required: false
+    description: "Prefix for CLMS tables in shared DB"
 
-  - variable: cachet.env.MAIL_HOST
-    label: "Mail Server Host"
+  - variable: clms.env.MAIL_NAME
+    label: "CLMS Mail From Name"
     type: string
-    required: true
-    default: "postfix"
-    description: "SMTP server host"
+    required: false
+    default: "CLMS Status Page"
+    description: "Sender name for CLMS"
 
-  - variable: cachet.env.MAIL_PORT
-    label: "Mail Server Port"
-    type: int
-    required: true
-    default: 25
-    description: "SMTP server port"
-
-  - variable: cachet.env.DEBUG
+  # Optional common config
+  - variable: envCommon.DEBUG
     label: "Enable Debugging"
     type: enum
     default: "false"
     options:
       - "true"
       - "false"
-    description: "Set Laravel debug mode"
+    description: "Enable Laravel debug mode"
 
-  - variable: cachet.env.TZ
+  - variable: envCommon.TZ
     label: "Timezone"
     type: string
     default: "Europe/Copenhagen"
     required: true
-    description: "Timezone for the application"
-
-  - variable: cachet.env.TIMEOUT
-    label: "HTTP Timeout"
-    type: int
-    default: 180
-    description: "Timeout setting for HTTP client in Cachet"
-
-  - variable: cachet.env.CACHET_BEACON
-    label: "Enable Beacon"
-    type: enum
-    default: "false"
-    options:
-      - "true"
-      - "false"
-    description: "Whether to enable Cachet Beacon pinging"
-
-  # CLMS-specific (enabled only if clmsCachet.enabled = true)
-  - variable: clmsCachet.env.DB_DATABASE
-    label: "CLMS Cachet Database Name"
-    type: string
-    required: true
-    default: "clms_cachet"
-    description: "Separate PostgreSQL database name for CLMS Cachet"
-
-  - variable: clmsCachet.env.PHP_MAX_CHILDREN
-    label: "PHP Max Children (CLMS)"
-    type: int
-    default: 150
-    required: false
-    description: "Set max PHP-FPM children for CLMS-specific instance"
-
-  - variable: clmsCachet.env.CACHET_MONITOR_TOKEN
-    label: "Cachet API Token (CLMS)"
-    type: string
-    default: ""
-    description: "Token used by Cachet Monitor to access the API"
-
-  - variable: clmsCachet.env.CONFIG
-    label: "Cachet Monitor Config (CLMS)"
-    type: multiline
-    default: ""
-    description: "YAML config for cachet-monitor, leave blank to disable"
+    description: "Timezone for Cachet"

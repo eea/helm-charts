@@ -4,24 +4,39 @@ kind: Ingress
 metadata:
   name: cachet
   annotations:
-    {{- toYaml .Values.ingress.annotations | nindent 4 }}
+    {{- range $key, $val := .Values.ingress.eea.annotations }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
 spec:
-  ingressClassName: {{ .Values.ingress.className | quote }}
+  ingressClassName: {{ .Values.ingress.className }}
+  tls:
+    - hosts:
+        - {{ .Values.ingress.eea.host }}
+        {{- if .Values.ingress.clms.enabled }}
+        - {{ .Values.ingress.clms.host }}
+        {{- end }}
+      secretName: {{ .Values.ingress.eea.certificate }}
   rules:
-    - host: {{ .Values.cachet.host }}
+    - host: {{ .Values.ingress.eea.host }}
       http:
         paths:
           - path: /
-            pathType: ImplementationSpecific
+            pathType: Prefix
             backend:
               service:
                 name: cachet
                 port:
                   number: 80
-  {{- if .Values.ingress.certificate }}
-  tls:
-    - hosts:
-        - {{ .Values.cachet.host }}
-      secretName: {{ .Values.ingress.certificate }}
-  {{- end }}
+    {{- if .Values.ingress.clms.enabled }}
+    - host: {{ .Values.ingress.clms.host }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: cachet
+                port:
+                  number: 80
+    {{- end }}
 {{- end }}

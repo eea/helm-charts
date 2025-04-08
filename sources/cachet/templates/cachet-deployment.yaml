@@ -14,18 +14,27 @@ spec:
     spec:
       containers:
         - name: cachet
-          image: {{ ternary .Values.clmsCachet.image .Values.cachet.image .Values.clmsCachet.enabled }}
-          ports:
-            - containerPort: 80
+          image: {{ .Values.cachet.image }}
           env:
-            {{- $env := ternary .Values.clmsCachet.env .Values.cachet.env .Values.clmsCachet.enabled }}
-            {{- range $key, $val := $env }}
+            # Shared/common envs
+            {{- range $key, $val := .Values.envCommon }}
             - name: {{ $key }}
               value: {{ $val | quote }}
             {{- end }}
-          resources:
-            {{- if .Values.clmsCachet.enabled }}
-            {{- toYaml .Values.clmsCachet.resources | nindent 12 }}
-            {{- else }}
-            {{- toYaml .Values.cachet.resources | nindent 12 }}
+
+            # EEA-specific envs
+            {{- range $key, $val := .Values.eea.env }}
+            - name: {{ $key }}
+              value: {{ $val | quote }}
             {{- end }}
+
+            # CLMS envs (only if enabled)
+            {{- if .Values.clms.enabled }}
+            {{- range $key, $val := .Values.clms.env }}
+            - name: CLMS_{{ $key }}
+              value: {{ $val | quote }}
+            {{- end }}
+            {{- end }}
+
+          resources:
+{{ toYaml .Values.cachet.resources | indent 12 }}
