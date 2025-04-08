@@ -1,0 +1,93 @@
+postgresql:
+  fullnameOverride: "postgres"
+  auth:
+    enablePostgresUser: true
+    database: cachet
+    username: postgres
+    password: postgres
+    postgresPassword: ""
+  primary:
+    persistence:
+      size: 2Gi
+  resources:
+    requests:
+      memory: 2Gi
+    limits:
+      memory: 2Gi
+
+postfix:
+  fullnameOverride: "postfix"
+  serviceName: "postfix"
+  dryrun: false
+  serverName: plone.eea.europa.eu
+  mtpPass: ""
+  mtpPort: ""
+  mtpRelay: ""
+  mtpUser: ""
+
+cachet:
+  host: cachet.devel5cph.eea.europa.eu
+  image: eeacms/cachet:2.3-1.3
+  resources:
+    requests:
+      memory: 2Gi
+    limits:
+      memory: 2Gi
+  env:
+    APP_KEY: "base64:DfgwDrqPE0ePlRtbRM4cgRyPlBYOHGkdrh5gFtDB="
+    APP_LOG: "errorlog"
+    CACHET_BEACON: "false"
+    DB_DRIVER: "pgsql"
+    DB_HOST: "postgres"
+    DB_PORT: "5432"
+    DB_DATABASE: "cachet"
+    DB_USERNAME: "postgres"
+    DB_PASSWORD: "postgres"
+    DB_PREFIX: "chq_"
+    DEBUG: "false"
+    MAIL_ADDRESS: "noreply@eea.europa.eu"
+    MAIL_DRIVER: "smtp"
+    MAIL_ENCRYPTION: ""
+    MAIL_HOST: "postfix"
+    MAIL_NAME: "EEA Systems Status"
+    MAIL_PORT: "25"
+    TIMEOUT: "180"
+    TZ: "Europe/Copenhagen"
+
+clmsCachet:
+  enabled: false
+  host: clms-status-dev.eea.europa.eu
+  image: eeacms/cachet:2.3-1.3
+  resources:
+    requests:
+      memory: 2Gi
+    limits:
+      memory: 2Gi
+  env:
+    APP_KEY: "base64:sdAkuHHXmXt4BHB8VNdr+rjjP9PxEhBKN5OPp81V7go="
+    APP_LOG: "errorlog"
+    CACHET_BEACON: "false"
+    DB_DRIVER: "pgsql"
+    DB_HOST: "postgres"
+    DB_PORT: "5432"
+    DB_DATABASE: "clms_cachet"
+    DB_USERNAME: "postgres"
+    DB_PASSWORD: "postgres"
+    DB_PREFIX: "chq_"
+    DEBUG: "false"
+    MAIL_ADDRESS: "noreply@eea.europa.eu"
+    MAIL_DRIVER: "smtp"
+    MAIL_ENCRYPTION: ""
+    MAIL_HOST: "postfix"
+    MAIL_NAME: "CLMS Status Page"
+    MAIL_PORT: "25"
+    TIMEOUT: "180"
+    TZ: "Europe/Copenhagen"
+
+ingress:
+  enabled: true
+  className: nginx
+  annotations: {
+    cert-manager.io/cluster-issuer: 01dev-eea-letsencrypt
+  }
+  certificate: key-01dev-letsencrypt
