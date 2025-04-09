@@ -35,7 +35,7 @@ cachet:
 
 eea:
   env:
-    APP_KEY: "base64:DfgwDrqPE0ePlRtbRM4cgRyPlBYOHGkdrh5gFtDB="
+    APP_KEY: "base64:4t9MvAAFSKd7jIdCSAGV/NwXRTrafJeKUU9QqLrK+Zk="
     APP_URL: "status-dev.eea.europa.eu"
     DB_PREFIX: "chq_"
     MAIL_NAME: "EEA Systems Status"
@@ -52,7 +52,7 @@ envCommon:
   APP_LOG: "errorlog"
   CACHET_BEACON: "false"
   DB_DRIVER: "pgsql"
-  DB_HOST: "postgres"  # corespunde cu fullnameOverride
+  DB_HOST: "postgres" 
   DB_PORT: "5432"
   DB_DATABASE: "cachet"
   DB_USERNAME: "postgres"
@@ -81,3 +81,18 @@ ingress:
     host: clms-status-dev.eea.europa.eu
     annotations: {}
     certificate: key-01dev-letsencrypt
+
+persistence:
+  enabled: true
+  existingClaim: ""
+  storageClass: "nfs-client" 
+
+monitor:
+  enabled: true
+  image: eeacms/cachet-monitor
+  config: ""
+  token: ""
+  phpMaxChildren: 150
+  env:
+    CACHE_URL: ""
+    CACHET_MONITOR_TOKEN: ""
