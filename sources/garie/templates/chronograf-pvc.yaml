@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: chronograf-data
+  labels:
+    app: garie
+    role: chronograf
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage:  {{ .Values.chronograf.storage }}
+  storageClassName: {{ .Values.chronograf.storageClassName }}

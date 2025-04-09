@@ -1,0 +1,591 @@
+questions:
+  - variable: general.timezone
+    group: General Configuration
+    default: UTC
+    description: Containers timezone (TZ)
+    type: string
+    required: true
+    subquestions:
+      - variable: ingress.class
+        default: nginx
+        description: Ingress class to use
+        type: string
+        required: true
+      - variable: ingress.clusterIssuer
+        default: letsencrypt-prod
+        description: Cluster issuer for TLS certificates
+        type: string
+        required: true
+      - varaible: ingress.grafana
+        default: grafana.01dev.eea.europa.eu
+        description: Grafana ingress hostname
+        type: string
+        required: true
+      - variable: ingress.lighthouse
+        default: lighthouse.01dev.eea.europa.eu
+        description: Lighthouse ingress hostname
+        type: string
+        required: true
+      - variable: ingress.browsertime
+        default: browsertime.01dev.eea.europa.eu
+        description: Browsertime ingress hostname
+        type: string
+        required: true
+      - variable: ingress.webscore
+        default: webscore.01dev.eea.europa.eu
+        description: Webscore ingress hostname
+        type: string
+        required: true
+      - variable: ingress.chronograf
+        description: Chronograf ingress hostname
+        default: chronograph.01dev.eea.europa.eu
+        type: string
+        required: true
+
+  - variable: influxdb.replicas
+    group: InfluxDB Configuration
+    default: "1"
+    description: Number of InfluxDB replicas
+    type: int
+    required: true
+    subquestions:
+      - variable: influxdb.storageClassName
+        default: local-path
+        description: Storage class for InfluxDB PV
+        type: string
+        required: true
+
+      - variable: influxdb.storage
+        default: 1Gi
+        description: Persistent storage size for InfluxDB data
+        type: string
+        required: true
+
+      - variable: influxdb.adminUser
+        default: admin
+        description: InfluxDB admin username
+        type: string
+        required: true
+
+      - variable: influxdb.adminPassword
+        default: changeme
+        description: InfluxDB admin password
+        type: password
+        required: true
+
+      - variable: influxdb.timezone
+        default: UTC
+        description: Container timezone (TZ) for InfluxDB
+        type: string
+        required: true
+
+      - variable: influxdb.memReservation
+        default: 3Gi
+        description: Memory reservation (requests)
+        type: string
+        required: true
+
+      - variable: influxdb.memLimit
+        default: 3Gi
+        description: Memory limit
+        type: string
+        required: true
+
+      - variable: influxdb.antiAffinity
+        default: false
+        description: Anti-affinity rule for InfluxDB pods
+        type: boolean
+        required: false
+
+      - variable: influxdb.role
+        default: influxdb
+        show_if: influxdb.antiAfinity=true
+        description: Role label for node scheduling
+        type: string
+        required: false
+
+  - variable: grafana.replicas
+    group: Grafana Configuration
+    default: "1"
+    description: Number of Grafana replicas
+    type: int
+    required: true
+    subquestions:
+      - variable: grafana.adminPassword
+        label: Admin Password
+        type: password
+        required: true
+
+      - variable: grafana.timezone
+        label: Timezone
+        type: string
+        default: UTC
+        required: false
+
+      - variable: grafana.storage.data
+        label: Data Volume Size
+        type: string
+        default: 1Gi
+        required: true
+
+      - variable: grafana.storage.config
+        label: Config Volume Size
+        type: string
+        default: 1Gi
+        required: true
+
+      - variable: grafana.storage.storageClassName
+        label: Storage Class
+        type: string
+        default: local-path
+        required: true
+
+  - variable: chronograf.resources.requests.memory
+    group: Chronograf Configuration
+    default: 256Mi
+    description: Memory reservation (requests)
+    type: string
+    required: true
+    subquestions:
+      - variable: chronograf.resources.limits.memory
+        default: 256Mi
+        description: Memory limit
+        type: string
+        required: true
+
+      - variable: chronograf.storage
+        default: 1Gi
+        description: Data volume size
+        type: string
+        required: true
+
+      - variable: chronograf.storageClassName
+        default: local-path
+        description: Storage Class
+        type: string
+        required: true
+
+  - variable: garieConfig.config
+    label: "Garie Config "
+    description: "The JSON configuration for all plugins and URLs"
+    group: Garie Config
+    required: true
+    default: |
+      {
+        "plugins":{
+            "uptimerobot":{
+              "cron":"5 1 * * *"
+            },
+            "pagespeed-insights":{
+              "cron":"30 1 * * *"
+            },
+            "sonarqube":{
+              "cron":"0 2 * * *"
+            },
+            "sentry-metrics":{
+              "cron":"30 2 * * *",
+              "intervals":[
+                  {
+                    "field":"30days",
+                    "days":30
+                  },
+                  {
+                    "field":"7days",
+                    "days":7
+                  }
+              ],
+              "remove_fields":[
+                  "entries"
+              ]
+            },
+            "securityheaders":{
+              "cron":"0 3 * * *"
+            },
+            "browsertime":{
+              "cron":"30 3 * * *",
+              "maxCpus":2,
+              "cpuUsage":0.9,
+              "delete_files_by_type":{
+                  "type":"mp4",
+                  "age":100
+              }
+            },
+            "ssllabs":{
+              "cron":"30 4 * * *"
+            },
+            "linksintegrity":{
+              "cron":"0 5 * * *"
+            },
+            "lighthouse":{
+              "cron":"30 6 * * *",
+              "maxCpus":1
+            },
+            "webbkoll":{
+              "cron":"30 7 * * *"
+            },
+            "checkmk":{
+              "cron":"50 4 * * *",
+              "maxCpus":1,
+              "additional_hosts":[
+                  "host1",
+                  "host2"
+              ]
+            }
+        },
+        "urls":[
+            {
+              "url":"https://google.com",
+              "plugins":{
+                  
+              }
+            },
+            {
+              "url":"https://reddit.com/",
+              "plugins":{
+                  "sentry-metrics":{
+                    "sentry_config":[
+                        {
+                          "sentryId":1
+                        }
+                    ],
+                    "matomoId":2
+                  }
+              }
+            }
+        ]
+      }
+    subquestions:
+      - variable: garieConfig.storage
+        default: 1Gi
+        description: Data volume size for Garie configuration it should allow for RWX access (nfs, longhorn, etc.)
+        type: string
+        required: true
+
+      - variable: garieConfig.storageClassName
+        default: local-path
+        description: Storage Class
+        type: string
+        required: true
+
+  - variable: gariebBrowserTime.resources.requests.memory
+    default: 3Gi
+    description: Memory reservation (requests)
+    type: string
+    required: true
+    group: Garie BrowserTime
+    subquestions:
+      - variable: gariebBrowserTime.resources.limits.memory
+        default: 3Gi
+        description: Memory limit
+        type: string
+        required: true
+
+  - variable: garieLighthouse.resources.requests.memory
+    default: 5Gi
+    description: Memory reservation (requests)
+    type: string
+    required: true
+    group: Garie Lighthouse
+    subquestions:
+      - variable: garieLighthouse.resources.limits.memory
+        default: 5Gi
+        description: Memory limit
+        type: string
+        required: true
+
+  - variable: garieSecurityheaders.resources.requests.memory
+    default: 512Mi
+    description: Memory reservation (requests)
+    type: string
+    required: true
+    group: Garie Securityheaders
+    subquestions:
+      - variable: garieSecurityheaders.resources.limits.memory
+        default: 512Mi
+        description: Memory limit
+        type: string
+        required: true
+
+  - variable: gariUptimeRobot.resources.requests.memory
+    default: 256Mi
+    description: Memory reservation (requests)
+    type: string
+    required: true
+    group: Garie UptimeRobot
+    subquestions:
+      - variable: gariUptimeRobot.resources.limits.memory
+        default: 256Mi
+        description: Memory limit
+        type: string
+        required: true
+      - variable: gariUptimeRobot.uptimeApiUrl
+        default: https://api.uptimerobot.com/v2/getMonitors
+        description: Uptime Robot API URL
+        type: string
+        required: true
+      - variable: gariUptimeRobot.uptimeRobotKeys
+        default: ""
+        description: Uptime Robot Keys
+        type: string
+        required: true
+      - variable: gariUptimeRobot.intervalDays
+        default: 30
+        description: Uptime Robot Interval Days
+        type: int
+        required: true
+
+  - variable: garieSonarQube.resources.requests.memory
+    default: 256Mi
+    description: Memory reservation (requests)
+    type: string
+    required: true
+    group: Garie SonarQube
+    subquestions:
+      - variable: garieSonarQube.resources.limits.memory
+        default: 256Mi
+        description: Memory limit
+        type: string
+        required: true
+      - variable: garieSonarQube.snarqubeApiUrl
+        default: https://sonarqube.eea.europa.eu
+        type: string
+        required: true
+
+  - variable: garieSentryMetrics.resources.requests.memory
+    default: 256Mi
+    description: Memory reservation (requests)
+    type: string
+    required: true
+    group: Sentry Metrics configuration
+    subquestions:
+      - variable: garieSentryMetrics.resources.limits.memory
+        default: 256Mi
+        description: Memory limit
+        type: string
+        required: true
+      - variable: garieSonarQube.snarqubeApiUrl
+        default: https://sonarqube.eea.europa.eu
+        type: string
+        required: true
+      - variable: garieSentryMetrics.sentryURL
+        default: https://sentry.eea.europa.eu
+        type: string
+        required: true
+        label: "Sentry URL"
+        description: "The URL of your Sentry instance."
+      - varaible: garieSentryMetrics.sentryAuthoriation
+        type: password
+        required: true
+        label: "Sentry Authorization"
+        description: "Your Sentry API token for authorization."
+      - variable: garieSentryMetrics.matomoURL
+        type: string
+        required: true
+        label: "Matomo URL"
+        description: "The URL of your Matomo instance."
+      - variable: garieSentryMetrics.matomoToken
+        type: password
+        required: true
+        label: "Matomo Token"
+        description: "The API token for your Matomo instance."
+
+  - variable: garieCheckmk.resources.requests.memory
+    default: 256Mi
+    description: Memory reservation (requests)
+    type: string
+    required: true
+    group: Checkmk configuration
+    subquestions:
+      - variable: garieCheckmk.resources.limits.memory
+        default: 256Mi
+        description: Memory limit
+        type: string
+        required: true
+      - variable: garieCheckmk.cmkSecrets
+        label: "Checkmk authentication secrets. Should be added in the string, separated by comma and no spaces."
+        type: "password"
+        required: true
+      - variable: garieCheckmk.cmkServers
+        label: "Checkmk servers"
+        description: "The servers which have the checkmk data. Should be added in the string, separated by comma and no spaces."
+        type: string
+        required: true
+        default: "goldeneye.eea.europa.eu,goldeneye-aws.eea.europa.eu"
+      - variable: garieCheckmk.cmkSiteNames
+        label: "Checkmk site names"
+        description: "The names used in checkmk requests for data. Should be added in the string, separated by comma and no spaces."
+        type: string
+        default: "omdeea,omdeeaaws"
+      - varaible: garieCheckmk.cmkUsernames
+        label: "Checkmk usernames for checkmk servers"
+        description: "To login to each checkmk we need a user and its secret for each server. Should be added in the string, separated by comma and no spaces."
+        type: string
+        default: "cmkapi-omdeea,cmkapi-omdeeaaws"
+
+  - variable: webbkollBackend.resources.requests.memory
+    default: 2Gi
+    description: Memory reservation (requests)
+    type: string
+    required: true
+    group: Webbkoll Backend configuration
+    subquestions:
+      - variable: webbkollBackend.resources.limits.memory
+        default: 2Gi
+        description: Memory limit
+        type: string
+        required: true
+
+  - variable: garieWebbkoll.resources.requests.memory
+    default: 1Gi
+    description: Memory reservation (requests)
+    type: string
+    required: true
+    group: Webbkoll configuration
+    subquestions:
+      - variable: garieWebbkoll.resources.limits.memory
+        default: 1Gi
+        description: Memory limit
+        type: string
+        required: true
+
+  - variable: webbkoll.resources.requests.memory
+    default: 2Gi
+    description: Memory reservation (requests)
+    type: string
+    required: true
+    group: Garie Webbkoll configuration
+    subquestions:
+      - variable: webbkoll.resources.limits.memory
+        default: 2Gi
+        description: Memory limit
+        type: string
+        required: true
+
+  - variable: garieLinksintegrity.resources.requests.memory
+    default: 512Mi
+    description: Memory reservation (requests)
+    type: string
+    required: true
+    group: Garie Linksintegrity configuration
+    subquestions:
+      - variable: garieLinksintegrity.resources.limits.memory
+        default: 512Mi
+        description: Memory limit
+        type: string
+        required: true
+
+  - variable: garieSSLlabs.resources.requests.memory
+    default: 256Mi
+    description: Memory reservation (requests)
+    type: string
+    required: true
+    group: Garie garieSSLlabs configuration
+    subquestions:
+      - variable: garieSSLlabs.resources.limits.memory
+        default: 256Mi
+        description: Memory limit
+        type: string
+        required: true
+
+  - variable: webscore.resources.requests.memory
+    default: 256Mi
+    description: Memory reservation (requests)
+    type: string
+    required: true
+    group: Webscore configuration
+    subquestions:
+      - variable: webscore.resources.limits.memory
+        default: 256Mi
+        description: Memory limit
+        type: string
+        required: true
+      - variable: webscrore.onDemandJobTimeout
+        default: "900"
+        description: Path to store reports
+        type: string
+        required: true
+      - variable: webscrore.sonarqubeUrl
+        default: https://sonarqube.eea.europa.eu
+        description: URL of SonarQube server
+        type: string
+        required: true
+      - variable: webscore.pageUsername
+        default: admin
+        description: Username for the page to be scored
+        type: string
+        required: true
+      - variable: webscore.pagePassword
+        description: Password for the page to be scored
+        type: password
+        required: true
+        default: "changeme"
+      - variable: webscore.mailSubscriptionFrequencyCronjob
+        label: "Webscore notification email schedule"
+        description: "Use CronTab syntax https://crontab.guru/"
+        type: string
+        required: true
+        default: "0 10 * * 1"
+      - variable: webscore.mailSubscriptionInfluxSyntax
+        label: "Webscore notification influx interval"
+        description: "Must cover at least one schedule, e.g. 7d, 10m"
+        type: string
+        required: true
+        default: "7d"
+      - variable: webscore.monthlySubscription
+        label: "Webscore monthly notification email schedule"
+        description: "Use CronTab syntax https://crontab.guru/"
+        type: string
+        required: true
+        default: "0 12 1 * *"
+      - variable: webscore.forcedMailResend
+        description: "Send unsent monthly notification"
+        type: bool
+        required: true
+        default: "false"
+      - variable: webscore.reportPath
+        description: "Path to the report file"
+        type: string
+        required: true
+        default: "/reports"
+
+  - variable: postfix.variant
+    label: "Postfix Mode"
+    type: enum
+    required: true
+    options:
+      - demo
+      - prod
+    default: demo
+    description: "Select 'demo' for Mailtrap (dev), or 'prod' for external SMTP."
+    group: Postfix configuration
+    subquestions:
+      - variable: postfix.portNumber
+        label: "Container Port"
+        type: int
+        default: 80
+        required: true
+
+      - variable: postfix.mtpHost
+        label: "MTP Host"
+        type: string
+        required: false
+
+      - variable: postfix.relay
+        label: "SMTP Relay"
+        type: string
+        required: false
+
+      - variable: postfix.port
+        label: "SMTP Port"
+        type: string
+        required: false
+
+      - variable: postfix.user
+        label: "SMTP Username"
+        type: string
+        required: false
+
+      - variable: postfix.pass
+        label: "SMTP Password"
+        type: password
+        required: false

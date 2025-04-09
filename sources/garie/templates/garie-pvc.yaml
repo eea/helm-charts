@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: garie-reports
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: {{ .Values.garieConfig.reportsStorage | default "5Gi" }}
+  storageClassName: {{ .Values.garieConfig.storageClassName | quote }}

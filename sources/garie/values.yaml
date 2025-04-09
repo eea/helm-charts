@@ -1,0 +1,1020 @@
+general:
+  timezone: "UTC"
+
+influxdb:
+  image: influxdb:latest
+  replicas: 1
+  adminUser: "admin"
+  adminPassword: "password"
+  timezone: "UTC"
+  antiAffinity: false
+
+  resources:
+    requests:
+      memory: "3G"
+    limits:
+      memory: "3G"
+
+  storage: "1Gi"
+  storageClassName: "local-path"
+
+  livenessProbe:
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+
+  readinessProbe:
+    initialDelaySeconds: 5
+    periodSeconds: 5
+    timeoutSeconds: 3
+    failureThreshold: 3
+
+service:
+  type: ClusterIP
+
+grafana:
+  replicas: 1
+  adminPassword: "admin"
+  timezone: "UTC"
+  domain: "grafana.example.com"
+
+  resources:
+    requests:
+      memory: 512Mi
+    limits:
+      memory: 512Mi
+
+  storage:
+    data: 1Gi
+    config: 1Gi
+    storageClassName: "local-path"
+
+  livenessProbe:
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+
+  readinessProbe:
+    initialDelaySeconds: 5
+    periodSeconds: 5
+    timeoutSeconds: 3
+    failureThreshold: 3
+
+chronograf:
+  storage: 1Gi
+  storageClassName: "local-path"
+  resources:
+    requests:
+      memory: 256Mi
+    limits:
+      memory: 256Mi
+
+garieConfig:
+  reportsStorage: 5Gi
+  storageClassName: local-path
+  config: |
+    {
+      "plugins":{
+          "uptimerobot":{
+            "cron":"20 2 * * *"
+          },
+          "sonarqube":{
+            "cron":"0 2 * * *"
+          },
+          "sentry-metrics":{
+            "cron":"30 2 * * *",
+            "intervals":[
+                {
+                  "field":"30days",
+                  "days":30
+                },
+                {
+                  "field":"7days",
+                  "days":7
+                }
+            ],
+            "remove_fields":[
+                "entries"
+            ]
+          },
+          "securityheaders":{
+            "cron":"0 3 * * *",
+            "maxCpus":1,
+            "requestDelay":2000
+          },
+          "browsertime":{
+            "cron":"30 3 * * *",
+            "maxCpus":2,
+            "cpuUsage":0.9
+          },
+          "ssllabs":{
+            "cron":"30 4 * * *"
+          },
+          "linksintegrity":{
+            "cron":"0 5 * * *"
+          },
+          "lighthouse":{
+            "cron":"30 6 * * *",
+            "maxCpus":1
+          },
+          "webbkoll":{
+            "cron":"30 7 * * *"
+          },
+          "checkmk":{
+            "cron":"50 4 * * *",
+            "maxCpus":1,
+            "additional_hosts":[
+                "kvm-cph-05-nt",
+                "kvm-prod1-05",
+                "kvm-prodi-01",
+                "www.eea.europa.eu",
+                "kvm-prod3-01",
+                "prodI-aws-03",
+                "02prod-mip32",
+                "01prod-mip31",
+                "01prod-mip49",
+                "eeadmz1-wap-azure"
+            ]
+          }
+      },
+      "urls":[
+          {
+            "url":"https://airindex.eea.europa.eu",
+            "plugins":{
+                
+            }
+          },
+          {
+            "url":"https://bdr.eionet.europa.eu/",
+            "plugins":{
+                "sentry-metrics":{
+                  "sentry_config":[
+                      {
+                        "sentryId":20
+                      }
+                  ],
+                  "matomoId":41
+                }
+            }
+          },
+          {
+            "url":"https://biodiversity.europa.eu/",
+            "plugins":{
+                "sentry-metrics":{
+                  "sentry_config":[
+                      {
+                        "sentryId":33
+                      }
+                  ],
+                  "matomoId":12
+                }
+            }
+          },
+          {
+            "url":"https://cdr.eionet.europa.eu/",
+            "plugins":{
+                "sentry-metrics":{
+                  "sentry_config":[
+                      {
+                        "sentryId":21
+                      }
+                  ],
+                  "matomoId":39
+                }
+            }
+          },
+          {
+            "url":"https://cdrsandbox.eionet.europa.eu/",
+            "plugins":{
+                
+            }
+          },
+          {
+            "url":"https://cdrtest.eionet.europa.eu/",
+            "plugins":{
+                
+            }
+          },
+          {
+            "url":"http://chm-root.eea.europa.eu/",
+            "plugins":{
+                
+            }
+          },
+          {
+            "url":"https://climate-adapt.eea.europa.eu/",
+            "plugins":{
+                "sentry-metrics":{
+                  "sentry_config":[
+                      {
+                        "sentryId":31
+                      }
+                  ],
+                  "matomoId":13
+                }
+            }
+          },
+          {
+            "url":"https://climate-adapt.eea.europa.eu/observatory/",
+            "plugins":{
+                
+            }
+          },
+          {
+            "url":"https://climate-adapt.eea.europa.eu/en/mission/",
+            "plugins":{
+                
+            }
+          },
+          {
+            "url":"https://cca-p6.devel5cph.eionet.europa.eu/en",
+            "plugins":{
+                
+            }
+          },
+          {
+            "url":"https://climate.discomap.eea.europa.eu/arcgis/rest/services/",
+            "plugins":{
+                
+            }
+          },
+          {
+            "url":"https://clmsdemo.devel6cph.eea.europa.eu/",
+            "plugins":{
+                "sentry-metrics":{
+                  "sentry_config":[
+                      {
+                        "sentryId":28,
+                        "filters":{
+                            "serverEvents":{
+                              "operator":"contains",
+                              "field":"tags.url",
+                              "value":"clmsdemo.devel6cph.eea.europa.eu"
+                            },
+                            "jsEvents":{
+                              "operator":"contains",
+                              "field":"tags.url",
+                              "value":"clmsdemo.devel6cph.eea.europa.eu"
+                            }
+                        }
+                      }
+                  ],
+                  "default_visits_per_day":100
+                }
+            }
+          },
+          {
+            "url":"https://demo-www.eea.europa.eu/",
+            "plugins":{
+                "sentry-metrics":{
+                  "sentry_config":[
+                      {
+                        "sentryId":58
+                      }
+                  ],
+                  "default_visits_per_day":100
+                }
+            }
+          },
+          {
+            "url":"https://www.eea.europa.eu/en",
+            "plugins":{
+                "sentry-metrics":{
+                  "sentry_config":[
+                      {
+                        "sentryId":60
+                      }
+                  ],
+                  "matomoId":61
+                }
+            }
+          },
+          {
+            "url":"https://cmshare.eea.europa.eu/",
+            "plugins":{
+                
+            }
+          },
+          {
+            "url":"https://converters.eionet.europa.eu/",
+            "plugins":{
+                
+            }
+          },
+          {
+            "url":"https://convertersbdr.eionet.europa.eu/",
+            "plugins":{
+                
+            }
+          },
+          {
+            "url":"https://cr.eionet.europa.eu/",
+            "plugins":{
+                
+            }
+          },
+          {
+            "url":"https://dd.eionet.europa.eu/",
+            "plugins":{
+                
+            }
+          },
+          {
+            "url":"https://demo-biodiversity.eea.europa.eu/natura2000",
+            "plugins":{
+                
+            }
+          },
+          {
+            "url":"https://demo-climate-advisory-board.devel4cph.eea.europa.eu",
+            "plugins":{
+                
+            }
+          },
+          {
+            "url":"https://demo-biodiversity.eea.europa.eu/",
+            "plugins":{
+                
+            }
+          },
+          {
+            "url":"https://demo-forest-eea-design-system.devel4cph.eea.europa.eu/",
+            "plugins":{
+                
+            }
+          },
+          {
+            "url":"https://demo-water.devel5cph.eea.europa.eu/freshwater",
+            "plugins":{
+                
+            }
+          },
+          {
+            "url":"https://demo-water.devel5cph.eea.europa.eu/marine",
+            "plugins":{
+                
+            }
+          },
+          {
+            "url":"https://climate-energy.eea.europa.eu/",
+            "plugins":{
+                "sentry-metrics":{
+                  "sentry_config":[
+                      {
+                        "sentryId":52
+                      }
+                  ],
+                  "matomoId":58
+                }
+            }
+          },
+          {
+            "url":"https://climate-advisory-board.europa.eu/",
+            "plugins":{
+                "sentry-metrics":{
+                  "sentry_config":[
+                      {
+                        "sentryId":65
+                      }
+                  ],
+                  "matomoId":62
+                }
+            }
+          },
+          {
+            "url":"https://discomap.eea.europa.eu/",
+            "plugins":{
+                
+            }
+          },
+          {
+            "url":"https://commission.europa.eu/index_en",
+            "plugins":{
+                
+            }
+          },
+          {
+            "url":"http://emerald.eea.europa.eu/",
+            "plugins":{
+                
+            }
+          },
+          {
+            "url":"https://emrt-esd.eionet.europa.eu/",
+            "plugins":{
+                
+            }
+          },
+          {
+            "url":"https://emrt-necd.eionet.europa.eu/",
+            "plugins":{
+                
+            }
+          },
+          {
+            "url":"https://epanet.eea.europa.eu/",
+            "plugins":{
+                "sentry-metrics":{
+                  "sentry_config":[
+                      {
+                        "sentryId":36,
+                        "filters":{
+                            "serverEvents":{
+                              "operator":"contains",
+                              "field":"tags.url",
+                              "value":"epanet.eea.europa.eu"
+                            },
+                            "jsEvents":{
+                              "operator":"contains",
+                              "field":"tags.url",
+                              "value":"epanet.eea.europa.eu"
+                            }
+                        }
+                      }
+                  ],
+                  "matomoId":43
+                }
+            }
+          },
+          {
+            "url":"https://eunis.eea.europa.eu/",
+            "plugins":{
+                
+            }
+          },
+          {
+            "url":"http://experience.discomap.eea.europa.eu/",
+            "plugins":{
+                
+            }
+          },
+          {
+            "url":"https://forum.eionet.europa.eu/",
+            "plugins":{
+                "sentry-metrics":{
+                  "sentry_config":[
+                      {
+                        "sentryId":3
+                      },
+                      {
+                        "sentryId":6
+                      }
+                  ],
+                  "matomoId":16
+                }
+            }
+          },
+          {
+            "url":"https://helpdesk.eionet.europa.eu/",
+            "plugins":{
+                
+            }
+          },
+          {
+            "url":"https://ias.eea.europa.eu/",
+            "plugins":{
+                
+            }
+          },
+          {
+            "url":"https://www.eea.europa.eu/ims",
+            "plugins":{
+                "sentry-metrics":{
+                  "sentry_config":[
+                      {
+                        "sentryId":56
+                      }
+                  ],
+                  "matomoId":59
+                }
+            }
+          },
+          {
+            "url":"https://staging.eea.europa.eu/en",
+            "plugins":{
+                "sentry-metrics":{
+                  "sentry_config":[
+                      {
+                        "sentryId":47
+                      }
+                  ],
+                  "default_visits_per_day":300
+                }
+            }
+          },
+          {
+            "url":"https://industry.eea.europa.eu/",
+            "plugins":{
+                "sentry-metrics":{
+                  "sentry_config":[
+                      {
+                        "sentryId":50
+                      }
+                  ],
+                  "matomoId":48
+                }
+            }
+          },
+          {
+            "url":"https://mdr.eionet.europa.eu/",
+            "plugins":{
+                "sentry-metrics":{
+                  "sentry_config":[
+                      {
+                        "sentryId":17
+                      }
+                  ],
+                  "matomoId":40
+                }
+            }
+          },
+          {
+            "url":"https://natura2000.eea.europa.eu/",
+            "plugins":{
+                
+            }
+          },
+          {
+            "url":"https://nature-art12.eionet.europa.eu/article12/",
+            "plugins":{
+                
+            }
+          },
+          {
+            "url":"https://nature-art17.eionet.europa.eu/article17/",
+            "plugins":{
+                
+            }
+          },
+          {
+            "url":"https://newdesign.eea.europa.eu/",
+            "plugins":{
+                
+            }
+          },
+          {
+            "url":"https://noise.eea.europa.eu/",
+            "plugins":{
+                
+            }
+          },
+          {
+            "url":"https://papers.eionet.europa.eu/",
+            "plugins":{
+                
+            }
+          },
+          {
+            "url":"https://projects.eionet.europa.eu/",
+            "plugins":{
+                "sentry-metrics":{
+                  "sentry_config":[
+                      {
+                        "sentryId":11
+                      }
+                  ],
+                  "matomoId":18
+                }
+            }
+          },
+          {
+            "url":"https://reportnet.europa.eu/",
+            "plugins":{
+                "sentry-metrics":{
+                  "sentry_config":[
+                      {
+                        "sentryId":46,
+                        "filters":{
+                            "serverEvents":{
+                              "operator":"equals",
+                              "field":"tags.environment",
+                              "value":"production"
+                            }
+                        }
+                      }
+                  ],
+                  "default_visits_per_day":300
+                }
+            }
+          },
+          {
+            "url":"https://riot.eea.europa.eu/",
+            "plugins":{
+                
+            }
+          },
+          {
+            "url":"https://sso.eionet.europa.eu/",
+            "plugins":{
+                
+            }
+          },
+          {
+            "url":"https://transfer.eionet.europa.eu/",
+            "plugins":{
+                
+            }
+          },
+          {
+            "url":"https://water.europa.eu/",
+            "plugins":{
+                "sentry-metrics":{
+                  "sentry_config":[
+                      {
+                        "sentryId":32
+                      }
+                  ],
+                  "matomoId":19
+                }
+            }
+          },
+          {
+            "url":"https://water.europa.eu/marine",
+            "plugins":{
+                "sentry-metrics":{
+                  "sentry_config":[
+                      {
+                        "sentryId":32,
+                        "filters":{
+                            "serverEvents":{
+                              "operator":"contains",
+                              "field":"tags.url",
+                              "value":"water.europa.eu/marine"
+                            },
+                            "jsEvents":{
+                              "operator":"contains",
+                              "field":"tags.url",
+                              "value":"water.europa.eu/marine"
+                            }
+                        }
+                      }
+                  ],
+                  "matomoId":19
+                }
+            }
+          },
+          {
+            "url":"https://water.europa.eu/freshwater",
+            "plugins":{
+                "sentry-metrics":{
+                  "sentry_config":[
+                      {
+                        "sentryId":32,
+                        "filters":{
+                            "serverEvents":{
+                              "operator":"contains",
+                              "field":"tags.url",
+                              "value":"water.europa.eu/freshwater"
+                            },
+                            "jsEvents":{
+                              "operator":"contains",
+                              "field":"tags.url",
+                              "value":"water.europa.eu/freshwater"
+                            }
+                        }
+                      }
+                  ],
+                  "matomoId":19
+                }
+            }
+          },
+          {
+            "url":"https://webformsbdr.eionet.europa.eu/",
+            "plugins":{
+                
+            }
+          },
+          {
+            "url":"https://www.eea.europa.eu/",
+            "plugins":{
+                "sentry-metrics":{
+                  "sentry_config":[
+                      {
+                        "sentryId":2
+                      }
+                  ],
+                  "matomoId":3
+                }
+            }
+          },
+          {
+            "url":"https://www.eionet.europa.eu/",
+            "plugins":{
+                "sentry-metrics":{
+                  "sentry_config":[
+                      {
+                        "sentryId":36
+                      }
+                  ],
+                  "matomoId":2
+                }
+            }
+          },
+          {
+            "url":"https://cis2.eea.europa.eu/",
+            "plugins":{
+                "sentry-metrics":{
+                  "sentry_config":[
+                      {
+                        "sentryId":44
+                      }
+                  ],
+                  "matomoId":26
+                }
+            }
+          },
+          {
+            "url":"https://corda.eea.europa.eu/",
+            "plugins":{
+                
+            }
+          },
+          {
+            "url":"https://eni-seis.eionet.europa.eu/",
+            "plugins":{
+                "sentry-metrics":{
+                  "sentry_config":[
+                      {
+                        "sentryId":41
+                      }
+                  ],
+                  "matomoId":15
+                }
+            }
+          },
+          {
+            "url":"https://fme.discomap.eea.europa.eu/",
+            "plugins":{
+                
+            }
+          },
+          {
+            "url":"https://fmebatch.discomap.eea.europa.eu/",
+            "plugins":{
+                
+            }
+          },
+          {
+            "url":"https://forest.eea.europa.eu/",
+            "plugins":{
+                "sentry-metrics":{
+                  "sentry_config":[
+                      {
+                        "sentryId":49
+                      }
+                  ],
+                  "matomoId":46
+                }
+            }
+          },
+          {
+            "url":"https://jobs.eea.europa.eu/",
+            "plugins":{
+                
+            }
+          },
+          {
+            "url":"https://hrl-copernicus.eea.europa.eu/",
+            "plugins":{
+                
+            }
+          },
+          {
+            "url":"https://idp.eea.europa.eu/",
+            "plugins":{
+                
+            }
+          },
+          {
+            "url":"https://insitu.copernicus.eu/",
+            "plugins":{
+                
+            }
+          },
+          {
+            "url":"https://land.copernicus.eu/",
+            "plugins":{
+                "sentry-metrics":{
+                  "sentry_config":[
+                      {
+                        "sentryId":28
+                      }
+                  ],
+                  "matomoId":17
+                }
+            }
+          },
+          {
+            "url":"https://rod.eionet.europa.eu/",
+            "plugins":{
+                
+            }
+          },
+          {
+            "url":"https://sdi.eea.europa.eu/",
+            "plugins":{
+                
+            }
+          },
+          {
+            "url":"https://semantic.eea.europa.eu/",
+            "plugins":{
+                
+            }
+          },
+          {
+            "url":"https://svn.eionet.europa.eu/",
+            "plugins":{
+                
+            }
+          },
+          {
+            "url":"https://tableau-public.discomap.eea.europa.eu/",
+            "plugins":{
+                
+            }
+          },
+          {
+            "url":"https://taskman.eionet.europa.eu/",
+            "plugins":{
+                
+            }
+          },
+          {
+            "url":"https://uns.eionet.europa.eu/",
+            "plugins":{
+                
+            }
+          },
+          {
+            "url":"https://webforms.eionet.europa.eu/",
+            "plugins":{
+                
+            }
+          },
+          {
+            "url":"https://webformstest.eionet.europa.eu/",
+            "plugins":{
+                
+            }
+          },
+          {
+            "url":"https://webq2test.eionet.europa.eu/",
+            "plugins":{
+                
+            }
+          },
+          {
+            "url":"https://www.eionet.europa.eu/gemet/en/themes/",
+            "plugins":{
+                
+            }
+          },
+          {
+            "url":"https://www.bbc.com/",
+            "plugins":{
+                
+            }
+          },
+          {
+            "url":"https://www.who.int/",
+            "plugins":{
+                
+            }
+          }
+      ]
+    }
+
+garieLighthouse:
+  label: "Garie Lighthouse configuration"
+  resources:
+    requests:
+      memory: 5Gi
+    limits:
+      memory: 5Gi
+
+gariebBrowserTime:
+  label: "Garie Lighthouse configuration"
+  resources:
+    requests:
+      memory: 3Gi
+    limits:
+      memory: 3Gi
+
+garieSecurityheaders:
+  label: "Garie Securityheaders configuration"
+  resources:
+    requests:
+      memory: 512Mi
+    limits:
+      memory: 512Mi
+
+garieUptimeRobot:
+  label: "Garie UptimeRobot configuration"
+  uptimeRobotKeys: ""
+  uptimeApiUrl: "https://api.uptimerobot.com/v2/getMonitors"
+  intervalDays: "30"
+  resources:
+    requests:
+      memory: 512Mi
+    limits:
+      memory: 512Mi
+
+garieSonarQube:
+  label: "Garie SonarQube configuration"
+  snarqubeApiUrl: "https://sonarqube.eea.europa.eu"
+  resources:
+    requests:
+      memory: 256Mi
+    limits:
+      memory: 256Mi
+
+garieSentryMetrics:
+  label: "Garie Sentry Metrics configuration"
+  sentryAuthoriation: ""
+  sentryURL: "https://sentry.eea.europa.eu/"
+  matomoToken: ""
+  matomoURL: https://matomo.eea.europa.eu/
+  resources:
+    requests:
+      memory: 256Mi
+    limits:
+      memory: 256Mi
+
+garieCheckmk:
+  label: "Garie Checkmk configuration"
+  cmkSecrets: ""
+  cmkServers: "goldeneye.eea.europa.eu,goldeneye-aws.eea.europa.eu"
+  cmkSiteNames: "omdeea,omdeeaaws"
+  cmkUsernames: "cmkapi-omdeea,cmkapi-omdeeaaws"
+  resources:
+    requests:
+      memory: 256Mi
+    limits:
+      memory: 256Mi
+
+garieSSLlabs:
+  resources:
+    requests:
+      memory: 256Mi
+    limits:
+      memory: 256Mi
+
+garieLinksintegrity:
+  resources:
+    requests:
+      memory: 1Gi
+    limits:
+      memory: 1Gi
+
+webbkollBackend:
+  resources:
+    requests:
+      memory: 2Gi
+    limits:
+      memory: 2Gi
+
+webbkoll:
+  resources:
+    requests:
+      memory: 2Gi
+    limits:
+      memory: 2Gi
+
+garieWebbkoll:
+  resources:
+    requests:
+      memory: 1Gi
+    limits:
+      memory: 1Gi
+
+webscore:
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 250m
+  onDemandJobTimeout: "900"
+  sonarqubeUrl: "https://sonarqube.eea.europa.eu"
+  pageUsername: "admin"
+  pagePassword: "password"
+  mailSubscriptionFrequencyCronjob: "0 10 * * 1"
+  mailSubscriptionInfluxSyntax: "7d"
+  monthlySubscription: "0 12 1 * *"
+  forcedMailResend: "false"
+  reportPath: "/reports"
+
+postfix:
+  variant: "demo"
+  portNumber: "80"
+
+  mtpHost: "webscore.eea.europa.eu"
+  relay: "smtp.example.com"
+  port: "587"
+  user: "postfix@example.com"
+  pass: "supersecure"
+
+ingress:
+  enabled: false
+  class: "nginx"

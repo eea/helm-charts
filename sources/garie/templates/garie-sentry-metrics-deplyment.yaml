@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: garie-sentry-metrics
+  labels:
+    app: garie
+    role: garie-sentry-metrics
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: garie
+      role: garie-sentry-metrics
+  template:
+    metadata:
+      labels:
+        app: garie
+        role: garie-sentry-metrics
+    spec:
+      containers:
+        - name: garie-sentry-metrics
+          image: eeacms/garie-sentry-metrics:2.0.2
+          env:
+            - name: HOST
+              value: influxdb
+            - name: CONFIG
+              value: {{ .Values.garieConfig.config | squote }}
+            - name: TZ
+              value: {{ .Values.timezone | default "UTC" | quote }}
+            - name: SENTRY_AUTHORIZATION
+              value: {{ .Values.garieSentryMetrics.sentryAuthoriation }}
+            - name: URL_SENTRY
+              value: {{ .Values.garieSentryMetrics.sentryURL }}
+            - name: MATOMO_TOKEN
+              value: {{ .Values.garieSentryMetrics.matomoToken }}
+            - name: URL_MATOMO
+              value: {{ .Values.garieSentryMetrics.matomoURL }}
+            - name: NODE_OPTIONS
+              value: --max-old-space-size=4096
+          volumeMounts:
+            - name: reports
+              mountPath: /usr/src/garie-plugin/reports
+          livenessProbe:
+            tcpSocket:
+              port: 3000
+            initialDelaySeconds: 10
+            periodSeconds: 15
+            timeoutSeconds: 2
+            failureThreshold: 5
+          readinessProbe:
+            tcpSocket:
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 3
+          resources:
+            requests:
+              memory: {{ .Values.garieSentryMetrics.resources.requests.memory }}
+            limits:
+              memory: {{ .Values.garieSentryMetrics.resources.limits.memory }}
+      volumes:
+        - name: reports
+          persistentVolumeClaim:
+            claimName: garie-reports

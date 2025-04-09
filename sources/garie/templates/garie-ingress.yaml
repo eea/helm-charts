@@ -1,0 +1,77 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: garie-ingress
+  labels:
+    app: garie
+    role: ingress
+  annotations:
+    {{ if .Values.ingress.clusterIssuer }}
+    cert-manager.io/cluster-issuer: {{ .Values.ingress.clusterIssuer }}
+    {{ end }}
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    spec.ingressClassName: {{ .Values.ingress.class }}
+spec:
+  tls:
+    - hosts:
+        - {{ .Values.ingress.grafana }}
+        - {{ .Values.ingress.browsertime }}
+        - {{ .Values.ingress.lighthouse }}
+        - {{ .Values.ingress.webscore }}
+        - {{ .Values.ingress.chronograf }}
+      secretName: garie-tls-secret
+  rules:
+    - host: {{ .Values.ingress.grafana }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: grafana
+                port:
+                  number: 3000
+                  
+    - host: {{ .Values.ingress.browsertime }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: garie-browsertime
+                port:
+                  number: 3000
+    
+    - host: {{ .Values.ingress.lighthouse }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: garie-lighthouse
+                port:
+                  number: 3000
+
+    - host: {{ .Values.ingress.webscore }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: garie-webscore
+                port:
+                  number: 3000
+
+    - host: {{ .Values.ingress.chronograf }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: chronograf
+                port:
+                  number: 8888

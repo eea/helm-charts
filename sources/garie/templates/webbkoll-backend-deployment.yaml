@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webbkoll-backend
+  labels:
+    app: garie
+    role: webbkoll-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: garie
+      role: webbkoll-backend
+  template:
+    metadata:
+      labels:
+        app: garie
+        role: webbkoll-backend
+    spec:
+      containers:
+        - name: webbkoll-backend
+          image: eeacms/webbkoll-backend:1.2
+          env:
+            - name: TZ
+              value: {{ .Values.timezone | default "UTC" | quote }}
+          ports:
+            - containerPort: 8100
+          livenessProbe:
+            tcpSocket:
+              port: 8100
+            initialDelaySeconds: 10
+            periodSeconds: 15
+            timeoutSeconds: 2
+            failureThreshold: 5
+          readinessProbe:
+            tcpSocket:
+              port: 8100
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 3
+          resources:
+            requests:
+              memory: {{ .Values.webbkollBackend.resources.requests.memory }}
+            limits:
+              memory: {{ .Values.webbkollBackend.resources.limits.memory }}

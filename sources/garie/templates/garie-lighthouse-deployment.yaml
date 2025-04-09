@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: garie-lighthouse
+  labels:
+    app: garie
+    role: gaire-lighthouse
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: garie
+      role: garie-lighthouse
+  template:
+    metadata:
+      labels:
+        app: garie
+        role: garie-lighthouse
+    spec:
+      containers:
+        - name: garie-lighthouse
+          image: eeacms/garie-lighthouse:1.2.14
+          env:
+            - name: HOST
+              value: influxdb
+            - name: CONFIG
+              value: {{ .Values.garieConfig.config | squote }}
+            - name: TZ
+              value: {{ .Values.timezone | default "UTC" | quote }}
+          volumeMounts:
+            - name: reports
+              mountPath: /usr/src/garie-plugin/reports
+            - name: dshm
+              mountPath: /dev/shm
+          ports:
+            - containerPort: 3000
+          livenessProbe:
+            tcpSocket:
+              port: 3000
+            initialDelaySeconds: 10
+            periodSeconds: 15
+            timeoutSeconds: 2
+            failureThreshold: 5
+          readinessProbe:
+            tcpSocket:
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 3
+          resources:
+            requests:
+              memory: {{ .Values.garieLighthouse.resources.requests.memory }}
+            limits:
+              memory: {{ .Values.garieLighthouse.resources.limits.memory }}
+      volumes:
+        - name: reports
+          persistentVolumeClaim:
+            claimName: garie-reports
+        - name: dshm
+          emptyDir:
+            medium: Memory
