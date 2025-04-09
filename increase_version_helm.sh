@@ -51,6 +51,8 @@ echo "Commit message is $HELM_COMMIT_MESSAGE"
 
 readme_link=""
 
+git pull
+
 helm lint .
 
 if [[ "$HELM_ADD_COMMIT_LINK_README" == "yes" ]]; then
@@ -118,7 +120,7 @@ fi
 
 head -n $line README.md > part1
 
-echo -e "\n### Version $HELM_NEWVERSION - $(LANG=en_us_88591 date +"%d %B %Y")\n- $HELM_UPGRADE_MESSAGE $readme_link" >> part1
+echo -e "\n### Version $HELM_NEWVERSION - $(LANG=en_us_88591 date +"%d %B %Y")\n- $HELM_UPGRADE_MESSAGE $readme_link" | sed 's/[Rr][Ee][Ff][Ss][ ]*#\([0-9]*\)/Refs \[#\1\]\(https:\/\/taskman.eionet.europa.eu\/issues\/\1\)/g' >> part1
 
 
 cat part1 part2 > README.md
