@@ -2,6 +2,42 @@ apiVersion: v1
 entries:
   advisory-board-backend:
   - apiVersion: v2
+    appVersion: 6.0.14-1
+    created: "2025-04-09T13:51:57.942584477Z"
+    dependencies:
+    - name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.0.6
+    description: Climate advisory backend
+    digest: 47601d936a5bd6288bfe4a147439bb21ebadec6ad26c135fd8038fe3aeca9fac
+    home: https://github.com/eea/advisory-board-backend
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/advisory-board-backend/volto.png
+    keywords:
+    - CMS
+    name: advisory-board-backend
+    type: application
+    urls:
+    - advisory-board-backend-1.5.0.tgz
+    version: 1.5.0
+  - apiVersion: v2
+    appVersion: 6.0.13-17
+    created: "2025-04-09T10:51:22.74077537+03:00"
+    dependencies:
+    - name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.0.6
+    description: Climate advisory backend
+    digest: d8cc0ee30bfaf061bf50dc0cd2e70684b802e926ab7d4def16bd5924474e922d
+    home: https://github.com/eea/advisory-board-backend
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/advisory-board-backend/volto.png
+    keywords:
+    - CMS
+    name: advisory-board-backend
+    type: application
+    urls:
+    - advisory-board-backend-1.4.2.tgz
+    version: 1.4.2
+  - apiVersion: v2
     appVersion: 6.0.13-17
     created: "2025-04-08T18:57:42.645090367+03:00"
     dependencies:
@@ -8681,6 +8717,42 @@ entries:
     version: 1.0.0
   fise-backend:
   - apiVersion: v2
+    appVersion: 6.0.14-1
+    created: "2025-04-09T13:52:25.42794346Z"
+    dependencies:
+    - name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.0.6
+    description: FISE backend
+    digest: d598b1023473f6464e307d3f4301efbaf9dc5e7adbeb311c2dafca8ff064bb06
+    home: https://github.com/eea/fise-backend
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/fise-backend/logo.png
+    keywords:
+    - CMS
+    name: fise-backend
+    type: application
+    urls:
+    - fise-backend-1.2.0.tgz
+    version: 1.2.0
+  - apiVersion: v2
+    appVersion: 6.0.13-23
+    created: "2025-04-09T12:46:07.067662498+03:00"
+    dependencies:
+    - name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.0.6
+    description: FISE backend
+    digest: 918a9e100dcdda180110245325d5ebc47d0ebf56fa611130f9e21fe0f53c3c43
+    home: https://github.com/eea/fise-backend
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/fise-backend/logo.png
+    keywords:
+    - CMS
+    name: fise-backend
+    type: application
+    urls:
+    - fise-backend-1.1.2.tgz
+    version: 1.1.2
+  - apiVersion: v2
     appVersion: 6.0.13-23
     created: "2025-04-08T19:01:55.215378509+03:00"
     dependencies:
@@ -9512,6 +9584,24 @@ entries:
     - helpdesk-otrs-0.3.1.tgz
     version: 0.3.1
   ied-backend:
+  - apiVersion: v2
+    appVersion: 6.0.14-1
+    created: "2025-04-09T13:54:55.142710779Z"
+    dependencies:
+    - name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.0.6
+    description: IED backend
+    digest: 1ba6d04b079ea7147bf0c9ca117389912eb7489d1610f7ebd43c3446075fa6cf
+    home: https://github.com/eea/ied-backend
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/ied-backend/ied.png
+    keywords:
+    - CMS
+    name: ied-backend
+    type: application
+    urls:
+    - ied-backend-1.5.0.tgz
+    version: 1.5.0
   - apiVersion: v2
     appVersion: 6.0.13-2
     created: "2025-04-08T21:09:08.264397897+03:00"
@@ -14832,4 +14922,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2025-04-08T21:09:08.262852682+03:00"
+generated: "2025-04-09T13:54:55.139159577Z"

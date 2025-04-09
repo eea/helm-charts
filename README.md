@@ -15,20 +15,20 @@ Create your package or update the source. For the example we will call the packa
     cd toypackage
     _... create Chart.yaml, values.yaml etc. If updating, remember to increase version number in Chart.yaml_
 
-Check package:
+### Check package:
 
     helm lint .
 
 _Might raise errors if dependencies were changed. If that happens, run __helm dependencies update__ first_
 
-Update dependecies:
+### Update dependecies:
 
     helm dependencies update 
     
 _if you have changed the chart dependencies_
 
 
-Update Readme/Version Increase:
+### Update Readme/Version Increase:
 
 After you did some changes in an existing helm chart, don't commit yet, use the `increase_version_helm.sh` to prepare to release a new version of helm chart
 
@@ -57,7 +57,7 @@ Then it will add a changelog entry in README.md file with the following structur
 
 
 
-Update/Release docs:
+### Update/Release docs:
 
 Can be called by the name or the path of the chart directory:
 

@@ -1,12 +1,14 @@
+{{- if .Values.plone.googleUrl }}
+
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: advisory-board-admin
+  name: advisory-board-google-admin
   labels:
     {{- include "appl.labels" . | nindent 4 }}
-    component: advisory-board-admin
+    component: advisory-board-google-admin
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /VirtualHostBase/https/{{ .Values.plone.hostname }}:443/{{ .Values.plone.site }}/VirtualHostRoot/_vh_admin/$1
+    nginx.ingress.kubernetes.io/rewrite-target: /VirtualHostBase/https/{{ .Values.plone.hostname }}:443/{{ .Values.plone.site }}/VirtualHostRoot/_vh_admin/{{ .Values.plone.googleUrl }}$1
     nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/proxy-body-size: 100m
   {{- with .Values.ingress.annotations }}
@@ -19,7 +21,7 @@ spec:
   - host: {{ .Values.plone.hostname }}
     http:
       paths:
-      - path: /admin(.*)
+      - path: /{{ .Values.plone.googleUrl }}(.*)
         pathType: ImplementationSpecific
         backend:
           service:
@@ -34,4 +36,4 @@ spec:
     secretName: {{ .Values.ingress.certificate }}
     {{- end  }}
   {{- end  }}
-   
+{{- end }}
