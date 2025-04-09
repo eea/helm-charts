@@ -10,6 +10,9 @@ This chart deployes the Forest Information System of Europe website backend app
 
 ## Releases
 
+### Version 1.1.2 - 09 April 2025
+- Add plone.googleUrl variable, fix admin ingress Refs [#286358](https://taskman.eionet.europa.eu/issues/286358) [valentinab25 - [`727ffbf`](https://github.com/eea/helm-charts/commit/727ffbf03de5d20de70fe70da7fb4553b0052dc2)]
+
 ### Version 1.1.1 - 08 April 2025
 - Add plone.site variable, rewrite api-ingress using snippet [valentinab25 - [`abb241e`](https://github.com/eea/helm-charts/commit/abb241e489d9e3c6c3e131e331df9985fbc4fb3a)]
 
