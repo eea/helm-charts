@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: influxdb
+  labels:
+    app: garie
+    role: influxdb 
+spec:
+  serviceName: influxdb
+  replicas: {{ .Values.influxdb.replicas }}
+  selector:
+    matchLabels:
+      app: garie
+  template:
+    metadata:
+      labels:
+        app: garie
+        component: database
+        role: influxdb
+        tier: backend
+    spec:
+      {{ if .Values.influxdb.antiAffinity }}
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: role
+                      operator: In
+                      values:
+                        - {{ .Values.influxdb.role }}
+                topologyKey: "kubernetes.io/hostname"
+      {{ end }}
+      containers:
+        - name: influxdb
+          image: influxdb:1.8.10
+          env:
+            - name: INFLUXDB_ADMIN_USER
+              value: {{ .Values.influxdb.adminUser | quote }}
+            - name: INFLUXDB_ADMIN_PASSWORD
+              value: {{ .Values.influxdb.adminPassword | quote }}
+            - name: INFLUXDB_REPORTING_DISABLED
+              value: "true"
+            - name: TZ
+              value: {{ .Values.general.timezone | quote }}
+          ports:
+            - containerPort: 8086
+              name: influxdb
+          resources:
+            requests:
+              memory: {{ .Values.influxdb.resources.requests.memory }}
+            limits:
+              memory: {{ .Values.influxdb.resources.limits.memory }}
+          volumeMounts:
+            - name: influxdb-data
+              mountPath: /var/lib/influxdb
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8086
+            initialDelaySeconds: {{ .Values.influxdb.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.influxdb.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.influxdb.livenessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.influxdb.livenessProbe.failureThreshold }}
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8086
+            initialDelaySeconds: {{ .Values.influxdb.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.influxdb.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.influxdb.readinessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.influxdb.readinessProbe.failureThreshold }}
+      volumes:
+        - name: influxdb-data
+          persistentVolumeClaim:
+            claimName: influxdb-data
