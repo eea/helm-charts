@@ -38,3 +38,37 @@ spec:
 
           resources:
 {{ toYaml .Values.cachet.resources | indent 12 }}
+
+          volumeMounts:
+            - name: cachet-storage
+              mountPath: /var/www/html/storage
+
+        {{- if .Values.monitor.enabled }}
+        - name: cachet-monitor
+          image: {{ .Values.monitor.image }}
+          env:
+            - name: CONFIG
+              value: {{ .Values.monitor.config | quote }}
+            - name: TOKEN
+              value: {{ .Values.monitor.token | quote }}
+            {{- if .Values.monitor.env }}
+            {{- range $key, $val := .Values.monitor.env }}
+            - name: {{ $key }}
+              value: {{ $val | quote }}
+            {{- end }}
+            {{- end }}
+          resources:
+            limits:
+              memory: 512Mi
+            requests:
+              memory: 256Mi
+        {{- end }}
+
+      volumes:
+        - name: cachet-storage
+          {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.existingClaim | default (printf "%s-cachet" .Release.Name) }}
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
