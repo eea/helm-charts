@@ -1,0 +1,35 @@
+{{- if .Values.monitor.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cachet-monitor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cachet-monitor
+  template:
+    metadata:
+      labels:
+        app: cachet-monitor
+    spec:
+      containers:
+        - name: cachet-monitor
+          image: {{ .Values.monitor.image }}
+          env:
+            - name: CONFIG
+              value: {{ .Values.monitor.config | quote }}
+            - name: TOKEN
+              value: {{ .Values.monitor.token | quote }}
+            {{- if .Values.monitor.env }}
+            {{- range $key, $val := .Values.monitor.env }}
+            - name: {{ $key }}
+              value: {{ $val | quote }}
+            {{- end }}
+            {{- end }}
+          resources:
+            limits:
+              memory: 512Mi
+            requests:
+              memory: 256Mi
+{{- end }}
