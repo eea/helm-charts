@@ -92,7 +92,6 @@ monitor:
   image: eeacms/cachet-monitor
   config: ""
   token: ""
-  phpMaxChildren: 150
   env:
-    CACHE_URL: ""
-    CACHET_MONITOR_TOKEN: ""
+    CACHE_URL: "https://status-dev.eea.europa.eu"
+    CACHET_MONITOR_TOKEN: "your-token"
