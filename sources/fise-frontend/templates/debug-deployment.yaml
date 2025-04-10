@@ -57,7 +57,7 @@ spec:
         tty: true
 
         volumeMounts:
-        - mountPath: /opt/frontend/src/addons
+        - mountPath: {{ .Values.debug.addonsPath }}
           name: debug-addons
 
         resources:
