@@ -25,6 +25,7 @@ ingress:
   annotations: 
     cert-manager.io/cluster-issuer: 01dev-eea-letsencrypt
   certificate: plone.eea.europa.eu-tls
+  tls: enabled
 
 plone:
   serviceType: ClusterIP
