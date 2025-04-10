@@ -112,7 +112,26 @@ volto:
     periodSeconds: 5
     successThreshold: 1
     timeoutSeconds: 10
-  
+
+debug:
+  affinity: {}
+  enabled: false
+  environment: {}
+  nodeSelector: {}
+  podAnnotations: {}
+  podSecurityContext: {}
+  resources:
+    limits:
+      memory: 3Gi
+    requests:
+      memory: 3Gi
+  securityContext: {}
+  serviceType: NodePort
+  tolerations: []
+
+
+
+
 varnish:
   affinity: {}
   backend: frontend-volto
