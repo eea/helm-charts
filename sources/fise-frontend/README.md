@@ -10,6 +10,9 @@ This chart deployes the Forest Information System of Europe website frontend app
 
 ## Releases
 
+### Version 1.3.1 - 10 April 2025
+- Add debug deployment & service for volto [valentinab25 - [`eb6f4a2`](https://github.com/eea/helm-charts/commit/eb6f4a25d8f1d534bf9768a4d4c3cd563a58c104)]
+
 ### Version 1.3.0 - 10 April 2025
 - Automated release of [eeacms/fise-frontend:3.0.3-beta.2](https://github.com/eea/fise-frontend/releases) [EEA Jenkins - [`2c59d84`](https://github.com/eea/helm-charts/commit/2c59d84b068577be46eb7d8272a2a9995d3be124)]
 
