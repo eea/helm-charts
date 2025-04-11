@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: garie-webscore
+  labels:
+    app: garie
+    role: garie-webscore
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: garie
+      role: garie-webscore
+  template:
+    metadata:
+      labels:
+        app: garie
+        role: garie-webscore
+    spec:
+      containers:
+        - name: garie-webscore
+          image: eeacms/garie-webscore:0.3.25
+          env:
+            - name: HOST
+              value: influxdb
+            - name: TZ
+              value: {{ .Values.timezone | default "UTC" | quote }}
+            - name: REPORTS_PATH
+              value: {{ .Values.webscore.reportPath | default "/reports" | squote }}
+            - name: ONDEMAND_JOB_TIMEOUT
+              value: {{ .Values.webscore.onDemandJobTimeout | quote }}
+            - name: SONARQUBE_URL
+              value: {{ .Values.webscore.sonarqubeUrl | quote }}
+            - name: PAGE_USERNAME
+              value: {{ .Values.webscore.pageUsername | quote }}
+            - name: PAGE_PASSWORD
+              value: {{ .Values.webscore.pagePassword | quote }}
+            - name: MAIL_SUBSCRIPTION_FREQUENCY_CRONJOB
+              value: {{ .Values.webscore.mailSubscriptionFrequencyCronjob |quote }}
+            - name: MAIL_SUBSCRIPTION_INFLUX_SYNTAX
+              value: {{ .Values.webscore.mailSubscriptionInfluxSyntax | quote }}
+            - name: MONTHLY_SUBSCRIPTION
+              value: {{ .Values.webscore.monthlySubscription | quote }}
+            - name: FORCED_MAIL_RESEND
+              value: {{ .Values.webscore.forcedMailResend | quote }}
+          volumeMounts:
+            - name: reports
+              mountPath: /reports
+          ports:
+            - containerPort: 3000
+          livenessProbe:
+            tcpSocket:
+              port: 3000
+            initialDelaySeconds: 10
+            periodSeconds: 15
+            timeoutSeconds: 2
+            failureThreshold: 5
+          readinessProbe:
+            tcpSocket:
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 3
+          resources:
+            requests:
+              memory: {{ .Values.garieSentryMetrics.resources.requests.memory }}
+            limits:
+              memory: {{ .Values.garieSentryMetrics.resources.limits.memory }}
+      volumes:
+        - name: reports
+          persistentVolumeClaim:
+            claimName: garie-reports

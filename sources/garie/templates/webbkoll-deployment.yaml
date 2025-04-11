@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webbkoll
+  labels:
+    app: garie
+    role: webbkoll
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: garie
+      role: webbkoll
+  template:
+    metadata:
+      labels:
+        app: garie
+        role: webbkoll
+    spec:
+      containers:
+        - name: webbkoll
+          image: eeacms/webbkoll:1.2
+          env:
+            - name: HOST
+              value: influxdb
+            - name: TZ
+              value: {{ .Values.timezone | default "UTC" | quote }}
+            - name: BACKEND_HOST
+              value: "webbkoll-backend"
+            - name: BACKEND_PORT
+              value: "8100"
+          ports:
+            - containerPort: 4000
+          livenessProbe:
+            tcpSocket:
+              port: 4000
+            initialDelaySeconds: 10
+            periodSeconds: 15
+            timeoutSeconds: 2
+            failureThreshold: 5
+          readinessProbe:
+            tcpSocket:
+              port: 4000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 3
+          resources:
+            requests:
+              memory: {{ .Values.webbkoll.resources.requests.memory }}
+            limits:
+              memory: {{ .Values.webbkoll.resources.limits.memory }}

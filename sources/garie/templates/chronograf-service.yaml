@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+    name: chronograf
+    labels:
+        app: garie
+        role: chronograf
+spec:
+    type: ClusterIP
+    ports:
+      - name: http
+        port: 8888
+        targetPort: 8888
+    selector:
+        app: garie
+        role: chronograf

@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: garie-checkmk
+  labels:
+    app: garie
+    role: garie-checkmk
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: garie
+      role: garie-checkmk
+  template:
+    metadata:
+      labels:
+        app: garie
+        role: garie-checkmk
+    spec:
+      containers:
+        - name: garie-checkmk
+          image: eeacms/garie-checkmk:0.1.5
+          env:
+            - name: HOST
+              value: influxdb
+            - name: CONFIG
+              value: {{ .Values.garieConfig.config | squote }}
+            - name: TZ
+              value: {{ .Values.timezone | default "UTC" | quote }}
+            - name: CMK_SECRETS
+              value: {{ .Values.garieCheckmk.cmkSecrets }}
+            - name: CMK_SERVERS
+              value: {{ .Values.garieCheckmk.sentryAuthoriation }}
+            - name: CMK_SITE_NAMES
+              value: {{ .Values.garieCheckmk.sentryURL }}
+            - name: CMK_USERNAMES
+              value: {{ .Values.garieCheckmk.matomoToken }}
+          volumeMounts:
+            - name: reports
+              mountPath: /usr/src/garie-plugin/reports
+          livenessProbe:
+            tcpSocket:
+              port: 3000
+            initialDelaySeconds: 10
+            periodSeconds: 15
+            timeoutSeconds: 2
+            failureThreshold: 5
+          readinessProbe:
+            tcpSocket:
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 3
+          resources:
+            requests:
+              memory: {{ .Values.garieCheckmk.resources.requests.memory }}
+            limits:
+              memory: {{ .Values.garieCheckmk.resources.limits.memory }}
+      volumes:
+        - name: reports
+          persistentVolumeClaim:
+            claimName: garie-reports

@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: garie-uptimerobot
+    labels:
+        app: garie
+        role: garie-uptimerobot
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: garie
+            role: garie-uptimerobot
+    template:
+        metadata:
+            labels:
+                app: garie
+                role: garie-uptimerobot
+        spec:
+            containers:
+              - name: garie-uptimerobot
+                image: eeacms/garie-uptimerobot:1.2.0
+                env:
+                  - name: HOST
+                    value: influxdb
+                  - name: CONFIG
+                    value: {{ .Values.garieConfig.config | squote }}
+                  - name: TZ
+                    value: {{ .Values.timezone | default "UTC" | quote }}
+                  - name: UPTIME_ROBOT_KEYS
+                    value: {{ .Values.garieUptimeRobot.uptimeRobotKeys | quote  }}
+                  - name: UPTIME_API_URL
+                    value: {{ .Values.garieUptimeRobot.uptimeApiUrl | quote }}
+                  - name: UPTIME_INTERVAL_DAYS
+                    value: {{ .Values.garieUptimeRobot.uptimeIntervalDays | quote }}
+                volumeMounts:
+                  - name: reports
+                    mountPath: /usr/src/garie-plugin/reports
+                livenessProbe:
+                    tcpSocket:
+                        port: 3000
+                    initialDelaySeconds: 10
+                    periodSeconds: 15
+                    timeoutSeconds: 2
+                    failureThreshold: 5
+                readinessProbe:
+                    tcpSocket:
+                        port: 3000
+                    initialDelaySeconds: 5
+                    periodSeconds: 10
+                    timeoutSeconds: 2
+                    failureThreshold: 3
+                resources:
+                    requests:
+                        memory: {{ .Values.garieUptimeRobot.resources.requests.memory }}
+                    limits:
+                        memory: {{ .Values.garieUptimeRobot.resources.limits.memory }}
+            volumes:
+              - name: reports
+                persistentVolumeClaim:
+                    claimName: garie-reports

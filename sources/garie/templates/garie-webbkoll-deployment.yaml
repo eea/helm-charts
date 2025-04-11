@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: garie-webbkoll
+  labels:
+    app: garie
+    role: garie-webbkoll
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: garie
+      role: garie-webbkoll
+  template:
+    metadata:
+      labels:
+        app: garie
+        role: garie-webbkoll
+    spec:
+      containers:
+        - name: garie-webbkoll
+          image: eeacms/garie-webbkoll:2.0.1
+          env:
+            - name: TZ
+              value: {{ .Values.timezone | default "UTC" | quote }}          
+            - name: CONFIG
+              value: {{ .Values.garieConfig.config | squote }}              
+            - name: HOST
+              value: influxdb
+            - name: BACKEND_HOST
+              value: webbkoll-backend
+            - name: BACKEND_PORT
+              value: "8100"
+            - name: WEBBKOLL_HOST
+              value: webbkoll
+            - name: WEBBKOLL_PORT
+              value: "4000"
+          volumeMounts:
+            - name: reports
+              mountPath: /usr/src/garie-plugin/reports
+          ports:
+            - containerPort: 3000
+          livenessProbe:
+            tcpSocket:
+              port: 3000
+            initialDelaySeconds: 10
+            periodSeconds: 15
+            timeoutSeconds: 2
+            failureThreshold: 5
+          readinessProbe:
+            tcpSocket:
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 3
+          resources:
+            requests:
+              memory: {{ .Values.garieWebbkoll.resources.requests.memory }}
+            limits:
+              memory: {{ .Values.garieWebbkoll.resources.limits.memory }}
+      volumes:
+        - name: reports
+          persistentVolumeClaim:
+            claimName: garie-reports

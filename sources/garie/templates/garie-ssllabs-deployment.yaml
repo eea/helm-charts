@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: garie-ssllabs
+    labels:
+        app: garie
+        role: garie-ssllabs
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: garie
+            role: garie-ssllabs
+    template:
+        metadata:
+            labels:
+                app: garie
+                role: garie-ssllabs
+        spec:
+            containers:
+              - name: garie-ssllabs
+                image: eeacms/garie-ssllabs:1.2.0
+                env:
+                  - name: HOST
+                    value: influxdb
+                  - name: CONFIG
+                    value: {{ .Values.garieConfig.config | squote }}
+                  - name: TZ
+                volumeMounts:
+                  - name: reports
+                    mountPath: /usr/src/garie-plugin/reports
+                livenessProbe:
+                    tcpSocket:
+                        port: 3000
+                    initialDelaySeconds: 10
+                    periodSeconds: 15
+                    timeoutSeconds: 2
+                    failureThreshold: 5
+                readinessProbe:
+                    tcpSocket:
+                        port: 3000
+                    initialDelaySeconds: 5
+                    periodSeconds: 10
+                    timeoutSeconds: 2
+                    failureThreshold: 3
+                resources:
+                    requests:
+                        memory: {{ .Values.garieSSLlabs.resources.requests.memory }}
+                    limits:
+                        memory: {{ .Values.garieSSLlabs.resources.limits.memory }}
+            volumes:
+              - name: reports
+                persistentVolumeClaim:
+                    claimName: garie-reports

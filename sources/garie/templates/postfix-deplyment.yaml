@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postfix
+  labels:
+    app: mail
+    role: postfix
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mail
+      role: postfix
+  template:
+    metadata:
+      labels:
+        app: mail
+        role: postfix
+    spec:
+      containers:
+        - name: postfix
+          {{ if eq .Values.postfix.variant "prod" }}
+          image: eeacms/postfix:3.5-1.0
+          {{ else }}
+          image: eaudeweb/mailtrap:2.3
+          {{ end }}
+          env:
+            - name: TZ
+              value: {{ .Values.timezone | default "UTC" }}
+            {{- if eq .Values.postfix.variant "prod" }}
+            - name: MTP_HOST
+              value: {{ .Values.postfix.mtpHost }}
+            - name: MTP_RELAY
+              value: {{ .Values.postfix.relay }}
+            - name: MTP_PORT
+              value: {{ .Values.postfix.port }}
+            - name: MTP_USER
+              value: {{ .Values.postfix.user }}
+            - name: MTP_PASS
+              value: {{ .Values.postfix.pass }}
+            {{- end }}
+            
+          ports:
+            - containerPort: {{ .Values.postfix.portNumber | default 80 }}
+          resources:
+            requests:
+              memory: 128Mi
+            limits:
+              memory: 128Mi
