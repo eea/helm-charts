@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: influxdb-data
+  labels:
+    app: garie
+    role: influxdb
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.influxdb.storage }}
+  storageClassName: {{ .Values.influxdb.storageClassName }}

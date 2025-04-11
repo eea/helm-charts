@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chronograf
+  labels:
+    app: garie
+    role: chronograf
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: garie
+      role: chronograf
+  template:
+    metadata:
+      labels:
+        app: garie
+        role: chronograf
+    spec:
+      containers:
+        - name: chronograf
+          image: chronograf:1.8.10
+          args:
+            - chronograf
+            - --influxdb-url=http://influxdb:8086
+            - --reporting-disabled
+          ports:
+            - containerPort: 8888
+          env:
+            - name: TZ
+              value: {{ .Values.timezone | default "UTC" | quote }}
+          volumeMounts:
+            - name: chronograf-data
+              mountPath: /var/lib/chronograf
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8888
+            initialDelaySeconds: 10
+            periodSeconds: 15
+            timeoutSeconds: 2
+            failureThreshold: 5
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8888
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 3              
+          resources:
+            requests:
+              memory: {{ .Values.chronograf.resources.requests.memory }}
+            limits:
+              memory: {{ .Values.chronograf.resources.limits.memory }}
+      restartPolicy: Always              
+      volumes:
+        - name: chronograf-data
+          persistentVolumeClaim: 
+            claimName: chronograf-data
