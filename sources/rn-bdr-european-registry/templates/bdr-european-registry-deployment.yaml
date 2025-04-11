@@ -122,6 +122,8 @@ spec:
               value: {{ .Values.stocksApiUrl | quote }}
             - name: STOCKS_INCLUDE_TESTDATA
               value: {{ .Values.stocksIncludeTestdata | quote }}
+            - name: PORT
+              value: {{ .Values.service.port | quote }}
           {{- if not .Values.debugTail }}
           livenessProbe:
             {{- toYaml .Values.livenessProbe | nindent 12 }}
