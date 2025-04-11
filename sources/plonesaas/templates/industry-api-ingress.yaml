@@ -7,7 +7,8 @@ metadata:
     {{- include "appl.labels" . | nindent 4 }}
     component: industry-api
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /VirtualHostBase/https/{{ .Values.industry.hostname }}:443/eprtr/++api++/VirtualHostRoot/$1
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      rewrite ^/(\+\+api\+\+)(.*)$ /VirtualHostBase/https/{{ .Values.industry.hostname }}:443/eprtr/$1/VirtualHostRoot$2 break;
     nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/proxy-body-size: 100m
 
@@ -17,7 +18,7 @@ spec:
   - host: {{ .Values.industry.hostname }}
     http:
       paths:
-      - path: /\+\+api\+\+/(.*)
+      - path: /\+\+api\+\+(.*)
         pathType: ImplementationSpecific
         backend:
           service:
