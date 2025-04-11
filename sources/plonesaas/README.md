@@ -20,25 +20,28 @@ This chart deployes the PloneSaaS app together with several frontends as Ingress
 
 ## Releases
 
-<dl>
-  <dt>Version 2.4.5 - 29 August 2024</dt>
-  <dd>Updated industry deployment image from eeacms/industry-frontend:3.25.0 to eeacms/industry-frontend:3.29.0</dd>
-  <dd>Added `nginx.ingress.kubernetes.io/proxy-body-size: 100m` to `climate-energy-api-ingress.yaml` and `industry-api.ingress.yaml`, refs #279315</dd>
+### Version 2.4.6 - 11 April 2025
+- Fix industry rewrite on api ingress [valentinab25 - [`b3c2605`](https://github.com/eea/helm-charts/commit/b3c2605fb1aca5e91d8ab58ca83ac2549963830b)]
 
-  <dt>Version 2.4.4 - 29 August 2024</dt>
-  <dd>Added "forests" redirection. Activated with forest.enabled.</dd>
 
-  <dt>Version 2.4.3 - 29 August 2024</dt>
-  <dd>Added the forest frontend. Made it possible to deactivate the debug instance. Both disabled by default.</dd>
+### Version 2.4.5 - 29 August 2024
+- Updated industry deployment image from eeacms/industry-frontend:3.25.0 to eeacms/industry-frontend:3.29.0
+- Added `nginx.ingress.kubernetes.io/proxy-body-size: 100m` to `climate-energy-api-ingress.yaml` and `industry-api.ingress.yaml`, refs #279315
 
-  <dt>Version 2.4.2 - 16 August 2024</dt>
+### Version 2.4.4 - 29 August 2024
+- Added "forests" redirection. Activated with forest.enabled.
+
+### Version 2.4.3 - 29 August 2024
+- Added the forest frontend. Made it possible to deactivate the debug instance. Both disabled by default.
+
+### Version 2.4.2 - 16 August 2024
   <dd>Implement autoscaling for plone pods.
   Increase the timeout for plone startup to 900 seconds.
   Remove the default `nginx.ingress.kubernetes.io/proxy-body-size: 100m` from Ingress annotations.</dd>
 
-  <dt>Version 2.4.1 - 15 August 2024</dt>
-  <dd>Fix issue with /++api++/ path. The pluses were parsed with regex.</dd>
+### Version 2.4.1 - 15 August 2024
+- Fix issue with /++api++/ path. The pluses were parsed with regex.
 
-  <dt>Version 2.4.0</dt>
-  <dd>Initial release. Version matching Rancher 1 catalog version.</dd>
-</dl> 
+### Version 2.4.0
+- Initial release. Version matching Rancher 1 catalog version.
+
