@@ -1,53 +1,69 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: cachet
+  name: {{ .Release.Name }}-dpl-cachet
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: cachet
 spec:
-  replicas: 1
+  replicas: {{ .Values.cachet.replicaCount | default 1 }}
   selector:
     matchLabels:
-      app: cachet
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: cachet
   template:
     metadata:
       labels:
-        app: cachet
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: cachet
     spec:
       containers:
-        - name: cachet
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        - name: cachet-ui
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy | default "IfNotPresent" }}
+          ports:
+            - name: http
+              containerPort: 8000
           env:
-            # Shared/common envs
-            {{- range $key, $val := .Values.envCommon }}
+            {{- range $key, $val := .Values.cachet.env }}
             - name: {{ $key }}
               value: {{ $val | quote }}
             {{- end }}
 
-            # EEA-specific envs
-            {{- range $key, $val := .Values.eea.env }}
-            - name: {{ $key }}
-              value: {{ $val | quote }}
-            {{- end }}
+          {{- if .Values.cachet.livenessProbe }}
+          livenessProbe:
+            {{- toYaml .Values.cachet.livenessProbe | nindent 12 }}
+          {{- end }}
 
-            # CLMS envs (only if enabled)
-            {{- if .Values.clms.enabled }}
-            {{- range $key, $val := .Values.clms.env }}
-            - name: CLMS_{{ $key }}
-              value: {{ $val | quote }}
-            {{- end }}
-            {{- end }}
+          {{- if .Values.cachet.startupProbe }}
+          startupProbe:
+            {{- toYaml .Values.cachet.startupProbe | nindent 12 }}
+          {{- end }}
 
           resources:
-{{ toYaml .Values.cachet.resources | indent 12 }}
-
+            {{- toYaml .Values.cachet.resources | nindent 12 }}
           volumeMounts:
             - name: cachet-storage
               mountPath: /var/www/html/storage
+
+        {{- if .Values.monitor.enabled }}
+        - name: cachet-monitor
+          image: "{{ .Values.monitor.image.repository }}:{{ .Values.monitor.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy | default "IfNotPresent" }}
+          env:
+            {{- range $k, $v := .Values.monitor.env }}
+            - name: {{ $k }}
+              value: {{ $v | quote }}
+            {{- end }}
+          resources:
+            {{- toYaml .Values.monitor.resources | nindent 12 }}
+        {{- end }}
 
       volumes:
         - name: cachet-storage
           {{- if .Values.persistence.enabled }}
           persistentVolumeClaim:
-            claimName: {{ .Values.persistence.existingClaim | default (printf "%s-cachet" .Release.Name) }}
+            claimName: {{ .Release.Name }}-cachet
           {{- else }}
           emptyDir: {}
           {{- end }}
