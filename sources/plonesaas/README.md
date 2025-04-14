@@ -20,6 +20,9 @@ This chart deployes the PloneSaaS app together with several frontends as Ingress
 
 ## Releases
 
+### Version 2.4.7 - 14 April 2025
+- Fixed redirect on circularity [valentinab25 - [`89378da`](https://github.com/eea/helm-charts/commit/89378da922adbea1e5dbaa729bb729510308274f)]
+
 ### Version 2.4.6 - 11 April 2025
 - Fix industry rewrite on api ingress [valentinab25 - [`b3c2605`](https://github.com/eea/helm-charts/commit/b3c2605fb1aca5e91d8ab58ca83ac2549963830b)]
 
