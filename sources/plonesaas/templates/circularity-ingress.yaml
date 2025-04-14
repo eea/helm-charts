@@ -8,7 +8,8 @@ metadata:
     component: circularity
 
   annotations:
-    nginx.ingress.kubernetes.io/permanent-redirect: https://www.eea.europa.eu/en/circularity/$1
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      rewrite ^/(.*)$ https://www.eea.europa.eu/en/circularity/$1 permanent;
     nginx.ingress.kubernetes.io/use-regex: "true"
     {{- with .Values.circularity.annotations }}
     {{- toYaml . | nindent 4 }}
