@@ -1,42 +1,33 @@
-{{- if .Values.ingress.enabled }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: cachet
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: cachet
+  {{- with .Values.ingress.annotations }}
   annotations:
-    {{- range $key, $val := .Values.ingress.eea.annotations }}
-    {{ $key }}: {{ $val | quote }}
-    {{- end }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+
 spec:
-  ingressClassName: {{ .Values.ingress.className }}
-  tls:
-    - hosts:
-        - {{ .Values.ingress.eea.host }}
-        {{- if .Values.ingress.clms.enabled }}
-        - {{ .Values.ingress.clms.host }}
-        {{- end }}
-      secretName: {{ .Values.ingress.eea.certificate }}
+  ingressClassName: nginx
   rules:
-    - host: {{ .Values.ingress.eea.host }}
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: cachet
-                port:
-                  number: 80
-    {{- if .Values.ingress.clms.enabled }}
-    - host: {{ .Values.ingress.clms.host }}
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: cachet
-                port:
-                  number: 80
-    {{- end }}
-{{- end }}
+  - host: {{ .Values.cachet.host }}
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ .Values.cachet.serviceName }}
+            port:
+              number: {{ .Values.service.port }}
+  {{- if .Values.ingress.tls }}
+  tls:
+  - hosts:
+    - {{ .Values.cachet.host }}
+    {{- if .Values.ingress.certificate }}
+    secretName: {{ .Values.ingress.certificate }}
+    {{- end  }}
+  {{- end  }}

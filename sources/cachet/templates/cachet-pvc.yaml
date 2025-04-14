@@ -3,11 +3,11 @@ kind: PersistentVolumeClaim
 metadata:
   name: {{ .Release.Name }}-cachet
   labels:
-    app: cachet
+    {{- include "appl.labels" . | nindent 4 }}
 spec:
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 2Gi
-  storageClassName: {{ .Values.persistence.storageClass | default nil }}
+      storage: 10Gi
+

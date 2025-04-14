@@ -1,21 +1,25 @@
-{{- if .Values.monitor.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: cachet-monitor
+  name: {{ .Release.Name }}-dpl-monitor
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: cachet-monitor
 spec:
-  replicas: 1
+  replicas: {{ .Values.monitor.replicaCount | default 1 }}
   selector:
     matchLabels:
-      app: cachet-monitor
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: cachet-monitor
   template:
     metadata:
       labels:
-        app: cachet-monitor
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: cachet-monitor
     spec:
       containers:
         - name: cachet-monitor
-          image: {{ .Values.monitor.image }}
+          image: "{{ .Values.monitor.image.repository }}:{{ .Values.monitor.image.tag | default .Chart.AppVersion }}"
           env:
             - name: CONFIG
               value: {{ .Values.monitor.config | quote }}
@@ -28,8 +32,7 @@ spec:
             {{- end }}
             {{- end }}
           resources:
-            limits:
-              memory: 512Mi
             requests:
-              memory: 256Mi
-{{- end }}
+              memory: {{ .Values.monitor.resources.requests.memory }}
+            limits:
+              memory: {{ .Values.monitor.resources.limits.memory }}
