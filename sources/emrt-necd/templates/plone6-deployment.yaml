@@ -1,10 +1,10 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: plone
+  name: plone6
   labels:
     {{- include "appl.labels" . | nindent 4 }}
-    component: plone
+    component: plone6
 
 spec:
   {{- if not .Values.autoscaling.enabled }}
@@ -13,12 +13,12 @@ spec:
   selector:
     matchLabels:
       {{- include "appl.selectorLabels" . | nindent 6 }}
-      component: plone
+      component: plone6
   template:
     metadata:
       labels:
         {{- include "appl.selectorLabels" . | nindent 8 }}
-        component: plone
+        component: plone6
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -27,15 +27,15 @@ spec:
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
 
       containers:
-      - name: plone
-        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+      - name: plone6
+        image: "plone/plone-backend:6.1"
         env:
         - name: TZ
           value: {{ .Values.timezone }}
         - name: WARMUP_HEALTH_THRESHOLD
           value: "10"
         - name: ZEO_ADDRESS
-          value: zeoserver:8100
+          value: zeo6:8100
         - name: EDW_LOGGER_PUBLISHER
           value: '{{ .Values.edwLoggerPublisher }}'
         - name: EDW_LOGGER_USER_ID
@@ -51,46 +51,43 @@ spec:
         - name: TABLEAU_TOKEN_SNAPSHOT
           value: '{{ .Values.tableauTokenSnapshot }}'
         - name: COLLECTIVE_EXPORTIMPORT_CENTRAL_DIRECTORY
-          value: "/data/exportimport"
+          value: "/plone4data"
+        - name: DEVELOP
+          value: {{ .Values.plone6develop }}
 
         ports:
         - containerPort: 8080
-          name: plone8080
+          name: plone68080
 
         # Wait for up to 600 seconds
         startupProbe:
           httpGet:
-            path: {{ .Values.plone.probePath }}
-            port: plone8080
+            path: {{ .Values.plone6.probePath }}
+            port: plone68080
           failureThreshold: 60
           periodSeconds: 10
-          timeoutSeconds: {{ .Values.plone.probeTimeoutSeconds }}
+          timeoutSeconds: {{ .Values.plone6.probeTimeoutSeconds }}
 
         livenessProbe:
           httpGet:
-            path: {{ .Values.plone.probePath }}
-            port: plone8080
+            path: {{ .Values.plone6.probePath }}
+            port: plone68080
           periodSeconds: 15
-          timeoutSeconds: {{ .Values.plone.probeTimeoutSeconds }}
+          timeoutSeconds: {{ .Values.plone6.probeTimeoutSeconds }}
 
         resources:
-          {{- toYaml .Values.plone.resources | nindent 10 }}
+          {{- toYaml .Values.plone6.resources | nindent 10 }}
 
         volumeMounts:
-        - mountPath: /data/downloads
-          name: emrt-necd-downloads
-        - mountPath: /data/exportimport
+        - mountPath: /plone4data
           name: emrt-necd-exportimport
 
         securityContext:
-          {{- toYaml .Values.plone.securityContext | nindent 10 }}
+          {{- toYaml .Values.plone6.securityContext | nindent 10 }}
 
       restartPolicy: Always
 
       volumes:
-      - name: emrt-necd-downloads
-        persistentVolumeClaim:
-          claimName: emrt-necd-downloads
       - name: emrt-necd-exportimport
         persistentVolumeClaim:
           claimName: emrt-necd-exportimport

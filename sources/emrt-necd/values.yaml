@@ -89,8 +89,23 @@ plone:
   resources:
     requests:
       memory: 1536Mi
+    limits:
+      memory: 4Gi
   probePath: /Plone/2023/
   probeTimeoutSeconds: 3
+
+plone6:
+  securityContext: {}
+  resources:
+    requests:
+      memory: 1536Mi
+    limits:
+      memory: 4Gi
+  probePath: /
+  probeTimeoutSeconds: 3
+
+
+plone6develop: "git+https://github.com/eea/emrt.necd.content.git@p6-dataimport#egg=emrt.necd.content git+https://github.com/BHUVAN-RJ/collective.deletepermission@python3#egg=collective.deletepermission git+https://github.com/eea/emrt.necd.theme.git@python3#egg=emrt.necd.theme git+https://github.com/david-batranu/plone.formwidget.multifile.git#egg=plone.formwidget.multifile"
 
 varnish:
   securityContext: {}
@@ -118,6 +133,13 @@ cron:
     - https://emrt-necd.eionet.europa.eu/2024/tableau-snapshot.json?tableau_token=Sohcuk5wohjuoPheedeifeMooghahqu3
     - -O
     - /dev/stdout
+
+zeo6:
+  storage: 30Gi
+  resources:
+    requests:
+      memory: 1Gi
+
 
 zeoserver:
   fullnameOverride: "zeoserver"
