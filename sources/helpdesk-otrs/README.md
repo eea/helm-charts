@@ -26,47 +26,20 @@ expects to find a certificate secret matching the name at `haproxy.extraVolumes.
 
 ## Releases
 
-<dl>
-
-  <dt>Version 0.5.4 - 03-MAR-2025</dt>
-  <dd>Increased startup probe to 600 seconds.</dd>
-
-  <dt>Version 0.5.3 - 12-DEC-2024</dt>
-  <dd>Add Perl library LibXSLT to OTRS image.</dd>
-
-  <dt>Version 0.5.2 - 28-AUG-2024</dt>
-  <dd>Upgrade to HAproxy 3.0.3 via subchart.</dd>
-
-  <dt>Version 0.5.1 - 11-JUN-2024</dt>
-  <dd>Delete X-Forwarded-Port as it resolves to 8443.</dd>
-
-  <dt>Version 0.5.0 - 11-JUN-2024</dt>
-  <dd>Add X-Forwarded-Proto and X-Forwarded-Port to haproxy configuration.</dd>
-  <dd>Upgrade haproxy subchart to version 2.0.2.</dd>
-
-  <dt>Version 0.4.0 - 10-MAR-2024</dt>
-  <dd>Upgrade of postfix subchart, which adds the dryrun switch.</dd>
-
-  <dt>Version 0.3.1</dt>
-  <dd>Typo in target ports.</dd>
-
-  <dt>Version 0.3.0</dt>
-  <dd>Integrated HAProxy as subchart.</dd>
-
-  <dt>Version 0.2.1</dt>
-  <dd>Liveness probe on frontend.</dd>
-
-  <dt>Version 0.2.0</dt>
-  <dd>Sendmail requires a FQDN for hostname. In Kubernetes this requires a subdomain.</dd>
-
-  <dt>Version 0.1.2</dt>
-  <dd>Backend doesn't listen on port 80.</dd>
-
-  <dt>Version 0.1.1</dt>
-  <dd>Frontend is not a master</dd>
-
-  <dt>Version 0.1.0</dt>
-  <dd>Initial version.</dd>
-
-</dl>
+| Version | Notes |
+| ------- | ----- |
+| 0.5.5 - 14-APR-2025 | Increased patch version number on MariaDB. |
+| 0.5.4 - 03-MAR-2025 | Increased startup probe to 600 seconds. |
+| 0.5.3 - 12-DEC-2024 | Add Perl library LibXSLT to OTRS image. |
+| 0.5.2 - 28-AUG-2024 | Upgrade to HAproxy 3.0.3 via subchart. | 
+| 0.5.1 - 11-JUN-2024 | Delete X-Forwarded-Port as it resolves to 8443. | 
+| 0.5.0 - 11-JUN-2024 | Add X-Forwarded-Proto and X-Forwarded-Port to haproxy configuration. Upgrade haproxy subchart to version 2.0.2. |
+| 0.4.0 - 10-MAR-2024 | Upgrade of postfix subchart, which adds the dryrun switch. |
+| 0.3.1 | Typo in target ports. | 
+| 0.3.0 | Integrated HAProxy as subchart. | 
+| 0.2.1 | Liveness probe on frontend. | 
+| 0.2.0 | Sendmail requires a FQDN for hostname. In Kubernetes this requires a subdomain. | 
+| 0.1.2 | Backend doesn't listen on port 80. | 
+| 0.1.1 | Frontend is not a master | 
+| 0.1.0 | Initial version. | 
 
