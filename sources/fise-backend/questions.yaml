@@ -73,6 +73,14 @@
     required: true
     group: "General"
 
+  - variable: "debug.enabled"
+    label: "Debug"
+    description: "Add backend debugging"
+    default: false
+    type: "boolean"
+    required: true
+    group: "General"
+
   - variable: "debug.serviceType"
     label: "Expose debug"
     description: "Select NodePort to expose debug"
@@ -162,17 +170,6 @@
     - "Yes"
     - "No"
     group: "Plone configuration"
-
-
-  - variable: "debug.enabled"
-    label: "Debug"
-    description: "Add backend debugging"
-    default: false
-    type: "boolean"
-    required: true
-    group: "General"
-
-
 
 
   - variable: "varnish.port"
