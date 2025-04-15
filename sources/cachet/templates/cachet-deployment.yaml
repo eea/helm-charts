@@ -29,6 +29,8 @@ spec:
             - name: {{ $key }}
               value: {{ $val | quote }}
             {{- end }}
+            - name: DB_PASSWORD
+              value: {{ .Values.postgres.env.dbPassword | quote }}
 
           {{- if .Values.cachet.livenessProbe }}
           livenessProbe:
