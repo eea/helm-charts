@@ -111,7 +111,7 @@ service:
 cachet:
   serviceType: ClusterIP
   serviceName: cachet-svc
-  host: status-dev.eea.europa.eu  
+  host: status.01dev.eea.europa.eu  
   resources:
     requests:
       memory: 2Gi
@@ -184,5 +184,5 @@ monitor:
       memory: 2Gi
 
   env:
-    CACHE_URL: "https://status-dev.eea.europa.eu"
+    CACHE_URL: "https://status.01dev.eea.europa.eu"
     CACHET_MONITOR_TOKEN: "your-token"
