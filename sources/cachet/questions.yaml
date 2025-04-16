@@ -9,7 +9,7 @@ questions:
     label: "EEA Cachet Public URL"
     type: string
     required: true
-    default: "status-dev.eea.europa.eu"
+    default: "status.01dev.eea.europa.eu"
     description: "Public URL of the EEA Cachet instance"
 
   - variable: eea.env.APP_KEY
@@ -37,15 +37,8 @@ questions:
     label: "CLMS Cachet Public URL"
     type: string
     required: false
-    default: "clms-status-dev.eea.europa.eu"
+    default: "clms-status.01dev.eea.europa.eu"
     description: "Public URL of the CLMS Cachet instance"
-
-  - variable: clms.env.APP_KEY
-    label: "CLMS App Key"
-    type: string
-    required: false
-    default: "base64:CLMSKEY=="
-    description: "App encryption key for CLMS instance"
 
   - variable: clms.env.DB_PREFIX
     label: "CLMS DB Table Prefix"
