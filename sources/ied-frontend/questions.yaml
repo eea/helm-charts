@@ -50,6 +50,26 @@ questions:
     required: true
     group: "General"
 
+  - variable: "debug.enabled"
+    label: "Debug"
+    description: "Add frontend debugging"
+    default: false
+    type: "boolean"
+    required: true
+    group: "General"
+
+  - variable: "debug.serviceType"
+    label: "Expose debug"
+    description: "Select NodePort to expose debug"
+    type: "enum"
+    options:
+      - "NodePort"
+      - "ClusterIP"
+    default: "ClusterIP"
+    required: true
+    group: "General"
+    show_if: "debug.enabled=true"
+
   - variable: "volto.environment.RAZZLE_INTERNAL_API_PATH"
     label: "RAZZLE_INTERNAL_API_PATH"
     description: "Location of Plone site accessible from container"

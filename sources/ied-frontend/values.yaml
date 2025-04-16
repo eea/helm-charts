@@ -108,7 +108,24 @@ volto:
     initialDelaySeconds: 60
     failureThreshold: 4
     successThreshold: 2
-  
+
+debug:
+  addonsPath: /app/src/addons
+  affinity: {}
+  enabled: false
+  environment: {}
+  nodeSelector: {}
+  podAnnotations: {}
+  podSecurityContext: {}
+  resources:
+    limits:
+      memory: 3Gi
+    requests:
+      memory: 3Gi
+  securityContext: {}
+  serviceType: NodePort
+  tolerations: []
+
 varnish:
   serviceType: NodePort
   serviceName: frontend-varnish
