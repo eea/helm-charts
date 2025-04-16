@@ -1,6 +1,7 @@
 {{- if .Values.ingress6.enabled -}}
-{{- $fullName := include "appl.fullname" . -}}
-{{- $svcPort := .Values.service.port -}}
+{{- $fullName := .Values.ingress6.name . -}}
+{{- $svcName := .Values.ingress6.serviceName -}}
+{{- $svcPort := .Values.ingress6.servicePort -}}
 {{- if and .Values.ingress6.className (not (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion)) }}
   {{- if not (hasKey .Values.ingress6.annotations "kubernetes.io/ingress.class") }}
   {{- $_ := set .Values.ingress6.annotations "kubernetes.io/ingress.class" .Values.ingress6.className}}
@@ -49,11 +50,11 @@ spec:
             backend:
               {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
               service:
-                name: {{ $fullName }}
+                name: {{ $svcName }}
                 port:
                   number: {{ $svcPort }}
               {{- else }}
-              serviceName: {{ $fullName }}
+              serviceName: {{ $svcName }}
               servicePort: {{ $svcPort }}
               {{- end }}
           {{- end }}
