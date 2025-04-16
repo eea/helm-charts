@@ -68,6 +68,9 @@ ingress:
         - emrt-necd.eionet.europa.eu
 
 ingress6:
+  name: emrt-necd-p6
+  serviceName: plone6
+  servicePort: 8080
   enabled: false
   className: "nginx"
   annotations:
