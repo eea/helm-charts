@@ -22,8 +22,9 @@ spec:
           image: "{{ .Values.monitor.image.repository }}:{{ .Values.monitor.image.tag | default .Chart.AppVersion }}"
           env:
             - name: CONFIG
-              value: {{ .Values.monitor.config | quote }}
-            - name: TOKEN
+              value: |
+                {{ .Values.monitor.config | nindent 16 }}
+            - name: CACHET_MONITOR_TOKEN
               value: {{ .Values.monitor.token | quote }}
             {{- if .Values.monitor.env }}
             {{- range $key, $val := .Values.monitor.env }}

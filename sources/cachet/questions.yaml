@@ -77,3 +77,30 @@ questions:
     default: "Europe/Copenhagen"
     required: true
     description: "Timezone for Cachet"
+
+  - variable: monitor.config
+    label: "Monitor Checks Configuration"
+    type: multiline
+    required: false
+    default: |
+      checks:
+        - name: "Cachet Web"
+          type: http
+          url: https://status-dev.eea.europa.eu
+          component_id: 1
+          interval: 60
+        - name: "PostgreSQL"
+          type: tcp
+          host: postgres
+          port: 5432
+          component_id: 2
+          interval: 60
+    description: "YAML-formatted monitor checks config passed to the monitor via CONFIG env var"
+
+  - variable: monitor.token
+    label: "Cachet Monitor Token"
+    type: string
+    required: true
+    default: ""
+    description: "Token used by the Cachet Monitor for authentication (CACHET_MONITOR_TOKEN)"
+
