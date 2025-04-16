@@ -70,6 +70,19 @@ spec:
         securityContext:
           {{- toYaml .Values.backend.securityContext | nindent 10 }}
 
+        {{- if (.Values.backend.startupProbe) }}
+        startupProbe:
+          {{- toYaml .Values.backend.startupProbe | nindent 10 }}
+        {{- end }}
+        {{- if (.Values.backend.livenessProbe) }}
+        livenessProbe:
+          {{- toYaml .Values.backend.livenessProbe | nindent 10 }}
+        {{- end }}
+        {{- if (.Values.backend.readinessProbe) }}
+        readinessProbe:
+          {{- toYaml .Values.backend.readinessProbe | nindent 10 }}
+        {{- end }}
+
         volumeMounts:
         - mountPath: /backups
           name: helpdesk-eionet-backups
