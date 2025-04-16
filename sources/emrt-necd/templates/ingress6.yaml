@@ -1,5 +1,5 @@
 {{- if .Values.ingress6.enabled -}}
-{{- $fullName := .Values.ingress6.name . -}}
+{{- $fullName := .Values.ingress6.name -}}
 {{- $svcName := .Values.ingress6.serviceName -}}
 {{- $svcPort := .Values.ingress6.servicePort -}}
 {{- if and .Values.ingress6.className (not (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion)) }}
