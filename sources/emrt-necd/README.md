@@ -4,6 +4,9 @@ The EMRT (EEA Emission Review Tool) is a web-based tool hosted by the EEA to fac
 
 ## Releases
 
+### Version 2.0.1 - 16/04-2025
+- Add ingress for Plone 6.
+
 ### Version 2.0.0 - 14/04-2025
 - Upgrade to plone-2.6.3. Prepare for migration.
 - Add Plone 6 deployments: zeo6 (+ storage) and plone6.
