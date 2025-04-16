@@ -67,6 +67,22 @@ ingress:
     - hosts:
         - emrt-necd.eionet.europa.eu
 
+ingress6:
+  enabled: false
+  className: "nginx"
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-max-temp-file-size: '1024m'
+    nginx.ingress.kubernetes.io/rewrite-target: /VirtualHostBase/https/emrt-necd-p6.eionet.europa.eu:443/Plone/VirtualHostRoot/$1
+    nginx.ingress.kubernetes.io/use-regex: 'true'
+  hosts:
+    - host: emrt-necd-p6.eionet.europa.eu
+      paths:
+        - path: /(.*)
+          pathType: ImplementationSpecific
+  tls:
+    - hosts:
+        - emrt-necd-p6.eionet.europa.eu
+
 memcached:
   fullnameOverride: "memcached"
   resources:
@@ -105,7 +121,7 @@ plone6:
   probeTimeoutSeconds: 3
 
 
-plone6develop: "git+https://github.com/eea/emrt.necd.content.git@p6-dataimport#egg=emrt.necd.content git+https://github.com/BHUVAN-RJ/collective.deletepermission@python3#egg=collective.deletepermission git+https://github.com/eea/emrt.necd.theme.git@python3#egg=emrt.necd.theme git+https://github.com/david-batranu/plone.formwidget.multifile.git#egg=plone.formwidget.multifile"
+plone6develop: "git+https://github.com/eea/emrt.necd.content.git@python3#egg=emrt.necd.content git+https://github.com/BHUVAN-RJ/collective.deletepermission@python3#egg=collective.deletepermission git+https://github.com/eea/emrt.necd.theme.git@python3#egg=emrt.necd.theme git+https://github.com/david-batranu/plone.formwidget.multifile.git#egg=plone.formwidget.multifile"
 
 varnish:
   securityContext: {}
