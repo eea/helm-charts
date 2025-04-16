@@ -9,7 +9,7 @@ spec:
   type: {{ .Values.cachet.serviceType }}
   ports:
     - name: http
-      port: {{ .Values.service.port }}
+      port: 80
       targetPort: 8000
   selector:
     {{- include "appl.selectorLabels" . | nindent 4 }}
