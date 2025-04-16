@@ -28,6 +28,7 @@ expects to find a certificate secret matching the name at `haproxy.extraVolumes.
 
 | Version | Notes |
 | ------- | ----- |
+| 0.6.0 - 16-APR-2025 | Make the probes configurable with sane defaults. |
 | 0.5.5 - 14-APR-2025 | Increased patch version number on MariaDB. |
 | 0.5.4 - 03-MAR-2025 | Increased startup probe to 600 seconds. |
 | 0.5.3 - 12-DEC-2024 | Add Perl library LibXSLT to OTRS image. |

@@ -49,6 +49,22 @@ frontend:
   nodeSelector: {}
   tolerations: []
   affinity: {}
+  startupProbe:
+    tcpSocket:
+      port: 80
+    failureThreshold: 30
+    periodSeconds: 20
+    timeoutSeconds: 3
+
+  livenessProbe:
+    tcpSocket:
+      port: 80
+    initialDelaySeconds: 15
+    periodSeconds: 20
+    timeoutSeconds: 3
+
+  readinessProbe: {}
+
 
 backend:
   resources:
@@ -59,6 +75,10 @@ backend:
   nodeSelector: {}
   tolerations: []
   affinity: {}
+
+  startupProbe: {}
+  livenessProbe: {}
+  readinessProbe: {}
 
 database:
   securityContext: {}

@@ -11,7 +11,7 @@ keywords:
 # This is the chart version. This version number should be incremented each time you make changes
 # to the chart and its templates, including the app version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 0.5.5
+version: 0.6.0
 
 # Version for the main container
 appVersion: "v6.0.43-openid-06"
@@ -19,7 +19,7 @@ appVersion: "v6.0.43-openid-06"
 # Remember to do: helm dep up
 dependencies:
   - name: postfix
-    version: 1.1.0
+    version: 3.0.6
     repository: https://eea.github.io/helm-charts
 # - name: mariadb
 #   version: 13.1.3
