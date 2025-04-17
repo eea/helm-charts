@@ -1,0 +1,363 @@
+  questions:
+
+  - variable: "plone.hostname"
+    label: "Server name"
+    description: "DNS name for this deployment"
+    default: "demo.eea.europa.eu"
+    type: "string"
+    required: true
+    group: "General"
+
+  - variable: "plone.site"
+    label: "Site name"
+    default: "advisory"
+    type: "string"
+    required: true
+    group: "General"
+
+  - variable: "plone.googleUrl"
+    label: "Plone google website owner url"
+    description: "Leave empty for no google url"
+    default: "google85dc6cec8f1329e5.html"
+    type: "string"
+    group: "General"
+
+
+  - variable: "ingress.tls"
+    label: "Enable https"
+    default: true
+    type: "boolean"
+    required: true
+    group: "General"
+
+
+  - variable: "ingress.certificate"
+    label: "Certificate name"
+    description: "Use a new name for letsencrypt certificates, for existing certificate write the correct name for the domain, leave blank for kube default"
+    default: "demo.europa.eu-tls"
+    type: "string"
+    group: "General"
+
+  - variable: "links.memcached"
+    label: "Memcached service"
+    description: "Memcached service for python caching, SERVICE.NAMESPACE"
+    type: "string"
+    required: true
+    group: "General"
+
+  - variable: "links.database"
+    label: "PostgreSQL"
+    description: "PostgreSQL DB backend, SERVICE.NAMESPACE"
+    type: "string"
+    required: true
+    group: "General"
+
+  - variable: "varnish.serviceType"
+    label: "Expose varnish"
+    description: "Select NodePort to expose varnish"
+    type: "enum"
+    options:
+      - "NodePort"
+      - "ClusterIP"
+    default: "ClusterIP"
+    required: true
+    group: "General"
+
+  - variable: "plone.serviceType"
+    label: "Expose plone"
+    description: "Select NodePort to expose plone"
+    type: "enum"
+    options:
+      - "NodePort"
+      - "ClusterIP"
+    default: "ClusterIP"
+    required: true
+    group: "General"
+
+  - variable: "debug.serviceType"
+    label: "Expose debug"
+    description: "Select NodePort to expose debug"
+    type: "enum"
+    options:
+      - "NodePort"
+      - "ClusterIP"
+    default: "ClusterIP"
+    required: true
+    group: "General"
+    show_if: "debug.enabled=true"
+      
+
+  - variable: "plone.database.POSTGRES_DB"
+    label: "PostgreSQL database name"
+    type: "string"
+    default: "www"
+    required: true
+    group: "Plone configuration"
+
+  - variable: "plone.database.POSTGRES_USER"
+    label: "PostgreSQL user name"
+    type: "string"
+    default: "zope"
+    required: true
+    group: "Plone configuration"
+
+  - variable: "plone.database.POSTGRES_PASSWORD"
+    label: "PostgreSQL password"
+    type: "string"
+    default: "zope"
+    required: true
+    group: "Plone configuration"
+
+  - variable: "plone.environment.DEFAULT_PUBLISHER"
+    label: "Publisher value"
+    description: "Comma separated list of the default value for the 'Publisher' field."
+    type: "string"
+    required: false
+    default: ""
+    group: "Plone configuration"
+  - variable: "plone.environment.DEFAULT_ORGANISATIONS"
+    label: "Organisations value"
+    description: "Comma separated list of the default value for the 'Other organisations involved' field."
+    type: "string"
+    required: false
+    default: ""
+    group: "Plone configuration"
+  - variable: "plone.environment.SENTRY_DSN"
+    label: "Sentry DSN"
+    description: "Sentry client key. If set, Sentry error reporting and User feedback will be enabled."
+    type: "string"
+    required: false
+    default: ""
+    group: "Plone configuration"
+  - variable: "plone.environment.SENTRY_ENVIRONMENT"
+    label: "Sentry Environment"
+    description: "Sentry log field, set to rancher cluster"
+    type: "string"
+    required: true
+    default: "01dev"
+    group: "Plone configuration"
+  - variable: "plone.environment.CORS_ALLOW_ORIGIN"
+    label: "CORS ALLOW ORIGIN"
+    type: "string"
+    required: false
+    default: ""
+    group: "Plone configuration"
+
+  - variable: "plone.environment.STATIC_BANNER_ENABLED"
+    label: "Enable Volto Banner"
+    description: "A customizable banner to highlight to the user that the website is in demo, dev or staging state. Select 'No' for Production"
+    type: "enum"
+    default: "Yes"
+    required: true
+    options:
+    - "Yes"
+    - "No"
+    group: "Plone configuration"
+  - variable: "plone.environment.DYNAMIC_BANNER_ENABLED"
+    label: "Enable Dynamic Volto Banner"
+    description: "A customizable banner to highlight to the user that the website is in demo, dev or staging state. Select 'No' for Production"
+    type: "enum"
+    default: "Yes"
+    required: true
+    options:
+    - "Yes"
+    - "No"
+    group: "Plone configuration"
+
+
+  - variable: "debug.enabled"
+    label: "Debug"
+    description: "Add backend debugging"
+    default: false
+    type: "boolean"
+    required: true
+    group: "General"
+
+
+
+
+  - variable: "varnish.port"
+    label: "Varnish backend/exposed port"
+    description: "To simplify, we use the same port as the web application"
+    type: "int"
+    required: true
+    default: 8080
+    group: "Varnish configuration"
+
+  - variable: "varnish.environment.VARNISH_SIZE"
+    label: "Varnish cache size, less then memory limit"
+    type: "string"
+    default: "2G"
+    group: "Varnish configuration"
+
+  - variable: "varnish.environment.VARNISH_BERESP_TTL"
+    label: "Varnish object TTL (fresh)"
+    description: "https://docs.varnish-software.com/tutorials/object-lifetime/"
+    type: "string"
+    default: "60s"
+    group: "Varnish configuration"
+      
+  - variable: "varnish.environment.VARNISH_BERESP_GRACE"
+    label: "Varnish object grace (stale)"
+    description: "https://docs.varnish-software.com/tutorials/object-lifetime/"
+    type: "string"
+    default: "120s"
+    group: "Varnish configuration"
+
+  - variable: "varnish.environment.VARNISH_BERESP_KEEP"
+    label: "Varnish object KEEP (used in conditional requests)"
+    description: "https://docs.varnish-software.com/tutorials/object-lifetime/"
+    type: "string"
+    default: "120s"
+    group: "Varnish configuration"
+  - variable: "varnish.environment.VARNISH_GZIP_ENABLED"
+    label: "Enable gzip on text & js content types"
+    type: "enum"
+    default: "false"
+    required: true
+    options:
+    - "false"
+    - "true"
+    group: "Varnish configuration"
+      
+  - variable: "varnish.environment.VARNISH_GZIP_JSON_ENABLED"
+    label: "Enable gzip on json content types"
+    type: "enum"
+    default: "false"
+    required: true
+    options:
+    - "false"
+    - "true"
+    group: "Varnish configuration"
+  - variable: "varnish.environment.AUTOKILL_CRON"
+    label: "Varnish re-create crontab"
+    description: "If empty, will not force a recreation of the container. Uses UTC time, format is linux crontab - for example -  `0 2 * * *` is 02:00 UTC each day"
+    type: "string"
+    default: ""
+    group: "Varnish configuration"
+
+
+  - variable: "plone.resources.requests.memory"
+    label: "Plone memory reservation"
+    type: "string"
+    required: true
+    default: "4Gi"
+    group: "Memory"
+
+  - variable: "plone.resources.limits.memory"
+    label: "Plone memory limit"
+    description: ">= memory reservation"
+    type: "string"
+    required: true
+    default: "4Gi"
+    group: "Memory"
+  - variable: "debug.resources.requests.memory"
+    label: "Debug memory reservation"
+    type: "string"
+    required: true
+    default: "4Gi"
+    group: "Memory"
+
+  - variable: "debug.resources.limits.memory"
+    label: "Debug memory limit"
+    description: ">= memory reservation"
+    type: "string"
+    required: true
+    default: "4Gi"
+    group: "Memory"
+  - variable: "varnish.resources.requests.memory"
+    label: "Varnish memory reservation"
+    type: "string"
+    required: true
+    default: "2Gi"
+    group: "Memory"
+  - variable: "varnish.resources.limits.memory"
+    label: "Varnish memory limit"
+    description: ">= memory reservation"
+    type: "string"
+    required: true
+    default: "2Gi"
+    group: "Memory"
+
+  - variable: "postfix.serviceName"
+    label: "Postfix service name"
+    description: "Default is application full name ( application-postfix ) "
+    default: ""
+    type: "string"
+    group: "Mail"
+  - variable: "postfix.dryrun"
+    label: "Run in development mode"
+    description: "If checked, will not send emails, but use mailtrap to catch them"
+    default: false
+    type: "boolean"
+    required: true
+    show_subquestion_if: false
+    group: "Mail"
+    subquestions:
+    - variable: "postfix.mtpRelay"
+      label: "Postfix relay"
+      required: true
+      description: "Postfix SMTP relay"
+      type: "string"
+      default: "ironports.eea.europa.eu"
+    - variable: "postfix.mtpPort"
+      label: "Postfix relay port"
+      description: "Postfix SMTP relay port"
+      type: "int"
+      required: true
+      default: 8587
+    - variable: "postfix.mtpUser"
+      label: "Postfix user"
+      description: "Without authentication, emails will not be sent"
+      type: "string"
+      required: true
+    - variable: "postfix.mtpPass"
+      label: "Postfix password"
+      description: "Without authentication, emails will not be sent"
+      type: "string"
+      required: true
+    - variable: "postfix.serverName"
+      label: "Application url"
+      type: "string"
+      required: true
+
+
+  - variable: "postfix.mailtrap.httpenabled"
+    label: "Create mailtrap service for port 80"
+    description: "Keep unchecked if you don't want to view the emails in a webinterface"
+    type: "boolean"
+    default: false
+    required: true
+    show_if: "postfix.dryrun"
+    show_subquestion_if: true
+    group: "Mail"
+    subquestions:
+    - variable: "postfix.mailtrap.serviceType"
+      label: "Mailtrap service type"
+      description: "Select NodePort to expose mailtrap on port"
+      type: "enum"
+      options:
+        - "NodePort"
+        - "ClusterIP"
+      default: "ClusterIP"
+      required: true
+    - variable: "postfix.mailtrap.ingress.enabled"
+      label: "Add mailtrap url in ingress"
+      default: false
+      type: "boolean"
+      required: true
+  
+  - variable: "postfix.mailtrap.ingress.hostname"
+    label: "Mailtrap URL"
+    show_if: "postfix.mailtrap.ingress.enabled"
+    required: true
+    type: "string"  
+    default: "mailtrap.01dev.eea.europa.eu"
+    group: "Mail"
+  - variable: "postfix.mailtrap.ingress.certificate"
+    label: "Mailtrap certificate name"
+    show_if: "postfix.mailtrap.ingress.enabled"
+    description: "If empty, https will not be enabled"
+    default: "mailtrap.01dev.eea.europa.eu-tls"
+    group: "Mail"
+
