@@ -1,3 +1,4 @@
+{{- if .Values.monitor.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -19,15 +20,18 @@ spec:
     spec:
       containers:
         - name: cachet-monitor
-          image: "{{ .Values.monitor.image.repository }}:{{ .Values.monitor.image.tag | default .Chart.AppVersion }}"
+          image: eeacms/cachet-monitor:1.1
           env:
-            - name: CONFIG
-              value: |
-                {{ .Values.monitor.config | nindent 16 }}
-            - name: CACHET_MONITOR_TOKEN
-              value: {{ .Values.monitor.token | quote }}
-            {{- if .Values.monitor.env }}
-            {{- range $key, $val := .Values.monitor.env }}
+            - name: CACHET_API
+              {{- if .Values.ingress.tls }}
+              value: "https://{{ .Values.cachet.hostname }}/api/v1"
+              {{- else }}
+              value: "http://{{ .Values.cachet.hostname }}/api/v1"
+              {{- end }}
+            - name: TZ
+              value: "{{ .Values.timezone }}"
+            {{- if .Values.monitor.environment }}
+            {{- range $key, $val := .Values.monitor.environment }}
             - name: {{ $key }}
               value: {{ $val | quote }}
             {{- end }}
@@ -37,3 +41,5 @@ spec:
               memory: {{ .Values.monitor.resources.requests.memory }}
             limits:
               memory: {{ .Values.monitor.resources.limits.memory }}
+
+{{- end }}                

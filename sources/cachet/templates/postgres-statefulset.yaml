@@ -28,39 +28,26 @@ spec:
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
       containers:
         - name: postgres
-          image: "{{ .Values.postgres.image.repository }}:{{ .Values.postgres.image.tag }}"
-          imagePullPolicy: {{ .Values.postgres.image.pullPolicy }}
+          image: eeacms/postgres:16.4-1.1
+          imagePullPolicy: {{ .Values.postgres.pullPolicy }}
           ports:
             - containerPort: 5432
               protocol: TCP
           env:
-            - name: POSTGRES_DB
-              value: "cachet"
-            - name: POSTGRES_USER
-              value: "{{ .Values.postgres.env.dbUser }}"
-            - name: POSTGRES_PASSWORD
-              value: "{{ .Values.postgres.env.dbPassword }}"
-            - name: POSTGRES_CONFIG
-              value: "{{ .Values.postgres.env.configuration }}"
-            - name: POSTGRES_CRONS
-              value: "{{ .Values.postgres.env.crons }}"
-            - name: POSTGRES_REPLICATION_NETWORK
-              value: "{{ .Values.postgres.env.replicationNetwork }}"
             - name: TZ
               value: "{{ .Values.timezone }}"
+            {{- range $key, $value := .Values.postgres.environment }}
+            {{- if ($value) }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+            {{- end }}
+
           securityContext:
             {{- toYaml .Values.postgres.securityContext | nindent 12 }}
           volumeMounts:
             - mountPath: /var/lib/postgresql/data
               name: psqldata
-            {{- if .Values.backupstorage.enabled }}
-            - mountPath: /postgresql.backup
-              name: psqldata-backup
-            {{- end }}
-            {{- if .Values.archivestorage.enabled }}
-            - mountPath: /var/lib/postgresql/archive
-              name: psqldata-archive
-            {{- end }}
           {{- if .Values.postgres.livenessProbe }}
           livenessProbe:
             {{- toYaml .Values.postgres.livenessProbe | nindent 12 }}
@@ -92,35 +79,9 @@ spec:
       spec:
         accessModes:
           - ReadWriteOnce
-        {{- if .Values.datastorage.storageClassName }}
-        storageClassName: "{{ .Values.datastorage.storageClassName }}"
+        {{- if .Values.postgres.datastorage.storageClassName }}
+        storageClassName: "{{ .Values.postgres.datastorage.storageClassName }}"
         {{- end }}
         resources:
           requests:
-            storage: "{{ .Values.datastorage.size }}"
-    {{- if .Values.backupstorage.enabled }}
-    - metadata:
-        name: psqldata-backup
-      spec:
-        accessModes:
-          - ReadWriteOnce
-        {{- if .Values.backupstorage.storageClassName }}
-        storageClassName: "{{ .Values.backupstorage.storageClassName }}"
-        {{- end }}
-        resources:
-          requests:
-            storage: "{{ .Values.backupstorage.size }}"
-    {{- end }}
-    {{- if .Values.archivestorage.enabled }}
-    - metadata:
-        name: psqldata-archive
-      spec:
-        accessModes:
-          - ReadWriteOnce
-        {{- if .Values.archivestorage.storageClassName }}
-        storageClassName: "{{ .Values.archivestorage.storageClassName }}"
-        {{- end }}
-        resources:
-          requests:
-            storage: "{{ .Values.archivestorage.size }}"
-    {{- end }}
+            storage: "{{ .Values.postgres.datastorage.size }}"
