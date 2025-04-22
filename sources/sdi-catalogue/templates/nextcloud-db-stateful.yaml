@@ -29,7 +29,7 @@ spec:
 
       containers:
       - name: nextcloud-db
-        image: mariadb:10.5
+        image: mariadb:10.11
         env:
         - name: MYSQL_DATABASE
           value: {{ .Values.nextclouddb.database }}

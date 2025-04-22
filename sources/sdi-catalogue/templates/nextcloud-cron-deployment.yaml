@@ -27,7 +27,7 @@ spec:
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
       containers:
       - name: nextcloud-cron
-        image: eeacms/nextcloud:25.0.6-apache
+        image: eeacms/nextcloud:30.0.2-apache
         command:
         - /cron.sh
         env:
