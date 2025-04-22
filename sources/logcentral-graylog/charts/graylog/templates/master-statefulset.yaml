@@ -1,0 +1,66 @@
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: graylog-master
+spec:
+  serviceName: graylog-master
+  replicas: 1
+  selector:
+    matchLabels:
+      app: graylog-master
+  template:
+    metadata:
+      labels:
+        app: graylog-master
+    spec:
+      containers:
+      - name: graylog
+        image: graylog/graylog:4.3
+        env:
+        - name: GRAYLOG_ROOT_PASSWORD_SHA2
+          value: "{{ .Values.master.rootPassword }}"
+        - name: GRAYLOG_SECRET
+          value: "{{ .Values.master.secret }}"
+        - name: GRAYLOG_ELASTICSEARCH_HOSTS
+          value: "http://{{ .Values.master.elasticsearchLink }}"
+        - name: JAVA_OPTS
+          value: "{{ .Values.master.heapSize }}"
+        - name: GRAYLOG_PROCESSBUFFER_PROCESSORS
+          value: "{{ .Values.master.processbufferProcessors }}"
+        ports:
+        - containerPort: 9000
+        resources:
+{{ toYaml .Values.master.resources | indent 10 }}
+        volumeMounts:
+        - name: journal
+          mountPath: /usr/share/graylog/data/journal
+        - name: data
+          mountPath: /usr/share/graylog/data
+        - name: plugins
+          mountPath: /usr/share/graylog/plugin
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: "{{ .Values.master.persistence.storageClass }}"
+      resources:
+        requests:
+          storage: "{{ .Values.master.persistence.size }}"
+  - metadata:
+      name: journal
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: "{{ .Values.master.persistence.storageClass }}"
+      resources:
+        requests:
+          storage: "{{ .Values.master.persistence.size }}"
+  - metadata:
+      name: plugins
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: "{{ .Values.master.persistence.storageClass }}"
+      resources:
+        requests:
+          storage: "{{ .Values.master.persistence.size }}"

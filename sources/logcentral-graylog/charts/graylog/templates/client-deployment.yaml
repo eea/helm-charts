@@ -1,0 +1,22 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: graylog-client
+spec:
+  replicas: {{ .Values.client.replicas }}
+  selector:
+    matchLabels:
+      app: graylog-client
+  template:
+    metadata:
+      labels:
+        app: graylog-client
+    spec:
+      containers:
+      - name: graylog
+        image: graylog/graylog:4.3
+        ports:
+        - containerPort: 9000
+        resources:
+{{ toYaml .Values.client.resources | indent 10 }}

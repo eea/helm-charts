@@ -1,0 +1,32 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postfix
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postfix
+  template:
+    metadata:
+      labels:
+        app: postfix
+    spec:
+      containers:
+      - name: postfix
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        env:
+        - name: MTP_USER
+          value: "{{ .Values.smtp.user }}"
+        - name: MTP_PASS
+          value: "{{ .Values.smtp.password }}"
+        - name: MTP_HOST
+          value: "{{ .Values.smtp.host }}"
+        - name: MTP_RELAY
+          value: "{{ .Values.smtp.relay }}"
+        - name: MTP_PORT
+          value: "{{ .Values.smtp.port }}"
+        resources:
+{{ toYaml .Values.resources | indent 10 }}

@@ -1,0 +1,16 @@
+apiVersion: v2
+name: logcentral-graylog
+description: A Helm chart for centralized logging (Graylog, MongoDB, Postfix)
+type: application
+version: 0.1.0
+appVersion: "1.0"
+dependencies:
+  - name: mongo
+    version: 0.1.0
+    repository: "file://charts/mongo"
+  - name: postfix
+    version: 0.1.0
+    repository: "file://charts/postfix"
+  - name: graylog
+    version: 0.1.0
+    repository: "file://charts/graylog"
