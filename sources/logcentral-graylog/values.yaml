@@ -1,0 +1,52 @@
+
+mongo:
+  enabled: true
+  resources:
+    requests:
+      memory: "256Mi"
+    limits:
+      memory: "384Mi"
+  persistence:
+    enabled: true
+    size: 5Gi
+    storageClass: "rancher-nfs"
+
+postfix:
+  enabled: true
+  smtp:
+    user: "logcentral"
+    password: "changeme"
+    host: "logs.eea.europa.eu"
+    relay: "ironports.eea.europa.eu"
+    port: 8587
+  resources:
+    requests:
+      memory: "64Mi"
+    limits:
+      memory: "128Mi"
+
+graylog:
+  enabled: true
+  master:
+    heapSize: "-Xms2g -Xmx4g"
+    processbufferProcessors: 20
+    rootPassword: "changeme_sha256"
+    secret: "changeme_secret"
+    elasticsearchLink: "logcentral-elastic6-engine/es-client"
+    resources:
+      requests:
+        memory: "3Gi"
+      limits:
+        memory: "4Gi"
+  client:
+    replicas: 2
+    resources:
+      requests:
+        memory: "3Gi"
+      limits:
+        memory: "4Gi"
+  ingress:
+    enabled: true
+    hostname: "logs.eea.europa.eu"
+    annotations: {}
+    tls: false
