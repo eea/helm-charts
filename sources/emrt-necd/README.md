@@ -4,6 +4,9 @@ The EMRT (EEA Emission Review Tool) is a web-based tool hosted by the EEA to fac
 
 ## Releases
 
+### Version 2.0.4 - 23/04-2025
+- Ingress: rewrite-target -> configuration-snippet.
+
 ### Version 2.0.3 - 16/04-2025
 - Fix typo.
 
