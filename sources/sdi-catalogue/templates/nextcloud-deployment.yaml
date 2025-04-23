@@ -28,7 +28,7 @@ spec:
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
       containers:
       - name: nextcloud
-        image: eeacms/nextcloud:25.0.6-apache
+        image: eeacms/nextcloud:30.0.2-apache
         env:
         - name: MYSQL_DATABASE
           value: {{ .Values.nextclouddb.database }}

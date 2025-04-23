@@ -13,7 +13,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: {{ .Values.cachet.host }}
+  - host: {{ .Values.cachet.hostname }}
     http:
       paths:
       - path: /
@@ -22,11 +22,11 @@ spec:
           service:
             name: {{ .Values.cachet.serviceName }}
             port:
-              number: {{ .Values.service.port }}
+              number: 8000
   {{- if .Values.ingress.tls }}
   tls:
   - hosts:
-    - {{ .Values.cachet.host }}
+    - {{ .Values.cachet.hostname }}
     {{- if .Values.ingress.certificate }}
     secretName: {{ .Values.ingress.certificate }}
     {{- end  }}

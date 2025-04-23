@@ -1,61 +1,52 @@
 questions:
-  - variable: clms.enabled
-    label: "Enable CLMS-specific Cachet Configuration"
-    type: boolean
-    default: false
-    description: "Toggle to include CLMS-specific environment variables"
 
-  - variable: eea.env.APP_URL
-    label: "EEA Cachet Public URL"
+  - variable: cachet.hostname
+    label: "Cachet Hostname"
     type: string
     required: true
     default: "status.01dev.eea.europa.eu"
-    description: "Public URL of the EEA Cachet instance"
+    group: "General"
 
-  - variable: eea.env.APP_KEY
-    label: "EEA App Key"
+  - variable: monitor.enabled
+    label: "Cachet enable monitor" 
+    type: boolean
+    required: true
+    default: false
+    group: "General"
+      
+  - variable: cachet.environment.APP_KEY
+    label: "Cachet App Key"
     type: string
     required: true
     default: "base64:EXAMPLEKEY=="
-    description: "Application encryption key for EEA (32+ character base64 string)"
+    description: "Application encryption key for Cachet (32+ character base64 string)"
+    group: "General"
 
-  - variable: eea.env.DB_PREFIX
-    label: "EEA DB Table Prefix"
+  - variable: cachet.environment.DB_PREFIX
+    label: "DB Table Prefix"
     type: string
     default: "chq_"
     required: true
-    description: "Prefix for EEA tables in shared DB"
+    description: "Prefix for DB tables, use clms_ for CLMS"
+    group: "Database"
 
-  - variable: eea.env.MAIL_NAME
-    label: "EEA Mail From Name"
+
+  - variable: cachet.environment.MAIL_ADDRESS
+    label: "Cachet Mail FROM Email"
+    type: string
+    required: true
+    default: "noreply@eea.europa.eu"
+    group: "General"
+
+  - variable: cachet.environment.MAIL_NAME
+    label: "Cachet Mail FROM Name"
     type: string
     required: true
     default: "EEA Systems Status"
-    description: "Sender name for EEA"
-
-  - variable: clms.env.APP_URL
-    label: "CLMS Cachet Public URL"
-    type: string
-    required: false
-    default: "clms-status.01dev.eea.europa.eu"
-    description: "Public URL of the CLMS Cachet instance"
-
-  - variable: clms.env.DB_PREFIX
-    label: "CLMS DB Table Prefix"
-    type: string
-    default: "clms_"
-    required: false
-    description: "Prefix for CLMS tables in shared DB"
-
-  - variable: clms.env.MAIL_NAME
-    label: "CLMS Mail From Name"
-    type: string
-    required: false
-    default: "CLMS Status Page"
-    description: "Sender name for CLMS"
+    group: "General"
 
   # Optional common config
-  - variable: envCommon.DEBUG
+  - variable: cachet.environment.DEBUG_ON
     label: "Enable Debugging"
     type: enum
     default: "false"
@@ -63,18 +54,47 @@ questions:
       - "true"
       - "false"
     description: "Enable Laravel debug mode"
+    group: "General"
 
-  - variable: envCommon.TZ
+  - variable: cachet.environment.TIMEOUT
+    label: "Cachet nginx timeout"
+    type: int
+    required: true
+    default: "300"
+    group: "General"
+
+  - variable: cachet.environment.PHP_MAX_CHILDREN
+    label: "Cachet number of threads"
+    type: int
+    required: true
+    default: "150"
+    group: "General"
+    description: "Needs to be no more than database connections"
+
+  - variable: cachet.environment.PHP_MAX_EXECUTION_TIME
+    label: "Cachet php timeout"
+    type: int
+    required: true
+    default: "300"
+    group: "General"
+
+
+
+  - variable: timezone
     label: "Timezone"
     type: string
     default: "Europe/Copenhagen"
     required: true
-    description: "Timezone for Cachet"
+    group: "General"
+
+
+
+
+
 
   - variable: monitor.config
     label: "Monitor Checks Configuration"
     type: multiline
-    required: false
     default: |
       checks:
         - name: "Cachet Web"
@@ -89,11 +109,175 @@ questions:
           component_id: 2
           interval: 60
     description: "YAML-formatted monitor checks config passed to the monitor via CONFIG env var"
+    show_if: "monitor.enabled"
+    group: "General"
 
   - variable: monitor.token
     label: "Cachet Monitor Token"
     type: string
-    required: true
     default: ""
-    description: "Token used by the Cachet Monitor for authentication (CACHET_MONITOR_TOKEN)"
+    description: "Token used by the Cachet Monitor for authentication (generate from dashboard)"
+    show_if: "monitor.enabled"
+    group: General
+    
+
+  - variable: "postgres.environment.POSTGRES_PASSWORD"
+    label: "Super User password"
+    default: "password"
+    type: "string"
+    required: true
+    group: "Database configuration"
+  - variable: "postgres.environment.POSTGRES_DBNAME"
+    label: "DB names"
+    description: "Space separated databases names to create on first run"
+    default: "cachet"
+    type: "string"
+    required: true
+    group: "Database configuration"
+  - variable: "postgres.environment.POSTGRES_DBUSER"
+    label: "PostgreSQL databases owner name"
+    default: "postgres"
+    type: "string"
+    required: true
+    group: "Database configuration"
+  - variable: "postgres.environment.POSTGRES_DBPASS"
+    label: "PostgreSQL databases owner password"
+    default: "postgres"
+    type: "string"
+    required: true
+    group: "Database configuration"
+  - variable: "postgres.environment.POSTGRES_CONFIG"
+    label: "PostgreSQL extra configuration"
+    default: |
+      max_connections = 300
+    type: "multiline"
+    required: true
+    group: "Database configuration"
+  - variable: "postgres.environment.POSTGRES_CRONTAB"
+    label: "PostgreSQL extra configuration"
+    default: |
+      ##0 3 * * * postgres /usr/bin/psql -d clms_cachet -c "DELETE FROM chq_metric_points WHERE created_at < CURRENT_DATE - interval '31 day';"
+      ##0 3 * * * postgres /usr/bin/psql -d clms_cachet -c "DELETE FROM chq_incidents     WHERE created_at < CURRENT_DATE - interval '31 day';"
+    type: "multiline"
+    required: true
+    group: "Database configuration"
+
+
+
+
+
+
+
+  - variable: "postfix.serviceName"
+    label: "Postfix service name"
+    description: "Default is application full name ( application-postfix ) "
+    default: ""
+    type: "string"
+    group: "Mail"
+  - variable: "postfix.dryrun"
+    label: "Run in development mode"
+    description: "If checked, will not send emails, but use mailtrap to catch them"
+    default: false
+    type: "boolean"
+    required: true
+    show_subquestion_if: false
+    group: "Mail"
+    subquestions:
+    - variable: "postfix.mtpRelay"
+      label: "Postfix relay"
+      required: true
+      description: "Postfix SMTP relay"
+      type: "string"
+      default: "ironports.eea.europa.eu"
+    - variable: "postfix.mtpPort"
+      label: "Postfix relay port"
+      description: "Postfix SMTP relay port"
+      type: "int"
+      required: true
+      default: 8587
+    - variable: "postfix.mtpUser"
+      label: "Postfix user"
+      description: "Without authentication, emails will not be sent"
+      type: "string"
+      required: true
+    - variable: "postfix.mtpPass"
+      label: "Postfix password"
+      description: "Without authentication, emails will not be sent"
+      type: "string"
+      required: true
+    - variable: "postfix.serverName"
+      label: "Application url"
+      type: "string"
+      required: true
+
+
+
+  - variable: "postfix.mailtrap.httpenabled"
+    label: "Create mailtrap service for port 80"
+    description: "Keep unchecked if you don't want to view the emails in a webinterface"
+    type: "boolean"
+    default: false
+    required: true
+    show_if: "postfix.dryrun"
+    show_subquestion_if: true
+    group: "Mail"
+    subquestions:
+    - variable: "postfix.mailtrap.serviceType"
+      label: "Mailtrap service type"
+      description: "Select NodePort to expose mailtrap on port"
+      type: "enum"
+      options:
+        - "NodePort"
+        - "ClusterIP"
+      default: "ClusterIP"
+      required: true
+    - variable: "postfix.mailtrap.ingress.enabled"
+      label: "Add mailtrap url in ingress"
+      default: false
+      type: "boolean"
+      required: true
+
+  - variable: "postfix.mailtrap.ingress.hostname"
+    label: "Mailtrap URL"
+    show_if: "postfix.mailtrap.ingress.enabled"
+    required: true
+    type: "string"
+    default: "mailtrap.01dev.eea.europa.eu"
+    group: "Mail"
+  - variable: "postfix.mailtrap.ingress.certificate"
+    label: "Mailtrap certificate name"
+    show_if: "postfix.mailtrap.ingress.enabled"
+    description: "If empty, https will not be enabled"
+    default: "mailtrap.01dev.eea.europa.eu-tls"
+    group: "Mail"
+        
+
+  - variable: "cachet.resources.requests.memory"
+    label: "Cachet memory reservation"
+    type: "string"
+    required: true
+    default: "4Gi"
+    group: "Memory"
+  - variable: "cachet.resources.limits.memory"
+    label: "Cachet memory limit"
+    description: ">= memory reservation"
+    type: "string"
+    required: true
+    default: "4Gi"
+    group: "Memory"
+
+  - variable: "postgres.resources.requests.memory"
+    label: "Memory reservation postgres"
+    default: "4Gi"
+    required: true
+    type: "string"
+    group: "General"
+  - variable: "postgres.resources.limits.memory"
+    label: "Memory limit postgres"
+    default: "4Gi"
+    required: true
+    type: "string"
+    group: "General"
+
+
 

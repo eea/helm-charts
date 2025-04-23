@@ -17,55 +17,67 @@ spec:
         {{- include "appl.selectorLabels" . | nindent 8 }}
         component: cachet
     spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
       containers:
-        - name: cachet-ui
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy | default "IfNotPresent" }}
-          ports:
-            - name: http
-              containerPort: 8000
-          env:
-            {{- range $key, $val := .Values.cachet.env }}
-            - name: {{ $key }}
-              value: {{ $val | quote }}
-            {{- end }}
-            - name: DB_PASSWORD
-              value: {{ .Values.postgres.env.dbPassword | quote }}
+      - name: cachet
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        ports:
+          - name: http
+            containerPort: 8000
+        env:
+          - name: DB_DRIVER
+            value: "pgsql"
+          - name: DB_HOST
+            value: "postgres"
+          - name: DB_PORT
+            value: "5432"
+          - name: DB_DATABASE
+            value: "{{ .Values.postgres.environment.POSTGRES_DBNAME }}"
+          - name: DB_USERNAME
+            value: "{{ .Values.postgres.environment.POSTGRES_DBUSER }}"
+          - name: DB_PASSWORD
+            value: "{{ .Values.postgres.environment.POSTGRES_DBPASS }}"
 
-          {{- if .Values.cachet.livenessProbe }}
-          livenessProbe:
-            {{- toYaml .Values.cachet.livenessProbe | nindent 12 }}
+          - name: APP_URL
+          {{- if .Values.ingress.tls }}
+            value: "https://{{ .Values.cachet.hostname }}"
+          {{- else }}
+            value: "http://{{ .Values.cachet.hostname }}"
+          {{- end }}
+            
+
+          - name: MAIL_HOST
+            value: "postfix"
+          - name: MAIL_PORT
+            value: "25"
+          - name: MAIL_DRIVER
+            value: "smtp"
+          - name: MAIL_ENCRYPTION
+            value: ""
+          - name: TZ
+            value: "{{ .Values.timezone }}"
+          - name: CACHET_BEACON
+            value: "false"
+
+          {{- range $key, $val := .Values.cachet.environment }}
+          - name: {{ $key }}
+            value: {{ $val | quote }}
           {{- end }}
 
-          {{- if .Values.cachet.startupProbe }}
-          startupProbe:
-            {{- toYaml .Values.cachet.startupProbe | nindent 12 }}
-          {{- end }}
-
-          resources:
-            {{- toYaml .Values.cachet.resources | nindent 12 }}
-          volumeMounts:
-            - name: cachet-storage
-              mountPath: /var/www/html/storage
-
-        {{- if .Values.monitor.enabled }}
-        - name: cachet-monitor
-          image: "{{ .Values.monitor.image.repository }}:{{ .Values.monitor.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy | default "IfNotPresent" }}
-          env:
-            {{- range $k, $v := .Values.monitor.env }}
-            - name: {{ $k }}
-              value: {{ $v | quote }}
-            {{- end }}
-          resources:
-            {{- toYaml .Values.monitor.resources | nindent 12 }}
+        {{- if .Values.cachet.livenessProbe }}
+        livenessProbe:
+          {{- toYaml .Values.cachet.livenessProbe | nindent 12 }}
         {{- end }}
 
-      volumes:
-        - name: cachet-storage
-          {{- if .Values.persistence.enabled }}
-          persistentVolumeClaim:
-            claimName: {{ .Release.Name }}-cachet
-          {{- else }}
-          emptyDir: {}
-          {{- end }}
+        {{- if .Values.cachet.startupProbe }}
+        startupProbe:
+          {{- toYaml .Values.cachet.startupProbe | nindent 12 }}
+        {{- end }}
+
+        resources:
+          {{- toYaml .Values.cachet.resources | nindent 12 }}
+
