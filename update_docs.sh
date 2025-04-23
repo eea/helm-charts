@@ -14,7 +14,7 @@ if [ -z "$chart" ] || [ ! -d sources/$chart ]; then
 fi
 
 
-# git pull
+git pull
 
 
 echo "Starting release on $chart"
