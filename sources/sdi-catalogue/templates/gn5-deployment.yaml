@@ -28,7 +28,7 @@ spec:
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
       containers:
       - name: gn5
-        image: juanluisrp/geonetwork5:frontend-exp-indexrecord-5eba5900
+        image: juanluisrp/geonetwork5:frontend-exp-indexrecord-8afdd82bbfcdf0647131c1a418b0920e7b8d050c
         env:
         - name: SERVER_PORT
           value: "{{ .Values.gn5.server.port }}"
