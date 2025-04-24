@@ -19,6 +19,12 @@ When the application was running on Rancher 1.6, it had a container, which ran t
 ## Releases
 
 <dl>
+  <dt>Version 0.7.1 - 24 April 2025</dt>
+  <dd>Make Nextcloud's config.php not read-only. Add ConfigMap with Nextcloud config to 
+  /etc/nextcloud/config/config.php and a initcontainer that creates a symlink in /var/www/html/config/k8s.config.php to that file.
+  This allow to have a read-only configuration file in a ConfigMap and Nextcloud doesn't complain about config.php read-only file.
+  </dd>
+
   <dt>Version 0.7.0 - 22 April 2025</dt>
   <dd>Update Nextcloud to 30 and MariaDB to 10.11</dd>
 
