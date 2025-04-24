@@ -58,6 +58,8 @@ spec:
           value: {{ .Values.gn5.gn4baseUrl }}
         - name: JAVA_OPTS
           value: -Dfile.encoding=UTF-8
+        - name: SPRING_CONFIG_LOCATION
+          value: optional:{{ .Values.gn5.directory.data }}/config/gn5-config.yaml
 
         ports:
         - containerPort: 8080
