@@ -28,7 +28,7 @@ questions:
     default: "chq_"
     required: true
     description: "Prefix for DB tables, use clms_ for CLMS"
-    group: "Database"
+    group: "Database Configuration"
 
 
   - variable: cachet.environment.MAIL_ADDRESS
@@ -88,11 +88,7 @@ questions:
     group: "General"
 
 
-
-
-
-
-  - variable: monitor.config
+  - variable: monitor.environment.CONFIG
     label: "Monitor Checks Configuration"
     type: multiline
     default: |
@@ -112,7 +108,7 @@ questions:
     show_if: "monitor.enabled"
     group: "General"
 
-  - variable: monitor.token
+  - variable: monitor.environment.CACHET_TOKEN
     label: "Cachet Monitor Token"
     type: string
     default: ""
@@ -271,13 +267,13 @@ questions:
     default: "4Gi"
     required: true
     type: "string"
-    group: "General"
+    group: "Memory"
   - variable: "postgres.resources.limits.memory"
     label: "Memory limit postgres"
     default: "4Gi"
     required: true
     type: "string"
-    group: "General"
+    group: "Memory"
 
 
 
