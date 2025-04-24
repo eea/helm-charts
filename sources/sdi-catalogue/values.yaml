@@ -117,6 +117,7 @@ nextcloud:
   resources: {}
 
 nextclouddb:
+  dbtype: pgsql
   database: ncdb
   user: ''
   password: ''
@@ -243,7 +244,7 @@ gn5:
 gn46:
   webapp_context: /geonetwork
   geonetwork_dir: /catalogue-data
-  geonetwork_data_dir: /var/local/gis_sdi/datastore
+  geonetwork_data_dir: /var/local/gis_sdi/cataloguestore/metadata_data
   catalogue_name: catalogue
   jvm_max_memory: 2G
   db_type: postgres
