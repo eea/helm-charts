@@ -19,6 +19,9 @@ When the application was running on Rancher 1.6, it had a container, which ran t
 ## Releases
 
 <dl>
+  <dt>Version 0.7.4 - 24 April 2025</dt>
+  <dd>Externalise GN5 configuration yml file</dd>
+
   <dt>Version 0.7.3 - 24 April 2025</dt>
   <dd>Fix Nextcloud configmap values</dd>
 
