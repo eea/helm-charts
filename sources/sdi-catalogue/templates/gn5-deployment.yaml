@@ -59,7 +59,7 @@ spec:
         - name: JAVA_OPTS
           value: -Dfile.encoding=UTF-8
         - name: SPRING_CONFIG_LOCATION
-          value: optional:{{ .Values.gn5.directory.data }}/config/gn5-config.yaml
+          value: optional:{{ .Values.gn5.directory.config }}/gn5-config.yaml
 
         ports:
         - containerPort: 8080
@@ -68,6 +68,9 @@ spec:
         volumeMounts:
         - mountPath: /catalogue-data
           name: sdi-gn5-data
+        - mountPath: /var/local/gis_sdi
+          name: gis-sdi
+          readOnly: false
 
       {{- with .Values.nodeSelector }}
       nodeSelector:
@@ -87,4 +90,8 @@ spec:
       - name: sdi-gn5-data
         persistentVolumeClaim:
           claimName: sdi-gn5-data
+      - name: gis-sdi
+        persistentVolumeClaim:
+          claimName: gis-sdi
+          readOnly: false
  {{- end }}
