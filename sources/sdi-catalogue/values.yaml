@@ -117,8 +117,10 @@ nextcloud:
   resources: {}
 
 nextclouddb:
-  dbtype: pgsql
+  dbtype: mysql
   database: ncdb
+  host: 'nextcloud-db'
+  port: 3306
   user: ''
   password: ''
   rootPW: ''
