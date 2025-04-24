@@ -44,7 +44,7 @@ postgres:
   securityContext: {}
   environment:
     POSTGRES_DBNAME: cachet
-    POSTGRES_DBUSER: postgres
+    POSTGRES_DBUSER: cachet
     POSTGRES_DBPASS: postgres  
     POSTGRES_PASSWORD: password
     POSTGRES_CONFIG: |
@@ -139,7 +139,7 @@ cachet:
 
     
 monitor:
-  enabled: true
+  enabled: false
   environment:
     CACHET_TOKEN: ""
     CACHET_DEV: ""
