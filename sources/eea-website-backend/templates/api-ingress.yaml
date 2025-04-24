@@ -1,10 +1,10 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: advisory-board-api
+  name: eea-website-backend-api
   labels:
     {{- include "appl.labels" . | nindent 4 }}
-    component: advisory-board-api
+    component: eea-website-backend-api
   annotations:
     nginx.ingress.kubernetes.io/configuration-snippet: |
       rewrite ^/(\+\+api\+\+)(.*)$ /VirtualHostBase/https/{{ .Values.plone.hostname }}:443/{{ .Values.plone.site }}/$1/VirtualHostRoot$2 break;

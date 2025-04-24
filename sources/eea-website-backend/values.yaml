@@ -30,19 +30,17 @@ ingress:
 plone:
   serviceType: ClusterIP
   hostname: plone.eea.europa.eu
-  googleUrl: google85dc6cec8f1329e5.html 
   autoscaling:
     enabled: false
     minReplicas: 1
-    maxReplicas: 6
-    # targetCPUUtilizationPercentage: 80
+    maxReplicas: 9
     targetMemoryUtilizationPercentage: 60
   replicaCount: 1
   resources:
     limits:
-      memory: 2Gi
+      memory: 4Gi
     requests:
-      memory: 2Gi
+      memory: 4Gi
   database:
     POSTGRES_DB: database
     POSTGRES_USER: databaseuser

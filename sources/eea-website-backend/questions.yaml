@@ -3,25 +3,18 @@
   - variable: "plone.hostname"
     label: "Server name"
     description: "DNS name for this deployment"
-    default: "demo.eea.europa.eu"
+    default: "demo-www.01dev.eea.europa.eu"
     type: "string"
     required: true
     group: "General"
 
   - variable: "plone.site"
-    label: "Site name"
-    default: "advisory"
+    label: "Plone instance name"
+    description: "Name of the Plone instance"
+    default: "www"
     type: "string"
     required: true
     group: "General"
-
-  - variable: "plone.googleUrl"
-    label: "Plone google website owner url"
-    description: "Leave empty for no google url"
-    default: "google85dc6cec8f1329e5.html"
-    type: "string"
-    group: "General"
-
 
   - variable: "ingress.tls"
     label: "Enable https"
@@ -30,19 +23,11 @@
     required: true
     group: "General"
 
-
   - variable: "ingress.certificate"
     label: "Certificate name"
     description: "Use a new name for letsencrypt certificates, for existing certificate write the correct name for the domain, leave blank for kube default"
     default: "demo.europa.eu-tls"
     type: "string"
-    group: "General"
-
-  - variable: "links.memcached"
-    label: "Memcached service"
-    description: "Memcached service for python caching, SERVICE.NAMESPACE"
-    type: "string"
-    required: true
     group: "General"
 
   - variable: "links.database"
@@ -164,7 +149,6 @@
     - "No"
     group: "Plone configuration"
 
-
   - variable: "debug.enabled"
     label: "Debug"
     description: "Add backend debugging"
@@ -172,9 +156,6 @@
     type: "boolean"
     required: true
     group: "General"
-
-
-
 
   - variable: "varnish.port"
     label: "Varnish backend/exposed port"

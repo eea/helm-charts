@@ -27,7 +27,7 @@ spec:
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
       containers:
       - name: debug
-        image: eeacms/advisory-board-backend-devel
+        image: eeacms/eea-website-backend-devel
         imagePullPolicy: Always
         args:
         - cat
