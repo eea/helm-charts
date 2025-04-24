@@ -26,6 +26,25 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      initContainers:
+        - args:
+            - >-
+              ln -sf /etc/nextcloud/config/config.php /var/www/html/config/k8s.config.php
+          command:
+            - /bin/sh
+            - '-c'
+          image: busybox
+          imagePullPolicy: Always
+          name: symlink-k8s-config
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+            - mountPath: /etc/nextcloud/config
+              name: nextcloud-config
+              readOnly: true
+            - mountPath: /var/www/html
+              name: sdi-nextcloud-app
       containers:
       - name: nextcloud
         image: eeacms/nextcloud:30.0.2-apache

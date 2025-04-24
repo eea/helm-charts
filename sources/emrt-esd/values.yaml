@@ -44,13 +44,10 @@ ingress:
   annotations:
     nginx.ingress.kubernetes.io/proxy-max-temp-file-size: '1024m'
     nginx.ingress.kubernetes.io/proxy-body-size: '50m'
-    nginx.ingress.kubernetes.io/rewrite-target: /VirtualHostBase/https/emrt-esd.eionet.europa.eu:443/Plone/VirtualHostRoot/$1
     nginx.ingress.kubernetes.io/use-regex: 'true'
-#   nginx.ingress.kubernetes.io/configuration-snippet: |
-#     more_set_headers 'X-XSS-Protection: 1; mode=block'
-#       'X-Frame-Options: SAMEORIGIN'
-#       'X-Content-Type-Options: nosniff'
-#       'Referrer-Policy: no-referrer,same-origin,strict-origin,strict-origin-when-cross-origin';
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      rewrite ^/(.*)$ /VirtualHostBase/https/emrt-esd.eionet.europa.eu:443/Plone/VirtualHostRoot/$1 break;
+
   hosts:
     - host: emrt-esd.eionet.europa.eu
       paths:
