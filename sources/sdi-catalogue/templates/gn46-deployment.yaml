@@ -28,7 +28,7 @@ spec:
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
       containers:
       - name: gn46
-        image: eeacms/eea-geonetwork@sha256:9308d313d594ddc19f0d1b889e3658f9d35f287fece666a2683d90c9a903365a
+        image: eeacms/eea-geonetwork@sha256:35054334bb159c4dba0637bc861321118f949213c9312ff6490dd2ceba031c35
         env:
         - name: WEBAPP_CONTEXT_PATH
           value: {{ .Values.gn46.webapp_context }}
