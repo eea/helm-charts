@@ -48,8 +48,7 @@ ingress:
     nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/configuration-snippet: |
       more_set_headers 'X-Frame-Options: SAMEORIGIN';
-      rewrite ^/(.*)$ /VirtualHostBase/https/emrt-necd.eionet.europa.eu:443/VirtualHostRoot/$1 break;
-
+      rewrite ^/(.*)$ /VirtualHostBase/https/eni-seis.eionet.europa.eu:443/VirtualHostRoot/$1 break;
   hosts:
     - host: eni-seis.eionet.europa.eu
       paths:
