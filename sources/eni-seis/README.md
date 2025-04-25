@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 1.0.1
+Upgrade of ingress resources to use rewrite instead of rewrite target.
+
 ### Version 1.0.0
 Upgrade of postfix to a version with fewer vulnerabilities.
 
