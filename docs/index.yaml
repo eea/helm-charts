@@ -2,6 +2,24 @@ apiVersion: v1
 entries:
   advisory-board-backend:
   - apiVersion: v2
+    appVersion: 6.0.15-6
+    created: "2025-04-30T23:56:16.133126651Z"
+    dependencies:
+    - name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.0.6
+    description: Climate advisory backend
+    digest: 380868c76d113f77807947a999151855dfc3589d3e44ed07303b22a2f2deebd5
+    home: https://github.com/eea/advisory-board-backend
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/advisory-board-backend/volto.png
+    keywords:
+    - CMS
+    name: advisory-board-backend
+    type: application
+    urls:
+    - advisory-board-backend-1.10.0.tgz
+    version: 1.10.0
+  - apiVersion: v2
     appVersion: 6.0.15-5
     created: "2025-04-28T16:20:55.249973663Z"
     dependencies:
@@ -17238,4 +17256,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2025-04-30T08:44:56.409841017Z"
+generated: "2025-04-30T23:56:16.130644699Z"
