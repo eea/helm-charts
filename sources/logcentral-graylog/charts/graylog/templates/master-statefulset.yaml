@@ -43,7 +43,7 @@ spec:
   - metadata:
       name: data
     spec:
-      accessModes: [ "ReadWriteOnce" ]
+      accessModes: [ "ReadWriteMany" ]
       storageClassName: "{{ .Values.master.persistence.storageClass }}"
       resources:
         requests:
@@ -51,7 +51,7 @@ spec:
   - metadata:
       name: journal
     spec:
-      accessModes: [ "ReadWriteOnce" ]
+      accessModes: [ "ReadWriteMany" ]
       storageClassName: "{{ .Values.master.persistence.storageClass }}"
       resources:
         requests:
@@ -59,7 +59,7 @@ spec:
   - metadata:
       name: plugins
     spec:
-      accessModes: [ "ReadWriteOnce" ]
+      accessModes: [ "ReadWriteMany" ]
       storageClassName: "{{ .Values.master.persistence.storageClass }}"
       resources:
         requests:
