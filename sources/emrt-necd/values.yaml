@@ -48,6 +48,8 @@ service:
 
 ingress:
   enabled: false
+  serviceName: plone6
+  servicePort: 8080
   className: "nginx"
   annotations:
     nginx.ingress.kubernetes.io/proxy-max-temp-file-size: '1024m'
