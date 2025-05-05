@@ -4,6 +4,9 @@ The EMRT (EEA Emission Review Tool) is a web-based tool hosted by the EEA to fac
 
 ## Releases
 
+### Version 2.0.5 - 05/05-2025
+- Ingress: move default ingress to plone6 service.
+
 ### Version 2.0.4 - 23/04-2025
 - Ingress: rewrite-target -> configuration-snippet.
 
