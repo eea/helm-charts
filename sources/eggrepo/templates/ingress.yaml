@@ -20,7 +20,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: {{ include "appl.fullname" . }} 
+            name: {{ include "appl.fullname" . }}-apache 
             port:
               number: 80
   {{- if .Values.ingress.tls }}

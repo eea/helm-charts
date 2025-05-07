@@ -1,13 +1,12 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ .Release.Name }}-repo
+  name: {{ .Release.Name }}-repo-ss
   labels:
     {{- include "appl.labels" . | nindent 4 }}
     component: eggrepo
 spec:
   replicas: 1
-  serviceName: {{ .Release.Name }}-repo
   selector:
     matchLabels:
       {{- include "appl.selectorLabels" . | nindent 6 }}
