@@ -14,7 +14,11 @@ fullnameOverride: ""
 timezone: Europe/Copenhagen
 ldapServer: ldap.eionet.europa.eu
 
-rewriteUrl: eggrepo.apps.eea.europa.eu
+rewrite:
+  url: ''
+  tls: yes
+  certificate: eggrepo.apps.eea.europa.eu-tls
+
 url: eggrepo.eea.europa.eu
 
 commandArgs: ''
@@ -45,7 +49,7 @@ ingress:
   annotations: 
     cert-manager.io/cluster-issuer: 01dev-eea-letsencrypt
   tls: true
-
+  certificate: ""
 
 eggrepo:
   resources:
