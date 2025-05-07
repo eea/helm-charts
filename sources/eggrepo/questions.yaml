@@ -5,7 +5,35 @@ questions:
     default: "eggrepo.eea.europa.eu"
     type: "string"
     required: true
-  - variable: "rewriteUrl"
-    label: "Second Url"
-    description: "Redirect url"
+
+  - variable: "ingress.tls"
+    label: "Enable https"
+    default: true
+    type: "boolean"
+    required: true
+
+  - variable: "ingress.certificate"
+    label: "Certificate name"
+    description: "Leave blank for default certificate"
+    default: "eggrepo.eea.europa.eu-tls"
     type: "string"
+    show_if: "ingress.tls"
+
+  - variable: "rewrite.url"
+    label: "Add second url"
+    description: "Leave blank for no redirect url"
+    default: ""
+    type: "string"
+
+  - variable: "rewrite.tls"
+    label: "Enable https on second url"
+    default: false
+    type: "boolean"
+    required: true
+
+  - variable: "rewrite.certificate"
+    label: "Certificate name for second url"
+    description: "Leave blank for default certificate"
+    default: "eggrepo.apps.eea.europa.eu-tls"
+    type: "string"
+    show_if: "rewrite.tls"
