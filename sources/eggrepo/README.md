@@ -8,6 +8,9 @@ For deployment into production set:
 
 ## Releases
 
+### Version 0.4.2 - 07 May 2025
+- Refactor values, names, questions [valentinab25 - [`dc81826`](https://github.com/eea/helm-charts/commit/dc81826950d54d1787932274301be18e308e691d)]
+
 ### Version 0.4.1 - 07 May 2025
 - Rename services, refactor headers [valentinab25 - [`dda5609`](https://github.com/eea/helm-charts/commit/dda56092bd07419835391f4246c0db3215e8008c)]
 
