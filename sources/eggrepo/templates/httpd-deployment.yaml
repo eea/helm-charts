@@ -34,7 +34,7 @@ spec:
         - name: APACHE_CONFIG
           valueFrom:
             configMapKeyRef:
-              name: {{ .Release.Name }}-htconf
+              name: {{ .Release.Name }}-apache-config-cm
               key: vh-my-app.conf
         resources:
           {{- toYaml .Values.httpd.resources | nindent 10 }}
