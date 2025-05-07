@@ -72,16 +72,15 @@ eggrepo:
       port: 9090
     periodSeconds: 5
     timeoutSeconds: 10
-    initialDelaySeconds: 10
+    initialDelaySeconds: 5
     failureThreshold: 12
     successThreshold: 1
   readinessProbe:
     httpGet:
       path: /
       port: 9090
-    periodSeconds: 15
+    periodSeconds: 10
     timeoutSeconds: 10
-    initialDelaySeconds: 60
     failureThreshold: 4
     successThreshold: 2
   nodeSelector: {}
@@ -102,7 +101,6 @@ httpd:
       port: 80
     periodSeconds: 20
     timeoutSeconds: 10
-    initialDelaySeconds: 30
     failureThreshold: 6
     successThreshold: 1
   startupProbe:
@@ -120,7 +118,6 @@ httpd:
       port: 80
     periodSeconds: 15
     timeoutSeconds: 10
-    initialDelaySeconds: 60
     failureThreshold: 4
     successThreshold: 2
   nodeSelector: {}
