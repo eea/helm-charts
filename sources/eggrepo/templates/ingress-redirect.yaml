@@ -9,7 +9,7 @@ metadata:
     {{- include "appl.labels" . | nindent 4 }}
     component: httpd
   annotations:
-    nginx.ingress.kubernetes.io/permanent-redirect: https://{{ .Values.rewriteUrl }}
+    nginx.ingress.kubernetes.io/permanent-redirect: https://{{ .Values.url }}
     {{- with .Values.ingress.annotations }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
