@@ -23,14 +23,14 @@ data:
       # with host.com, host.com in the HOST header
       RequestHeader unset X-Forwarded-Host
       
-      Header set Content-Security-Policy default-src 'self'; script-src 'self' ; style-src 'self' ; font-src 'self'; img-src 'self' data:; connect-src 'self'; frame-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'self'
-      Header set X-Content-Type-Options nosniff
-      Header set Referrer-Policy strict-origin-when-cross-origin
+      Header set Content-Security-Policy "default-src 'self'; script-src 'self' ; style-src 'self' ; font-src 'self'; img-src 'self' data:; connect-src 'self'; frame-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'self'"
+      Header set X-Content-Type-Options "nosniff"
+      Header set Referrer-Policy "strict-origin-when-cross-origin"
       Header set Feature-Policy "accelerometer 'none'; ambient-light-sensor 'none'; autoplay 'none'; camera 'none'; encrypted-media 'none'; fullscreen 'self'; geolocation 'none'; gyroscope 'none'; magnetometer 'none'; microphone 'none'; midi 'none'; payment 'none'; picture-in-picture 'none'; speaker 'none'; sync-xhr 'self'; usb 'none'; vr 'none'"
-      Header set X-Frame-Options SAMEORIGIN
-      Header set X-Xss-Protection 1; mode=block
-      Header set Strict-Transport-Security 'max-age=31536000; includeSubDomains; preload'
-      Header set Server HTTPS
+      Header set X-Frame-Options "SAMEORIGIN"
+      Header set X-Xss-Protection "1; mode=block"
+      Header set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+      Header set Server "HTTPS"
 
       <LocationMatch "^/(?!(simple|pypi|(.+)\.gif|(.+)\.jpg|(.+)\.css|(.+)\.gz|(.+)\.zip))">
 
