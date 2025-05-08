@@ -106,6 +106,21 @@ questions:
     type: "string"
     group: "Volto configuration"
 
+  - variable: "volto.environment.RAZZLE_PROXY_ES_DSN_fiseSearch"
+    label: "RAZZLE_PROXY_ES_DSN_fiseSearch"
+    description: "Elastic Search DSN Resource Catalogue"
+    default: ""
+    required: false
+    type: "string"
+    group: "Volto configuration"
+  - variable: "volto.environment.RAZZLE_PROXY_QA_DSN_fiseSearch"
+    label: "RAZZLE_PROXY_QA_DSN_fiseSearch"
+    description: "NLP Service DSN Resource Catalogue"
+    default: ""
+    required: false
+    type: "string"
+    group: "Volto configuration"
+
   - variable: "volto.environment.SENTRY_URL"
     label: "Sentry URL"
     description: "Sentry URL"
