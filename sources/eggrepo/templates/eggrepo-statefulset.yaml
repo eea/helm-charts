@@ -7,6 +7,7 @@ metadata:
     component: eggrepo
 spec:
   replicas: 1
+  serviceName: {{ .Release.Name }}-repository
   selector:
     matchLabels:
       {{- include "appl.selectorLabels" . | nindent 6 }}
