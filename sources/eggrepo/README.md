@@ -8,6 +8,9 @@ For deployment into production set:
 
 ## Releases
 
+### Version 0.4.3 - 08 May 2025
+- Fix statefulset servicename [valentinab25 - [`8a8ff1b`](https://github.com/eea/helm-charts/commit/8a8ff1b6444ea7fa7deff634b1af57de5390ae3d)]
+
 ### Version 0.4.2 - 07 May 2025
 - Refactor values, names, questions [valentinab25 - [`dc81826`](https://github.com/eea/helm-charts/commit/dc81826950d54d1787932274301be18e308e691d)]
 
