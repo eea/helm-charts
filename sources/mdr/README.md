@@ -65,6 +65,9 @@ To customize the network policies, you should modify the `instance.networkPolicy
 
 ## Releases
 
+### Version 0.24.0 - 09 May 2025
+- Automated release of [eeacms/reportek-mdr:3.9.1-250](https://github.com/eea/eea.docker.reportek.mdr-instance/releases) [EEA Jenkins - [`8411d49`](https://github.com/eea/helm-charts/commit/8411d492750534ab76912aedcbd3944fee492a4f)]
+
 ### Version 0.23.0 - 09 May 2025
 - Automated release of [eeacms/reportek-mdr:3.9.1-249](https://github.com/eea/eea.docker.reportek.mdr-instance/releases) [EEA Jenkins - [`8231cd5`](https://github.com/eea/helm-charts/commit/8231cd521374ccef51d185ad1b460d02931bcbcb)]
 
