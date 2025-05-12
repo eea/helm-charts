@@ -46,8 +46,12 @@ service:
 ingress:
   enabled: true
   className: ""
-  annotations: 
-    cert-manager.io/cluster-issuer: 01dev-eea-letsencrypt
+  annotations: {}
+  letsencrypt: "01dev-eea-letsencrypt"
+  configuration:
+    proxy-body-size: "256m"
+    proxy-read-timeout: "180s"
+    proxy-send-timeout: "120s"
   tls: true
   certificate: ""
 
