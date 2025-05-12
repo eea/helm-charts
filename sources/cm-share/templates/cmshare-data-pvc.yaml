@@ -1,0 +1,17 @@
+{{- if not .Values.cmshareData.existing }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: cmshare-app-data
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: cmshare-data
+  annotations:
+    "helm.sh/resource-policy": keep
+ spec:
+   accessModes:
+   - ReadWriteMany
+   resources:
+     requests:
+       storage: 500Gi
+{{- end }}
