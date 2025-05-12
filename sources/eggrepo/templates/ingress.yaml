@@ -5,8 +5,16 @@ metadata:
   labels:
     {{- include "appl.labels" . | nindent 4 }}
     component: httpd
-  {{- with .Values.ingress.annotations }}
   annotations:
+  {{- if .Values.ingress.letsencrypt }}
+    cert-manager.io/cluster-issuer: "{{ .Values.ingress.letsencrypt }}"
+  {{- end }}
+  {{- range $key, $value := .Values.ingress.configuration }}
+    {{- if ($value) }}
+    nginx.ingress.kubernetes.io/{{ $key }}: {{ $value | quote }}
+    {{- end }}
+  {{- end }}
+  {{- with .Values.ingress.annotations }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
 
