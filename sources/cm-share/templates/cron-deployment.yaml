@@ -49,9 +49,9 @@ spec:
 
         volumeMounts:
         - mountPath: /var/www/html
-          name: datashare-app
+          name: cmshare-app-data
         - mountPath: /data
-          name: cmshare-data
+          name: {{ .Values.pvcNames.cmshareData }}
 
         securityContext:
           {{- toYaml .Values.cron.securityContext | nindent 10 }}
@@ -59,9 +59,9 @@ spec:
       restartPolicy: Always
 
       volumes:
-      - name: datashare-app
+      - name: cmshare-app-data
         persistentVolumeClaim:
-          claimName: datashare-app
-      - name: cmshare-data
+          claimName: cmshare-app-data
+      - name: {{ .Values.pvcNames.cmshareData }}
         persistentVolumeClaim:
-          claimName: cmshare-data
+          claimName: {{ .Values.pvcNames.cmshareData }}
