@@ -8,6 +8,9 @@ For deployment into production set:
 
 ## Releases
 
+### Version 0.4.4 - 12 May 2025
+- Added new ingress configuration vars [valentinab25 - [`7105349`](https://github.com/eea/helm-charts/commit/710534985707f26efb855caf5f1e1133e84ac60e)]
+
 ### Version 0.4.3 - 08 May 2025
 - Fix statefulset servicename [valentinab25 - [`8a8ff1b`](https://github.com/eea/helm-charts/commit/8a8ff1b6444ea7fa7deff634b1af57de5390ae3d)]
 
