@@ -46,9 +46,10 @@ data:
 
       RewriteEngine On
       RewriteRule ^/pypi(.*) http://pypi.python.org/simple$1 [R=permanent,L]
-
-      RewriteCond %{REQUEST_URI} ^/d/[^/]+$
-      RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI}/ [R=301,L]
+      
+      #add trailing slash or it does not work
+      RewriteRule ^/simple$ /simple/ [PT,L]
+      RewriteRule ^/d/([^/]+)$ /d/$1/ [PT,L]
 
       ProxyPreserveHost On
       ProxyPass / http://{{ .Release.Name }}-repository:9090/
