@@ -50,7 +50,7 @@ data:
       RewriteCond %{REQUEST_URI} ^/d/[^/]+$
       RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI}/ [R=301,L]
 
-      #ProxyPreserveHost On
+      ProxyPreserveHost On
       ProxyPass / http://{{ .Release.Name }}-repository:9090/
       ProxyPassReverse / http://{{ .Release.Name }}-repository:9090/
 
