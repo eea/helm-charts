@@ -47,7 +47,7 @@ spec:
           {{- toYaml .Values.nginx.resources | nindent 10 }}
         volumeMounts:
         - mountPath: /var/www/html
-          name: datashare-app
+          name: cmshare-app-data
 
       {{- with .Values.nodeSelector }}
       nodeSelector:

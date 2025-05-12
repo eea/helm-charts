@@ -56,7 +56,7 @@ nginx:
 
 cron:
   securityContext:
-    privileged: true
+    privileged: false
   resources:
     requests:
       memory: 4Gi
@@ -65,7 +65,7 @@ cron:
 
 app:
   securityContext:
-    privileged: true
+    privileged: false
   resources:
     requests:
       memory: 4Gi
@@ -100,4 +100,8 @@ redis:
       memory: 4Gi
 
 cmshareData:
-  existing: true
+  existing: false
+
+pvcNames:
+  cmshareDBdata: "cmshare-db-data"
+  cmshareData: "cmshare-data"

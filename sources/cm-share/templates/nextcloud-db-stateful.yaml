@@ -48,8 +48,7 @@ spec:
            {{- toYaml .Values.db.resources | nindent 10 }}
         volumeMounts:
         - mountPath: /var/lib/mysql
-          name: cmshare-db-data
-
+          name: {{ .Values.pvcNames.cmshareDBdata }}
         ports:
         - containerPort: 3306
 
@@ -65,13 +64,14 @@ spec:
           periodSeconds: 15
 
       restartPolicy: Always
-
+  {{- if not .Values.cmshareData.existing }}
   volumeClaimTemplates:
-  - metadata:
-      name: cmshare-db-data
-    spec:
-      accessModes:
-      - ReadWriteOnce
-      resources:
-        requests:
-          storage: "{{ .Values.db.storage }}"
+    - metadata:
+        name: {{ .Values.pvcNames.cmshareDBdata }}
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: {{ .Values.db.storage | quote }}
+  {{- end }}
