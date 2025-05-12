@@ -5,9 +5,9 @@ metadata:
 
 data:
   vh-my-app.conf: |-
-    {{- if .Values.rewriteUrl }}
+    {{- if .Values.rewrite.url }}
     <VirtualHost *:80>
-      ServerName {{ .Values.rewriteUrl }}
+      ServerName {{ .Values.rewrite.url }}
       RewriteEngine On
       RewriteRule ^(.*)$ https://{{ .Values.url }}$1 [R=permanent,L]
     </VirtualHost>
@@ -46,6 +46,9 @@ data:
 
       RewriteEngine On
       RewriteRule ^/pypi(.*) http://pypi.python.org/simple$1 [R=permanent,L]
+
+      RewriteCond %{REQUEST_URI} ^/d/[^/]+$
+      RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI}/ [R=301,L]
 
       #ProxyPreserveHost On
       ProxyPass / http://{{ .Release.Name }}-repository:9090/
