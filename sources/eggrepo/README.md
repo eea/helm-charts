@@ -8,6 +8,9 @@ For deployment into production set:
 
 ## Releases
 
+### Version 0.4.5 - 12 May 2025
+- Add redirect to from /d/REPO to /d/REPO/ [valentinab25 - [`aba1966`](https://github.com/eea/helm-charts/commit/aba1966178992e6d3cf4af9871f2f0faccbafa64)]
+
 ### Version 0.4.4 - 12 May 2025
 - Added new ingress configuration vars [valentinab25 - [`7105349`](https://github.com/eea/helm-charts/commit/710534985707f26efb855caf5f1e1133e84ac60e)]
 
