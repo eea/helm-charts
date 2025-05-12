@@ -8267,6 +8267,25 @@ entries:
     urls:
     - cluster-role-manager-0.0.1.tgz
     version: 0.0.1
+  cmshare:
+  - apiVersion: v2
+    appVersion: 31.0.4-fpm-alpine
+    created: "2025-05-12T10:41:18.937119+03:00"
+    dependencies:
+    - name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.0.6
+    description: A NextCloud service for sharing files
+    digest: 0791f47a55fc263dd801c665a946e0b2476e217c94ea5e19f559e7d104a77716
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/cmshare/cmshare.svg
+    keywords:
+    - Sharing
+    - Nextcloud
+    name: cmshare
+    type: application
+    urls:
+    - cmshare-0.1.0.tgz
+    version: 0.1.0
   contreg:
   - apiVersion: v2
     appVersion: 2025-03-17T1344
@@ -17619,4 +17638,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2025-05-09T14:10:41.221713375Z"
+generated: "2025-05-12T10:41:18.936276+03:00"

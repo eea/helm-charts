@@ -1,0 +1,5 @@
+
+
+Get the application URL by running these commands:
+
+    kubectl --namespace {{ .Release.Namespace }} port-forward svc/nginx 8080:80
