@@ -8,6 +8,9 @@ For deployment into production set:
 
 ## Releases
 
+### Version 0.4.6 - 12 May 2025
+- Add trailing slash to /simple [valentinab25 - [`ffaacf3`](https://github.com/eea/helm-charts/commit/ffaacf3574f23bec0c0fc3238efb4afbfffd2d09)]
+
 ### Version 0.4.5 - 12 May 2025
 - Add redirect to from /d/REPO to /d/REPO/ [valentinab25 - [`aba1966`](https://github.com/eea/helm-charts/commit/aba1966178992e6d3cf4af9871f2f0faccbafa64)]
 
