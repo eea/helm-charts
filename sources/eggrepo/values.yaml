@@ -14,7 +14,11 @@ fullnameOverride: ""
 timezone: Europe/Copenhagen
 ldapServer: ldap.eionet.europa.eu
 
-rewriteUrl: eggrepo.apps.eea.europa.eu
+rewrite:
+  url: ''
+  tls: yes
+  certificate: eggrepo.apps.eea.europa.eu-tls
+
 url: eggrepo.eea.europa.eu
 
 commandArgs: ''
@@ -42,17 +46,14 @@ service:
 ingress:
   enabled: true
   className: ""
-  annotations: 
-    cert-manager.io/cluster-issuer: 01dev-eea-letsencrypt
-    nginx.ingress.kubernetes.io/configuration-snippet: |-
-      more_set_headers 'Server HTTPS'
-        'Strict-Transport-Security max-age=31536000; includeSubDomains; preload'
-        'X-Content-Type-Options "nosniff"'
-        'X-XSS-Protection "1; mode=block"'
-        "X-Frame-Options 'SAMEORIGIN'"
-        "Referrer-Policy origin"
+  annotations: {}
+  letsencrypt: "01dev-eea-letsencrypt"
+  configuration:
+    proxy-body-size: "256m"
+    proxy-read-timeout: "180s"
+    proxy-send-timeout: "120s"
   tls: true
-
+  certificate: ""
 
 eggrepo:
   resources:
@@ -75,16 +76,15 @@ eggrepo:
       port: 9090
     periodSeconds: 5
     timeoutSeconds: 10
-    initialDelaySeconds: 10
+    initialDelaySeconds: 5
     failureThreshold: 12
     successThreshold: 1
   readinessProbe:
     httpGet:
       path: /
       port: 9090
-    periodSeconds: 15
+    periodSeconds: 10
     timeoutSeconds: 10
-    initialDelaySeconds: 60
     failureThreshold: 4
     successThreshold: 2
   nodeSelector: {}
@@ -105,7 +105,6 @@ httpd:
       port: 80
     periodSeconds: 20
     timeoutSeconds: 10
-    initialDelaySeconds: 30
     failureThreshold: 6
     successThreshold: 1
   startupProbe:
@@ -123,7 +122,6 @@ httpd:
       port: 80
     periodSeconds: 15
     timeoutSeconds: 10
-    initialDelaySeconds: 60
     failureThreshold: 4
     successThreshold: 2
   nodeSelector: {}

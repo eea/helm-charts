@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "appl.fullname" . }}-httpd
+  name: {{ .Release.Name }}-apache-dpl
   labels:
     {{- include "appl.labels" . | nindent 4 }}
     component: httpd
@@ -34,7 +34,7 @@ spec:
         - name: APACHE_CONFIG
           valueFrom:
             configMapKeyRef:
-              name: {{ .Release.Name }}-htconf
+              name: {{ .Release.Name }}-apache-config-cm
               key: vh-my-app.conf
         resources:
           {{- toYaml .Values.httpd.resources | nindent 10 }}

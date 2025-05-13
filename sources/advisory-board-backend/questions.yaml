@@ -251,12 +251,14 @@
     required: true
     default: "4Gi"
     group: "Memory"
+
   - variable: "debug.resources.requests.memory"
     label: "Debug memory reservation"
     type: "string"
     required: true
     default: "4Gi"
     group: "Memory"
+    show_if: "debug.enabled=true"
 
   - variable: "debug.resources.limits.memory"
     label: "Debug memory limit"
@@ -265,6 +267,8 @@
     required: true
     default: "4Gi"
     group: "Memory"
+    show_if: "debug.enabled=true"
+
   - variable: "varnish.resources.requests.memory"
     label: "Varnish memory reservation"
     type: "string"

@@ -1,15 +1,15 @@
 
-{{- if (.Values.redirectUrl) }}
+{{- if (.Values.rewrite.url) }}
 
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: eggrepo-redirect
+  name: {{ .Release.Name }}-redirect
   labels:
     {{- include "appl.labels" . | nindent 4 }}
     component: httpd
   annotations:
-    nginx.ingress.kubernetes.io/permanent-redirect: https://{{ .Values.rewriteUrl }}
+    nginx.ingress.kubernetes.io/permanent-redirect: https://{{ .Values.url }}
     {{- with .Values.ingress.annotations }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
@@ -17,20 +17,22 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: {{ .Values.rewriteUrl }}
+  - host: {{ .Values.rewrite.url }}
     http:
       paths:
       - path: /
         pathType: Prefix
         backend:
           service:
-            name: {{ include "appl.fullname" . }} 
+            name: {{ .Release.Name }}-apache
             port:
               number: 80
-  {{- if .Values.ingress.tls }}
+  {{- if .Values.rewrite.tls }}
   tls:
   - hosts:
-    - {{ .Values.rewriteUrl }}
-    secretName: {{ .Values.rewriteUrl }}-tls
+    - {{ .Values.rewrite.url }}
+    {{- if .Values.rewrite.certificate }}  
+    secretName: {{ .Values.rewrite.certificate }}
+    {{- end }}
   {{- end  }}
 {{- end  }}

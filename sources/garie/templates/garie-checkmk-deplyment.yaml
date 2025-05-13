@@ -17,7 +17,17 @@ spec:
         app: garie
         role: garie-checkmk
     spec:
-      containers:
+      initContainers:
+      - name: create-config
+        image: busybox
+        command: [ "/bin/sh", "-c" ]
+        args:
+        - >
+          touch /config/config.json && chmod 666 /config/config.json
+        volumeMounts:
+        - name: config-volume
+          mountPath: /config    
+      containers: 
         - name: garie-checkmk
           image: eeacms/garie-checkmk:0.1.5
           env:
@@ -38,20 +48,23 @@ spec:
           volumeMounts:
             - name: reports
               mountPath: /usr/src/garie-plugin/reports
-          livenessProbe:
-            tcpSocket:
-              port: 3000
-            initialDelaySeconds: 10
-            periodSeconds: 15
-            timeoutSeconds: 2
-            failureThreshold: 5
-          readinessProbe:
-            tcpSocket:
-              port: 3000
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 2
-            failureThreshold: 3
+            - name: config-volume
+              mountPath: /usr/src/garie-plugin/config.json
+              subPath: config.json
+          # livenessProbe:
+          #   tcpSocket:
+          #     port: 3000
+          #   initialDelaySeconds: 10
+          #   periodSeconds: 15
+          #   timeoutSeconds: 2
+          #   failureThreshold: 5
+          # readinessProbe:
+          #   tcpSocket:
+          #     port: 3000
+          #   initialDelaySeconds: 5
+          #   periodSeconds: 10
+          #   timeoutSeconds: 2
+          #   failureThreshold: 3
           resources:
             requests:
               memory: {{ .Values.garieCheckmk.resources.requests.memory }}
@@ -61,3 +74,5 @@ spec:
         - name: reports
           persistentVolumeClaim:
             claimName: garie-reports
+        - name: config-volume
+          emptyDir: {}

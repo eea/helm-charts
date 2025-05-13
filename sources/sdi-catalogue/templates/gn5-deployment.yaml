@@ -28,7 +28,7 @@ spec:
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
       containers:
       - name: gn5
-        image: juanluisrp/geonetwork5:frontend-exp-indexrecord-5eba5900
+        image: juanluisrp/geonetwork5:frontend-exp-indexrecord-cb703d4153c0a0a5b338b8a76a740152c80399b2
         env:
         - name: SERVER_PORT
           value: "{{ .Values.gn5.server.port }}"
@@ -38,26 +38,10 @@ spec:
           value: {{ .Values.gn5.database.username }}
         - name: SPRING_DATASOURCE_PASSWORD  
           value: {{ .Values.gn5.database.password }}
-        - name: GEONETWORK_DIRECTORY_DATA
-          value: {{ .Values.gn5.directory.data }}
-        - name: GEONETWORK_URL
-          value: {{ .Values.gn5.gnUrl }}
-        - name: GEONETWORK_INDEX_URL
-          value: "{{ tpl  .Values.gn5.index.url . }}"
-        - name: GEONETWORK_INDEX_INDEXPREFIX
-          value: {{ .Values.gn5.index.indexPrefix }}
-        - name: GEONETWORK_INDEX_INDEXRECORDNAME
-          value: {{ .Values.gn5.index.indexRecordName }}
-        - name: GEONETWORK_4_URL
-          value: {{ .Values.gn5.gn4Url }}
-        - name: GEONETWORK_CORE_URL
-          value: {{ .Values.gn5.coreUrl }}
-        - name: GN5_BASE_URL
-          value: {{ .Values.gn5.baseUrl }}
-        - name: GN4_BASE_URL  
-          value: {{ .Values.gn5.gn4baseUrl }}
         - name: JAVA_OPTS
           value: -Dfile.encoding=UTF-8
+        - name: SPRING_CONFIG_ADDITIONAL_LOCATION
+          value: optional:{{ .Values.gn5.directory.config }}/gn5-config.yaml
 
         ports:
         - containerPort: 8080
@@ -66,6 +50,9 @@ spec:
         volumeMounts:
         - mountPath: /catalogue-data
           name: sdi-gn5-data
+        - mountPath: /var/local/gis_sdi
+          name: gis-sdi
+          readOnly: false
 
       {{- with .Values.nodeSelector }}
       nodeSelector:
@@ -85,4 +72,8 @@ spec:
       - name: sdi-gn5-data
         persistentVolumeClaim:
           claimName: sdi-gn5-data
+      - name: gis-sdi
+        persistentVolumeClaim:
+          claimName: gis-sdi
+          readOnly: false
  {{- end }}

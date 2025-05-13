@@ -1,18 +1,20 @@
 # EEA Screenshoteer service
 
-<p> Service for making web screenshots and pdfs via api.</p>
+Service for making web screenshots and pdfs via api.
 
-<p>Tool based on <a href="https://github.com/GoogleChrome/puppeteer">puppeteer</a>. </p>
+Tool based on <a href="https://github.com/GoogleChrome/puppeteer">puppeteer</a>.
 
-<h4>Installation </h4>
+## Installation
 
 <p><a href="https://hub.docker.com/r/eeacms/screenshoteer">Docker image</a>. </p>
 <p><a href="https://github.com/eea/eea.docker.screenshoteer/blob/master/docker-compose.yml">Docker Compose</a>. </p>
 <p><a href="https://eea.github.io/helm-charts/">Helm Chart</a>.</p>
 
+## Releases
 
-<p>
-<h4>API options:</h4>
+1.12.0 - Remove default capabilities
+
+## API options
 
 /API/v1/retrieve_image_for_url?params=params - used for image/pdf creation, returns the respective pdf/image as response
 
@@ -25,8 +27,7 @@
 /API/v1/healthcheck - used mainly by rancher, returns code 200 if everything checks out
 <p>
 
-<p>
-<h4>API Parameters:</h4>
+### API Parameters
 
 --url - web page url
 
@@ -52,10 +53,8 @@
 
 --click - example: ".selector>a" excellent way to close popups or to click some buttons on the page.
 
-<p>
 
-
-<h4>Example: </h4>
+## Example
 
 ```shell
 /API/v1/retrieve_image_for_url?url=https://www.eea.europa.eu/countries-and-regions/hungary&pdf=true
@@ -64,5 +63,5 @@
 
 /API/v1/retrieve_image_for_url?url=google.com&fullPage=true&w=1920
 ```
-<p> List of of supported mobile devices: https://github.com/GoogleChrome/puppeteer/blob/master/DeviceDescriptors.js
-</p>
+
+List of of supported mobile devices: https://github.com/GoogleChrome/puppeteer/blob/master/DeviceDescriptors.js

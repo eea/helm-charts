@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: redis
+
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: redis
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: redis
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      containers:
+      - name: redis
+        image: redis:7.2.8-alpine
+        env:
+        - name: TZ
+          value: Europe/Copenhagen
+
+        resources:
+          {{- toYaml .Values.redis.resources | nindent 10 }}
+
+        volumeMounts:
+        - mountPath: /data
+          name: cmshare-redis
+
+        ports:
+        - containerPort: 6379
+
+        livenessProbe:
+          tcpSocket:
+            port: 6379
+          periodSeconds: 60
+
+        startupProbe:
+          tcpSocket:
+            port: 6379
+          failureThreshold: 6
+          periodSeconds: 10
+
+      restartPolicy: Always
+
+      volumes:
+      - name: cmshare-redis
+        persistentVolumeClaim:
+          claimName: cmshare-redis

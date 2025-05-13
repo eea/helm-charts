@@ -152,6 +152,26 @@ data:
             ProxyPassReverse http://validator:8080/validator
         </Location>
 
+        Redirect permanent /webdav/datastore/public https://galliwasp.eea.europa.eu/datastore/public
+        Redirect permanent /webdav/datastore https://galliwasp.eea.europa.eu/datastore/public
+
+    
+        RewriteEngine On
+        RewriteRule ^/data/([^/]+)$ http://public-catalogue:8080/catalogue/srv/api/records/$1/datastore [P,L]
+        ProxyPassReverse ^/data/([^/]+)$ http://public-catalogue:8080/catalogue/srv/api/records/$1/datastore
+
+
+        <Location /datastore/public>
+            ProxyPass http://nextcloud/s/eSX7atQY4BPZEtN
+            ProxyPassReverse /datastore/public
+        </Location>
+
+        <Location /datastore/internal>
+            ProxyPass http://nextcloud/f/52734
+            ProxyPassReverse /datastore/internal
+        </Location>
+
+
         <Location /datashare>
             ProxyPreserveHost On
             RewriteEngine On

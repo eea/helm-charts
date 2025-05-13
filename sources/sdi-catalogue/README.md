@@ -19,10 +19,23 @@ When the application was running on Rancher 1.6, it had a container, which ran t
 ## Releases
 
 <dl>
+  <dt>Version 0.7.5 - 25 April 2025</dt>
+  <dd>Add apache redirections. Add symlinks to GN datastore. Events for updating the metadata file on metadata change. All running as www-data (33:33)</dd>
+
+  <dt>Version 0.7.4 - 24 April 2025</dt>
+  <dd>Externalise GN5 configuration yml file</dd>
+
+  <dt>Version 0.7.3 - 24 April 2025</dt>
+  <dd>Fix Nextcloud configmap values</dd>
+
+  <dt>Version 0.7.2 - 24 April 2025</dt>
+  <dd>Fix config map</dd>
+
   <dt>Version 0.7.1 - 24 April 2025</dt>
   <dd>Make Nextcloud's config.php not read-only. Add ConfigMap with Nextcloud config to 
   /etc/nextcloud/config/config.php and a initcontainer that creates a symlink in /var/www/html/config/k8s.config.php to that file.
   This allow to have a read-only configuration file in a ConfigMap and Nextcloud doesn't complain about config.php read-only file.
+  Remove nextcloud-db container as NC can use a postgres database instead.
   </dd>
 
   <dt>Version 0.7.0 - 22 April 2025</dt>

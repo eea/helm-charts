@@ -390,14 +390,14 @@ questions:
         description: "The API token for your Matomo instance."
 
   - variable: garieCheckmk.resources.requests.memory
-    default: 256Mi
+    default: 512Mi
     description: Memory reservation (requests)
     type: string
     required: true
     group: Checkmk configuration
     subquestions:
       - variable: garieCheckmk.resources.limits.memory
-        default: 256Mi
+        default: 512Mi
         description: Memory limit
         type: string
         required: true

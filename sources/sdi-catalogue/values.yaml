@@ -117,7 +117,10 @@ nextcloud:
   resources: {}
 
 nextclouddb:
+  dbtype: mysql
   database: ncdb
+  host: 'nextcloud-db'
+  port: 3306
   user: ''
   password: ''
   rootPW: ''
@@ -230,6 +233,7 @@ gn5:
     indexRecordName: gn-records5
   directory:
     data: /catalogue-data/data
+    config: /catalogue-data/config
   gn4Url: http://gn46:8080/geonetwork
   coreUrl: http://gn46:8080/geonetwork
   baseUrl: http://gn46:8080/geonetwork
@@ -243,7 +247,7 @@ gn5:
 gn46:
   webapp_context: /geonetwork
   geonetwork_dir: /catalogue-data
-  geonetwork_data_dir: /var/local/gis_sdi/datastore
+  geonetwork_data_dir: /var/local/gis_sdi/cataloguestore/metadata_data
   catalogue_name: catalogue
   jvm_max_memory: 2G
   db_type: postgres
