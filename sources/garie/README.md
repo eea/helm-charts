@@ -68,3 +68,6 @@ We have the following services that should be exposed in ingress:
 - garie-webscore:3000
 
 # Releases
+
+### Version 0.0.1 - 13 May 2025
+- Init Helm Chart [Silviu - [`90a5f25`](https://github.com/eea/helm-charts/commit/90a5f2581e73452324545ff3bc149b73e9006ea3)]
