@@ -19,7 +19,8 @@ spec:
     spec:
       containers:
         - name: garie-webscore
-          image: eeacms/garie-webscore:0.3.25
+          image: eeacms/garie-webscore:{{ .Chart.AppVersion }}
+          imagePullPolicy: Always
           env:
             - name: HOST
               value: influxdb
