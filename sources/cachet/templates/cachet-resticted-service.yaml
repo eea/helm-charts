@@ -1,0 +1,19 @@
+{{- if .Values.ingress.enableRestrictions }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.cachet.serviceName }}-restricted
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: cachet
+spec:
+  type: LoadBalancer
+  externalTrafficPolicy: Local
+  ports:
+    - name: http
+      port: 8000
+      targetPort: 8000
+  selector:
+    {{- include "appl.selectorLabels" . | nindent 4 }}
+    component: cachet
+{{- end }}      

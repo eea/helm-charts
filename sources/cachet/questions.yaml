@@ -7,6 +7,43 @@ questions:
     default: "status.01dev.eea.europa.eu"
     group: "General"
 
+  - variable: "ingress.tls"
+    label: "Enable https"
+    default: true
+    type: "boolean"
+    required: true
+
+  - variable: "ingress.letsencrypt"
+    label: "Ingress letsencrypt cluster-issuer"
+    description: "Leave empty when not using letsencrypt"
+    default: "01dev-eea-letsencrypt"
+
+  - variable: "ingress.configuration.proxy-body-size"
+    label: "Rancher LB body size"
+    description: "Example 100m"
+    type: "string"
+    default: "100m"
+
+  - variable: "ingress.configuration.proxy-read-timeout"
+    label: "Rancher LB read timeout"
+    description: "Maximum response time from upstream server, in seconds, example 60s"
+    type: "string"
+    default: "120s"
+
+  - variable: "ingress.configuration.proxy-send-timeout"
+    label: "Rancher LB send timeout"
+    description: "Timeout before closing the connection"
+    type: "string"
+    default: "60s"
+
+  - variable: "ingress.certificate"
+    label: "Certificate name"
+    description: "Leave blank for default certificate"
+    default: "status.01dev.eea.europa.eu-tls"
+    type: "string"
+    show_if: "ingress.tls"
+
+
   - variable: monitor.enabled
     label: "Cachet enable monitor" 
     type: boolean
