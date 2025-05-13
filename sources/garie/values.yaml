@@ -1,79 +1,23 @@
-general:
-  timezone: "UTC"
-
-influxdb:
-  image: influxdb:latest
-  replicas: 1
-  adminUser: "admin"
-  adminPassword: "password"
-  timezone: "UTC"
-  antiAffinity: false
-
-  resources:
-    requests:
-      memory: "3G"
-    limits:
-      memory: "3G"
-
-  storage: "1Gi"
-  storageClassName: "local-path"
-
-  livenessProbe:
-    initialDelaySeconds: 10
-    periodSeconds: 10
-    timeoutSeconds: 5
-    failureThreshold: 3
-
-  readinessProbe:
-    initialDelaySeconds: 5
-    periodSeconds: 5
-    timeoutSeconds: 3
-    failureThreshold: 3
-
-service:
-  type: ClusterIP
-
-grafana:
-  replicas: 1
-  adminPassword: "admin"
-  timezone: "UTC"
-  domain: "grafana.example.com"
-
-  resources:
-    requests:
-      memory: 512Mi
-    limits:
-      memory: 512Mi
-
-  storage:
-    data: 1Gi
-    config: 1Gi
-    storageClassName: "local-path"
-
-  livenessProbe:
-    initialDelaySeconds: 10
-    periodSeconds: 10
-    timeoutSeconds: 5
-    failureThreshold: 3
-
-  readinessProbe:
-    initialDelaySeconds: 5
-    periodSeconds: 5
-    timeoutSeconds: 3
-    failureThreshold: 3
-
 chronograf:
-  storage: 1Gi
-  storageClassName: "local-path"
   resources:
-    requests:
-      memory: 256Mi
     limits:
       memory: 256Mi
-
+    requests:
+      memory: 256Mi
+  storage: 1Gi
+  storageClassName: nfs-client
+garieCheckmk:
+  cmkSecrets: ""
+  cmkServers: goldeneye.eea.europa.eu,goldeneye-aws.eea.europa.eu
+  cmkSiteNames: omdeea,omdeeaaws
+  cmkUsernames: ""
+  label: Garie Checkmk configuration
+  resources:
+    limits:
+      memory: 256Mi
+    requests:
+      memory: 256Mi
 garieConfig:
-  reportsStorage: 5Gi
-  storageClassName: local-path
   config: |
     {
       "plugins":{
@@ -886,135 +830,168 @@ garieConfig:
           }
       ]
     }
-
+  reportsStorage: 5Gi
+  storageClassName: nfs-client
 garieLighthouse:
-  label: "Garie Lighthouse configuration"
+  label: Garie Lighthouse configuration
   resources:
-    requests:
-      memory: 5Gi
     limits:
       memory: 5Gi
-
-gariebBrowserTime:
-  label: "Garie Lighthouse configuration"
-  resources:
     requests:
-      memory: 3Gi
+      memory: 5Gi
+garieLinksintegrity:
+  resources:
     limits:
-      memory: 3Gi
-
+      memory: 1Gi
+    requests:
+      memory: 1Gi
+garieSSLlabs:
+  resources:
+    limits:
+      memory: 256Mi
+    requests:
+      memory: 256Mi
 garieSecurityheaders:
-  label: "Garie Securityheaders configuration"
+  label: Garie Securityheaders configuration
   resources:
-    requests:
-      memory: 512Mi
     limits:
       memory: 512Mi
-
-garieUptimeRobot:
-  label: "Garie UptimeRobot configuration"
-  uptimeRobotKeys: ""
-  uptimeApiUrl: "https://api.uptimerobot.com/v2/getMonitors"
-  intervalDays: "30"
-  resources:
     requests:
       memory: 512Mi
-    limits:
-      memory: 512Mi
-
-garieSonarQube:
-  label: "Garie SonarQube configuration"
-  snarqubeApiUrl: "https://sonarqube.eea.europa.eu"
-  resources:
-    requests:
-      memory: 256Mi
-    limits:
-      memory: 256Mi
-
 garieSentryMetrics:
-  label: "Garie Sentry Metrics configuration"
-  sentryAuthoriation: ""
-  sentryURL: "https://sentry.eea.europa.eu/"
+  label: Garie Sentry Metrics configuration
   matomoToken: ""
   matomoURL: https://matomo.eea.europa.eu/
   resources:
-    requests:
-      memory: 256Mi
     limits:
       memory: 256Mi
-
-garieCheckmk:
-  label: "Garie Checkmk configuration"
-  cmkSecrets: ""
-  cmkServers: "goldeneye.eea.europa.eu,goldeneye-aws.eea.europa.eu"
-  cmkSiteNames: "omdeea,omdeeaaws"
-  cmkUsernames: "cmkapi-omdeea,cmkapi-omdeeaaws"
+    requests:
+      memory: 256Mi
+  sentryAuthoriation: ""
+  sentryURL: https://sentry.eea.europa.eu/
+garieSonarQube:
+  label: Garie SonarQube configuration
   resources:
-    requests:
-      memory: 256Mi
     limits:
       memory: 256Mi
-
-garieSSLlabs:
-  resources:
     requests:
       memory: 256Mi
-    limits:
-      memory: 256Mi
-
-garieLinksintegrity:
+  snarqubeApiUrl: https://sonarqube.eea.europa.eu
+garieUptimeRobot:
+  intervalDays: "30"
+  label: Garie UptimeRobot configuration
   resources:
-    requests:
-      memory: 1Gi
     limits:
-      memory: 1Gi
-
-webbkollBackend:
-  resources:
+      memory: 512Mi
     requests:
-      memory: 2Gi
-    limits:
-      memory: 2Gi
-
-webbkoll:
-  resources:
-    requests:
-      memory: 2Gi
-    limits:
-      memory: 2Gi
-
+      memory: 512Mi
+  uptimeApiUrl: https://api.uptimerobot.com/v2/getMonitors
+  uptimeRobotKeys: ""
 garieWebbkoll:
   resources:
-    requests:
-      memory: 1Gi
     limits:
       memory: 1Gi
-
+    requests:
+      memory: 1Gi
+gariebBrowserTime:
+  label: Garie Lighthouse configuration
+  resources:
+    limits:
+      memory: 3Gi
+    requests:
+      memory: 3Gi
+general:
+  timezone: UTC
+grafana:
+  adminPassword: admin
+  domain: grafana.example.com
+  livenessProbe:
+    failureThreshold: 3
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    timeoutSeconds: 5
+  readinessProbe:
+    failureThreshold: 3
+    initialDelaySeconds: 5
+    periodSeconds: 5
+    timeoutSeconds: 3
+  replicas: 1
+  resources:
+    limits:
+      memory: 512Mi
+    requests:
+      memory: 512Mi
+  storage:
+    config: 1Gi
+    data: 1Gi
+    storageClassName: nfs-client
+  timezone: UTC
+influxdb:
+  adminPassword: password
+  adminUser: admin
+  antiAffinity: false
+  image: influxdb:latest
+  livenessProbe:
+    failureThreshold: 3
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    timeoutSeconds: 5
+  readinessProbe:
+    failureThreshold: 3
+    initialDelaySeconds: 5
+    periodSeconds: 5
+    timeoutSeconds: 3
+  replicas: 1
+  resources:
+    limits:
+      memory: 3G
+    requests:
+      memory: 3G
+  storage: 1Gi
+  storageClassName: nfs-client
+  timezone: UTC
+ingress:
+  class: nginx
+  enabled: false
+  browsertime: ""
+  chronograf: ""
+  clusterIssuer: ""
+  grafana: ""
+  lighthouse: ""
+  webscore: ""
+postfix:
+  mtpHost: ""
+  pass: ""
+  port: ""
+  portNumber: ""
+  relay: ""
+  user: ""
+  variant: demo
+service:
+  type: ClusterIP
+webbkoll:
+  resources:
+    limits:
+      memory: 2Gi
+    requests:
+      memory: 2Gi
+webbkollBackend:
+  resources:
+    limits:
+      memory: 2Gi
+    requests:
+      memory: 2Gi
 webscore:
+  forcedMailResend: "false"
+  mailSubscriptionFrequencyCronjob: 0 10 * * 1
+  mailSubscriptionInfluxSyntax: 7d
+  monthlySubscription: 0 12 1 * *
+  onDemandJobTimeout: "900"
+  pagePassword: password
+  pageUsername: admin
+  reportPath: /reports
   resources:
     requests:
-      memory: 256Mi
       cpu: 250m
-  onDemandJobTimeout: "900"
-  sonarqubeUrl: "https://sonarqube.eea.europa.eu"
-  pageUsername: "admin"
-  pagePassword: "password"
-  mailSubscriptionFrequencyCronjob: "0 10 * * 1"
-  mailSubscriptionInfluxSyntax: "7d"
-  monthlySubscription: "0 12 1 * *"
-  forcedMailResend: "false"
-  reportPath: "/reports"
-
-postfix:
-  variant: "demo"
-  portNumber: "80"
-
-  mtpHost: "webscore.eea.europa.eu"
-  relay: "smtp.example.com"
-  port: "587"
-  user: "postfix@example.com"
-  pass: "supersecure"
-
-ingress:
-  enabled: false
-  class: "nginx"
+      memory: 256Mi
+  sonarqubeUrl: https://sonarqube.eea.europa.eu
