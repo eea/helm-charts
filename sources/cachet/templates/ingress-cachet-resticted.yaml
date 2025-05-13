@@ -1,0 +1,43 @@
+{{- if .Values.ingress.enableRestrictions }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: cachet-resticted
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: cachet
+  annotations:
+  {{- if .Values.ingress.letsencrypt }}
+    cert-manager.io/cluster-issuer: "{{ .Values.ingress.letsencrypt }}"
+  {{- end }}
+  {{- range $key, $value := .Values.ingress.configuration }}
+    {{- if ($value) }}
+    nginx.ingress.kubernetes.io/{{ $key }}: {{ $value | quote }}
+    {{- end }}
+  {{- end }}
+  {{- with .Values.ingress.annotations }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+
+spec:
+  ingressClassName: {{ .Values.ingress.restictedClassName }}
+  rules:
+  - host: {{ .Values.cachet.hostname }}
+    http:
+      paths:
+      - path: /dashboard/
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ .Values.cachet.serviceName }}-restricted
+            port:
+              number: 8000
+  {{- if .Values.ingress.tls }}
+  tls:
+  - hosts:
+    - {{ .Values.cachet.hostname }}
+    {{- if .Values.ingress.certificate }}
+    secretName: {{ .Values.ingress.certificate }}
+    {{- end  }}
+  {{- end  }}
+{{- end }}
