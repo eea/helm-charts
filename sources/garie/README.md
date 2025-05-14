@@ -69,6 +69,9 @@ We have the following services that should be exposed in ingress:
 
 # Releases
 
+### Version 0.0.5 - 14 May 2025
+- fix influxdb pvc [Silviu - [`cc9ab94`](https://github.com/eea/helm-charts/commit/cc9ab947ec8211f5ab391567a57abccb10533c4d)]
+
 ### Version 0.0.4 - 14 May 2025
 - fix typo [Silviu - [`82d988d`](https://github.com/eea/helm-charts/commit/82d988d367e2ace36252084a308ccb89a217188e)]
 
