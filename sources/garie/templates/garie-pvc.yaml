@@ -2,7 +2,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: garie-reports
-  adnotations:
+  annotations:
     helm.sh/resource-policy: keep
 spec:
   accessModes:

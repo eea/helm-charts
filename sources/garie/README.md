@@ -70,10 +70,13 @@ We have the following services that should be exposed in ingress:
 # Releases
 
 ### Version 0.0.3 - 14 May 2025
+
 - fix linksintegrity [Silviu - [`ab81b3b`](https://github.com/eea/helm-charts/commit/ab81b3b04f75d77f01fa86af5de69b8f8db8b897)]
 
 ### Version 0.0.2 - 14 May 2025
-- add pvc adnotations [Silviu - [`43aab12`](https://github.com/eea/helm-charts/commit/43aab12f37cdb4378ea48be4f991b584fff2641c)]
+
+- add pvc annotations [Silviu - [`43aab12`](https://github.com/eea/helm-charts/commit/43aab12f37cdb4378ea48be4f991b584fff2641c)]
 
 ### Version 0.0.1 - 13 May 2025
+
 - Init Helm Chart [Silviu - [`90a5f25`](https://github.com/eea/helm-charts/commit/90a5f2581e73452324545ff3bc149b73e9006ea3)]
