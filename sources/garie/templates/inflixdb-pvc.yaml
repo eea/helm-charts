@@ -1,6 +1,8 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
+  adnotation:
+    helm.sh/resource-policy: keep
   name: influxdb-data
   labels:
     app: garie

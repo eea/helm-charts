@@ -5,6 +5,8 @@ metadata:
   labels:
     app: garie
     role: grafana   
+  adnotations:
+    helm.sh/resource-policy: keep
 spec:
   accessModes:
     - ReadWriteOnce
