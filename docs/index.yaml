@@ -339,6 +339,20 @@ entries:
     version: 1.0.0
   advisory-board-frontend:
   - apiVersion: v2
+    appVersion: 1.15.0
+    created: "2025-05-16T11:09:03.469733129Z"
+    description: Climate advisory frontend
+    digest: e2a8b3f21c220e48cc122812d37fe78779e9186602b0f71229fee3fd06fb38e1
+    home: https://github.com/eea/advisory-board-frontend
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/advisory-board-frontend/volto.png
+    keywords:
+    - CMS
+    name: advisory-board-frontend
+    type: application
+    urls:
+    - advisory-board-frontend-1.4.0.tgz
+    version: 1.4.0
+  - apiVersion: v2
     appVersion: 1.14.0
     created: "2025-04-25T16:58:11.667501+02:00"
     description: Climate advisory frontend
@@ -5494,6 +5508,36 @@ entries:
   cachet:
   - apiVersion: v2
     appVersion: 2.3-1.3
+    created: "2025-05-13T19:44:41.338651014+03:00"
+    dependencies:
+    - name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.0.6
+    description: Cachet - The Open Source Status Page System
+    digest: 6b9609c2992118535402b1e843d3b4b51255d77ee367629ee08896e26a2e8b91
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/cachet/cachet.png
+    name: cachet
+    type: application
+    urls:
+    - cachet-0.1.3.tgz
+    version: 0.1.3
+  - apiVersion: v2
+    appVersion: 2.3-1.3
+    created: "2025-05-13T17:05:43.925784179+03:00"
+    dependencies:
+    - name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.0.6
+    description: Cachet - The Open Source Status Page System
+    digest: 7f2ca687be85dc71c14aaacd8597c353f1faaa818d90847485a46a5e80864b77
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/cachet/cachet.png
+    name: cachet
+    type: application
+    urls:
+    - cachet-0.1.2.tgz
+    version: 0.1.2
+  - apiVersion: v2
+    appVersion: 2.3-1.3
     created: "2025-04-25T16:58:12.863772+02:00"
     dependencies:
     - name: postfix
@@ -8301,6 +8345,24 @@ entries:
   cmshare:
   - apiVersion: v2
     appVersion: 31.0.4-fpm-alpine
+    created: "2025-05-16T14:46:20.568123+03:00"
+    dependencies:
+    - name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.0.6
+    description: A NextCloud service for sharing files
+    digest: 6ad3773be047f42193e1fd911af5f0950f2f73292be588918da0aae4c5081ad7
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/cm-share/cmshare.svg
+    keywords:
+    - Sharing
+    - Nextcloud
+    name: cmshare
+    type: application
+    urls:
+    - cmshare-0.1.2.tgz
+    version: 0.1.2
+  - apiVersion: v2
+    appVersion: 31.0.4-fpm-alpine
     created: "2025-05-12T18:01:39.373959+03:00"
     dependencies:
     - name: postfix
@@ -11098,6 +11160,62 @@ entries:
   garie:
   - apiVersion: v2
     appVersion: 0.3.26
+    created: "2025-05-14T13:10:16.486465+03:00"
+    description: Garie Webscore stack used for monitoring
+    digest: 881987c2434f87e9989f811bcdeb1321bf9ff1ab50a1346a402980a826b0a3de
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/garie/logo_garie.svg
+    keywords:
+    - Garie
+    - monitoring
+    name: garie
+    type: application
+    urls:
+    - garie-0.0.5.tgz
+    version: 0.0.5
+  - apiVersion: v2
+    appVersion: 0.3.26
+    created: "2025-05-14T12:51:28.668186+03:00"
+    description: Garie Webscore stack used for monitoring
+    digest: 3d01aa98b22e059e0634a48dd892120de048d7ff93261c9379441452f42984f2
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/garie/logo_garie.svg
+    keywords:
+    - Garie
+    - monitoring
+    name: garie
+    type: application
+    urls:
+    - garie-0.0.4.tgz
+    version: 0.0.4
+  - apiVersion: v2
+    appVersion: 0.3.26
+    created: "2025-05-14T12:47:29.18747+03:00"
+    description: Garie Webscore stack used for monitoring
+    digest: 2fcf346d0d5c58aef874edd45d9c3f408ce22c52287fc97a24affdf9709000eb
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/garie/logo_garie.svg
+    keywords:
+    - Garie
+    - monitoring
+    name: garie
+    type: application
+    urls:
+    - garie-0.0.3.tgz
+    version: 0.0.3
+  - apiVersion: v2
+    appVersion: 0.3.26
+    created: "2025-05-14T12:09:47.697944+03:00"
+    description: Garie Webscore stack used for monitoring
+    digest: 522e0c3b268949d94f4fd2a1ad20b53b37b5dc6b45b07566f21d72ee62b4c163
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/garie/logo_garie.svg
+    keywords:
+    - Garie
+    - monitoring
+    name: garie
+    type: application
+    urls:
+    - garie-0.0.2.tgz
+    version: 0.0.2
+  - apiVersion: v2
+    appVersion: 0.3.26
     created: "2025-05-13T10:31:41.399553+03:00"
     description: Garie Webscore stack used for monitoring
     digest: 6ecf33ce86ff13ac6ffe433708f9908defaf92b85d561c88c0d561ae995db891
@@ -11936,6 +12054,34 @@ entries:
     - ied-backend-1.0.1.tgz
     version: 1.0.1
   ied-frontend:
+  - apiVersion: v2
+    appVersion: 0.19.0
+    created: "2025-05-16T15:01:23.55883045Z"
+    description: IED frontend
+    digest: 18ed3786cfc6fee6050e9d0766946f5d8e7b4bfc13f0df94dd281b344a708c36
+    home: https://github.com/eea/ied-frontend
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/ied-frontend/ied.png
+    keywords:
+    - CMS
+    name: ied-frontend
+    type: application
+    urls:
+    - ied-frontend-1.14.0.tgz
+    version: 1.14.0
+  - apiVersion: v2
+    appVersion: 0.18.0
+    created: "2025-05-14T09:45:04.625797683Z"
+    description: IED frontend
+    digest: 7c606c6cdec6c55386bcdbfc6cac95618b8f78c89db59541b6040a3eb0761143
+    home: https://github.com/eea/ied-frontend
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/ied-frontend/ied.png
+    keywords:
+    - CMS
+    name: ied-frontend
+    type: application
+    urls:
+    - ied-frontend-1.13.0.tgz
+    version: 1.13.0
   - apiVersion: v2
     appVersion: 0.17.0
     created: "2025-05-12T08:59:36.896214963Z"
@@ -17761,4 +17907,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2025-05-13T10:31:41.396922+03:00"
+generated: "2025-05-16T15:01:23.556923323Z"
