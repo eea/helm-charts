@@ -11,6 +11,9 @@ This chart deployes the Climate Advisory Board backend app
 
 ## Releases
 
+### Version 1.10.2 - 20 May 2025
+- Fix cronjob args [valentinab25 - [`b8a90ff`](https://github.com/eea/helm-charts/commit/b8a90ff4b92826760cff933751921ec378bcdef9)]
+
 ### Version 1.10.1 - 20 May 2025
 - Add entrasync CronJob [valentinab25 - [`1d66430`](https://github.com/eea/helm-charts/commit/1d66430e40c481cf4237a5c94b97a787a930dc81)]
 
