@@ -25,13 +25,13 @@ ingress:
   className: "nginx"
   annotations: {}
   hosts:
-    - host: cmshare.eea.europa.eu
+    - host: ""
       paths:
         - path: /
           pathType: Prefix
   tls:
     - hosts:
-        - cmshare.eea.europa.eu
+        - ""
 
 podAnnotations: {}
 
