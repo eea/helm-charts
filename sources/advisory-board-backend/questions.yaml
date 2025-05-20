@@ -62,11 +62,26 @@
   - variable: "entrasync.schedule"
     label: "Scheduled Endra ID synchronization time"
     type: "string"
-    default: "0 0 3 * *"
+    default: "0 0 0 * *"
     required: true
     group: "General"
     show_if: "entrasync.enabled=true"
 
+  - variable: "zodbpack.enabled"
+    label: "Enable Zodbpack cleanup"
+    default: false
+    type: "boolean"
+    required: true
+    group: "General"
+
+  - variable: "zodbpack.schedule"
+    label: "Scheduled Zodbpack cleanup time"
+    type: "string"
+    default: "0 0 1 * *"
+    required: true
+    group: "General"
+    show_if: "zodbpack.enabled=true"
+      
   - variable: "varnish.serviceType"
     label: "Expose varnish"
     description: "Select NodePort to expose varnish"
@@ -290,13 +305,32 @@
     show_if: "entrasync.enabled=true"
 
   - variable: "entrasync.resources.limits.memory"
-    label: "Entrasync memory limit"
+    label: "Entrasynci cron job memory limit"
     description: ">= memory reservation"
     type: "string"
     required: true
     default: "1Gi"
     group: "Memory"
     show_if: "entrasync.enabled=true"
+
+
+  - variable: "zodbpack.resources.requests.memory"
+    label: "Zodbpack cron job memory reservation"
+    type: "string"
+    required: true
+    default: "1Gi"
+    group: "Memory"
+    show_if: "zodbpack.enabled=true"
+
+  - variable: "zodbpack.resources.limits.memory"
+    label: "Zodbpack cron job memory limit"
+    description: ">= memory reservation"
+    type: "string"
+    required: true
+    default: "1Gi"
+    group: "Memory"
+    show_if: "zodbpack.enabled=true"
+
 
   - variable: "varnish.resources.requests.memory"
     label: "Varnish memory reservation"
