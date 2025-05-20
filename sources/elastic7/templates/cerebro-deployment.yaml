@@ -42,7 +42,7 @@ spec:
           value: "{{ .Values.readWriteUser }}"
         {{- end }}
         - name: ELASTIC_URL
-          value: http://{{ .Release.Name }}-client:{{ .Values.esclient.service.port }}
+          value: http://{{ .Release.Name }}-master:{{ .Values.esmaster.service.port }}
         - name: TZ
           value: Europe/Copenhagen
 

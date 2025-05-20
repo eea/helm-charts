@@ -7,11 +7,11 @@ metadata:
     component: master
 
 spec:
-  type: {{ .Values.esclient.service.type }}
+  type: {{ .Values.esmaster.service.type }}
   clusterIP: None
   ports:
   - name: "9200"
-    port: {{ .Values.esclient.service.port }}
+    port: {{ .Values.esmaster.service.port }}
     targetPort: 9200
   selector:
     {{- include "appl.selectorLabels" . | nindent 4 }}
