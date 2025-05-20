@@ -163,6 +163,7 @@ publicCatalogue:
   schema_dir: /opt/geonetwork/WEB-INF/data/config/schema_plugins
   index_config_dir: /opt/geonetwork/WEB-INF/data/config/index
   resources_dir: "{{ .Values.publicCatalogue.geonetwork_dir }}/resources"
+  log_dir: "{{ .Values.publicCatalogue.geonetwork_dir }}/"
   es_host: elasticsearch
   es_port: 9200
   es_protocol: http
