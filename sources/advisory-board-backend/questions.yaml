@@ -52,6 +52,21 @@
     required: true
     group: "General"
 
+  - variable: "entrasync.enabled"
+    label: "Enable Entraid synchronization"
+    default: false
+    type: "boolean"
+    required: true
+    group: "General"
+      
+  - variable: "entrasync.schedule"
+    label: "Scheduled entrasync synchronization time"
+    type: "string"
+    default: "0 0 3 * *"
+    required: true
+    group: "General"
+    show_if: "entrasync.enabled=true"
+
   - variable: "varnish.serviceType"
     label: "Expose varnish"
     description: "Select NodePort to expose varnish"
@@ -71,6 +86,14 @@
       - "NodePort"
       - "ClusterIP"
     default: "ClusterIP"
+    required: true
+    group: "General"
+
+  - variable: "debug.enabled"
+    label: "Debug"
+    description: "Add backend debugging"
+    default: false
+    type: "boolean"
     required: true
     group: "General"
 
@@ -165,17 +188,6 @@
     group: "Plone configuration"
 
 
-  - variable: "debug.enabled"
-    label: "Debug"
-    description: "Add backend debugging"
-    default: false
-    type: "boolean"
-    required: true
-    group: "General"
-
-
-
-
   - variable: "varnish.port"
     label: "Varnish backend/exposed port"
     description: "To simplify, we use the same port as the web application"
@@ -268,6 +280,23 @@
     default: "4Gi"
     group: "Memory"
     show_if: "debug.enabled=true"
+
+  - variable: "entrasync.resources.requests.memory"
+    label: "Entrasync cron job memory reservation"
+    type: "string"
+    required: true
+    default: "1Gi"
+    group: "Memory"
+    show_if: "entrasync.enabled=true"
+
+  - variable: "entrasync.resources.limits.memory"
+    label: "Entrasync memory limit"
+    description: ">= memory reservation"
+    type: "string"
+    required: true
+    default: "1Gi"
+    group: "Memory"
+    show_if: "entrasync.enabled=true"
 
   - variable: "varnish.resources.requests.memory"
     label: "Varnish memory reservation"
