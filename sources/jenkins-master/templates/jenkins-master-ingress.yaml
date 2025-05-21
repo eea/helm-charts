@@ -19,7 +19,7 @@ spec:
               service:
                 name: {{ .Release.Name }}-service
                 port:
-                  number: 80
+                  number: 8080
   tls:
     - hosts:
         - {{ .Values.ingress.hostname }}
