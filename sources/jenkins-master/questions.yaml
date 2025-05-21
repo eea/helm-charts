@@ -1,0 +1,72 @@
+questions:
+  - variable: javaOpts
+    default: '-Xmx4096m -Dhudson.tasks.MailSender.SEND_TO_USERS_WITHOUT_READ=true -Dhudson.model.DirectoryBrowserSupport.CSP="default-src ''self'' ''unsafe-inline'' ''unsafe-eval'' *.eea.europa.eu *.eionet.europa.eu ; frame-src *; img-src * ''self'' ''unsafe-inline'' ''unsafe-eval'' data:;"'
+    description: "Java options for Jenkins"
+    type: string
+    label: Java Options
+    group: "Jenkins Configuration"
+    required: true
+
+  - variable: jenkinsOpts
+    default: "--sessionTimeout=240"
+    description: "Jenkins options"
+    type: string
+    label: Jenkins Options
+    group: "Jenkins Configuration"
+    required: true
+
+  - variable: timezone
+    default: "Europe/Copenhagen"
+    description: "Timezone for Jenkins"
+    type: string
+    label: Timezone
+    group: "Jenkins Configuration"
+    required: true
+
+  - variable: storageClass
+    default: "nfs-client"
+    description: "Storage class for Jenkins"
+    type: string
+    label: Storage Class
+    group: "Storage Configuration"
+    required: true
+
+  - variable: ingress.enabled
+    default: true
+    description: "Enable Ingress for Jenkins"
+    type: boolean
+    label: Enable Ingress
+    group: "Ingress Configuration"
+    required: true
+
+  - variable: ingress.hosts[0].host
+    default: "ci.eionet.europa.eu"
+    description: "Hostname for the Ingress"
+    type: string
+    label: Ingress Host
+    group: "Ingress Configuration"
+    required: true
+
+  - variable: ingress.tls[0].hosts[0]
+    default: "ci.eionet.europa.eu"
+    description: "Host for the TLS configuration"
+    type: string
+    label: TLS Host
+    group: "Ingress Configuration"
+    required: true
+
+  - variable: ingress.tls[0].secretName
+    default: ""
+    description: "Secret name for the TLS configuration"
+    type: string
+    label: TLS Secret Name
+    group: "Ingress Configuration"
+    required: false
+
+  - variable: volumeSize
+    default: "10Gi"
+    description: "Size of the Persistent Volume Claim"
+    type: string
+    label: Volume Size
+    group: "Storage Configuration"
+    required: true
