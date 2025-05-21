@@ -3,34 +3,24 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ .Release.Name }}-ingress
-  labels:
-    {{- include "appl.labels" . | nindent 4 }}
+  namespace: {{ .Release.Namespace }}
   annotations:
     {{- range $key, $value := .Values.ingress.annotations }}
     {{ $key }}: {{ $value | quote }}
     {{- end }}
 spec:
   rules:
-    {{- range .Values.ingress.hosts }}
-    - host: {{ .host }}
+    - host: {{ .Values.ingress.hostname }}
       http:
         paths:
-          {{- range .paths }}
-          - path: {{ .path }}
-            pathType: {{ .pathType }}
+          - path: "/"
+            pathType: "ImplementationSpecific"
             backend:
               service:
-                name: {{ $.Release.Name }}
+                name: {{ .Release.Name }}-service
                 port:
-                  number: 8080
-          {{- end }}
-    {{- end }}
+                  number: 80
   tls:
-    {{- range .Values.ingress.tls }}
     - hosts:
-        {{- range .hosts }}
-        - {{ . }}
-        {{- end }}
-      secretName: {{ .secretName }}
-    {{- end }}
+        - {{ .Values.ingress.hostname }}
 {{- end }}

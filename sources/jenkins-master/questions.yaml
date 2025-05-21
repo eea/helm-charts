@@ -39,29 +39,13 @@ questions:
     group: "Ingress Configuration"
     required: true
 
-  - variable: ingress.hosts[0].host
+  - variable: ingress.hostsname
     default: "ci.eionet.europa.eu"
     description: "Hostname for the Ingress"
     type: string
     label: Ingress Host
     group: "Ingress Configuration"
     required: true
-
-  - variable: ingress.tls[0].hosts[0]
-    default: "ci.eionet.europa.eu"
-    description: "Host for the TLS configuration"
-    type: string
-    label: TLS Host
-    group: "Ingress Configuration"
-    required: true
-
-  - variable: ingress.tls[0].secretName
-    default: ""
-    description: "Secret name for the TLS configuration"
-    type: string
-    label: TLS Secret Name
-    group: "Ingress Configuration"
-    required: false
 
   - variable: volumeSize
     default: "10Gi"

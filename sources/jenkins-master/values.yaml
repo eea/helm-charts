@@ -3,15 +3,8 @@ jenkinsOpts: "--sessionTimeout=240"
 timezone: "Europe/Copenhagen"
 storageClass: "nfs-client"
 volumeSize: "50Gi"
+
 ingress:
+  hostsname: "ci.eionet.europa.eu"
   enabled: true
-  hosts:
-    - host: "ci.eionet.europa.eu"
-      paths:
-        - path: "/"
-          pathType: "ImplementationSpecific"
   annotations: {}
-  tls:
-    - hosts:
-        - "ci.eionet.europa.eu"
-      secretName: ""
