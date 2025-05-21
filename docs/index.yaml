@@ -11911,6 +11911,24 @@ entries:
   ied-backend:
   - apiVersion: v2
     appVersion: 6.0.15-6
+    created: "2025-05-21T08:13:16.654653178Z"
+    dependencies:
+    - name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.0.6
+    description: IED backend
+    digest: 3dc72ca2ae4ed59da355d1ca07b4fec54b7f9500a5b59093ac0022f036d7ca73
+    home: https://github.com/eea/ied-backend
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/ied-backend/ied.png
+    keywords:
+    - CMS
+    name: ied-backend
+    type: application
+    urls:
+    - ied-backend-1.11.1.tgz
+    version: 1.11.1
+  - apiVersion: v2
+    appVersion: 6.0.15-6
     created: "2025-05-20T11:58:31.054157+02:00"
     dependencies:
     - name: postfix
@@ -18077,4 +18095,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2025-05-21T08:12:13.226729738Z"
+generated: "2025-05-21T08:13:16.652236179Z"
