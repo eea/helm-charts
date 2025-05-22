@@ -83,7 +83,7 @@ spec:
             - name: DOCKERHUB_USER
               value: "{{ .Values.dockerhub.username }}"
             - name: JAVA_OPTS
-              value: "-Xmx{{ .Values.javaOpts }}"
+              value: "{{ .Values.javaOpts }}"
             - name: JENKINS_MASTER
               value: "{{ .Values.master.url }}"
             - name: JENKINS_PASS
