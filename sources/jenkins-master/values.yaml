@@ -8,3 +8,13 @@ ingress:
   hostname: "ci.eionet.europa.eu"
   enabled: true
   annotations: {}
+
+postfix:
+  image: eeacms/postfix:3.5-1.0
+  environment:
+    MTP_HOST: ""
+    MTP_PASS: ""
+    MTP_PORT: "8587"
+    MTP_RELAY: ""
+    MTP_USER: ""
+    TZ: Europe/Copenhagen
