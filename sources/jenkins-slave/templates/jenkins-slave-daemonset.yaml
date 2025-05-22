@@ -33,11 +33,12 @@ spec:
             path: /sys/fs/cgroup
             type: Directory
         - name: dockersock
-          emptyDir: {}
+          emptyDir: 
+            sizeLimit: 100Gi
 
       containers:
         - name: docker
-          image: {{ .Values.dockerServerImage }}
+          image: {{ .Values.docker.image }}
           securityContext:
             privileged: true
           tty: true
@@ -57,7 +58,7 @@ spec:
             - name: docker-daemon-config
               mountPath: /etc/docker/daemon.json
               subPath: daemon.json
-
+              readOnly: true
           env:
             - name: DOCKER_TLS_CERTDIR
               value: "/certs"
@@ -67,7 +68,11 @@ spec:
               value: "1"
             - name: DOCKER_BUILDKIT
               value: "1"
-              
+          resources:
+            requests:
+              memory: "{{ .Values.docker.resources.requests.memory }}"
+            limits:
+              memory: "{{ .Values.docker.resources.limits.memory }}"
         - name: jenkins-slave
           image: eeacms/jenkins-slave-dind:{{ .Chart.AppVersion }}
           env:
@@ -108,8 +113,11 @@ spec:
               mountPath: /var/jenkins_home/worker
             - name: jenkins-docker-certs
               mountPath: /certs/client
+              readOnly: true
           securityContext:
             privileged: false
+            seccompProfile:
+              type: RuntimeDefault            
           resources:
             requests:
               memory: "{{ .Values.resources.requests.memory }}"
