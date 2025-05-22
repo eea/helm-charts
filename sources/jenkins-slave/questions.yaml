@@ -8,30 +8,6 @@ questions:
     label: Java Options
     group: "General Settings"
 
-  - variable: dockerhub.username
-    default: ""
-    description: "Docker Hub username"
-    type: string
-    required: false
-    label: Docker Hub Username
-    group: "General Settings"
-
-  - variable: dockerhub.password
-    default: ""
-    description: "Docker Hub password"
-    type: password
-    required: false
-    label: Docker Hub Password
-    group: "General Settings"
-
-  - variable: dockerServerImage
-    default: "docker:28.0.4-dind"
-    description: "Docker server image"
-    type: string
-    required: true
-    label: Docker Server Image
-    group: "General Settings"
-
   - variable: timezone
     default: "Europe/Copenhagen"
     description: "Timezone for the Jenkins instance"
@@ -39,6 +15,47 @@ questions:
     required: true
     label: Timezone
     group: "General Settings"
+
+  # Docker Settings
+  - variable: dockerhub.username
+    default: ""
+    description: "Docker Hub username"
+    type: string
+    required: false
+    label: Docker Hub Username
+    group: "Docker Settings"
+
+  - variable: dockerhub.password
+    default: ""
+    description: "Docker Hub password"
+    type: password
+    required: false
+    label: Docker Hub Password
+    group: "Docker Settings"
+
+  - variable: docker.image
+    default: "docker:28.1.1-dind-alpine3.21"
+    description: "Docker server image"
+    type: string
+    required: true
+    label: Docker Server Image
+    group: "Docker Settings"
+
+  - variable: docker.resources.requests.memory
+    default: "3Gi"
+    description: "Memory request for the Docker agent"
+    type: string
+    required: true
+    label: Memory Request
+    group: "Docker Settings"
+
+  - variable: docker.resources.limits.memory
+    default: "60Gi"
+    description: "Memory limit for the Docker agent"
+    type: string
+    required: true
+    label: Memory Limit
+    group: "Docker Settings"
 
   # Jenkins Master Settings
   - variable: master.url
