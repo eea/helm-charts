@@ -1,0 +1,117 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: {{ .Release.Name }}-daemonset
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: jenkins-slave
+spec:
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: jenkins-slave
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: jenkins-slave
+    spec:
+      volumes:
+        - name: docker-daemon-config
+          configMap:
+            name: docker-daemon-config      
+        - name: jenkins-docker-certs
+          hostPath:
+            path: /var/lib/jenkins-certs
+            type: DirectoryOrCreate
+        - name: jenkins-dind-work
+          hostPath:
+            path: /var/lib/jenkins-agent
+            type: DirectoryOrCreate
+        - name: cgroup
+          hostPath:
+            path: /sys/fs/cgroup
+            type: Directory
+        - name: dockersock
+          emptyDir: {}
+
+      containers:
+        - name: docker
+          image: {{ .Values.dockerServerImage }}
+          securityContext:
+            privileged: true
+          tty: true
+          args:
+          - "--config-file=/etc/docker/daemon.json"
+          - "--host=unix:///var/run/docker.sock"          
+          volumeMounts:
+            - name: dockersock
+              mountPath: /var/run
+            - name: jenkins-dind-work
+              mountPath: /var/lib/docker
+            - name: jenkins-docker-certs
+              mountPath: /certs/client
+            - name: cgroup
+              mountPath: /sys/fs/cgroup
+              mountPropagation: Bidirectional
+            - name: docker-daemon-config
+              mountPath: /etc/docker/daemon.json
+              subPath: daemon.json
+
+          env:
+            - name: DOCKER_TLS_CERTDIR
+              value: "/certs"
+            - name: DOCKER_CERT_PATH
+              value: "/certs/client"
+            - name: DOCKER_TLS_VERIFY
+              value: "1"
+            - name: DOCKER_BUILDKIT
+              value: "1"
+              
+        - name: jenkins-slave
+          image: eeacms/jenkins-slave-dind:{{ .Chart.AppVersion }}
+          env:
+            - name: DOCKER_HOST
+              value: "unix:///var/run/docker.sock"
+            - name: DOCKERHUB_PASS
+              value: "{{ .Values.dockerhub.password }}"
+            - name: DOCKERHUB_USER
+              value: "{{ .Values.dockerhub.username }}"
+            - name: JAVA_OPTS
+              value: "-Xmx{{ .Values.javaOpts }}"
+            - name: JENKINS_MASTER
+              value: "{{ .Values.master.url }}"
+            - name: JENKINS_PASS
+              value: "{{ .Values.master.password }}"
+            - name: JENKINS_USER
+              value: "{{ .Values.master.user }}"
+            - name: JENKINS_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+            - name: JENKINS_EXECUTORS
+              value: "{{ .Values.executors }}"
+            - name: JENKINS_LABELS
+              value: "{{ .Values.labels }}"
+            - name: JENKINS_OPTS
+              value: "{{ .Values.opts }}"
+            - name: JENKINS_RETRY
+              value: "{{ .Values.retry }}"
+            - name: RUN_AS_ROOT
+              value: "{{ if eq .Values.root "yes" }}yes{{ else }}no{{ end }}"
+            - name: TZ
+              value: "{{ .Values.timezone }}"
+          volumeMounts:
+            - name: dockersock
+              mountPath: /var/run
+            - name: jenkins-dind-work
+              mountPath: /var/jenkins_home/worker
+            - name: jenkins-docker-certs
+              mountPath: /certs/client
+          securityContext:
+            privileged: false
+          resources:
+            requests:
+              memory: "{{ .Values.resources.requests.memory }}"
+            limits:
+              memory: "{{ .Values.resources.limits.memory }}"
