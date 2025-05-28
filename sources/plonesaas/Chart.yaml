@@ -1,20 +1,13 @@
 apiVersion: v2
 name: plonesaas
-
 type: application
-
 version: 2.4.7
-
-appVersion: "5.2.9-58"
-
+appVersion: "5.2.13-32"
 description: PloneSAAS - both backend and frontends
 icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/plonesaas/volto.png
-
 home: http://eea.github.io/docs/IT-systems
-
 keywords:
-- CMS
-
+  - CMS
 # Remember to do helm dep up
 dependencies:
   - name: postfix
@@ -25,4 +18,3 @@ dependencies:
     version: 18.1.8
     repository: https://charts.bitnami.com/bitnami
     condition: plonesaas.enabled
-
