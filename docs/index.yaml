@@ -14738,6 +14738,29 @@ entries:
     version: 1.0.0
   plonesaas:
   - apiVersion: v2
+    appVersion: 5.2.13-32
+    created: "2025-05-28T22:39:56.514793963Z"
+    dependencies:
+    - condition: plonesaas.enabled
+      name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 1.1.0
+    - condition: plonesaas.enabled
+      name: nginx
+      repository: https://charts.bitnami.com/bitnami
+      version: 18.1.8
+    description: PloneSAAS - both backend and frontends
+    digest: 25608711908a7846be01fe9ec638030a2f2c40603e37f579ff27eb875da949f5
+    home: http://eea.github.io/docs/IT-systems
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/plonesaas/volto.png
+    keywords:
+    - CMS
+    name: plonesaas
+    type: application
+    urls:
+    - plonesaas-2.5.0.tgz
+    version: 2.5.0
+  - apiVersion: v2
     appVersion: 5.2.9-58
     created: "2025-05-20T11:58:31.68532+02:00"
     dependencies:
@@ -18422,4 +18445,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2025-05-28T14:20:05.360394599Z"
+generated: "2025-05-28T22:39:56.511149669Z"
