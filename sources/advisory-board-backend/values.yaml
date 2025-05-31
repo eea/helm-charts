@@ -31,6 +31,7 @@ plone:
   serviceType: ClusterIP
   hostname: plone.eea.europa.eu
   googleUrl: google85dc6cec8f1329e5.html 
+  site: Plone
   autoscaling:
     enabled: false
     minReplicas: 1
@@ -142,6 +143,41 @@ debug:
   podSecurityContext: {}
   securityContext: {}
   environment: {}
+
+entrasync:
+  enabled: false
+  schedule: "0 0 3 * *"
+  keepSuccessfulPods: 3
+  keepFailedPods: 5
+  resources:
+    limits:
+      memory: 1Gi
+    requests:
+      memory: 1Gi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  podAnnotations: {}
+  podSecurityContext: {}
+  securityContext: {}
+
+
+zodbpack:
+  enabled: false
+  schedule: "0 0 3 * *"
+  keepSuccessfulPods: 3
+  keepFailedPods: 5
+  resources:
+    limits:
+      memory: 1Gi
+    requests:
+      memory: 1Gi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  podAnnotations: {}
+  podSecurityContext: {}
+  securityContext: {}
 
 
 postfix:

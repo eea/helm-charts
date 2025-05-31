@@ -19,6 +19,12 @@ When the application was running on Rancher 1.6, it had a container, which ran t
 ## Releases
 
 <dl>
+  <dt>Version 0.7.7 - 20 May 2025</dt>
+  <dd>Add log directory to public-catalogue deployment</dd>
+
+  <dt>Version 0.7.6 - 20 May 2025</dt>
+  <dd>Update GN46 and GN5</dd>
+
   <dt>Version 0.7.5 - 25 April 2025</dt>
   <dd>Add apache redirections. Add symlinks to GN datastore. Events for updating the metadata file on metadata change. All running as www-data (33:33)</dd>
 

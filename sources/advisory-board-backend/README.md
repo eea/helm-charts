@@ -11,6 +11,27 @@ This chart deployes the Climate Advisory Board backend app
 
 ## Releases
 
+### Version 1.13.0 - 28 May 2025
+- Automated release of [eeacms/advisory-board-backend:6.0.15-9](https://github.com/eea/advisory-board-backend/releases) [EEA Jenkins - [`32d8946`](https://github.com/eea/helm-charts/commit/32d8946a351960a7fe23a3170c7a43c28fd27188)]
+
+### Version 1.12.0 - 21 May 2025
+- Automated release of [eeacms/advisory-board-backend:6.0.15-8](https://github.com/eea/advisory-board-backend/releases) [EEA Jenkins - [`4a4cd21`](https://github.com/eea/helm-charts/commit/4a4cd211a5923f2e205dcce828562afeaeb58c5a)]
+
+### Version 1.11.1 - 21 May 2025
+- Automated release of [eeacms/plone-varnish:7.7-1.0](https://github.com/eea/plone-varnish/releases) [EEA Jenkins - [`ddfb2a9`](https://github.com/eea/helm-charts/commit/ddfb2a9924ac131d6a9973b54456a3e9f0b8e98c)]
+
+### Version 1.11.0 - 20 May 2025
+- Automated release of [eeacms/advisory-board-backend:6.0.15-7](https://github.com/eea/advisory-board-backend/releases) [EEA Jenkins - [`3eab84b`](https://github.com/eea/helm-charts/commit/3eab84bce7cbb8c41f1990b5958a331a651b0846)]
+
+### Version 1.10.3 - 20 May 2025
+- Add zodbpack cronjob [valentinab25 - [`0ccb5d1`](https://github.com/eea/helm-charts/commit/0ccb5d190004a0a3b555ba595f4020bada7aac90)]
+
+### Version 1.10.2 - 20 May 2025
+- Fix cronjob args [valentinab25 - [`b8a90ff`](https://github.com/eea/helm-charts/commit/b8a90ff4b92826760cff933751921ec378bcdef9)]
+
+### Version 1.10.1 - 20 May 2025
+- Add entrasync CronJob [valentinab25 - [`1d66430`](https://github.com/eea/helm-charts/commit/1d66430e40c481cf4237a5c94b97a787a930dc81)]
+
 ### Version 1.10.0 - 30 April 2025
 - Automated release of [eeacms/advisory-board-backend:6.0.15-6](https://github.com/eea/advisory-board-backend/releases) [EEA Jenkins - [`220c7eb`](https://github.com/eea/helm-charts/commit/220c7ebed149f6bf5dd112e10c0c2515129e4894)]
 

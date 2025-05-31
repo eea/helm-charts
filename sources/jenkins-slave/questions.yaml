@@ -1,0 +1,148 @@
+questions:
+  # General Settings
+  - variable: javaOpts
+    default: "-Xmx2048m"
+    description: "Java options for Jenkins"
+    type: string
+    required: true
+    label: Java Options
+    group: "General Settings"
+
+  - variable: timezone
+    default: "Europe/Copenhagen"
+    description: "Timezone for the Jenkins instance"
+    type: string
+    required: true
+    label: Timezone
+    group: "General Settings"
+
+  # Docker Settings
+  - variable: dockerhub.username
+    default: ""
+    description: "Docker Hub username"
+    type: string
+    required: false
+    label: Docker Hub Username
+    group: "Docker Settings"
+
+  - variable: dockerhub.password
+    default: ""
+    description: "Docker Hub password"
+    type: password
+    required: false
+    label: Docker Hub Password
+    group: "Docker Settings"
+
+  - variable: docker.image
+    default: "docker:28.1.1-dind-alpine3.21"
+    description: "Docker server image"
+    type: string
+    required: true
+    label: Docker Server Image
+    group: "Docker Settings"
+
+  - variable: docker.resources.requests.memory
+    default: "3Gi"
+    description: "Memory request for the Docker agent"
+    type: string
+    required: true
+    label: Memory Request
+    group: "Docker Settings"
+
+  - variable: docker.resources.limits.memory
+    default: "60Gi"
+    description: "Memory limit for the Docker agent"
+    type: string
+    required: true
+    label: Memory Limit
+    group: "Docker Settings"
+
+  # Jenkins Master Settings
+  - variable: master.url
+    default: "http://jenkins-master.master-test.svc.cluster.local:8080"
+    description: "URL of the Jenkins master"
+    type: string
+    required: true
+    label: Jenkins Master URL
+    group: "Jenkins Master Settings"
+
+  - variable: master.user
+    default: "admin"
+    description: "Username for the Jenkins master"
+    type: string
+    required: true
+    label: Jenkins Master Username
+    group: "Jenkins Master Settings"
+
+  - variable: master.password
+    default: ""
+    description: "Password for the Jenkins master"
+    type: password
+    required: true
+    label: Jenkins Master Password
+    group: "Jenkins Master Settings"
+
+  # Jenkins Agent Settings
+  - variable: labels
+    default: "docker docker-host"
+    description: "Labels for the Jenkins agent"
+    type: string
+    required: true
+    label: Labels
+    group: "Jenkins Agent Settings"
+
+  - variable: executors
+    default: "5"
+    description: "Number of executors for the Jenkins agent"
+    type: string
+    required: true
+    label: Executors
+    group: "Jenkins Agent Settings"
+
+  - variable: opts
+    default: ""
+    description: "Additional options for the Jenkins agent"
+    type: string
+    required: false
+    label: Additional Options
+    group: "Jenkins Agent Settings"
+
+  - variable: retry
+    default: "100"
+    description: "Retry count for the Jenkins agent"
+    type: string
+    required: true
+    label: Retry Count
+    group: "Jenkins Agent Settings"
+
+  - variable: root
+    default: "yes"
+    description: "Run Jenkins agent as root"
+    type: boolean
+    required: true
+    label: Run as Root
+    group: "Jenkins Agent Settings"
+
+  - variable: resources.requests.memory
+    default: "3Gi"
+    description: "Memory request for the Jenkins agent"
+    type: string
+    required: true
+    label: Memory Request
+    group: "Jenkins Agent Settings"
+
+  - variable: resources.limits.memory
+    default: "15Gi"
+    description: "Memory limit for the Jenkins agent"
+    type: string
+    required: true
+    label: Memory Limit
+    group: "Jenkins Agent Settings"
+
+  - variable: storageClass
+    default: ""
+    description: "Storage class for the Jenkins agent"
+    type: string
+    required: false
+    label: Storage Class
+    group: "Jenkins Agent Settings"

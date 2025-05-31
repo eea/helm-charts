@@ -1,0 +1,32 @@
+master:
+  url: "http://jenkins-master.master-test.svc.cluster.local:8080"
+  user: "admin"
+  password: ""
+
+javaOpts: "-Xmx2048m"
+dockerhub:
+  username: ""
+  password: ""
+
+docker:
+  image: "docker:28.1.1-dind-alpine3.21"
+  resources:
+    requests:
+      memory: "3Gi"
+    limits:
+      memory: "60Gi"
+
+timezone: "Europe/Copenhagen"
+
+labels: "docker docker-host"
+executors: "5"
+opts: ""
+retry: "100"
+root: "yes"
+
+resources:
+  requests:
+    memory: "3Gi"
+  limits:
+    memory: "5Gi"
+storageClass: ""

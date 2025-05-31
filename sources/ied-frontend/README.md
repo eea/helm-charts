@@ -10,6 +10,21 @@ This chart deployes the European Industrial Emissions Portal frontend app
 
 ## Releases
 
+### Version 1.18.0 - 26 May 2025
+- Automated release of [eeacms/ied-frontend:0.23.0](https://github.com/eea/ied-frontend/releases) [EEA Jenkins - [`6798215`](https://github.com/eea/helm-charts/commit/679821511ddcb50c96f012d4fa8021069e89b44e)]
+
+### Version 1.17.0 - 21 May 2025
+- Automated release of [eeacms/ied-frontend:0.22.0](https://github.com/eea/ied-frontend/releases) [EEA Jenkins - [`1bfac28`](https://github.com/eea/helm-charts/commit/1bfac28f2bcf70eb7523d187b4164590ad5e1903)]
+
+### Version 1.16.0 - 21 May 2025
+- Automated release of [eeacms/ied-frontend:0.21.0](https://github.com/eea/ied-frontend/releases) [EEA Jenkins - [`66e2465`](https://github.com/eea/helm-charts/commit/66e24658af93dc52e4037a121443bdeadc81efec)]
+
+### Version 1.15.1 - 21 May 2025
+- Automated release of [eeacms/plone-varnish:7.7-1.0](https://github.com/eea/plone-varnish/releases) [EEA Jenkins - [`b705cd6`](https://github.com/eea/helm-charts/commit/b705cd61bf6d3c95952c84e240e18c11995f73d4)]
+
+### Version 1.15.0 - 20 May 2025
+- Automated release of [eeacms/ied-frontend:0.20.0](https://github.com/eea/ied-frontend/releases) [EEA Jenkins - [`244d4f9`](https://github.com/eea/helm-charts/commit/244d4f96889f25b7a75fee164b432def943e16b0)]
+
 ### Version 1.14.0 - 16 May 2025
 - Automated release of [eeacms/ied-frontend:0.19.0](https://github.com/eea/ied-frontend/releases) [EEA Jenkins - [`93b0eb7`](https://github.com/eea/helm-charts/commit/93b0eb7c0404568ddf95a85f061f337a7e9e4fa3)]
 

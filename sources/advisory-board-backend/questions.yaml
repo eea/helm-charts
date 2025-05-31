@@ -52,6 +52,36 @@
     required: true
     group: "General"
 
+  - variable: "entrasync.enabled"
+    label: "Enable Entra Id synchronization"
+    default: false
+    type: "boolean"
+    required: true
+    group: "General"
+      
+  - variable: "entrasync.schedule"
+    label: "Scheduled Endra ID synchronization time"
+    type: "string"
+    default: "0 0 0 * *"
+    required: true
+    group: "General"
+    show_if: "entrasync.enabled=true"
+
+  - variable: "zodbpack.enabled"
+    label: "Enable Zodbpack cleanup"
+    default: false
+    type: "boolean"
+    required: true
+    group: "General"
+
+  - variable: "zodbpack.schedule"
+    label: "Scheduled Zodbpack cleanup time"
+    type: "string"
+    default: "0 0 1 * *"
+    required: true
+    group: "General"
+    show_if: "zodbpack.enabled=true"
+      
   - variable: "varnish.serviceType"
     label: "Expose varnish"
     description: "Select NodePort to expose varnish"
@@ -71,6 +101,14 @@
       - "NodePort"
       - "ClusterIP"
     default: "ClusterIP"
+    required: true
+    group: "General"
+
+  - variable: "debug.enabled"
+    label: "Debug"
+    description: "Add backend debugging"
+    default: false
+    type: "boolean"
     required: true
     group: "General"
 
@@ -165,17 +203,6 @@
     group: "Plone configuration"
 
 
-  - variable: "debug.enabled"
-    label: "Debug"
-    description: "Add backend debugging"
-    default: false
-    type: "boolean"
-    required: true
-    group: "General"
-
-
-
-
   - variable: "varnish.port"
     label: "Varnish backend/exposed port"
     description: "To simplify, we use the same port as the web application"
@@ -268,6 +295,42 @@
     default: "4Gi"
     group: "Memory"
     show_if: "debug.enabled=true"
+
+  - variable: "entrasync.resources.requests.memory"
+    label: "Entrasync cron job memory reservation"
+    type: "string"
+    required: true
+    default: "1Gi"
+    group: "Memory"
+    show_if: "entrasync.enabled=true"
+
+  - variable: "entrasync.resources.limits.memory"
+    label: "Entrasynci cron job memory limit"
+    description: ">= memory reservation"
+    type: "string"
+    required: true
+    default: "1Gi"
+    group: "Memory"
+    show_if: "entrasync.enabled=true"
+
+
+  - variable: "zodbpack.resources.requests.memory"
+    label: "Zodbpack cron job memory reservation"
+    type: "string"
+    required: true
+    default: "1Gi"
+    group: "Memory"
+    show_if: "zodbpack.enabled=true"
+
+  - variable: "zodbpack.resources.limits.memory"
+    label: "Zodbpack cron job memory limit"
+    description: ">= memory reservation"
+    type: "string"
+    required: true
+    default: "1Gi"
+    group: "Memory"
+    show_if: "zodbpack.enabled=true"
+
 
   - variable: "varnish.resources.requests.memory"
     label: "Varnish memory reservation"

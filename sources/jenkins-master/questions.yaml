@@ -1,0 +1,113 @@
+questions:
+  - variable: javaOpts
+    default: '-Xmx4096m -Dhudson.tasks.MailSender.SEND_TO_USERS_WITHOUT_READ=true -Dhudson.model.DirectoryBrowserSupport.CSP="default-src ''self'' ''unsafe-inline'' ''unsafe-eval'' *.eea.europa.eu *.eionet.europa.eu ; frame-src *; img-src * ''self'' ''unsafe-inline'' ''unsafe-eval'' data:;"'
+    description: "Java options for Jenkins"
+    type: string
+    label: Java Options
+    group: "Jenkins Configuration"
+    required: true
+
+  - variable: jenkinsOpts
+    default: "--sessionTimeout=240"
+    description: "Jenkins options"
+    type: string
+    label: Jenkins Options
+    group: "Jenkins Configuration"
+    required: true
+
+  - variable: timezone
+    default: "Europe/Copenhagen"
+    description: "Timezone for Jenkins"
+    type: string
+    label: Timezone
+    group: "Jenkins Configuration"
+    required: true
+
+  - variable: storageClass
+    default: "nfs-client"
+    description: "Storage class for Jenkins"
+    type: string
+    label: Storage Class
+    group: "Storage Configuration"
+    required: true
+
+  - variable: ingress.enabled
+    default: true
+    description: "Enable Ingress for Jenkins"
+    type: boolean
+    label: Enable Ingress
+    group: "Ingress Configuration"
+    required: true
+
+  - variable: ingress.hostname
+    default: "ci.eionet.europa.eu"
+    description: "Hostname for the Ingress"
+    type: string
+    label: Ingress Host
+    group: "Ingress Configuration"
+    required: true
+
+  - variable: volumeSize
+    default: "50Gi"
+    description: "Size of the Persistent Volume Claim"
+    type: string
+    label: Volume Size
+    group: "Storage Configuration"
+    required: true
+
+  # Postfix Settings
+  - variable: postfix.image
+    default: "eeacms/postfix:3.5-1.0"
+    description: "Docker image for Postfix"
+    type: string
+    required: true
+    label: Postfix Image
+    group: "Postfix Settings"
+
+  - variable: postfix.environment.MTP_HOST
+    default: ""
+    description: "MTP Host for Postfix"
+    type: string
+    required: true
+    label: MTP Host
+    group: "Postfix Settings"
+
+  - variable: postfix.environment.MTP_PASS
+    default: ""
+    description: "MTP Password for Postfix"
+    type: password
+    required: true
+    label: MTP Password
+    group: "Postfix Settings"
+
+  - variable: postfix.environment.MTP_PORT
+    default: "8587"
+    description: "MTP Port for Postfix"
+    type: string
+    required: true
+    label: MTP Port
+    group: "Postfix Settings"
+
+  - variable: postfix.environment.MTP_RELAY
+    default: ""
+    description: "MTP Relay for Postfix"
+    type: string
+    required: true
+    label: MTP Relay
+    group: "Postfix Settings"
+
+  - variable: postfix.environment.MTP_USER
+    default: "jenkins"
+    description: "MTP User for Postfix"
+    type: string
+    required: true
+    label: MTP User
+    group: "Postfix Settings"
+
+  - variable: postfix.environment.TZ
+    default: "Europe/Copenhagen"
+    description: "Timezone for Postfix"
+    type: string
+    required: true
+    label: Timezone
+    group: "Postfix Settings"

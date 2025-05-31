@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: jenkins-master
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: jenkins-master
+  template:
+    metadata:
+      labels:
+        {{- include "appl.labels" . | nindent 8 }}
+        component: jenkins-master
+    spec:
+      containers:
+      - name: jenkins-master
+        image: eeacms/jenkins-master:{{ .Chart.AppVersion }}
+        env:
+        - name: JAVA_OPTS
+          value: {{ .Values.javaOpts | quote }}
+        - name: JENKINS_OPTS
+          value: "{{ .Values.jenkinsOpts }}"
+        - name: TZ
+          value: "{{ .Values.timezone }}"
+        volumeMounts:
+        - mountPath: /var/jenkins_home
+          name: {{ .Release.Name | quote }}
+        ports:
+        - containerPort: 8080
+        - containerPort: 50000
+      volumes:
+      - name: {{ .Release.Name | quote }}
+        persistentVolumeClaim:
+          claimName: {{ printf "%s-pvc" .Release.Name | quote }}
+

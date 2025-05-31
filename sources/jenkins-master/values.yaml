@@ -1,0 +1,20 @@
+javaOpts: '-Xmx4096m -Dhudson.tasks.MailSender.SEND_TO_USERS_WITHOUT_READ=true -Dhudson.model.DirectoryBrowserSupport.CSP="default-src ''self'' ''unsafe-inline'' ''unsafe-eval'' *.eea.europa.eu *.eionet.europa.eu ; frame-src *; img-src * ''self'' ''unsafe-inline'' ''unsafe-eval'' data:;"'
+jenkinsOpts: "--sessionTimeout=240"
+timezone: "Europe/Copenhagen"
+storageClass: "nfs-client"
+volumeSize: "50Gi"
+
+ingress:
+  hostname: "ci.eionet.europa.eu"
+  enabled: true
+  annotations: {}
+
+postfix:
+  image: eeacms/postfix:3.5-1.0
+  environment:
+    MTP_HOST: ""
+    MTP_PASS: ""
+    MTP_PORT: "8587"
+    MTP_RELAY: ""
+    MTP_USER: ""
+    TZ: Europe/Copenhagen
