@@ -1,6 +1,6 @@
 # EEA Main Website frontend - Plone 6
 
-This chart deployes the EEA Main Website frontend app 
+This chart deploys the EEA Main Website frontend app
 
 
 ## Values
