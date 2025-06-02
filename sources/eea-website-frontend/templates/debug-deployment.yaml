@@ -44,6 +44,8 @@ spec:
           value: "{{ .Values.timezone }}"
         - name: REBUILD
           value: "True"
+        - name: RAZZLE_DEV_PROXY_API_PATH
+          value: "{{ .Values.volto.environment.RAZZLE_INTERNAL_API_PATH }}"
         {{- range $key, $value := .Values.volto.environment }}
         {{- if ($value) }}
         - name: {{ $key }}
