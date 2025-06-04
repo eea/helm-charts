@@ -152,7 +152,7 @@ postfix:
   serviceName: 'postfix'
   mailtrap:
     httpenabled: true
-    serviceType: NodePort
+    serviceType: ClusterIP
     ingress:
       enabled: true
       hostname: mailtrap-demo-www.01dev.eea.europa.eu
