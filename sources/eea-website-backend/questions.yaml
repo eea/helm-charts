@@ -288,13 +288,13 @@
       label: "Application url"
       type: "string"
       required: true
-
+      default: "demo-www.01dev.eea.europa.eu"
 
   - variable: "postfix.mailtrap.httpenabled"
     label: "Create mailtrap service for port 80"
     description: "Keep unchecked if you don't want to view the emails in a webinterface"
     type: "boolean"
-    default: false
+    default: true
     required: true
     show_if: "postfix.dryrun"
     show_subquestion_if: true
@@ -311,7 +311,7 @@
       required: true
     - variable: "postfix.mailtrap.ingress.enabled"
       label: "Add mailtrap url in ingress"
-      default: false
+      default: true
       type: "boolean"
       required: true
   
@@ -320,13 +320,13 @@
     show_if: "postfix.mailtrap.ingress.enabled"
     required: true
     type: "string"  
-    default: "mailtrap.01dev.eea.europa.eu"
+    default: "mailtrap-demo-www.01dev.eea.europa.eu"
     group: "Mail"
   - variable: "postfix.mailtrap.ingress.certificate"
     label: "Mailtrap certificate name"
     show_if: "postfix.mailtrap.ingress.enabled"
     description: "If empty, https will not be enabled"
-    default: "mailtrap.01dev.eea.europa.eu-tls"
+    default: "mailtrap-demo-www.01dev.eea.europa.eu-tls"
     group: "Mail"
 
   - variable: "cronjobs.zodbpack.enabled"
