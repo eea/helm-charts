@@ -164,7 +164,7 @@ postfix:
 cronjobs:
   zodbpack:
     enabled: true
-    schedule: "0 0 1 ? * SUN"
+    schedule: "0 1 * * 0"
     image: eeacms/eea-website-backend:6.0.15-23
     command: ["/app/bin/zodbpack", "/app/etc/zodbpack.conf"]
     resources:
@@ -174,7 +174,7 @@ cronjobs:
         memory: 1Gi
   entrasync:
     enabled: true
-    schedule: "0 0 * * * *"
+    schedule: "0 0 * * *"
     image: eeacms/eea-website-backend:6.0.15-23
     command: ["/app/bin/sync_eea_entra", "--portal", "www", "--zope-conf", "/app/etc/relstorage.conf"]
     resources:
