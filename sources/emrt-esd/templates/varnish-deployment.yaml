@@ -47,6 +47,8 @@ spec:
         - "/etc/varnish/default.vcl"
         - "-s"
         - "malloc,{{ .Values.varnish.size | default "1G" }}"
+        - "-a"
+        - "0.0.0.0:6081"
 
         volumeMounts:
         - name: varnish-vcl
