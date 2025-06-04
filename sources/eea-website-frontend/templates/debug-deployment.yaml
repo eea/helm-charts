@@ -1,0 +1,88 @@
+{{- if  .Values.debug.enabled }}
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-dpl-debug
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: debug
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: debug
+
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: debug
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      containers:
+      - name: debug
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        args:
+        - cat
+        env:
+        - name: PORT
+          value: "3000"
+        - name: RAZZLE_SENTRY_RELEASE
+          value: "{{ .Values.image.tag | default .Chart.AppVersion }}"
+        - name: RAZZLE_FRONTEND_VERSION
+          value: "{{ .Values.image.tag | default .Chart.AppVersion }}"
+        - name: SENTRY_RELEASE
+          value: "{{ .Values.image.tag | default .Chart.AppVersion }}"
+        - name: TZ
+          value: "{{ .Values.timezone }}"
+        - name: REBUILD
+          value: "True"
+        - name: RAZZLE_DEV_PROXY_API_PATH
+          value: "{{ .Values.volto.environment.RAZZLE_INTERNAL_API_PATH }}"
+        {{- range $key, $value := .Values.volto.environment }}
+        {{- if ($value) }}
+        - name: {{ $key }}
+          value: {{ $value | quote }}
+        {{- end }}
+        {{- end }}
+
+        ports:
+        - containerPort: 3000
+          name: http
+
+        stdin: true
+        tty: true
+
+        volumeMounts:
+        - mountPath: {{ .Values.debug.addonsPath }}
+          name: debug-addons
+
+        resources:
+          {{- toYaml .Values.debug.resources | nindent 10 }}
+
+      {{- with .Values.debug.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.debug.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.debug.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+      volumes:
+      - name: debug-addons
+        persistentVolumeClaim:
+          claimName: debug-addons-pvc
+
+{{- end }}
