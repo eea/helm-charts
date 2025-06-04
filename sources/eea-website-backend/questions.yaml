@@ -18,15 +18,15 @@
 
   - variable: "ingress.tls"
     label: "Enable https"
-    default: true
     type: "boolean"
+    default: true
     required: true
     group: "General"
 
   - variable: "ingress.certificate"
     label: "Certificate name"
     description: "Use a new name for letsencrypt certificates, for existing certificate write the correct name for the domain, leave blank for kube default"
-    default: "demo.europa.eu-tls"
+    default: "demo-www.01dev.eea.europa.eu-tls"
     type: "string"
     group: "General"
 
@@ -75,7 +75,7 @@
   - variable: "plone.database.POSTGRES_DB"
     label: "PostgreSQL database name"
     type: "string"
-    default: "www"
+    default: "eea"
     required: true
     group: "Plone configuration"
 
@@ -125,7 +125,7 @@
     label: "CORS ALLOW ORIGIN"
     type: "string"
     required: false
-    default: ""
+    default: "http://localhost:3000"
     group: "Plone configuration"
 
   - variable: "plone.environment.PLONE_REGISTRY_YAML_CONTENT"
@@ -181,7 +181,7 @@
   - variable: "varnish.environment.VARNISH_GZIP_ENABLED"
     label: "Enable gzip on text & js content types"
     type: "enum"
-    default: "false"
+    default: "true"
     required: true
     options:
     - "false"
@@ -191,7 +191,7 @@
   - variable: "varnish.environment.VARNISH_GZIP_JSON_ENABLED"
     label: "Enable gzip on json content types"
     type: "enum"
-    default: "false"
+    default: "true"
     required: true
     options:
     - "false"
@@ -256,7 +256,7 @@
   - variable: "postfix.dryrun"
     label: "Run in development mode"
     description: "If checked, will not send emails, but use mailtrap to catch them"
-    default: false
+    default: true
     type: "boolean"
     required: true
     show_subquestion_if: false

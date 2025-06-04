@@ -18,14 +18,14 @@ serviceAccount:
 timezone: Europe/Copenhagen
 
 links:
-  database: plone-postgres.namespace
-  memcached: plone-postgres-memcached.namespace
+  database: postgres-postgres.database
+  memcached: postgres-memcached.database
 
 ingress:
   annotations: 
     cert-manager.io/cluster-issuer: 01dev-eea-letsencrypt
-  certificate: plone.eea.europa.eu-tls
-  tls: enabled
+  certificate: demo-www.01dev.eea.europa.eu-tls
+  tls: true
 
 plone:
   serviceType: ClusterIP
