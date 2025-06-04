@@ -2,6 +2,24 @@ apiVersion: v1
 entries:
   advisory-board-backend:
   - apiVersion: v2
+    appVersion: 6.0.15-10
+    created: "2025-06-03T14:30:40.505165225Z"
+    dependencies:
+    - name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.0.6
+    description: Climate advisory backend
+    digest: 24cbfc74384d1495f3384e401197f1824bd202997e78027f8a2ff0a3fa274cb1
+    home: https://github.com/eea/advisory-board-backend
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/advisory-board-backend/volto.png
+    keywords:
+    - CMS
+    name: advisory-board-backend
+    type: application
+    urls:
+    - advisory-board-backend-1.14.0.tgz
+    version: 1.14.0
+  - apiVersion: v2
     appVersion: 6.0.15-9
     created: "2025-05-28T14:13:25.586223341Z"
     dependencies:
@@ -9653,6 +9671,78 @@ entries:
     version: 0.1.0
   emrt-esd:
   - apiVersion: v2
+    appVersion: 18.1.23-1-1.77.3
+    created: "2025-06-02T18:32:50.438647865+03:00"
+    dependencies:
+    - name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.0.3
+    - name: zeoserver
+      repository: https://eea.github.io/helm-charts
+      version: 0.1.0
+    - name: memcached
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.4.13
+    description: Emission Review Tool - Effort Sharing Decision
+    digest: 8b8e02f26a4db954002b946c163f3be9c3d033c894351cd3f2df0d7349a9e551
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/emrt-esd/logo_eionet.png
+    keywords:
+    - Reportnet
+    - Emmission
+    name: emrt-esd
+    type: application
+    urls:
+    - emrt-esd-1.2.10.tgz
+    version: 1.2.10
+  - apiVersion: v2
+    appVersion: 18.1.23-1-1.77.3
+    created: "2025-06-02T16:05:34.748066402+03:00"
+    dependencies:
+    - name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.0.3
+    - name: zeoserver
+      repository: https://eea.github.io/helm-charts
+      version: 0.1.0
+    - name: memcached
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.4.13
+    description: Emission Review Tool - Effort Sharing Decision
+    digest: 4f764fa652a5b203a397be0351fa1638fbec9fb7c2b7e467ead21572cafbbb48
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/emrt-esd/logo_eionet.png
+    keywords:
+    - Reportnet
+    - Emmission
+    name: emrt-esd
+    type: application
+    urls:
+    - emrt-esd-1.2.9.tgz
+    version: 1.2.9
+  - apiVersion: v2
+    appVersion: 18.1.23-1-1.77.2
+    created: "2025-06-02T09:35:50.064418113+03:00"
+    dependencies:
+    - name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.0.3
+    - name: zeoserver
+      repository: https://eea.github.io/helm-charts
+      version: 0.1.0
+    - name: memcached
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.4.13
+    description: Emission Review Tool - Effort Sharing Decision
+    digest: aa1f591e56a542012e8d75aa76e02f5b563a188992ddf4cbeca489487ec7fefa
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/emrt-esd/logo_eionet.png
+    keywords:
+    - Reportnet
+    - Emmission
+    name: emrt-esd
+    type: application
+    urls:
+    - emrt-esd-1.2.8.tgz
+    version: 1.2.8
+  - apiVersion: v2
     appVersion: 18.1.23-1-1.77.1
     created: "2025-05-20T11:58:30.618202+02:00"
     dependencies:
@@ -10801,6 +10891,24 @@ entries:
     - eunis-1.0.0.tgz
     version: 1.0.0
   fise-backend:
+  - apiVersion: v2
+    appVersion: 6.0.15-10
+    created: "2025-06-03T14:34:09.099377845Z"
+    dependencies:
+    - name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.0.6
+    description: FISE backend
+    digest: d5fb19de7645a4a8df6622c6ea9295915c50c56a33afc23446e5fa59e2acf5bc
+    home: https://github.com/eea/fise-backend
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/fise-backend/logo.png
+    keywords:
+    - CMS
+    name: fise-backend
+    type: application
+    urls:
+    - fise-backend-1.11.0.tgz
+    version: 1.11.0
   - apiVersion: v2
     appVersion: 6.0.15-9
     created: "2025-05-28T14:17:28.460435237Z"
@@ -12113,6 +12221,60 @@ entries:
     version: 0.3.1
   ied-backend:
   - apiVersion: v2
+    appVersion: 6.0.15-10
+    created: "2025-06-03T23:17:08.463623433Z"
+    dependencies:
+    - name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.0.6
+    description: IED backend
+    digest: 0138605e0b68ed7ff7abd902dc996722586e1bae910a5f436c0aec2a48d90d69
+    home: https://github.com/eea/ied-backend
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/ied-backend/ied.png
+    keywords:
+    - CMS
+    name: ied-backend
+    type: application
+    urls:
+    - ied-backend-1.16.0.tgz
+    version: 1.16.0
+  - apiVersion: v2
+    appVersion: 6.0.15-9
+    created: "2025-06-03T14:35:03.895863524Z"
+    dependencies:
+    - name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.0.6
+    description: IED backend
+    digest: 01015dc981b33669150bb7c3d583d473691b93a4b2f92ae848aeac35e2adba9e
+    home: https://github.com/eea/ied-backend
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/ied-backend/ied.png
+    keywords:
+    - CMS
+    name: ied-backend
+    type: application
+    urls:
+    - ied-backend-1.15.0.tgz
+    version: 1.15.0
+  - apiVersion: v2
+    appVersion: 6.0.16
+    created: "2025-06-02T07:52:35.400568761Z"
+    dependencies:
+    - name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.0.6
+    description: IED backend
+    digest: a1508d1017aab5ddb9f5b24621bae03e7627ca195294db70938366bc28c2dc57
+    home: https://github.com/eea/ied-backend
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/ied-backend/ied.png
+    keywords:
+    - CMS
+    name: ied-backend
+    type: application
+    urls:
+    - ied-backend-1.14.0.tgz
+    version: 1.14.0
+  - apiVersion: v2
     appVersion: 6.0.15-8
     created: "2025-05-28T14:20:05.363694541Z"
     dependencies:
@@ -12419,6 +12581,20 @@ entries:
     - ied-backend-1.0.1.tgz
     version: 1.0.1
   ied-frontend:
+  - apiVersion: v2
+    appVersion: 0.24.0
+    created: "2025-06-02T07:31:32.96215474Z"
+    description: IED frontend
+    digest: e5a01a570334a470d57afbcaca930ff7755112d0fbf1ce32d8b7deb68a9e38c6
+    home: https://github.com/eea/ied-frontend
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/ied-frontend/ied.png
+    keywords:
+    - CMS
+    name: ied-frontend
+    type: application
+    urls:
+    - ied-frontend-1.19.0.tgz
+    version: 1.19.0
   - apiVersion: v2
     appVersion: 0.23.0
     created: "2025-05-26T09:54:05.186616873Z"
@@ -14773,6 +14949,29 @@ entries:
     - plone-postgres-1.0.0.tgz
     version: 1.0.0
   plonesaas:
+  - apiVersion: v2
+    appVersion: 5.2.13-33
+    created: "2025-06-03T23:11:45.546723879Z"
+    dependencies:
+    - condition: plonesaas.enabled
+      name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 1.1.0
+    - condition: plonesaas.enabled
+      name: nginx
+      repository: https://charts.bitnami.com/bitnami
+      version: 18.1.8
+    description: PloneSAAS - both backend and frontends
+    digest: 7c5195c5bceba4f12f037d6180792d7b72983bddb4ef78b09a5b67a0bf1d7f11
+    home: http://eea.github.io/docs/IT-systems
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/plonesaas/volto.png
+    keywords:
+    - CMS
+    name: plonesaas
+    type: application
+    urls:
+    - plonesaas-2.6.0.tgz
+    version: 2.6.0
   - apiVersion: v2
     appVersion: 5.2.13-32
     created: "2025-05-28T22:39:56.514793963Z"
@@ -18481,4 +18680,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2025-06-04T16:14:27.791652+03:00"
+generated: "2025-06-03T23:17:08.462091774Z"

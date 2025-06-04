@@ -79,6 +79,13 @@ plone:
   resources:
     requests:
       memory: 1536Mi
+    limits:
+      memory: 4Gi
+  probePath: /health.check
+  probeTimeoutSeconds: 10
+  probeFailureThreshold: 6
+  probePeriodSeconds: 10
+  probeInitialDelaySeconds: 5
 
 varnish:
   securityContext: {}
