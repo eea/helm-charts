@@ -341,7 +341,7 @@
     label: "ZODB pack schedule"
     description: "Cron schedule for ZODB pack job (default: weekly on Sunday)"
     type: "string"
-    default: "0 0 1 ? * SUN"
+    default: "0 1 * * 6"
     required: true
     show_if: "cronjobs.zodbpack.enabled=true"
     group: "Maintenance"
@@ -358,7 +358,7 @@
     label: "Entra ID sync schedule"
     description: "Cron schedule for Entra ID sync job (default: hourly)"
     type: "string"
-    default: "0 0 * * * *"
+    default: "0 0 * * *"
     required: true
     show_if: "cronjobs.entrasync.enabled=true"
     group: "Maintenance"
