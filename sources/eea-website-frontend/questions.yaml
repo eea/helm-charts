@@ -3,7 +3,7 @@
   - variable: "volto.hostname"
     label: "Server name"
     description: "DNS name for this deployment"
-    default: "demo.eea.europa.eu"
+    default: "demo-www.01dev.eea.europa.eu"
     type: "string"
     required: true
     group: "General"
@@ -25,7 +25,7 @@
   - variable: "ingress.certificate"
     label: "Certificate name"
     description: "Use a new name for letsencrypt certificates, for existing certificate write the correct name for the domain, leave blank for kube default"
-    default: "demo.eea.europa.eu-tls"
+    default: "demo-www.01dev.eea.europa.eu-tls"
     type: "string"
     group: "General"
 
@@ -54,7 +54,7 @@
   - variable: "debug.enabled"
     label: "Debug"
     description: "Add frontend debugging"
-    default: false
+    default: true
     type: "boolean"
     required: true
     group: "General"
@@ -159,7 +159,7 @@
     label: "Public URL"
     description: "RAZZLE_PUBLIC_URL used by config.settings.publicURL"
     type: "string"
-    default: "https://www.eea.europa.eu"
+    default: "https://demo-www.01dev.eea.europa.eu"
     group: "Volto configuration"
   - variable: "volto.environment.DANSWER_URL"
     label: "Danswer URL"
@@ -276,7 +276,7 @@
   - variable: "varnish.environment.VARNISH_GZIP_ENABLED"
     label: "Enable gzip on text & js content types"
     type: "enum"
-    default: "false"
+    default: "true"
     required: true
     options:
     - "false"
@@ -286,7 +286,7 @@
   - variable: "varnish.environment.VARNISH_GZIP_JSON_ENABLED"
     label: "Enable gzip on json content types"
     type: "enum"
-    default: "false"
+    default: "true"
     required: true
     options:
     - "false"
@@ -324,4 +324,3 @@
     required: true
     default: "2Gi"
     group: "Memory"
-
