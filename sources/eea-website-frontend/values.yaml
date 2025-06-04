@@ -117,7 +117,6 @@ debug:
   enabled: true
   addonsPath: /app/src/addons
   affinity: {}
-  enabled: false
   environment: {}
   nodeSelector: {}
   podAnnotations: {}
@@ -128,7 +127,7 @@ debug:
     requests:
       memory: 3Gi
   securityContext: {}
-  serviceType: NodePort
+  serviceType: ClusterIP
   tolerations: []
 
 varnish:
