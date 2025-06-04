@@ -12,6 +12,8 @@ data:
       .host = "{{ .Values.varnish.backendHost | default "plone" }}";
       .port = "{{ .Values.varnish.backendPort | default "8080" }}";
       .connect_timeout = {{ .Values.varnish.connectTimeout | default "300s" }};
+      .first_byte_timeout = {{ .Values.varnish.firstByteTimeout | default "300s" }};
+      .between_bytes_timeout = {{ .Values.varnish.betweenBytesTimeout | default "300s" }};
     }
 
     acl purge {

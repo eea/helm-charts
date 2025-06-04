@@ -93,6 +93,8 @@ varnish:
   backendHost: plone
   backendPort: 8080
   connectTimeout: 300s
+  firstByteTimeout: 300s
+  betweenBytesTimeout: 300s
   size: 1G
   image:
     repository: varnish
