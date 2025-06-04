@@ -45,6 +45,7 @@ ingress:
     nginx.ingress.kubernetes.io/proxy-max-temp-file-size: '1024m'
     nginx.ingress.kubernetes.io/proxy-body-size: '50m'
     nginx.ingress.kubernetes.io/use-regex: 'true'
+    nginx.ingress.kubernetes.io/proxy-read-timeout: '300'
     nginx.ingress.kubernetes.io/configuration-snippet: |
       rewrite ^/(.*)$ /VirtualHostBase/https/emrt-esd.eionet.europa.eu:443/Plone/VirtualHostRoot/$1 break;
 
@@ -89,6 +90,13 @@ plone:
 
 varnish:
   securityContext: {}
+  backendHost: plone
+  backendPort: 8080
+  connectTimeout: 300s
+  size: 1G
+  image:
+    repository: varnish
+    tag: stable
   resources:
     requests:
       memory: 1Gi

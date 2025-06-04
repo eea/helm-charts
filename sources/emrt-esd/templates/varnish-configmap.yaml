@@ -1,0 +1,285 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "appl.fullname" . }}-varnish-vcl
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+data:
+  default.vcl: |-
+    vcl 4.0;
+
+    backend default {
+      .host = "{{ .Values.varnish.backendHost | default "plone" }}";
+      .port = "{{ .Values.varnish.backendPort | default "8080" }}";
+      .connect_timeout = "{{ .Values.varnish.connectTimeout | default "300s" }}";
+    }
+
+    acl purge {
+        "127.0.0.1";
+        "localhost";
+    }
+
+    sub vcl_recv {
+
+        if (req.method == "PURGE") {
+            # Not from an allowed IP? Then die with an error.
+            if (!client.ip ~ purge) {
+                return (synth(405, "This IP is not allowed to send PURGE requests."));
+            }
+            return (purge);
+        }
+
+        if (req.method == "BAN") {
+                # Same ACL check as above:
+                if (!client.ip ~ purge) {
+                return(synth(403, "Not allowed."));
+                }
+                #ban("req.url ~ " + req.url);
+            ban("req.http.host == " + req.http.host +
+                " && req.url == " + req.url);
+                # Throw a synthetic page so the
+                # request won't go to the backend.
+                return(synth(200, "Ban added"));
+        }
+
+        ## for some urls or request we can do a pass here (no caching)
+        if (req.method == "GET" && (
+                    req.url ~ "robots\.txt$" ||
+                    req.url ~ "at_download" ||
+                    req.url ~ "aq_parent" ||
+                    req.url ~ "manage$" ||
+                    req.url ~ "manage_workspace$" ||
+                    req.url ~ "manage_main$")) {
+            return(pass);
+        }
+
+        # disable caching in ZMI
+        if (req.url ~ "manage" && req.http.cookie ~ "__ac="){
+            return(pass);
+        }
+
+        # Keep auth/anon variants apart if "Vary: X-Anonymous" is in the response
+        if (!(req.http.Authorization || req.http.cookie ~ "(^|.*; )__ac=")) {
+            set req.http.X-Anonymous = "True";
+        }
+
+        # Only deal with "normal" types
+        if (req.method != "GET" &&
+          req.method != "HEAD" &&
+          req.method != "PUT" &&
+          req.method != "POST" &&
+          req.method != "TRACE" &&
+          req.method != "OPTIONS" &&
+          req.method != "DELETE") {
+            /* Non-RFC2616 or CONNECT which is weird. */
+            return (pipe);
+        }
+
+        # Only cache GET or HEAD requests. This makes sure the POST requests are always passed.
+        if (req.method != "GET" && req.method != "HEAD") {
+            return (pass);
+        }
+
+        if (req.http.Expect) {
+            return(pipe);
+        }
+
+        if (req.http.If-None-Match && !req.http.If-Modified-Since) {
+            return(pass);
+        }
+
+        /* Do not cache other authorized content by default */
+        if (req.http.Authenticate || req.http.Authorization) {
+            return(pass);
+        }
+
+        # Large static files should be piped, so they are delivered directly to the end-user without
+        # waiting for Varnish to fully read the file first.
+
+        if (req.url ~ "^[^?]*\.(mp3,mp4|rar|tar|tgz|gz|wav|zip)(\?.*)?$") {
+            return(pipe);
+        }
+
+        return (hash);
+    }
+
+    sub vcl_pipe {
+
+        # By default Connection: close is set on all piped requests, to stop
+        # connection reuse from sending future requests directly to the
+        # (potentially) wrong backend. If you do want this to happen, you can undo
+        # it here.
+        # unset bereq.http.connection;
+
+        return(pipe);
+    }
+
+    sub vcl_pass {
+
+        return (fetch);
+    }
+
+    sub vcl_hash {
+        hash_data(req.url);
+        if (req.http.host) {
+            hash_data(req.http.host);
+        } else {
+            hash_data(server.ip);
+        }
+        return (lookup);
+    }
+
+    sub vcl_purge {
+
+        return (synth(200, "Purged"));
+    }
+
+    sub vcl_hit {
+        if (obj.ttl >= 0s) {
+            # A standard hit, deliver from cache
+            return (deliver);
+        }
+
+
+        if (req.method == "PURGE") {
+            set req.method = "GET";
+            set req.http.X-purger = "Purged";
+            return(synth(200, "Purged. in hit " + req.url));
+        }
+
+        // fetch & deliver once we get the result
+        return (fetch);
+    }
+
+    sub vcl_miss {
+
+
+        if (req.method == "PURGE") {
+            set req.method = "GET";
+            set req.http.X-purger = "Purged-possibly";
+            return(synth(200, "Purged. in miss " + req.url));
+        }
+
+        // fetch & deliver once we get the result
+        return (fetch);
+    }
+
+    sub vcl_backend_fetch{
+
+        return (fetch);
+    }
+
+    sub vcl_backend_response {
+
+        set beresp.http.Vary = "X-Anonymous,Accept-Encoding";
+
+        # Only cache css/js/image content types
+        if (beresp.http.Content-Type !~ "application/javascript|application/x-javascript|text/css|image/*") {
+            unset beresp.http.Cache-Control;
+            set beresp.http.Cache-Control = "no-cache, max-age=0, must-revalidate";
+            set beresp.ttl = 0s;
+            set beresp.http.Pragma = "no-cache";
+            set beresp.uncacheable = true;
+            set beresp.http.X-Cache = "NEVER";
+            return(deliver);
+        }
+
+        # The object is not cacheable
+        if (beresp.http.Set-Cookie) {
+            set beresp.http.X-Cacheable = "NO - Set Cookie";
+            set beresp.ttl = 0s;
+            set beresp.uncacheable = true;
+        } elsif (beresp.http.Cache-Control ~ "private") {
+            set beresp.http.X-Cacheable = "NO - Cache-Control=private";
+            set beresp.uncacheable = true;
+            set beresp.ttl = 120s;
+        } elsif (beresp.http.Surrogate-control ~ "no-store") {
+            set beresp.http.X-Cacheable = "NO - Surrogate-control=no-store";
+            set beresp.uncacheable = true;
+            set beresp.ttl = 120s;
+        } elsif (!beresp.http.Surrogate-Control && beresp.http.Cache-Control ~ "no-cache|no-store") {
+            set beresp.http.X-Cacheable = "NO - Cache-Control=no-cache|no-store";
+            set beresp.uncacheable = true;
+            set beresp.ttl = 120s;
+        } elsif (beresp.http.Vary == "*") {
+            set beresp.http.X-Cacheable = "NO - Vary=*";
+            set beresp.uncacheable = true;
+            set beresp.ttl = 120s;
+
+
+        # ttl handling
+        } elsif (beresp.ttl < 0s) {
+            set beresp.http.X-Cacheable = "NO - TTL < 0";
+            set beresp.uncacheable = true;
+
+        # Varnish determined the object was cacheable
+        } else {
+            set beresp.http.X-Cacheable = "YES";
+        }
+
+        # Do not cache 5xx errors
+        if (beresp.status >= 500 && beresp.status < 600) {
+            unset beresp.http.Cache-Control;
+            set beresp.http.X-Cache = "NOCACHE";
+            set beresp.http.Cache-Control = "no-cache, max-age=0, must-revalidate";
+            set beresp.ttl = 0s;
+            set beresp.http.Pragma = "no-cache";
+            set beresp.uncacheable = true;
+            return(deliver);
+        }
+
+        # TODO this one is very plone specific and should be removed, not sure if its needed any more
+        if (bereq.url ~ "(createObject|@@captcha)") {
+            set beresp.uncacheable = true;
+            return(deliver);
+        }
+
+        return (deliver);
+    }
+
+    sub vcl_deliver {
+        set resp.http.grace = req.http.grace;
+        if (obj.hits > 0) {
+            set resp.http.X-Cache = "HIT";
+        } else {
+            set resp.http.X-Cache = "MISS";
+        }
+        /* Rewrite s-maxage to exclude from intermediary proxies
+          (to cache *everywhere*, just use 'max-age' token in the response to avoid
+          this override) */
+        if (resp.http.Cache-Control ~ "s-maxage") {
+            set resp.http.Cache-Control = regsub(resp.http.Cache-Control, "s-maxage=[0-9]+", "s-maxage=0");
+        }
+        /* Remove proxy-revalidate for intermediary proxies */
+        if (resp.http.Cache-Control ~ ", proxy-revalidate") {
+            set resp.http.Cache-Control = regsub(resp.http.Cache-Control, ", proxy-revalidate", "");
+        }
+
+    }
+
+    /*
+    We can come here "invisibly" with the following errors: 413, 417 & 503
+    */
+    sub vcl_synth {
+        set resp.http.Content-Type = "text/html; charset=utf-8";
+        set resp.http.Retry-After = "5";
+
+        synthetic( {"
+            <!DOCTYPE html>
+            <html>
+              <head>
+                <title>Varnish cache server: "} + resp.status + " " + resp.reason + {" </title>
+              </head>
+              <body>
+                <h1>Error "} + resp.status + " " + resp.reason + {"</h1>
+                <p>"} + resp.reason + {"</p>
+                <h3>Guru Meditation:</h3>
+                <p>XID: "} + req.xid + {"</p>
+                <hr>
+                <p>Varnish cache server</p>
+              </body>
+            </html>
+        "} );
+
+        return (deliver);
+    }

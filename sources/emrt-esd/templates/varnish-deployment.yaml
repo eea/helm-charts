@@ -7,9 +7,13 @@ metadata:
     component: varnish
 
 spec:
-  replicas: 1
+  replicas: 2
   strategy:
-    type: Recreate
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+
   selector:
     matchLabels:
       {{- include "appl.selectorLabels" . | nindent 6 }}
@@ -27,36 +31,49 @@ spec:
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
 
       containers:
-      - name: varnish
-        image: eeacms/varnish-emrt-necd:4.1-2.0
+        - name: varnish
+          image: "{{ .Values.varnish.image.repository | default "varnish" }}:{{ .Values.varnish.image.tag | default "stable" }}"
 
-        ports:
-        - containerPort: 6081
+          ports:
+          - containerPort: 6081
 
-        env:
-        - name: BACKENDS
-          value: plone
-        - name: BACKENDS_PORT
-          value: "8080"
-        - name: CACHE_SIZE
-          value: 1G
-        - name: DNS_ENABLED
-          value: "true"
-        - name: LOGSPOUT
-          value: ignore
-        - name: TZ
-          value: Europe/Copenhagen
+          env:
+            - name: VARNISH_SIZE
+              value: "{{ .Values.varnish.size | default "1G" }}"
+          args:
+            - "-F"
+            - "-f"
+            - "/etc/varnish/default.vcl"
+            - "-s"
+            - "malloc,${VARNISH_SIZE}"
+          volumeMounts:
+            - name: varnish-vcl
+              mountPath: /etc/varnish/default.vcl
+              subPath: default.vcl
+      livenessProbe:
+        tcpSocket:
+          port: 6081
+        initialDelaySeconds: 60
+        periodSeconds: 10
+        timeoutSeconds: 3
+      readinessProbe:
+        tcpSocket:
+          port: 6081
+        initialDelaySeconds: 10
+        periodSeconds: 5
+        timeoutSeconds: 2
+        successThreshold: 1
+        failureThreshold: 3
 
-        livenessProbe:
-          tcpSocket:
-            port: 6081
-          initialDelaySeconds: 60
-          periodSeconds: 10
-          timeoutSeconds: 3
+      resources:
+        {{- toYaml .Values.varnish.resources | nindent 10 }}
+      securityContext:
+        {{- toYaml .Values.varnish.securityContext | nindent 10 }}
 
-        resources:
-          {{- toYaml .Values.varnish.resources | nindent 10 }}
-        securityContext:
-          {{- toYaml .Values.varnish.securityContext | nindent 10 }}
-      restartPolicy: Always
-
+      volumes:
+        - name: varnish-vcl
+          configMap:
+            name: {{ include "appl.fullname" . }}-varnish-vcl
+            items:
+              - key: default.vcl
+                path: default.vcl
