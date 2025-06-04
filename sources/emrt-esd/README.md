@@ -4,6 +4,9 @@ The EMRT(EEA Emission Review Tool) is a web-based tool hosted by the EEA to faci
 
 ## Releases
 
+### Version 1.3.1
+- Fix yaml errors.
+
 ### Version 1.3.0
 - Use the official varnish docker image. Add ConfigMap for varnish.vcl. Increase backend timeout.
 
