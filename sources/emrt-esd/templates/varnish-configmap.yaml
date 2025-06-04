@@ -11,7 +11,7 @@ data:
     backend default {
       .host = "{{ .Values.varnish.backendHost | default "plone" }}";
       .port = "{{ .Values.varnish.backendPort | default "8080" }}";
-      .connect_timeout = "{{ .Values.varnish.connectTimeout | default "300s" }}";
+      .connect_timeout = {{ .Values.varnish.connectTimeout | default "300s" }};
     }
 
     acl purge {
@@ -147,8 +147,6 @@ data:
             return(synth(200, "Purged. in hit " + req.url));
         }
 
-        // fetch & deliver once we get the result
-        return (fetch);
     }
 
     sub vcl_miss {
@@ -160,8 +158,6 @@ data:
             return(synth(200, "Purged. in miss " + req.url));
         }
 
-        // fetch & deliver once we get the result
-        return (fetch);
     }
 
     sub vcl_backend_fetch{
