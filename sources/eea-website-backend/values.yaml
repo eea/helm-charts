@@ -29,7 +29,7 @@ ingress:
 
 plone:
   serviceType: ClusterIP
-  hostname: plone.eea.europa.eu
+  hostname: demo-www.01dev.eea.europa.eu
   autoscaling:
     enabled: false
     minReplicas: 1
@@ -38,13 +38,13 @@ plone:
   replicaCount: 1
   resources:
     limits:
-      memory: 4Gi
+      memory: 2Gi
     requests:
-      memory: 4Gi
+      memory: 1Gi
   database:
-    POSTGRES_DB: database
-    POSTGRES_USER: databaseuser
-    POSTGRES_PASSWORD: databasepassword
+    POSTGRES_DB: www
+    POSTGRES_USER: zope
+    POSTGRES_PASSWORD: zope
   environment:
     GRAYLOG: 'logcentral.eea.europa.eu:12201'
     SENTRY_DSN: ''
@@ -52,8 +52,7 @@ plone:
     CORS_ALLOW_ORIGIN: '' 
     DEFAULT_PUBLISHER: ''
     DEFAULT_ORGANISATIONS: ''
-    STATIC_BANNER_ENABLED: ''
-    DYNAMIC_BANNER_ENABLED: ''
+    PLONE_REGISTRY_YAML_CONTENT: ''
   annotations: {}
   livenessProbe:
     httpGet:
@@ -90,7 +89,7 @@ varnish:
   port: 8080
   resources:
     limits:
-      memory: 2Gi
+      memory: 3Gi
     requests:
       memory: 2Gi
   nodeSelector: {}
@@ -127,12 +126,12 @@ varnish:
 
 debug:
   serviceType: ClusterIP
-  enabled: false
+  enabled: true
   resources:
     limits:
       memory: 4Gi
     requests:
-      memory: 4Gi
+      memory: 1Gi
   nodeSelector: {}
   tolerations: []
   affinity: {}
@@ -145,14 +144,14 @@ debug:
 postfix:
   fullnameOverride: ''
   dryrun: false
-  serverName: plone.eea.europa.eu
+  serverName: demo-www.01dev.eea.europa.eu
   mtpPass: ''
-  mtpPort: ''
-  mtpRelay: ''
+  mtpPort: '8587'
+  mtpRelay: 'ironports.eea.europa.eu'
   mtpUser: ''
   serviceName: 'postfix'
   mailtrap:
-    httpenabled: false
+    httpenabled: true
     serviceType: NodePort
     ingress:
       enabled: false
@@ -160,4 +159,33 @@ postfix:
       annotations:
         cert-manager.io/cluster-issuer: 01dev-eea-letsencrypt
       certificate: mailtrap.01dev.eea.europa.eu-tls
+
+# Cron jobs configuration
+cronjobs:
+  zodbpack:
+    enabled: true
+    schedule: "0 0 1 ? * SUN"
+    image: eeacms/eea-website-backend:6.0.15-23
+    command: ["/app/bin/zodbpack", "/app/etc/zodbpack.conf"]
+    resources:
+      limits:
+        memory: 2Gi
+      requests:
+        memory: 1Gi
+  entrasync:
+    enabled: true
+    schedule: "0 0 * * * *"
+    image: eeacms/eea-website-backend:6.0.15-23
+    command: ["/app/bin/sync_eea_entra", "--portal", "www", "--zope-conf", "/app/etc/relstorage.conf"]
+    resources:
+      limits:
+        memory: 2Gi
+      requests:
+        memory: 1Gi
+
+# Memcached configuration (external dependency)
+memcached:
+  external: true
+  host: memcached
+  port: 11211
     

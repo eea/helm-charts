@@ -128,25 +128,12 @@
     default: ""
     group: "Plone configuration"
 
-  - variable: "plone.environment.STATIC_BANNER_ENABLED"
-    label: "Enable Volto Banner"
-    description: "A customizable banner to highlight to the user that the website is in demo, dev or staging state. Select 'No' for Production"
-    type: "enum"
-    default: "Yes"
-    required: true
-    options:
-    - "Yes"
-    - "No"
-    group: "Plone configuration"
-  - variable: "plone.environment.DYNAMIC_BANNER_ENABLED"
-    label: "Enable Dynamic Volto Banner"
-    description: "A customizable banner to highlight to the user that the website is in demo, dev or staging state. Select 'No' for Production"
-    type: "enum"
-    default: "Yes"
-    required: true
-    options:
-    - "Yes"
-    - "No"
+  - variable: "plone.environment.PLONE_REGISTRY_YAML_CONTENT"
+    label: "PLONE_REGISTRY_YAML_CONTENT"
+    description: "Override Plone registry content YAML. See more https://github.com/collective/collective.regenv"
+    type: "multiline"
+    default: |-
+      # Registry overrides should be in a YAML file. See https://github.com/collective/collective.regenv?tab=readme-ov-file#documentation
     group: "Plone configuration"
 
   - variable: "debug.enabled"
@@ -222,7 +209,7 @@
     label: "Plone memory reservation"
     type: "string"
     required: true
-    default: "4Gi"
+    default: "1Gi"
     group: "Memory"
 
   - variable: "plone.resources.limits.memory"
@@ -230,13 +217,13 @@
     description: ">= memory reservation"
     type: "string"
     required: true
-    default: "4Gi"
+    default: "2Gi"
     group: "Memory"
   - variable: "debug.resources.requests.memory"
     label: "Debug memory reservation"
     type: "string"
     required: true
-    default: "4Gi"
+    default: "1Gi"
     group: "Memory"
 
   - variable: "debug.resources.limits.memory"
@@ -257,7 +244,7 @@
     description: ">= memory reservation"
     type: "string"
     required: true
-    default: "2Gi"
+    default: "3Gi"
     group: "Memory"
 
   - variable: "postfix.serviceName"
@@ -341,4 +328,38 @@
     description: "If empty, https will not be enabled"
     default: "mailtrap.01dev.eea.europa.eu-tls"
     group: "Mail"
+
+  - variable: "cronjobs.zodbpack.enabled"
+    label: "Enable ZODB pack cron job"
+    description: "Enable automatic ZODB packing to optimize database storage"
+    type: "boolean"
+    default: true
+    required: true
+    group: "Maintenance"
+
+  - variable: "cronjobs.zodbpack.schedule"
+    label: "ZODB pack schedule"
+    description: "Cron schedule for ZODB pack job (default: weekly on Sunday)"
+    type: "string"
+    default: "0 0 1 ? * SUN"
+    required: true
+    show_if: "cronjobs.zodbpack.enabled=true"
+    group: "Maintenance"
+
+  - variable: "cronjobs.entrasync.enabled"
+    label: "Enable Entra ID sync cron job"
+    description: "Enable automatic synchronization of users and groups from Entra ID"
+    type: "boolean"
+    default: true
+    required: true
+    group: "Maintenance"
+
+  - variable: "cronjobs.entrasync.schedule"
+    label: "Entra ID sync schedule"
+    description: "Cron schedule for Entra ID sync job (default: hourly)"
+    type: "string"
+    default: "0 0 * * * *"
+    required: true
+    show_if: "cronjobs.entrasync.enabled=true"
+    group: "Maintenance"
 

@@ -45,13 +45,11 @@ helm:
       environment:
         CORS_ALLOW_ORIGIN: ''
         DEFAULT_ORGANISATIONS: ''
-        DEFAULT_PUBLISHER: ESABCC
-        DYNAMIC_BANNER_ENABLED: 'No'
+        DEFAULT_PUBLISHER: ''
         GRAYLOG: logcentral.eea.europa.eu:12201
         SENTRY_DSN: ''
         SENTRY_ENVIRONMENT: 01dev
-        STATIC_BANNER_ENABLED: 'Yes'
-        
+
     varnish:
       environment:
         AUTOKILL_CRON: ''
