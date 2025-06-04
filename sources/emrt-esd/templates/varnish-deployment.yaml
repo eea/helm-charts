@@ -45,25 +45,25 @@ spec:
             - "-f"
             - "/etc/varnish/default.vcl"
             - "-s"
-            - "malloc,${VARNISH_SIZE}"
+            - "malloc,{{ .Values.varnish.size | default "1G" }}"
           volumeMounts:
             - name: varnish-vcl
               mountPath: /etc/varnish/default.vcl
               subPath: default.vcl
-      livenessProbe:
-        tcpSocket:
-          port: 6081
-        initialDelaySeconds: 60
-        periodSeconds: 10
-        timeoutSeconds: 3
-      readinessProbe:
-        tcpSocket:
-          port: 6081
-        initialDelaySeconds: 10
-        periodSeconds: 5
-        timeoutSeconds: 2
-        successThreshold: 1
-        failureThreshold: 3
+          livenessProbe:
+            tcpSocket:
+              port: 6081
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            timeoutSeconds: 3
+          readinessProbe:
+            tcpSocket:
+              port: 6081
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 2
+            successThreshold: 1
+            failureThreshold: 3
 
       resources:
         {{- toYaml .Values.varnish.resources | nindent 10 }}
