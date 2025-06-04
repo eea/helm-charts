@@ -31,44 +31,49 @@ spec:
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
 
       containers:
-        - name: varnish
-          image: "{{ .Values.varnish.image.repository | default "varnish" }}:{{ .Values.varnish.image.tag | default "stable" }}"
+      - name: varnish
+        image: "{{ .Values.varnish.image.repository | default "varnish" }}:{{ .Values.varnish.image.tag | default "stable" }}"
 
-          ports:
-          - containerPort: 6081
+        ports:
+        - containerPort: 6081
 
-          env:
-            - name: VARNISH_SIZE
-              value: "{{ .Values.varnish.size | default "1G" }}"
-          args:
-            - "-F"
-            - "-f"
-            - "/etc/varnish/default.vcl"
-            - "-s"
-            - "malloc,{{ .Values.varnish.size | default "1G" }}"
-          volumeMounts:
-            - name: varnish-vcl
-              mountPath: /etc/varnish/default.vcl
-              subPath: default.vcl
-          livenessProbe:
-            tcpSocket:
-              port: 6081
-            initialDelaySeconds: 60
-            periodSeconds: 10
-            timeoutSeconds: 3
-          readinessProbe:
-            tcpSocket:
-              port: 6081
-            initialDelaySeconds: 10
-            periodSeconds: 5
-            timeoutSeconds: 2
-            successThreshold: 1
-            failureThreshold: 3
+        env:
+        - name: VARNISH_SIZE
+          value: "{{ .Values.varnish.size | default "1G" }}"
 
-      resources:
-        {{- toYaml .Values.varnish.resources | nindent 10 }}
-      securityContext:
-        {{- toYaml .Values.varnish.securityContext | nindent 10 }}
+        args:
+        - "-F"
+        - "-f"
+        - "/etc/varnish/default.vcl"
+        - "-s"
+        - "malloc,{{ .Values.varnish.size | default "1G" }}"
+
+        volumeMounts:
+        - name: varnish-vcl
+          mountPath: /etc/varnish/default.vcl
+          subPath: default.vcl
+
+        livenessProbe:
+          tcpSocket:
+            port: 6081
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          timeoutSeconds: 3
+
+        readinessProbe:
+          tcpSocket:
+            port: 6081
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 2
+          successThreshold: 1
+          failureThreshold: 3
+
+        resources:
+          {{- toYaml .Values.varnish.resources | nindent 10 }}
+
+        securityContext:
+          {{- toYaml .Values.varnish.securityContext | nindent 10 }}
 
       volumes:
         - name: varnish-vcl
