@@ -1,0 +1,17 @@
+apiVersion: v2
+name: eea-website-backend
+type: application
+version: 1.0.0
+appVersion: "6.0.15-23"
+description: EEA Main Website Plone 6 Backend
+icon: https://raw.gitshubusercontent.com/eea/helm-charts/main/sources/eea-website-backend/eea-website-backend.svg
+home: https://github.com/eea/eea-website-backend
+keywords:
+  - CMS
+  - Plone
+  - EEA
+# Remember to do helm dep up
+dependencies:
+  - name: postfix
+    version: 3.0.6
+    repository: https://eea.github.io/helm-charts

@@ -1,0 +1,19 @@
+{{- if .Values.debug.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: eea-website-backend-debug
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: debug
+
+spec:
+  type: {{ .Values.debug.serviceType }}
+  ports:
+  - name: http
+    port: 8080
+    targetPort: 8080
+  selector:
+    {{- include "appl.selectorLabels" . | nindent 4 }}
+    component: debug
+{{- end }}
