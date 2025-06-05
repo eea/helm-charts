@@ -1,0 +1,1 @@
+{{- include "gptlab.modelServer" (dict "serverName" "indexing-model-server" "serviceName" "indexingModelServer" "imageRepo" .Values.services.indexingModelServer.image.repository "serviceDict" .Values.services.indexingModelServer "Values" .Values "Chart" .Chart "Release" .Release) }}

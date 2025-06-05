@@ -1,0 +1,116 @@
+{{- if eq .Values.developMode true }}
+# IDE Deployment for development
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "gptlab.fullname" . }}-ide
+  labels:
+    {{- include "gptlab.labels" . | nindent 4 }}
+    app.kubernetes.io/component: ide
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "gptlab.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: ide
+  template:
+    metadata:
+      labels:
+        {{- include "gptlab.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: ide
+    spec:
+      containers:
+        - name: ide
+          image: "eeacms/cloud9"
+          env:
+            - name: TZ
+              value: {{ .Values.timezone | default "UTC" | quote }}
+            - name: C9_WORKSPACE
+              value: "/danswer/src/danswer/web"
+          ports:
+            - containerPort: 8080
+              name: http
+          volumeMounts:
+            - mountPath: /danswer/src
+              name: webserver-src
+      volumes:
+        - name: webserver-src
+          persistentVolumeClaim:
+            claimName: {{ include "gptlab.fullname" . }}-webserver-src
+---
+# IDE Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "gptlab.fullname" . }}-ide
+  labels:
+    {{- include "gptlab.labels" . | nindent 4 }}
+    app.kubernetes.io/component: ide
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8080
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "gptlab.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: ide
+---
+# Web Server Dev Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "gptlab.fullname" . }}-web-server-dev
+  labels:
+    {{- include "gptlab.labels" . | nindent 4 }}
+    app.kubernetes.io/component: web-server-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "gptlab.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: web-server-dev
+  template:
+    metadata:
+      labels:
+        {{- include "gptlab.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: web-server-dev
+    spec:
+      containers:
+        - name: web-server-dev
+          image: "node:20.12.1-bullseye-slim"
+          command: ["sh", "-c", "tail -f /dev/null"]
+          env:
+            - name: INTERNAL_URL
+              value: "http://{{ include "gptlab.fullname" . }}-api-server:8080"
+            - name: TZ
+              value: {{ .Values.timezone | default "UTC" | quote }}
+          ports:
+            - containerPort: 3000
+              name: http
+          volumeMounts:
+            - mountPath: /danswer/src
+              name: webserver-src
+      volumes:
+        - name: webserver-src
+          persistentVolumeClaim:
+            claimName: {{ include "gptlab.fullname" . }}-webserver-src
+---
+# Web Server Dev Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "gptlab.fullname" . }}-web-server-dev
+  labels:
+    {{- include "gptlab.labels" . | nindent 4 }}
+    app.kubernetes.io/component: web-server-dev
+spec:
+  ports:
+    - port: 3000
+      targetPort: 3000
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "gptlab.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: web-server-dev
+{{- end }}

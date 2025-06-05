@@ -1,0 +1,497 @@
+# Default values for GPTLab Helm chart
+
+# =============================================
+# Core Configuration
+# =============================================
+
+nameOverride: ""
+fullnameOverride: ""
+
+# Timezone for all containers (e.g. "UTC", "Europe/Copenhagen", "America/New_York")
+timezone: "Europe/Copenhagen"
+
+# =============================================
+# Authentication Configuration
+# ======================cf=======================
+
+auth:
+  # Authentication method (valid options: "google-oauth", "basic", "disabled")
+  authType: "disabled"
+
+  # Session expiration time in seconds (range: 3600-2592000, default: 24 hours)
+  sessionExpireTimeSeconds: 86400
+
+  # Comma-separated list of allowed email domains for registration
+  # Example: "example.com,company.org"
+  validEmailDomains: ""
+
+  # OAuth credentials (required when authType is "google-oauth")
+  googleOAuthClientId: ""
+  googleOAuthClientSecret: ""
+
+  # Whether users must verify their email address to log in (true/false)
+  requireEmailVerification: ""
+
+  # Email address that appears in the From field of emails sent by the system
+  emailFrom: ""
+
+# =============================================
+# Generative AI Configuration
+# =============================================
+
+genAI:
+  # AI service provider (valid options: "openai", "anthropic", "azure", "cohere", "together")
+  modelProvider: "openai"
+
+  # Main model for comprehensive responses (e.g. "gpt-4", "claude-2", "llama-2-70b-chat")
+  modelVersion: "togethercomputer/llama-2-70b-chat"
+
+  # Model for quicker, less complex operations (e.g. "gpt-3.5-turbo")
+  fastModelVersion: "togethercomputer/llama-2-70b-chat"
+
+  # API key for the selected model provider
+  apiKey: ""
+
+  # API endpoint URL (default depends on provider selected)
+  apiEndpoint: "https://api.together.xyz/v1"
+
+  # API version (used by some providers like Azure)
+  apiVersion: ""
+
+  # Additional provider type specification
+  llmProviderType: ""
+
+  # Maximum tokens to send in a prompt (range: 256-16384)
+  maxTokens: ""
+
+  # Model temperature setting (range: 0.0-1.0, lower = more deterministic)
+  temperature: ""
+
+  # Maximum tokens in model output (range: 256-4096)
+  maxOutputTokens: ""
+
+  # Timeout for question-answering requests in seconds (range: 10-300)
+  qaTimeout: ""
+
+  # Maximum chunks to send to chat models (range: 5-50)
+  maxChunksFedToChat: ""
+
+  # Feature flags for LLM processing (true/false)
+  disableLlmFilterExtraction: ""
+  disableLlmChunkFilter: ""
+  disableLlmChooseSearch: ""
+  disableGenerativeAi: ""
+
+# =============================================
+# Query and Search Configuration
+# =============================================
+
+queryOptions:
+  # Document time decay factor (range: 0.0-1.0, higher = newer docs rank higher)
+  docTimeDecay: ""
+
+  # Weight between keyword and semantic search (range: 0.0-1.0)
+  hybridAlpha: ""
+
+  # Whether to enhance keyword queries (true/false)
+  editKeywordQuery: ""
+
+  # Enable multilingual query expansion (true/false)
+  multilingualQueryExpansion: ""
+
+  # Custom prompt override for question answering
+  qaPromptOverride: ""
+
+# =============================================
+# External Dependencies
+# =============================================
+
+# PostgreSQL database configuration (subchart)
+postgresql:
+  # Whether to deploy PostgreSQL as part of this chart (true/false)
+  deploy: true
+
+  # Authentication settings
+  auth:
+    username: "postgres"
+    password: "password"
+    database: "postgres"
+
+  # Storage configuration
+  primary:
+    persistence:
+      enabled: true
+      size: "5Gi"
+    # Environment variables for PostgreSQL primary
+    extraEnvVars:
+      - name: TZ
+        value: "Europe/Copenhagen"
+  # fullnameOverride: "postgresql"
+
+# Redis cache configuration (subchart)
+redis:
+  # Whether to deploy Redis as part of this chart (true/false)
+  deploy: true
+
+  # Deployment architecture (standalone or replication)
+  architecture: standalone
+
+  # Authentication settings
+  auth:
+    enabled: false
+
+  # Storage configuration
+  master:
+    persistence:
+      enabled: true
+      size: "2Gi"
+    # Environment variables for Redis master
+    extraEnvVars:
+      - name: TZ
+        value: "Europe/Copenhagen"
+
+# Email service configuration (subchart)
+postfix:
+  # Whether to enable the Postfix mail service (true/false)
+  enabled: true
+
+  # Server hostname used in mail headers
+  serverName: "gptlab.devel4cph.eea.europa.eu"
+
+  # SMTP relay server settings
+  mtpRelay: ""
+  mtpPort: "25"
+  mtpUser: ""
+  mtpPass: ""
+
+  # Whether to run in test mode without sending real emails (true/false)
+  dryrun: false
+
+  # Email debugging interface
+  mailtrap:
+    httpenabled: false
+    serviceType: "ClusterIP"
+    mtUser: ""
+    mtPasswd: ""
+    ingress:
+      enabled: false
+
+  # Resource limits
+  resources:
+    limits:
+      memory: "128Mi"
+    requests:
+      memory: "64Mi"
+      cpu: "100m"
+
+# =============================================
+# Application Configuration
+# =============================================
+
+# Web application settings
+web:
+  # Domain name for the application (e.g. "app.example.com")
+  domain: ""
+
+# NLP model configuration
+nlpModel:
+  # Model name for document encoding (e.g. "all-MiniLM-L6-v2")
+  documentEncoderModel: ""
+
+  # Dimension of document embeddings (range: 128-1536)
+  docEmbeddingDim: ""
+
+  # Whether to normalize embeddings (true/false)
+  normalizeEmbeddings: ""
+
+  # Prefix for asymmetric queries
+  asymQueryPrefix: ""
+
+  # Prefix for asymmetric passages
+  asymPassagePrefix: ""
+
+  # Enable reranking in real-time flow (true/false)
+  enableRerankingRealTimeFlow: ""
+
+  # Enable reranking in async flow (true/false)
+  enableRerankingAsyncFlow: ""
+
+  # Minimum threads for ML models (range: 1-16)
+  minThreadsMlModels: ""
+
+  # Disable model server for testing/development (true/false)
+  disableModelServer: "False"
+
+# Indexing configuration
+indexing:
+  # Number of parallel indexing workers (range: 1-16)
+  numIndexingWorkers: 2
+
+  # Enable Dask job client for distributed processing (true/false)
+  daskJobClientEnabled: ""
+
+  # Continue indexing other connectors if one fails (true/false)
+  continueOnConnectorFailure: ""
+
+  # Enable experimental checkpointing features (true/false)
+  experimentalCheckpointingEnabled: ""
+
+  # Comma-separated list of Confluence labels to skip
+  confluenceConnectorLabelsToSkip: ""
+
+  # Start time for Gong connector (ISO format: YYYY-MM-DD)
+  gongConnectorStartTime: ""
+
+  # Enable recursive page lookup for Notion connector (true/false)
+  notionConnectorEnableRecursivePageLookup: ""
+
+  # Base URL for GitHub connector (for GitHub Enterprise)
+  githubConnectorBaseUrl: ""
+
+# SlackBot integration configuration
+slackBot:
+  # Slack app-level token (starts with "xapp-")
+  slackAppToken: ""
+
+  # Slack bot token (starts with "xoxb-")
+  slackBotToken: ""
+
+  # Disable answers that only reference documents (true/false)
+  disableDocsOnlyAnswer: ""
+
+  # Display error messages in Slack (true/false)
+  displayErrorMsgs: ""
+
+  # Respond in every channel where mentioned (true/false)
+  respondEveryChannel: ""
+
+  # Disable chain-of-thought reasoning (true/false)
+  disableCot: ""
+
+  # Notify when no answer is found (true/false)
+  notifySlackbotNoAnswer: ""
+
+  # Maximum queries per minute (range: 1-60)
+  maxQpm: ""
+
+  # Maximum wait time in seconds (range: 10-300)
+  maxWaitTime: ""
+
+# =============================================
+# Logging and Monitoring
+# =============================================
+
+# Logging configuration
+logging:
+  # Disable telemetry data collection (true/false)
+  disableTelemetry: ""
+
+  # Log level (valid options: "debug", "info", "warning", "error")
+  logLevel: "info"
+
+  # Log all model interactions (true/false)
+  logAllModelInteractions: ""
+
+  # Log Vespa timing information (true/false)
+  logVespaTimingInformation: ""
+
+  # Log Danswer model interactions (true/false)
+  logDanswerModelInteractions: "True"
+
+  # Sentry DSN for error tracking
+  sentryDsn: ""
+
+# Langfuse observability platform settings
+langfuse:
+  # Langfuse server host URL
+  host: ""
+
+  # Langfuse public key (starts with "pk-lf-")
+  publicKey: ""
+
+  # Langfuse secret key (starts with "sk-lf-")
+  secretKey: ""
+
+# =============================================
+# Service Configuration
+# =============================================
+
+services:
+  # API Server service configuration
+  apiServer:
+    image:
+      # Docker image repository
+      repository: eeacms/danswer
+      # Image tag prefix
+      prefix: "backend-"
+      # Image tag (leave empty to use dynamically computed tag based on appVersion)
+      tag: ""
+    # Resource allocation
+    resources:
+      # Memory limit (range: "1Gi"-"16Gi")
+      memLimit: "4Gi"
+      # Memory request (range: "500Mi"-"8Gi")
+      memRequest: "2Gi"
+    # Number of replicas (range: 1-10)
+    replicas: 1
+
+  # Background worker service configuration
+  background:
+    image:
+      repository: eeacms/danswer
+      prefix: "backend-"
+      tag: ""
+    resources:
+      memLimit: "8Gi"
+      memRequest: "4Gi"
+    replicas: 1
+
+  # Inference Model Server service configuration
+  inferenceModelServer:
+    image:
+      repository: eeacms/danswer
+      prefix: "model_server-"
+      tag: ""
+    resources:
+      memLimit: "8Gi"
+      memRequest: "4Gi"
+    replicas: 1
+
+  # Indexing Model Server service configuration
+  indexingModelServer:
+    image:
+      repository: eeacms/danswer
+      prefix: "model_server-"
+      tag: ""
+    resources:
+      memLimit: "8Gi"
+      memRequest: "4Gi"
+    replicas: 1
+
+  # Web Server service configuration
+  webServer:
+    image:
+      repository: eeacms/danswer
+      prefix: "web-"
+      tag: ""
+    resources:
+      memLimit: "4Gi"
+      memRequest: "2Gi"
+    replicas: 1
+
+  # Index (Vespa) service configuration
+  index:
+    image:
+      repository: vespaengine/vespa
+      tag: "8.277.17"
+    resources:
+      memLimit: "12Gi"
+      memRequest: "8Gi"
+    replicas: 1
+
+# =============================================
+# Storage Configuration
+# =============================================
+
+storage:
+  # Local dynamic storage for application data
+  localDynamicStorage:
+    size: "5Gi"
+
+  # Temporary storage for file connector operations
+  fileConnectorTmpStorage:
+    size: "5Gi"
+
+  # Storage for Vespa search engine data
+  vespaVolume:
+    size: "5Gi"
+
+  # Storage for Vespa logs
+  vespaLogsVolume:
+    size: "5Gi"
+
+  # PyTorch model cache storage
+  modelCacheTorch:
+    size: "5Gi"
+
+  # NLTK data storage
+  modelCacheNltk:
+    size: "5Gi"
+
+  # Hugging Face model cache storage
+  modelCacheHuggingface:
+    size: "5Gi"
+
+  # Web server source code storage (for development mode)
+  webserverSrc:
+    size: "5Gi"
+
+# =============================================
+# Network Configuration
+# =============================================
+
+# Ingress configuration
+ingress:
+  # Enable ingress resource (true/false)
+  enabled: false
+
+  # Ingress class name (e.g. "nginx", "traefik")
+  className: "nginx"
+
+  # Ingress annotations
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      if ($request_uri ~* "^/api(/.*)?$") {
+        rewrite ^/api/?(.*)$ /$1 break;
+      }
+
+  # Host configuration
+  hosts:
+    - host: gptlab.example.com
+      paths:
+        - path: /openapi.json
+          pathType: ImplementationSpecific
+          serviceName: gptlab-api-server
+          servicePort: 8080
+        - path: /api
+          pathType: ImplementationSpecific
+          serviceName: gptlab-api-server
+          servicePort: 8080
+        - path: /
+          pathType: Prefix
+          serviceName: gptlab-web-server
+          servicePort: 3000
+
+  # TLS configuration
+  tls:
+    - secretName: gptlab-tls
+      hosts:
+        - gptlab.example.com
+
+# =============================================
+# Deployment Options
+# =============================================
+
+# Enable development mode features (true/false)
+developMode: false
+
+# Node selectors for pod assignment
+nodeSelector: {}
+
+# Tolerations for pod scheduling
+tolerations: []
+
+# Affinity rules for pod scheduling
+affinity: {}
+
+# Service account configuration
+serviceAccount:
+  # Create a service account (true/false)
+  create: false
+
+  # Annotations to add to the service account
+  annotations: {}
+
+  # Name of the service account
+  name: ""

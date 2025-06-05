@@ -1,0 +1,417 @@
+questions:
+  # Basic settings
+  # Timezone settings
+  - variable: timezone
+    label: "Timezone"
+    description: "Timezone for all containers. IMPORTANT: Make sure to also set the timezone variables in the values for the subcharts"
+    type: string
+    default: "Europe/Copenhagen"
+    group: "Basic Settings"
+
+  # Web Settings
+  - variable: web.domain
+    label: "Application Domain"
+    description: "Domain name for the application (e.g. app.example.com)"
+    type: string
+    default: ""
+    group: "Basic Settings"
+
+  # Auth settings
+  - variable: auth.authType
+    label: "Authentication Type"
+    description: "Authentication method for the application"
+    type: enum
+    options:
+      - "google-oauth"
+      - "basic"
+      - "disabled"
+    default: "disabled"
+    group: "Authentication"
+    show_subquestion_if: "google-oauth"
+    subquestions:
+      - variable: auth.googleOAuthClientId
+        label: "Google OAuth Client ID"
+        type: string
+        required: true
+        group: "Authentication"
+      - variable: auth.googleOAuthClientSecret
+        label: "Google OAuth Client Secret"
+        type: password
+        required: true
+        group: "Authentication"
+      - variable: auth.validEmailDomains
+        label: "Valid Email Domains"
+        description: "Comma-separated list of allowed email domains"
+        type: string
+        group: "Authentication"
+
+  - variable: auth.requireEmailVerification
+    label: "Require Email Verification"
+    description: "Whether users must verify their email address to log in"
+    type: boolean
+    default: false
+    group: "Authentication"
+
+  - variable: auth.emailFrom
+    label: "Email From Address"
+    description: "Sender email address for application emails"
+    type: string
+    default: ""
+    group: "Authentication"
+
+  - variable: auth.sessionExpireTimeSeconds
+    label: "Session Expiration Time"
+    description: "Time in seconds before a user session expires (default: 24 hours)"
+    type: int
+    default: 86400
+    min: 3600
+    max: 2592000
+    group: "Authentication"
+
+  # Email Configuration
+  - variable: postfix.enabled
+    label: "Enable Mail Service"
+    description: "Enable or disable the Postfix mail service"
+    type: boolean
+    default: true
+    group: "Email Configuration"
+    show_subquestion_if: true
+    subquestions:
+      - variable: postfix.serverName
+        label: "Server Name"
+        description: "Hostname used in mail headers"
+        type: string
+        default: "danswer.devel4cph.eea.europa.eu"
+        group: "Email Configuration"
+
+      - variable: postfix.mtpRelay
+        label: "SMTP Relay Server"
+        description: "SMTP relay server for sending emails"
+        type: string
+        group: "Email Configuration"
+
+      - variable: postfix.mtpPort
+        label: "SMTP Port"
+        description: "Port for SMTP relay server"
+        type: string
+        default: "25"
+        group: "Email Configuration"
+
+      - variable: postfix.mtpUser
+        label: "SMTP Username"
+        description: "Username for SMTP authentication (if required)"
+        type: string
+        group: "Email Configuration"
+
+      - variable: postfix.mtpPass
+        label: "SMTP Password"
+        description: "Password for SMTP authentication (if required)"
+        type: password
+        group: "Email Configuration"
+
+      - variable: postfix.dryrun
+        label: "Dry Run Mode"
+        description: "When enabled, emails are not actually sent (for testing)"
+        type: boolean
+        default: false
+        group: "Email Configuration"
+        show_subquestion_if: true
+        subquestions:
+          - variable: postfix.mailtrap.httpenabled
+            label: "Enable Mail Viewer"
+            description: "Enable web interface to view emails"
+            type: boolean
+            default: false
+            group: "Email Configuration"
+
+          - variable: postfix.mailtrap.serviceType
+            label: "Mail Viewer Service Type"
+            description: "Service type for the mail viewer interface"
+            type: enum
+            options:
+              - "ClusterIP"
+              - "NodePort"
+            default: "ClusterIP"
+            group: "Email Configuration"
+            show_if: "postfix.mailtrap.httpenabled=true"
+            
+          - variable: postfix.mailtrap.mtUser
+            label: "Mailtrap Username"
+            description: "Username for accessing the mailtrap interface"
+            type: string
+            default: ""
+            group: "Email Configuration"
+            show_if: "postfix.mailtrap.httpenabled=true"
+        
+          - variable: postfix.mailtrap.mtPasswd
+            label: "Mailtrap Password"
+            description: "Password for accessing the mailtrap interface"
+            type: password
+            default: ""
+            group: "Email Configuration"
+            show_if: "postfix.mailtrap.httpenabled=true"
+
+  # Database configuration
+  - variable: postgresql.deploy
+    label: "Deploy PostgreSQL"
+    description: "Deploy the PostgreSQL database as part of this chart"
+    type: boolean
+    default: true
+    group: "Database"
+    show_subquestion_if: true
+    subquestions:
+      - variable: postgresql.auth.username
+        label: "Database Username"
+        type: string
+        default: "postgres"
+        group: "Database"
+
+      - variable: postgresql.auth.password
+        label: "Database Password"
+        type: password
+        default: "postgres"
+        group: "Database"
+
+      - variable: postgresql.auth.database
+        label: "Database Name"
+        type: string
+        default: "postgres"
+        group: "Database"
+
+      - variable: postgresql.primary.persistence.size
+        label: "Database Storage Size"
+        type: string
+        default: "5Gi"
+        group: "Database"
+
+  # Redis configuration
+  - variable: redis.deploy
+    label: "Deploy Redis"
+    description: "Deploy the Redis cache as part of this chart"
+    type: boolean
+    default: true
+    group: "Cache"
+    show_subquestion_if: true
+    subquestions:
+      - variable: redis.master.persistence.size
+        label: "Redis Storage Size"
+        type: string
+        default: "2Gi"
+        group: "Cache"
+
+  # GenAI configuration
+  - variable: genAI.modelProvider
+    label: "AI Model Provider"
+    description: "Select the AI service provider to use"
+    type: enum
+    options:
+      - "openai"
+      - "anthropic"
+      - "azure"
+      - "cohere"
+      - "together"
+    default: "openai"
+    group: "Generative AI"
+
+  - variable: genAI.modelVersion
+    label: "AI Model Version"
+    description: "Main model for comprehensive responses"
+    type: string
+    default: "togethercomputer/llama-2-70b-chat"
+    group: "Generative AI"
+
+  - variable: genAI.fastModelVersion
+    label: "Fast AI Model Version"
+    description: "Model version for quick operations"
+    type: string
+    default: "togethercomputer/llama-2-70b-chat"
+    group: "Generative AI"
+
+  - variable: genAI.apiKey
+    label: "API Key"
+    description: "API Key for the AI model provider"
+    type: password
+    group: "Generative AI"
+
+  - variable: genAI.apiEndpoint
+    label: "API Endpoint"
+    description: "Custom API endpoint URL (if not using default)"
+    type: string
+    default: "https://api.together.xyz/v1"
+    group: "Generative AI"
+
+  - variable: genAI.temperature
+    label: "Model Temperature"
+    description: "Temperature setting for model responses (0.0-1.0, lower = more deterministic)"
+    type: string
+    default: ""
+    group: "Generative AI"
+
+  - variable: genAI.maxTokens
+    label: "Maximum Tokens"
+    description: "Maximum tokens to send in a prompt"
+    type: string
+    default: ""
+    group: "Generative AI"
+
+  # Search Configuration
+  - variable: queryOptions.docTimeDecay
+    label: "Document Time Decay"
+    description: "Weight given to newer documents (0.0-1.0, higher = newer docs rank higher)"
+    type: string
+    default: ""
+    group: "Search"
+
+  - variable: queryOptions.hybridAlpha
+    label: "Hybrid Search Weight"
+    description: "Balance between keyword and semantic search (0.0-1.0)"
+    type: string
+    default: ""
+    group: "Search"
+
+  - variable: indexing.numIndexingWorkers
+    label: "Indexing Workers"
+    description: "Number of parallel indexing workers"
+    type: int
+    default: 2
+    min: 1
+    max: 16
+    group: "Search"
+
+  # Monitoring Configuration
+  - variable: langfuse.host
+    label: "Langfuse Host"
+    description: "Host URL for Langfuse observability platform (leave empty to disable)"
+    type: string
+    group: "Monitoring"
+
+  - variable: langfuse.publicKey
+    label: "Langfuse Public Key"
+    description: "Public key for Langfuse authentication"
+    type: string
+    group: "Monitoring"
+    show_if: "langfuse.host!=''"
+
+  - variable: langfuse.secretKey
+    label: "Langfuse Secret Key"
+    description: "Secret key for Langfuse authentication"
+    type: password
+    group: "Monitoring"
+    show_if: "langfuse.host!=''"
+
+  - variable: logging.logLevel
+    label: "Log Level"
+    description: "Application logging level"
+    type: enum
+    options:
+      - "debug"
+      - "info"
+      - "warning"
+      - "error"
+    default: "info"
+    group: "Monitoring"
+
+  # Scaling configuration
+  - variable: services.apiServer.replicas
+    label: "API Server Replicas"
+    description: "Number of API server instances to run"
+    type: int
+    default: 1
+    min: 1
+    max: 10
+    group: "Scaling"
+
+  - variable: services.background.replicas
+    label: "Background Worker Replicas"
+    description: "Number of background worker instances to run"
+    type: int
+    default: 1
+    min: 1
+    max: 10
+    group: "Scaling"
+
+  - variable: services.webServer.replicas
+    label: "Web Server Replicas"
+    description: "Number of web server instances to run"
+    type: int
+    default: 1
+    min: 1
+    max: 10
+    group: "Scaling"
+
+  # Ingress Configuration
+  - variable: ingress.enabled
+    label: "Enable Ingress"
+    description: "Enable ingress resource for external access"
+    type: string
+    default: "true"
+    group: "Networking"
+    show_subquestion_if: true
+    subquestions:
+      - variable: ingress.className
+        label: "Ingress Class Name"
+        description: "Kubernetes ingress controller class (e.g. nginx, traefik)"
+        type: string
+        default: "nginx"
+        group: "Networking"
+
+      - variable: ingress.hosts[0].host
+        label: "Hostname"
+        description: "Hostname for the application"
+        type: string
+        default: ""
+        group: "Networking"
+
+      - variable: ingress.annotations.cert-manager\.io/cluster-issuer
+        label: "Certificate Issuer"
+        description: "Certificate issuer for TLS (e.g. letsencrypt-prod)"
+        type: string
+        default: "letsencrypt-prod"
+        group: "Networking"
+        
+      - variable: ingress.annotations.nginx\.ingress\.kubernetes\.io/configuration-snippet
+        label: "Nginx Configuration Snippet"
+        description: "Custom Nginx configuration for path rewrites"
+        type: multiline
+        default: |
+          if ($request_uri ~* "^/api(/.*)?$") {
+            rewrite ^/api/?(.*)$ /$1 break;
+          }
+        group: "Networking"
+
+      - variable: ingress.tls[0].secretName
+        label: "TLS Secret Name"
+        description: "Name of the secret containing TLS certificate"
+        type: string
+        default: ""
+        group: "Networking"
+
+  # Storage configuration
+  - variable: storage.localDynamicStorage.size
+    label: "Dynamic Storage Size"
+    description: "Size for local dynamic storage"
+    type: string
+    default: "5Gi"
+    group: "Storage"
+
+  - variable: storage.vespaVolume.size
+    label: "Vespa Storage Size"
+    description: "Size for Vespa search engine data"
+    type: string
+    default: "5Gi"
+    group: "Storage"
+
+  - variable: storage.modelCacheHuggingface.size
+    label: "Model Cache Size"
+    description: "Size for AI model cache storage"
+    type: string
+    default: "5Gi"
+    group: "Storage"
+
+  # Development Mode
+  - variable: developMode
+    label: "Development Mode"
+    description: "Enable development features (IDE, hot reloading)"
+    type: boolean
+    default: false
+    group: "Advanced"

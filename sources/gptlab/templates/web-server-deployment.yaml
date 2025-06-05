@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "gptlab.fullname" . }}-web-server
+  labels:
+    {{- include "gptlab.labels" . | nindent 4 }}
+    app.kubernetes.io/component: web-server
+spec:
+  replicas: {{ .Values.services.webServer.replicas }}
+  selector:
+    matchLabels:
+      {{- include "gptlab.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: web-server
+  template:
+    metadata:
+      labels:
+        {{- include "gptlab.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: web-server
+    spec:
+      containers:
+        - name: web-server
+          image: "{{ .Values.services.webServer.image.repository }}:{{ include "gptlab.imageTag" (dict "service" "webServer" "Values" .Values "Chart" .Chart) }}"
+          ports:
+            - containerPort: 3000
+              name: http
+          env:
+            - name: TZ
+              value: {{ .Values.timezone | default "UTC" | quote }}
+            - name: INTERNAL_URL
+              value: "http://{{ include "gptlab.fullname" . }}-api-server:8080"
+            - name: APP_VERSION
+              value: {{ include "gptlab.imageTag" (dict "service" "webServer" "Values" .Values "Chart" .Chart) | quote }}
+            - name: WEB_DOMAIN
+              value: {{ .Values.web.domain | quote }}
+          resources:
+            limits:
+              memory: {{ .Values.services.webServer.resources.memLimit }}
+            requests:
+              memory: {{ .Values.services.webServer.resources.memRequest }}
