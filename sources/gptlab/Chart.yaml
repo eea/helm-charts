@@ -1,0 +1,34 @@
+apiVersion: v2
+name: gptlab
+description: A Helm chart for GPTLab AI-powered question-answering system
+icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/gptlab/logo_onyx.png
+type: application
+
+version: 0.1.0
+
+appVersion: "v0.28.2-eea.0.0.49"
+
+keywords:
+  - gptlab
+  - ai
+  - search
+  - question-answering
+
+maintainers:
+  - name: EEA
+    url: https://github.com/eea
+
+dependencies:
+  - name: postgresql
+    version: 16.4.9
+    repository: https://charts.bitnami.com/bitnami
+    condition: postgresql.deploy
+  - name: redis
+    version: 20.5.0
+    repository: https://charts.bitnami.com/bitnami
+    condition: redis.deploy
+    alias: redis
+  - name: postfix
+    version: 3.0.6
+    repository: https://eea.github.io/helm-charts
+    condition: postfix.enabled

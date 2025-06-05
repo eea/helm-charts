@@ -1,0 +1,19 @@
+{{- if and .Values.postfix.dryrun .Values.postfix.mailtrap.httpenabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "gptlab.fullname" . }}-mailtrap
+  labels:
+    {{- include "gptlab.labels" . | nindent 4 }}
+    app.kubernetes.io/component: mailtrap
+spec:
+  type: {{ .Values.postfix.mailtrap.serviceType | default "ClusterIP" }}
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: postfix
+    app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}

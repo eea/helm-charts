@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "gptlab.fullname" . }}-api-server
+  labels:
+    {{- include "gptlab.labels" . | nindent 4 }}
+    app.kubernetes.io/component: api-server
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8080
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "gptlab.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: api-server

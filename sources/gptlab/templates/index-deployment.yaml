@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "gptlab.fullname" . }}-index
+  labels:
+    {{- include "gptlab.labels" . | nindent 4 }}
+    app.kubernetes.io/component: index
+spec:
+  replicas: {{ .Values.services.index.replicas }}
+  selector:
+    matchLabels:
+      {{- include "gptlab.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: index
+  template:
+    metadata:
+      labels:
+        {{- include "gptlab.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: index
+    spec:
+      containers:
+        - name: index
+          image: "{{ .Values.services.index.image.repository }}:{{ include "gptlab.imageTag" (dict "service" "index" "Values" .Values "Chart" .Chart) }}"
+          ports:
+            - containerPort: 19071
+              name: vespa-admin
+            - containerPort: 8081
+              name: vespa-http
+          env:
+            - name: TZ
+              value: {{ .Values.timezone | default "UTC" | quote }}
+          volumeMounts:
+            - mountPath: /opt/vespa/var
+              name: vespa-data
+            - mountPath: /opt/vespa/logs
+              name: vespa-logs
+          resources:
+            limits:
+              memory: {{ .Values.services.index.resources.memLimit }}
+            requests:
+              memory: {{ .Values.services.index.resources.memRequest }}
+      volumes:
+        - name: vespa-data
+          persistentVolumeClaim:
+            claimName: {{ include "gptlab.fullname" . }}-vespa-volume
+        - name: vespa-logs
+          persistentVolumeClaim:
+            claimName: {{ include "gptlab.fullname" . }}-vespa-logs-volume
