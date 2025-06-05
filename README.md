@@ -99,7 +99,7 @@ In Rancher 2 you can add the repository to the cluster and it will show the pack
 
 On the command line you can do the same with the helm tool.
 
-    helm add repo eea-charts https://eea.github.io/helm-charts/
+    helm repo add eea-charts https://eea.github.io/helm-charts/
 
 ## Source repository
 
