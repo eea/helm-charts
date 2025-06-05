@@ -1,0 +1,117 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-matomo
+spec:
+  replicas: {{ .Values.matomo.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ .Release.Name }}-matomo
+      component: matomo
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ .Release.Name }}-matomo
+        component: matomo
+    spec:
+      securityContext:
+        runAsUser: 0
+        runAsGroup: 0
+        fsGroup: 0
+      initContainers:
+      - name: wait-for-mariadb
+        image: busybox
+        command: 
+          - sh
+          - -c
+          - >
+            until nc -z {{ .Release.Name }}-mariadb 3306;
+            do echo waiting for {{ .Release.Name }}-mariadb; sleep 2; done;
+      containers:
+        - name: matomo
+          image: "{{ .Values.matomo.image.repository }}:{{ .Values.matomo.image.tag }}"
+          env:
+            - name: MATOMO_DATABASE_HOST
+              value: {{ .Release.Name }}-mariadb
+            - name: MATOMO_DATABASE_PORT_NUMBER
+              value: "3306"
+            - name: MATOMO_DATABASE_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-matomo-secrets
+                  key: mariadbUser
+            - name: MATOMO_DATABASE_NAME
+              value: {{ .Values.mariadb.database }}
+            - name: MATOMO_DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-matomo-secrets
+                  key: mariadbPassword
+            - name: ALLOW_EMPTY_PASSWORD
+              value: {{ .Values.mariadb.environment.MYSQL_ALLOW_EMPTY_PASSWORD }}
+            - name: PHP_MEMORY_LIMIT
+              value: {{ .Values.matomo.environment.PHP_MEMORY_LIMIT }}
+            - name: TZ
+              value: {{ .Values.timezone }}
+            - name: PHP_MAX_EXECUTION_TIME
+              value: {{ .Values.matomo.environment.PHP_MAX_EXECUTION_TIME }}
+            - name: PHP_MAX_INPUT_TIME
+              value: {{ .Values.matomo.environment.PHP_MAX_INPUT_TIME }}
+            - name: APACHE_HTTP_PORT_NUMBER
+              value: {{ quote .Values.matomo.environment.APACHE_HTTP_PORT_NUMBER }}
+            - name: MATOMO_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-matomo-secrets
+                  key: username
+            - name: MATOMO_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-matomo-secrets
+                  key: password
+          resources:
+            requests:
+              memory: {{ .Values.matomo.resources.requests.memory }}
+            limits:
+              memory: {{ .Values.matomo.resources.limits.memory }}
+          volumeMounts:
+            - name: matomo-pv
+              mountPath: /bitnami
+            - name: geoipupdate-pv
+              mountPath: /geoupdate
+              readOnly: true
+          startupProbe:
+            httpGet:
+              path: /matomo.php
+              port: {{ .Values.matomo.environment.APACHE_HTTP_PORT_NUMBER }}
+            initialDelaySeconds: 600
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 5
+            successThreshold: 1
+          livenessProbe:
+            tcpSocket:
+              port: http
+            initialDelaySeconds: 600
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 5
+            successThreshold: 1
+          readinessProbe:
+            httpGet:
+              path: /matomo.php
+              port: {{ .Values.matomo.environment.APACHE_HTTP_PORT_NUMBER }}
+            initialDelaySeconds: 30
+            periodSeconds: 5
+            timeoutSeconds: 1
+            failureThreshold: 5
+            successThreshold: 1
+
+      volumes:
+        - name: matomo-pv
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-matomo-pvc
+        - name: geoipupdate-pv
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-geoipupdate-pvc

@@ -1,0 +1,44 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ .Release.Name }}-rsync-analytics
+spec:
+  schedule: "{{ .Values.rsyncAnalytics.cronSchedule }}"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      ttlSecondsAfterFinished: {{ .Values.jobs.ttlSecondsAfterFinished }}
+      template:
+        metadata:
+          labels:
+            app.kubernetes.io/name: {{ .Release.Name }}-rsync-analytics
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: rsync-analytics
+              image: "{{ .Values.rsyncAnalytics.image.repository }}:{{ .Values.rsyncAnalytics.image.tag }}"
+              env:
+                - name: RSYNC_COMMANDS
+                  value: "{{ .Values.rsyncAnalytics.rsyncCommands }}"
+                - name: TZ
+                  value: "{{ .Values.timezone }}"
+              command: ["sh", "-c", "${RSYNC_COMMANDS}"]
+              resources:
+                requests:
+                  memory: 256Mi
+                limits:
+                  memory: 512Mi
+              volumeMounts:
+                - mountPath: "/analytics"
+                  name: matomo-importer-pv
+                - name: {{ .Release.Name }}-rsync-ssh
+                  mountPath: /root/.ssh
+          volumes:
+            - name: matomo-importer-pv
+              persistentVolumeClaim:
+                claimName: {{ .Release.Name }}-matomo-importer-pvc
+            - name: {{ .Release.Name }}-rsync-ssh
+              persistentVolumeClaim:
+                claimName: {{ .Release.Name }}-rsync-ssh-pvc
+
