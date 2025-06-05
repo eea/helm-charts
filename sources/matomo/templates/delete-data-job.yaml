@@ -1,0 +1,75 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ .Release.Name }}-delete-data
+spec:
+  schedule: "{{ .Values.matomocronDeleteData.cronSchedule }}"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      ttlSecondsAfterFinished: {{ .Values.jobs.ttlSecondsAfterFinished }}
+      template:
+        metadata:
+          labels:
+            app.kubernetes.io/name: {{ .Release.Name }}-delete-data
+        spec:
+          securityContext:
+            runAsUser: 0
+            runAsGroup: 0
+            fsGroup: 0
+          initContainers:
+          - name: wait-for-mariadb
+            image: busybox
+            command: 
+              - sh
+              - -c
+              - >
+                until nc -z {{ .Release.Name }}-mariadb 3306;
+                do echo waiting for {{ .Release.Name }}-mariadb; sleep 2; done;
+          containers:
+            - name: matomocron-delete-data
+              image: "{{ .Values.matomocronDeleteData.image.repository }}:{{ .Values.matomocronDeleteData.image.tag }}"
+              env:
+                - name: MATOMO_DATABASE_HOST
+                  value: {{ .Release.Name }}-mariadb
+                - name: MATOMO_DATABASE_PORT_NUMBER
+                  value: "3306"
+                - name: MATOMO_DATABASE_USER
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ .Release.Name }}-matomo-secrets
+                      key: mariadbUser
+                - name: MATOMO_DATABASE_NAME
+                  value: {{ .Values.mariadb.database }}
+                - name: MATOMO_DATABASE_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ .Release.Name }}-matomo-secrets
+                      key: mariadbPassword
+                - name: ALLOW_EMPTY_PASSWORD
+                  value: {{ .Values.mariadb.environment.MYSQL_ALLOW_EMPTY_PASSWORD }}
+                - name: MATOMO_URL
+                  value: "https://{{ .Values.matomo.hostname }}/"
+                - name: TZ
+                  value: "{{ .Values.timezone }}"
+                - name: PHP_MEMORY_LIMIT
+                  value: "{{ .Values.matomocronDeleteData.environment.PHP_MEMORY_LIMIT }}"
+                - name: DAYS_TO_KEEP
+                  value: "{{ .Values.matomocronDeleteData.environment.daysToKeep }}"
+                - name: SITE_TO_DELETE
+                  value: "{{ .Values.matomocronDeleteData.environment.siteToDelete }}"
+              command: ["run_delete_data.sh"]
+              resources:
+                requests:
+                  memory: "{{ .Values.matomocronDeleteData.resources.requests.memory }}"
+                limits:
+                  memory: "{{ .Values.matomocronDeleteData.resources.limits.memory }}"
+              volumeMounts:
+                - name: matomo-pv
+                  mountPath: /bitnami
+          restartPolicy: Never
+          volumes:
+            - name: matomo-pv
+              persistentVolumeClaim:
+                claimName: {{ .Release.Name }}-matomo-pvc

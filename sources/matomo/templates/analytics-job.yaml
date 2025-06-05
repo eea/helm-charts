@@ -1,0 +1,49 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ .Release.Name }}-analytics
+spec:
+  schedule: "{{ .Values.matomoAnalytics.cronSchedule }}"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      ttlSecondsAfterFinished: {{ .Values.jobs.ttlSecondsAfterFinished }}
+      template:
+        metadata:
+          labels:
+            app.kubernetes.io/name: {{ .Release.Name }}-analytics
+        spec:
+          initContainers:
+          - name: create-dir
+            image: busybox
+            command: 
+              - sh
+              - -c
+              - mkdir -p /analytics/logs/
+          containers:
+            - name: matomo-analytics
+              image: "{{ .Values.matomoAnalytics.image.repository }}:{{ .Values.matomoAnalytics.image.tag }}"
+              env:
+                - name: MATOMO_URL
+                  value: "https://{{ .Values.matomo.hostname }}/"
+                - name: MATOMO_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ .Release.Name }}-matomo-secrets
+                      key: matomoToken
+                - name: TZ
+                  value: "{{ .Values.timezone }}"
+              resources:
+                requests:
+                  memory: "{{ .Values.matomoAnalytics.resources.requests.memory }}"
+                limits:
+                  memory: "{{ .Values.matomoAnalytics.resources.limits.memory }}"
+              volumeMounts:
+              - mountPath: "/analytics"
+                name: matomo-importer-pv
+          restartPolicy: Never
+          volumes:
+            - name: matomo-importer-pv
+              persistentVolumeClaim:
+                claimName: {{ .Release.Name }}-matomo-importer-pvc

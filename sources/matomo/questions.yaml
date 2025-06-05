@@ -1,0 +1,396 @@
+version: 2
+questions:
+
+  - variable: timezone
+    label: "Time zone"
+    type: string
+    default: "Europe/Copenhagen"
+    required: true
+    group: General
+
+  - variable: pvc.resourcePolicyKeep
+    label: "Keep data"
+    type: bool
+    description: "Leave keep if you want to keep current data upon deletion of the application. This does not replace a proper backup."
+    required: true
+    default: true
+    group: General
+
+  - variable: hostname
+    label: "Matomo Hostname"
+    description: "The primary public hostname for accessing your Matomo instance."
+    type: string
+    required: true
+    default: "matomo.eea.europa.eu"
+    group: General
+
+
+  - variable: matomo.environment.PHP_MEMORY_LIMIT
+    label: "PHP memory limit for Matomo website containers"
+    description: "At least 4096Mi"
+    type: string
+    required: true
+    default: "4096Mi"
+    group: Matomo
+
+  - variable: matomo.replicaCount
+    label: "Number of Matomo containers"
+    description: "Scale of Matomo containers"
+    type: int
+    default: 1
+    group: Matomo
+
+  - variable: matomo.token
+    label: "Matomo authentication token"
+    description: "Matomo API authentication token for a user with permissions to import logs. Found in Matomo Admin > Personal > API Authentication Token."
+    type: password
+    required: true
+    group: Matomo
+
+  - variable: "matomo.username"
+    label: "Override matomo username"
+    description: "Leave blank for default user, 'user'"
+    default: ""
+    type: "string"
+    group: Matomo
+
+  - variable: "matomo.password"
+    label: "Set matomo password"
+    description: "Leave blank for setting no password. The user is matomo username set previous"
+    default: ""
+    type: "string"
+    group: Matomo
+
+
+
+  - variable: mariadb.user
+    label: "MariaDB username"
+    description: "Username for Matomo to connect to MariaDB."
+    type: string
+    required: true
+    default: eea_matomo
+    group: Database
+
+  - variable: mariadb.database
+    label: "MariaDB database"
+    description: "Database name for Matomo within MariaDB."
+    type: string
+    required: true
+    default: eea_matomo_db
+    group: Database
+
+  - variable: mariadb.password
+    label: "MariaDB database password"
+    description: "Password for the MariaDB user specified in `mariadb.user`."
+    type: password
+    required: true
+    group: Database
+
+  - variable: mariadb.rootPassword
+    label: "MariaDB root password"
+    description: "Password for the MariaDB root user."
+    type: password
+    required: true
+    group: Database
+
+  - variable: mariadb.environment.MYSQL_ALLOW_EMPTY_PASSWORD
+    label: "Allow empty password (yes/no)."
+    description: "Set to 'yes' to allow MariaDB to run with an empty root password. **Not recommended for production.**"
+    type: string
+    default: "no"
+    group: Database
+
+
+
+  - variable: postfix.relay
+    label: "Postfix relay"
+    type: string
+    default: "ironports.eea.europa.eu"
+    group: Postfix
+  - variable: postfix.port
+    label: "Postfix relay port"
+    type: int
+    default: 8587
+    group: Postfix
+  - variable: postfix.user
+    label: "Postfix user"
+    type: string
+    required: true
+    group: Postfix
+  - variable: postfix.password
+    label: "Postfix password"
+    type: password
+    required: true
+    group: Postfix
+
+
+
+  - variable: geoipupdate.cronSchedule
+    label: "GeoIP update cron schedule"
+    description: "Cron schedule for updating GeoIP database."
+    type: string
+    default: "0 4 5 * *"
+    required: true
+    group: GeoIP
+
+  - variable: geoipupdate.environment.GEOIPUPDATE_EDITION_IDS
+    label: "GeoIP Edition IDs"
+    description: "Which GeoIP databases to download (e.g., GeoLite2-City)."
+    type: string
+    default: "GeoLite2-City"
+    required: false
+    group: GeoIP
+
+  - variable: geoipupdate.environment.GEOIPUPDATE_VERBOSE
+    label: "GeoIP Update Verbose Mode"
+    description: "Enable verbose output for GeoIP update process (e.g., 1 for true, 0 for false)."
+    type: string
+    default: "1"
+    required: false
+    group: GeoIP
+
+  - variable: geoipupdate.accountId
+    label: "Maxmind GeoIP account ID"
+    description: "Used in updating GeoIP database"
+    type: string
+    required: true
+    group: GeoIP
+
+  - variable: geoipupdate.licenseKey
+    label: "Maxmind license key"
+    description: "Used in updating GeoIP database"
+    type: password
+    required: true
+    group: GeoIP
+
+
+
+  - variable: matomocronLdapSync.cronSchedule
+    label: "Matomo LDAP sync cron"
+    type: string
+    default: "10 1 * * *"
+    required: true
+    group: "LDAP Sync Job"
+
+
+
+  - variable: matomocronArchive.environment.PHP_MEMORY_LIMIT
+    label: "PHP memory limit for Matomo archive containers"
+    description: "At least 7168MB"
+    type: string
+    default: "7168Mi"
+    required: true
+    group: "Archive Job"
+
+  - variable: matomocronArchive.environment.PHP_MAX_EXECUTION_TIME
+    label: "PHP Max Execution Time (Archive)"
+    description: "Maximum execution time for PHP scripts in archive cronjob (0 for unlimited)."
+    type: string
+    default: "0"
+    required: true
+    group: "Archive Job"
+
+  - variable: matomocronArchive.environment.PHP_MAX_INPUT_TIME
+    label: "PHP Max Input Time (Archive)"
+    description: "Maximum input time for PHP scripts in archive cronjob (0 for unlimited)."
+    type: string
+    default: "0"
+    required: true
+    group: "Archive Job"
+
+  - variable: matomocronArchive.cronSchedule
+    label: "Matomo archiving cron"
+    type: string
+    default: "5 * * * *"
+    required: true
+    group: "Archive Job"
+
+
+
+  - variable: rsyncAnalytics.cronSchedule
+    label: "Rsync logs cron"
+    type: string
+    default: "5 * * * *"
+    required: true
+    group: "Rsync Analytics Job"
+
+  - variable: rsyncAnalytics.rsyncCommands
+    label: "Rsync commands"
+    description: "Rsync command(s) to fetch logs. Example: `rsync -avz user@source:/logs/ /analytics/logs/1`. Ensure correct SITE_ID and SSH options."
+    type: string
+    default: "rsync -e 'ssh -p 2222 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no' -avz --delete root@<IP>:<LOG_LOCATION_REMOTE> /analytics/logs/<SITE_ID>"
+    group: "Rsync Analytics Job"
+
+
+
+  - variable: matomoAnalytics.cronSchedule
+    label: "Import logs cron"
+    type: string
+    default: "30 0 * * *"
+    required: true
+    group: "Analytics Job"
+
+
+
+  - variable: matomocronDeleteData.cronSchedule
+    label: "Delete raw data cron"
+    type: string
+    default: "0 23 * * *"
+    required: true
+    group: "Delete Data Job"
+
+  - variable: matomocronDeleteData.environment.siteToDelete
+    label: "Delete log data belonging to this site ID"
+    type: string
+    default: "22"
+    required: true
+    group: "Delete Data Job"
+
+  - variable: matomocronDeleteData.environment.daysToKeep
+    label: "Number of days to keep the data"
+    type: int
+    default: 90
+    required: true
+    group: "Delete Data Job"
+
+
+
+  - variable: "ingress.tls"
+    label: "Enable https"
+    default: true
+    type: "boolean"
+    required: true
+    group: Ingress
+
+  - variable: "ingress.letsencrypt"
+    label: "Ingress letsencrypt cluster-issuer"
+    description: "Leave empty when not using letsencrypt"
+    default: "01dev-eea-letsencrypt"
+    group: Ingress
+
+  - variable: "ingress.configuration.proxy-body-size"
+    label: "Rancher LB body size"
+    description: "Example 100m"
+    type: "string"
+    default: "100m"
+    group: Ingress
+
+  - variable: "ingress.configuration.proxy-read-timeout"
+    label: "Rancher LB read timeout"
+    description: "Maximum response time from upstream server, in seconds, example 60s"
+    type: "string"
+    default: "120s"
+    group: Ingress
+
+  - variable: "ingress.configuration.proxy-send-timeout"
+    label: "Rancher LB send timeout"
+    description: "Timeout before closing the connection"
+    type: "string"
+    default: "60s"
+    group: Ingress
+
+  - variable: "ingress.certificate"
+    label: "Certificate name"
+    description: "Leave blank for default certificate"
+    default: "eggrepo.eea.europa.eu-tls"
+    type: "string"
+    show_if: "ingress.tls"
+    group: Ingress
+
+
+
+  - variable: matomo.storage
+    label: "Matomo data volume size"
+    description: "Size of the persistent volume for Matomo data (e.g., 10Gi)."
+    type: string
+    default: "10Gi"
+    required: true
+    group: Storage
+
+  - variable: mariadb.storage
+    label: "MariaDB storage size"
+    description: "Storage size for MariaDB"
+    type: string
+    default: "10Gi"
+    group: Storage
+
+  - variable: geoipupdate.storage
+    label: "GeoIP data volume size"
+    description: "Size of the persistent volume for GeoIP data (e.g., 1Gi)."
+    type: string
+    default: "1Gi"
+    required: true
+    group: Storage
+
+  - variable: rsyncAnalytics.storage
+    label: "Rsync analytics import volume size"
+    description: "Size of the persistent volume for rsync analytics import (e.g., 1Gi)."
+    type: string
+    default: "1Gi"
+    required: true
+    group: Storage
+
+
+
+  - variable: matomo.resources.requests.memory
+    label: "Matomo website memory requests"
+    description: "At least 2GB"
+    type: string
+    default: "2Gi"
+    required: true
+    group: Memory
+
+  - variable: matomo.resources.limits.memory
+    label: "Matomo website memory limit"
+    description: "Must be more than the PHP memory_limit"
+    type: string
+    default: "5Gi"
+    required: true
+    group: Memory
+
+  - variable: mariadb.resources.requests.memory
+    label: "Database memory requests"
+    description: "At least 7GB"
+    type: string
+    default: "7Gi"
+    required: true
+    group: Memory
+
+  - variable: mariadb.resources.limits.memory
+    label: "Database memory limit"
+    type: string
+    default: "10Gi"
+    required: true
+    group: Memory
+
+  - variable: matomocronDeleteData.resources.requests.memory
+    label: "Matomo delete data container memory requests"
+    description: "At least 512MB"
+    type: string
+    default: "512MB"
+    required: true
+    group: Memory
+
+  - variable: matomocronDeleteData.resources.limits.memory
+    label: "Matomo delete data container memory limit"
+    description: "Must be more than the requests"
+    type: string
+    default: "2Gi"
+    required: true
+    group: Memory
+
+  - variable: matomocronArchive.resources.requests.memory
+    label: "Matomo archive container memory requests"
+    description: "At least 4Gi"
+    type: string
+    default: "4Gi"
+    required: true
+    group: Memory
+
+  - variable: matomocronArchive.resources.limits.memory
+    label: "Matomo archive memory limit"
+    description: "Must be more than the PHP memory_limit"
+    type: string
+    default: "6Gi"
+    required: true
+    group: Memory

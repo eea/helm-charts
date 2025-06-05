@@ -1,0 +1,39 @@
+# Common build artifacts
+*.tgz
+*.tar.gz
+*.zip
+
+# OS/system files
+.DS_Store
+Thumbs.db
+
+# Git & CI/CD
+.git/
+.gitignore
+.gitattributes
+.github/
+.gitlab/
+.circleci/
+
+# Helm-specific
+.chart/
+charts/
+tmp/
+test/
+unittest/
+values-production.yaml
+values-staging.yaml
+
+# Editor/IDE
+*.swp
+*.bak
+*.tmp
+*.idea/
+.vscode/
+
+# Secrets & sensitive overrides (for dev only, not Helm)
+secrets.yaml
+secrets/
+
+# Misc
+*.log

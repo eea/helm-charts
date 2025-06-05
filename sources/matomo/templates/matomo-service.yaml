@@ -1,0 +1,15 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: matomo
+  labels:
+    component: matomo-service
+spec:
+  ports:
+    - port: {{ .Values.matomo.environment.APACHE_HTTP_PORT_NUMBER }}
+      targetPort: {{ .Values.matomo.environment.APACHE_HTTP_PORT_NUMBER }}
+      name: http
+  selector:
+    app.kubernetes.io/name: {{ .Release.Name }}-matomo
+    component: matomo

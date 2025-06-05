@@ -1,0 +1,171 @@
+---
+timezone: Europe/Copenhagen
+
+pvc:
+  resourcePolicyKeep: false
+
+jobs:
+  ttlSecondsAfterFinished: 86400
+
+mariadb:
+  image:
+    repository: mariadb
+    tag: 10.11.11
+  environment:
+    MYSQL_ALLOW_EMPTY_PASSWORD: '"no"'
+  user: eea_matomo
+  commands:
+    - "--max_allowed_packet=128M"
+    - "--wait_timeout=999999"
+    - "--interactive_timeout=999999"
+    - "--net_read_timeout=120"
+    - "--net_write_timeout=180"
+    - "--connect_timeout=20"
+    - "--innodb_flush_log_at_trx_commit=2"
+    - "--max_connections=300"
+    - "--table_open_cache=800"
+    - "--table_definition_cache=800"
+    - "--innodb_buffer_pool_size=10G"
+    - "--innodb_log_file_size=1G"
+    - "--query_cache_size=0"
+    - "--query_cache_type=0"
+  resources:
+    requests:
+      memory: 7Gi
+    limits:
+      memory: 10Gi
+  database: eea_matomo_db
+  password: REPLACEME
+  rootPassword: REPLACEME
+  storage: 10Gi
+  storageClassName: ""
+
+matomo:
+  hostname: "dev-matomo.01dev.eea.europa.eu"
+  image:
+    repository: eeacms/matomo
+    tag: 5.3.2-1
+  environment:
+    PHP_MEMORY_LIMIT: 4096M
+    PHP_MAX_EXECUTION_TIME: '"0"'
+    PHP_MAX_INPUT_TIME: '"0"'
+    APACHE_HTTP_PORT_NUMBER: "9080"
+  resources:
+    requests:
+      memory: 2Gi
+    limits:
+      memory: 5Gi
+  token: REPLACEME
+  storageClassName: ""
+  storage: "10Gi"
+  replicaCount: 1
+  username: ""
+  password: "ReHerTHyronE"
+
+
+matomocronArchive:
+  image:
+    repository: eeacms/matomo
+    tag: 5.3.2-1
+  environment:
+    PHP_MEMORY_LIMIT: 7168M
+    PHP_MAX_EXECUTION_TIME: 0
+    PHP_MAX_INPUT_TIME: 0
+  cronSchedule: "5 * * * *"
+  resources:
+    requests:
+      memory: 4Gi
+    limits:
+      memory: 6Gi
+
+matomocronLdapSync:
+  image:
+    repository: eeacms/matomo
+    tag: 5.3.2-1
+  cronSchedule: "10 1 * * *"
+  resources:
+    requests:
+      memory: 256Mi
+    limits:
+      memory: 256Mi
+
+matomocronDeleteData:
+  image:
+    repository: eeacms/matomo
+    tag: 5.3.2-1
+  environment:
+    PHP_MEMORY_LIMIT: 512M
+    siteToDelete: "22"
+    daysToKeep: 90
+  cronSchedule: "0 23 * * *"
+  resources:
+    requests:
+      memory: 512Mi
+    limits:
+      memory: 2Gi
+
+geoipupdate:
+  image:
+    repository: maxmindinc/geoipupdate
+    tag: v7.1
+  environment:
+    GEOIPUPDATE_EDITION_IDS: GeoLite2-City
+    GEOIPUPDATE_VERBOSE: '"1"'
+  cronSchedule: "0 4 5 * *"
+  accountId: REPLACEME
+  licenseKey: REPLACEME
+  resources:
+    requests:
+      memory: NODATA
+    limits:
+      memory: NODATA
+  storageClassName: ""
+  storage: "1Gi"
+
+postfix:
+  image:
+    repository: eeacms/postfix
+    tag: 3.5-1.0
+  environment:
+    TZ: Europe/Copenhagen
+  resources:
+    requests:
+      memory: 256Mi
+    limits:
+      memory: 256Mi
+  user: postfix
+  password: REPLACEME
+  relay: "ironports.eea.europa.eu"
+  port: 8587
+
+rsyncAnalytics:
+  image:
+    repository: eeacms/rsync
+    tag: 2.6
+  cronSchedule: "5 * * * *"
+  rsyncCommands: "rsync -e 'ssh -p 2222 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no' -avz --delete root@<IP>:<LOG_LOCATION_REMOTE> /analytics/logs/<SITE_ID>"
+  storageClassName: ""
+  storage: "1Gi"
+
+matomoAnalytics:
+  image:
+    repository: eeacms/matomo-log-analytics
+    tag: 2.4
+  cronSchedule: "30 0 * * *"
+  resources:
+    requests:
+      memory: 512Mi
+    limits:
+      memory: 1Gi
+
+ingress:
+  enabled: true
+  className: ""
+  annotations: {}
+  letsencrypt: "01dev-eea-letsencrypt"
+  configuration:
+    proxy-body-size: "256m"
+    proxy-read-timeout: "180s"
+    proxy-send-timeout: "120s"
+  tls: true
+  certificate: "dev-matomo.01dev.eea.europa.eu-tls"

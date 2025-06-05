@@ -1,0 +1,43 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ .Release.Name }}-geoipupdate
+spec:
+  schedule: {{ .Values.geoipupdate.cronSchedule }}
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      ttlSecondsAfterFinished: {{ .Values.jobs.ttlSecondsAfterFinished }}
+      template:
+        metadata:
+          labels:
+            app.kubernetes.io/name: {{ .Release.Name }}-geoipupdate
+        spec:
+          containers:
+            - name: geoipupdate
+              image: "{{ .Values.geoipupdate.image.repository }}:{{ .Values.geoipupdate.image.tag }}"
+              env:
+                - name: GEOIPUPDATE_ACCOUNT_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ .Release.Name }}-matomo-secrets
+                      key: geoipupdateAccountId
+                - name: GEOIPUPDATE_LICENSE_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ .Release.Name }}-matomo-secrets
+                      key: geoipupdateLicenseKey
+                - name: GEOIPUPDATE_EDITION_IDS
+                  value: {{ .Values.geoipupdate.environment.GEOIPUPDATE_EDITION_IDS }}
+                - name: GEOIPUPDATE_VERBOSE
+                  value: {{ .Values.geoipupdate.environment.GEOIPUPDATE_VERBOSE }}
+              volumeMounts:
+                - mountPath: "/usr/share/GeoIP"
+                  name: geoipupdate-pv
+          restartPolicy: Never
+          volumes:
+            - name: geoipupdate-pv
+              persistentVolumeClaim:
+                claimName: {{ .Release.Name }}-geoipupdate-pvc
+
