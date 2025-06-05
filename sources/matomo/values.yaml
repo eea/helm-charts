@@ -55,12 +55,11 @@ matomo:
       memory: 2Gi
     limits:
       memory: 5Gi
-  token: REPLACEME
   storageClassName: ""
   storage: "10Gi"
   replicaCount: 1
   username: ""
-  password: "ReHerTHyronE"
+  password: "t8N3xF3EiF0nfK5X5hG2"
 
 
 matomocronArchive:
@@ -122,21 +121,7 @@ geoipupdate:
   storageClassName: ""
   storage: "1Gi"
 
-postfix:
-  image:
-    repository: eeacms/postfix
-    tag: 3.5-1.0
-  environment:
-    TZ: Europe/Copenhagen
-  resources:
-    requests:
-      memory: 256Mi
-    limits:
-      memory: 256Mi
-  user: postfix
-  password: REPLACEME
-  relay: "ironports.eea.europa.eu"
-  port: 8587
+
 
 rsyncAnalytics:
   image:
@@ -157,6 +142,8 @@ matomoAnalytics:
       memory: 512Mi
     limits:
       memory: 1Gi
+  token: REPLACEME
+
 
 ingress:
   enabled: true
@@ -169,3 +156,23 @@ ingress:
     proxy-send-timeout: "120s"
   tls: true
   certificate: "dev-matomo.01dev.eea.europa.eu-tls"
+
+
+postfix:
+  fullnameOverride: ""
+  dryrun: false
+  serverName: plone.eea.europa.eu
+  mtpPass: ""
+  mtpPort: ""
+  mtpRelay: ""
+  mtpUser: ""
+  serviceName: "postfix"
+  mailtrap:
+    httpenabled: false
+    serviceType: NodePort
+    ingress:
+      enabled: false
+      hostname: mailtrap.01dev.eea.europa.eu
+      annotations:
+        cert-manager.io/cluster-issuer: 01dev-eea-letsencrypt
+      certificate: mailtrap.01dev.eea.europa.eu-tls
