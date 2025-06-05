@@ -19,11 +19,9 @@ spec:
             - name: rsync-analytics
               image: "{{ .Values.rsyncAnalytics.image.repository }}:{{ .Values.rsyncAnalytics.image.tag }}"
               env:
-                - name: RSYNC_COMMANDS
-                  value: "{{ .Values.rsyncAnalytics.rsyncCommands }}"
                 - name: TZ
                   value: "{{ .Values.timezone }}"
-              command: ["sh", "-c", "${RSYNC_COMMANDS}"]
+              command: ["{{ .Values.rsyncAnalytics.rsyncCommands }}"]
               resources:
                 requests:
                   memory: 256Mi

@@ -102,51 +102,12 @@ questions:
 
 
 
-  - variable: postfix.relay
-    label: "Postfix relay"
-    type: string
-    default: "ironports.eea.europa.eu"
-    group: Postfix
-  - variable: postfix.port
-    label: "Postfix relay port"
-    type: int
-    default: 8587
-    group: Postfix
-  - variable: postfix.user
-    label: "Postfix user"
-    type: string
-    required: true
-    group: Postfix
-  - variable: postfix.password
-    label: "Postfix password"
-    type: password
-    required: true
-    group: Postfix
-
-
-
   - variable: geoipupdate.cronSchedule
     label: "GeoIP update cron schedule"
     description: "Cron schedule for updating GeoIP database."
     type: string
     default: "0 4 5 * *"
     required: true
-    group: GeoIP
-
-  - variable: geoipupdate.environment.GEOIPUPDATE_EDITION_IDS
-    label: "GeoIP Edition IDs"
-    description: "Which GeoIP databases to download (e.g., GeoLite2-City)."
-    type: string
-    default: "GeoLite2-City"
-    required: false
-    group: GeoIP
-
-  - variable: geoipupdate.environment.GEOIPUPDATE_VERBOSE
-    label: "GeoIP Update Verbose Mode"
-    description: "Enable verbose output for GeoIP update process (e.g., 1 for true, 0 for false)."
-    type: string
-    default: "1"
-    required: false
     group: GeoIP
 
   - variable: geoipupdate.accountId
@@ -170,7 +131,7 @@ questions:
     type: string
     default: "10 1 * * *"
     required: true
-    group: "LDAP Sync Job"
+    group: "Scheduled Jobs"
 
 
 
@@ -180,7 +141,7 @@ questions:
     type: string
     default: "7168Mi"
     required: true
-    group: "Archive Job"
+    group: "Scheduled Jobs"
 
   - variable: matomocronArchive.environment.PHP_MAX_EXECUTION_TIME
     label: "PHP Max Execution Time (Archive)"
@@ -188,7 +149,7 @@ questions:
     type: string
     default: "0"
     required: true
-    group: "Archive Job"
+    group: "Scheduled Jobs"
 
   - variable: matomocronArchive.environment.PHP_MAX_INPUT_TIME
     label: "PHP Max Input Time (Archive)"
@@ -196,14 +157,14 @@ questions:
     type: string
     default: "0"
     required: true
-    group: "Archive Job"
+    group: "Scheduled Jobs"
 
   - variable: matomocronArchive.cronSchedule
     label: "Matomo archiving cron"
     type: string
     default: "5 * * * *"
     required: true
-    group: "Archive Job"
+    group: "Scheduled Jobs"
 
 
 
@@ -212,14 +173,14 @@ questions:
     type: string
     default: "5 * * * *"
     required: true
-    group: "Rsync Analytics Job"
+    group: "Scheduled Jobs"
 
   - variable: rsyncAnalytics.rsyncCommands
     label: "Rsync commands"
     description: "Rsync command(s) to fetch logs. Example: `rsync -avz user@source:/logs/ /analytics/logs/1`. Ensure correct SITE_ID and SSH options."
     type: string
     default: "rsync -e 'ssh -p 2222 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no' -avz --delete root@<IP>:<LOG_LOCATION_REMOTE> /analytics/logs/<SITE_ID>"
-    group: "Rsync Analytics Job"
+    group: "Scheduled Jobs"
 
 
 
@@ -228,7 +189,7 @@ questions:
     type: string
     default: "30 0 * * *"
     required: true
-    group: "Analytics Job"
+    group: "Scheduled Jobs"
 
 
 
@@ -237,21 +198,21 @@ questions:
     type: string
     default: "0 23 * * *"
     required: true
-    group: "Delete Data Job"
+    group: "Scheduled Jobs"
 
   - variable: matomocronDeleteData.environment.siteToDelete
     label: "Delete log data belonging to this site ID"
     type: string
     default: "22"
     required: true
-    group: "Delete Data Job"
+    group: "Scheduled Jobs"
 
   - variable: matomocronDeleteData.environment.daysToKeep
     label: "Number of days to keep the data"
     type: int
     default: 90
     required: true
-    group: "Delete Data Job"
+    group: "Scheduled Jobs"
 
 
 
@@ -322,14 +283,6 @@ questions:
     required: true
     group: Storage
 
-  - variable: rsyncAnalytics.storage
-    label: "Rsync analytics import volume size"
-    description: "Size of the persistent volume for rsync analytics import (e.g., 1Gi)."
-    type: string
-    default: "1Gi"
-    required: true
-    group: Storage
-
 
 
   - variable: matomo.resources.requests.memory
@@ -394,3 +347,86 @@ questions:
     default: "6Gi"
     required: true
     group: Memory
+
+
+
+  - variable: "postfix.serviceName"
+    label: "Postfix service name"
+    description: "Default is application full name ( application-postfix ) "
+    default: ""
+    type: "string"
+    group: "Mail"
+  - variable: "postfix.dryrun"
+    label: "Run in development mode"
+    description: "If checked, will not send emails, but use mailtrap to catch them"
+    default: false
+    type: "boolean"
+    required: true
+    show_subquestion_if: false
+    group: "Mail"
+    subquestions:
+      - variable: "postfix.mtpRelay"
+        label: "Postfix relay"
+        required: true
+        description: "Postfix SMTP relay"
+        type: "string"
+        default: "ironports.eea.europa.eu"
+      - variable: "postfix.mtpPort"
+        label: "Postfix relay port"
+        description: "Postfix SMTP relay port"
+        type: "int"
+        required: true
+        default: 8587
+      - variable: "postfix.mtpUser"
+        label: "Postfix user"
+        description: "Without authentication, emails will not be sent"
+        type: "string"
+        required: true
+      - variable: "postfix.mtpPass"
+        label: "Postfix password"
+        description: "Without authentication, emails will not be sent"
+        type: "string"
+        required: true
+      - variable: "postfix.serverName"
+        label: "Application url"
+        type: "string"
+        required: true
+
+  - variable: "postfix.mailtrap.httpenabled"
+    label: "Create mailtrap service for port 80"
+    description: "Keep unchecked if you don't want to view the emails in a webinterface"
+    type: "boolean"
+    default: false
+    required: true
+    show_if: "postfix.dryrun"
+    show_subquestion_if: true
+    group: "Mail"
+    subquestions:
+      - variable: "postfix.mailtrap.serviceType"
+        label: "Mailtrap service type"
+        description: "Select NodePort to expose mailtrap on port"
+        type: "enum"
+        options:
+          - "NodePort"
+          - "ClusterIP"
+        default: "ClusterIP"
+        required: true
+      - variable: "postfix.mailtrap.ingress.enabled"
+        label: "Add mailtrap url in ingress"
+        default: false
+        type: "boolean"
+        required: true
+
+  - variable: "postfix.mailtrap.ingress.hostname"
+    label: "Mailtrap URL"
+    show_if: "postfix.mailtrap.ingress.enabled"
+    required: true
+    type: "string"
+    default: "mailtrap.01dev.eea.europa.eu"
+    group: "Mail"
+  - variable: "postfix.mailtrap.ingress.certificate"
+    label: "Mailtrap certificate name"
+    show_if: "postfix.mailtrap.ingress.enabled"
+    description: "If empty, https will not be enabled"
+    default: "mailtrap.01dev.eea.europa.eu-tls"
+    group: "Mail"
