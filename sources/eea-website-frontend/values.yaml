@@ -19,7 +19,7 @@ timezone: Europe/Copenhagen
 
 
 ingress:
-  certificate: demo-www.01dev.eea.europa.eu-tls
+  certificate: demo-www2.01dev.eea.europa.eu-tls
   tls: true
   annotations:
     cert-manager.io/cluster-issuer: 01dev-eea-letsencrypt
@@ -43,7 +43,7 @@ links:
 
 volto:
   serviceType: ClusterIP
-  hostname: demo-www.01dev.eea.europa.eu
+  hostname: demo-www2.01dev.eea.europa.eu
   autoscaling:
     enabled: false
     minReplicas: 1
@@ -172,3 +172,50 @@ varnish:
     successThreshold: 1
 
 
+nginx:
+  conf: |-
+    server {
+      listen 80;
+      server_name _;
+
+      location ^~ /cors-proxy {
+        proxy_pass http://varnish_frontend;
+      }
+
+      location ^~ /login-authomatic {
+        proxy_pass http://varnish_frontend;
+      }
+
+      location ^~ /controlpanel {
+        proxy_pass http://varnish_frontend;
+      }
+
+      location ^~ /static {
+        proxy_pass http://varnish_frontend;
+      }
+
+      location ^~ /personal-information {
+        proxy_pass http://varnish_frontend;
+      }
+
+      location ^~ /fallback_login {
+        proxy_pass http://varnish_frontend;
+      }
+
+      location ^~ /_da {
+        proxy_pass http://varnish_frontend;
+      }
+
+      location ^~ /en {
+        proxy_pass http://varnish_frontend;
+      }
+
+      # Fallback: proxy everything else to Varnish frontend
+      location / {
+        proxy_pass http://varnish_frontend;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      }
+    }   
+  
