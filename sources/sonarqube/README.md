@@ -48,3 +48,9 @@ This service should be exposed in rancher lb:
 
 The official documentation is: <https://docs.sonarqube.org/latest/setup/upgrading/>
 Because we are using docker, we only need to access <http://yourSonarQubeServerURL/setup>  to finish the upgrade.
+
+
+## Releases
+
+### Version 1.0.0 - 10 June 2025
+- First draft

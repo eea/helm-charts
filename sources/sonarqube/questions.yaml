@@ -1,0 +1,217 @@
+questions:
+  - variable: "url"
+    label: "Url"
+    description: "DNS name for this deployment"
+    default: "sonarqube.eea.europa.eu"
+    type: "string"
+    required: true
+
+  - variable: "sonarqube.serviceType"
+    label: "Expose sonarqube for debug"
+    description: "Select NodePort to expose sonarqube"
+    type: "enum"
+    options:
+      - "NodePort"
+      - "ClusterIP"
+    default: "ClusterIP"
+    required: true
+    group: "General"
+
+  - variable: "sonarqube.commandArgs.ce.javaOpts"
+    label: "Additional Java options for SonarQube"
+    type: "string"
+    default: ""
+    group: "General"
+
+
+  - variable: "ingress.tls"
+    label: "Enable https"
+    default: true
+    type: "boolean"
+    required: true
+
+  - variable: "ingress.letsencrypt"
+    label: "Ingress letsencrypt cluster-issuer"
+    description: "Leave empty when not using letsencrypt"
+    default: "01dev-eea-letsencrypt"
+    
+  - variable: "ingress.configuration.proxy-body-size"
+    label: "Rancher LB body size"
+    description: "Example 100m"
+    type: "string"
+    default: "100m"
+
+  - variable: "ingress.configuration.proxy-read-timeout"
+    label: "Rancher LB read timeout"
+    description: "Maximum response time from upstream server, in seconds, example 60s"
+    type: "string"
+    default: "120s"
+
+  - variable: "ingress.configuration.proxy-send-timeout"
+    label: "Rancher LB send timeout"
+    description: "Timeout before closing the connection"
+    type: "string"
+    default: "60s"
+
+  - variable: "ingress.certificate"
+    label: "Certificate name"
+    description: "Leave blank for default certificate"
+    default: "sonarqube.eea.europa.eu-tls"
+    type: "string"
+    show_if: "ingress.tls"
+
+  - variable: "postgres.environment.POSTGRES_PASSWORD"
+    label: "Super User password"
+    default: "password"
+    type: "string"
+    required: true
+    group: "Database configuration"
+  - variable: "postgres.environment.POSTGRES_DBNAME"
+    label: "DB names"
+    description: "Space separated databases names to create on first run"
+    default: "sonar"
+    type: "string"
+    required: true
+    group: "Database configuration"
+  - variable: "postgres.environment.POSTGRES_DBUSER"
+    label: "PostgreSQL databases owner name"
+    default: "sonar"
+    type: "string"
+    required: true
+    group: "Database configuration"
+  - variable: "postgres.environment.POSTGRES_DBPASS"
+    label: "PostgreSQL databases owner password"
+    default: "sonar"
+    type: "string"
+    required: true
+    group: "Database configuration"
+  - variable: "postgres.environment.POSTGRES_CONFIG"
+    label: "PostgreSQL extra configuration"
+    default: |
+      max_connections = 300
+    type: "multiline"
+    required: true
+    group: "Database configuration"
+  - variable: "postgres.environment.POSTGRES_CRONTAB"
+    label: "PostgreSQL extra configuration"
+    default: |
+      ##0 3 * * * postgres /usr/bin/psql -d clms_cachet -c "DELETE FROM chq_metric_points WHERE created_at < CURRENT_DATE - interval '31 day';"
+      ##0 3 * * * postgres /usr/bin/psql -d clms_cachet -c "DELETE FROM chq_incidents     WHERE created_at < CURRENT_DATE - interval '31 day';"
+    type: "multiline"
+    required: true
+    group: "Database configuration"
+
+
+
+
+ - variable: "postfix.serviceName"
+    label: "Postfix service name"
+    description: "Default is application full name ( application-postfix ) "
+    default: ""
+    type: "string"
+    group: "Mail"
+  - variable: "postfix.dryrun"
+    label: "Run in development mode"
+    description: "If checked, will not send emails, but use mailtrap to catch them"
+    default: false
+    type: "boolean"
+    required: true
+    show_subquestion_if: false
+    group: "Mail"
+    subquestions:
+    - variable: "postfix.mtpRelay"
+      label: "Postfix relay"
+      required: true
+      description: "Postfix SMTP relay"
+      type: "string"
+      default: "ironports.eea.europa.eu"
+    - variable: "postfix.mtpPort"
+      label: "Postfix relay port"
+      description: "Postfix SMTP relay port"
+      type: "int"
+      required: true
+      default: 8587
+    - variable: "postfix.mtpUser"
+      label: "Postfix user"
+      description: "Without authentication, emails will not be sent"
+      type: "string"
+      required: true
+    - variable: "postfix.mtpPass"
+      label: "Postfix password"
+      description: "Without authentication, emails will not be sent"
+      type: "string"
+      required: true
+    - variable: "postfix.serverName"
+      label: "Application url"
+      type: "string"
+      required: true
+
+  - variable: "postfix.mailtrap.httpenabled"
+    label: "Create mailtrap service for port 80"
+    description: "Keep unchecked if you don't want to view the emails in a webinterface"
+    type: "boolean"
+    default: false
+    required: true
+    show_if: "postfix.dryrun"
+    show_subquestion_if: true
+    group: "Mail"
+    subquestions:
+    - variable: "postfix.mailtrap.serviceType"
+      label: "Mailtrap service type"
+      description: "Select NodePort to expose mailtrap on port"
+      type: "enum"
+      options:
+        - "NodePort"
+        - "ClusterIP"
+      default: "ClusterIP"
+      required: true
+    - variable: "postfix.mailtrap.ingress.enabled"
+      label: "Add mailtrap url in ingress"
+      default: false
+      type: "boolean"
+      required: true
+
+  - variable: "postfix.mailtrap.ingress.hostname"
+    label: "Mailtrap URL"
+    show_if: "postfix.mailtrap.ingress.enabled"
+    required: true
+    type: "string"
+    default: "mailtrap.01dev.eea.europa.eu"
+    group: "Mail"
+  - variable: "postfix.mailtrap.ingress.certificate"
+    label: "Mailtrap certificate name"
+    show_if: "postfix.mailtrap.ingress.enabled"
+    description: "If empty, https will not be enabled"
+    default: "mailtrap.01dev.eea.europa.eu-tls"
+    group: "Mail"
+
+
+
+  - variable: "sonarqube.resources.requests.memory"
+    label: "SonarQube memory reservation"
+    type: "string"
+    required: true
+    default: "3Gi"
+    group: "Memory"
+  - variable: "sonarqube.resources.limits.memory"
+    label: "SonarQube memory limit"
+    description: ">= memory reservation"
+    type: "string"
+    required: true
+    default: "3Gi"
+    group: "Memory"
+  - variable: "postgres.resources.requests.memory"
+    label: "Memory reservation postgres"
+    default: "2Gi"
+    required: true
+    type: "string"
+    group: "Memory"
+  - variable: "postgres.resources.limits.memory"
+    label: "Memory limit postgres"
+    default: "2Gi"
+    required: true
+    type: "string"
+    group: "Memory"
+
+
+
