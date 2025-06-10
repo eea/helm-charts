@@ -1,0 +1,33 @@
+{{- if and .Values.litellm.enabled .Values.litellm.autoscaling.enabled }}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "appl.fullname" . }}-litellm
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    app.kubernetes.io/component: litellm
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "appl.fullname" . }}-litellm
+  minReplicas: {{ .Values.litellm.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.litellm.autoscaling.maxReplicas }}
+  metrics:
+    {{- if .Values.litellm.autoscaling.targetCPUUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.litellm.autoscaling.targetCPUUtilizationPercentage }}
+    {{- end }}
+    {{- if .Values.litellm.autoscaling.targetMemoryUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.litellm.autoscaling.targetMemoryUtilizationPercentage }}
+    {{- end }}
+{{- end }}
