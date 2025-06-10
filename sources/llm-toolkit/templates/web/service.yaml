@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "appl.fullname" . }}-langfuse-web
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    {{- with .Values.langfuse.web.service.additionalLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+{{- with .Values.langfuse.web.service.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+{{- end }}
+spec:
+  externalTrafficPolicy: {{ .Values.langfuse.web.service.externalTrafficPolicy | default "Cluster" }}
+  type: {{ .Values.langfuse.web.service.type }}
+  ports:
+    - port: {{ .Values.langfuse.web.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+      nodePort: {{ .Values.langfuse.web.service.nodePort }}
+  selector:
+    {{- include "appl.selectorLabels" . | nindent 4 }}
+    app: web

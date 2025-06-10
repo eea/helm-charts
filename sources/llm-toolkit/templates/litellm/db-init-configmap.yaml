@@ -1,0 +1,48 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "appl.fullname" . }}-litellm-postgres-init
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    app.kubernetes.io/component: litellm
+data:
+  init-litellm-db.sql: |
+    CREATE DATABASE {{ .Values.litellm.database.dbname }};
+    \c {{ .Values.litellm.database.dbname }};
+
+    CREATE TABLE IF NOT EXISTS model_configs (
+      model_name VARCHAR(255) PRIMARY KEY,
+      model_config JSONB NOT NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+
+    CREATE TABLE IF NOT EXISTS key_management (
+      key_id SERIAL PRIMARY KEY,
+      key_name VARCHAR(255) UNIQUE NOT NULL,
+      key_value TEXT NOT NULL,
+      team_id TEXT,
+      max_budget DECIMAL(15, 2),
+      budget_duration VARCHAR(50),
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      expires_at TIMESTAMP,
+      metadata JSONB
+    );
+
+    CREATE TABLE IF NOT EXISTS spend_logs (
+      request_id VARCHAR(255) PRIMARY KEY,
+      api_key VARCHAR(255),
+      model_name VARCHAR(255) NOT NULL,
+      tokens_used INT NOT NULL,
+      completion_tokens INT,
+      prompt_tokens INT,
+      spend DECIMAL(15, 6) NOT NULL,
+      end_user_id VARCHAR(255),
+      team_id VARCHAR(255),
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      request_headers JSONB,
+      extra_metadata JSONB
+    );
+
+    GRANT ALL PRIVILEGES ON DATABASE {{ .Values.litellm.database.dbname }} TO {{ .Values.postgresql.auth.username }};
+    GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO {{ .Values.postgresql.auth.username }};
+    GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO {{ .Values.postgresql.auth.username }};
