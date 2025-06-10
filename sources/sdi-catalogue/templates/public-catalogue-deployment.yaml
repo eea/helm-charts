@@ -68,4 +68,16 @@ spec:
       - name: sdi-public-catalogue-data
         persistentVolumeClaim:
           claimName: sdi-public-catalogue-data
+      
+      # Liveness Probe: For detecting critical failures and triggering restarts
+      livenessProbe:
+        httpGet:
+          path: {{ .Values.publicCatalogue.webapp_context }}/srv/eng/catalog.search # GeoNetwork context path + mai n search endpoint
+          port: 8080
+          scheme: HTTP
+        initialDelaySeconds: 120 # GeoNetwork can take a while to start up, adjust if needed
+        periodSeconds: 30       # Check every 30 seconds
+        timeoutSeconds: 10      # Wait up to 10 seconds for a response
+        failureThreshold: 3     # Allow 3 consecutive failures before restarting
+        
  

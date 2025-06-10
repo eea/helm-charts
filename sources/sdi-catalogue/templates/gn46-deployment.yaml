@@ -77,5 +77,16 @@ spec:
         persistentVolumeClaim:
           claimName: gis-sdi
           readOnly: false
+        
+            # Liveness Probe: For detecting critical failures and triggering restarts
+      livenessProbe:
+        httpGet:
+          path: {{ .Values.gn46.webapp_context }}/srv/eng/catalog.search # GeoNetwork context path + main search endpoint
+          port: 8080
+          scheme: HTTP
+        initialDelaySeconds: 120 # GeoNetwork can take a while to start up, adjust if needed
+        periodSeconds: 30       # Check every 30 seconds
+        timeoutSeconds: 10      # Wait up to 10 seconds for a response
+        failureThreshold: 3     # Allow 3 consecutive failures before restarting
 
 {{- end }}
