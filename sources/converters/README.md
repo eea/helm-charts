@@ -5,6 +5,9 @@ This chart is configured for production use.
 ## Releases
 
 <dl>
+  <dt>Version 0.1.4</dt>
+  <dd>Java 17 upgrade.</dd>
+
   <dt>Version 0.1.3</dt>
   <dd>Tomcat/libraries upgrades.</dd>
 
