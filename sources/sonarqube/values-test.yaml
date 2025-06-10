@@ -1,0 +1,109 @@
+# Default values for Sonarqube
+
+image:
+  repository: sonarqube
+  pullPolicy: Always
+  tag: ""
+
+imagePullSecrets: []
+
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: false
+  annotations: {}
+  name: ""
+
+url: sonarqube.01dev.eea.europa.eu
+
+postgres:
+  pullPolicy: IfNotPresent
+  podAnnotations: {}
+  podSecurityContext: {}
+  securityContext: {}
+  environment:
+    POSTGRES_DBNAME: sonar
+    POSTGRES_DBUSER: sonar
+    POSTGRES_DBPASS: sonar
+    POSTGRES_PASSWORD: password
+    POSTGRES_CONFIG: |
+      max_connections = 150
+    POSTGRES_CRONS: |
+      ##
+    POSTGRES_REPLICATION_NETWORK:
+  datastorage:
+    size: 10Gi
+    storageClassName: ""
+  resources:
+    requests:
+      memory: 2Gi
+    limits:
+      memory: 2Gi
+  livenessProbe:
+    tcpSocket:
+      port: 5432
+    periodSeconds: 10
+    timeoutSeconds: 3
+  startupProbe:
+    tcpSocket:
+      port: 5432
+    failureThreshold: 10
+    periodSeconds: 5
+    initialDelaySeconds: 5
+    timeoutSeconds: 2
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+
+postfix:
+  fullnameOverride: ''
+  dryrun: false
+  serverName: sonarqube.01dev.eea.europa.eu
+  mtpPass: ''
+  mtpPort: ''
+  mtpRelay: ''
+  mtpUser: ''
+  serviceName: 'postfix'
+  mailtrap:
+    httpenabled: false
+    serviceType: NodePort
+    ingress:
+      enabled: false
+      hostname: mailtrap.01dev.eea.europa.eu
+      annotations:
+        cert-manager.io/cluster-issuer: 01dev-eea-letsencrypt
+      certificate: mailtrap.01dev.eea.europa.eu-tls
+
+
+sonarqube:
+  commandArgs:
+    telemetry.enable: false
+    ce.javaOpts: ''
+  serviceType: ClusterIP
+  resources:
+    requests:
+      memory: "4Gi"
+    limits:
+      memory: "4Gi"
+
+
+ingress:
+  enabled: true
+  className: ""
+  annotations: {}
+  letsencrypt: "01dev-eea-letsencrypt"
+  configuration:
+    proxy-body-size: "256m"
+    proxy-read-timeout: "180s"
+    proxy-send-timeout: "120s"
+  tls: true
+  certificate: "sonarqube.01dev.eea.europa.eu-tls"
+
+storage:
+  extensionsSize: 1Gi
+  logsSize: 10Gi
+  dataSize: 5Gi
+  className: "nfs-client"
+
