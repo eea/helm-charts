@@ -1,0 +1,41 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-ingress
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: httpd
+  annotations:
+  {{- if .Values.ingress.letsencrypt }}
+    cert-manager.io/cluster-issuer: "{{ .Values.ingress.letsencrypt }}"
+  {{- end }}
+  {{- range $key, $value := .Values.ingress.configuration }}
+    {{- if ($value) }}
+    nginx.ingress.kubernetes.io/{{ $key }}: {{ $value | quote }}
+    {{- end }}
+  {{- end }}
+  {{- with .Values.ingress.annotations }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: {{ .Values.url }}
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ .Release.Name }} 
+            port:
+              number: 9000
+  {{- if .Values.ingress.tls }}
+  tls:
+  - hosts:
+    - {{ .Values.url }}
+    {{- if .Values.ingress.certificate }}
+    secretName: {{ .Values.ingress.certificate }}
+    {{- end  }}
+  {{- end  }}

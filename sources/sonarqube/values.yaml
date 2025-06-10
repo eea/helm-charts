@@ -1,74 +1,131 @@
 # Default values for Sonarqube
 
 image:
-  repository: eeacms/sonarqube
-  tag: "10.6.0"
-  ## Specify a imagePullPolicy
-  ## ref: https://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images
-  ##
-  pullPolicy: IfNotPresent
-  ## Optionally specify an array of imagePullSecrets.
-  ## Secrets must be manually created in the namespace.
-  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
-  ## e.g:
-  ## pullSecrets:
-  ##   - myRegistryKeySecretName
-  ##
-  pullSecrets: []
-  ## Enable debug mode
-  ##
-  debug: false
+  repository: sonarqube
+  pullPolicy: Always
+  tag: ""
 
-db:
-  image: eeacms/postgres:14.13-2.1
-  host: db
-  user: sonar
-  password: sonar
-  database: sonar
-  adminUser: postgres
-  adminPassword: sonar
+imagePullSecrets: []
+
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: false
+  annotations: {}
+  name: ""
+
+url: sonarqube.eea.europa.eu
+
+timezone: Europe/Copenhagen
+
+
+postgres:
+  pullPolicy: IfNotPresent
+  podAnnotations: {}
+  podSecurityContext: {}
+  securityContext: {}
+  environment:
+    POSTGRES_DBNAME: sonarqube
+    POSTGRES_DBUSER: sonarqube
+    POSTGRES_DBPASS: sonarqube
+    POSTGRES_PASSWORD: password
+    POSTGRES_CONFIG: |
+      max_connections = 150
+    POSTGRES_CRONS: |
+      ##
+    POSTGRES_REPLICATION_NETWORK:
+  datastorage:
+    size: 20Gi
+    storageClassName: ""
+  resources:
+    requests:
+      memory: 2Gi
+    limits:
+      memory: 2Gi
+  livenessProbe:
+    tcpSocket:
+      port: 5432
+    periodSeconds: 10
+    timeoutSeconds: 3
+  startupProbe:
+    tcpSocket:
+      port: 5432
+    failureThreshold: 10
+    periodSeconds: 5
+    initialDelaySeconds: 5
+    timeoutSeconds: 2
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
 
 postfix:
-  image: eeacms/postfix:3.5-1.0
-  relay: ironports.eea.europa.eu
-  port: 8587
-  user: postfix_user
-  password: postfix_pass
+  fullnameOverride: ''
+  dryrun: false
+  serverName: sonarqube.eea.europa.eu
+  mtpPass: ''
+  mtpPort: ''
+  mtpRelay: ''
+  mtpUser: ''
+  serviceName: 'postfix'
+  mailtrap:
+    httpenabled: false
+    serviceType: NodePort
+    ingress:
+      enabled: false
+      hostname: mailtrap.01dev.eea.europa.eu
+      annotations:
+        cert-manager.io/cluster-issuer: 01dev-eea-letsencrypt
+      certificate: mailtrap.01dev.eea.europa.eu-tls
 
-environment:
-  TZ: "Europe/Copenhagen"
-  POSTGRES_DB: "{{ .Values.db.database }}"
-  POSTGRES_USER: "{{ .Values.db.user }}"
-  POSTGRES_PASSWORD: "{{ .Values.db.password }}"
-  POSTGRES_ADMIN_USER: "{{ .Values.db.adminUser }}"
-  POSTGRES_ADMIN_PASSWORD: "{{ .Values.db.adminPassword }}"
-  SONARQUBE_JDBC_URL: "jdbc:postgresql://{{ .Values.db.host }}:5432/{{ .Values.db.database }}"
-  POSTFIX_RELAY: "{{ .Values.postfix.relay }}"
-  POSTFIX_PORT: "{{ .Values.postfix.port }}"
-  POSTFIX_USER: "{{ .Values.postfix.user }}"
-  POSTFIX_PASS: "{{ .Values.postfix.password }}"
 
-service:
-  type: ClusterIP
-  port: 9000
+sonarqube:
+  commandArgs:
+    telemetry.enable: false
+    ce.javaOpts: ''
+  serviceType: ClusterIP
+  resources:
+    requests:
+      memory: "4Gi"
+    limits:
+      memory: "4Gi"
+  livenessProbe:
+    httpGet:
+      path: /api/system/health
+      port: 9000
+    periodSeconds: 10
+    timeoutSeconds: 10
+    initialDelaySeconds: 0
+    failureThreshold: 5
+    successThreshold: 1
+  startupProbe:
+    httpGet:
+      path: /api/system/health
+      port: 9000
+    periodSeconds: 5
+    timeoutSeconds: 5
+    initialDelaySeconds: 15
+    failureThreshold: 20
+    successThreshold: 1
+
+
 
 ingress:
-  enabled: false
-
-persistence:
   enabled: true
-  accessMode: ReadWriteOnce
-  size: 10Gi
-  external: true
-  volume_sonarqubedata: sonarqubedata
-  volume_sonarqubeextensions: sonarqubeextensions
-  db_storage_driver: netapp
-  front_storage_driver: netapp
+  className: ""
+  annotations: {}
+  letsencrypt: "01dev-eea-letsencrypt"
+  configuration:
+    proxy-body-size: "256m"
+    proxy-read-timeout: "180s"
+    proxy-send-timeout: "120s"
+  tls: true
+  certificate: ""
 
-resources:
-  requests:
-    memory: "2Gi"
-    cpu: "500m"
-  limits:
-    memory: "4Gi"
-    cpu: "2"
+storage:
+  extensionsSize: 1Gi
+  logsSize: 10Gi
+  dataSize: 5Gi
+  className: "nfs-client"
+

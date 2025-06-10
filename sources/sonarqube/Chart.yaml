@@ -8,3 +8,16 @@ type: application
 # to the chart and its templates, including the app version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
 version: 1.0.0
+
+appVersion: 25.4.0.105899-community
+
+icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/sonarqube/sonarqube.png
+home: https://github.com/eea/eea.docker.sonarqube
+keywords:
+  - Code quality
+  - Sonarqube
+# Remember to do helm dep up
+dependencies:
+  - name: postfix
+    version: 3.0.6
+    repository: https://eea.github.io/helm-charts
