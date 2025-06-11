@@ -11,6 +11,9 @@ This chart deployes the EEA Website Plone 6 backend app
 ## Releases
 
 ### Version 1.0.4 - 11 June 2025
+- ingress update [Silviu - [`17525fb`](https://github.com/eea/helm-charts/commit/17525fbd75a12abf92a3bc59efe8521d8551b738)]
+
+### Version 1.0.4 - 11 June 2025
 - ingress update [Silviu - [`5570716`](https://github.com/eea/helm-charts/commit/557071648484c9838ce34c5e64ae5769065f438f)]
 
 ### Version 1.0.4 - 11 June 2025
