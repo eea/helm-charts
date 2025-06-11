@@ -284,24 +284,6 @@ questions:
     label: "Enterprise License Key"
     group: "Langfuse Enterprise"
 
-  - variable: "langfuse.image.tag"
-    default: null
-    description: "Image tag to use for Langfuse (defaults to Chart.appVersion if not set)"
-    type: "string"
-    label: "Langfuse Image Tag"
-    group: "Langfuse Deployment"
-
-  - variable: "langfuse.image.pullPolicy"
-    default: "Always"
-    description: "Image pull policy for Langfuse containers"
-    type: "enum"
-    options:
-      - "Always"
-      - "IfNotPresent"
-      - "Never"
-    label: "Image Pull Policy"
-    group: "Langfuse Deployment"
-
   # LiteLLM section
   - variable: "litellm.enabled"
     default: false
@@ -315,18 +297,6 @@ questions:
     description: "Image tag to use for LiteLLM"
     type: "string"
     label: "LiteLLM Image Tag"
-    group: "LiteLLM Deployment"
-    show_if: "litellm.enabled=true"
-
-  - variable: "litellm.image.pullPolicy"
-    default: "IfNotPresent"
-    description: "Image pull policy for LiteLLM containers"
-    type: "enum"
-    options:
-      - "Always"
-      - "IfNotPresent"
-      - "Never"
-    label: "LiteLLM Image Pull Policy"
     group: "LiteLLM Deployment"
     show_if: "litellm.enabled=true"
 
@@ -515,18 +485,6 @@ questions:
     description: "LLM Guard plugin image tag"
     type: "string"
     label: "LLM Guard Image Tag"
-    group: "LiteLLM Plugins"
-    show_if: "litellm.enabled=true && litellm.llmGuardPlugin.enabled=true"
-
-  - variable: "litellm.llmGuardPlugin.image.pullPolicy"
-    default: "IfNotPresent"
-    description: "LLM Guard plugin image pull policy"
-    type: "enum"
-    options:
-      - "Always"
-      - "IfNotPresent"
-      - "Never"
-    label: "LLM Guard Pull Policy"
     group: "LiteLLM Plugins"
     show_if: "litellm.enabled=true && litellm.llmGuardPlugin.enabled=true"
 

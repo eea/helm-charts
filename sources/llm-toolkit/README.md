@@ -264,8 +264,11 @@ helm delete llm-toolkit
 
 ## Releases
 
+### Version 0.1.3
+- Updated `questions.yaml`.
+
 ### Version 0.1.2
-- Ingress fixes in questions.yaml.
+- Ingress fixes in `questions.yaml`.
 
 ### Version 0.1.1
 - Updated questions.yaml.
