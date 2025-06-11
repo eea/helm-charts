@@ -264,5 +264,8 @@ helm delete llm-toolkit
 
 ## Releases
 
+### Version 0.1.1
+- Updated questions.yaml.
+
 ### Version 0.1.0
 - Initial release.

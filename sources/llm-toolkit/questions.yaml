@@ -1,914 +1,900 @@
 # LLM Toolkit Configuration Questions
-categories:
-  - name: "General"
-    description: "General LLM Toolkit Configuration"
-    questions:
-      - variable: "timezone"
-        default: "Europe/Copenhagen"
-        description: "Timezone for all main containers. IMPORTANT: Make sure to also set the timezone variables in the values for the subcharts"
-        type: "string"
-        label: "Main Timezone"
-        group: "Timezone Settings"
-
-  - name: "Langfuse"
-    description: "Configuration for Langfuse observability platform"
-    questions:
-  - name: "Langfuse"
-    description: "Configuration for Langfuse observability platform"
-    questions:
-      # Langfuse is always enabled as the core component
-      - variable: "langfuse.nodeEnv"
-        default: "production"
-        description: "Node.js environment mode for Langfuse"
-        type: "enum"
-        options:
-          - "production"
-          - "development"
-        label: "Node Environment"
-        group: "Langfuse Deployment"
-
-      - variable: "langfuse.features.telemetryEnabled"
-        default: true
-        description: "Report basic usage statistics to Langfuse"
-        type: "boolean"
-        label: "Enable Telemetry"
-        group: "Langfuse Features"
-
-      - variable: "langfuse.features.experimentalFeaturesEnabled"
-        default: false
-        description: "Enable experimental features"
-        type: "boolean"
-        label: "Enable Experimental Features"
-        group: "Langfuse Features"
-
-      - variable: "langfuse.salt.value"
-        default: ""
-        description: "Salt used to hash API keys (generate with: openssl rand -base64 32)"
-        type: "password"
-        label: "API Key Salt"
-        group: "Langfuse Security"
-        required: true
-        show_if: "langfuse.enabled=true"
-
-      - variable: "langfuse.encryptionKey.value"
-        default: ""
-        description: "Key used to encrypt sensitive data (generate with: openssl rand -hex 32)"
-        type: "password"
-        label: "Encryption Key"
-        group: "Langfuse Security"
-        required: true
-        show_if: "langfuse.enabled=true"
-
-      - variable: "langfuse.nextauth.secret.value"
-        default: ""
-        description: "Secret used by NextAuth for JWT encryption"
-        type: "password"
-        label: "NextAuth Secret"
-        group: "Langfuse Security"
-        required: true
-        show_if: "langfuse.enabled=true"
-
-      - variable: "langfuse.features.signUpDisabled"
-        default: false
-        description: "Disable public sign up"
-        type: "boolean"
-        label: "Disable Sign Up"
-        group: "Langfuse Features"
-        show_if: "langfuse.enabled=true"
-
-      - variable: "langfuse.logging.level"
-        default: "info"
-        description: "Log level for the application"
-        type: "enum"
-        options:
-          - "trace"
-          - "debug"
-          - "info"
-          - "warn"
-          - "error"
-          - "fatal"
-        label: "Log Level"
-        group: "Langfuse Configuration"
-        show_if: "langfuse.enabled=true"
-
-      - variable: "langfuse.logging.format"
-        default: "text"
-        description: "Log format for the application"
-        type: "enum"
-        options:
-          - "text"
-          - "json"
-        label: "Log Format"
-        group: "Langfuse Configuration"
-        show_if: "langfuse.enabled=true"
-
-      - variable: "langfuse.nextauth.url"
-        default: ""
-        description: "Public URL where Langfuse will be accessible (e.g. https://langfuse.your-domain.com)"
-        type: "string"
-        label: "Langfuse URL"
-        group: "Langfuse Configuration"
-        required: true
-        show_if: "langfuse.enabled=true"
-
-      - variable: "langfuse.replicas"
-        default: 1
-        description: "Default number of replicas for all Langfuse deployments"
-        type: "int"
-        min: 1
-        max: 10
-        label: "Default Replicas"
-        group: "Langfuse Scaling"
-
-      - variable: "langfuse.web.replicas"
-        default: null
-        description: "Number of web server replicas (overrides default)"
-        type: "int"
-        min: 1
-        max: 10
-        label: "Web Replicas"
-        group: "Langfuse Scaling"
-        show_if: "langfuse.web.hpa.enabled=false"
-
-      - variable: "langfuse.worker.replicas"
-        default: null
-        description: "Number of worker replicas (overrides default)"
-        type: "int"
-        min: 1
-        max: 10
-        label: "Worker Replicas"
-        group: "Langfuse Scaling"
-        show_if: "langfuse.worker.hpa.enabled=false"
-
-      - variable: "langfuse.web.hpa.enabled"
-        default: false
-        description: "Enable autoscaling for web servers"
-        type: "boolean"
-        label: "Enable Web Autoscaling"
-        group: "Langfuse Scaling"
-
-      - variable: "langfuse.web.hpa.minReplicas"
-        default: 1
-        description: "Minimum number of web replicas with autoscaling"
-        type: "int"
-        min: 1
-        label: "Web Min Replicas"
-        group: "Langfuse Scaling"
-        show_if: "langfuse.web.hpa.enabled=true"
-
-      - variable: "langfuse.web.hpa.maxReplicas"
-        default: 2
-        description: "Maximum number of web replicas with autoscaling"
-        type: "int"
-        min: 2
-        label: "Web Max Replicas"
-        group: "Langfuse Scaling"
-        show_if: "langfuse.web.hpa.enabled=true"
-
-      - variable: "langfuse.web.hpa.targetCPUUtilizationPercentage"
-        default: 50
-        description: "Target CPU utilization for web autoscaling"
-        type: "int"
-        min: 10
-        max: 90
-        label: "Web CPU Target %"
-        group: "Langfuse Scaling"
-        show_if: "langfuse.web.hpa.enabled=true"
-
-      - variable: "langfuse.worker.hpa.enabled"
-        default: false
-        description: "Enable autoscaling for workers"
-        type: "boolean"
-        label: "Enable Worker Autoscaling"
-        group: "Langfuse Scaling"
-
-      - variable: "langfuse.worker.hpa.minReplicas"
-        default: 1
-        description: "Minimum number of worker replicas with autoscaling"
-        type: "int"
-        min: 1
-        label: "Worker Min Replicas"
-        group: "Langfuse Scaling"
-        show_if: "langfuse.worker.hpa.enabled=true"
-
-      - variable: "langfuse.worker.hpa.maxReplicas"
-        default: 2
-        description: "Maximum number of worker replicas with autoscaling"
-        type: "int"
-        min: 2
-        label: "Worker Max Replicas"
-        group: "Langfuse Scaling"
-        show_if: "langfuse.worker.hpa.enabled=true"
-
-      - variable: "langfuse.worker.hpa.targetCPUUtilizationPercentage"
-        default: 50
-        description: "Target CPU utilization for worker autoscaling"
-        type: "int"
-        min: 10
-        max: 90
-        label: "Worker CPU Target %"
-        group: "Langfuse Scaling"
-        show_if: "langfuse.worker.hpa.enabled=true"
-
-      - variable: "langfuse.ingress.enabled"
-        default: true
-        description: "Enable ingress for Langfuse"
-        type: "boolean"
-        label: "Enable Ingress"
-        group: "Langfuse Networking"
-
-      - variable: "langfuse.ingress.className"
-        default: "nginx"
-        description: "Ingress class name"
-        type: "string"
-        label: "Ingress Class"
-        group: "Langfuse Networking"
-        show_if: "langfuse.ingress.enabled=true"
-
-      - variable: "langfuse.ingress.hosts[0].host"
-        default: "langfuse.example.com"
-        description: "Hostname for Langfuse"
-        type: "string"
-        label: "Langfuse Hostname"
-        group: "Langfuse Networking"
-        required: true
-        show_if: "langfuse.ingress.enabled=true"
-
-      - variable: "langfuse.ingress.hosts[0].paths[0].path"
-        default: "/"
-        description: "Path for Langfuse ingress"
-        type: "string"
-        label: "Ingress Path"
-        group: "Langfuse Networking"
-        show_if: "langfuse.ingress.enabled=true"
-
-      - variable: "langfuse.ingress.hosts[0].paths[0].pathType"
-        default: "ImplementationSpecific"
-        description: "Path type for Langfuse ingress"
-        type: "enum"
-        options:
-          - "ImplementationSpecific"
-          - "Prefix"
-          - "Exact"
-        label: "Path Type"
-        group: "Langfuse Networking"
-        show_if: "langfuse.ingress.enabled=true"
-
-      - variable: "langfuse.ingress.tls[0].secretName"
-        default: "langfuse-tls"
-        description: "Name of the TLS secret"
-        type: "string"
-        label: "TLS Secret Name"
-        group: "Langfuse Networking"
-        show_if: "langfuse.ingress.enabled=true"
-
-      - variable: "langfuse.web.service.type"
-        default: "ClusterIP"
-        description: "Langfuse web service type"
-        type: "enum"
-        options:
-          - "ClusterIP"
-          - "NodePort"
-          - "LoadBalancer"
-        label: "Service Type"
-        group: "Langfuse Networking"
-
-      - variable: "langfuse.web.service.externalTrafficPolicy"
-        default: "Cluster"
-        description: "External traffic policy for LoadBalancer/NodePort services"
-        type: "enum"
-        options:
-          - "Cluster"
-          - "Local"
-        label: "External Traffic Policy"
-        group: "Langfuse Networking"
-        show_if: "langfuse.web.service.type=LoadBalancer || langfuse.web.service.type=NodePort"
-
-      - variable: "langfuse.licenseKey.value"
-        default: ""
-        description: "Langfuse Enterprise Edition license key (leave empty for Community Edition)"
-        type: "password"
-        label: "Enterprise License Key"
-        group: "Langfuse Enterprise"
-
-      - variable: "langfuse.image.tag"
-        default: null
-        description: "Image tag to use for Langfuse (defaults to Chart.appVersion if not set)"
-        type: "string"
-        label: "Langfuse Image Tag"
-        group: "Langfuse Deployment"
-
-      - variable: "langfuse.image.pullPolicy"
-        default: "Always"
-        description: "Image pull policy for Langfuse containers"
-        type: "enum"
-        options:
-          - "Always"
-          - "IfNotPresent"
-          - "Never"
-        label: "Image Pull Policy"
-        group: "Langfuse Deployment"
-
-  - name: "LiteLLM"
-    description: "Configuration for LiteLLM proxy"
-    questions:
-      - variable: "litellm.enabled"
-        default: false
-        description: "Deploy LiteLLM proxy alongside Langfuse"
-        type: "boolean"
-        label: "Enable LiteLLM"
-        group: "LiteLLM Deployment"
-
-      - variable: "litellm.image.tag"
-        default: "v1.61.13-stable"
-        description: "Image tag to use for LiteLLM"
-        type: "string"
-        label: "LiteLLM Image Tag"
-        group: "LiteLLM Deployment"
-        show_if: "litellm.enabled=true"
-
-      - variable: "litellm.image.pullPolicy"
-        default: "IfNotPresent"
-        description: "Image pull policy for LiteLLM containers"
-        type: "enum"
-        options:
-          - "Always"
-          - "IfNotPresent"
-          - "Never"
-        label: "LiteLLM Image Pull Policy"
-        group: "LiteLLM Deployment"
-        show_if: "litellm.enabled=true"
-
-      - variable: "litellm.masterKey"
-        default: ""
-        description: "Master key for LiteLLM authentication (needed for API access)"
-        type: "password"
-        label: "LiteLLM Master Key"
-        group: "LiteLLM Security"
-        required: true
-        show_if: "litellm.enabled=true"
-
-      - variable: "litellm.langfusePublicKey"
-        default: ""
-        description: "Langfuse public API key for LiteLLM integration"
-        type: "string"
-        label: "Langfuse Public Key"
-        group: "LiteLLM Langfuse Integration"
-        show_if: "litellm.enabled=true"
-
-      - variable: "litellm.langfuseSecretKey"
-        default: ""
-        description: "Langfuse secret API key for LiteLLM integration"
-        type: "password"
-        label: "Langfuse Secret Key"
-        group: "LiteLLM Langfuse Integration"
-        show_if: "litellm.enabled=true"
-
-      - variable: "litellm.langfuseHost"
-        default: ""
-        description: "Custom Langfuse host URL (defaults to the web service in this chart)"
-        type: "string"
-        label: "Langfuse Host"
-        group: "LiteLLM Langfuse Integration"
-        show_if: "litellm.enabled=true"
-
-      - variable: "litellm.replicaCount"
-        default: 1
-        description: "Number of LiteLLM replicas"
-        type: "int"
-        min: 1
-        max: 10
-        label: "LiteLLM Replicas"
-        group: "LiteLLM Scaling"
-        show_if: "litellm.enabled=true && litellm.autoscaling.enabled=false"
-
-      - variable: "litellm.autoscaling.enabled"
-        default: false
-        description: "Enable autoscaling for LiteLLM"
-        type: "boolean"
-        label: "Enable LiteLLM Autoscaling"
-        group: "LiteLLM Scaling"
-        show_if: "litellm.enabled=true"
-
-      - variable: "litellm.autoscaling.minReplicas"
-        default: 1
-        description: "Minimum number of LiteLLM replicas with autoscaling"
-        type: "int"
-        min: 1
-        label: "LiteLLM Min Replicas"
-        group: "LiteLLM Scaling"
-        show_if: "litellm.enabled=true && litellm.autoscaling.enabled=true"
-
-      - variable: "litellm.autoscaling.maxReplicas"
-        default: 2
-        description: "Maximum number of LiteLLM replicas with autoscaling"
-        type: "int"
-        min: 2
-        label: "LiteLLM Max Replicas"
-        group: "LiteLLM Scaling"
-        show_if: "litellm.enabled=true && litellm.autoscaling.enabled=true"
-
-      - variable: "litellm.autoscaling.targetCPUUtilizationPercentage"
-        default: 80
-        description: "Target CPU utilization for LiteLLM autoscaling"
-        type: "int"
-        min: 10
-        max: 90
-        label: "LiteLLM CPU Target %"
-        group: "LiteLLM Scaling"
-        show_if: "litellm.enabled=true && litellm.autoscaling.enabled=true"
-
-      - variable: "litellm.ingress.enabled"
-        default: true
-        description: "Enable ingress for LiteLLM"
-        type: "boolean"
-        label: "Enable LiteLLM Ingress"
-        group: "LiteLLM Networking"
-        show_if: "litellm.enabled=true"
-
-      - variable: "litellm.ingress.className"
-        default: "nginx"
-        description: "LiteLLM ingress class name"
-        type: "string"
-        label: "LiteLLM Ingress Class"
-        group: "LiteLLM Networking"
-        show_if: "litellm.enabled=true && litellm.ingress.enabled=true"
-
-      - variable: "litellm.ingress.hosts[0].host"
-        default: "litellm.example.com"
-        description: "Hostname for LiteLLM"
-        type: "string"
-        label: "LiteLLM Hostname"
-        group: "LiteLLM Networking"
-        required: true
-        show_if: "litellm.enabled=true && litellm.ingress.enabled=true"
-
-      - variable: "litellm.ingress.hosts[0].paths[0].path"
-        default: "/"
-        description: "Path for LiteLLM ingress"
-        type: "string"
-        label: "LiteLLM Ingress Path"
-        group: "LiteLLM Networking"
-        show_if: "litellm.enabled=true && litellm.ingress.enabled=true"
-
-      - variable: "litellm.ingress.hosts[0].paths[0].pathType"
-        default: "Prefix"
-        description: "Path type for LiteLLM ingress"
-        type: "enum"
-        options:
-          - "ImplementationSpecific"
-          - "Prefix"
-          - "Exact"
-        label: "LiteLLM Path Type"
-        group: "LiteLLM Networking"
-        show_if: "litellm.enabled=true && litellm.ingress.enabled=true"
-
-      - variable: "litellm.ingress.tls[0].secretName"
-        default: "litellm-tls"
-        description: "Name of the TLS secret for LiteLLM"
-        type: "string"
-        label: "LiteLLM TLS Secret Name"
-        group: "LiteLLM Networking"
-        show_if: "litellm.enabled=true && litellm.ingress.enabled=true"
-
-      - variable: "litellm.logLevel"
-        default: "info"
-        description: "Log level for LiteLLM"
-        type: "enum"
-        options:
-          - "trace"
-          - "debug"
-          - "info"
-          - "warn"
-          - "error"
-        label: "LiteLLM Log Level"
-        group: "LiteLLM Configuration"
-        show_if: "litellm.enabled=true"
-
-      - variable: "litellm.tpmLimit"
-        default: 1000
-        description: "Tokens per minute limit"
-        type: "int"
-        min: 1
-        label: "TPM Limit"
-        group: "LiteLLM Rate Limits"
-        show_if: "litellm.enabled=true"
-
-      - variable: "litellm.rpmLimit"
-        default: 60
-        description: "Requests per minute limit"
-        type: "int"
-        min: 1
-        label: "RPM Limit"
-        group: "LiteLLM Rate Limits"
-        show_if: "litellm.enabled=true"
-
-      - variable: "litellm.llmGuardPlugin.enabled"
-        default: false
-        description: "Enable LLM Guard plugin for content filtering"
-        type: "boolean"
-        label: "Enable LLM Guard"
-        group: "LiteLLM Plugins"
-        show_if: "litellm.enabled=true"
-
-      - variable: "litellm.llmGuardPlugin.image.repository"
-        default: "eeacms/llmguard-plugin"
-        description: "LLM Guard plugin image repository"
-        type: "string"
-        label: "LLM Guard Image Repo"
-        group: "LiteLLM Plugins"
-        show_if: "litellm.enabled=true && litellm.llmGuardPlugin.enabled=true"
-
-      - variable: "litellm.llmGuardPlugin.image.tag"
-        default: "v0.0.1"
-        description: "LLM Guard plugin image tag"
-        type: "string"
-        label: "LLM Guard Image Tag"
-        group: "LiteLLM Plugins"
-        show_if: "litellm.enabled=true && litellm.llmGuardPlugin.enabled=true"
-
-      - variable: "litellm.llmGuardPlugin.image.pullPolicy"
-        default: "IfNotPresent"
-        description: "LLM Guard plugin image pull policy"
-        type: "enum"
-        options:
-          - "Always"
-          - "IfNotPresent"
-          - "Never"
-        label: "LLM Guard Pull Policy"
-        group: "LiteLLM Plugins"
-        show_if: "litellm.enabled=true && litellm.llmGuardPlugin.enabled=true"
-
-  - name: "Database"
-    description: "Database Configuration"
-    questions:
-      - variable: "postgresql.deploy"
-        default: true
-        description: "Deploy PostgreSQL database (disable to use external)"
-        type: "boolean"
-        label: "Deploy PostgreSQL"
-        group: "PostgreSQL"
-
-      - variable: "postgresql.host"
-        default: ""
-        description: "External PostgreSQL host (used when deployment is disabled)"
-        type: "string"
-        label: "PostgreSQL Host"
-        group: "PostgreSQL"
-        show_if: "postgresql.deploy=false"
-        required: true
-
-      - variable: "postgresql.port"
-        default: 5432
-        description: "PostgreSQL port"
-        type: "int"
-        label: "PostgreSQL Port"
-        group: "PostgreSQL"
-        show_if: "postgresql.deploy=false"
-
-      - variable: "postgresql.auth.username"
-        default: "postgres"
-        description: "PostgreSQL username"
-        type: "string"
-        label: "PostgreSQL Username"
-        group: "PostgreSQL"
-
-      - variable: "postgresql.auth.password"
-        default: ""
-        description: "PostgreSQL password"
-        type: "password"
-        label: "PostgreSQL Password"
-        group: "PostgreSQL"
-        required: true
-        placeholder: "Enter a secure password"
-
-      - variable: "postgresql.auth.database"
-        default: "postgres_langfuse"
-        description: "Database name for Langfuse"
-        type: "string"
-        label: "PostgreSQL Database"
-        group: "PostgreSQL"
-
-      - variable: "litellm.database.dbname"
-        default: "litellm"
-        description: "Database name for LiteLLM"
-        type: "string"
-        label: "LiteLLM Database"
-        group: "PostgreSQL"
-        show_if: "litellm.enabled=true"
-
-      - variable: "postgresql.migration.autoMigrate"
-        default: true
-        description: "Run automatic PostgreSQL migrations on startup"
-        type: "boolean"
-        label: "Auto Migrate PostgreSQL"
-        group: "PostgreSQL"
-
-      - variable: "postgresql.primary.persistence.size"
-        default: "11Gi"
-        description: "Storage size for PostgreSQL"
-        type: "string"
-        label: "PostgreSQL Storage Size"
-        group: "PostgreSQL"
-        show_if: "postgresql.deploy=true"
-
-      - variable: "clickhouse.deploy"
-        default: true
-        description: "Deploy ClickHouse database (disable to use external)"
-        type: "boolean"
-        label: "Deploy ClickHouse"
-        group: "ClickHouse"
-
-      - variable: "clickhouse.host"
-        default: ""
-        description: "External ClickHouse host (used when deployment is disabled)"
-        type: "string"
-        label: "ClickHouse Host"
-        group: "ClickHouse"
-        show_if: "clickhouse.deploy=false"
-        required: true
-
-      - variable: "clickhouse.auth.username"
-        default: "clickhouse"
-        description: "ClickHouse username"
-        type: "string"
-        label: "ClickHouse Username"
-        group: "ClickHouse"
-
-      - variable: "clickhouse.auth.password"
-        default: ""
-        description: "ClickHouse password"
-        type: "password"
-        label: "ClickHouse Password"
-        group: "ClickHouse"
-        required: true
-        placeholder: "Enter a secure password"
-
-      - variable: "clickhouse.replicaCount"
-        default: 1
-        description: "Number of ClickHouse replicas (1 for non-HA, 3+ for HA)"
-        type: "int"
-        min: 1
-        label: "ClickHouse Replicas"
-        group: "ClickHouse"
-        show_if: "clickhouse.deploy=true"
-
-      - variable: "clickhouse.migration.autoMigrate"
-        default: true
-        description: "Run automatic ClickHouse migrations on startup"
-        type: "boolean"
-        label: "Auto Migrate ClickHouse"
-        group: "ClickHouse"
-
-      - variable: "clickhouse.persistence.size"
-        default: "11Gi"
-        description: "Storage size for ClickHouse"
-        type: "string"
-        label: "ClickHouse Storage Size"
-        group: "ClickHouse"
-        show_if: "clickhouse.deploy=true"
-
-      - variable: "redis.deploy"
-        default: true
-        description: "Deploy Redis (disable to use external)"
-        type: "boolean"
-        label: "Deploy Redis"
-        group: "Redis"
-
-      - variable: "redis.host"
-        default: ""
-        description: "External Redis host (used when deployment is disabled)"
-        type: "string"
-        label: "Redis Host"
-        group: "Redis"
-        show_if: "redis.deploy=false"
-        required: true
-
-      - variable: "redis.port"
-        default: 6379
-        description: "Redis port"
-        type: "int"
-        label: "Redis Port"
-        group: "Redis"
-        show_if: "redis.deploy=false"
-
-      - variable: "redis.auth.username"
-        default: "default"
-        description: "Redis username"
-        type: "string"
-        label: "Redis Username"
-        group: "Redis"
-
-      - variable: "redis.auth.password"
-        default: ""
-        description: "Redis password"
-        type: "password"
-        label: "Redis Password"
-        group: "Redis"
-        required: true
-        placeholder: "Enter a secure password"
-
-      - variable: "redis.master.persistence.size"
-        default: "11Gi"
-        description: "Storage size for Redis"
-        type: "string"
-        label: "Redis Storage Size"
-        group: "Redis"
-        show_if: "redis.deploy=true"
-
-  - name: "Storage"
-    description: "Object Storage Configuration"
-    questions:
-      - variable: "minio.extraEnvVars"
-        default:
-          - name: MINIO_LOG_LEVEL
-            value: "DEBUG"
-        description: "Additional environment variables for MinIO"
-        type: "array"
-        label: "MinIO Environment Variables"
-        group: "MinIO Advanced"
-        show_if: "minio.deploy=true"
-      - variable: "minio.deploy"
-        default: true
-        description: "Deploy MinIO (disable to use external S3 compatible storage)"
-        type: "boolean"
-        label: "Deploy MinIO"
-        group: "MinIO / S3"
-
-      - variable: "minio.bucket"
-        default: "langfuse"
-        description: "Bucket name for all uploads"
-        type: "string"
-        label: "Bucket Name"
-        group: "MinIO / S3"
-        required: true
-
-      - variable: "minio.endpoint"
-        default: ""
-        description: "S3 endpoint (leave empty if using deployed MinIO)"
-        type: "string"
-        label: "S3 Endpoint"
-        group: "MinIO / S3"
-        show_if: "minio.deploy=false"
-
-      - variable: "minio.eventUpload.prefix"
-        default: "events/"
-        description: "Prefix for event upload files in the bucket"
-        type: "string"
-        label: "Events Prefix"
-        group: "MinIO / S3"
-
-      - variable: "minio.mediaUpload.enabled"
-        default: true
-        description: "Enable media file uploads"
-        type: "boolean"
-        label: "Enable Media Uploads"
-        group: "MinIO / S3"
-
-      - variable: "minio.mediaUpload.maxContentLength"
-        default: 1000000000
-        description: "Maximum content length for media uploads (in bytes, default is 1GB)"
-        type: "int"
-        min: 1
-        label: "Max Content Length"
-        group: "MinIO / S3"
-        show_if: "minio.mediaUpload.enabled=true"
-
-      - variable: "minio.mediaUpload.downloadUrlExpirySeconds"
-        default: 3600
-        description: "Expiry time in seconds for download URLs (default is 1 hour)"
-        type: "int"
-        min: 1
-        label: "Download URL Expiry"
-        group: "MinIO / S3"
-        show_if: "minio.mediaUpload.enabled=true"
-
-      - variable: "minio.batchExport.enabled"
-        default: true
-        description: "Enable batch exports"
-        type: "boolean"
-        label: "Enable Batch Exports"
-        group: "MinIO / S3"
-
-      - variable: "minio.region"
-        default: "auto"
-        description: "S3 region"
-        type: "string"
-        label: "S3 Region"
-        group: "MinIO / S3"
-        show_if: "minio.deploy=false"
-
-      - variable: "minio.accessKeyId.value"
-        default: ""
-        description: "S3 access key ID"
-        type: "string"
-        label: "Access Key ID"
-        group: "MinIO / S3"
-        show_if: "minio.deploy=false"
-        required: true
-
-      - variable: "minio.secretAccessKey.value"
-        default: ""
-        description: "S3 secret access key"
-        type: "password"
-        label: "Secret Access Key"
-        group: "MinIO / S3"
-        show_if: "minio.deploy=false"
-        required: true
-
-      - variable: "minio.forcePathStyle"
-        default: true
-        description: "Force path style for S3 requests (required for MinIO)"
-        type: "boolean"
-        label: "Force Path Style"
-        group: "MinIO / S3"
-
-      - variable: "minio.auth.rootUser"
-        default: "minio"
-        description: "MinIO root username"
-        type: "string"
-        label: "MinIO Username"
-        group: "MinIO / S3"
-        show_if: "minio.deploy=true"
-        required: true
-
-      - variable: "minio.auth.rootPassword"
-        default: ""
-        description: "MinIO root password"
-        type: "password"
-        label: "MinIO Password"
-        group: "MinIO / S3"
-        show_if: "minio.deploy=true"
-        required: true
-
-      - variable: "minio.persistence.size"
-        default: "11Gi"
-        description: "Storage size for MinIO"
-        type: "string"
-        label: "MinIO Storage Size"
-        group: "MinIO / S3"
-        show_if: "minio.deploy=true"
-
-  - name: "Resources"
-    description: "Resource allocation for components"
-    questions:
-      # These resource fields are structured for a UI-friendly approach, but actually map to a nested structure
-      - variable: "langfuse.resources.requests.cpu"
-        default: "100m"
-        description: "CPU requests for Langfuse containers"
-        type: "string"
-        label: "Langfuse CPU Requests"
-        group: "Langfuse Resources"
-
-      - variable: "langfuse.resources.requests.memory"
-        default: "256Mi"
-        description: "Memory requests for Langfuse containers"
-        type: "string"
-        label: "Langfuse Memory Requests"
-        group: "Langfuse Resources"
-
-      - variable: "langfuse.resources.limits.cpu"
-        default: "500m"
-        description: "CPU limits for Langfuse containers"
-        type: "string"
-        label: "Langfuse CPU Limits"
-        group: "Langfuse Resources"
-
-      - variable: "langfuse.resources.limits.memory"
-        default: "512Mi"
-        description: "Memory limits for Langfuse containers"
-        type: "string"
-        label: "Langfuse Memory Limits"
-        group: "Langfuse Resources"
-
-      - variable: "litellm.resources.requests.cpu"
-        default: "100m"
-        description: "CPU requests for LiteLLM containers"
-        type: "string"
-        label: "LiteLLM CPU Requests"
-        group: "LiteLLM Resources"
-        show_if: "litellm.enabled=true"
-
-      - variable: "litellm.resources.requests.memory"
-        default: "128Mi"
-        description: "Memory requests for LiteLLM containers"
-        type: "string"
-        label: "LiteLLM Memory Requests"
-        group: "LiteLLM Resources"
-        show_if: "litellm.enabled=true"
-
-      - variable: "litellm.resources.limits.cpu"
-        default: "500m"
-        description: "CPU limits for LiteLLM containers"
-        type: "string"
-        label: "LiteLLM CPU Limits"
-        group: "LiteLLM Resources"
-        show_if: "litellm.enabled=true"
-
-      - variable: "litellm.resources.limits.memory"
-        default: "512Mi"
-        description: "Memory limits for LiteLLM containers"
-        type: "string"
-        label: "LiteLLM Memory Limits"
-        group: "LiteLLM Resources"
-        show_if: "litellm.enabled=true"
+questions:
+  # General section
+  - variable: "timezone"
+    default: "Europe/Copenhagen"
+    description: "Timezone for all main containers. IMPORTANT: Make sure to also set the timezone variables in the values for the subcharts"
+    type: "string"
+    label: "Main Timezone"
+    group: "Timezone Settings"
+
+  # Langfuse section
+  # Langfuse is always enabled as the core component
+  - variable: "langfuse.nodeEnv"
+    default: "production"
+    description: "Node.js environment mode for Langfuse"
+    type: "enum"
+    options:
+      - "production"
+      - "development"
+    label: "Node Environment"
+    group: "Langfuse Deployment"
+
+  - variable: "langfuse.features.telemetryEnabled"
+    default: true
+    description: "Report basic usage statistics to Langfuse"
+    type: "boolean"
+    label: "Enable Telemetry"
+    group: "Langfuse Features"
+
+  - variable: "langfuse.features.experimentalFeaturesEnabled"
+    default: false
+    description: "Enable experimental features"
+    type: "boolean"
+    label: "Enable Experimental Features"
+    group: "Langfuse Features"
+
+  - variable: "langfuse.salt.value"
+    default: ""
+    description: "Salt used to hash API keys (generate with: openssl rand -base64 32)"
+    type: "password"
+    label: "API Key Salt"
+    group: "Langfuse Security"
+    required: true
+    show_if: "langfuse.enabled=true"
+
+  - variable: "langfuse.encryptionKey.value"
+    default: ""
+    description: "Key used to encrypt sensitive data (generate with: openssl rand -hex 32)"
+    type: "password"
+    label: "Encryption Key"
+    group: "Langfuse Security"
+    required: true
+    show_if: "langfuse.enabled=true"
+
+  - variable: "langfuse.nextauth.secret.value"
+    default: ""
+    description: "Secret used by NextAuth for JWT encryption"
+    type: "password"
+    label: "NextAuth Secret"
+    group: "Langfuse Security"
+    required: true
+    show_if: "langfuse.enabled=true"
+
+  - variable: "langfuse.features.signUpDisabled"
+    default: false
+    description: "Disable public sign up"
+    type: "boolean"
+    label: "Disable Sign Up"
+    group: "Langfuse Features"
+    show_if: "langfuse.enabled=true"
+
+  - variable: "langfuse.logging.level"
+    default: "info"
+    description: "Log level for the application"
+    type: "enum"
+    options:
+      - "trace"
+      - "debug"
+      - "info"
+      - "warn"
+      - "error"
+      - "fatal"
+    label: "Log Level"
+    group: "Langfuse Configuration"
+    show_if: "langfuse.enabled=true"
+
+  - variable: "langfuse.logging.format"
+    default: "text"
+    description: "Log format for the application"
+    type: "enum"
+    options:
+      - "text"
+      - "json"
+    label: "Log Format"
+    group: "Langfuse Configuration"
+    show_if: "langfuse.enabled=true"
+
+  - variable: "langfuse.nextauth.url"
+    default: ""
+    description: "Public URL where Langfuse will be accessible (e.g. https://langfuse.your-domain.com)"
+    type: "string"
+    label: "Langfuse URL"
+    group: "Langfuse Configuration"
+    required: true
+    show_if: "langfuse.enabled=true"
+
+  - variable: "langfuse.replicas"
+    default: 1
+    description: "Default number of replicas for all Langfuse deployments"
+    type: "int"
+    min: 1
+    max: 10
+    label: "Default Replicas"
+    group: "Langfuse Scaling"
+
+  - variable: "langfuse.web.replicas"
+    default: null
+    description: "Number of web server replicas (overrides default)"
+    type: "int"
+    min: 1
+    max: 10
+    label: "Web Replicas"
+    group: "Langfuse Scaling"
+    show_if: "langfuse.web.hpa.enabled=false"
+
+  - variable: "langfuse.worker.replicas"
+    default: null
+    description: "Number of worker replicas (overrides default)"
+    type: "int"
+    min: 1
+    max: 10
+    label: "Worker Replicas"
+    group: "Langfuse Scaling"
+    show_if: "langfuse.worker.hpa.enabled=false"
+
+  - variable: "langfuse.web.hpa.enabled"
+    default: false
+    description: "Enable autoscaling for web servers"
+    type: "boolean"
+    label: "Enable Web Autoscaling"
+    group: "Langfuse Scaling"
+
+  - variable: "langfuse.web.hpa.minReplicas"
+    default: 1
+    description: "Minimum number of web replicas with autoscaling"
+    type: "int"
+    min: 1
+    label: "Web Min Replicas"
+    group: "Langfuse Scaling"
+    show_if: "langfuse.web.hpa.enabled=true"
+
+  - variable: "langfuse.web.hpa.maxReplicas"
+    default: 2
+    description: "Maximum number of web replicas with autoscaling"
+    type: "int"
+    min: 2
+    label: "Web Max Replicas"
+    group: "Langfuse Scaling"
+    show_if: "langfuse.web.hpa.enabled=true"
+
+  - variable: "langfuse.web.hpa.targetCPUUtilizationPercentage"
+    default: 50
+    description: "Target CPU utilization for web autoscaling"
+    type: "int"
+    min: 10
+    max: 90
+    label: "Web CPU Target %"
+    group: "Langfuse Scaling"
+    show_if: "langfuse.web.hpa.enabled=true"
+
+  - variable: "langfuse.worker.hpa.enabled"
+    default: false
+    description: "Enable autoscaling for workers"
+    type: "boolean"
+    label: "Enable Worker Autoscaling"
+    group: "Langfuse Scaling"
+
+  - variable: "langfuse.worker.hpa.minReplicas"
+    default: 1
+    description: "Minimum number of worker replicas with autoscaling"
+    type: "int"
+    min: 1
+    label: "Worker Min Replicas"
+    group: "Langfuse Scaling"
+    show_if: "langfuse.worker.hpa.enabled=true"
+
+  - variable: "langfuse.worker.hpa.maxReplicas"
+    default: 2
+    description: "Maximum number of worker replicas with autoscaling"
+    type: "int"
+    min: 2
+    label: "Worker Max Replicas"
+    group: "Langfuse Scaling"
+    show_if: "langfuse.worker.hpa.enabled=true"
+
+  - variable: "langfuse.worker.hpa.targetCPUUtilizationPercentage"
+    default: 50
+    description: "Target CPU utilization for worker autoscaling"
+    type: "int"
+    min: 10
+    max: 90
+    label: "Worker CPU Target %"
+    group: "Langfuse Scaling"
+    show_if: "langfuse.worker.hpa.enabled=true"
+
+  - variable: "langfuse.ingress.enabled"
+    default: true
+    description: "Enable ingress for Langfuse"
+    type: "boolean"
+    label: "Enable Ingress"
+    group: "Langfuse Networking"
+
+  - variable: "langfuse.ingress.className"
+    default: "nginx"
+    description: "Ingress class name"
+    type: "string"
+    label: "Ingress Class"
+    group: "Langfuse Networking"
+    show_if: "langfuse.ingress.enabled=true"
+
+  - variable: "langfuse.ingress.hosts[0].host"
+    default: "langfuse.example.com"
+    description: "Hostname for Langfuse"
+    type: "string"
+    label: "Langfuse Hostname"
+    group: "Langfuse Networking"
+    required: true
+    show_if: "langfuse.ingress.enabled=true"
+
+  - variable: "langfuse.ingress.hosts[0].paths[0].path"
+    default: "/"
+    description: "Path for Langfuse ingress"
+    type: "string"
+    label: "Ingress Path"
+    group: "Langfuse Networking"
+    show_if: "langfuse.ingress.enabled=true"
+
+  - variable: "langfuse.ingress.hosts[0].paths[0].pathType"
+    default: "ImplementationSpecific"
+    description: "Path type for Langfuse ingress"
+    type: "enum"
+    options:
+      - "ImplementationSpecific"
+      - "Prefix"
+      - "Exact"
+    label: "Path Type"
+    group: "Langfuse Networking"
+    show_if: "langfuse.ingress.enabled=true"
+
+  - variable: "langfuse.ingress.tls[0].secretName"
+    default: "langfuse-tls"
+    description: "Name of the TLS secret"
+    type: "string"
+    label: "TLS Secret Name"
+    group: "Langfuse Networking"
+    show_if: "langfuse.ingress.enabled=true"
+
+  - variable: "langfuse.web.service.type"
+    default: "ClusterIP"
+    description: "Langfuse web service type"
+    type: "enum"
+    options:
+      - "ClusterIP"
+      - "NodePort"
+      - "LoadBalancer"
+    label: "Service Type"
+    group: "Langfuse Networking"
+
+  - variable: "langfuse.web.service.externalTrafficPolicy"
+    default: "Cluster"
+    description: "External traffic policy for LoadBalancer/NodePort services"
+    type: "enum"
+    options:
+      - "Cluster"
+      - "Local"
+    label: "External Traffic Policy"
+    group: "Langfuse Networking"
+    show_if: "langfuse.web.service.type=LoadBalancer || langfuse.web.service.type=NodePort"
+
+  - variable: "langfuse.licenseKey.value"
+    default: ""
+    description: "Langfuse Enterprise Edition license key (leave empty for Community Edition)"
+    type: "password"
+    label: "Enterprise License Key"
+    group: "Langfuse Enterprise"
+
+  - variable: "langfuse.image.tag"
+    default: null
+    description: "Image tag to use for Langfuse (defaults to Chart.appVersion if not set)"
+    type: "string"
+    label: "Langfuse Image Tag"
+    group: "Langfuse Deployment"
+
+  - variable: "langfuse.image.pullPolicy"
+    default: "Always"
+    description: "Image pull policy for Langfuse containers"
+    type: "enum"
+    options:
+      - "Always"
+      - "IfNotPresent"
+      - "Never"
+    label: "Image Pull Policy"
+    group: "Langfuse Deployment"
+
+  # LiteLLM section
+  - variable: "litellm.enabled"
+    default: false
+    description: "Deploy LiteLLM proxy alongside Langfuse"
+    type: "boolean"
+    label: "Enable LiteLLM"
+    group: "LiteLLM Deployment"
+
+  - variable: "litellm.image.tag"
+    default: "v1.61.13-stable"
+    description: "Image tag to use for LiteLLM"
+    type: "string"
+    label: "LiteLLM Image Tag"
+    group: "LiteLLM Deployment"
+    show_if: "litellm.enabled=true"
+
+  - variable: "litellm.image.pullPolicy"
+    default: "IfNotPresent"
+    description: "Image pull policy for LiteLLM containers"
+    type: "enum"
+    options:
+      - "Always"
+      - "IfNotPresent"
+      - "Never"
+    label: "LiteLLM Image Pull Policy"
+    group: "LiteLLM Deployment"
+    show_if: "litellm.enabled=true"
+
+  - variable: "litellm.masterKey"
+    default: ""
+    description: "Master key for LiteLLM authentication (needed for API access)"
+    type: "password"
+    label: "LiteLLM Master Key"
+    group: "LiteLLM Security"
+    required: true
+    show_if: "litellm.enabled=true"
+
+  - variable: "litellm.langfusePublicKey"
+    default: ""
+    description: "Langfuse public API key for LiteLLM integration"
+    type: "string"
+    label: "Langfuse Public Key"
+    group: "LiteLLM Langfuse Integration"
+    show_if: "litellm.enabled=true"
+
+  - variable: "litellm.langfuseSecretKey"
+    default: ""
+    description: "Langfuse secret API key for LiteLLM integration"
+    type: "password"
+    label: "Langfuse Secret Key"
+    group: "LiteLLM Langfuse Integration"
+    show_if: "litellm.enabled=true"
+
+  - variable: "litellm.langfuseHost"
+    default: ""
+    description: "Custom Langfuse host URL (defaults to the web service in this chart)"
+    type: "string"
+    label: "Langfuse Host"
+    group: "LiteLLM Langfuse Integration"
+    show_if: "litellm.enabled=true"
+
+  - variable: "litellm.replicaCount"
+    default: 1
+    description: "Number of LiteLLM replicas"
+    type: "int"
+    min: 1
+    max: 10
+    label: "LiteLLM Replicas"
+    group: "LiteLLM Scaling"
+    show_if: "litellm.enabled=true && litellm.autoscaling.enabled=false"
+
+  - variable: "litellm.autoscaling.enabled"
+    default: false
+    description: "Enable autoscaling for LiteLLM"
+    type: "boolean"
+    label: "Enable LiteLLM Autoscaling"
+    group: "LiteLLM Scaling"
+    show_if: "litellm.enabled=true"
+
+  - variable: "litellm.autoscaling.minReplicas"
+    default: 1
+    description: "Minimum number of LiteLLM replicas with autoscaling"
+    type: "int"
+    min: 1
+    label: "LiteLLM Min Replicas"
+    group: "LiteLLM Scaling"
+    show_if: "litellm.enabled=true && litellm.autoscaling.enabled=true"
+
+  - variable: "litellm.autoscaling.maxReplicas"
+    default: 2
+    description: "Maximum number of LiteLLM replicas with autoscaling"
+    type: "int"
+    min: 2
+    label: "LiteLLM Max Replicas"
+    group: "LiteLLM Scaling"
+    show_if: "litellm.enabled=true && litellm.autoscaling.enabled=true"
+
+  - variable: "litellm.autoscaling.targetCPUUtilizationPercentage"
+    default: 80
+    description: "Target CPU utilization for LiteLLM autoscaling"
+    type: "int"
+    min: 10
+    max: 90
+    label: "LiteLLM CPU Target %"
+    group: "LiteLLM Scaling"
+    show_if: "litellm.enabled=true && litellm.autoscaling.enabled=true"
+
+  - variable: "litellm.ingress.enabled"
+    default: true
+    description: "Enable ingress for LiteLLM"
+    type: "boolean"
+    label: "Enable LiteLLM Ingress"
+    group: "LiteLLM Networking"
+    show_if: "litellm.enabled=true"
+
+  - variable: "litellm.ingress.className"
+    default: "nginx"
+    description: "LiteLLM ingress class name"
+    type: "string"
+    label: "LiteLLM Ingress Class"
+    group: "LiteLLM Networking"
+    show_if: "litellm.enabled=true && litellm.ingress.enabled=true"
+
+  - variable: "litellm.ingress.hosts[0].host"
+    default: "litellm.example.com"
+    description: "Hostname for LiteLLM"
+    type: "string"
+    label: "LiteLLM Hostname"
+    group: "LiteLLM Networking"
+    required: true
+    show_if: "litellm.enabled=true && litellm.ingress.enabled=true"
+
+  - variable: "litellm.ingress.hosts[0].paths[0].path"
+    default: "/"
+    description: "Path for LiteLLM ingress"
+    type: "string"
+    label: "LiteLLM Ingress Path"
+    group: "LiteLLM Networking"
+    show_if: "litellm.enabled=true && litellm.ingress.enabled=true"
+
+  - variable: "litellm.ingress.hosts[0].paths[0].pathType"
+    default: "Prefix"
+    description: "Path type for LiteLLM ingress"
+    type: "enum"
+    options:
+      - "ImplementationSpecific"
+      - "Prefix"
+      - "Exact"
+    label: "LiteLLM Path Type"
+    group: "LiteLLM Networking"
+    show_if: "litellm.enabled=true && litellm.ingress.enabled=true"
+
+  - variable: "litellm.ingress.tls[0].secretName"
+    default: "litellm-tls"
+    description: "Name of the TLS secret for LiteLLM"
+    type: "string"
+    label: "LiteLLM TLS Secret Name"
+    group: "LiteLLM Networking"
+    show_if: "litellm.enabled=true && litellm.ingress.enabled=true"
+
+  - variable: "litellm.logLevel"
+    default: "info"
+    description: "Log level for LiteLLM"
+    type: "enum"
+    options:
+      - "trace"
+      - "debug"
+      - "info"
+      - "warn"
+      - "error"
+    label: "LiteLLM Log Level"
+    group: "LiteLLM Configuration"
+    show_if: "litellm.enabled=true"
+
+  - variable: "litellm.tpmLimit"
+    default: 1000
+    description: "Tokens per minute limit"
+    type: "int"
+    min: 1
+    label: "TPM Limit"
+    group: "LiteLLM Rate Limits"
+    show_if: "litellm.enabled=true"
+
+  - variable: "litellm.rpmLimit"
+    default: 60
+    description: "Requests per minute limit"
+    type: "int"
+    min: 1
+    label: "RPM Limit"
+    group: "LiteLLM Rate Limits"
+    show_if: "litellm.enabled=true"
+
+  - variable: "litellm.llmGuardPlugin.enabled"
+    default: false
+    description: "Enable LLM Guard plugin for content filtering"
+    type: "boolean"
+    label: "Enable LLM Guard"
+    group: "LiteLLM Plugins"
+    show_if: "litellm.enabled=true"
+
+  - variable: "litellm.llmGuardPlugin.image.repository"
+    default: "eeacms/llmguard-plugin"
+    description: "LLM Guard plugin image repository"
+    type: "string"
+    label: "LLM Guard Image Repo"
+    group: "LiteLLM Plugins"
+    show_if: "litellm.enabled=true && litellm.llmGuardPlugin.enabled=true"
+
+  - variable: "litellm.llmGuardPlugin.image.tag"
+    default: "v0.0.1"
+    description: "LLM Guard plugin image tag"
+    type: "string"
+    label: "LLM Guard Image Tag"
+    group: "LiteLLM Plugins"
+    show_if: "litellm.enabled=true && litellm.llmGuardPlugin.enabled=true"
+
+  - variable: "litellm.llmGuardPlugin.image.pullPolicy"
+    default: "IfNotPresent"
+    description: "LLM Guard plugin image pull policy"
+    type: "enum"
+    options:
+      - "Always"
+      - "IfNotPresent"
+      - "Never"
+    label: "LLM Guard Pull Policy"
+    group: "LiteLLM Plugins"
+    show_if: "litellm.enabled=true && litellm.llmGuardPlugin.enabled=true"
+
+  # Database section
+  - variable: "postgresql.deploy"
+    default: true
+    description: "Deploy PostgreSQL database (disable to use external)"
+    type: "boolean"
+    label: "Deploy PostgreSQL"
+    group: "PostgreSQL"
+
+  - variable: "postgresql.host"
+    default: ""
+    description: "External PostgreSQL host (used when deployment is disabled)"
+    type: "string"
+    label: "PostgreSQL Host"
+    group: "PostgreSQL"
+    show_if: "postgresql.deploy=false"
+    required: true
+
+  - variable: "postgresql.port"
+    default: 5432
+    description: "PostgreSQL port"
+    type: "int"
+    label: "PostgreSQL Port"
+    group: "PostgreSQL"
+    show_if: "postgresql.deploy=false"
+
+  - variable: "postgresql.auth.username"
+    default: "postgres"
+    description: "PostgreSQL username"
+    type: "string"
+    label: "PostgreSQL Username"
+    group: "PostgreSQL"
+
+  - variable: "postgresql.auth.password"
+    default: ""
+    description: "PostgreSQL password"
+    type: "password"
+    label: "PostgreSQL Password"
+    group: "PostgreSQL"
+    required: true
+    placeholder: "Enter a secure password"
+
+  - variable: "postgresql.auth.database"
+    default: "postgres_langfuse"
+    description: "Database name for Langfuse"
+    type: "string"
+    label: "PostgreSQL Database"
+    group: "PostgreSQL"
+
+  - variable: "litellm.database.dbname"
+    default: "litellm"
+    description: "Database name for LiteLLM"
+    type: "string"
+    label: "LiteLLM Database"
+    group: "PostgreSQL"
+    show_if: "litellm.enabled=true"
+
+  - variable: "postgresql.migration.autoMigrate"
+    default: true
+    description: "Run automatic PostgreSQL migrations on startup"
+    type: "boolean"
+    label: "Auto Migrate PostgreSQL"
+    group: "PostgreSQL"
+
+  - variable: "postgresql.primary.persistence.size"
+    default: "11Gi"
+    description: "Storage size for PostgreSQL"
+    type: "string"
+    label: "PostgreSQL Storage Size"
+    group: "PostgreSQL"
+    show_if: "postgresql.deploy=true"
+
+  - variable: "clickhouse.deploy"
+    default: true
+    description: "Deploy ClickHouse database (disable to use external)"
+    type: "boolean"
+    label: "Deploy ClickHouse"
+    group: "ClickHouse"
+
+  - variable: "clickhouse.host"
+    default: ""
+    description: "External ClickHouse host (used when deployment is disabled)"
+    type: "string"
+    label: "ClickHouse Host"
+    group: "ClickHouse"
+    show_if: "clickhouse.deploy=false"
+    required: true
+
+  - variable: "clickhouse.auth.username"
+    default: "clickhouse"
+    description: "ClickHouse username"
+    type: "string"
+    label: "ClickHouse Username"
+    group: "ClickHouse"
+
+  - variable: "clickhouse.auth.password"
+    default: ""
+    description: "ClickHouse password"
+    type: "password"
+    label: "ClickHouse Password"
+    group: "ClickHouse"
+    required: true
+    placeholder: "Enter a secure password"
+
+  - variable: "clickhouse.replicaCount"
+    default: 1
+    description: "Number of ClickHouse replicas (1 for non-HA, 3+ for HA)"
+    type: "int"
+    min: 1
+    label: "ClickHouse Replicas"
+    group: "ClickHouse"
+    show_if: "clickhouse.deploy=true"
+
+  - variable: "clickhouse.migration.autoMigrate"
+    default: true
+    description: "Run automatic ClickHouse migrations on startup"
+    type: "boolean"
+    label: "Auto Migrate ClickHouse"
+    group: "ClickHouse"
+
+  - variable: "clickhouse.persistence.size"
+    default: "11Gi"
+    description: "Storage size for ClickHouse"
+    type: "string"
+    label: "ClickHouse Storage Size"
+    group: "ClickHouse"
+    show_if: "clickhouse.deploy=true"
+
+  - variable: "redis.deploy"
+    default: true
+    description: "Deploy Redis (disable to use external)"
+    type: "boolean"
+    label: "Deploy Redis"
+    group: "Redis"
+
+  - variable: "redis.host"
+    default: ""
+    description: "External Redis host (used when deployment is disabled)"
+    type: "string"
+    label: "Redis Host"
+    group: "Redis"
+    show_if: "redis.deploy=false"
+    required: true
+
+  - variable: "redis.port"
+    default: 6379
+    description: "Redis port"
+    type: "int"
+    label: "Redis Port"
+    group: "Redis"
+    show_if: "redis.deploy=false"
+
+  - variable: "redis.auth.username"
+    default: "default"
+    description: "Redis username"
+    type: "string"
+    label: "Redis Username"
+    group: "Redis"
+
+  - variable: "redis.auth.password"
+    default: ""
+    description: "Redis password"
+    type: "password"
+    label: "Redis Password"
+    group: "Redis"
+    required: true
+    placeholder: "Enter a secure password"
+
+  - variable: "redis.master.persistence.size"
+    default: "11Gi"
+    description: "Storage size for Redis"
+    type: "string"
+    label: "Redis Storage Size"
+    group: "Redis"
+    show_if: "redis.deploy=true"
+
+  # Storage section
+  - variable: "minio.extraEnvVars"
+    default:
+      - name: MINIO_LOG_LEVEL
+        value: "DEBUG"
+    description: "Additional environment variables for MinIO"
+    type: "array"
+    label: "MinIO Environment Variables"
+    group: "MinIO Advanced"
+    show_if: "minio.deploy=true"
+
+  - variable: "minio.deploy"
+    default: true
+    description: "Deploy MinIO (disable to use external S3 compatible storage)"
+    type: "boolean"
+    label: "Deploy MinIO"
+    group: "MinIO / S3"
+
+  - variable: "minio.bucket"
+    default: "langfuse"
+    description: "Bucket name for all uploads"
+    type: "string"
+    label: "Bucket Name"
+    group: "MinIO / S3"
+    required: true
+
+  - variable: "minio.endpoint"
+    default: ""
+    description: "S3 endpoint (leave empty if using deployed MinIO)"
+    type: "string"
+    label: "S3 Endpoint"
+    group: "MinIO / S3"
+    show_if: "minio.deploy=false"
+
+  - variable: "minio.eventUpload.prefix"
+    default: "events/"
+    description: "Prefix for event upload files in the bucket"
+    type: "string"
+    label: "Events Prefix"
+    group: "MinIO / S3"
+
+  - variable: "minio.mediaUpload.enabled"
+    default: true
+    description: "Enable media file uploads"
+    type: "boolean"
+    label: "Enable Media Uploads"
+    group: "MinIO / S3"
+
+  - variable: "minio.mediaUpload.maxContentLength"
+    default: 1000000000
+    description: "Maximum content length for media uploads (in bytes, default is 1GB)"
+    type: "int"
+    min: 1
+    label: "Max Content Length"
+    group: "MinIO / S3"
+    show_if: "minio.mediaUpload.enabled=true"
+
+  - variable: "minio.mediaUpload.downloadUrlExpirySeconds"
+    default: 3600
+    description: "Expiry time in seconds for download URLs (default is 1 hour)"
+    type: "int"
+    min: 1
+    label: "Download URL Expiry"
+    group: "MinIO / S3"
+    show_if: "minio.mediaUpload.enabled=true"
+
+  - variable: "minio.batchExport.enabled"
+    default: true
+    description: "Enable batch exports"
+    type: "boolean"
+    label: "Enable Batch Exports"
+    group: "MinIO / S3"
+
+  - variable: "minio.region"
+    default: "auto"
+    description: "S3 region"
+    type: "string"
+    label: "S3 Region"
+    group: "MinIO / S3"
+    show_if: "minio.deploy=false"
+
+  - variable: "minio.accessKeyId.value"
+    default: ""
+    description: "S3 access key ID"
+    type: "string"
+    label: "Access Key ID"
+    group: "MinIO / S3"
+    show_if: "minio.deploy=false"
+    required: true
+
+  - variable: "minio.secretAccessKey.value"
+    default: ""
+    description: "S3 secret access key"
+    type: "password"
+    label: "Secret Access Key"
+    group: "MinIO / S3"
+    show_if: "minio.deploy=false"
+    required: true
+
+  - variable: "minio.forcePathStyle"
+    default: true
+    description: "Force path style for S3 requests (required for MinIO)"
+    type: "boolean"
+    label: "Force Path Style"
+    group: "MinIO / S3"
+
+  - variable: "minio.auth.rootUser"
+    default: "minio"
+    description: "MinIO root username"
+    type: "string"
+    label: "MinIO Username"
+    group: "MinIO / S3"
+    show_if: "minio.deploy=true"
+    required: true
+
+  - variable: "minio.auth.rootPassword"
+    default: ""
+    description: "MinIO root password"
+    type: "password"
+    label: "MinIO Password"
+    group: "MinIO / S3"
+    show_if: "minio.deploy=true"
+    required: true
+
+  - variable: "minio.persistence.size"
+    default: "11Gi"
+    description: "Storage size for MinIO"
+    type: "string"
+    label: "MinIO Storage Size"
+    group: "MinIO / S3"
+    show_if: "minio.deploy=true"
+
+  # Resources section
+  # These resource fields are structured for a UI-friendly approach, but actually map to a nested structure
+  - variable: "langfuse.resources.requests.cpu"
+    default: "100m"
+    description: "CPU requests for Langfuse containers"
+    type: "string"
+    label: "Langfuse CPU Requests"
+    group: "Langfuse Resources"
+
+  - variable: "langfuse.resources.requests.memory"
+    default: "256Mi"
+    description: "Memory requests for Langfuse containers"
+    type: "string"
+    label: "Langfuse Memory Requests"
+    group: "Langfuse Resources"
+
+  - variable: "langfuse.resources.limits.cpu"
+    default: "500m"
+    description: "CPU limits for Langfuse containers"
+    type: "string"
+    label: "Langfuse CPU Limits"
+    group: "Langfuse Resources"
+
+  - variable: "langfuse.resources.limits.memory"
+    default: "512Mi"
+    description: "Memory limits for Langfuse containers"
+    type: "string"
+    label: "Langfuse Memory Limits"
+    group: "Langfuse Resources"
+
+  - variable: "litellm.resources.requests.cpu"
+    default: "100m"
+    description: "CPU requests for LiteLLM containers"
+    type: "string"
+    label: "LiteLLM CPU Requests"
+    group: "LiteLLM Resources"
+    show_if: "litellm.enabled=true"
+
+  - variable: "litellm.resources.requests.memory"
+    default: "128Mi"
+    description: "Memory requests for LiteLLM containers"
+    type: "string"
+    label: "LiteLLM Memory Requests"
+    group: "LiteLLM Resources"
+    show_if: "litellm.enabled=true"
+
+  - variable: "litellm.resources.limits.cpu"
+    default: "500m"
+    description: "CPU limits for LiteLLM containers"
+    type: "string"
+    label: "LiteLLM CPU Limits"
+    group: "LiteLLM Resources"
+    show_if: "litellm.enabled=true"
+
+  - variable: "litellm.resources.limits.memory"
+    default: "512Mi"
+    description: "Memory limits for LiteLLM containers"
+    type: "string"
+    label: "LiteLLM Memory Limits"
+    group: "LiteLLM Resources"
+    show_if: "litellm.enabled=true"
