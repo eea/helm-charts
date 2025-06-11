@@ -38,12 +38,12 @@ ingress:
     nginx.ingress.kubernetes.io/proxy-send-timeout: '120'
 
 links:
-  backend: backend-varnish.eea-website
+  backend: backend-varnish
 
 
 volto:
   serviceType: ClusterIP
-  hostname: demo-www2.01dev.eea.europa.eu
+  hostname: demo-www.01dev.eea.europa.eu
   autoscaling:
     enabled: false
     minReplicas: 1
@@ -178,13 +178,13 @@ nginx:
       listen 80;
       server_name _;
 
-    location ~ ^/(cors-proxy|login-authomatic|controlpanel|static|_es|ok|personal-information|fallback_login|_da|en) {
-        proxy_pass http://varnish_frontend;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
+      location ~ ^/(cors-proxy|login-authomatic|controlpanel|static|_es|ok|personal-information|fallback_login|_da|en) {
+          proxy_pass http://varnish_frontend;
+          proxy_set_header Host $host;
+          proxy_set_header X-Real-IP $remote_addr;
+          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+          proxy_set_header X-Forwarded-Proto $scheme;
+      }
 
       # Fallback: proxy everything else to old deployment
       location / {
