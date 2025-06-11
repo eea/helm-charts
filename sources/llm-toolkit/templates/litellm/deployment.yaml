@@ -1,0 +1,175 @@
+{{- if .Values.litellm.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "appl.fullname" . }}-litellm
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    app.kubernetes.io/component: litellm
+spec:
+  {{- if not .Values.litellm.autoscaling.enabled }}
+  replicas: {{ .Values.litellm.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      app: litellm
+  template:
+    metadata:
+      {{- with .Values.litellm.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        app: litellm
+        {{- with .Values.litellm.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.litellm.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      {{- with .Values.litellm.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      initContainers:
+        {{- if .Values.litellm.llmGuardPlugin.enabled }}
+        - name: init-llmguard-plugin
+          {{- with .Values.litellm.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          image: "{{ .Values.litellm.llmGuardPlugin.image.repository }}:{{ .Values.litellm.llmGuardPlugin.image.tag }}"
+          imagePullPolicy: {{ .Values.litellm.llmGuardPlugin.image.pullPolicy }}
+          volumeMounts:
+          - name: llmguard-plugin
+            mountPath: /llm_plugin
+        {{- end }}
+
+        - name: init-litellm-db
+          image: postgres:14-alpine
+          imagePullPolicy: IfNotPresent
+          command:
+            - sh
+            - -c
+            - |
+              PGPASSWORD=$POSTGRES_PASSWORD psql -h $POSTGRES_HOST -U $POSTGRES_USER -p 5432 -f /docker-entrypoint-initdb.d/init-litellm-db.sql
+          env:
+            - name: POSTGRES_HOST
+              value: {{ include "appl.postgresql.hostname" . }}
+            - name: POSTGRES_USER
+              value: {{ .Values.postgresql.auth.username }}
+            - name: POSTGRES_PASSWORD
+              value: {{ .Values.postgresql.auth.password }}
+          volumeMounts:
+            - name: init-script
+              mountPath: /docker-entrypoint-initdb.d
+      volumes:
+        - name: init-script
+          configMap:
+            name: {{ include "appl.fullname" . }}-litellm-postgres-init
+        {{- if .Values.litellm.llmGuardPlugin.enabled }}
+        - name: llmguard-plugin
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-llmguard-plugin
+        {{- end }}
+
+        {{- with .Values.litellm.volumes }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      containers:
+        - name: litellm
+          {{- with .Values.litellm.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          image: "{{ .Values.litellm.image.repository }}:{{ .Values.litellm.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.litellm.image.pullPolicy }}
+          env:
+            - name: PORT
+              value: {{ .Values.litellm.service.port | quote }}
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "appl.fullname" . }}-litellm-db
+                  key: db-url
+            - name: LANGFUSE_HOST
+              value: {{ .Values.litellm.langfuseHost | default (printf "http://%s-web:3000" (include "appl.fullname" .)) | quote }}
+            - name: STORE_MODEL_IN_DB
+              value: {{ .Values.litellm.storeModelInDb | default false | quote }}
+            - name: LITELLM_TURN_ON_MESSAGE_LOGGING
+              value: {{ .Values.litellm.turnOnMessageLogging | default false | quote }}
+            - name: LITELLM_LOG_LEVEL
+              value: {{ .Values.litellm.logLevel | default "info" | quote }}
+            - name: LITELLM_TPM_LIMIT
+              value: {{ .Values.litellm.tpmLimit | default 1000 | quote }}
+            - name: LITELLM_RPM_LIMIT
+              value: {{ .Values.litellm.rpmLimit | default 60 | quote }}
+            - name: LITELLM_MASTER_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "appl.fullname" . }}-litellm-master-key
+                  key: master-key
+                  optional: true
+          ports:
+            - name: http
+              containerPort: {{ .Values.litellm.service.port }}
+              protocol: TCP
+          livenessProbe:
+            {{- if .Values.litellm.livenessProbe }}
+            {{- toYaml .Values.litellm.livenessProbe | nindent 12 }}
+            {{- else }}
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+            successThreshold: 1
+            {{- end }}
+          readinessProbe:
+            {{- if .Values.litellm.readinessProbe }}
+            {{- toYaml .Values.litellm.readinessProbe | nindent 12 }}
+            {{- else }}
+            httpGet:
+              path: /health/readiness
+              port: http
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+            successThreshold: 1
+            {{- end }}
+          {{- with .Values.litellm.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- if or .Values.litellm.llmGuardPlugin.enabled .Values.litellm.volumeMounts }}
+          volumeMounts:
+            {{- if .Values.litellm.llmGuardPlugin.enabled }}
+            - name: llmguard-plugin
+              mountPath: /app/litellm/llmguard-plugin/plugin
+            {{- end }}
+            {{- with .Values.litellm.volumeMounts }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          {{- end }}
+
+      {{- with .Values.litellm.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.litellm.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.litellm.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}

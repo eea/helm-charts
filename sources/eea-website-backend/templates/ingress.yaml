@@ -1,15 +1,12 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: eea-website-backend-admin
+  name: eea-website
   labels:
     {{- include "appl.labels" . | nindent 4 }}
-    component: eea-website-backend-admin
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /VirtualHostBase/https/{{ .Values.plone.hostname }}:443/{{ .Values.plone.site }}/VirtualHostRoot/_vh_admin/$1
-    nginx.ingress.kubernetes.io/use-regex: "true"
-    nginx.ingress.kubernetes.io/proxy-body-size: 100m
+    component: eea-website-backend-ingress
   {{- with .Values.ingress.annotations }}
+  annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 
@@ -19,13 +16,23 @@ spec:
   - host: {{ .Values.plone.hostname }}
     http:
       paths:
-      - path: /admin
+      - path: /\+\+api\+\+
         pathType: ImplementationSpecific
         backend:
           service:
-            name: {{ .Values.varnish.serviceName }}
+            name: nginx-service
             port:
-              number: {{ .Values.varnish.port }}
+              number: 80
+  - host: {{ .Values.plone.hostname }}
+    http:
+      paths:
+      - path: /admin
+        pathType: ImplementationSpecific   
+        backend:
+          service:
+            name: {{ .Release.Name }}-nginx-service
+            port:
+              number: 80                  
   {{- if .Values.ingress.tls }}
   tls:
   - hosts:

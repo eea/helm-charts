@@ -5,52 +5,10 @@ metadata:
   labels:
     {{- include "appl.labels" . | nindent 4 }}
 data:
-  default.conf: |
+  upstream.conf: |
     upstream varnish_frontend {
         server {{ .Values.varnish.serviceName }}:{{ .Values.varnish.port }};  # adjust as needed
     }
 
-    server {
-        listen 80;
-        server_name _;
-
-        location ^~ /cors-proxy {
-            proxy_pass http://varnish_frontend;
-        }
-
-        location ^~ /login-authomatic {
-            proxy_pass http://varnish_frontend;
-        }
-
-        location ^~ /controlpanel {
-            proxy_pass http://varnish_frontend;
-        }
-
-        location ^~ /static {
-            proxy_pass http://varnish_frontend;
-        }
-
-        location ^~ /personal-information {
-            proxy_pass http://varnish_frontend;
-        }
-
-        location ^~ /fallback_login {
-            proxy_pass http://varnish_frontend;
-        }
-
-        location ^~ /_da {
-            proxy_pass http://varnish_frontend;
-        }
-
-        location ^~ /en {
-            proxy_pass http://varnish_frontend;
-        }
-
-        # Fallback: proxy everything else to Varnish frontend
-        location / {
-            proxy_pass http://varnish_frontend;
-            proxy_set_header Host $host;
-            proxy_set_header X-Real-IP $remote_addr;
-            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        }
-    }    
+  default.conf: |
+{{ .Values.nginx.conf | indent 4 }} 

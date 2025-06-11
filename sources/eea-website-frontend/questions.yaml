@@ -324,3 +324,10 @@
     required: true
     default: "2Gi"
     group: "Memory"
+
+  - variable: "nginx.conf"
+    label: "Nginx Config"
+    description: "redirects for nginx config"
+    type: "multiline"
+    required: true
+    group: "Nginx"

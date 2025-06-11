@@ -28,6 +28,31 @@ spec:
       containers:
       - name: public-catalogue
         image: eeacms/eea-geonetwork:d287bcfc
+
+        # STARTUP PROBE
+        # This probe runs during container startup. If it fails, the container is restarted.
+        # Once it succeeds, liveness and readiness probes take over.
+        # startupProbe:
+        #  httpGet:
+        #    path: {{ .Values.publicCatalogue.webapp_context }}/srv/eng/catalog.search # GeoNetwork context path + main search endpoint
+        #    port: 8080
+        #    scheme: HTTP
+        #  initialDelaySeconds: 0 # Startup probes typically don't need this, as they start immediately
+        #  periodSeconds: 10      # Check every 10 seconds
+        #  failureThreshold: 30   # Allow up to 30 failures (30 * 10s = 300 seconds total startup time)
+        #  timeoutSeconds: 5      # Wait up to 5 seconds for a response
+
+        # Liveness Probe: For detecting critical failures and triggering restarts
+        #livenessProbe:
+        #  failureThreshold: 3  # Allow 3 consecutive failures before restarting
+        #  httpGet:
+        #    path: {{ .Values.publicCatalogue.webapp_context }}/srv/eng/catalog.search # GeoNetwork context path + main search endpoint
+        #    port: 8080
+        #    scheme: HTTP
+        #  initialDelaySeconds: 120 # GeoNetwork can take a while to start up, adjust if needed
+        #  periodSeconds: 30 # Check every 30 seconds
+        #  successThreshold: 1  
+        #  timeoutSeconds: 10 # Wait up to 10 seconds for a response
         env:
         - name: WEBAPP_CONTEXT_PATH
           value: {{ .Values.publicCatalogue.webapp_context }}
@@ -68,16 +93,6 @@ spec:
       - name: sdi-public-catalogue-data
         persistentVolumeClaim:
           claimName: sdi-public-catalogue-data
-      
-      # Liveness Probe: For detecting critical failures and triggering restarts
-      livenessProbe:
-        httpGet:
-          path: {{ .Values.publicCatalogue.webapp_context }}/srv/eng/catalog.search # GeoNetwork context path + mai n search endpoint
-          port: 8080
-          scheme: HTTP
-        initialDelaySeconds: 120 # GeoNetwork can take a while to start up, adjust if needed
-        periodSeconds: 30       # Check every 30 seconds
-        timeoutSeconds: 10      # Wait up to 10 seconds for a response
-        failureThreshold: 3     # Allow 3 consecutive failures before restarting
+     
         
  

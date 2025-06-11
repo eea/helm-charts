@@ -134,7 +134,7 @@ questions:
             default: "ClusterIP"
             group: "Email Configuration"
             show_if: "postfix.mailtrap.httpenabled=true"
-            
+
           - variable: postfix.mailtrap.mtUser
             label: "Mailtrap Username"
             description: "Username for accessing the mailtrap interface"
@@ -142,7 +142,7 @@ questions:
             default: ""
             group: "Email Configuration"
             show_if: "postfix.mailtrap.httpenabled=true"
-        
+
           - variable: postfix.mailtrap.mtPasswd
             label: "Mailtrap Password"
             description: "Password for accessing the mailtrap interface"
@@ -178,26 +178,13 @@ questions:
         default: "postgres"
         group: "Database"
 
-      - variable: postgresql.primary.persistence.size
-        label: "Database Storage Size"
-        type: string
-        default: "5Gi"
-        group: "Database"
-
   # Redis configuration
   - variable: redis.deploy
     label: "Deploy Redis"
     description: "Deploy the Redis cache as part of this chart"
     type: boolean
     default: true
-    group: "Cache"
-    show_subquestion_if: true
-    subquestions:
-      - variable: redis.master.persistence.size
-        label: "Redis Storage Size"
-        type: string
-        default: "2Gi"
-        group: "Cache"
+    group: "Redis"
 
   # GenAI configuration
   - variable: genAI.modelProvider
@@ -343,8 +330,8 @@ questions:
   - variable: ingress.enabled
     label: "Enable Ingress"
     description: "Enable ingress resource for external access"
-    type: string
-    default: "true"
+    type: boolean
+    default: false
     group: "Networking"
     show_subquestion_if: true
     subquestions:
@@ -355,31 +342,14 @@ questions:
         default: "nginx"
         group: "Networking"
 
-      - variable: ingress.hosts[0].host
-        label: "Hostname"
-        description: "Hostname for the application"
+      - variable: ingress.hosts.0.host
+        label: "Ingress Host"
+        description: "Domain name for the ingress (e.g. gptlab.example.com)"
         type: string
-        default: ""
+        default: "gptlab.example.com"
         group: "Networking"
 
-      - variable: ingress.annotations.cert-manager\.io/cluster-issuer
-        label: "Certificate Issuer"
-        description: "Certificate issuer for TLS (e.g. letsencrypt-prod)"
-        type: string
-        default: "letsencrypt-prod"
-        group: "Networking"
-        
-      - variable: ingress.annotations.nginx\.ingress\.kubernetes\.io/configuration-snippet
-        label: "Nginx Configuration Snippet"
-        description: "Custom Nginx configuration for path rewrites"
-        type: multiline
-        default: |
-          if ($request_uri ~* "^/api(/.*)?$") {
-            rewrite ^/api/?(.*)$ /$1 break;
-          }
-        group: "Networking"
-
-      - variable: ingress.tls[0].secretName
+      - variable: ingress.tls.0.secretName
         label: "TLS Secret Name"
         description: "Name of the secret containing TLS certificate"
         type: string
@@ -407,6 +377,22 @@ questions:
     type: string
     default: "5Gi"
     group: "Storage"
+
+  - variable: postgresql.primary.persistence.size
+    label: "Database Storage Size"
+    description: "Size for PostgreSQL database storage"
+    type: string
+    default: "5Gi"
+    group: "Storage"
+    show_if: "postgresql.deploy=true"
+
+  - variable: redis.master.persistence.size
+    label: "Redis Storage Size"
+    description: "Size for Redis cache storage"
+    type: string
+    default: "2Gi"
+    group: "Storage"
+    show_if: "redis.deploy=true"
 
   # Development Mode
   - variable: developMode

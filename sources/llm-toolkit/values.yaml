@@ -1,0 +1,701 @@
+timezone: Europe/Copenhagen
+
+# Core Langfuse Configuration
+langfuse:
+  # Logging configuration
+  logging:
+    # -- Set the log level for the application (trace, debug, info, warn, error, fatal)
+    level: info
+    # -- Set the log format for the application (text or json)
+    format: text
+
+  # -- Used to hash API keys. Can be configured by value or existing secret reference. To generate a new salt, run `openssl rand -base64 32`.
+  salt:
+    value: "mysaltvalue"
+    secretKeyRef:
+      name: ""
+      key: ""
+
+  # -- Langfuse EE license key.
+  licenseKey:
+    value: ""
+    secretKeyRef:
+      name: ""
+      key: ""
+
+  # -- Used to encrypt sensitive data. Must be 256 bits (64 string characters in hex format). Generate via `openssl rand -hex 32`.
+  encryptionKey:
+    value: ""
+    secretKeyRef:
+      name: ""
+      key: ""
+
+  # Feature flags
+  features:
+    # -- Whether or not to report basic usage statistics to a centralized server.
+    telemetryEnabled: true
+    # -- Disable public sign up
+    signUpDisabled: false
+    # -- Enable experimental features
+    experimentalFeaturesEnabled: false
+
+  # -- Node.js environment to use for all langfuse deployments
+  nodeEnv: production
+
+  ingress:
+    # -- Set to `true` to enable the ingress resource
+    enabled: false
+    # -- Additional labels for the ingress resource
+    additionalLabels: {}
+    # -- Annotations for the ingress resource
+    annotations: {}
+    # -- The class name for the ingress resource
+    className: ""
+    # -- The hosts for the ingress resource
+    hosts: []
+    # Example:
+    # - host: "langfuse.example.com"
+    #   paths:
+    #     - path: /
+    #       pathType: ImplementationSpecific
+
+    tls: []
+    # Example:
+    # - hosts:
+    #     - "langfuse.example.com"
+    #   secretName: "langfuse-tls"
+
+  # -- Pod security context for all langfuse deployments
+  podSecurityContext: {}
+  # -- Security context for all langfuse deployments
+  securityContext: {}
+  # -- Node selector for all langfuse deployments
+  nodeSelector: {}
+  # -- Tolerations for all langfuse deployments
+  tolerations: []
+  # -- Affinity for all langfuse deployments
+  affinity: {}
+  pod:
+    # -- Annotations for all langfuse pods
+    annotations: {}
+    # -- Labels for all langfuse pods
+    labels: {}
+    # -- Topology spread constraints for all langfuse pods
+    topologySpreadConstraints: []
+  deployment:
+    # -- Annotations for all langfuse deployments
+    annotations: {}
+    # -- Deployment strategy for all langfuse deployments (can be overridden by individual deployments)
+    strategy: {}
+  # -- Number of replicas to use for all langfuse deployments. Can be overridden by the individual deployments
+  replicas: 1
+  # -- Resources for all langfuse deployments. Can be overridden by the individual deployments
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "256Mi"
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
+
+  serviceAccount:
+    # -- Whether to create a service account for all langfuse deployments
+    create: true
+    # -- Annotations for the service account
+    annotations: {}
+    # -- Override the name of the service account to use, discovered automatically if not set
+    name: ""
+
+  image:
+    # -- The image tag to use for all langfuse deployments. Can be overridden by the individual deployments. Falls back to appVersion if not set.
+    tag: Null
+    # -- The pull policy to use for all langfuse deployments. Can be overridden by the individual deployments.
+    pullPolicy: Always
+    # -- The pull secrets to use for all langfuse deployments. Can be overridden by the individual deployments.
+    pullSecrets: []
+
+  # -- List of additional environment variables to be added to all langfuse deployments. See [documentation](https://langfuse.com/docs/deployment/self-host#configuring-environment-variables) for details.
+  additionalEnv: []
+  # -- Allows additional containers to be added to all langfuse deployments
+  extraContainers: []
+  # -- Allows additional volumes to be added to all langfuse deployments
+  extraVolumes: []
+  # -- Allows additional init containers to be added to all langfuse deployments
+  extraInitContainers: []
+  # -- Allows additional volume mounts to be added to all langfuse deployments
+  extraVolumeMounts: []
+
+  web:
+    image:
+      # -- The image repository to use for the langfuse web pods.
+      repository: langfuse/langfuse
+      # -- The tag to use for the langfuse web pods. Using `langfuse.image.tag` if not set.
+      tag: Null
+      # -- The pull policy to use for the langfuse web pods. Using `langfuse.image.pullPolicy` if not set.
+      pullPolicy: Null
+      # -- The pull secrets to use for the langfuse web pods. Using `langfuse.image.pullSecrets` if not set.
+      pullSecrets: Null
+    deployment:
+      # -- Annotations for the web deployment
+      annotations: {}
+      # -- Deployment strategy for the web deployment. Overrides the global deployment strategy
+      strategy: {}
+    pod:
+      # -- Annotations for the web pods
+      annotations: {}
+      # -- Labels for the web pods
+      labels: {}
+      # -- Topology spread constraints for the web pods. Overrides the global topologySpreadConstraints
+      topologySpreadConstraints: null
+    service:
+      # -- The type of service to use for the langfuse web application
+      type: ClusterIP
+      externalTrafficPolicy: Cluster
+      # -- The port to use for the langfuse web application
+      port: 3000
+      # -- The node port to use for the langfuse web application
+      nodePort: null
+      # -- Additional labels for the langfuse web application service
+      additionalLabels: {}
+      # -- Annotations for the langfuse web application service
+      annotations: {}
+
+    # -- Resources for the langfuse web pods. Defaults to the global resources
+    resources: {}
+
+    # -- Number of replicas to use if HPA is not enabled. Defaults to the global replicas
+    replicas: null
+
+    # Horizontal Pod Autoscaler configuration
+    hpa:
+      # -- Set to `true` to enable HPA for the langfuse web pods
+      # Note: When both KEDA and HPA are enabled, the deployment will fail.
+      enabled: false
+      # -- The minimum number of replicas to use for the langfuse web pods
+      minReplicas: 1
+      # -- The maximum number of replicas to use for the langfuse web pods
+      maxReplicas: 2
+      # -- The target CPU utilization percentage for the langfuse web pods
+      targetCPUUtilizationPercentage: 50
+
+    # -- Adding records to /etc/hosts in the pod's network.
+    hostAliases: []
+
+    livenessProbe:
+      # -- Path to check for liveness.
+      path: "/api/public/health"
+      # -- Initial delay seconds for livenessProbe.
+      initialDelaySeconds: 20
+      # -- Period seconds for livenessProbe.
+      periodSeconds: 10
+      # -- Timeout seconds for livenessProbe.
+      timeoutSeconds: 5
+      # -- Failure threshold for livenessProbe.
+      failureThreshold: 3
+      # -- Success threshold for livenessProbe.
+      successThreshold: 1
+
+    readinessProbe:
+      # -- Path to check for readiness.
+      path: "/api/public/ready"
+      # -- Initial delay seconds for readinessProbe.
+      initialDelaySeconds: 20
+      # -- Period seconds for readinessProbe.
+      periodSeconds: 10
+      # -- Timeout seconds for readinessProbe.
+      timeoutSeconds: 5
+      # -- Failure threshold for readinessProbe.
+      failureThreshold: 3
+      # -- Success threshold for readinessProbe.
+      successThreshold: 1
+
+  # Worker deployment configuration
+  worker:
+    image:
+      # -- The image repository to use for the langfuse worker pods
+      repository: langfuse/langfuse-worker
+      # -- The tag to use for the langfuse worker pods. Using `langfuse.image.tag` if not set.
+      tag: Null
+      # -- The pull policy to use for the langfuse worker pods. Using `langfuse.image.pullPolicy` if not set.
+      pullPolicy: Null
+      # -- The pull secrets to use for the langfuse worker pods. Using `langfuse.image.pullSecrets` if not set.
+      pullSecrets: Null
+    deployment:
+      # -- Annotations for the worker deployment
+      annotations: {}
+      # -- Deployment strategy for the worker deployment. Overrides the global deployment strategy
+      strategy: {}
+    pod:
+      # -- Annotations for the worker pods
+      annotations: {}
+      # -- Labels for the worker pods
+      labels: {}
+      # -- Topology spread constraints for the worker pods. Overrides the global topologySpreadConstraints
+      topologySpreadConstraints: null
+
+    # -- Resources for the langfuse worker pods. Defaults to the global resources
+    resources: {}
+
+    # -- Number of replicas to use if HPA is not enabled. Defaults to the global replicas
+    replicas: null
+
+    # Horizontal Pod Autoscaler configuration
+    hpa:
+      # -- Set to `true` to enable HPA for the langfuse worker pods
+      # Note: When both KEDA and HPA are enabled, the deployment will fail.
+      enabled: false
+      # -- The minimum number of replicas to use for the langfuse worker pods
+      minReplicas: 1
+      # -- The maximum number of replicas to use for the langfuse worker pods
+      maxReplicas: 2
+      # -- The target CPU utilization percentage for the langfuse worker pods
+      targetCPUUtilizationPercentage: 50
+
+    livenessProbe:
+      # -- Initial delay seconds for livenessProbe.
+      initialDelaySeconds: 20
+      # -- Period seconds for livenessProbe.
+      periodSeconds: 10
+      # -- Timeout seconds for livenessProbe.
+      timeoutSeconds: 5
+      # -- Failure threshold for livenessProbe.
+      failureThreshold: 3
+      # -- Success threshold for livenessProbe.
+      successThreshold: 1
+
+  # NextAuth configuration
+  nextauth:
+    # -- When deploying to production, set the `nextauth.url` value to the canonical URL of your site.
+    url: http://localhost:3000
+    # -- Used to encrypt the NextAuth.js JWT, and to hash email verification tokens. Can be configured by value or existing secret reference.
+    secret:
+      value: "mysecretvalue"
+      secretKeyRef:
+        name: ""
+        key: ""
+
+# PostgreSQL Configuration
+postgresql:
+  # -- Enable PostgreSQL deployment (via Bitnami Helm Chart). If you want to use an external Postgres server (or a managed one), set this to false
+  deploy: true
+
+  # -- PostgreSQL host to connect to. If postgresql.deploy is true, this will be set automatically based on the release name.
+  host: ""
+  # -- Port of the postgres server to use. Defaults to 5432.
+  port: 5432
+  # -- Additional database connection arguments
+  args: ""
+
+  # -- If `postgresql.deploy` is set to false, Connection string of your Postgres database used for database migrations. Use this if you want to use a different user for migrations or use connection pooling on DATABASE_URL. For large deployments, configure the database user with long timeouts as migrations might need a while to complete.
+  directUrl: ""
+
+  # -- If your database user lacks the CREATE DATABASE permission, you must create a shadow database and configure the "SHADOW_DATABASE_URL". This is often the case if you use a Cloud database. Refer to the Prisma docs for detailed instructions.
+  shadowDatabaseUrl: ""
+
+  # Authentication configuration
+  auth:
+    # -- Username to use to connect to the postgres database deployed with Langfuse. In case `postgresql.deploy` is set to `true`, the user will be created automatically.
+    username: postgres
+    # -- Password to use to connect to the postgres database deployed with Langfuse. In case `postgresql.deploy` is set to `true`, the password will be set automatically.
+    password: "replaceme-with-a-secure-password"
+    # -- If you want to use an existing secret for the postgres password, set the name of the secret here. (`postgresql.auth.username` and `postgresql.auth.password` will be ignored and picked up from this secret).
+    existingSecret: ""
+    # -- The key in the existing secret that contains the password.
+    secretKeys:
+      userPasswordKey: password
+    # -- Database name to use for Langfuse.
+    database: postgres_langfuse
+    # -- Additional database connection arguments
+    args: ""
+
+  # Migration configuration
+  migration:
+    # -- Whether to run automatic migrations on startup
+    autoMigrate: true
+
+  # Subchart specific settings
+  architecture: standalone
+  primary:
+    persistence:
+      size: 11Gi
+    resources:
+      requests:
+        memory: 1Gi
+        cpu: 1
+      limits:
+        memory: 2Gi
+    service:
+      ports:
+        postgresql: 5432
+    extraEnvVars:
+      - name: TZ
+        value: "Europe/Copenhagen"
+
+# Key-Value Store / Redis Configuration
+redis:
+  # -- Enable valkey deployment (via Bitnami Helm Chart). If you want to use a Redis or Valkey server already deployed, set to false.
+  deploy: true
+
+  # -- Redis host to connect to. If redis.deploy is true, this will be set automatically based on the release name.
+  host: ""
+  # -- Redis port to connect to.
+  port: 6379
+  master:
+    persistence:
+      size: 11Gi
+  # Redis TLS configuration
+  tls:
+    # -- Set to `true` to enable TLS/SSL encrypted connection to the Redis server
+    enabled: false
+    # -- Path to the CA certificate file for TLS verification
+    caPath: ""
+    # -- Path to the client certificate file for mutual TLS authentication
+    certPath: ""
+    # -- Path to the client private key file for mutual TLS authentication
+    keyPath: ""
+
+  # Authentication configuration
+  auth:
+    # -- Username to use to connect to the redis database deployed with Langfuse. In case `redis.deploy` is set to `true`, the user will be created automatically. Set to null for an empty username in the connection string.
+    username: "default"
+    # -- Configure the password by value or existing secret reference. Use URL-encoded passwords or avoid special characters in the password.
+    password: "replaceme-with-a-secure-password"
+    # -- If you want to use an existing secret for the redis password, set the name of the secret here. (`redis.auth.password` will be ignored and picked up from this secret).
+    existingSecret: ""
+    # -- The key in the existing secret that contains the password.
+    existingSecretPasswordKey: ""
+
+    database: 0
+
+  # Subchart specific settings
+  architecture: standalone
+  primary:
+    # -- Extra flags for the valkey deployment. Must include `--maxmemory-policy noeviction`.
+    extraFlags:
+      - "--maxmemory-policy noeviction"
+    extraEnvVars:
+      - name: TZ
+        value: "Europe/Copenhagen"
+
+# ClickHouse Configuration
+clickhouse:
+  # -- Enable ClickHouse deployment (via Bitnami Helm Chart). If you want to use an external Clickhouse server (or a managed one), set this to false
+  deploy: true
+
+  # -- ClickHouse host to connect to. If clickhouse.deploy is true, this will be set automatically based on the release name.
+  host: ""
+  # -- ClickHouse HTTP port to connect to.
+  httpPort: 8123
+  # -- ClickHouse native port to connect to.
+  nativePort: 9000
+
+  # Authentication configuration
+  auth:
+    # -- Username for the ClickHouse user.
+    username: default
+    # -- Password for the ClickHouse user.
+    password: "replaceme-with-a-secure-password"
+    # -- If you want to use an existing secret for the ClickHouse password, set the name of the secret here. (`clickhouse.auth.username` and `clickhouse.auth.password` will be ignored and picked up from this secret).
+    existingSecret: ""
+    # -- The key in the existing secret that contains the password.
+    existingSecretKey: ""
+
+  # Migration configuration
+  migration:
+    # -- Migration URL (TCP protocol) for clickhouse
+    url: ""
+    # -- Set to true to establish SSL connection for migration
+    ssl: false
+    # -- Whether to run automatic ClickHouse migrations on startup
+    autoMigrate: true
+
+  # -- Whether to run ClickHouse commands ON CLUSTER
+  clusterEnabled: true
+  persistence:
+    size: 11Gi
+  extraEnvVars:
+    - name: TZ
+      value: "Europe/Copenhagen"
+
+  # -- Subchart specific settings
+  shards: 1 # Fixed - Langfuse does not support sharding
+  # -- Number of replicas to use for the ClickHouse cluster. 1 corresponds to a single, non-HA deployment.
+  replicaCount: 3
+  # -- The resources preset to use for the ClickHouse cluster.
+  resourcesPreset: 2xlarge
+
+# S3/MinIO Configuration
+minio:
+  # -- Enable MinIO deployment (via Bitnami Helm Chart). If you want to use a custom BlobStorage, e.g. S3, set to false.
+  deploy: true
+
+  extraEnvVars:
+    - name: TZ
+      value: "Europe/Copenhagen"
+
+  # -- S3 bucket to use for all uploads. Can be overridden per upload type.
+  bucket: ""
+  # -- S3 region to use for all uploads. Can be overridden per upload type.
+  region: "auto"
+  # -- S3 endpoint to use for all uploads. Can be overridden per upload type.
+  endpoint: ""
+  # -- Whether to force path style on requests. Required for MinIO. Can be overridden per upload type.
+  forcePathStyle: true
+  # -- S3 accessKeyId to use for all uploads. Can be overridden per upload type.
+  accessKeyId:
+    value: ""
+    secretKeyRef:
+      name: ""
+      key: ""
+  # -- S3 secretAccessKey to use for all uploads. Can be overridden per upload type.
+  secretAccessKey:
+    value: ""
+    secretKeyRef:
+      name: ""
+      key: ""
+
+  persistence:
+    size: 11Gi
+
+  # S3 Concurrency Configuration
+  concurrency:
+    # -- Maximum number of concurrent read operations to S3. Defaults to 50.
+    reads: 50
+    # -- Maximum number of concurrent write operations to S3. Defaults to 50.
+    writes: 50
+
+  # Event Upload Configuration
+  eventUpload:
+    # -- S3 bucket to use for event uploads.
+    bucket: ""
+    # -- Prefix to use for event uploads within the bucket.
+    prefix: ""
+    # -- S3 region to use for event uploads.
+    region: ""
+    # -- S3 endpoint to use for event uploads.
+    endpoint: ""
+    # -- Whether to force path style on requests. Required for MinIO.
+    forcePathStyle: Null
+    # -- S3 accessKeyId to use for event uploads.
+    accessKeyId:
+      value: ""
+      secretKeyRef:
+        name: ""
+        key: ""
+    # -- S3 secretAccessKey to use for event uploads.
+    secretAccessKey:
+      value: ""
+      secretKeyRef:
+        name: ""
+        key: ""
+
+  # Batch Export Configuration
+  batchExport:
+    # -- Enable batch export.
+    enabled: true
+    # -- S3 bucket to use for batch exports.
+    bucket: ""
+    # -- Prefix to use for batch exports within the bucket.
+    prefix: ""
+    # -- S3 region to use for batch exports.
+    region: ""
+    # -- S3 endpoint to use for batch exports.
+    endpoint: ""
+    # -- Whether to force path style on requests. Required for MinIO.
+    forcePathStyle: Null
+    # -- S3 accessKeyId to use for batch exports.
+    accessKeyId:
+      value: ""
+      secretKeyRef:
+        name: ""
+        key: ""
+    # -- S3 secretAccessKey to use for batch exports.
+    secretAccessKey:
+      value: ""
+      secretKeyRef:
+        name: ""
+        key: ""
+
+  # Media Upload Configuration
+  mediaUpload:
+    # -- Enable media uploads.
+    enabled: true
+    # -- S3 bucket to use for media uploads.
+    bucket: ""
+    # -- Prefix to use for media uploads within the bucket.
+    prefix: ""
+    # -- S3 region to use for media uploads.
+    region: ""
+    # -- S3 endpoint to use for media uploads.
+    endpoint: ""
+    # -- Whether to force path style on requests. Required for MinIO.
+    forcePathStyle: Null
+    # -- S3 accessKeyId to use for media uploads.
+    accessKeyId:
+      value: ""
+      secretKeyRef:
+        name: ""
+        key: ""
+    # -- S3 secretAccessKey to use for media uploads.
+    secretAccessKey:
+      value: ""
+      secretKeyRef:
+        name: ""
+        key: ""
+    # -- Maximum content length for media uploads. Defaults to 1GB.
+    maxContentLength: 1000000000
+    # -- Expiry time for download URLs. Defaults to 1 hour.
+    downloadUrlExpirySeconds: 3600
+
+  # MinIO subchart specific settings
+  defaultBuckets: langfuse
+  auth:
+    # -- root username
+    rootUser: minio
+    # -- Password for MinIO root user
+    rootPassword: ""
+    # -- If you want to use an existing secret for the root user password, set the name of the secret here. (`s3.auth.rootUser` and `s3.auth.rootPassword` will be ignored and picked up from this secret).
+    existingSecret: ""
+    # -- Key where the Minio root user is being stored inside the existing secret `s3.auth.existingSecret`
+    rootUserSecretKey: ""
+    # -- Key where the Minio root user password is being stored inside the existing secret `s3.auth.existingSecret`
+    rootPasswordSecretKey: ""
+
+# LiteLLM Configuration
+litellm:
+  # -- Set to `true` to deploy LiteLLM alongside Langfuse
+  enabled: false
+
+  image:
+    # -- The image repository to use for the LiteLLM pods
+    repository: litellm/litellm
+    # -- The pull policy to use for the LiteLLM pods
+    pullPolicy: IfNotPresent
+    # -- The image tag to use for the LiteLLM pods
+    tag: "v1.61.13-stable"
+
+  llmGuardPlugin:
+    enabled: false
+    image:
+      repository: eeacms/llmguard-plugin
+      pullPolicy: IfNotPresent
+      tag: "v0.0.1"
+      volumeMounts: []
+      volumes: []
+  # -- Image pull secrets for LiteLLM
+  # -- Number of replicas for the LiteLLM deployment
+  replicaCount: 1
+
+  # -- Database configuration for LiteLLM (uses same PostgreSQL server as Langfuse)
+  database:
+    # -- Database name for LiteLLM
+    dbname: litellm
+
+  # -- Whether to store model configurations in the database
+  storeModelInDb: true
+  # -- Whether to enable message logging
+  turnOnMessageLogging: true
+  # -- Log level for LiteLLM (trace, debug, info, warn, error)
+  logLevel: debug
+  # -- Tokens per minute limit
+  tpmLimit: 1000
+  # -- Requests per minute limit
+  rpmLimit: 60
+  # -- LiteLLM master key for authentication
+  masterKey: ""
+
+  # -- Langfuse public API key for LiteLLM integration
+  langfusePublicKey: ""
+  # -- Langfuse secret API key for LiteLLM integration
+  langfuseSecretKey: ""
+  # -- Custom Langfuse host URL, defaults to the web service in this chart
+  langfuseHost: ""
+
+  service:
+    # -- The type of service to use for the LiteLLM application
+    type: ClusterIP
+    # -- The port to use for the LiteLLM application
+    port: 4000
+    # -- The node port to use if type is NodePort
+    nodePort: null
+    # -- Annotations for the LiteLLM service
+    annotations: {}
+
+  ingress:
+    # -- Set to `true` to enable the ingress resource for LiteLLM
+    enabled: false
+    # -- The class name for the ingress resource
+    className: ""
+    # -- Annotations for the ingress resource
+    annotations: {}
+    # -- The hosts for the ingress resource
+    hosts: []
+    # -- TLS configuration for the ingress
+    tls: []
+
+  # Horizontal Pod Autoscaler configuration for LiteLLM
+  autoscaling:
+    # -- Set to `true` to enable HPA for the LiteLLM pods
+    enabled: false
+    # -- Minimum number of replicas
+    minReplicas: 1
+    # -- Maximum number of replicas
+    maxReplicas: 2
+    # -- Target CPU utilization percentage
+    targetCPUUtilizationPercentage: 80
+    # -- Target memory utilization percentage
+    targetMemoryUtilizationPercentage: null
+
+  # -- Resources for the LiteLLM pods
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "128Mi"
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
+  # -- Pod annotations for LiteLLM
+  podAnnotations: {}
+  # -- Pod labels for LiteLLM
+  podLabels: {}
+  # -- Security context for LiteLLM pods
+  podSecurityContext: {}
+  # -- Security context for LiteLLM containers
+  securityContext: {}
+  # -- Node selector for LiteLLM pods
+  nodeSelector: {}
+  # -- Tolerations for LiteLLM pods
+  tolerations: []
+  # -- Affinity rules for LiteLLM pods
+  affinity: {}
+  # -- Volume mounts for LiteLLM containers
+  volumeMounts: []
+  # -- Volumes for LiteLLM pods
+  volumes: []
+  # -- Image pull secrets for LiteLLM
+  imagePullSecrets: []
+
+  # -- Probe configuration for LiteLLM
+  livenessProbe:
+    httpGet:
+      path: /health/liveliness
+      port: http
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+    successThreshold: 1
+
+  # # -- Readiness probe configuration for LiteLLM
+  readinessProbe:
+    httpGet:
+      path: /health/readiness
+      port: http
+    initialDelaySeconds: 20
+    periodSeconds: 10
+    timeoutSeconds: 3
+    failureThreshold: 3
+    successThreshold: 1
+
+# Additional manifests
+extraManifests: []
