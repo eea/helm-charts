@@ -10,6 +10,9 @@ This chart deployes the EEA Website Plone 6 backend app
 
 ## Releases
 
+### Version 1.0.6 - 11 June 2025
+- update nginx defaults [Silviu - [`b629266`](https://github.com/eea/helm-charts/commit/b6292663d8d4ca59f0b13895478c68ce4c2691f9)]
+
 ### Version 1.0.5 - 11 June 2025
 - update rewrite rules [Silviu - [`f848977`](https://github.com/eea/helm-charts/commit/f8489772ffbbe2db4d1ba20115f3604c346643da)]
 
