@@ -34,7 +34,6 @@ questions:
     label: "Ingress letsencrypt cluster-issuer"
     description: "Leave empty when not using letsencrypt"
     default: "01dev-eea-letsencrypt"
-    
   - variable: "ingress.configuration.proxy-body-size"
     label: "Rancher LB body size"
     description: "Example 100m"
@@ -100,7 +99,7 @@ questions:
     type: "multiline"
     required: true
     group: "Database configuration"
- - variable: "postfix.serviceName"
+  - variable: "postfix.serviceName"
     label: "Postfix service name"
     description: "Default is application full name ( application-postfix ) "
     default: ""
@@ -115,32 +114,32 @@ questions:
     show_subquestion_if: false
     group: "Mail"
     subquestions:
-    - variable: "postfix.mtpRelay"
-      label: "Postfix relay"
-      required: true
-      description: "Postfix SMTP relay"
-      type: "string"
-      default: "ironports.eea.europa.eu"
-    - variable: "postfix.mtpPort"
-      label: "Postfix relay port"
-      description: "Postfix SMTP relay port"
-      type: "int"
-      required: true
-      default: 8587
-    - variable: "postfix.mtpUser"
-      label: "Postfix user"
-      description: "Without authentication, emails will not be sent"
-      type: "string"
-      required: true
-    - variable: "postfix.mtpPass"
-      label: "Postfix password"
-      description: "Without authentication, emails will not be sent"
-      type: "string"
-      required: true
-    - variable: "postfix.serverName"
-      label: "Application url"
-      type: "string"
-      required: true
+      - variable: "postfix.mtpRelay"
+        label: "Postfix relay"
+        required: true
+        description: "Postfix SMTP relay"
+        type: "string"
+        default: "ironports.eea.europa.eu"
+      - variable: "postfix.mtpPort"
+        label: "Postfix relay port"
+        description: "Postfix SMTP relay port"
+        type: "int"
+        required: true
+        default: 8587
+      - variable: "postfix.mtpUser"
+        label: "Postfix user"
+        description: "Without authentication, emails will not be sent"
+        type: "string"
+        required: true
+      - variable: "postfix.mtpPass"
+        label: "Postfix password"
+        description: "Without authentication, emails will not be sent"
+        type: "string"
+        required: true
+      - variable: "postfix.serverName"
+        label: "Application url"
+        type: "string"
+        required: true
 
   - variable: "postfix.mailtrap.httpenabled"
     label: "Create mailtrap service for port 80"
@@ -152,20 +151,20 @@ questions:
     show_subquestion_if: true
     group: "Mail"
     subquestions:
-    - variable: "postfix.mailtrap.serviceType"
-      label: "Mailtrap service type"
-      description: "Select NodePort to expose mailtrap on port"
-      type: "enum"
-      options:
-        - "NodePort"
-        - "ClusterIP"
-      default: "ClusterIP"
-      required: true
-    - variable: "postfix.mailtrap.ingress.enabled"
-      label: "Add mailtrap url in ingress"
-      default: false
-      type: "boolean"
-      required: true
+      - variable: "postfix.mailtrap.serviceType"
+        label: "Mailtrap service type"
+        description: "Select NodePort to expose mailtrap on port"
+        type: "enum"
+        options:
+          - "NodePort"
+          - "ClusterIP"
+        default: "ClusterIP"
+        required: true
+      - variable: "postfix.mailtrap.ingress.enabled"
+        label: "Add mailtrap url in ingress"
+        default: false
+        type: "boolean"
+        required: true
 
   - variable: "postfix.mailtrap.ingress.hostname"
     label: "Mailtrap URL"
@@ -180,7 +179,6 @@ questions:
     description: "If empty, https will not be enabled"
     default: "mailtrap.01dev.eea.europa.eu-tls"
     group: "Mail"
-
 
 
   - variable: "sonarqube.resources.requests.memory"
@@ -208,6 +206,3 @@ questions:
     required: true
     type: "string"
     group: "Memory"
-
-
-
