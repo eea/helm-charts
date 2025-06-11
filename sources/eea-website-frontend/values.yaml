@@ -178,44 +178,20 @@ nginx:
       listen 80;
       server_name _;
 
-      location ^~ /cors-proxy {
-        proxy_pass http://varnish_frontend;
-      }
-
-      location ^~ /login-authomatic {
-        proxy_pass http://varnish_frontend;
-      }
-
-      location ^~ /controlpanel {
-        proxy_pass http://varnish_frontend;
-      }
-
-      location ^~ /static {
-        proxy_pass http://varnish_frontend;
-      }
-
-      location ^~ /personal-information {
-        proxy_pass http://varnish_frontend;
-      }
-
-      location ^~ /fallback_login {
-        proxy_pass http://varnish_frontend;
-      }
-
-      location ^~ /_da {
-        proxy_pass http://varnish_frontend;
-      }
-
-      location ^~ /en {
-        proxy_pass http://varnish_frontend;
-      }
-
-      # Fallback: proxy everything else to Varnish frontend
-      location / {
+    location ~ ^/(cors-proxy|login-authomatic|controlpanel|static|_es|ok|personal-information|fallback_login|_da|en) {
         proxy_pass http://varnish_frontend;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+      # Fallback: proxy everything else to old deployment
+      location / {
+        proxy_pass https://10.120.31.65$request_uri;
+        proxy_set_header Host www.eea.europa.eu;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
       }
     }   
   
