@@ -30,7 +30,7 @@ spec:
         pathType: ImplementationSpecific   
         backend:
           service:
-            name: nginx-service
+            name: {{ .Release.Name }}-nginx-service
             port:
               number: 80                  
   {{- if .Values.ingress.tls }}
