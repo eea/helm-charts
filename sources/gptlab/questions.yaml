@@ -380,6 +380,7 @@ questions:
 
   - variable: postgresql.primary.persistence.size
     label: "Database Storage Size"
+    description: "Size for PostgreSQL database storage"
     type: string
     default: "5Gi"
     group: "Storage"
@@ -387,6 +388,7 @@ questions:
 
   - variable: redis.master.persistence.size
     label: "Redis Storage Size"
+    description: "Size for Redis cache storage"
     type: string
     default: "2Gi"
     group: "Storage"
