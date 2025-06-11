@@ -97,15 +97,17 @@ echo "Old version is $old_version, new version is $v1.$v2.$v3 "
 HELM_NEWVERSION="${v1}.${v2}.${v3}"
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
-    # macOS
-    SED_INPLACE=''
+    # macOS (BSD sed)
+    echo "Running on macOS"
+    SED_INPLACE=(-i '')
 else
-    # Linux
-    SED_INPLACE='-i'
+    # Linux (GNU sed)
+    echo "Running on Linux"
+    SED_INPLACE=(-i)
 fi
 
 
-sed $SED_INPLACE "s/^version:.*/version: $HELM_NEWVERSION/g" Chart.yaml
+sed "${SED_INPLACE[@]}" "s/^version:.*/version: $HELM_NEWVERSION/g" Chart.yaml
 
 
 line=$(grep -nE "^#+ Releases" README.md | awk -F: '{print $1}')
@@ -121,9 +123,9 @@ fi
 sed "1,${line}d" README.md > part2
 
 if [ $(grep "<dl>" part2 | wc -l ) -eq 1 ]; then
-    sed $SED_INPLACE 's|<[/]*dl>.*||g' part2
-    sed $SED_INPLACE  's|[ ]*<dt>\(.*\)</dt>|### \1|g' part2
-    sed $SED_INPLACE  's|[ ]*<dd>\(.*\)</dd>|- \1|g' part2
+    sed "${SED_INPLACE[@]}" 's|<[/]*dl>.*||g' part2
+    sed "${SED_INPLACE[@]}"  's|[ ]*<dt>\(.*\)</dt>|### \1|g' part2
+    sed "${SED_INPLACE[@]}"  's|[ ]*<dd>\(.*\)</dd>|- \1|g' part2
 fi
 
 
