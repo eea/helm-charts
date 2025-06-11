@@ -28,7 +28,7 @@ spec:
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
       containers:
       - name: gn46
-        image: eeacms/eea-geonetwork@sha256:8e426748bdc2c62669a4b5fe141d0526ff508e34c853d6d676f8f6dfc9ddd6e8
+        image: eeacms/eea-geonetwork@sha256:8fe8b507f4dc0420d13459b8b2d998558b6f23e431d6b48c4f90cb5dd9067a63
         env:
         - name: WEBAPP_CONTEXT_PATH
           value: {{ .Values.gn46.webapp_context }}
@@ -78,15 +78,15 @@ spec:
           claimName: gis-sdi
           readOnly: false
         
-            # Liveness Probe: For detecting critical failures and triggering restarts
-      livenessProbe:
-        httpGet:
-          path: {{ .Values.gn46.webapp_context }}/srv/eng/catalog.search # GeoNetwork context path + main search endpoint
-          port: 8080
-          scheme: HTTP
-        initialDelaySeconds: 120 # GeoNetwork can take a while to start up, adjust if needed
-        periodSeconds: 30       # Check every 30 seconds
-        timeoutSeconds: 10      # Wait up to 10 seconds for a response
-        failureThreshold: 3     # Allow 3 consecutive failures before restarting
+      ## Liveness Probe: For detecting critical failures and triggering restarts
+      #livenessProbe:
+      #  httpGet:
+      #    path: {{ .Values.gn46.webapp_context }}/srv/eng/catalog.search # GeoNetwork context path + main search endpoint
+      #    port: 8080
+      #    scheme: HTTP
+      #  initialDelaySeconds: 120 # GeoNetwork can take a while to start up, adjust if needed
+      #  periodSeconds: 30       # Check every 30 seconds
+      #  timeoutSeconds: 10      # Wait up to 10 seconds for a response
+      #  failureThreshold: 3     # Allow 3 consecutive failures before restarting
 
 {{- end }}
