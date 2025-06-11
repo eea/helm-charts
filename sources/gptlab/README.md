@@ -170,6 +170,9 @@ helm upgrade gptlab eea/gptlab
 
 ## Releases
 
+### Version 0.1.2
+- questions.yaml tweaks.
+
 ### Version 0.1.1
 - Updated questions.yaml to fix Ingress issues.
 

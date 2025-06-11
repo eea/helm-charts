@@ -178,26 +178,13 @@ questions:
         default: "postgres"
         group: "Database"
 
-      - variable: postgresql.primary.persistence.size
-        label: "Database Storage Size"
-        type: string
-        default: "5Gi"
-        group: "Database"
-
   # Redis configuration
   - variable: redis.deploy
     label: "Deploy Redis"
     description: "Deploy the Redis cache as part of this chart"
     type: boolean
     default: true
-    group: "Cache"
-    show_subquestion_if: true
-    subquestions:
-      - variable: redis.master.persistence.size
-        label: "Redis Storage Size"
-        type: string
-        default: "2Gi"
-        group: "Cache"
+    group: "Redis"
 
   # GenAI configuration
   - variable: genAI.modelProvider
@@ -356,113 +343,10 @@ questions:
         group: "Networking"
 
       - variable: ingress.hosts.0.host
-        label: "Hostname"
-        description: "Hostname for the application"
+        label: "Ingress Host"
+        description: "Domain name for the ingress (e.g. gptlab.example.com)"
         type: string
-        default: ""
-        group: "Networking"
-
-      - variable: "ingress.hosts.0.paths.0.path"
-        default: "/openapi.json"
-        description: "OpenAPI json path"
-        type: "string"
-        label: "Ingress OpenAPI Path"
-        group: "Networking"
-
-      - variable: "ingress.hosts.0.paths.0.pathType"
-        default: "ImplementationSpecific"
-        description: "Path type for OpenAPI json"
-        type: "enum"
-        options:
-          - "ImplementationSpecific"
-          - "Prefix"
-          - "Exact"
-        label: "Path Type"
-        group: "Networking"
-
-      - variable: "ingress.hosts.0.paths.0.serviceName"
-        default: "gptlab-api-server"
-        description: "Service name for OpenAPI json"
-        type: "string"
-        label: "OpenAPI Service Name"
-        group: "Networking"
-
-      - variable: "ingress.hosts.0.paths.0.servicePort"
-        default: 8080
-        description: "Service port for OpenAPI json"
-        type: "int"
-        label: "OpenAPI json Service Port"
-        group: "Networking"
-
-      - variable: "ingress.hosts.0.paths.1.path"
-        default: "/api"
-        description: "API path for the application"
-        type: "string"
-        label: "Ingress API Path"
-        group: "Networking"
-
-      - variable: "ingress.hosts.0.paths.1.pathType"
-        default: "ImplementationSpecific"
-        description: "Path type for API"
-        type: "enum"
-        options:
-          - "ImplementationSpecific"
-          - "Prefix"
-          - "Exact"
-        label: "Ingress API Path Type"
-        group: "Networking"
-
-      - variable: "ingress.hosts.0.paths.1.serviceName"
-        default: "gptlab-api-server"
-        description: "Service name for API"
-        type: "string"
-        label: "API Service Name"
-        group: "Networking"
-
-      - variable: "ingress.hosts.0.paths.1.servicePort"
-        default: 8080
-        description: "Service port for API Service"
-        type: "int"
-        label: "API Service Port"
-        group: "Networking"
-
-      - variable: "ingress.hosts.0.paths.2.path"
-        default: "/"
-        description: "Root path for the application"
-        type: "string"
-        label: "Ingress Root Path"
-        group: "Networking"
-
-      - variable: "ingress.hosts.0.paths.2.pathType"
-        default: "Prefix"
-        description: "Path type for root path"
-        type: "enum"
-        options:
-          - "ImplementationSpecific"
-          - "Prefix"
-          - "Exact"
-        label: "Ingress root Path Type"
-        group: "Networking"
-
-      - variable: "ingress.hosts.0.paths.2.serviceName"
-        default: "gptlab-web-server"
-        description: "Service name web root path"
-        type: "string"
-        label: "Root Web Service Name"
-        group: "Networking"
-
-      - variable: "ingress.hosts.0.paths.2.servicePort"
-        default: 8080
-        description: "Service port for Web Service"
-        type: "int"
-        label: "Root Web Service Port"
-        group: "Networking"
-
-      - variable: ingress.annotations.cert-manager\.io/cluster-issuer
-        label: "Certificate Issuer"
-        description: "Certificate issuer for TLS (e.g. letsencrypt-prod)"
-        type: string
-        default: "letsencrypt-prod"
+        default: "gptlab.example.com"
         group: "Networking"
 
       - variable: ingress.annotations.nginx\.ingress\.kubernetes\.io/configuration-snippet
@@ -503,6 +387,20 @@ questions:
     type: string
     default: "5Gi"
     group: "Storage"
+
+  - variable: postgresql.primary.persistence.size
+    label: "Database Storage Size"
+    type: string
+    default: "5Gi"
+    group: "Storage"
+    show_if: "postgresql.deploy=true"
+
+  - variable: redis.master.persistence.size
+    label: "Redis Storage Size"
+    type: string
+    default: "2Gi"
+    group: "Storage"
+    show_if: "redis.deploy=true"
 
   # Development Mode
   - variable: developMode
