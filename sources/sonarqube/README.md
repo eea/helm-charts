@@ -52,8 +52,5 @@ Because we are using docker, we only need to access <http://yourSonarQubeServerU
 
 ## Releases
 
-### Version 1.0.1 - 10 June 2025
-- Small fixes [valentinab25 - [`6d7e954`](https://github.com/eea/helm-charts/commit/6d7e954a62efe092b9bf447e6ff16653d2e763b1)]
-
 ### Version 1.0.0 - 10 June 2025
 - First draft
