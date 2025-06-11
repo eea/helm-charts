@@ -10,6 +10,9 @@ This chart deployes the EEA Website Plone 6 backend app
 
 ## Releases
 
+### Version 1.0.5 - 11 June 2025
+- update rewrite rules [Silviu - [`f848977`](https://github.com/eea/helm-charts/commit/f8489772ffbbe2db4d1ba20115f3604c346643da)]
+
 ### Version 1.0.4 - 11 June 2025
 - ingress update [Silviu - [`17525fb`](https://github.com/eea/helm-charts/commit/17525fbd75a12abf92a3bc59efe8521d8551b738)]
 

@@ -198,17 +198,27 @@ memcached:
 
 nginx:
   conf: |-
+    map $request_uri $rewritten_uri {
+      # Handle ++api++
+      ~^/(\+\+api\+\+)(.*)$ /VirtualHostBase/https/$host:443/www/$1/VirtualHostRoot$2;
+
+      # Handle /admin
+      ~^/admin(.*)$ /VirtualHostBase/https/$host:443/www/VirtualHostRoot/_vh_admin$1;
+
+      # Default: no rewrite
+      default $request_uri;
+    }
+
     server {
       listen 80;
       server_name _;
-      
-      include /etc/nginx/conf.d/rewrite-rules.conf;
 
-      location ~ ^/(admin|++api++|voltoCustom.css) {
-          proxy_pass http://varnish_backend;
-          proxy_set_header Host $host;
-          proxy_set_header X-Real-IP $remote_addr;
-          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-          proxy_set_header X-Forwarded-Proto $scheme;
+      location / {
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_redirect http:// https://;
+        proxy_pass http://varnish_backend$rewritten_uri;
       }
-    }   
+    }
