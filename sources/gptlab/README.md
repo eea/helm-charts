@@ -170,6 +170,9 @@ helm upgrade gptlab eea/gptlab
 
 ## Releases
 
+### Version 0.1.4
+- Fixed ingress enabled type in questions.yaml.
+
 ### Version 0.1.3
 - Removed snippet from questions as it was causing issues with Ingress.
 ### Version 0.1.2
