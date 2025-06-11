@@ -349,16 +349,6 @@ questions:
         default: "gptlab.example.com"
         group: "Networking"
 
-      - variable: ingress.annotations.nginx\.ingress\.kubernetes\.io/configuration-snippet
-        label: "Nginx Configuration Snippet"
-        description: "Custom Nginx configuration for path rewrites"
-        type: multiline
-        default: |
-          if ($request_uri ~* "^/api(/.*)?$") {
-            rewrite ^/api/?(.*)$ /$1 break;
-          }
-        group: "Networking"
-
       - variable: ingress.tls.0.secretName
         label: "TLS Secret Name"
         description: "Name of the secret containing TLS certificate"
