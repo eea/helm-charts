@@ -330,8 +330,8 @@ questions:
   - variable: ingress.enabled
     label: "Enable Ingress"
     description: "Enable ingress resource for external access"
-    type: string
-    default: "true"
+    type: boolean
+    default: false
     group: "Networking"
     show_subquestion_if: true
     subquestions:
