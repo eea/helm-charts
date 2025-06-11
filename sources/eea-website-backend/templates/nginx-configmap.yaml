@@ -9,5 +9,8 @@ data:
     upstream varnish_backend {
         server {{ .Values.varnish.serviceName }}:{{ .Values.varnish.port }}; 
     }
+  rewrite.conf: |
+    rewrite ^/(\+\+api\+\+)(.*)$ /VirtualHostBase/https/{{ .Values.plone.hostname }}:443/{{ .Values.plone.site }}/$1/VirtualHostRoot$2 break;
+
   default.conf: |
 {{ .Values.nginx.conf | indent 4 }} 

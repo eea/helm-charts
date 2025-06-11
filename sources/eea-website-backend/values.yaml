@@ -202,8 +202,8 @@ nginx:
       listen 80;
       server_name _;
       
-      rewrite ^/(\+\+api\+\+)(.*)$ /VirtualHostBase/https/{{ .Values.plone.hostname }}:443/{{ .Values.plone.site }}/$1/VirtualHostRoot$2 break;
-      
+      include /etc/nginx/conf.d/rewrite-rules.conf;
+
       location ~ ^/(admin|++api++|voltoCustom.css) {
           proxy_pass http://varnish_backend;
           proxy_set_header Host $host;
