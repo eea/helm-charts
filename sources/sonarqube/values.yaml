@@ -92,7 +92,7 @@ sonarqube:
       memory: "4Gi"
   livenessProbe:
     httpGet:
-      path: /api/system/health
+      path: /
       port: 9000
     periodSeconds: 10
     timeoutSeconds: 10
@@ -101,7 +101,7 @@ sonarqube:
     successThreshold: 1
   startupProbe:
     httpGet:
-      path: /api/system/health
+      path: /
       port: 9000
     periodSeconds: 5
     timeoutSeconds: 5
