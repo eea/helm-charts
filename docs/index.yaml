@@ -11854,6 +11854,39 @@ entries:
   gptlab:
   - apiVersion: v2
     appVersion: v0.28.2-eea.0.0.49
+    created: "2025-06-11T11:17:49.908182+03:00"
+    dependencies:
+    - condition: postgresql.deploy
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 16.4.9
+    - alias: redis
+      condition: redis.deploy
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 20.5.0
+    - condition: postfix.enabled
+      name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.0.6
+    description: A Helm chart for GPTLab AI-powered question-answering system
+    digest: 14bad3b266405659f3690c80d9caf05d44f78652cae56fb82f92d6187d6713b1
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/gptlab/logo_onyx.png
+    keywords:
+    - gptlab
+    - ai
+    - search
+    - question-answering
+    maintainers:
+    - name: EEA
+      url: https://github.com/eea
+    name: gptlab
+    type: application
+    urls:
+    - gptlab-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v2
+    appVersion: v0.28.2-eea.0.0.49
     created: "2025-06-10T18:57:34.965581+02:00"
     dependencies:
     - condition: postgresql.deploy
@@ -19271,4 +19304,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2025-06-11T10:53:56.007312+03:00"
+generated: "2025-06-11T11:17:49.899116+03:00"

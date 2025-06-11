@@ -134,7 +134,7 @@ questions:
             default: "ClusterIP"
             group: "Email Configuration"
             show_if: "postfix.mailtrap.httpenabled=true"
-            
+
           - variable: postfix.mailtrap.mtUser
             label: "Mailtrap Username"
             description: "Username for accessing the mailtrap interface"
@@ -142,7 +142,7 @@ questions:
             default: ""
             group: "Email Configuration"
             show_if: "postfix.mailtrap.httpenabled=true"
-        
+
           - variable: postfix.mailtrap.mtPasswd
             label: "Mailtrap Password"
             description: "Password for accessing the mailtrap interface"
@@ -355,11 +355,107 @@ questions:
         default: "nginx"
         group: "Networking"
 
-      - variable: ingress.hosts[0].host
+      - variable: ingress.hosts.0.host
         label: "Hostname"
         description: "Hostname for the application"
         type: string
         default: ""
+        group: "Networking"
+
+      - variable: "ingress.hosts.0.paths.0.path"
+        default: "/openapi.json"
+        description: "OpenAPI json path"
+        type: "string"
+        label: "Ingress OpenAPI Path"
+        group: "Networking"
+
+      - variable: "ingress.hosts.0.paths.0.pathType"
+        default: "ImplementationSpecific"
+        description: "Path type for OpenAPI json"
+        type: "enum"
+        options:
+          - "ImplementationSpecific"
+          - "Prefix"
+          - "Exact"
+        label: "Path Type"
+        group: "Networking"
+
+      - variable: "ingress.hosts.0.paths.0.serviceName"
+        default: "gptlab-api-server"
+        description: "Service name for OpenAPI json"
+        type: "string"
+        label: "OpenAPI Service Name"
+        group: "Networking"
+
+      - variable: "ingress.hosts.0.paths.0.servicePort"
+        default: 8080
+        description: "Service port for OpenAPI json"
+        type: "int"
+        label: "OpenAPI json Service Port"
+        group: "Networking"
+
+      - variable: "ingress.hosts.0.paths.1.path"
+        default: "/api"
+        description: "API path for the application"
+        type: "string"
+        label: "Ingress API Path"
+        group: "Networking"
+
+      - variable: "ingress.hosts.0.paths.1.pathType"
+        default: "ImplementationSpecific"
+        description: "Path type for API"
+        type: "enum"
+        options:
+          - "ImplementationSpecific"
+          - "Prefix"
+          - "Exact"
+        label: "Ingress API Path Type"
+        group: "Networking"
+
+      - variable: "ingress.hosts.0.paths.1.serviceName"
+        default: "gptlab-api-server"
+        description: "Service name for API"
+        type: "string"
+        label: "API Service Name"
+        group: "Networking"
+
+      - variable: "ingress.hosts.0.paths.1.servicePort"
+        default: 8080
+        description: "Service port for API Service"
+        type: "int"
+        label: "API Service Port"
+        group: "Networking"
+
+      - variable: "ingress.hosts.0.paths.2.path"
+        default: "/"
+        description: "Root path for the application"
+        type: "string"
+        label: "Ingress Root Path"
+        group: "Networking"
+
+      - variable: "ingress.hosts.0.paths.2.pathType"
+        default: "Prefix"
+        description: "Path type for root path"
+        type: "enum"
+        options:
+          - "ImplementationSpecific"
+          - "Prefix"
+          - "Exact"
+        label: "Ingress root Path Type"
+        group: "Networking"
+
+      - variable: "ingress.hosts.0.paths.2.serviceName"
+        default: "gptlab-web-server"
+        description: "Service name web root path"
+        type: "string"
+        label: "Root Web Service Name"
+        group: "Networking"
+
+      - variable: "ingress.hosts.0.paths.2.servicePort"
+        default: 8080
+        description: "Service port for Web Service"
+        type: "int"
+        label: "Root Web Service Port"
         group: "Networking"
 
       - variable: ingress.annotations.cert-manager\.io/cluster-issuer
@@ -368,7 +464,7 @@ questions:
         type: string
         default: "letsencrypt-prod"
         group: "Networking"
-        
+
       - variable: ingress.annotations.nginx\.ingress\.kubernetes\.io/configuration-snippet
         label: "Nginx Configuration Snippet"
         description: "Custom Nginx configuration for path rewrites"
@@ -379,7 +475,7 @@ questions:
           }
         group: "Networking"
 
-      - variable: ingress.tls[0].secretName
+      - variable: ingress.tls.0.secretName
         label: "TLS Secret Name"
         description: "Name of the secret containing TLS certificate"
         type: string
