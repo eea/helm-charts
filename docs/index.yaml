@@ -13582,6 +13582,28 @@ entries:
   matomo:
   - apiVersion: v2
     appVersion: 5.3.2
+    created: "2025-06-11T09:40:01.817246+03:00"
+    dependencies:
+    - name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.0.6
+    description: Matomo (formerly piwik) is a web analytics platform.
+    digest: 04dbe076596bd8080adf0ed86e7b05354ba3c6eb911740bdc9530afff5bcd92a
+    home: https://matomo.org/
+    icon: https://raw.githubusercontent.com/eea/helm-charts/refs/heads/main/sources/matomo/logo_matomo.svg
+    keywords:
+    - matomo
+    - web-analytics
+    maintainers:
+    - name: 'EEA: IDM2 A-Team'
+    name: matomo
+    sources:
+    - https://github.com/eea/helm-charts/blob/main/sources/matomo
+    urls:
+    - matomo-5.3.2-4.tgz
+    version: 5.3.2-4
+  - apiVersion: v2
+    appVersion: 5.3.2
     created: "2025-06-10T18:57:35.281328+02:00"
     dependencies:
     - name: postfix
@@ -19139,4 +19161,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2025-06-10T18:57:32.12688+02:00"
+generated: "2025-06-11T09:40:01.815611+03:00"
