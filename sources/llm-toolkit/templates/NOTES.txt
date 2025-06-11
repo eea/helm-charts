@@ -1,0 +1,54 @@
+Thank you for installing {{ .Chart.Name }} (version: {{ .Chart.Version }})!
+
+{{- if .Values.langfuse.ingress.enabled }}
+You can access Langfuse at:
+{{- range .Values.langfuse.ingress.hosts }}
+  - https://{{ .host }}
+{{- end }}
+{{- else }}
+Langfuse service has been deployed but no ingress has been configured.
+You can access it by port-forwarding:
+
+  kubectl port-forward svc/{{ include "appl.fullname" . }}-langfuse-web 3000:3000 --namespace {{ .Release.Namespace }}
+
+Then browse to http://localhost:3000
+{{- end }}
+
+{{- if .Values.litellm.enabled }}
+{{- if .Values.litellm.ingress.enabled }}
+LiteLLM is available at:
+{{- range .Values.litellm.ingress.hosts }}
+  - https://{{ .host }}
+{{- end }}
+{{- else }}
+LiteLLM service has been deployed but no ingress has been configured.
+You can access it by port-forwarding:
+
+  kubectl port-forward svc/{{ include "appl.fullname" . }}-litellm {{ .Values.litellm.service.port }}:{{ .Values.litellm.service.port }} --namespace {{ .Release.Namespace }}
+
+Then browse to http://localhost:{{ .Values.litellm.service.port }}
+{{- end }}
+{{- else }}
+LiteLLM is not enabled in this installation.
+{{- end }}
+
+{{- if or (not .Values.langfuse.salt.value) (not .Values.langfuse.encryptionKey.value) (not .Values.langfuse.nextauth.secret.value) }}
+
+IMPORTANT: You need to set the following security values:
+{{- if not .Values.langfuse.salt.value }}
+  * langfuse.salt.value (generate with: openssl rand -base64 32)
+{{- end }}
+{{- if not .Values.langfuse.encryptionKey.value }}
+  * langfuse.encryptionKey.value (generate with: openssl rand -hex 32)
+{{- end }}
+{{- if not .Values.langfuse.nextauth.secret.value }}
+  * langfuse.nextauth.secret.value
+{{- end }}
+{{- end }}
+
+{{- if .Values.litellm.enabled }}
+{{- if not .Values.litellm.masterKey }}
+
+IMPORTANT: You need to set litellm.masterKey for LiteLLM API access!
+{{- end }}
+{{- end }}

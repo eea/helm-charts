@@ -9,6 +9,7 @@ spec:
     matchLabels:
         app.kubernetes.io/name: {{ .Release.Name }}-mariadb
         component: mariadb
+  serviceName: {{ .Release.Name }}-mariadb
   template:
     metadata:
       labels:

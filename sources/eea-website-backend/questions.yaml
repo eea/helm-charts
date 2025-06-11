@@ -1,21 +1,5 @@
   questions:
 
-  - variable: "plone.hostname"
-    label: "Server name"
-    description: "DNS name for this deployment"
-    default: "demo-www.01dev.eea.europa.eu"
-    type: "string"
-    required: true
-    group: "General"
-
-  - variable: "plone.site"
-    label: "Plone instance name"
-    description: "Name of the Plone instance"
-    default: "www"
-    type: "string"
-    required: true
-    group: "General"
-
   - variable: "ingress.tls"
     label: "Enable https"
     type: "boolean"
@@ -363,3 +347,9 @@
     show_if: "cronjobs.entrasync.enabled=true"
     group: "Maintenance"
 
+  - variable: "nginx.conf"
+    label: "Nginx Config"
+    description: "redirects for nginx config"
+    type: "multiline"
+    required: true
+    group: "Nginx"

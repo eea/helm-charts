@@ -24,6 +24,10 @@ links:
 ingress:
   annotations:
     cert-manager.io/cluster-issuer: 01dev-eea-letsencrypt
+    nginx.ingress.kubernetes.io/proxy-body-size: 100m
+    nginx.ingress.kubernetes.io/proxy-read-timeout: '480'
+    nginx.ingress.kubernetes.io/proxy-send-timeout: '120'
+
   certificate: demo-www.01dev.eea.europa.eu-tls
   tls: true
 
@@ -81,6 +85,7 @@ plone:
     initialDelaySeconds: 60
     failureThreshold: 4
     successThreshold: 2
+  site: www
 
 varnish:
   serviceType: ClusterIP
@@ -189,3 +194,21 @@ memcached:
   host: memcached
   port: 11211
 
+
+
+nginx:
+  conf: |-
+    server {
+      listen 80;
+      server_name _;
+      
+      rewrite ^/(\+\+api\+\+)(.*)$ /VirtualHostBase/https/{{ .Values.plone.hostname }}:443/{{ .Values.plone.site }}/$1/VirtualHostRoot$2 break;
+      
+      location ~ ^/(admin|++api++|voltoCustom.css) {
+          proxy_pass http://varnish_backend;
+          proxy_set_header Host $host;
+          proxy_set_header X-Real-IP $remote_addr;
+          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+          proxy_set_header X-Forwarded-Proto $scheme;
+      }
+    }   
