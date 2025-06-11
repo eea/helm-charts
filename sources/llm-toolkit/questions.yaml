@@ -218,7 +218,7 @@ questions:
     group: "Langfuse Networking"
     show_if: "langfuse.ingress.enabled=true"
 
-  - variable: "langfuse.ingress.hosts[0].host"
+  - variable: "langfuse.ingress.hosts.0.host"
     default: "langfuse.example.com"
     description: "Hostname for Langfuse"
     type: "string"
@@ -227,7 +227,7 @@ questions:
     required: true
     show_if: "langfuse.ingress.enabled=true"
 
-  - variable: "langfuse.ingress.hosts[0].paths[0].path"
+  - variable: "langfuse.ingress.hosts.0.paths.0.path"
     default: "/"
     description: "Path for Langfuse ingress"
     type: "string"
@@ -235,7 +235,7 @@ questions:
     group: "Langfuse Networking"
     show_if: "langfuse.ingress.enabled=true"
 
-  - variable: "langfuse.ingress.hosts[0].paths[0].pathType"
+  - variable: "langfuse.ingress.hosts.0.paths.0.pathType"
     default: "ImplementationSpecific"
     description: "Path type for Langfuse ingress"
     type: "enum"
@@ -247,7 +247,7 @@ questions:
     group: "Langfuse Networking"
     show_if: "langfuse.ingress.enabled=true"
 
-  - variable: "langfuse.ingress.tls[0].secretName"
+  - variable: "langfuse.ingress.tls.0.secretName"
     default: "langfuse-tls"
     description: "Name of the TLS secret"
     type: "string"
@@ -425,7 +425,7 @@ questions:
     group: "LiteLLM Networking"
     show_if: "litellm.enabled=true && litellm.ingress.enabled=true"
 
-  - variable: "litellm.ingress.hosts[0].host"
+  - variable: "litellm.ingress.hosts.0.host"
     default: "litellm.example.com"
     description: "Hostname for LiteLLM"
     type: "string"
@@ -434,7 +434,7 @@ questions:
     required: true
     show_if: "litellm.enabled=true && litellm.ingress.enabled=true"
 
-  - variable: "litellm.ingress.hosts[0].paths[0].path"
+  - variable: "litellm.ingress.hosts.0.paths.0.path"
     default: "/"
     description: "Path for LiteLLM ingress"
     type: "string"
@@ -442,7 +442,7 @@ questions:
     group: "LiteLLM Networking"
     show_if: "litellm.enabled=true && litellm.ingress.enabled=true"
 
-  - variable: "litellm.ingress.hosts[0].paths[0].pathType"
+  - variable: "litellm.ingress.hosts.0.paths.0.pathType"
     default: "Prefix"
     description: "Path type for LiteLLM ingress"
     type: "enum"
@@ -454,7 +454,7 @@ questions:
     group: "LiteLLM Networking"
     show_if: "litellm.enabled=true && litellm.ingress.enabled=true"
 
-  - variable: "litellm.ingress.tls[0].secretName"
+  - variable: "litellm.ingress.tls.0.secretName"
     default: "litellm-tls"
     description: "Name of the TLS secret for LiteLLM"
     type: "string"
@@ -704,17 +704,6 @@ questions:
     label: "Redis Storage Size"
     group: "Redis"
     show_if: "redis.deploy=true"
-
-  # Storage section
-  - variable: "minio.extraEnvVars"
-    default:
-      - name: MINIO_LOG_LEVEL
-        value: "DEBUG"
-    description: "Additional environment variables for MinIO"
-    type: "array"
-    label: "MinIO Environment Variables"
-    group: "MinIO Advanced"
-    show_if: "minio.deploy=true"
 
   - variable: "minio.deploy"
     default: true
