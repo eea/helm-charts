@@ -23,7 +23,6 @@ questions:
     default: ""
     group: "General"
 
-
   - variable: "ingress.tls"
     label: "Enable https"
     default: true
@@ -34,6 +33,7 @@ questions:
     label: "Ingress letsencrypt cluster-issuer"
     description: "Leave empty when not using letsencrypt"
     default: "01dev-eea-letsencrypt"
+
   - variable: "ingress.configuration.proxy-body-size"
     label: "Rancher LB body size"
     description: "Example 100m"
@@ -54,7 +54,7 @@ questions:
 
   - variable: "ingress.certificate"
     label: "Certificate name"
-    description: "Leave blank for default certificate"
+    description: "Leave blank for default certificate, hostname-tls for letsencrypt"
     default: "sonarqube.eea.europa.eu-tls"
     type: "string"
     show_if: "ingress.tls"
