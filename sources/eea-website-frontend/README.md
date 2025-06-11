@@ -11,6 +11,9 @@ This chart deploys the EEA Main Website frontend app
 
 ## Releases
 
+### Version 1.1.2 - 11 June 2025
+- update nginx default config [Silviu - [`b022ea4`](https://github.com/eea/helm-charts/commit/b022ea4bc421473b239c034ecadb536213ec39e6)]
+
 ### Version 1.1.1 - 10 June 2025
 - add nginx [Silviu - [`b0a9a78`](https://github.com/eea/helm-charts/commit/b0a9a78c2d850925107676b207666218785c55a2)]
 
