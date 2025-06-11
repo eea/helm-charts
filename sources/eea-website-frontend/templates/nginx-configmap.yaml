@@ -9,5 +9,6 @@ data:
     upstream varnish_frontend {
         server {{ .Values.varnish.serviceName }}:{{ .Values.varnish.port }};  # adjust as needed
     }
+
   default.conf: |
 {{ .Values.nginx.conf | indent 4 }} 
