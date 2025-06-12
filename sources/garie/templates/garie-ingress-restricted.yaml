@@ -34,3 +34,43 @@ spec:
                 name: garie-webscore
                 port:
                   number: 3000
+    - host: {{ .Values.ingress.reports }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: garie-uptimerobot
+                port:
+                  number: 3000
+    - host: {{ .Values.ingress.grafana }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: grafana
+                port:
+                  number: 3000
+    - host: {{ .Values.ingress.webbkoll }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: webbkoll
+                port:
+                  number: 4000
+    - host: {{ .Values.ingress.webbkollBackend }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: webbkoll-backend
+                port:
+                  number: 8100
