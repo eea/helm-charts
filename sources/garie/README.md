@@ -69,6 +69,9 @@ We have the following services that should be exposed in ingress:
 
 # Releases
 
+### Version 0.0.12 - 12 June 2025
+- grafana config [Silviu - [`4241ad3`](https://github.com/eea/helm-charts/commit/4241ad3bc113f34d0f1471abdb515783da26fbb6)]
+
 ### Version 0.0.11 - 12 June 2025
 - update grafana defaults [Silviu - [`177b46b`](https://github.com/eea/helm-charts/commit/177b46b74766e1c51764e46194cb021aa6180d45)]
 
