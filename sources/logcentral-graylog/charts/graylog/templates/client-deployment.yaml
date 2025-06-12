@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: graylog-client
+spec:
+  replicas: {{ .Values.client.replicas }}
+  selector:
+    matchLabels:
+      app: graylog-client
+  template:
+    metadata:
+      labels:
+        app: graylog-client
+    spec:
+      containers:
+        - name: graylog
+          image: graylog/graylog:4.3
+          ports:
+            - containerPort: 9000
+          resources:
+{{ toYaml .Values.client.resources | indent 12 }}
+          volumeMounts:
+            - name: data
+              mountPath: /usr/share/graylog/data
+            - name: journal
+              mountPath: /usr/share/graylog/data/journal
+            - name: plugins
+              mountPath: /usr/share/graylog/plugin
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: data-graylog-master-0
+        - name: journal
+          persistentVolumeClaim:
+            claimName: journal-graylog-master-0
+        - name: plugins
+          persistentVolumeClaim:
+            claimName: plugins-graylog-master-0

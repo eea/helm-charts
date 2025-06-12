@@ -1,0 +1,32 @@
+master:
+  heapSize: "-Xms2g -Xmx4g"
+  processbufferProcessors: 20
+  rootPassword: "changeme_sha256"
+  secret: "changeme_secret"
+  elasticsearchLink: "logcentral-elastic6-engine/es-client"
+  resources:
+    requests:
+      memory: "3Gi"
+    limits:
+      memory: "4Gi"
+  persistence:
+    enabled: true
+    size:
+      data: "5Gi"
+      journal: "3Gi"
+      plugins: "1Gi"
+    storageClass: "rancher-nfs"
+
+client:
+  replicas: 2
+  resources:
+    requests:
+      memory: "3Gi"
+    limits:
+      memory: "4Gi"
+
+ingress:
+  enabled: true
+  hostname: "logs.eea.europa.eu"
+  annotations: {}
+  tls: false
