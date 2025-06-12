@@ -1,0 +1,23 @@
+{{- if .Values.dashboards.enabled }}
+{{- if .Values.dashboards.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-dashboards-ingress
+  annotations:
+    kubernetes.io/ingress.class: {{ .Values.dashboards.ingress.className | quote }}
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  rules:
+    - host: {{ .Values.dashboards.ingress.host }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-dashboards
+                port:
+                  number: {{ .Values.dashboards.service.port }}
+{{- end }}
+{{- end }}
