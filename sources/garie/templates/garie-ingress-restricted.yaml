@@ -10,20 +10,24 @@ metadata:
     cert-manager.io/cluster-issuer: {{ .Values.ingress.clusterIssuer }}
     {{ end }}
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    spec.ingressClassName: {{ .Values.ingress.class }}
+    nginx.ingress.kubernetes.io/ingress-class: {{ .Values.ingress.class }}
+  {{- with .Values.ingress.annotations }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   tls:
     - hosts:
         - {{ .Values.ingress.webscore }}
-      {{ if .Values.ingress.clusterIssuer }}
+        - {{ .Values.ingress.reports }}
+        - {{ .Values.ingress.grafana }}
+        - {{ .Values.ingress.webbkoll }}
+        - {{ .Values.ingress.webbkollBackend }}
       secretName: garie-tls-secret
-      {{ end }}
-      
-  rules:
+  rules:                      
     - host: {{ .Values.ingress.webscore }}
       http:
         paths:
-          - path: /
+          - path: /ondemand
             pathType: Prefix
             backend:
               service:
