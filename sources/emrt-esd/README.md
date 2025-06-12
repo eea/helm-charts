@@ -4,6 +4,9 @@ The EMRT(EEA Emission Review Tool) is a web-based tool hosted by the EEA to faci
 
 ## Releases
 
+### Version 1.3.5
+- Updated app version to 18.1.23-1-1.77.4
+
 ### Version 1.3.4
 - Add extra timeouts to varnish config.
 
