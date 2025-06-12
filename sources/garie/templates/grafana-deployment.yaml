@@ -34,14 +34,8 @@ spec:
             limits:
               memory: {{ .Values.grafana.resources.limits.memory }}
           volumeMounts:
-            - name: dashboards
-              mountPath: /etc/grafana/provisioning/dashboards
             - name: grafana-config
-              mountPath: /etc/grafana/grafana.ini
-              subPath: grafana.ini
-            - name: datasource
-              mountPath: /etc/grafana/provisioning/datasources/datasource.yml
-              subPath: datasource.yml
+              mountPath: /etc/grafana
             - name: grafana-data
               mountPath: /var/lib/grafana
           livenessProbe:
@@ -61,15 +55,9 @@ spec:
             timeoutSeconds: {{ .Values.grafana.readinessProbe.timeoutSeconds }}
             failureThreshold: {{ .Values.grafana.readinessProbe.failureThreshold }}
       volumes:
-        - name: datasource
-          configMap:
-            name: grafana-datasource
-        - name: grafana-config
-          configMap:
-            name: grafana-config
-        - name: dashboards
-          configMap:
-            name: grafana-dashboards
+        - name: grafana-configß
+          persistentVolumeClaim:
+            claimName: grafana-config
         - name: grafana-data
           persistentVolumeClaim:
             claimName: grafana-data

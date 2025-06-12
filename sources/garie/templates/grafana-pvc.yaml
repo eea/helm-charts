@@ -14,3 +14,20 @@ spec:
     requests:
       storage: {{ .Values.grafana.storage.data }}
   storageClassName: {{ .Values.grafana.storage.storageClassName }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: grafana-config
+  labels:
+    app: garie
+    role: grafana   
+  annotations:
+    helm.sh/resource-policy: keep
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.grafana.storage.data }}
+  storageClassName: {{ .Values.grafana.storage.storageClassName }}
