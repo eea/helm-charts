@@ -14,13 +14,14 @@ metadata:
 spec:
   tls:
     - hosts:
-        - {{ .Values.ingress.webscore }}
+        {{- if .Values.ingress.hosts.webscore }}
+        - {{ .Values.ingress.hosts.webscore }}
+        {{- end }}
       {{ if .Values.ingress.clusterIssuer }}
       secretName: garie-tls-secret
       {{ end }}
-
   rules:
-    - host: {{ .Values.ingress.webscore }}
+    - host: {{ .Values.ingress.hosts.webscore }}
       http:
         paths:
           - path: /
