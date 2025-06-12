@@ -17,25 +17,25 @@ metadata:
 spec:
   tls:
     - hosts:
-        {{- if .Values.ingress.webscore }}
-        - {{ .Values.ingress.webscore }}
+        {{- if .Values.ingress.hosts.webscore }}
+        - {{ .Values.ingress.hosts.webscore }}
         {{- end }}
-        {{- if .Values.ingress.reports }}
-        - {{ .Values.ingress.reports }}
+        {{- if .Values.ingress.hosts.reports }}
+        - {{ .Values.ingress.hosts.reports }}
         {{- end }}
-        {{- if .Values.ingress.grafana }}
-        - {{ .Values.ingress.grafana }}
+        {{- if .Values.ingress.hosts.grafana }}
+        - {{ .Values.ingress.hosts.grafana }}
         {{- end }}
-        {{- if .Values.ingress.webbkoll }}
-        - {{ .Values.ingress.webbkoll }}
+        {{- if .Values.ingress.hosts.webbkoll }}
+        - {{ .Values.ingress.hosts.webbkoll }}
         {{- end }}
-        {{- if .Values.ingress.webbkollBackend }}
-        - {{ .Values.ingress.webbkollBackend }}
+        {{- if .Values.ingress.hosts.webbkollBackend }}
+        - {{ .Values.ingress.hosts.webbkollBackend }}
         {{- end }}
       secretName: garie-tls-secret
   rules:
-    {{- if .Values.ingress.webscore }}
-    - host: {{ .Values.ingress.webscore }}
+    {{- if .Values.ingress.hosts.webscore }}
+    - host: {{ .Values.ingress.hosts.webscore }}
       http:
         paths:
           - path: /ondemand
@@ -46,8 +46,8 @@ spec:
                 port:
                   number: 3000
     {{- end }}
-    {{- if .Values.ingress.reports }}
-    - host: {{ .Values.ingress.reports }}
+    {{- if .Values.ingress.hosts.reports }}
+    - host: {{ .Values.ingress.hosts.reports }}
       http:
         paths:
           - path: /
@@ -58,8 +58,8 @@ spec:
                 port:
                   number: 3000
     {{- end }}
-    {{- if .Values.ingress.grafana }}
-    - host: {{ .Values.ingress.grafana }}
+    {{- if .Values.ingress.hosts.grafana }}
+    - host: {{ .Values.ingress.hosts.grafana }}
       http:
         paths:
           - path: /
@@ -70,8 +70,8 @@ spec:
                 port:
                   number: 3000
     {{- end }}
-    {{- if .Values.ingress.webbkoll }}
-    - host: {{ .Values.ingress.webbkoll }}
+    {{- if .Values.ingress.hosts.webbkoll }}
+    - host: {{ .Values.ingress.hosts.webbkoll }}
       http:
         paths:
           - path: /
@@ -82,8 +82,8 @@ spec:
                 port:
                   number: 4000
     {{- end }}
-    {{- if .Values.ingress.webbkollBackend }}
-    - host: {{ .Values.ingress.webbkollBackend }}
+    {{- if .Values.ingress.hosts.webbkollBackend }}
+    - host: {{ .Values.ingress.hosts.webbkollBackend }}
       http:
         paths:
           - path: /
