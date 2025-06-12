@@ -10,7 +10,7 @@ metadata:
     cert-manager.io/cluster-issuer: {{ .Values.ingress.clusterIssuer }}
     {{ end }}
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    spec.ingressClassName: {{ .Values.ingress.class }}
+    nginx.ingress.kubernetes.io/ingress-class: {{ .Values.ingress.class }}
 spec:
   tls:
     - hosts:
@@ -18,7 +18,7 @@ spec:
       {{ if .Values.ingress.clusterIssuer }}
       secretName: garie-tls-secret
       {{ end }}
-      
+
   rules:
     - host: {{ .Values.ingress.webscore }}
       http:
