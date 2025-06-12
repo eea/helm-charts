@@ -69,6 +69,9 @@ We have the following services that should be exposed in ingress:
 
 # Releases
 
+### Version 0.0.9 - 12 June 2025
+- fix typo [Silviu - [`b52d9f8`](https://github.com/eea/helm-charts/commit/b52d9f8fa51a33f9b3d73470c8b189cb3a63d440)]
+
 ### Version 0.0.8 - 12 June 2025
 - ingress patch [Silviu - [`6bf1ca5`](https://github.com/eea/helm-charts/commit/6bf1ca5ae8fc34add07c1edfaf7aba2dd111d257)]
 
