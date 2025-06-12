@@ -55,7 +55,7 @@ spec:
             timeoutSeconds: {{ .Values.grafana.readinessProbe.timeoutSeconds }}
             failureThreshold: {{ .Values.grafana.readinessProbe.failureThreshold }}
       volumes:
-        - name: grafana-configß
+        - name: grafana-config
           persistentVolumeClaim:
             claimName: grafana-config
         - name: grafana-data
