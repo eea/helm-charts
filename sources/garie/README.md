@@ -69,6 +69,9 @@ We have the following services that should be exposed in ingress:
 
 # Releases
 
+### Version 0.0.7 - 12 June 2025
+- update ingress rules [Silviu - [`10ed33f`](https://github.com/eea/helm-charts/commit/10ed33fe5571a7cd90eb9a561b86590a8a659f9c)]
+
 ### Version 0.0.6 - 12 June 2025
 - add restricted ingress [Silviu - [`71a9822`](https://github.com/eea/helm-charts/commit/71a9822e4e6b4fbe04b893f51c71d3f57fb54a5a)]
 
