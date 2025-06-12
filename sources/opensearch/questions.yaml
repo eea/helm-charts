@@ -1,0 +1,236 @@
+questions:
+  - variable: replicaCount
+    label: Number of OpenSearch replicas
+    type: int
+    required: true
+    default: 3
+    min: 1
+    max: 10
+    group: "OpenSearch Configuration"
+
+  - variable: image.repository
+    label: OpenSearch image repository
+    type: string
+    required: true
+    default: "opensearchproject/opensearch"
+    group: "OpenSearch Configuration"
+
+  - variable: image.tag
+    label: OpenSearch image tag
+    type: string
+    required: true
+    default: "2.15.0"
+    group: "OpenSearch Configuration"
+
+  - variable: image.pullPolicy
+    label: OpenSearch image pull policy
+    type: enum
+    options:
+      - Always
+      - IfNotPresent
+      - Never
+    required: true
+    default: IfNotPresent
+    group: "OpenSearch Configuration"
+
+  - variable: dashboards.enabled
+    label: Enable OpenSearch Dashboards
+    type: boolean
+    required: true
+    default: true
+    group: "Dashboards Configuration"
+
+  - variable: dashboards.image.repository
+    label: Dashboards image repository
+    type: string
+    required: true
+    default: "opensearchproject/opensearch-dashboards"
+    group: "Dashboards Configuration"
+    show_if: "dashboards.enabled=true"
+
+  - variable: dashboards.image.tag
+    label: Dashboards image tag
+    type: string
+    required: true
+    default: "2.15.0"
+    group: "Dashboards Configuration"
+    show_if: "dashboards.enabled=true"
+
+  - variable: dashboards.image.pullPolicy
+    label: Dashboards image pull policy
+    type: enum
+    options:
+      - Always
+      - IfNotPresent
+      - Never
+    required: true
+    default: IfNotPresent
+    group: "Dashboards Configuration"
+    show_if: "dashboards.enabled=true"
+
+  - variable: dashboards.service.type
+    label: Dashboards Service Type
+    type: enum
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    default: ClusterIP
+    group: "Dashboards Configuration"
+    show_if: "dashboards.enabled=true"
+
+  - variable: dashboards.service.port
+    label: Dashboards Service Port
+    type: int
+    required: true
+    default: 5601
+    group: "Dashboards Configuration"
+    show_if: "dashboards.enabled=true"
+
+  - variable: dashboards.ingress.enabled
+    label: Enable Dashboards ingress
+    type: boolean
+    required: true
+    default: true
+    group: "Dashboards Configuration"
+    show_if: "dashboards.enabled=true"
+
+  - variable: dashboards.ingress.className
+    label: Dashboards ingress class name
+    type: string
+    required: true
+    default: "nginx"
+    group: "Dashboards Configuration"
+    show_if: "dashboards.enabled=true && dashboards.ingress.enabled=true"
+
+  - variable: dashboards.ingress.host
+    label: Dashboards ingress host
+    type: hostname
+    required: true
+    default: "dashboards.local"
+    group: "Dashboards Configuration"
+    show_if: "dashboards.enabled=true && dashboards.ingress.enabled=true"
+
+  - variable: service.type
+    label: OpenSearch Service Type
+    type: enum
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    default: ClusterIP
+    group: "OpenSearch Service"
+
+  - variable: service.port
+    label: OpenSearch Service Port
+    type: int
+    required: true
+    default: 9200
+    group: "OpenSearch Service"
+
+  - variable: persistence.enabled
+    label: Enable persistence
+    type: boolean
+    required: true
+    default: true
+    group: "Persistence"
+
+  - variable: persistence.storageClass
+    label: Storage Class
+    type: string
+    required: true
+    default: "standard"
+    group: "Persistence"
+    show_if: "persistence.enabled=true"
+
+  - variable: persistence.accessMode
+    label: Access Mode
+    type: enum
+    options:
+      - ReadWriteOnce
+      - ReadOnlyMany
+      - ReadWriteMany
+    required: true
+    default: ReadWriteOnce
+    group: "Persistence"
+    show_if: "persistence.enabled=true"
+
+  - variable: persistence.size
+    label: Persistence size
+    type: string
+    required: true
+    default: "5Gi"
+    group: "Persistence"
+    show_if: "persistence.enabled=true"
+
+  - variable: resources.limits.cpu
+    label: CPU limits
+    type: string
+    required: true
+    default: "1"
+    group: "Resources"
+
+  - variable: resources.limits.memory
+    label: Memory limits
+    type: string
+    required: true
+    default: "2Gi"
+    group: "Resources"
+
+  - variable: resources.requests.cpu
+    label: CPU requests
+    type: string
+    required: true
+    default: "500m"
+    group: "Resources"
+
+  - variable: resources.requests.memory
+    label: Memory requests
+    type: string
+    required: true
+    default: "1Gi"
+    group: "Resources"
+
+  - variable: env[0].value
+    label: Cluster Name (cluster.name)
+    type: string
+    required: true
+    default: "opensearch-cluster"
+    group: "Environment Variables"
+
+  - variable: env[2].value
+    label: Initial Master Nodes (cluster.initial_master_nodes)
+    type: string
+    required: true
+    default: "opensearch-0,opensearch-1,opensearch-2"
+    group: "Environment Variables"
+
+  - variable: env[3].value
+    label: Bootstrap Memory Lock (bootstrap.memory_lock)
+    type: boolean
+    required: true
+    default: true
+    group: "Environment Variables"
+
+  - variable: env[4].value
+    label: OPENSEARCH_JAVA_OPTS
+    type: string
+    required: true
+    default: "-Xms2g -Xmx2g"
+    group: "Environment Variables"
+
+  - variable: env[5].value
+    label: Initial Admin Password (OPENSEARCH_INITIAL_ADMIN_PASSWORD)
+    type: password
+    required: true
+    default: "R0ck3t$SuperPass99!"
+    group: "Environment Variables"
+
+  - variable: env[6].value
+    label: Network Host
+    type: string
+    required: true
+    default: "0.0.0.0"
+    group: "Environment Variables"

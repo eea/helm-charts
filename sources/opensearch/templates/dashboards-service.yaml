@@ -1,0 +1,14 @@
+{{- if .Values.dashboards.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-dashboards
+spec:
+  type: {{ .Values.dashboards.service.type }}
+  ports:
+    - port: {{ .Values.dashboards.service.port }}
+      targetPort: {{ .Values.dashboards.service.port }}
+      name: dashboards
+  selector:
+    app: {{ .Release.Name }}-dashboards
+{{- end }}

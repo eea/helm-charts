@@ -1,0 +1,55 @@
+replicaCount: 3
+
+image:
+  repository: opensearchproject/opensearch
+  tag: "2.15.0"
+  pullPolicy: IfNotPresent
+
+dashboards:
+  enabled: true
+  image:
+    repository: opensearchproject/opensearch-dashboards
+    tag: "2.15.0"
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 5601
+  ingress:
+    enabled: true
+    className: "nginx"
+    host: "dashboards.local"
+
+service:
+  type: ClusterIP
+  port: 9200
+
+resources:
+  limits:
+    cpu: "1"
+    memory: "2Gi"
+  requests:
+    cpu: "500m"
+    memory: "1Gi"
+
+persistence:
+  enabled: true
+  storageClass: "standard"
+  accessMode: ReadWriteOnce
+  size: 5Gi
+
+env:
+  - name: cluster.name
+    value: opensearch-cluster
+  - name: node.name
+    valueFromFieldRef:
+      fieldPath: metadata.name
+  - name: cluster.initial_master_nodes
+    value: "opensearch-0,opensearch-1,opensearch-2"
+  - name: bootstrap.memory_lock
+    value: "true"
+  - name: "OPENSEARCH_JAVA_OPTS"
+    value: "-Xms2g -Xmx2g"
+  - name: OPENSEARCH_INITIAL_ADMIN_PASSWORD
+    value: "R0ck3t$SuperPass99!"
+  - name: network.host
+    value: "0.0.0.0"
