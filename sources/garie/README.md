@@ -69,6 +69,9 @@ We have the following services that should be exposed in ingress:
 
 # Releases
 
+### Version 0.0.6 - 12 June 2025
+- add restricted ingress [Silviu - [`71a9822`](https://github.com/eea/helm-charts/commit/71a9822e4e6b4fbe04b893f51c71d3f57fb54a5a)]
+
 ### Version 0.0.5 - 14 May 2025
 - fix influxdb pvc [Silviu - [`cc9ab94`](https://github.com/eea/helm-charts/commit/cc9ab947ec8211f5ab391567a57abccb10533c4d)]
 
