@@ -5,12 +5,12 @@ chronograf:
     requests:
       memory: 256Mi
   storage: 1Gi
-  storageClassName: nfs-client
+  storageClassName: nfs-rancher
 garieCheckmk:
-  cmkSecrets: ""
+  cmkSecrets: SUNEMEIREDFCDJDAJLEG,KWVVCQKHJPMSAMIMDAXB
   cmkServers: goldeneye.eea.europa.eu,goldeneye-aws.eea.europa.eu
   cmkSiteNames: omdeea,omdeeaaws
-  cmkUsernames: ""
+  cmkUsernames: cmkapi-omdeea,cmkapi-omdeeaaws
   label: Garie Checkmk configuration
   resources:
     limits:
@@ -831,7 +831,7 @@ garieConfig:
       ]
     }
   reportsStorage: 5Gi
-  storageClassName: nfs-client
+  storageClassName: nfs-rancher
 garieLighthouse:
   label: Garie Lighthouse configuration
   resources:
@@ -860,14 +860,14 @@ garieSecurityheaders:
       memory: 512Mi
 garieSentryMetrics:
   label: Garie Sentry Metrics configuration
-  matomoToken: ""
+  matomoToken: fd279dc5a5a44cd3f7f3903a41ad9310
   matomoURL: https://matomo.eea.europa.eu/
   resources:
     limits:
       memory: 256Mi
     requests:
       memory: 256Mi
-  sentryAuthoriation: ""
+  sentryAuthoriation: 0bf625ef98884915b3af2f3f878a3913b8f891b407dc4061acbc5ffcd8d53f1e
   sentryURL: https://sentry.eea.europa.eu/
 garieSonarQube:
   label: Garie SonarQube configuration
@@ -886,7 +886,7 @@ garieUptimeRobot:
     requests:
       memory: 512Mi
   uptimeApiUrl: https://api.uptimerobot.com/v2/getMonitors
-  uptimeRobotKeys: ""
+  uptimeRobotKeys: u667006-e56581e5c188c6a40056e7e8 u669407-35fd041548e72bb8f13b944a
 garieWebbkoll:
   resources:
     limits:
@@ -901,7 +901,7 @@ gariebBrowserTime:
     requests:
       memory: 3Gi
 general:
-  timezone: Europe/Copenhagen
+  timezone: UTC
 grafana:
   adminPassword: admin
   domain: grafana.example.com
@@ -924,12 +924,13 @@ grafana:
   storage:
     config: 1Gi
     data: 1Gi
-    storageClassName: nfs-client
+    storageClassName: nfs-rancher
   timezone: UTC
 influxdb:
   adminPassword: password
   adminUser: admin
   antiAffinity: false
+  image: influxdb:latest
   livenessProbe:
     failureThreshold: 3
     initialDelaySeconds: 10
@@ -947,34 +948,25 @@ influxdb:
     requests:
       memory: 3G
   storage: 1Gi
-  storageClassName: nfs-client
+  storageClassName: nfs-rancher
   timezone: UTC
 ingress:
-  annotations: 
-    nginx.ingress.kubernetes.io/whitelist-source-range: |
-      192.168.60.0/22,
-      192.168.64.0/21,
-      10.92.24.0/21,
-      10.50.0.0/16,
-      10.20.30.0/24,
-      10.0.9.0/24,
-      10.50.7.57
-  class: appsec-nginx
-  clusterIssuer: ""
-  hosts:
-    webscore: ""
-    reports: ""
-    grafana: ""
-    webbkoll: ""
-    webbkollBackend: ""
+  class: nginx
+  enabled: false
+  browsertime: browsertime.eea.europa.eu
+  chronograf: chronograf.eea.europa.eu
+  clusterIssuer: 01prod-eea-letsencrypt
+  grafana: grafana.eea.europa.eu
+  lighthouse: lighthouse.eea.europa.eu
+  webscore: webscore.eea.europa.eu
 postfix:
-  mtpHost: ""
-  pass: ""
-  port: ""
-  portNumber: ""
-  relay: ""
-  user: ""
-  variant: demo
+  mtpHost: webscore.eea.europa.eu
+  pass: ZC1bBFYO4kXc
+  port: "587"
+  portNumber: "80"
+  relay: ironports.eea.europa.eu
+  user: webscoreu
+  variant: prod
 service:
   type: ClusterIP
 webbkoll:

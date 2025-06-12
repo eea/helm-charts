@@ -1,46 +1,51 @@
 questions:
   - variable: general.timezone
     group: General Configuration
-    default: UTC
     description: Containers timezone (TZ)
     type: string
     required: true
-    subquestions:
-      - variable: ingress.class
-        default: nginx
-        description: Ingress class to use
-        type: string
-        required: true
-      - variable: ingress.clusterIssuer
-        default: letsencrypt-prod
-        description: Cluster issuer for TLS certificates
-        type: string
-        required: true
-      - varaible: ingress.grafana
-        default: grafana.01dev.eea.europa.eu
-        description: Grafana ingress hostname
-        type: string
-        required: true
-      - variable: ingress.lighthouse
-        default: lighthouse.01dev.eea.europa.eu
-        description: Lighthouse ingress hostname
-        type: string
-        required: true
-      - variable: ingress.browsertime
-        default: browsertime.01dev.eea.europa.eu
-        description: Browsertime ingress hostname
-        type: string
-        required: true
-      - variable: ingress.webscore
-        default: webscore.01dev.eea.europa.eu
-        description: Webscore ingress hostname
-        type: string
-        required: true
-      - variable: ingress.chronograf
-        description: Chronograf ingress hostname
-        default: chronograph.01dev.eea.europa.eu
-        type: string
-        required: true
+
+  - variable: ingress.class
+    group: Ingress Configuration
+    description: Ingress class to use
+    type: string
+    required: true
+
+  - variable: ingress.clusterIssuer
+    group: Ingress Configuration
+    description: Cluster issuer for TLS certificates
+    type: string
+    required: false
+
+  - variable: ingress.hosts.webscore
+    group: Ingress Configuration
+    description: Webscore ingress hostname
+    type: string
+    required: true
+
+  - variable: ingress.hosts.reports
+    group: Ingress Configuration
+    description: Reports ingress hostname
+    type: string
+    required: true
+
+  - variable: ingress.hosts.grafana
+    group: Ingress Configuration
+    description: Grafana ingress hostname
+    type: string
+    required: true
+
+  - variable: ingress.hosts.webbkoll
+    group: Ingress Configuration
+    description: Webbkoll ingress hostname
+    type: string
+    required: true
+
+  - variable: ingress.hosts.webbkollBackend
+    group: Ingress Configuration
+    description: Webbkoll backend ingress hostname
+    type: string
+    required: true
 
   - variable: influxdb.replicas
     group: InfluxDB Configuration
