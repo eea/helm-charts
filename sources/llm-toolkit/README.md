@@ -264,6 +264,9 @@ helm delete llm-toolkit
 
 ## Releases
 
+### Version 0.1.5
+- Updated grouping in `questions.yaml`.
+
 ### Version 0.1.4
 - Removed externalTrafficPolicy from default values.
 
