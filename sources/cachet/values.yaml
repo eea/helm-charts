@@ -16,7 +16,6 @@ serviceAccount:
 
 timezone: Europe/Copenhagen
 
-
 ingress:
   enabled: true
   className: "appsec-nginx"
@@ -44,7 +43,8 @@ ingress:
         "X-Frame-Options 'SAMEORIGIN'"
         "Referrer-Policy origin"
         "Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self'; frame-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'self';"
-        'Permissions-Policy accelerometer=(), autoplay=(), camera=(), encrypted-media=(), fullscreen=(self), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), midi=(), payment=(), picture-in-picture=(), sync-xhr=(self), usb=()'
+        'Permissions-Policy accelerometer=(), autoplay=(), camera=(), encrypted-media=(), fullscreen=(self), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), midi=(), payment=(), picture-in-picture=(), sync-xhr=(self), usb=()'; 
+  # make sure to add ; at the end of the snippet
   tls: true
   certificate: ""
   enableRestictions: true 
