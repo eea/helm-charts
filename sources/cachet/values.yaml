@@ -19,8 +19,18 @@ timezone: Europe/Copenhagen
 
 ingress:
   enabled: true
-  className: "nginx"
+  className: "appsec-nginx"
   annotations: {}
+  restrictedAnnotations: 
+    nginx.ingress.kubernetes.io/whitelist-source-range: |
+      192.168.60.0/22,
+      192.168.64.0/21,
+      10.92.24.0/21,
+      10.50.0.0/16,
+      10.20.30.0/24,
+      10.0.9.0/24,
+      10.50.7.57  
+  productionEnvironment: false
   letsencrypt: "01dev-eea-letsencrypt"
   configuration:
     proxy-body-size: "256m"
@@ -37,7 +47,7 @@ ingress:
         'Permissions-Policy accelerometer=(), autoplay=(), camera=(), encrypted-media=(), fullscreen=(self), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), midi=(), payment=(), picture-in-picture=(), sync-xhr=(self), usb=()'
   tls: true
   certificate: ""
-  enableRestictions: false 
+  enableRestictions: true 
   restrictedClassName: "appsec-nginx" 
    
 postgres:

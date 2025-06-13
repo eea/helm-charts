@@ -15,7 +15,7 @@ metadata:
     nginx.ingress.kubernetes.io/{{ $key }}: {{ $value | quote }}
     {{- end }}
   {{- end }}
-  {{- with .Values.ingress.annotations }}
+  {{- with .Values.ingress.restrictedAnnotations }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
 
