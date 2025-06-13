@@ -2,7 +2,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: cachet-resticted
+  name: {{ .Values.cachet.serviceName }}-restricted
   labels:
     {{- include "appl.labels" . | nindent 4 }}
     component: cachet
@@ -29,7 +29,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: {{ .Values.cachet.serviceName }}-restricted
+            name: {{ .Values.cachet.serviceName }}
             port:
               number: 8000
   {{- if .Values.ingress.tls }}
