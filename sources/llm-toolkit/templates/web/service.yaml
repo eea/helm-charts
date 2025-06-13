@@ -12,7 +12,9 @@ metadata:
     {{- toYaml . | nindent 4 }}
 {{- end }}
 spec:
-  externalTrafficPolicy: {{ .Values.langfuse.web.service.externalTrafficPolicy | default "Cluster" }}
+  {{- if .Values.langfuse.web.service.externalTrafficPolicy }}
+  externalTrafficPolicy: {{ .Values.langfuse.web.service.externalTrafficPolicy }}
+  {{- end }}
   type: {{ .Values.langfuse.web.service.type }}
   ports:
     - port: {{ .Values.langfuse.web.service.port }}

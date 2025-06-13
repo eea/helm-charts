@@ -150,7 +150,6 @@ langfuse:
     service:
       # -- The type of service to use for the langfuse web application
       type: ClusterIP
-      externalTrafficPolicy: Cluster
       # -- The port to use for the langfuse web application
       port: 3000
       # -- The node port to use for the langfuse web application
