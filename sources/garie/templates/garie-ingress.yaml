@@ -10,13 +10,7 @@ metadata:
     cert-manager.io/cluster-issuer: {{ .Values.ingress.clusterIssuer }}
     {{ end }}
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/ingress-class: {{ .Values.ingress.class }}
-    nginx.ingress.kubernetes.io/configuration-snippet: |
-      {{- if .Values.ingress.hosts.reports }}
-      if ($host = {{ .Values.ingress.hosts.reports }}) {
-        rewrite ^/$ /reports break;
-      }
-      {{- end }}    
+    nginx.ingress.kubernetes.io/ingress-class: {{ .Values.ingress.class }} 
 spec:
   ingressClassName: {{ .Values.ingress.class }}
   tls:

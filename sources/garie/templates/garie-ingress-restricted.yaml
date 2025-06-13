@@ -21,17 +21,8 @@ spec:
         {{- if .Values.ingress.hosts.webscore }}
         - {{ .Values.ingress.hosts.webscore }}
         {{- end }}
-        {{- if .Values.ingress.hosts.reports }}
-        - {{ .Values.ingress.hosts.reports }}
-        {{- end }}
         {{- if .Values.ingress.hosts.grafana }}
         - {{ .Values.ingress.hosts.grafana }}
-        {{- end }}
-        {{- if .Values.ingress.hosts.webbkoll }}
-        - {{ .Values.ingress.hosts.webbkoll }}
-        {{- end }}
-        {{- if .Values.ingress.hosts.webbkollBackend }}
-        - {{ .Values.ingress.hosts.webbkollBackend }}
         {{- end }}
       {{ if .Values.ingress.clusterIssuer }}
       secretName: garie-tls-secret
@@ -49,18 +40,6 @@ spec:
                 port:
                   number: 3000
     {{- end }}
-    {{- if .Values.ingress.hosts.reports }}
-    - host: {{ .Values.ingress.hosts.reports }}
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: garie-uptimerobot
-                port:
-                  number: 3000
-    {{- end }}
     {{- if .Values.ingress.hosts.grafana }}
     - host: {{ .Values.ingress.hosts.grafana }}
       http:
@@ -70,6 +49,40 @@ spec:
             backend:
               service:
                 name: grafana
+                port:
+                  number: 3000
+    {{- end }}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: garie-ingress-restricted-http
+  labels:
+    app: garie
+    role: ingress
+  annotations:
+    nginx.ingress.kubernetes.io/ingress-class: {{ .Values.ingress.class }}
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      {{- if .Values.ingress.hosts.reports }}
+      if ($host = {{ .Values.ingress.hosts.reports }}) {
+        rewrite ^/$ /reports break;
+      }
+      {{- end }}       
+  {{- with .Values.ingress.annotations }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  ingressClassName: {{ .Values.ingress.class }}
+  rules:
+    {{- if .Values.ingress.hosts.reports }}
+    - host: {{ .Values.ingress.hosts.reports }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: garie-uptimerobot
                 port:
                   number: 3000
     {{- end }}
