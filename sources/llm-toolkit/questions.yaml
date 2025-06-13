@@ -18,56 +18,52 @@ questions:
       - "production"
       - "development"
     label: "Node Environment"
-    group: "Langfuse Deployment"
+    group: "Langfuse Configuration"
 
   - variable: "langfuse.features.telemetryEnabled"
     default: true
     description: "Report basic usage statistics to Langfuse"
     type: "boolean"
     label: "Enable Telemetry"
-    group: "Langfuse Features"
+    group: "Langfuse Configuration"
 
   - variable: "langfuse.features.experimentalFeaturesEnabled"
     default: false
     description: "Enable experimental features"
     type: "boolean"
     label: "Enable Experimental Features"
-    group: "Langfuse Features"
+    group: "Langfuse Configuration"
 
   - variable: "langfuse.salt.value"
     default: ""
     description: "Salt used to hash API keys (generate with: openssl rand -base64 32)"
     type: "password"
     label: "API Key Salt"
-    group: "Langfuse Security"
+    group: "Langfuse Configuration"
     required: true
-    show_if: "langfuse.enabled=true"
 
   - variable: "langfuse.encryptionKey.value"
     default: ""
     description: "Key used to encrypt sensitive data (generate with: openssl rand -hex 32)"
     type: "password"
     label: "Encryption Key"
-    group: "Langfuse Security"
+    group: "Langfuse Configuration"
     required: true
-    show_if: "langfuse.enabled=true"
 
   - variable: "langfuse.nextauth.secret.value"
     default: ""
     description: "Secret used by NextAuth for JWT encryption"
     type: "password"
     label: "NextAuth Secret"
-    group: "Langfuse Security"
+    group: "Langfuse Configuration"
     required: true
-    show_if: "langfuse.enabled=true"
 
   - variable: "langfuse.features.signUpDisabled"
     default: false
     description: "Disable public sign up"
     type: "boolean"
     label: "Disable Sign Up"
-    group: "Langfuse Features"
-    show_if: "langfuse.enabled=true"
+    group: "Langfuse Configuration"
 
   - variable: "langfuse.logging.level"
     default: "info"
@@ -82,7 +78,6 @@ questions:
       - "fatal"
     label: "Log Level"
     group: "Langfuse Configuration"
-    show_if: "langfuse.enabled=true"
 
   - variable: "langfuse.logging.format"
     default: "text"
@@ -93,7 +88,6 @@ questions:
       - "json"
     label: "Log Format"
     group: "Langfuse Configuration"
-    show_if: "langfuse.enabled=true"
 
   - variable: "langfuse.nextauth.url"
     default: ""
@@ -102,7 +96,6 @@ questions:
     label: "Langfuse URL"
     group: "Langfuse Configuration"
     required: true
-    show_if: "langfuse.enabled=true"
 
   - variable: "langfuse.replicas"
     default: 1
@@ -452,7 +445,7 @@ questions:
     type: "int"
     min: 1
     label: "TPM Limit"
-    group: "LiteLLM Rate Limits"
+    group: "LiteLLM Configuration"
     show_if: "litellm.enabled=true"
 
   - variable: "litellm.rpmLimit"
@@ -461,7 +454,7 @@ questions:
     type: "int"
     min: 1
     label: "RPM Limit"
-    group: "LiteLLM Rate Limits"
+    group: "LiteLLM Configuration"
     show_if: "litellm.enabled=true"
 
   - variable: "litellm.llmGuardPlugin.enabled"
