@@ -28,7 +28,7 @@ spec:
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
       containers:
         - name: postgres
-          image: eeacms/postgres:16.4-1.1
+          image: eeacms/postgres:9.6s
           imagePullPolicy: {{ .Values.postgres.pullPolicy }}
           ports:
             - containerPort: 5432

@@ -20,7 +20,7 @@ metadata:
   {{- end }}
 
 spec:
-  ingressClassName: {{ .Values.ingress.restictedClassName }}
+  ingressClassName: {{ .Values.ingress.restrictedClassName }}
   rules:
   - host: {{ .Values.cachet.hostname }}
     http:
