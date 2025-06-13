@@ -45,6 +45,9 @@ Cachet is a beautiful and powerful open source status page system.
 
 ## Releases
 
+### Version 0.1.6 - 13 June 2025
+- patch ingress snippet [Silviu - [`cf2932d`](https://github.com/eea/helm-charts/commit/cf2932df0312208cff704332c046bacc020c7f00)]
+
 ### Version 0.1.5 - 13 June 2025
 - postgres fix [Silviu - [`5a4c1af`](https://github.com/eea/helm-charts/commit/5a4c1aff09694cc32e3bb543d831d7cceedeb664)]
 
