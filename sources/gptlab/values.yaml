@@ -378,6 +378,9 @@ services:
       memLimit: "4Gi"
       memRequest: "2Gi"
     replicas: 1
+    service:
+      type: "ClusterIP"
+      port: 3000
 
   # Index (Vespa) service configuration
   index:

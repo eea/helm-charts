@@ -170,6 +170,9 @@ helm upgrade gptlab eea/gptlab
 
 ## Releases
 
+### Version 0.1.6
+- Allow finer grain control for web service
+
 ### Version 0.1.5
 - Added missing description in `questions.yaml`.
 

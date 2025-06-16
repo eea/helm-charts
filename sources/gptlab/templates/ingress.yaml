@@ -33,7 +33,7 @@ spec:
             pathType: {{ .pathType }}
             backend:
               service:
-                name: {{ if eq .serviceName "gptlab-api-server" }}{{ include "gptlab.fullname" $ }}-api-server{{ else if eq .serviceName "gptlab-web-server" }}{{ include "gptlab.fullname" $ }}-web-server{{ else if eq .serviceName "gptlab-mailtrap" }}{{ include "gptlab.fullname" $ }}-mailtrap{{ else }}{{ .serviceName }}{{ end }}
+                name: {{ if contains .serviceName "gptlab-api-server" }}{{ include "gptlab.fullname" $ }}-api-server{{ else if contains .serviceName "gptlab-web-server" }}{{ include "gptlab.fullname" $ }}-web-server{{ else if contains .serviceName "gptlab-mailtrap" }}{{ include "gptlab.fullname" $ }}-mailtrap{{ else }}{{ .serviceName }}{{ end }}
                 port:
                   number: {{ .servicePort }}
           {{- end }}

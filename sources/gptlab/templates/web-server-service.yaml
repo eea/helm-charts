@@ -6,11 +6,18 @@ metadata:
     {{- include "gptlab.labels" . | nindent 4 }}
     app.kubernetes.io/component: web-server
 spec:
+  {{- if .Values.services.webServer.service.externalTrafficPolicy }}
+  externalTrafficPolicy: {{ .Values.services.webServer.service.externalTrafficPolicy }}
+  {{- end }}
+  type: {{ .Values.services.webServer.service.type }}
   ports:
-    - port: 3000
-      targetPort: 3000
+    - port: {{ .Values.services.webServer.service.port }}
+      targetPort: {{ .Values.services.webServer.service.port }}
       protocol: TCP
       name: http
+      {{- if and (eq .Values.services.webServer.service.type "NodePort") .Values.services.webServer.service.nodePort }}
+      nodePort: {{ .Values.services.webServer.service.nodePort }}
+      {{- end }}
   selector:
     {{- include "gptlab.selectorLabels" . | nindent 4 }}
     app.kubernetes.io/component: web-server
