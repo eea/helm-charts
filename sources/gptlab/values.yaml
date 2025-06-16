@@ -334,6 +334,9 @@ services:
       memRequest: "2Gi"
     # Number of replicas (range: 1-10)
     replicas: 1
+    service:
+      type: "ClusterIP"
+      port: 8080
 
   # Background worker service configuration
   background:
