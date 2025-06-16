@@ -170,6 +170,9 @@ helm upgrade gptlab eea/gptlab
 
 ## Releases
 
+### Version 0.1.7
+- Allow finer grain control for API service
+
 ### Version 0.1.6
 - Allow finer grain control for web service
 
