@@ -11,6 +11,9 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
+  {{- if .Values.litellm.service.externalTrafficPolicy }}
+  externalTrafficPolicy: {{ .Values.litellm.service.externalTrafficPolicy }}
+  {{- end }}
   type: {{ .Values.litellm.service.type }}
   ports:
     - port: {{ .Values.litellm.service.port }}

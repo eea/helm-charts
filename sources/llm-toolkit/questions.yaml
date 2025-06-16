@@ -97,6 +97,13 @@ questions:
     group: "Langfuse Configuration"
     required: true
 
+  - variable: "langfuse.licenseKey.value"
+    default: ""
+    description: "Langfuse Enterprise Edition license key (leave empty for Community Edition)"
+    type: "password"
+    label: "Enterprise License Key"
+    group: "Langfuse Configuration"
+
   - variable: "langfuse.replicas"
     default: 1
     description: "Default number of replicas for all Langfuse deployments"
@@ -270,12 +277,6 @@ questions:
     group: "Langfuse Networking"
     show_if: "langfuse.web.service.type=LoadBalancer || langfuse.web.service.type=NodePort"
 
-  - variable: "langfuse.licenseKey.value"
-    default: ""
-    description: "Langfuse Enterprise Edition license key (leave empty for Community Edition)"
-    type: "password"
-    label: "Enterprise License Key"
-    group: "Langfuse Enterprise"
 
   # LiteLLM section
   - variable: "litellm.enabled"
@@ -424,6 +425,29 @@ questions:
     label: "LiteLLM TLS Secret Name"
     group: "LiteLLM Networking"
     show_if: "litellm.enabled=true && litellm.ingress.enabled=true"
+
+  - variable: "litellm.service.type"
+    default: "ClusterIP"
+    description: "LiteLLM service type"
+    type: "enum"
+    options:
+      - "ClusterIP"
+      - "NodePort"
+      - "LoadBalancer"
+    label: "Service Type"
+    group: "LiteLLM Networking"
+    show_if: "litellm.enabled=true && litellm.ingress.enabled=true"
+
+  - variable: "litellm.service.externalTrafficPolicy"
+    default: "Cluster"
+    description: "External traffic policy for LoadBalancer/NodePort services"
+    type: "enum"
+    options:
+      - "Cluster"
+      - "Local"
+    label: "External Traffic Policy"
+    group: "LiteLLM Networking"
+    show_if: "litellm.service.type=LoadBalancer || litellm.service.type=NodePort"
 
   - variable: "litellm.logLevel"
     default: "info"
