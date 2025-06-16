@@ -264,6 +264,9 @@ helm delete llm-toolkit
 
 ## Releases
 
+### Version 0.1.6
+- Allow defining externalTrafficPolicy for litellm.
+
 ### Version 0.1.5
 - Updated grouping in `questions.yaml`.
 
