@@ -356,6 +356,28 @@ questions:
         default: ""
         group: "Networking"
 
+      - variable: "services.webServer.service.type"
+        default: "ClusterIP"
+        description: "GPTLab web service type"
+        type: "enum"
+        options:
+          - "ClusterIP"
+          - "NodePort"
+          - "LoadBalancer"
+        label: "Service Type"
+        group: "Networking"
+
+      - variable: "services.webServer.service.externalTrafficPolicy"
+        default: "Cluster"
+        description: "External traffic policy for GPTLab web LoadBalancer/NodePort service"
+        type: "enum"
+        options:
+          - "Cluster"
+          - "Local"
+        label: "External Traffic Policy"
+        group: "Networking"
+        show_if: "services.webServer.service.type=LoadBalancer || services.webServer.service.type=NodePort"
+
   # Storage configuration
   - variable: storage.localDynamicStorage.size
     label: "Dynamic Storage Size"
