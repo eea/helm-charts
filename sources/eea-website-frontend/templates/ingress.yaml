@@ -20,7 +20,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: nginx-service
+            name: frontend-nginx
             port:
               number: 80
   {{- if .Values.ingress.tls }}
