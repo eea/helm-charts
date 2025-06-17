@@ -38,8 +38,7 @@ ingress:
     nginx.ingress.kubernetes.io/proxy-send-timeout: '120'
 
 links:
-  backend: backend-varnish
-
+  backend:
 
 volto:
   serviceType: ClusterIP
@@ -67,7 +66,7 @@ volto:
     RAZZLE_MATOMO_URL:
     RAZZLE_MATOMO_SITE_ID: 
     RAZZLE_MATOMO_SECOND_SITE_ID:
-    RAZZLE_INTERNAL_API_PATH: 'http://backend-varnish:8080/www'
+    RAZZLE_INTERNAL_API_PATH:
     RAZZLE_PUBLIC_URL:
     VOLTO_ROBOTSTXT: 
     RAZZLE_DISABLE_DRAFT_WATERMARK: 
