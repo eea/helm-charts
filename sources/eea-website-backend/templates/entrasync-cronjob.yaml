@@ -24,7 +24,7 @@ spec:
           restartPolicy: OnFailure
           containers:
           - name: entrasync
-            image: {{ .Values.cronjobs.entrasync.image }}
+            image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
             imagePullPolicy: Always
             command: {{- toYaml .Values.cronjobs.entrasync.command | nindent 12 }}
             env:
