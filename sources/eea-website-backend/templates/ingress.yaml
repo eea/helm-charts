@@ -20,7 +20,7 @@ spec:
         pathType: ImplementationSpecific
         backend:
           service:
-            name: nginx-service
+            name: backend-nginx
             port:
               number: 80
   - host: {{ .Values.plone.hostname }}
@@ -30,7 +30,7 @@ spec:
         pathType: ImplementationSpecific   
         backend:
           service:
-            name: {{ .Release.Name }}-nginx-service
+            name: backend-nginx
             port:
               number: 80                  
   {{- if .Values.ingress.tls }}

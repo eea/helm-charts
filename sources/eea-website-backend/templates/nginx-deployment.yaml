@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-nginx-deployment
+  name: {{ .Release.Name }}-dpl-nginx
   labels:
     component: nginx
     {{- include "appl.labels" . | nindent 4 }}
