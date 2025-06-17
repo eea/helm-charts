@@ -24,8 +24,7 @@ spec:
           restartPolicy: OnFailure
           containers:
           - name: zodbpack
-            image: {{ .Values.cronjobs.zodbpack.image }}
-            imagePullPolicy: Always
+            image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
             command: {{- toYaml .Values.cronjobs.zodbpack.command | nindent 12 }}
             env:
             - name: SERVER_NAME
