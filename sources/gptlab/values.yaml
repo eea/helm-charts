@@ -428,10 +428,6 @@ storage:
   modelCacheHuggingface:
     size: "5Gi"
 
-  # Web server source code storage (for development mode)
-  webserverSrc:
-    size: "5Gi"
-
 # =============================================
 # Network Configuration
 # =============================================
@@ -478,9 +474,6 @@ ingress:
 # =============================================
 # Deployment Options
 # =============================================
-
-# Enable development mode features (true/false)
-developMode: false
 
 # Node selectors for pod assignment
 nodeSelector: {}

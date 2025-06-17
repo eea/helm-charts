@@ -32,14 +32,6 @@ helm install gptlab eea/gptlab
 helm install gptlab eea/gptlab -f values.yaml
 ```
 
-### Development Installation
-
-For a development setup with additional debugging features:
-
-```bash
-helm install gptlab eea/gptlab -f values-dev.yaml
-```
-
 ## Architecture
 
 This chart deploys a complete GPTLab stack with the following components:
@@ -141,16 +133,6 @@ langfuse:
   secretKey: "your-secret-key"
 ```
 
-## Development Mode
-
-For development environments, enable development mode:
-
-```yaml
-developMode: true
-```
-
-This will deploy additional services like a web-based IDE for on-cluster development.
-
 ## Uninstallation
 
 To uninstall the chart:
@@ -169,6 +151,9 @@ helm upgrade gptlab eea/gptlab
 ```
 
 ## Releases
+
+### Version 0.1.8
+- Removed development services.
 
 ### Version 0.1.7
 - Allow finer grain control for API service

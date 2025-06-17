@@ -437,11 +437,3 @@ questions:
     default: "2Gi"
     group: "Storage"
     show_if: "redis.deploy=true"
-
-  # Development Mode
-  - variable: developMode
-    label: "Development Mode"
-    description: "Enable development features (IDE, hot reloading)"
-    type: boolean
-    default: false
-    group: "Advanced"
