@@ -31,18 +31,16 @@ spec:
         env:
         - name: LINKING_KEY
           value: "{{ .Values.linkingKey }}"
-        - name: SCANNER_NAME
+        - name: NAME
           value: "{{ .Values.scannerName | default .Release.Name }}"
-        - name: ADMIN_USER
+        - name: USERNAME
           value: "{{ .Values.adminName }}"
-        - name: ADMIN_PASS
+        - name: PASSWORD
           value: "{{ .Values.adminPwd }}"
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
         securityContext:
           {{- toYaml .Values.securityContext | nindent 12 }}
-        stdin: true
-        tty: true
 
         # Port 8834 - User Interface, TSC communication, and API calls
         ports:
