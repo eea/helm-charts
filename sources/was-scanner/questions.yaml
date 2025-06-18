@@ -1,0 +1,16 @@
+# For more options see https://docs.tenable.com/web-app-scanning/Content/WAS/GettingStarted/DeployWASDocker.htm
+questions:
+- variable: wasLinkingKey
+  type: string
+  default: true
+  description: You must retrieve the WAS Agent linking key from Tenable Vulnerability Management.
+  label: Nessus WAS Agent linking key.
+  required: true
+
+- variable: wasScannerName
+  type: string
+  default: ""
+  label: Scanner name
+  description: The name of the Tenable Web App Scanning scanner to appear in Tenable Vulnerability Management
+  required: true
+
