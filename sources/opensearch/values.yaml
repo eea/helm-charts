@@ -129,7 +129,8 @@ image:
   tag: ""
   pullPolicy: "IfNotPresent"
 
-podAnnotations: {}
+podAnnotations:
+  {}
   # iam.amazonaws.com/role: es-cluster
 
 # OpenSearch Statefulset annotations
@@ -214,21 +215,25 @@ persistence:
   size: 8Gi
   annotations: {}
 
-extraVolumes: []
+extraVolumes:
+  []
   # - name: extras
   #   emptyDir: {}
 
-extraVolumeMounts: []
+extraVolumeMounts:
+  []
   # - name: extras
   #   mountPath: /usr/share/extras
   #   readOnly: true
 
-extraContainers: []
+extraContainers:
+  []
   # - name: do-something
   #   image: busybox
   #   command: ['do', 'something']
 
-extraInitContainers: []
+extraInitContainers:
+  []
   # - name: do-somethings
   #   image: busybox
   #   command: ['do', 'something']
@@ -333,7 +338,8 @@ securityConfig:
     # * It is an error to define both data and securityConfigSecret.
     securityConfigSecret: ""
     dataComplete: true
-    data: {}
+    data:
+      {}
       # config.yml: |-
       # internal_users.yml: |-
       # roles.yml: |-
@@ -354,7 +360,8 @@ startupProbe:
   timeoutSeconds: 3
   failureThreshold: 30
 
-livenessProbe: {}
+livenessProbe:
+  {}
   # periodSeconds: 20
   # timeoutSeconds: 5
   # failureThreshold: 10
@@ -382,17 +389,18 @@ tolerations: []
 # Enabling this will publically expose your OpenSearch instance.
 # Only enable this if you have security enabled on your cluster
 ingress:
-  enabled: false
+  enabled: true
   # For Kubernetes >= 1.18 you should specify the ingress-controller via the field ingressClassName
   # See https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/#specifying-the-class-of-an-ingress
   # ingressClassName: nginx
 
-  annotations: {}
+  annotations:
+    {}
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   path: /
   hosts:
-    - chart-example.local
+    - opensearch.example.com
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:
@@ -403,7 +411,8 @@ fullnameOverride: ""
 
 masterTerminationFix: false
 
-opensearchLifecycle: {}
+opensearchLifecycle:
+  {}
   # preStop:
   #   exec:
   #     command: ["/bin/sh", "-c", "echo Hello from the preStart handler > /usr/share/message"]
@@ -411,7 +420,8 @@ opensearchLifecycle: {}
   #   exec:
   #     command: ["/bin/sh", "-c", "echo Hello from the postStart handler > /usr/share/message"]
 
-lifecycle: {}
+lifecycle:
+  {}
   # preStop:
   #   exec:
   #     command: ["/bin/sh", "-c", "echo Hello from the postStart handler > /usr/share/message"]
@@ -475,7 +485,8 @@ plugins:
   # - example-fake-plugin
 
 # -- Array of extra K8s manifests to deploy
-extraObjects: []
+extraObjects:
+  []
   # - apiVersion: secrets-store.csi.x-k8s.io/v1
   #   kind: SecretProviderClass
   #   metadata:
