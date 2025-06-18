@@ -1,0 +1,289 @@
+questions:
+  - variable: opensearchHosts
+    label: OpenSearch Hosts
+    type: string
+    required: true
+    default: "https://opensearch-cluster-master:9200"
+    description: "URL to OpenSearch hosts."
+
+  - variable: replicaCount
+    label: Replica Count
+    type: int
+    default: 1
+    description: "Number of dashboard replicas to deploy."
+
+  - variable: image.repository
+    label: Image Repository
+    type: string
+    default: "opensearchproject/opensearch-dashboards"
+    description: "Dashboard container image repository."
+
+  - variable: image.tag
+    label: Image Tag
+    type: string
+    default: ""
+    description: "Docker image tag for OpenSearch. Default uses the chart appVersion if not set."
+
+  - variable: image.pullPolicy
+    label: Image Pull Policy
+    type: string
+    default: "IfNotPresent"
+    description: "Image pull policy for dashboard container."
+
+  - variable: serviceAccount.create
+    label: Create Service Account
+    type: boolean
+    default: true
+    description: "Whether to create a service account."
+
+  - variable: serviceAccount.annotations
+    label: Service Account Annotations
+    type: multiline
+    default: {}
+    description: "Annotations to add to the service account."
+
+  - variable: serviceAccount.name
+    label: Service Account Name
+    type: string
+    default: ""
+    description: "Only used if serviceAccount.create is true."
+
+  - variable: rbac.create
+    label: Enable RBAC
+    type: boolean
+    default: true
+    description: "Enable RBAC resources."
+
+  - variable: secretMounts
+    label: Secret Mounts
+    type: multiline
+    default: []
+    description: "List of secrets to mount inside the pod."
+
+  - variable: podAnnotations
+    label: Pod Annotations
+    type: multiline
+    default: {}
+    description: "Annotations for dashboard pods."
+
+  - variable: dashboardAnnotations
+    label: Deployment Annotations
+    type: multiline
+    default: {}
+    description: "Annotations for dashboard deployment."
+
+  - variable: extraEnvs
+    label: Extra Environment Variables
+    type: multiline
+    default: []
+    description: "Additional environment variables."
+
+  - variable: envFrom
+    label: Environment From Sources
+    type: multiline
+    default: []
+    description: "EnvFrom entries."
+
+  - variable: extraVolumes
+    label: Extra Volumes
+    type: multiline
+    default: []
+    description: "Extra volumes for dashboard pods."
+
+  - variable: extraVolumeMounts
+    label: Extra Volume Mounts
+    type: multiline
+    default: []
+    description: "Extra volume mounts for dashboard containers."
+
+  - variable: extraInitContainers
+    label: Extra Init Containers
+    type: string
+    default: ""
+    description: "YAML for extra init containers."
+
+  - variable: extraContainers
+    label: Extra Containers
+    type: string
+    default: ""
+    description: "YAML for extra sidecar containers."
+
+  - variable: serverHost
+    label: Server Host
+    type: string
+    default: "0.0.0.0"
+    description: "The host to bind the server to."
+
+  - variable: service.type
+    label: Service Type
+    type: string
+    default: "ClusterIP"
+    description: "Service type for dashboard."
+
+  - variable: service.port
+    label: Service Port
+    type: int
+    default: 5601
+    description: "Port to expose dashboard on."
+
+  - variable: service.metricsPort
+    label: Metrics Port
+    type: int
+    default: 9601
+    description: "Port to expose Prometheus metrics."
+
+  - variable: ingress.enabled
+    label: Enable Ingress
+    type: boolean
+    default: false
+    description: "Enable ingress for dashboard."
+
+  - variable: ingress.annotations
+    label: Ingress Annotations
+    type: multiline
+    default: {}
+    description: "Only used if ingress.enabled is true."
+
+  - variable: ingress.labels
+    label: Ingress Labels
+    type: multiline
+    default: {}
+    description: "Only used if ingress.enabled is true."
+
+  - variable: ingress.hosts
+    label: Ingress Hosts
+    type: multiline
+    default:
+      - host: chart-example.local
+        paths:
+          - path: /
+            backend:
+              serviceName: ""
+              servicePort: ""
+    description: "Only used if ingress.enabled is true."
+
+  - variable: ingress.tls
+    label: Ingress TLS
+    type: multiline
+    default: []
+    description: "Only used if ingress.enabled is true."
+
+  - variable: resources.requests.cpu
+    label: CPU Request
+    type: string
+    default: "100m"
+    description: "CPU resource request."
+
+  - variable: resources.requests.memory
+    label: Memory Request
+    type: string
+    default: "512M"
+    description: "Memory resource request."
+
+  - variable: resources.limits.cpu
+    label: CPU Limit
+    type: string
+    default: "100m"
+    description: "CPU resource limit."
+
+  - variable: resources.limits.memory
+    label: Memory Limit
+    type: string
+    default: "512M"
+    description: "Memory resource limit."
+
+  - variable: autoscaling.enabled
+    label: Enable Autoscaling
+    type: boolean
+    default: false
+    description: "Enable HPA autoscaling."
+
+  - variable: autoscaling.minReplicas
+    label: Min Replicas
+    type: int
+    default: 1
+    description: "Minimum number of replicas for autoscaling."
+
+  - variable: autoscaling.maxReplicas
+    label: Max Replicas
+    type: int
+    default: 10
+    description: "Maximum number of replicas for autoscaling."
+
+  - variable: autoscaling.targetCPUUtilizationPercentage
+    label: Target CPU Utilization (%)
+    type: int
+    default: 80
+    description: "CPU threshold for autoscaling."
+
+  - variable: updateStrategy.type
+    label: Update Strategy Type
+    type: string
+    default: "Recreate"
+    description: "Deployment update strategy."
+
+  - variable: nodeSelector
+    label: Node Selector
+    type: multiline
+    default: {}
+    description: "Node selector for scheduling pods."
+
+  - variable: tolerations
+    label: Tolerations
+    type: multiline
+    default: []
+    description: "Tolerations for pod scheduling."
+
+  - variable: affinity
+    label: Affinity
+    type: multiline
+    default: {}
+    description: "Affinity rules for pod scheduling."
+
+  - variable: lifecycle
+    label: Pod Lifecycle Hooks
+    type: multiline
+    default: {}
+    description: "Lifecycle hooks for the dashboard container."
+
+  - variable: plugins.enabled
+    label: Enable Plugin Support
+    type: boolean
+    default: false
+    description: "Enable custom plugin support."
+
+  - variable: plugins.installList
+    label: Plugins to Install
+    type: multiline
+    default: []
+    description: "Only used if plugins.enabled is true."
+
+  - variable: plugins.removeList
+    label: Plugins to Remove
+    type: multiline
+    default: []
+    description: "Only used if plugins.enabled is true."
+
+  - variable: serviceMonitor.enabled
+    label: Enable ServiceMonitor
+    type: boolean
+    default: false
+    description: "Enable ServiceMonitor for Prometheus."
+
+  - variable: serviceMonitor.path
+    label: ServiceMonitor Metrics Path
+    type: string
+    default: "/_prometheus/metrics"
+    description: "Only used if serviceMonitor.enabled is true."
+
+  - variable: serviceMonitor.interval
+    label: ServiceMonitor Scrape Interval
+    type: string
+    default: "10s"
+    description: "Only used if serviceMonitor.enabled is true."
+
+  - variable: serviceMonitor.labels
+    label: ServiceMonitor Labels
+    type: multiline
+    default: {}
+    description: "Only used if serviceMonitor.enabled is true."
