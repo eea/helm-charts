@@ -1,7 +1,8 @@
 questions:
 - variable: linkingKey
   type: string
-  default: true
+  required: true
+  default: ""
   description: You must retrieve the agent linking key from Tenable Vulnerability Management.
   label: Nessus Agent linking key.
 
@@ -19,11 +20,13 @@ questions:
 
 - variable: adminName
   type: string
+  required: true
   default: ""
   label: Administrator name
   description: Username for admin user creation. If not provided, defaults to admin.
 
 - variable: adminPwd
+  required: true
   type: string
   default: ""
   label: Administrator password
