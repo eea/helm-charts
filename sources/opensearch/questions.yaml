@@ -1,236 +1,804 @@
 questions:
-  - variable: replicaCount
-    label: Number of OpenSearch replicas
-    type: int
-    required: true
-    default: 3
-    min: 1
-    max: 10
-    group: "OpenSearch Configuration"
-
-  - variable: image.repository
-    label: OpenSearch image repository
-    type: string
-    required: true
-    default: "opensearchproject/opensearch"
-    group: "OpenSearch Configuration"
-
-  - variable: image.tag
-    label: OpenSearch image tag
-    type: string
-    required: true
-    default: "2.15.0"
-    group: "OpenSearch Configuration"
-
-  - variable: image.pullPolicy
-    label: OpenSearch image pull policy
-    type: enum
-    options:
-      - Always
-      - IfNotPresent
-      - Never
-    required: true
-    default: IfNotPresent
-    group: "OpenSearch Configuration"
-
-  - variable: dashboards.enabled
-    label: Enable OpenSearch Dashboards
-    type: boolean
-    required: true
-    default: true
-    group: "Dashboards Configuration"
-
-  - variable: dashboards.image.repository
-    label: Dashboards image repository
-    type: string
-    required: true
-    default: "opensearchproject/opensearch-dashboards"
-    group: "Dashboards Configuration"
-    show_if: "dashboards.enabled=true"
-
-  - variable: dashboards.image.tag
-    label: Dashboards image tag
-    type: string
-    required: true
-    default: "2.15.0"
-    group: "Dashboards Configuration"
-    show_if: "dashboards.enabled=true"
-
-  - variable: dashboards.image.pullPolicy
-    label: Dashboards image pull policy
-    type: enum
-    options:
-      - Always
-      - IfNotPresent
-      - Never
-    required: true
-    default: IfNotPresent
-    group: "Dashboards Configuration"
-    show_if: "dashboards.enabled=true"
-
-  - variable: dashboards.service.type
-    label: Dashboards Service Type
-    type: enum
-    options:
-      - ClusterIP
-      - NodePort
-      - LoadBalancer
-    required: true
-    default: ClusterIP
-    group: "Dashboards Configuration"
-    show_if: "dashboards.enabled=true"
-
-  - variable: dashboards.service.port
-    label: Dashboards Service Port
-    type: int
-    required: true
-    default: 5601
-    group: "Dashboards Configuration"
-    show_if: "dashboards.enabled=true"
-
-  - variable: dashboards.ingress.enabled
-    label: Enable Dashboards ingress
-    type: boolean
-    required: true
-    default: true
-    group: "Dashboards Configuration"
-    show_if: "dashboards.enabled=true"
-
-  - variable: dashboards.ingress.className
-    label: Dashboards ingress class name
-    type: string
-    required: true
-    default: "nginx"
-    group: "Dashboards Configuration"
-    show_if: "dashboards.enabled=true && dashboards.ingress.enabled=true"
-
-  - variable: dashboards.ingress.host
-    label: Dashboards ingress host
-    type: hostname
-    required: true
-    default: "dashboards.local"
-    group: "Dashboards Configuration"
-    show_if: "dashboards.enabled=true && dashboards.ingress.enabled=true"
-
-  - variable: service.type
-    label: OpenSearch Service Type
-    type: enum
-    options:
-      - ClusterIP
-      - NodePort
-      - LoadBalancer
-    required: true
-    default: ClusterIP
-    group: "OpenSearch Service"
-
-  - variable: service.port
-    label: OpenSearch Service Port
-    type: int
-    required: true
-    default: 9200
-    group: "OpenSearch Service"
-
-  - variable: persistence.enabled
-    label: Enable persistence
-    type: boolean
-    required: true
-    default: true
-    group: "Persistence"
-
-  - variable: persistence.storageClass
-    label: Storage Class
-    type: string
-    required: true
-    default: "standard"
-    group: "Persistence"
-    show_if: "persistence.enabled=true"
-
-  - variable: persistence.accessMode
-    label: Access Mode
-    type: enum
-    options:
-      - ReadWriteOnce
-      - ReadOnlyMany
-      - ReadWriteMany
-    required: true
-    default: ReadWriteOnce
-    group: "Persistence"
-    show_if: "persistence.enabled=true"
-
-  - variable: persistence.size
-    label: Persistence size
-    type: string
-    required: true
-    default: "5Gi"
-    group: "Persistence"
-    show_if: "persistence.enabled=true"
-
-  - variable: resources.limits.cpu
-    label: CPU limits
-    type: string
-    required: true
-    default: "1"
-    group: "Resources"
-
-  - variable: resources.limits.memory
-    label: Memory limits
-    type: string
-    required: true
-    default: "2Gi"
-    group: "Resources"
-
-  - variable: resources.requests.cpu
-    label: CPU requests
-    type: string
-    required: true
-    default: "500m"
-    group: "Resources"
-
-  - variable: resources.requests.memory
-    label: Memory requests
-    type: string
-    required: true
-    default: "1Gi"
-    group: "Resources"
-
-  - variable: env[0].value
-    label: Cluster Name (cluster.name)
+  - variable: clusterName
+    label: Cluster Name
     type: string
     required: true
     default: "opensearch-cluster"
-    group: "Environment Variables"
+    description: "The name of the OpenSearch cluster."
 
-  - variable: env[2].value
-    label: Initial Master Nodes (cluster.initial_master_nodes)
+  - variable: nodeGroup
+    label: Node Group
     type: string
     required: true
-    default: "opensearch-0,opensearch-1,opensearch-2"
-    group: "Environment Variables"
+    default: "master"
+    description: "The node group name for this OpenSearch node."
 
-  - variable: env[3].value
-    label: Bootstrap Memory Lock (bootstrap.memory_lock)
+  - variable: singleNode
+    label: Single Node
     type: boolean
-    required: true
-    default: true
-    group: "Environment Variables"
+    default: false
+    description: "Run OpenSearch in single-node mode."
 
-  - variable: env[4].value
-    label: OPENSEARCH_JAVA_OPTS
+  - variable: masterService
+    label: Master Service
     type: string
     required: true
-    default: "-Xms2g -Xmx2g"
-    group: "Environment Variables"
+    default: "opensearch-cluster-master"
+    description: "The service name that non-master groups connect to when joining the cluster."
 
-  - variable: env[5].value
-    label: Initial Admin Password (OPENSEARCH_INITIAL_ADMIN_PASSWORD)
-    type: password
-    required: true
-    default: "R0ck3t$SuperPass99!"
-    group: "Environment Variables"
+  - variable: roles
+    label: Node Roles
+    type: multiline
+    default: |
+      - master
+      - ingest
+      - data
+      - remote_cluster_client
+    description: "Roles for the OpenSearch node."
 
-  - variable: env[6].value
+  - variable: replicas
+    label: Replicas
+    type: int
+    default: 3
+    description: "Number of replicas for this node group."
+
+  - variable: majorVersion
+    label: Major Version
+    type: string
+    default: ""
+    description: "Major version of OpenSearch, falls back to imageTag or appVersion if not set."
+
+  - variable: global.dockerRegistry
+    label: Global Docker Registry
+    type: string
+    default: ""
+    description: "Override the default docker registry (e.g., use a private registry)."
+
+  - variable: opensearchHome
+    label: OpenSearch Home
+    type: string
+    default: "/usr/share/opensearch"
+    description: "Path to the OpenSearch home directory."
+
+  - variable: config
+    label: OpenSearch Config Files
+    type: multiline
+    default: |
+      opensearch.yml: |
+        cluster.name: opensearch-cluster
+
+        network.host: 0.0.0.0
+        plugins:
+          security:
+            ssl:
+              transport:
+                pemcert_filepath: esnode.pem
+                pemkey_filepath: esnode-key.pem
+                pemtrustedcas_filepath: root-ca.pem
+                enforce_hostname_verification: false
+              http:
+                enabled: true
+                pemcert_filepath: esnode.pem
+                pemkey_filepath: esnode-key.pem
+                pemtrustedcas_filepath: root-ca.pem
+            allow_unsafe_democertificates: true
+            allow_default_init_securityindex: true
+            authcz:
+              admin_dn:
+                - CN=kirk,OU=client,O=client,L=test,C=de
+            audit.type: internal_opensearch
+            enable_snapshot_restore_privilege: true
+            check_snapshot_restore_write_privileges: true
+            restapi:
+              roles_enabled: ["all_access", "security_rest_api_access"]
+            system_indices:
+              enabled: true
+              indices:
+                [
+                  ".opendistro-alerting-config",
+                  ".opendistro-alerting-alert*",
+                  ".opendistro-anomaly-results*",
+                  ".opendistro-anomaly-detector*",
+                  ".opendistro-anomaly-checkpoints",
+                  ".opendistro-anomaly-detection-state",
+                  ".opendistro-reports-*",
+                  ".opendistro-notifications-*",
+                  ".opendistro-notebooks",
+                  ".opendistro-asynchronous-search-response*",
+                ]
+    description: "YAML config files for OpenSearch (e.g., opensearch.yml, log4j2.properties)."
+
+  - variable: extraEnvs
+    label: Extra Environment Variables
+    type: multiline
+    default: ""
+    description: "Extra environment variables to append to this node group."
+
+  - variable: envFrom
+    label: Environment From
+    type: multiline
+    default: ""
+    description: "EnvFrom sources (secrets or config maps) to load environment variables."
+
+  - variable: secretMounts
+    label: Secret Mounts
+    type: multiline
+    default: ""
+    description: "List of secrets and their mount paths inside the pod."
+
+  - variable: hostAliases
+    label: Host Aliases
+    type: multiline
+    default: ""
+    description: "Host aliases to add to the pod."
+
+  - variable: image.repository
+    label: Image Repository
+    type: string
+    default: "opensearchproject/opensearch"
+    description: "Docker image repository for OpenSearch."
+
+  - variable: image.tag
+    label: Image Tag
+    type: string
+    default: ""
+    description: "Docker image tag for OpenSearch. Default uses the chart appVersion if not set."
+
+  - variable: image.pullPolicy
+    label: Image Pull Policy
+    type: enum
+    options:
+      - IfNotPresent
+      - Always
+      - Never
+    default: "IfNotPresent"
+    description: "Image pull policy for OpenSearch containers."
+
+  - variable: podAnnotations
+    label: Pod Annotations
+    type: multiline
+    default: ""
+    description: "Annotations to add to the OpenSearch pods."
+
+  - variable: openSearchAnnotations
+    label: StatefulSet Annotations
+    type: multiline
+    default: ""
+    description: "Annotations for the OpenSearch StatefulSet."
+
+  - variable: labels
+    label: Additional Labels
+    type: multiline
+    default: ""
+    description: "Additional labels for OpenSearch pods."
+
+  - variable: opensearchJavaOpts
+    label: OpenSearch Java Options
+    type: string
+    default: "-Xmx512M -Xms512M"
+    description: "JVM options for OpenSearch."
+
+  - variable: resources.requests.cpu
+    label: CPU Requests
+    type: string
+    default: "1000m"
+    description: "CPU resource requests for OpenSearch pods."
+
+  - variable: resources.requests.memory
+    label: Memory Requests
+    type: string
+    default: "100Mi"
+    description: "Memory resource requests for OpenSearch pods."
+
+  - variable: initResources
+    label: Init Container Resources
+    type: multiline
+    default: ""
+    description: "Resource requests and limits for init containers."
+
+  - variable: sidecarResources
+    label: Sidecar Resources
+    type: multiline
+    default: ""
+    description: "Resource requests and limits for sidecar containers."
+
+  - variable: networkHost
     label: Network Host
     type: string
-    required: true
     default: "0.0.0.0"
-    group: "Environment Variables"
+    description: "Network host address to bind OpenSearch."
+
+  - variable: rbac.create
+    label: Enable RBAC
+    type: boolean
+    default: false
+    description: "Enable RBAC for OpenSearch."
+
+  - variable: rbac.serviceAccountAnnotations
+    label: Service Account Annotations
+    type: multiline
+    default: ""
+    description: "Annotations for the service account."
+
+  - variable: rbac.serviceAccountName
+    label: Service Account Name
+    type: string
+    default: ""
+    description: "Service account name. Only used if rbac.create is true."
+
+  - variable: rbac.automountServiceAccountToken
+    label: Automount Service Account Token
+    type: boolean
+    default: false
+    description: "Automount the service account token."
+
+  - variable: podSecurityPolicy.create
+    label: Enable Pod Security Policy
+    type: boolean
+    default: false
+    description: "Enable PodSecurityPolicy for OpenSearch."
+
+  - variable: podSecurityPolicy.name
+    label: Pod Security Policy Name
+    type: string
+    default: ""
+    description: "Name of the PodSecurityPolicy to use. Only relevant if podSecurityPolicy.create is true."
+
+  - variable: persistence.enabled
+    label: Enable Persistence
+    type: boolean
+    default: true
+    description: "Enable persistent volume for OpenSearch data."
+
+  - variable: persistence.enableInitChown
+    label: Enable Init Chown
+    type: boolean
+    default: true
+    description: "Enable initContainer to update permissions on persistent disk."
+
+  - variable: persistence.labels.enabled
+    label: Enable Persistence Labels
+    type: boolean
+    default: false
+    description: "Enable default labels for volumeClaimTemplate."
+
+  - variable: persistence.labels.additionalLabels
+    label: Additional Persistence Labels
+    type: multiline
+    default: ""
+    description: "Custom labels for the volumeClaimTemplate. Only used if persistence.labels.enabled is true."
+
+  - variable: persistence.accessModes
+    label: Persistence Access Modes
+    type: multiline
+    default: |
+      - ReadWriteOnce
+    description: "Access modes for persistent volume. Only used if persistence.enabled is true."
+
+  - variable: persistence.size
+    label: Persistence Size
+    type: string
+    default: "8Gi"
+    description: "Persistent volume size. Only relevant if persistence.enabled is true."
+
+  - variable: persistence.annotations
+    label: Persistence Annotations
+    type: multiline
+    default: ""
+    description: "Annotations for the persistent volume."
+
+  - variable: extraVolumes
+    label: Extra Volumes
+    type: multiline
+    default: ""
+    description: "Additional volumes to add to the pod."
+
+  - variable: extraVolumeMounts
+    label: Extra Volume Mounts
+    type: multiline
+    default: ""
+    description: "Additional volume mounts for the pod."
+
+  - variable: extraContainers
+    label: Extra Containers
+    type: multiline
+    default: ""
+    description: "Additional containers to run in the pod."
+
+  - variable: extraInitContainers
+    label: Extra Init Containers
+    type: multiline
+    default: ""
+    description: "Additional init containers to run before the main container."
+
+  - variable: priorityClassName
+    label: Priority Class Name
+    type: string
+    default: ""
+    description: "Kubernetes PriorityClass for the OpenSearch pods."
+
+  - variable: antiAffinityTopologyKey
+    label: Anti-Affinity Topology Key
+    type: string
+    default: "kubernetes.io/hostname"
+    description: "Topology key for pod anti-affinity."
+
+  - variable: antiAffinity
+    label: Anti-Affinity Type
+    type: enum
+    options:
+      - soft
+      - hard
+    default: "soft"
+    description: "Type of anti-affinity for OpenSearch pods."
+
+  - variable: nodeAffinity
+    label: Node Affinity
+    type: multiline
+    default: ""
+    description: "Node affinity rules for pod scheduling."
+
+  - variable: topologySpreadConstraints
+    label: Topology Spread Constraints
+    type: multiline
+    default: ""
+    description: "Pod topology spread constraints."
+
+  - variable: podManagementPolicy
+    label: Pod Management Policy
+    type: enum
+    options:
+      - Parallel
+      - OrderedReady
+    default: "Parallel"
+    description: "Pod management policy for StatefulSet."
+
+  - variable: enableServiceLinks
+    label: Enable Service Links
+    type: boolean
+    default: true
+    description: "Enable service links in pods."
+
+  - variable: protocol
+    label: Protocol
+    type: string
+    default: "https"
+    description: "Protocol to use for OpenSearch service."
+
+  - variable: httpPort
+    label: HTTP Port
+    type: int
+    default: 9200
+    description: "HTTP port for OpenSearch."
+
+  - variable: transportPort
+    label: Transport Port
+    type: int
+    default: 9300
+    description: "Transport port for OpenSearch."
+
+  - variable: metricsPort
+    label: Metrics Port
+    type: int
+    default: 9600
+    description: "Metrics port for OpenSearch."
+
+  - variable: httpHostPort
+    label: HTTP Host Port
+    type: string
+    default: ""
+    description: "Host port to map the HTTP port."
+
+  - variable: transportHostPort
+    label: Transport Host Port
+    type: string
+    default: ""
+    description: "Host port to map the transport port."
+
+  - variable: service.labels
+    label: Service Labels
+    type: multiline
+    default: ""
+    description: "Labels to add to the OpenSearch service."
+
+  - variable: service.labelsHeadless
+    label: Headless Service Labels
+    type: multiline
+    default: ""
+    description: "Labels for the headless service."
+
+  - variable: service.headless.annotations
+    label: Headless Service Annotations
+    type: multiline
+    default: ""
+    description: "Annotations for the headless service."
+
+  - variable: service.type
+    label: Service Type
+    type: enum
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    default: "ClusterIP"
+    description: "Type of Kubernetes service."
+
+  - variable: service.nodePort
+    label: Service NodePort
+    type: string
+    default: ""
+    description: "NodePort for the OpenSearch service."
+
+  - variable: service.annotations
+    label: Service Annotations
+    type: multiline
+    default: ""
+    description: "Annotations for the OpenSearch service."
+
+  - variable: service.httpPortName
+    label: HTTP Port Name
+    type: string
+    default: "http"
+    description: "Name for the HTTP port."
+
+  - variable: service.transportPortName
+    label: Transport Port Name
+    type: string
+    default: "transport"
+    description: "Name for the transport port."
+
+  - variable: service.metricsPortName
+    label: Metrics Port Name
+    type: string
+    default: "metrics"
+    description: "Name for the metrics port."
+
+  - variable: service.loadBalancerIP
+    label: LoadBalancer IP
+    type: string
+    default: ""
+    description: "LoadBalancer IP address."
+
+  - variable: service.loadBalancerSourceRanges
+    label: LoadBalancer Source Ranges
+    type: multiline
+    default: ""
+    description: "Source ranges for the LoadBalancer."
+
+  - variable: service.externalTrafficPolicy
+    label: External Traffic Policy
+    type: string
+    default: ""
+    description: "External traffic policy for the LoadBalancer."
+
+  - variable: updateStrategy
+    label: Update Strategy
+    type: string
+    default: "RollingUpdate"
+    description: "Update strategy for the StatefulSet."
+
+  - variable: maxUnavailable
+    label: Max Unavailable
+    type: int
+    default: 1
+    description: "Max unavailable pods during maintenance."
+
+  - variable: podSecurityContext.fsGroup
+    label: Pod SecurityContext fsGroup
+    type: int
+    default: 1000
+    description: "fsGroup for the pod security context."
+
+  - variable: podSecurityContext.runAsUser
+    label: Pod SecurityContext runAsUser
+    type: int
+    default: 1000
+    description: "runAsUser for the pod security context."
+
+  - variable: securityContext.capabilities.drop
+    label: Drop Capabilities
+    type: multiline
+    default: |
+      - ALL
+    description: "Linux capabilities to drop in security context."
+
+  - variable: securityContext.runAsNonRoot
+    label: Run As Non-Root
+    type: boolean
+    default: true
+    description: "Run containers as non-root user."
+
+  - variable: securityContext.runAsUser
+    label: SecurityContext runAsUser
+    type: int
+    default: 1000
+    description: "User ID to run the container."
+
+  - variable: securityConfig.enabled
+    label: Enable Security Config
+    type: boolean
+    default: true
+    description: "Enable OpenSearch security configuration."
+
+  - variable: securityConfig.path
+    label: Security Config Path
+    type: string
+    default: "/usr/share/opensearch/plugins/opensearch-security/securityconfig"
+    description: "Path to the security configuration directory. Only used if securityConfig.enabled is true."
+
+  - variable: securityConfig.config.config.securityConfigSecret
+    label: Security Config Secret Name
+    type: string
+    default: ""
+    description: "Name of the security config secret. Used only if securityConfig.enabled is true and config.data is not set."
+
+  - variable: securityConfig.config.config.dataComplete
+    label: Security Config Data Complete
+    type: boolean
+    default: true
+    description: "Is the security config data complete."
+
+  - variable: securityConfig.config.config.data
+    label: Security Config Data
+    type: multiline
+    default: ""
+    description: "Inline config data for security. Used only if securityConfig.enabled is true and securityConfigSecret is not set."
+
+  - variable: terminationGracePeriod
+    label: Termination Grace Period
+    type: int
+    default: 120
+    description: "Grace period (seconds) for pod termination."
+
+  - variable: sysctlVmMaxMapCount
+    label: Sysctl vm.max_map_count
+    type: int
+    default: 262144
+    description: "Value for sysctl vm.max_map_count."
+
+  - variable: startupProbe.tcpSocket.port
+    label: Startup Probe TCP Port
+    type: int
+    default: 9200
+    description: "Port for the startup probe TCP check."
+
+  - variable: startupProbe.initialDelaySeconds
+    label: Startup Probe Initial Delay
+    type: int
+    default: 5
+    description: "Initial delay seconds for startup probe."
+
+  - variable: startupProbe.periodSeconds
+    label: Startup Probe Period Seconds
+    type: int
+    default: 10
+    description: "Period seconds for startup probe."
+
+  - variable: startupProbe.timeoutSeconds
+    label: Startup Probe Timeout Seconds
+    type: int
+    default: 3
+    description: "Timeout seconds for startup probe."
+
+  - variable: startupProbe.failureThreshold
+    label: Startup Probe Failure Threshold
+    type: int
+    default: 30
+    description: "Failure threshold for startup probe."
+
+  - variable: livenessProbe
+    label: Liveness Probe
+    type: multiline
+    default: ""
+    description: "Liveness probe configuration."
+
+  - variable: readinessProbe.tcpSocket.port
+    label: Readiness Probe TCP Port
+    type: int
+    default: 9200
+    description: "Port for the readiness probe TCP check."
+
+  - variable: readinessProbe.periodSeconds
+    label: Readiness Probe Period Seconds
+    type: int
+    default: 5
+    description: "Period seconds for readiness probe."
+
+  - variable: readinessProbe.timeoutSeconds
+    label: Readiness Probe Timeout Seconds
+    type: int
+    default: 3
+    description: "Timeout seconds for readiness probe."
+
+  - variable: readinessProbe.failureThreshold
+    label: Readiness Probe Failure Threshold
+    type: int
+    default: 3
+    description: "Failure threshold for readiness probe."
+
+  - variable: schedulerName
+    label: Scheduler Name
+    type: string
+    default: ""
+    description: "Alternate scheduler name."
+
+  - variable: imagePullSecrets
+    label: Image Pull Secrets
+    type: multiline
+    default: ""
+    description: "Image pull secrets for private registries."
+
+  - variable: nodeSelector
+    label: Node Selector
+    type: multiline
+    default: ""
+    description: "Node selector labels for pod assignment."
+
+  - variable: tolerations
+    label: Tolerations
+    type: multiline
+    default: ""
+    description: "Tolerations for pod scheduling."
+
+  - variable: ingress.enabled
+    label: Enable Ingress
+    type: boolean
+    default: false
+    description: "Enable Kubernetes ingress for OpenSearch."
+
+  - variable: ingress.annotations
+    label: Ingress Annotations
+    type: multiline
+    default: ""
+    description: "Annotations for the ingress resource. Only used if ingress.enabled is true."
+
+  - variable: ingress.path
+    label: Ingress Path
+    type: string
+    default: "/"
+    description: "Path for the ingress resource."
+
+  - variable: ingress.hosts
+    label: Ingress Hosts
+    type: multiline
+    default: |
+      - chart-example.local
+    description: "Ingress hostnames. Only used if ingress.enabled is true."
+
+  - variable: ingress.tls
+    label: Ingress TLS
+    type: multiline
+    default: ""
+    description: "TLS configuration for ingress. Only used if ingress.enabled is true."
+
+  - variable: nameOverride
+    label: Name Override
+    type: string
+    default: ""
+    description: "Override the name of the chart."
+
+  - variable: fullnameOverride
+    label: Full Name Override
+    type: string
+    default: ""
+    description: "Override the full name of the chart."
+
+  - variable: masterTerminationFix
+    label: Master Termination Fix
+    type: boolean
+    default: false
+    description: "Enable master termination fix."
+
+  - variable: opensearchLifecycle
+    label: OpenSearch Lifecycle Hooks
+    type: multiline
+    default: ""
+    description: "Lifecycle hooks for OpenSearch container."
+
+  - variable: lifecycle
+    label: Pod Lifecycle Hooks
+    type: multiline
+    default: ""
+    description: "Lifecycle hooks for the pod."
+
+  - variable: keystore
+    label: OpenSearch Keystore Items
+    type: multiline
+    default: ""
+    description: "Secrets to add to the OpenSearch keystore."
+
+  - variable: networkPolicy.create
+    label: Enable Network Policy
+    type: boolean
+    default: false
+    description: "Enable Kubernetes network policy."
+
+  - variable: networkPolicy.http.enabled
+    label: Enable HTTP Network Policy
+    type: boolean
+    default: false
+    description: "Enable HTTP network policy for OpenSearch."
+
+  - variable: fsGroup
+    label: Deprecated fsGroup
+    type: string
+    default: ""
+    description: "Deprecated: use podSecurityContext.fsGroup instead."
+
+  - variable: sysctl.enabled
+    label: Enable Sysctl SecurityContext
+    type: boolean
+    default: false
+    description: "Enable sysctl settings via securityContext."
+
+  - variable: sysctlInit.enabled
+    label: Enable Sysctl InitContainer
+    type: boolean
+    default: false
+    description: "Enable sysctl settings via privileged initContainer."
+
+  - variable: plugins.enabled
+    label: Enable Plugins
+    type: boolean
+    default: false
+    description: "Enable installation/removal of OpenSearch plugins."
+
+  - variable: plugins.installList
+    label: Plugins to Install
+    type: multiline
+    default: ""
+    description: "List of plugins to install. Only used if plugins.enabled is true."
+
+  - variable: plugins.removeList
+    label: Plugins to Remove
+    type: multiline
+    default: ""
+    description: "List of plugins to remove. Only used if plugins.enabled is true."
+
+  - variable: extraObjects
+    label: Extra Kubernetes Objects
+    type: multiline
+    default: ""
+    description: "Additional Kubernetes manifests to deploy."
+
+  - variable: serviceMonitor.enabled
+    label: Enable ServiceMonitor
+    type: boolean
+    default: false
+    description: "Enable ServiceMonitor for Prometheus scraping."
+
+  - variable: serviceMonitor.path
+    label: ServiceMonitor Path
+    type: string
+    default: "/_prometheus/metrics"
+    description: "Path where metrics are exposed for ServiceMonitor. Only used if serviceMonitor.enabled is true."
+
+  - variable: serviceMonitor.scheme
+    label: ServiceMonitor Scheme
+    type: string
+    default: "http"
+    description: "Scheme to use for Prometheus scraping."
+
+  - variable: serviceMonitor.interval
+    label: ServiceMonitor Interval
+    type: string
+    default: "10s"
+    description: "Scrape interval for ServiceMonitor. Only used if serviceMonitor.enabled is true."
+
+  - variable: serviceMonitor.labels
+    label: ServiceMonitor Labels
+    type: multiline
+    default: ""
+    description: "Additional labels for the ServiceMonitor."
+
+  - variable: serviceMonitor.tlsConfig
+    label: ServiceMonitor TLS Config
+    type: multiline
+    default: ""
+    description: "TLS configuration for ServiceMonitor."
+
+  - variable: serviceMonitor.basicAuth.enabled
+    label: Enable ServiceMonitor Basic Auth
+    type: boolean
+    default: false
+    description: "Enable basic authentication for ServiceMonitor. Only used if serviceMonitor.enabled is true."
