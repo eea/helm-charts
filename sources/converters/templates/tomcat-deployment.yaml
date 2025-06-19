@@ -81,7 +81,6 @@ spec:
               "-Donfig.enableXqueryCrCallsInterception=false"
               "-Djava.security.egd=file:/dev/./urandom"
               "-Dapp.home=/opt/xmlconv"
-              "-Dlogback.configurationFile=/opt/xmlconv/logback.xml"
               "-Djwt.secret={{ .Values.jwtSecret }}"
               "-Denv.uns.url={{ .Values.uns.url }}"
               "-Denv.uns.xml.rpc.server.url={{ .Values.uns.url }}/rpcrouter"
