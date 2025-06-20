@@ -51,7 +51,19 @@ spec:
                   value: {{ .Values.mariadb.environment.MYSQL_ALLOW_EMPTY_PASSWORD }}
                 - name: TZ
                   value: "{{ .Values.timezone }}"
-              command: ["run_ldapsync.sh"]
+              command:
+                - bash
+                - -c
+              args:
+                - . /opt/bitnami/scripts/matomo-env.sh &&
+                  . /opt/bitnami/scripts/libbitnami.sh &&
+                  . /opt/bitnami/scripts/liblog.sh &&
+                  /opt/bitnami/scripts/apache/setup.sh &&
+                  /opt/bitnami/scripts/php/setup.sh &&
+                  /opt/bitnami/scripts/mysql-client/setup.sh &&
+                  /opt/bitnami/scripts/matomo/setup.sh &&
+                  /post-init.sh &&
+                  /usr/bin/run_ldapsync.sh
               resources:
                 requests:
                   memory: "{{ .Values.matomocronLdapSync.resources.requests.memory }}"

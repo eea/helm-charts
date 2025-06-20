@@ -58,8 +58,20 @@ spec:
                 - name: PHP_MAX_INPUT_TIME
                   value: "{{ .Values.matomocronArchive.environment.PHP_MAX_INPUT_TIME }}"
                 - name: MATOMO_URL
-                  value: "https://{{ .Values.matomo.hostname }}/"
-              command: ["run_archiving.sh"]
+                  value: "matomo:{{ .Values.matomo.environment.APACHE_HTTP_PORT_NUMBER }}"
+              command:
+                - bash
+                - -c
+              args:
+                - . /opt/bitnami/scripts/matomo-env.sh &&
+                  . /opt/bitnami/scripts/libbitnami.sh &&
+                  . /opt/bitnami/scripts/liblog.sh &&
+                  /opt/bitnami/scripts/apache/setup.sh &&
+                  /opt/bitnami/scripts/php/setup.sh &&
+                  /opt/bitnami/scripts/mysql-client/setup.sh &&
+                  /opt/bitnami/scripts/matomo/setup.sh &&
+                  /post-init.sh &&
+                  /usr/bin/run_archiving.sh
               resources:
                 requests:
                   memory: "{{ .Values.matomocronArchive.resources.requests.memory }}"

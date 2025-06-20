@@ -15,18 +15,21 @@ spec:
             app.kubernetes.io/name: {{ .Release.Name }}-analytics
         spec:
           initContainers:
-          - name: create-dir
-            image: busybox
-            command: 
-              - sh
-              - -c
-              - mkdir -p /analytics/logs/
+            - name: create-dir
+              image: busybox
+              command: 
+                - sh
+                - -c
+                - mkdir -p /analytics/logs/
+              volumeMounts:
+                - mountPath: "/analytics"
+                  name: matomo-importer-pv
           containers:
             - name: matomo-analytics
               image: "{{ .Values.matomoAnalytics.image.repository }}:{{ .Values.matomoAnalytics.image.tag }}"
               env:
                 - name: MATOMO_URL
-                  value: "https://{{ .Values.matomo.hostname }}/"
+                  value: "https://{{ .Values.matomo.hostname }}"
                 - name: MATOMO_TOKEN
                   valueFrom:
                     secretKeyRef:
