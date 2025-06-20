@@ -177,6 +177,12 @@ questions:
     default: false
     description: "Enable sysctl settings via securityContext."
 
+  - variable: sysctlInit.enabled
+    label: Enable Sysctl SecurityContext
+    type: boolean
+    default: false
+    description: "Enable sysctlInit settings via securityContext."
+
   - variable: plugins.enabled
     label: Enable Plugins
     type: boolean
