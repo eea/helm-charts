@@ -90,20 +90,14 @@ questions:
     default: "512M"
     description: "Memory resource limit."
 
-  - variable: plugins.enabled
-    label: Enable Plugin Support
+  - variable: rbac.create
+    label: Create RBAC
     type: boolean
-    default: false
-    description: "Enable custom plugin support."
+    default: true
+    description: "Create RBAC resources for dashboard."
 
-  - variable: plugins.installList
-    label: Plugins to Install
-    type: multiline
-    default: []
-    description: "Only used if plugins.enabled is true."
-
-  - variable: plugins.removeList
-    label: Plugins to Remove
-    type: multiline
-    default: []
-    description: "Only used if plugins.enabled is true."
+  - variable: serviceAccount.create
+    label: Create Service Account
+    type: boolean
+    default: true
+    description: "Create a service account for dashboard."

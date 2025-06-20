@@ -177,12 +177,6 @@ questions:
     default: false
     description: "Enable sysctl settings via securityContext."
 
-  - variable: sysctlInit.enabled
-    label: Enable Sysctl InitContainer
-    type: boolean
-    default: false
-    description: "Enable sysctl settings via privileged initContainer."
-
   - variable: plugins.enabled
     label: Enable Plugins
     type: boolean
@@ -194,33 +188,3 @@ questions:
     type: multiline
     default: ""
     description: "List of plugins to install. Only used if plugins.enabled is true."
-
-  - variable: plugins.removeList
-    label: Plugins to Remove
-    type: multiline
-    default: ""
-    description: "List of plugins to remove. Only used if plugins.enabled is true."
-
-  - variable: serviceMonitor.enabled
-    label: Enable ServiceMonitor
-    type: boolean
-    default: false
-    description: "Enable ServiceMonitor for Prometheus scraping."
-
-  - variable: serviceMonitor.path
-    label: ServiceMonitor Path
-    type: string
-    default: "/_prometheus/metrics"
-    description: "Path where metrics are exposed for ServiceMonitor. Only used if serviceMonitor.enabled is true."
-
-  - variable: serviceMonitor.scheme
-    label: ServiceMonitor Scheme
-    type: string
-    default: "http"
-    description: "Scheme to use for Prometheus scraping."
-
-  - variable: serviceMonitor.basicAuth.enabled
-    label: Enable ServiceMonitor Basic Auth
-    type: boolean
-    default: false
-    description: "Enable basic authentication for ServiceMonitor. Only used if serviceMonitor.enabled is true."
