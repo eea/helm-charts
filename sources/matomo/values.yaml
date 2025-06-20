@@ -35,8 +35,8 @@ mariadb:
     limits:
       memory: 10Gi
   database: eea_matomo_db
-  password: REPLACEME
-  rootPassword: REPLACEME
+  password: XeXpRbQOHIiLW59
+  rootPassword: XeXpRbQOHIiLW59
   storage: 10Gi
   storageClassName: ""
 
@@ -58,8 +58,8 @@ matomo:
   storageClassName: ""
   storage: "10Gi"
   replicaCount: 1
-  username: ""
-  password: ""
+  username: "matomo"
+  password: "XeXpRbQOHIiLW59"
 
 
 matomocronArchive:
@@ -70,7 +70,7 @@ matomocronArchive:
     PHP_MEMORY_LIMIT: 7168M
     PHP_MAX_EXECUTION_TIME: 0
     PHP_MAX_INPUT_TIME: 0
-  cronSchedule: "5 * * * *"
+  cronSchedule: "5 2-22 * * *"
   resources:
     requests:
       memory: 4Gi
@@ -120,15 +120,13 @@ geoipupdate:
       memory: NODATA
   storageClassName: ""
   storage: "1Gi"
-
-
-
+ 
 rsyncAnalytics:
   image:
     repository: eeacms/rsync
     tag: 2.6
   cronSchedule: "5 * * * *"
-  rsyncCommands: "rsync -e 'ssh -p 2222 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no' -avz --delete root@<IP>:<LOG_LOCATION_REMOTE> /analytics/logs/<SITE_ID>"
+  rsyncCommands: "rsync -e 'ssh -p 2222 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no' -avz --delete root@10.120.10.133:/data/apache-logs /analytics/logs/22"
   storageClassName: ""
   storage: "1Gi"
 
@@ -136,13 +134,13 @@ matomoAnalytics:
   image:
     repository: eeacms/matomo-log-analytics
     tag: 2.4
-  cronSchedule: "30 0 * * *"
+  cronSchedule: "15,45 22,23,0,1 * * *"
   resources:
     requests:
       memory: 512Mi
     limits:
       memory: 1Gi
-  token: REPLACEME
+  token: "ff1ebc487371031f2ba9556e5b7dc1ee"
 
 
 ingress:

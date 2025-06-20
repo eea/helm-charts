@@ -50,7 +50,7 @@ spec:
                 - name: ALLOW_EMPTY_PASSWORD
                   value: {{ .Values.mariadb.environment.MYSQL_ALLOW_EMPTY_PASSWORD }}
                 - name: MATOMO_URL
-                  value: "https://{{ .Values.matomo.hostname }}/"
+                  value: "matomo:{{ .Values.matomo.environment.APACHE_HTTP_PORT_NUMBER }}"
                 - name: TZ
                   value: "{{ .Values.timezone }}"
                 - name: PHP_MEMORY_LIMIT
@@ -59,7 +59,19 @@ spec:
                   value: "{{ .Values.matomocronDeleteData.environment.daysToKeep }}"
                 - name: SITE_TO_DELETE
                   value: "{{ .Values.matomocronDeleteData.environment.siteToDelete }}"
-              command: ["run_delete_data.sh"]
+              command:
+                - bash
+                - -c
+              args:
+                - . /opt/bitnami/scripts/matomo-env.sh &&
+                  . /opt/bitnami/scripts/libbitnami.sh &&
+                  . /opt/bitnami/scripts/liblog.sh &&
+                  /opt/bitnami/scripts/apache/setup.sh &&
+                  /opt/bitnami/scripts/php/setup.sh &&
+                  /opt/bitnami/scripts/mysql-client/setup.sh &&
+                  /opt/bitnami/scripts/matomo/setup.sh &&
+                  /post-init.sh &&
+                  /usr/bin/run_delete_data.sh
               resources:
                 requests:
                   memory: "{{ .Values.matomocronDeleteData.resources.requests.memory }}"

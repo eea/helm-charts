@@ -60,16 +60,20 @@ spec:
               value: {{ .Values.matomo.environment.PHP_MAX_INPUT_TIME }}
             - name: APACHE_HTTP_PORT_NUMBER
               value: {{ quote .Values.matomo.environment.APACHE_HTTP_PORT_NUMBER }}
+            {{- if .Values.matomo.username }}
             - name: MATOMO_USERNAME
               valueFrom:
                 secretKeyRef:
                   name: {{ .Release.Name }}-matomo-secrets
                   key: username
+            {{- end }}
+            {{- if .Values.matomo.password }}
             - name: MATOMO_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: {{ .Release.Name }}-matomo-secrets
                   key: password
+            {{- end }}
           resources:
             requests:
               memory: {{ .Values.matomo.resources.requests.memory }}
@@ -92,7 +96,7 @@ spec:
             successThreshold: 1
           livenessProbe:
             tcpSocket:
-              port: http
+              port: {{ .Values.matomo.environment.APACHE_HTTP_PORT_NUMBER }}
             initialDelaySeconds: 600
             periodSeconds: 10
             timeoutSeconds: 5
