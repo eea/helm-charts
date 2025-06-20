@@ -35,8 +35,8 @@ mariadb:
     limits:
       memory: 10Gi
   database: eea_matomo_db
-  password: XeXpRbQOHIiLW59
-  rootPassword: XeXpRbQOHIiLW59
+  password: ""
+  rootPassword: ""
   storage: 10Gi
   storageClassName: ""
 
@@ -58,8 +58,8 @@ matomo:
   storageClassName: ""
   storage: "10Gi"
   replicaCount: 1
-  username: "matomo"
-  password: "XeXpRbQOHIiLW59"
+  username: ""
+  password: ""
 
 
 matomocronArchive:
@@ -126,7 +126,7 @@ rsyncAnalytics:
     repository: eeacms/rsync
     tag: 2.6
   cronSchedule: "5 * * * *"
-  rsyncCommands: "rsync -e 'ssh -p 2222 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no' -avz --delete root@10.120.10.133:/data/apache-logs /analytics/logs/22"
+  rsyncCommands: ""
   storageClassName: ""
   storage: "1Gi"
 
