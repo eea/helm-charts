@@ -14,6 +14,33 @@ image:
   tag: ""
   pullPolicy: "IfNotPresent"
 
+startupProbe:
+  tcpSocket:
+    port: 5601
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 20
+  successThreshold: 1
+  initialDelaySeconds: 10
+
+livenessProbe:
+  tcpSocket:
+    port: 5601
+  periodSeconds: 20
+  timeoutSeconds: 5
+  failureThreshold: 10
+  successThreshold: 1
+  initialDelaySeconds: 10
+
+readinessProbe:
+  tcpSocket:
+    port: 5601
+  periodSeconds: 20
+  timeoutSeconds: 5
+  failureThreshold: 10
+  successThreshold: 1
+  initialDelaySeconds: 10
+
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
@@ -74,10 +101,16 @@ securityContext:
 config:
   {}
   # Default OpenSearch Dashboards configuration from docker image of Dashboards
+
   #  opensearch_dashboards.yml: |
   #   server:
   #     name: dashboards
-  #     host: 0.0.0.0
+  #     host: "{{ .Values.serverHost }}"
+
+  #  opensearch_dashboards.yml:
+  #   server:
+  #     name: dashboards
+  #     host: "{{ .Values.serverHost }}"
 
   # Dashboards TLS Config (Ensure the cert files are present before enabling SSL
   # ssl:
@@ -90,6 +123,10 @@ config:
   #   ssl:
   #     certificateAuthorities: /usr/share/opensearch-dashboards/certs/dashboards-root-ca.pem
   #     if utilizing custom CA certs for connection to opensearch, provide the CA here
+
+opensearchDashboardsYml:
+  defaultMode:
+  # value should be 0-0777
 
 priorityClassName: ""
 
@@ -133,8 +170,8 @@ ingress:
       paths:
         - path: /
           backend:
-            serviceName: opensearch-dashboards.example.com
-            servicePort: 80
+            serviceName: ""
+            servicePort: ""
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:
@@ -193,3 +230,25 @@ extraObjects:
   #       type: Opaque
   #       labels:
   #         app.kubernetes.io/part-of: argocd
+
+# pod lifecycle policies as outlined here:
+# https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#container-hooks
+lifecycle:
+  {}
+  # preStop:
+  #   exec:
+  #     command: ["/bin/sh", "-c", "echo Hello from the postStart handler > /usr/share/message"]
+  # postStart:
+  #   exec:
+  #     command:
+  #       - bash
+  #       - -c
+  #       - |
+  #         #!/bin/bash
+  #         curl -I "http://admin:admin@127.0.0.1:5601/status -H "kbn-xsrf: true" -H 'kbn-xsrf: true' -H "Content-Type: application/json"
+
+## Enable to add 3rd Party / Custom plugins not offered in the default OpenSearchDashboards image.
+plugins:
+  enabled: false
+  installList: []
+  # - example-fake-plugin-downloadable-url
