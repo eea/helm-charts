@@ -1,103 +1,98 @@
 questions:
-  - variable: opensearchHosts
-    label: OpenSearch Hosts
+  - variable: opensearch-dashboards.opensearchHosts
+    label: OpenSearch Hosts URL
     type: string
     required: true
     default: "https://opensearch-cluster-master:9200"
-    description: "URL to OpenSearch hosts."
+    group: "Connection"
+    description: "The URL of the OpenSearch cluster to connect to."
 
-  - variable: replicaCount
-    label: Replica Count
+  - variable: opensearch-dashboards.replicaCount
+    label: Number of Replicas
     type: int
+    required: true
     default: 1
-    description: "Number of dashboard replicas to deploy."
+    group: "General"
+    description: "Number of OpenSearch Dashboards replicas."
 
-  - variable: image.repository
+  - variable: opensearch-dashboards.image.repository
     label: Image Repository
     type: string
+    required: true
     default: "opensearchproject/opensearch-dashboards"
-    description: "Dashboard container image repository."
+    group: "Image"
+    description: "Docker image repository for OpenSearch Dashboards."
 
-  - variable: image.tag
+  - variable: opensearch-dashboards.image.tag
     label: Image Tag
     type: string
+    required: false
     default: ""
-    description: "Docker image tag for OpenSearch. Default uses the chart appVersion if not set."
+    group: "Image"
+    description: "Image tag to use. Leave empty to use default."
 
-  - variable: extraEnvs
-    label: Extra Environment Variables
-    type: multiline
-    default: []
-    description: "Additional environment variables."
+  - variable: opensearch-dashboards.serverHost
+    label: Server Host
+    type: string
+    required: true
+    default: "0.0.0.0"
+    group: "Network"
+    description: "Host address OpenSearch Dashboards binds to."
 
-  - variable: extraVolumes
-    label: Extra Volumes
-    type: multiline
-    default: []
-    description: "Extra volumes for dashboard pods."
-
-  - variable: extraVolumeMounts
-    label: Extra Volume Mounts
-    type: multiline
-    default: []
-    description: "Extra volume mounts for dashboard containers."
-
-  - variable: ingress.enabled
+  - variable: opensearch-dashboards.ingress.enabled
     label: Enable Ingress
-    type: false
+    type: boolean
     default: true
-    description: "Enable/disable ingress for dashboard."
+    group: "Ingress"
+    description: "Enable ingress controller."
 
-  - variable: ingress.hosts
-    label: Ingress Hosts
-    type: multiline
-    default:
-      - host: opensearch-dashboards.example.com
-        paths:
-          - path: /
-            backend:
-              serviceName: ""
-              servicePort: ""
-    description: "Only used if ingress.enabled is true."
+  - variable: opensearch-dashboards.ingress.hosts[0].host
+    label: Ingress Host
+    type: string
+    required: true
+    default: "opensearch-dashboards.example.com"
+    group: "Ingress"
+    description: "Hostname for the OpenSearch Dashboards ingress."
 
-  - variable: ingress.tls
-    label: Ingress TLS
-    type: multiline
-    default: []
-    description: "Only used if ingress.enabled is true."
-
-  - variable: resources.requests.cpu
+  - variable: opensearch-dashboards.resources.requests.cpu
     label: CPU Request
     type: string
     default: "100m"
-    description: "CPU resource request."
+    group: "Resources"
+    description: "Requested CPU for the container."
 
-  - variable: resources.requests.memory
+  - variable: opensearch-dashboards.resources.requests.memory
     label: Memory Request
     type: string
     default: "512M"
-    description: "Memory resource request."
+    group: "Resources"
+    description: "Requested memory for the container."
 
-  - variable: resources.limits.cpu
+  - variable: opensearch-dashboards.resources.limits.cpu
     label: CPU Limit
     type: string
     default: "100m"
-    description: "CPU resource limit."
+    group: "Resources"
+    description: "CPU limit for the container."
 
-  - variable: resources.limits.memory
+  - variable: opensearch-dashboards.resources.limits.memory
     label: Memory Limit
     type: string
     default: "512M"
-    description: "Memory resource limit."
+    group: "Resources"
+    description: "Memory limit for the container."
 
-  - variable: rbac.create
-    label: Create RBAC
+  - variable: opensearch-dashboards.plugins.enabled
+    label: Enable Plugins
     type: boolean
-    default: true
-    description: "Create RBAC resources for dashboard."
+    default: false
+    group: "Plugins"
+    description: "Enable installation of OpenSearch Dashboards plugins."
 
-  - variable: serviceAccount.create
-    label: Create Service Account
-    type: boolean
-    default: true
-    description: "Create a service account for dashboard."
+  - variable: opensearch-dashboards.maxUnavailable
+    label: Max Unavailable
+    type: string
+    required: false
+    default: ""
+    group: "Availability"
+    description: "Maximum number of pods that can be unavailable during an update."
