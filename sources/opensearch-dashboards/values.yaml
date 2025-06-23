@@ -9,7 +9,7 @@ opensearch-dashboards:
   serverHost: "0.0.0.0"
 
   ingress:
-    enabled: false
+    enabled: true
     hosts:
       - host: opensearch-dashboards.example.com
         paths:
@@ -33,3 +33,17 @@ opensearch-dashboards:
   extraObjects: []
 
   maxUnavailable: ""
+  rbac:
+    create: false
+  config:
+    opensearch_dashboards.yml: |
+      server.host: "0.0.0.0"
+      opensearch.hosts: [ "https://opensearch-cluster-master:9200" ]
+      opensearch.ssl.verificationMode: none
+      opensearch.username: "admin"
+      opensearch.password: "admin"
+  extraEnvs:
+    - name: OPENSEARCH_USERNAME
+      value: "admin"
+    - name: OPENSEARCH_PASSWORD
+      value: "admin"
