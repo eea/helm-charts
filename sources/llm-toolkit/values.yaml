@@ -571,7 +571,7 @@ litellm:
     # -- The pull policy to use for the LiteLLM pods
     pullPolicy: IfNotPresent
     # -- The image tag to use for the LiteLLM pods
-    tag: "v1.61.13-stable"
+    tag: "v1.72.6-stable"
 
   llmGuardPlugin:
     enabled: false
@@ -652,7 +652,7 @@ litellm:
       memory: "128Mi"
     limits:
       cpu: "500m"
-      memory: "512Mi"
+      memory: "1Gi"
   # -- Pod annotations for LiteLLM
   podAnnotations: {}
   # -- Pod labels for LiteLLM
