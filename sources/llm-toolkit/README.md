@@ -264,6 +264,9 @@ helm delete llm-toolkit
 
 ## Releases
 
+### Version 0.1.7
+- Updated appVersion to 3.72.1.
+
 ### Version 0.1.6
 - Allow defining externalTrafficPolicy for litellm.
 
