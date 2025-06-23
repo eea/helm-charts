@@ -87,12 +87,6 @@ questions:
                 ]
     description: "YAML config files for OpenSearch (e.g., opensearch.yml, log4j2.properties)."
 
-  - variable: extraEnvs
-    label: Extra Environment Variables
-    type: multiline
-    default: ""
-    description: "Extra environment variables to append to this node group."
-
   - variable: image.repository
     label: Image Repository
     type: string
