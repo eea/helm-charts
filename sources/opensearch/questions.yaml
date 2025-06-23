@@ -1,4 +1,17 @@
 questions:
+  - variable: extraEnvs[0].name
+    label: Admin Password Env Name
+    type: string
+    required: true
+    default: "OPENSEARCH_INITIAL_ADMIN_PASSWORD"
+    description: "Environment variable name for the initial admin password. Must be OPENSEARCH_INITIAL_ADMIN_PASSWORD."
+
+  - variable: extraEnvs[0].value
+    label: Admin Password
+    type: password
+    required: true
+    description: "Password for the OpenSearch admin user."
+
   - variable: clusterName
     label: Cluster Name
     type: string
