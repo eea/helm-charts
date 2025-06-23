@@ -1,203 +1,81 @@
 questions:
-  - variable: extraEnvs[0].name
-    label: Admin Password Env Name
-    type: string
-    required: true
-    default: "OPENSEARCH_INITIAL_ADMIN_PASSWORD"
-    description: "Environment variable name for the initial admin password. Must be OPENSEARCH_INITIAL_ADMIN_PASSWORD."
-
-  - variable: extraEnvs[0].value
+  - variable: opensearch.extraEnvs[0].value
     label: Admin Password
     type: password
     required: true
-    description: "Password for the OpenSearch admin user."
+    group: "Authentication"
+    description: "Initial admin password required by OpenSearch."
 
-  - variable: clusterName
+  - variable: opensearch.clusterName
     label: Cluster Name
     type: string
     required: true
     default: "opensearch-cluster"
-    description: "The name of the OpenSearch cluster."
+    group: "General"
+    description: "Name of the OpenSearch cluster."
 
-  - variable: masterService
+  - variable: opensearch.replicas
+    label: Number of Replicas
+    type: int
+    required: true
+    default: 3
+    group: "General"
+    description: "Number of OpenSearch node replicas."
+
+  - variable: opensearch.nodeGroup
+    label: Node Group
+    type: string
+    default: "master"
+    required: true
+    group: "General"
+    description: "Logical name for the node group."
+
+  - variable: opensearch.masterService
     label: Master Service
     type: string
-    required: true
     default: "opensearch-cluster-master"
-    description: "The service name that non-master groups connect to when joining the cluster."
+    required: true
+    group: "General"
+    description: "Name of the master service."
 
-  - variable: replicas
-    label: Replicas
-    type: int
-    default: 3
-    description: "Number of replicas for this node group."
-
-  - variable: opensearchHome
-    label: OpenSearch Home
-    type: string
-    default: "/usr/share/opensearch"
-    description: "Path to the OpenSearch home directory."
-
-  - variable: config
-    label: OpenSearch Config Files
-    type: multiline
-    default: |
-      opensearch.yml: |
-        cluster.name: opensearch-cluster
-
-        network.host: 0.0.0.0
-        plugins:
-          security:
-            ssl:
-              transport:
-                pemcert_filepath: esnode.pem
-                pemkey_filepath: esnode-key.pem
-                pemtrustedcas_filepath: root-ca.pem
-                enforce_hostname_verification: false
-              http:
-                enabled: true
-                pemcert_filepath: esnode.pem
-                pemkey_filepath: esnode-key.pem
-                pemtrustedcas_filepath: root-ca.pem
-                clientauth_mode: OPTIONAL
-            allow_unsafe_democertificates: true
-            allow_default_init_securityindex: true
-            authcz:
-              admin_dn:
-                - CN=kirk,OU=client,O=client,L=test,C=de
-            audit.type: internal_opensearch
-            enable_snapshot_restore_privilege: true
-            check_snapshot_restore_write_privileges: true
-            restapi:
-              roles_enabled: ["all_access", "security_rest_api_access"]
-            system_indices:
-              enabled: true
-              indices:
-                [
-                  ".opendistro-alerting-config",
-                  ".opendistro-alerting-alert*",
-                  ".opendistro-anomaly-results*",
-                  ".opendistro-anomaly-detector*",
-                  ".opendistro-anomaly-checkpoints",
-                  ".opendistro-anomaly-detection-state",
-                  ".opendistro-reports-*",
-                  ".opendistro-notifications-*",
-                  ".opendistro-notebooks",
-                  ".opendistro-asynchronous-search-response*",
-                ]
-    description: "YAML config files for OpenSearch (e.g., opensearch.yml, log4j2.properties)."
-
-  - variable: image.repository
-    label: Image Repository
-    type: string
-    default: "opensearchproject/opensearch"
-    description: "Docker image repository for OpenSearch."
-
-  - variable: image.tag
-    label: Image Tag
-    type: string
-    default: ""
-    description: "Docker image tag for OpenSearch. Default uses the chart appVersion if not set."
-
-  - variable: opensearchJavaOpts
-    label: OpenSearch Java Options
+  - variable: opensearch.opensearchJavaOpts
+    label: Java Options
     type: string
     default: "-Xmx512M -Xms512M"
-    description: "JVM options for OpenSearch."
+    group: "Performance"
+    description: "Java options for OpenSearch."
 
-  - variable: resources.requests.cpu
-    label: CPU Requests
+  - variable: opensearch.resources.requests.cpu
+    label: CPU Request
     type: string
     default: "1000m"
-    description: "CPU resource requests for OpenSearch pods."
+    group: "Resources"
+    description: "Requested CPU for OpenSearch pods."
 
-  - variable: resources.requests.memory
-    label: Memory Requests
+  - variable: opensearch.resources.requests.memory
+    label: Memory Request
     type: string
     default: "100Mi"
-    description: "Memory resource requests for OpenSearch pods."
+    group: "Resources"
+    description: "Requested Memory for OpenSearch pods."
 
-  - variable: persistence.size
-    label: Persistence Size
-    type: string
-    default: "8Gi"
-    description: "Persistent volume size."
-
-  - variable: extraVolumes
-    label: Extra Volumes
-    type: multiline
-    default: ""
-    description: "Additional volumes to add to the pod."
-
-  - variable: extraVolumeMounts
-    label: Extra Volume Mounts
-    type: multiline
-    default: ""
-    description: "Additional volume mounts for the pod."
-
-  - variable: protocol
-    label: Protocol
-    type: string
-    default: "https"
-    description: "Protocol to use for OpenSearch service."
-
-  - variable: maxUnavailable
-    label: Max Unavailable
-    type: int
-    default: 1
-    description: "Max unavailable pods during maintenance."
-
-  - variable: sysctlVmMaxMapCount
-    label: Sysctl vm.max_map_count
-    type: int
-    default: 262144
-    description: "Value for sysctl vm.max_map_count."
-
-  - variable: imagePullSecrets
-    label: Image Pull Secrets
-    type: multiline
-    default: ""
-    description: "Image pull secrets for private registries."
-
-  - variable: ingress.enabled
-    label: Enable Ingress
+  - variable: opensearch.persistence.enabled
+    label: Enable Persistence
     type: boolean
     default: true
-    description: "Enable Kubernetes ingress for OpenSearch."
+    group: "Storage"
+    description: "Enable persistent storage for OpenSearch data."
 
-  - variable: ingress.hosts
-    label: Ingress Hosts
-    type: multiline
-    default: |
-      - "opensearch.example.com"
-    description: "Ingress hostnames."
+  - variable: opensearch.persistence.size
+    label: PVC Size
+    type: string
+    default: "8Gi"
+    group: "Storage"
+    description: "Size of the persistent volume claim."
 
-  - variable: ingress.tls
-    label: Ingress TLS
-    type: multiline
-    default: ""
-    description: "TLS configuration for ingress."
-
-  - variable: sysctl.enabled
-    label: Enable Sysctl SecurityContext
-    type: boolean
-    default: false
-    description: "Enable sysctl settings via securityContext."
-
-  - variable: sysctlInit.enabled
-    label: Enable Sysctl SecurityContext
-    type: boolean
-    default: false
-    description: "Enable sysctlInit settings via securityContext."
-
-  - variable: plugins.enabled
-    label: Enable Plugins
-    type: boolean
-    default: false
-    description: "Enable installation/removal of OpenSearch plugins."
-
-  - variable: plugins.installList
-    label: Plugins to Install
-    type: multiline
-    default: ""
-    description: "List of plugins to install. Only used if plugins.enabled is true."
+  - variable: opensearch.sysctlVmMaxMapCount
+    label: sysctl vm.max_map_count
+    type: int
+    default: 262144
+    group: "System"
+    description: "Linux kernel setting for vm.max_map_count."
