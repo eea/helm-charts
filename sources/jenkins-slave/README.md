@@ -1,5 +1,8 @@
 # Releases
 
+### Version 0.0.3 - 26 June 2025
+- patch jenkins volumes [Silviu - [`8635d70`](https://github.com/eea/helm-charts/commit/8635d70df06db477fcd7e45a62ed6bdaf413da00)]
+
 ### Version 0.0.2 - 26 June 2025
 - patch docker config map for multi app deployment [Silviu - [`fd9c572`](https://github.com/eea/helm-charts/commit/fd9c5720303a35b10409adc8cbe715f265d8e4d2)]
 
