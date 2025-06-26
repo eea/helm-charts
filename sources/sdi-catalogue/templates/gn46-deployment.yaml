@@ -47,7 +47,7 @@ spec:
         livenessProbe:
           failureThreshold: 6
           httpGet:
-            path: /{{ .Values.gn46.webapp_context }}/srv/eng/catalog.search
+            path: {{ .Values.gn46.webapp_context }}/srv/eng/catalog.search
             port: 8080
             scheme: HTTP
           initialDelaySeconds: 90
