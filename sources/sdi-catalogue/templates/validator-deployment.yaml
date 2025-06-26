@@ -43,32 +43,32 @@ spec:
           name: validator-config
           subPath: interfaces
         
-      startupProbe:
-        httpGet:
-          path: /validator/v2/status
-          port: 8080
-        initialDelaySeconds: 10
-        periodSeconds: 10
-        timeoutSeconds: 5
-        failureThreshold: 30  # allows up to 5 minutes for startup
+        startupProbe:
+          httpGet:
+            path: /validator/v2/status
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 30  # allows up to 5 minutes for startup
 
-      readinessProbe:
-        httpGet:
-          path: /validator/v2/status
-          port: 8080
-        initialDelaySeconds: 30
-        periodSeconds: 30
-        timeoutSeconds: 10
-        failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /validator/v2/status
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 30
+          timeoutSeconds: 10
+          failureThreshold: 3
 
-      livenessProbe:
-        httpGet:
-          path: /validator/v2/status
-          port: 8080
-        initialDelaySeconds: 60
-        periodSeconds: 60
-        timeoutSeconds: 15
-        failureThreshold: 5
+        livenessProbe:
+          httpGet:
+            path: /validator/v2/status
+            port: 8080
+          initialDelaySeconds: 60
+          periodSeconds: 60
+          timeoutSeconds: 15
+          failureThreshold: 5
 
       restartPolicy: Always
 
