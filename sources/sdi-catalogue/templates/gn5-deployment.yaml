@@ -43,6 +43,29 @@ spec:
         - name: SPRING_CONFIG_ADDITIONAL_LOCATION
           value: optional:{{ .Values.gn5.directory.config }}/gn5-config.yaml
 
+        # Liveness probe checks if the application is healthy and restarts the container if it fails
+        livenessProbe:
+          failureThreshold: 6
+          httpGet:
+            path: /geonetwork/actuator/health/liveness
+            port: {{ .Values.gn5.server.port }}
+            scheme: HTTP
+          initialDelaySeconds: 90
+          periodSeconds: 30
+          successThreshold: 1
+          timeoutSeconds: 10
+        
+        # Startup probe checks if the application has started successfully before running liveness/readiness probes
+        startupProbe:
+          failureThreshold: 30
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          successThreshold: 1
+          tcpSocket:
+            port: {{ .Values.gn5.server.port }}
+          timeoutSeconds: 5
+
+
         ports:
         - containerPort: 8080
         resources:

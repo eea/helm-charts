@@ -19,6 +19,9 @@ When the application was running on Rancher 1.6, it had a container, which ran t
 ## Releases
 
 <dl>
+  <dt>Version 0.7.13 - 26 Jun 2025</dt>
+  <dd>Liveness and Readyness probes for GN, GN46 and GN5</dd>
+
   <dt>Version 0.7.12 - 26 Jun 2025</dt>
   <dd>New GN46 and GN5 versions.</dd>
 
