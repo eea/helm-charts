@@ -63,6 +63,34 @@ spec:
           value: {{ .Values.nextcloud.trustedProxies }}
         ports:
         - containerPort: 80
+        
+        readinessProbe:
+          httpGet:
+            path: /status.php
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+
+        livenessProbe:
+          httpGet:
+            path: /status.php
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 15
+          timeoutSeconds: 5
+          failureThreshold: 5
+
+        startupProbe:
+          httpGet:
+            path: /status.php
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 18   # ~3 minutes grace time
+
         resources:
           {{- toYaml .Values.nextcloud.resources | nindent 10 }}
         tty: true
