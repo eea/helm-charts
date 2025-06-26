@@ -1,7 +1,13 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: docker-daemon-config
+  name: {{ .Release.Name }}-docker-daemon-config
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: docker-config
+  annotations:
+    meta.helm.sh/release-name: {{ .Release.Name }}
+    meta.helm.sh/release-namespace: {{ .Release.Namespace }}
 data:
   daemon.json: |
     {
