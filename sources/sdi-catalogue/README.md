@@ -19,6 +19,9 @@ When the application was running on Rancher 1.6, it had a container, which ran t
 ## Releases
 
 <dl>
+  <dt>Version 0.7.12 - 26 Jun 2025</dt>
+  <dd>New GN46 and GN5 versions.</dd>
+
   <dt>Version 0.7.11 - 11 Jun 2025</dt>
   <dd>New GN46 version. Fix /data proxypass.</dd>
 
