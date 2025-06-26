@@ -24,13 +24,9 @@ spec:
           configMap:
             name: {{ .Release.Name }}-docker-daemon-config      
         - name: jenkins-docker-certs
-          hostPath:
-            path: /var/lib/jenkins-certs
-            type: DirectoryOrCreate
+          emptyDir: {}
         - name: jenkins-dind-work
-          hostPath:
-            path: /var/lib/jenkins-agent
-            type: DirectoryOrCreate
+          emptyDir: {}
         - name: cgroup
           hostPath:
             path: /sys/fs/cgroup
