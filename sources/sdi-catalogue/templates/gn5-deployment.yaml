@@ -67,7 +67,7 @@ spec:
 
 
         ports:
-        - containerPort: 8080
+        - containerPort: {{ .Values.gn5.server.port }}
         resources:
           {{- toYaml .Values.gn5.resources | nindent 10 }}
         volumeMounts:
