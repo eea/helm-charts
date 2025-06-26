@@ -43,6 +43,28 @@ spec:
         # To configure the database connection parameters fill the values in /catalogue-data/config/db.properties
         # To configure the LDAP connection options fill the values in /catalogue-data/config/security.properties
 
+        # Liveness probe checks if the application is healthy and restarts the container if it fails
+        livenessProbe:
+          failureThreshold: 6
+          httpGet:
+            path: /{{ .Values.gn46.webapp_context }}/srv/eng/catalog.search
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 90
+          periodSeconds: 30
+          successThreshold: 1
+          timeoutSeconds: 10
+        
+        # Startup probe checks if the application has started successfully before running liveness/readiness probes
+        startupProbe:
+          failureThreshold: 30
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          successThreshold: 1
+          tcpSocket:
+            port: 8080
+          timeoutSeconds: 5
+
         ports:
         - containerPort: 8080
         resources:
@@ -77,16 +99,4 @@ spec:
         persistentVolumeClaim:
           claimName: gis-sdi
           readOnly: false
-        
-      ## Liveness Probe: For detecting critical failures and triggering restarts
-      #livenessProbe:
-      #  httpGet:
-      #    path: {{ .Values.gn46.webapp_context }}/srv/eng/catalog.search # GeoNetwork context path + main search endpoint
-      #    port: 8080
-      #    scheme: HTTP
-      #  initialDelaySeconds: 120 # GeoNetwork can take a while to start up, adjust if needed
-      #  periodSeconds: 30       # Check every 30 seconds
-      #  timeoutSeconds: 10      # Wait up to 10 seconds for a response
-      #  failureThreshold: 3     # Allow 3 consecutive failures before restarting
-
 {{- end }}
