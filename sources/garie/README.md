@@ -69,6 +69,9 @@ We have the following services that should be exposed in ingress:
 
 # Releases
 
+### Version 0.0.15 - 27 June 2025
+- Upgrade to eeacms/garie-lighthouse:1.2.15 [valentinab25 - [`97241fe`](https://github.com/eea/helm-charts/commit/97241fe0eb09d5d616ad7f2a3860f1d5a0cff957)]
+
 ### Version 0.0.14 - 13 June 2025
 - patch ingress [Silviu - [`9098370`](https://github.com/eea/helm-charts/commit/90983704b44ff7963505d3b325951b70405bcce0)]
 
