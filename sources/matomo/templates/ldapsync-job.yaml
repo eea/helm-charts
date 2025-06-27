@@ -63,7 +63,7 @@ spec:
                   /opt/bitnami/scripts/mysql-client/setup.sh &&
                   /opt/bitnami/scripts/matomo/setup.sh &&
                   /post-init.sh &&
-                  /usr/bin/run_ldapsync.sh
+                  /usr/bin/run_ldapsync.sh || true
               resources:
                 requests:
                   memory: "{{ .Values.matomocronLdapSync.resources.requests.memory }}"
