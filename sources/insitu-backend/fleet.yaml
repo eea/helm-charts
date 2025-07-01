@@ -14,9 +14,9 @@ helm:
     ingress:
       annotations:
         cert-manager.io/cluster-issuer: 01dev-eea-letsencrypt
-      certificate: insitu.01dev.eea.europa.eu-tls     
+      certificate: dev-insitu.copernicus.01dev.eea.europa.eu-tls     
     plone:
-      hostname: insitu.01dev.eea.europa.eu
+      hostname: dev-insitu.copernicus.01dev.eea.europa.eu
       database:
         POSTGRES_DB: insitu
         POSTGRES_PASSWORD: zope

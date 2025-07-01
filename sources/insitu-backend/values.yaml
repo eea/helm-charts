@@ -22,12 +22,12 @@ links:
 ingress:
   annotations: 
     cert-manager.io/cluster-issuer: 01dev-eea-letsencrypt
-  certificate: insitu.01dev.eea.europa.eu-tls
+  certificate: dev-insitu.copernicus.01dev.eea.europa.eu-tls
   tls: enabled
 
 plone:
   serviceType: ClusterIP
-  hostname: insitu.01dev.eea.europa.eu
+  hostname: dev-insitu.copernicus.01dev.eea.europa.eu
   googleUrl: google85dc6cec8f1329e5.html 
   site: Plone
   autoscaling:
@@ -177,7 +177,7 @@ zodbpack:
 postfix:
   fullnameOverride: ''
   dryrun: false
-  serverName: insitu.01dev.eea.europa.eu
+  serverName: dev-insitu.copernicus.01dev.eea.europa.eu
   mtpPass: ''
   mtpPort: ''
   mtpRelay: ''
