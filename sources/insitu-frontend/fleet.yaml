@@ -1,0 +1,22 @@
+namespace: insitu
+
+helm:
+  releaseName: insitu-frontend
+  chart: "insitu-frontend"
+  repo: "https://eea.github.io/helm-charts"
+  version: "1.0.0"
+  force: true
+  timeoutSeconds: 0
+  values:
+    ingress:
+      annotations:
+        cert-manager.io/cluster-issuer: 01dev-eea-letsencrypt
+      certificate: insitu.01dev.eea.europa.eu-tls     
+    volto:
+      hostname: insitu.01dev.eea.europa.eu
+      environment:
+        RAZZLE_INTERNAL_API_PATH: http://insitu-backend.insitu.svc.cluster.local:8080/Plone
+        RAZZLE_PUBLIC_PATH: /
+        RAZZLE_SENTRY_DSN: ""
+        RAZZLE_SENTRY_RELEASE: ""
+        RAZZLE_SENTRY_ENVIRONMENT: 01dev
