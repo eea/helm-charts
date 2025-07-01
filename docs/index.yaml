@@ -15345,6 +15345,32 @@ entries:
     version: 5.3.2-1
   mdr:
   - apiVersion: v2
+    appVersion: 3.9.1-251
+    created: "2025-07-01T13:08:54.077798112Z"
+    dependencies:
+    - alias: zeoserver
+      name: rn-zeoserver
+      repository: https://eea.github.io/helm-charts
+      version: 0.1.9
+    - alias: varnish
+      condition: rn-varnish.enabled
+      name: rn-varnish
+      repository: https://eea.github.io/helm-charts
+      version: 0.3.0
+    - alias: local-converters
+      condition: rn-local-converters.enabled
+      name: rn-local-converters
+      repository: https://eea.github.io/helm-charts
+      version: 0.1.6
+    description: A MDR Helm chart for Kubernetes
+    digest: 40e13e601820715e7ed45b383fa8adc8775edcf310d4a5b68dece3abeb93ece1
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/mdr/logo_eionet.png
+    name: mdr
+    type: application
+    urls:
+    - mdr-0.25.0.tgz
+    version: 0.25.0
+  - apiVersion: v2
     appVersion: 3.9.1-250
     created: "2025-07-01T09:38:16.063497+02:00"
     dependencies:
@@ -21143,4 +21169,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2025-07-01T13:08:00.006845701Z"
+generated: "2025-07-01T13:08:54.07281361Z"
