@@ -1,0 +1,57 @@
+namespace: insitu
+
+helm:
+  releaseName: insitu-backend
+  chart: "insitu-backend"
+  repo: "https://eea.github.io/helm-charts"
+  version: "1.0.0"
+  force: true
+  timeoutSeconds: 0
+  values:
+    links:
+      database: postgres-postgres.database
+      memcached: postgres-memcached.database
+    ingress:
+      annotations:
+        cert-manager.io/cluster-issuer: 01dev-eea-letsencrypt
+      certificate: dev-insitu.copernicus.01dev.eea.europa.eu-tls
+    plone:
+      hostname: dev-insitu.copernicus.01dev.eea.europa.eu
+      database:
+        POSTGRES_DB: insitu
+        POSTGRES_PASSWORD: zope_456
+        POSTGRES_USER: zope
+      environment:
+        CORS_ALLOW_ORIGIN: ""
+        DEFAULT_ORGANISATIONS: ""
+        DEFAULT_PUBLISHER: ""
+        DYNAMIC_BANNER_ENABLED: "No"
+        GRAYLOG: logcentral.eea.europa.eu:12201
+        SENTRY_DSN: ""
+        SENTRY_ENVIRONMENT: 01dev
+        STATIC_BANNER_ENABLED: "Yes"
+
+    varnish:
+      environment:
+        AUTOKILL_CRON: ""
+        VARNISH_BERESP_GRACE: 60s
+        VARNISH_BERESP_KEEP: 120s
+        VARNISH_BERESP_TTL: 120s
+        VARNISH_DNS_TTL: 20s
+        VARNISH_GZIP_ENABLED: "true"
+        VARNISH_GZIP_JSON_ENABLED: "true"
+
+    postfix:
+      dryrun: true
+      mailtrap:
+        httpenabled: false
+        ingress:
+          annotations:
+            cert-manager.io/cluster-issuer: 01dev-eea-letsencrypt
+          certificate: fabmailtrap.01dev.eea.europa.eu-tls
+          enabled: false
+          hostname: fabmailtrap.01dev.eea.europa.eu
+        serviceType: NodePort
+      mtpPass: ""
+      mtpPort: ""
+      mtpRelay: ironports.eea.europa.eu

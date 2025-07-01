@@ -1,0 +1,74 @@
+image:
+  repository: eeacms/insitu-frontend
+  pullPolicy: Always
+  tag: ""
+
+imagePullSecrets: []
+
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: false
+  annotations: {}
+  name: ""
+
+timezone: Europe/Copenhagen
+
+ingress:
+  annotations:
+    cert-manager.io/cluster-issuer: 01dev-eea-letsencrypt
+  certificate: dev-insitu.copernicus.01dev.eea.europa.eu-tls
+  tls: enabled
+
+volto:
+  serviceType: ClusterIP
+  hostname: dev-insitu.copernicus.01dev.eea.europa.eu
+  replicaCount: 1
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 4
+    targetCPUUtilizationPercentage: 80
+  resources:
+    limits:
+      memory: 2Gi
+    requests:
+      memory: 2Gi
+  environment:
+    RAZZLE_INTERNAL_API_PATH: http://backend:8080/copernicus
+    RAZZLE_PUBLIC_PATH: /
+    RAZZLE_SENTRY_DSN: ""
+    RAZZLE_SENTRY_RELEASE: ""
+    RAZZLE_SENTRY_ENVIRONMENT: 01dev
+  annotations: {}
+  livenessProbe:
+    httpGet:
+      path: /ok
+      port: http
+    periodSeconds: 10
+    timeoutSeconds: 10
+    initialDelaySeconds: 30
+    failureThreshold: 5
+    successThreshold: 1
+  startupProbe:
+    httpGet:
+      path: /ok
+      port: http
+    periodSeconds: 5
+    timeoutSeconds: 10
+    initialDelaySeconds: 10
+    failureThreshold: 12
+    successThreshold: 1
+
+service:
+  type: ClusterIP
+  port: 3000
+
+resources: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
