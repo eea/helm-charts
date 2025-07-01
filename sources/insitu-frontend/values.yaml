@@ -16,7 +16,7 @@ serviceAccount:
 timezone: Europe/Copenhagen
 
 ingress:
-  annotations: 
+  annotations:
     cert-manager.io/cluster-issuer: 01dev-eea-letsencrypt
   certificate: dev-insitu.copernicus.01dev.eea.europa.eu-tls
   tls: enabled
@@ -36,7 +36,7 @@ volto:
     requests:
       memory: 2Gi
   environment:
-    RAZZLE_INTERNAL_API_PATH: http://insitu-backend.insitu.svc.cluster.local:8080/Plone
+    RAZZLE_INTERNAL_API_PATH: http://backend:8080/copernicus
     RAZZLE_PUBLIC_PATH: /
     RAZZLE_SENTRY_DSN: ""
     RAZZLE_SENTRY_RELEASE: ""
