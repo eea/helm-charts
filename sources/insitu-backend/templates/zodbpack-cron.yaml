@@ -1,0 +1,72 @@
+{{- if .Values.zodbpack.enabled }}
+
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ .Release.Name }}-zodbpack-cron
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: zodbpack
+
+spec:
+  schedule: "{{ .Values.zodbpack.schedule }}"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          {{- with .Values.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          serviceAccountName: {{ include "appl.serviceAccountName" . }}
+          successfulJobsHistoryLimit: {{ .Values.zodbpack.keepSuccessfulPods }}
+          failedJobsHistoryLimit: {{ .Values.zodbpack.keepFailedPods }}
+          containers:
+          - name: zodbpack
+            image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+            args:
+            - /app/bin/zodbpack
+            - /app/etc/zodbpack.conf
+            env:
+            - name: SERVER_NAME
+              value: "{{ .Values.plone.hostname }}"
+            - name: SENTRY_SITE
+              value: "{{ .Values.plone.hostname }}"
+            - name: GRAYLOG_FACILITY
+              value: "{{ .Values.plone.hostname }}"
+            - name: BACKEND_VERSION
+              value: "{{ .Values.image.tag | default .Chart.AppVersion }}"
+            - name: SENTRY_RELEASE
+              value: "{{ .Values.image.tag | default .Chart.AppVersion }}"
+            - name: TZ
+              value: "{{ .Values.timezone }}"
+            - name: RELSTORAGE_DSN
+              value: "host='postgres' dbname='{{ .Values.plone.database.POSTGRES_DB }}' user='{{ .Values.plone.database.POSTGRES_USER }}' password='{{ .Values.plone.database.POSTGRES_PASSWORD }}'"
+            {{- range $key, $value := .Values.plone.environment }}
+            {{- if ($value) }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+            {{- end }}
+            resources:
+              {{- toYaml .Values.zodbpack.resources | nindent 10 }}
+
+            securityContext:
+              {{- toYaml .Values.zodbpack.securityContext | nindent 16 }}
+            
+          {{- with .Values.zodbpack.nodeSelector }}
+          nodeSelector:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          {{- with .Values.zodbpack.affinity }}
+          affinity:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          {{- with .Values.zodbpack.tolerations }}
+          tolerations:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          restartPolicy: Never
+
+{{- end }}            
