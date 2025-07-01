@@ -1,0 +1,18 @@
+
+replicaCount: 1
+image:
+  repository: mongo
+  tag: 4.4.29
+  pullPolicy: IfNotPresent
+
+resources:
+  requests:
+    memory: "256Mi"
+  limits:
+    memory: "384Mi"
+
+persistence:
+  enabled: true
+  accessMode: ReadWriteOnce
+  size: 5Gi
+  storageClass: "rancher-nfs"
