@@ -69,6 +69,9 @@ We have the following services that should be exposed in ingress:
 
 # Releases
 
+### Version 0.0.17 - 01 July 2025
+- update checkmk [Silviu - [`4edacf7`](https://github.com/eea/helm-charts/commit/4edacf7ffc3c87da376aec3191cf3c16b8c8feb5)]
+
 ### Version 0.0.16 - 01 July 2025
 - make config multiline [Silviu - [`8a95e10`](https://github.com/eea/helm-charts/commit/8a95e1059673a6bc275de96f1208398081fdbff6)]
 
