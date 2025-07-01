@@ -11,9 +11,9 @@ helm:
     ingress:
       annotations:
         cert-manager.io/cluster-issuer: 01dev-eea-letsencrypt
-      certificate: insitu.01dev.eea.europa.eu-tls     
+      certificate: dev-insitu.copernicus.01dev.eea.europa.eu-tls     
     volto:
-      hostname: insitu.01dev.eea.europa.eu
+      hostname: dev-insitu.copernicus.01dev.eea.europa.eu
       environment:
         RAZZLE_INTERNAL_API_PATH: http://insitu-backend.insitu.svc.cluster.local:8080/Plone
         RAZZLE_PUBLIC_PATH: /
