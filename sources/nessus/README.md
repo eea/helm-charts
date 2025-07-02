@@ -11,7 +11,8 @@ Tenable.io linking key
 
 | Version | Date | Comment |
 | ------- | -----| ------- |
-| 1.0.0 | 18 June 2025 | Use Tenable's official image (10.8.4-ubuntu) |
+| 1.0.1 | 02 July 2025 | Use Tenable's other image (10.8.4-oracle). |
+| 1.0.0 | 18 June 2025 | Use Tenable's official image (10.8.4-ubuntu). |
 | 0.3.0 | 14 Jan 2025 | Increased Nessus image version (AlmaLinux 9 image used). |
 | 0.2.9 | 12 Nov 2024 | Increased Nessus image version (AlmaLinux updates applied). |
 | 0.2.8 | 1 Oct. 2024 | Increased Nessus image version. |
