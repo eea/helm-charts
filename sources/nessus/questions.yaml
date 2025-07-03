@@ -20,15 +20,39 @@ questions:
 
 - variable: adminName
   type: string
-  required: true
+  required: false
   default: ""
   label: Administrator name
   description: Username for admin user creation. If not provided, defaults to admin.
 
 - variable: adminPwd
-  required: true
-  type: string
+  required: false
+  type: password
   default: ""
   label: Administrator password
   description: Password for admin user creation. If not provided, a password will be generated.
 
+- variable: autoUpdate
+  required: true
+  default: "all"
+  label: "Automatic update"
+  type: enum
+  options:
+  - "all"
+  - "plugins"
+  - "no"
+  description: Sets whether Tenable Nessus should automatically receive updates.
+
+- variable: managerHost
+  required: true
+  default: "cloud.tenable.com"
+  type: string
+  label: "Manager host"
+  description: The hostname or IP address of the manager. By default, the hostname is cloud.tenable.com.
+
+- variable: managerPort
+  required: true
+  default: "443"
+  type: string
+  label: "Manager port"
+  description: The port of the manager. By default, the port is 443.
