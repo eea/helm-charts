@@ -150,8 +150,6 @@ spec:
               "-Denv.converters.graylog={{ .Values.convertersGraylog }}"
               "-Denv.jobExecutor.graylog={{ .Values.jobExecutorGraylog }}"
               "-DjobExecutor.requests.url={{ .Values.jobExecutorRequestsUrl }}"
-              "-Denv.fme.user={{ .Values.fme.user }}"
-              "-Denv.fme.password={{ .Values.fme.password }}"
               "-Denv.fme.token={{ .Values.fme.token }}"
           # Wait for up to 3 minutes to all liquibase to finish
           startupProbe:
