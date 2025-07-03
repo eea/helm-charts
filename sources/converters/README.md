@@ -5,6 +5,9 @@ This chart is configured for production use.
 ## Releases
 
 <dl>
+  <dt>Version 0.1.6</dt>
+  <dd>Use token instead of basic auth for FME communication.</dd>
+
   <dt>Version 0.1.5</dt>
   <dd>Graylog config.</dd>
 
