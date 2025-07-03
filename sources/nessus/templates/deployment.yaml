@@ -1,15 +1,15 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "appl.fullname" . }}
+  name: {{ include "nessus.fullname" . }}
   labels:
-    {{- include "appl.labels" . | nindent 4 }}
+    {{- include "nessus.labels" . | nindent 4 }}
 
 spec:
   replicas: 1
   selector:
     matchLabels:
-      {{- include "appl.selectorLabels" . | nindent 6 }}
+      {{- include "nessus.selectorLabels" . | nindent 6 }}
 
   strategy:
     type: Recreate
@@ -17,13 +17,13 @@ spec:
   template:
     metadata:
       labels:
-        {{- include "appl.selectorLabels" . | nindent 8 }}
+        {{- include "nessus.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      serviceAccountName: {{ include "nessus.serviceAccountName" . }}
 
       containers:
       - name: {{ .Release.Name }}
@@ -37,6 +37,12 @@ spec:
           value: "{{ .Values.adminName }}"
         - name: PASSWORD
           value: "{{ .Values.adminPwd }}"
+        - name: MANAGER_HOST
+          value: "{{ .Values.managerHost }}"
+        - name: MANAGER_PORT
+          value: "{{ .Values.managerPort }}"
+        - name: AUTO_UPDATE
+          value: "{{ .Values.autoUpdate }}"
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
         securityContext:

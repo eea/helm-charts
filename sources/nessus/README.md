@@ -3,15 +3,15 @@
 This is a scanner that contacts Tenable.io for work.
 
 ## Prerequisites
-Tenable.io linking key
 
-## Releases
+Tenable.io linking key.
 
 ## Releases
 
 | Version | Date | Comment |
 | ------- | -----| ------- |
-| 1.0.1 | 02 July 2025 | Use Tenable's other image (10.8.4-oracle). |
+| 1.0.1 | 3 July 2025 | More options via environment variables. |
+| 1.0.1 | 2 July 2025 | Use Tenable's other image (10.8.4-oracle). |
 | 1.0.0 | 18 June 2025 | Use Tenable's official image (10.8.4-ubuntu). |
 | 0.3.0 | 14 Jan 2025 | Increased Nessus image version (AlmaLinux 9 image used). |
 | 0.2.9 | 12 Nov 2024 | Increased Nessus image version (AlmaLinux updates applied). |
