@@ -152,6 +152,9 @@ helm upgrade gptlab eea/gptlab
 
 ## Releases
 
+### Version 0.1.10
+- Updated appVersion to v0.29.1-eea.0.0.57
+
 ### Version 0.1.9
 - Updated appVersion to v0.29.1-eea.0.0.54
 
