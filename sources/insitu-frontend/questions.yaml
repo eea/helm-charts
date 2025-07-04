@@ -15,6 +15,22 @@ questions:
     required: true
     group: "General"
     
+  - variable: "volto.environment.RAZZLE_PROXY_ES_DSN_globalsearch"
+    label: "RAZZLE_PROXY_ES_DSN_globalsearch"
+    description: "Elastic Search DSN"
+    default: ""
+    required: false
+    type: "string"
+    group: "Volto configuration"
+
+  - variable: "volto.environment.RAZZLE_PROXY_QA_DSN_globalsearch"
+    label: "RAZZLE_PROXY_QA_DSN_globalsearch"
+    description: "NLP Service DSN"
+    default: ""
+    required: false
+    type: "string"
+    group: "Volto configuration"
+    
   - variable: "ingress.tls"
     label: "Enable https"
     default: true
