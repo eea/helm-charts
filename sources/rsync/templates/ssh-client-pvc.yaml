@@ -1,0 +1,18 @@
+{{- if .Values.client.enabled -}}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ssh-client-keys
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: client
+  annotations:
+    "helm.sh/resource-policy": keep
+
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+{{- end }}

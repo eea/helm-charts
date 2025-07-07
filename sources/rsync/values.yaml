@@ -1,0 +1,75 @@
+image:
+  repository: eeacms/rsync
+  pullPolicy: IfNotPresent
+  tag: ""
+
+networkSecurity:
+  enabled: false
+
+timezone: Europe/Copenhagen
+
+
+imagePullSecrets: []
+
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: false
+  annotations: {}
+  name: ""
+
+
+    
+# Enter the names of the Persistent Volume Claims.
+# They will be mounted under /mnt
+mounts: []
+#- eionet-ldapdump
+#- sqlservice-varlocal
+
+resources:
+  limits:
+    memory: 2024Mi
+  requests:
+    memory: 2024Mi
+
+server:
+  enabled: false
+  serviceType: NodePort
+  port: 12222
+  SSH_AUTH_KEYS: ''
+  resources:
+    limits:
+      memory: 2024Mi
+    requests:
+      memory: 2024Mi
+
+
+
+client:
+  enabled: true
+  CRON_TASKS: "" 
+  resources:
+    limits:
+      memory: 2024Mi
+    requests:
+      memory: 2024Mi
+
+
+args: []
+
+nameOverride: ""
+
+fullnameOverride: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+
+securityContext: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
