@@ -31,12 +31,11 @@ questions:
 
   - variable: "server.port"
     label: "Expose rsync server on external port:"
-    type: int
+    type: string
     required: true
     default: 2222
     group: "Configuration"
     show_if: "server.enabled=true"
-
 
   - variable: "server.SSH_AUTH_KEYS"
     label: "SSH Public Keys allowed to connect"
