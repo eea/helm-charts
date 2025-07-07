@@ -20,12 +20,9 @@ serviceAccount:
   name: ""
 
 
-    
 # Enter the names of the Persistent Volume Claims.
 # They will be mounted under /mnt
 mounts: []
-#- eionet-ldapdump
-#- sqlservice-varlocal
 
 resources:
   limits:
@@ -44,11 +41,9 @@ server:
     requests:
       memory: 2024Mi
 
-
-
 client:
   enabled: true
-  CRON_TASKS: "" 
+  CRON_TASKS: ""
   resources:
     limits:
       memory: 2024Mi
@@ -58,9 +53,6 @@ client:
 
 args: []
 
-nameOverride: ""
-
-fullnameOverride: ""
 
 podAnnotations: {}
 
