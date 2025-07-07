@@ -1,0 +1,76 @@
+{{- if .Values.server.enabled -}}
+
+{{- $mounts := .Values.mounts | join "," | splitList "," }}
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-server
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: server
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: server
+
+    spec:
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: rsync-server
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- if .Values.mounts }}
+          volumeMounts:
+          - mountPath: /ssh_host_keys
+            name: ssh-server-keys 
+          {{- range $index, $mnt := $mounts }}
+          - mountPath: /mnt/{{ $mnt }}
+            name: mnt{{ $index }}
+          {{- end }}
+          {{- end }}
+
+
+          resources:
+            {{- toYaml .Values.server.resources | nindent 12 }}
+          env:
+          - name: TZ
+            value: "{{ .Values.timezone }}"
+          - name: SSH_AUTH_KEYS
+            value: "{{ .Values.server.SSH_AUTH_KEYS }}"
+          args:
+          - server  
+          port:
+          - name: ssh
+            value: 22          
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+      {{- if .Values.mounts }}
+      volumes:
+      - name: ssh-server-keys
+        persistentVolumeClaim:
+          claimName: ssh-server-keys 
+      {{- range $index, $mnt := $mounts }}
+      - name: mnt{{ $index }}
+        persistentVolumeClaim:
+          claimName: {{ $mnt }}
+      {{- end }}
+      {{- end }}
+{{- end }}

@@ -1,0 +1,78 @@
+{{- if .Values.client.enabled -}}
+
+{{- $mounts := .Values.mounts | join "," | splitList "," }}
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-client
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: client
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: client
+
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: client
+    spec:
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: rsync-client
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- if .Values.mounts }}
+          volumeMounts:
+          - mountPath: /root/.ssh
+            name: ssh-client-keys 
+          {{- range $index, $mnt := $mounts }}
+          - mountPath: /mnt/{{ $mnt }}
+            name: mnt{{ $index }}
+          {{- end }}
+          {{- end }}
+
+
+          resources:
+            {{- toYaml .Values.client.resources | nindent 12 }}
+          env:
+          - name: TZ
+            value: "{{ .Values.timezone }}"
+          - name: CRON_TASKS
+            value: "{{ .Values.client.CRON_TASKS }}"
+          args:
+          - client
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+      {{- if .Values.mounts }}
+      volumes:
+      - name: ssh-client-keys
+        persistentVolumeClaim:
+          claimName: ssh-client-keys 
+      {{- range $index, $mnt := $mounts }}
+      - name: mnt{{ $index }}
+        persistentVolumeClaim:
+          claimName: {{ $mnt }}
+      {{- end }}
+      {{- end }}
+{{- end }}
