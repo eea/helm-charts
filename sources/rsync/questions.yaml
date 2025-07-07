@@ -1,5 +1,14 @@
 questions:
 
+  - variable: mounts
+    type: multiline
+    default: []
+    description: Comma-separated list of PVCs of volumes to mount under /mnt on enabled rsync server/client
+    label: Enter the names of the Persistent Volume Claims.
+    group: "General"
+    required: true
+
+
   - variable: "server.enabled"
     label: "Enable Rsync server"
     default: true
@@ -37,14 +46,13 @@ questions:
     required: true
     group: "Configuration"
     show_if: "server.enabled=true"
-  
- - variable: "client.enabled"
+
+  - variable: "client.enabled"
     label: "Enable Rsync client"
     default: true
     type: "boolean"
     required: true
     group: "General"
-
 
   - variable: "client.CRON_TASKS"
     label: "Syncing cron jobs"
@@ -53,16 +61,6 @@ questions:
     required: true
     group: "Configuration"
     show_if: "client.enabled=true"
-
-
-  - variable: mounts
-    type: multiline
-    default: []
-    description: Comma-separated list of PVCs of volumes to mount under /mnt on enabled rsync server/client
-    label: Enter the names of the Persistent Volume Claims.
-    group: "General"
-    required: true
-
 
   - variable: "server.resources.requests.memory"
     label: "Server memory reservation"
@@ -80,7 +78,7 @@ questions:
     default: "4Gi"
     group: "Memory"
     show_if: "server.enabled=true"
-      
+
   - variable: "client.resources.requests.memory"
     label: "Client memory reservation"
     type: "string"
@@ -97,9 +95,3 @@ questions:
     default: "4Gi"
     group: "Memory"
     show_if: "client.enabled=true"
-
-
-
-
-
-
