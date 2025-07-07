@@ -69,6 +69,9 @@ We have the following services that should be exposed in ingress:
 
 # Releases
 
+### Version 0.0.18 - 07 July 2025
+- update Lighthouse version 12.7.1 [Silviu - [`6f35a67e`](https://github.com/eea/helm-charts/commit/6f35a67e3b1657d1369c7293402fd39dec41d4c1)]
+
 ### Version 0.0.17 - 01 July 2025
 - update checkmk [Silviu - [`4edacf7`](https://github.com/eea/helm-charts/commit/4edacf7ffc3c87da376aec3191cf3c16b8c8feb5)]
 
