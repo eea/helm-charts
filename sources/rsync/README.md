@@ -1,21 +1,30 @@
-# ALMA 9 linux (Formerly CentOS 7)
+# Rsync
 
-This helm chart deploys a single pod with an ALMA Linux image, which can be used for administration, or as a subchart in another helm chart.
+This helm chart deploys a rsync server and/or rsync client
+
+Based on [www-sync](https://github.com/eea/eea.rancher.catalog/tree/master/infra-templates/www-sync)
+
+Using [eeacms/rsync](https://github.com/eea/eea.docker.rsync) docker image
+
+
 
 ## Mounting persistent volumes
 
-The `mounts` value is a list of Persistent Volume Claims that will be mounted
+The `mounts` value is a comma separated list of Persistent Volume Claims that will be mounted
 under /mnt. The volume claims must exist already.
+
+## Rsync Server 
+
+Enable server, choose how to expose it and under what port, add ssh keys
+
+
+## Rsync client
+
+Enable client, add crontab with rsync jobs, if needed
+
 
 ## Releases
 
-| Version | Note |
-| ------- | ---- |
-| Version 1.0.7 - 09 April 2025 | User-defined arguments to the entrypoint. |
-| Version 1.0.6 - 04 November 2024 | Use indexed name to allow mounts longer than 63 chars. |
-| Version 1.0.5 - 10 September 2024 | Allow mounts to be specified as comma-separated list. |
-| Version 1.0.4 - 10 September 2024 | Added questions.yaml from [Rancher documentation](https://ranchermanager.docs.rancher.com/how-to-guides/new-user-guides/helm-charts-in-rancher/create-apps) |
-| Version 1.0.3 - 4 September 2024 | Upgrade to AlmaLinux 9.4. |
-| Version 1.0.2 | Added ldap clients. |
-| Version 1.0.1 | Fixed typo in network security policy. |
-| Version 1.0.0 | Migrated to ALMA Linux 9.3 as CentOS has not been maintained by Redhat for a couple of years.  Added network security policy that blocks inter-namespace traffic. |
+### Version 1.0.1 - 07 July 2025
+- Fix questions [valentinab25 - [`0dd9368d`](https://github.com/eea/helm-charts/commit/0dd9368d1da562cfde72a36307288739183fa663)]
+
