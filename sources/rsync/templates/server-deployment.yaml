@@ -16,7 +16,11 @@ spec:
     matchLabels:
       {{- include "appl.selectorLabels" . | nindent 6 }}
       component: server
-
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: server
     spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
