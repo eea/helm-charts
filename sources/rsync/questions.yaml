@@ -24,7 +24,7 @@ questions:
       - "NodePort"
       - "ClusterIP"
       - "LoadBalancer"
-    default: "NodePort"
+    default: "LoadBalancer"
     required: true
     group: "Configuration"
     show_if: "server.enabled=true"

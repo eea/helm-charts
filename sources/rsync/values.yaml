@@ -32,7 +32,7 @@ resources:
 
 server:
   enabled: false
-  serviceType: NodePort
+  serviceType: LoadBalancer
   port: 12222
   SSH_AUTH_KEYS: ''
   resources:
