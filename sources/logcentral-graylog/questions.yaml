@@ -1,0 +1,192 @@
+questions:
+  - variable: graylog.image.tag
+    default: "6.3.1"
+    description: "Graylog Docker image tag"
+    type: string
+    label: Graylog Version
+    group: "Container Images"
+
+  - variable: graylog.replicas
+    default: 1
+    description: "Number of Graylog instances"
+    type: int
+    min: 1
+    max: 10
+    label: Graylog Replicas
+    group: "Scaling"
+
+  - variable: graylog.rootUsername
+    default: "admin"
+    description: "Graylog root administrator username"
+    type: string
+    label: Root Username
+    group: "Authentication"
+
+  - variable: graylog.rootPassword
+    default: ""
+    description: "Graylog root administrator password (leave empty for auto-generated)"
+    type: password
+    label: Root Password
+    group: "Authentication"
+
+  - variable: graylog.rootEmail
+    default: ""
+    description: "Email address for the root user"
+    type: string
+    label: Root Email
+    group: "Authentication"
+
+  - variable: graylog.persistence.enabled
+    default: true
+    description: "Enable persistent storage for Graylog data"
+    type: boolean
+    label: Enable Persistence
+    group: "Storage"
+
+  - variable: graylog.persistence.size
+    default: "20Gi"
+    description: "Size of the persistent volume"
+    type: string
+    label: Storage Size
+    group: "Storage"
+    show_if: "graylog.persistence.enabled=true"
+
+  - variable: graylog.service.port
+    default: 9000
+    description: "Port for Graylog web interface"
+    type: int
+    label: Web Interface Port
+    group: "Networking"
+
+  - variable: graylog.ingress.enabled
+    default: false
+    description: "Enable ingress for Graylog web interface"
+    type: boolean
+    label: Enable Ingress
+    group: "Networking"
+
+  - variable: graylog.ingress.hosts
+    default: []
+    description: "Hostnames for ingress (e.g., graylog.example.com)"
+    type: array[string]
+    label: Ingress Hosts
+    group: "Networking"
+    show_if: "graylog.ingress.enabled=true"
+
+  - variable: graylog.resources.requests.cpu
+    default: "200m"
+    description: "CPU request for Graylog pods"
+    type: string
+    label: CPU Request
+    group: "Resources"
+
+  - variable: graylog.resources.requests.memory
+    default: "512Mi"
+    description: "Memory request for Graylog pods"
+    type: string
+    label: Memory Request
+    group: "Resources"
+
+  - variable: graylog.resources.limits.cpu
+    default: "1"
+    description: "CPU limit for Graylog pods"
+    type: string
+    label: CPU Limit
+    group: "Resources"
+
+  - variable: graylog.heapSize
+    default: "16g"
+    description: "Java heap size for Graylog"
+    type: string
+    label: Java Heap Size
+    group: "Resources"
+
+  - variable: graylog.opensearch.hosts
+    default: ""
+    description: "OpenSearch hosts (comma-separated list)"
+    type: string
+    label: External OpenSearch Hosts
+    group: "Dependencies"
+
+  - variable: graylog.opensearch.username
+    default: "admin"
+    description: "OpenSearch username"
+    type: string
+    label: OpenSearch Username
+    group: "Dependencies"
+    show_if: "graylog.opensearch.hosts!="
+
+  - variable: graylog.mongodb.uri
+    default: ""
+    description: "MongoDB connection URI"
+    type: string
+    label: External MongoDB URI
+    group: "Dependencies"
+
+  - variable: graylog.metrics.enabled
+    default: false
+    description: "Enable Prometheus metrics"
+    type: boolean
+    label: Enable Metrics
+    group: "Monitoring"
+
+  - variable: graylog.metrics.serviceMonitor.enabled
+    default: false
+    description: "Create ServiceMonitor for Prometheus operator"
+    type: boolean
+    label: Create ServiceMonitor
+    group: "Monitoring"
+    show_if: "graylog.metrics.enabled=true"
+
+  - variable: graylog.geoip.enabled
+    default: false
+    description: "Enable GeoIP database for location lookups"
+    type: boolean
+    label: Enable GeoIP
+    group: "Features"
+
+  - variable: graylog.transportEmail.enabled
+    default: false
+    description: "Enable email transport for notifications"
+    type: boolean
+    label: Enable Email Transport
+    group: "Features"
+
+  - variable: graylog.transportEmail.hostname
+    default: ""
+    description: "SMTP server hostname"
+    type: string
+    label: SMTP Hostname
+    group: "Features"
+    show_if: "graylog.transportEmail.enabled=true"
+
+  - variable: graylog.transportEmail.port
+    default: 587
+    description: "SMTP server port"
+    type: int
+    label: SMTP Port
+    group: "Features"
+    show_if: "graylog.transportEmail.enabled=true"
+
+  - variable: graylog.transportEmail.authUsername
+    default: ""
+    description: "SMTP authentication username"
+    type: string
+    label: SMTP Username
+    group: "Features"
+    show_if: "graylog.transportEmail.enabled=true"
+
+  - variable: graylog.transportEmail.authPassword
+    default: ""
+    description: "SMTP authentication password"
+    type: password
+    label: SMTP Password
+    group: "Features"
+    show_if: "graylog.transportEmail.enabled=true"
+
+  - variable: graylog.journal.maxSize
+    default: "5gb"
+    description: "Maximum size of the Graylog journal"
+    type: string
+    label: Journal Max Size
+    group: "Advanced"
