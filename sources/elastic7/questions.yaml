@@ -1,0 +1,402 @@
+categories:
+  - Database
+  - Logging
+  - Elasticsearch
+
+questions:
+  # Image Configuration
+  - variable: image.repository
+    default: "eeacms/elastic"
+    description: "Elasticsearch Docker image repository"
+    type: string
+    label: Image Repository
+    group: "Image Configuration"
+
+  - variable: image.tag
+    default: ""
+    description: "Elasticsearch image tag (leave empty to use chart appVersion)"
+    type: string
+    label: Image Tag
+    group: "Image Configuration"
+
+  - variable: image.pullPolicy
+    default: "IfNotPresent"
+    description: "Image pull policy"
+    type: enum
+    options:
+      - "IfNotPresent"
+      - "Always"
+      - "Never"
+    label: Image Pull Policy
+    group: "Image Configuration"
+
+  # Elasticsearch Configuration
+  - variable: useXPack
+    default: true
+    description: "Install free X-PACK modules on elastic containers"
+    type: boolean
+    label: Enable X-Pack
+    group: "Elasticsearch Configuration"
+
+  - variable: useMonitoring
+    default: false
+    description: "Enable ElasticSearch monitoring"
+    type: boolean
+    label: Enable Monitoring
+    group: "Elasticsearch Configuration"
+
+  - variable: esJavaOpts
+    default: "-Xmx512m -Xms512m"
+    description: "Java options for Elasticsearch (heap size)"
+    type: string
+    label: Java Options
+    group: "Elasticsearch Configuration"
+
+  - variable: updateSysctl
+    default: false
+    description: "Update vm.max_map_count sysctl parameter"
+    type: boolean
+    label: Update Sysctl
+    group: "Elasticsearch Configuration"
+
+  - variable: sysctlVmMaxMapCount
+    default: 262144
+    description: "Value for vm.max_map_count sysctl parameter"
+    type: int
+    label: Sysctl vm.max_map_count
+    group: "Elasticsearch Configuration"
+    show_if: "updateSysctl=true"
+
+  - variable: timezone
+    default: "Europe/Copenhagen"
+    description: "Timezone for containers"
+    type: string
+    label: Timezone
+    group: "Elasticsearch Configuration"
+
+  # Master Nodes Configuration
+  - variable: esmaster.replicaCount
+    default: 3
+    description: "Number of master node replicas"
+    type: int
+    label: Master Nodes Count
+    group: "Master Nodes"
+    min: 1
+    max: 9
+
+  - variable: esmaster.resources.requests.memory
+    default: "1512Mi"
+    description: "Memory request for master nodes"
+    type: string
+    label: Master Memory Request
+    group: "Master Nodes"
+
+  - variable: esmaster.resources.limits.memory
+    default: "1512Mi"
+    description: "Memory limit for master nodes"
+    type: string
+    label: Master Memory Limit
+    group: "Master Nodes"
+
+  - variable: esmaster.persistence.enabled
+    default: true
+    description: "Enable persistent storage for master nodes"
+    type: boolean
+    label: Enable Master Persistence
+    group: "Master Nodes"
+
+  - variable: esmaster.persistence.size
+    default: "1Gi"
+    description: "Size of persistent volume for master nodes"
+    type: string
+    label: Master Storage Size
+    group: "Master Nodes"
+    show_if: "esmaster.persistence.enabled=true"
+
+  # Worker Nodes Configuration
+  - variable: esworker.replicaCount
+    default: 2
+    description: "Number of worker (data) node replicas"
+    type: int
+    label: Worker Nodes Count
+    group: "Worker Nodes"
+    min: 0
+    max: 20
+
+  - variable: esworker.resources.requests.memory
+    default: "1512Mi"
+    description: "Memory request for worker nodes"
+    type: string
+    label: Worker Memory Request
+    group: "Worker Nodes"
+
+  - variable: esworker.resources.limits.memory
+    default: "1512Mi"
+    description: "Memory limit for worker nodes"
+    type: string
+    label: Worker Memory Limit
+    group: "Worker Nodes"
+
+  - variable: esworker.persistence.enabled
+    default: true
+    description: "Enable persistent storage for worker nodes"
+    type: boolean
+    label: Enable Worker Persistence
+    group: "Worker Nodes"
+
+  - variable: esworker.persistence.size
+    default: "1Gi"
+    description: "Size of persistent volume for worker nodes"
+    type: string
+    label: Worker Storage Size
+    group: "Worker Nodes"
+    show_if: "esworker.persistence.enabled=true"
+
+  # Client Nodes Configuration
+  - variable: esclient.replicaCount
+    default: 1
+    description: "Number of client node replicas"
+    type: int
+    label: Client Nodes Count
+    group: "Client Nodes"
+    min: 0
+    max: 10
+
+  - variable: esclient.service.type
+    default: "ClusterIP"
+    description: "Service type for client nodes"
+    type: enum
+    options:
+      - "ClusterIP"
+      - "NodePort"
+      - "LoadBalancer"
+    label: Client Service Type
+    group: "Client Nodes"
+
+  - variable: esclient.service.port
+    default: 9200
+    description: "Service port for client nodes"
+    type: int
+    label: Client Service Port
+    group: "Client Nodes"
+
+  - variable: esclient.resources.requests.memory
+    default: "1512Mi"
+    description: "Memory request for client nodes"
+    type: string
+    label: Client Memory Request
+    group: "Client Nodes"
+
+  - variable: esclient.resources.limits.memory
+    default: "1512Mi"
+    description: "Memory limit for client nodes"
+    type: string
+    label: Client Memory Limit
+    group: "Client Nodes"
+
+  # Kibana Configuration
+  - variable: kibana.enabled
+    default: true
+    description: "Enable Kibana deployment"
+    type: boolean
+    label: Enable Kibana
+    group: "Kibana"
+
+  - variable: kibana.user
+    default: "kibana"
+    description: "Kibana username"
+    type: string
+    label: Kibana Username
+    group: "Kibana"
+    show_if: "kibana.enabled=true"
+
+  - variable: kibana.password
+    default: "kibanatest"
+    description: "Kibana password"
+    type: password
+    label: Kibana Password
+    group: "Kibana"
+    show_if: "kibana.enabled=true"
+
+  - variable: kibana.service.type
+    default: "ClusterIP"
+    description: "Kibana service type"
+    type: enum
+    options:
+      - "ClusterIP"
+      - "NodePort"
+      - "LoadBalancer"
+    label: Kibana Service Type
+    group: "Kibana"
+    show_if: "kibana.enabled=true"
+
+  - variable: kibana.service.port
+    default: 5601
+    description: "Kibana service port"
+    type: int
+    label: Kibana Service Port
+    group: "Kibana"
+    show_if: "kibana.enabled=true"
+
+  - variable: kibana.resources.requests.memory
+    default: "1Gi"
+    description: "Memory request for Kibana"
+    type: string
+    label: Kibana Memory Request
+    group: "Kibana"
+    show_if: "kibana.enabled=true"
+
+  - variable: kibana.resources.limits.memory
+    default: "2Gi"
+    description: "Memory limit for Kibana"
+    type: string
+    label: Kibana Memory Limit
+    group: "Kibana"
+    show_if: "kibana.enabled=true"
+
+  # Kibana Ingress Configuration
+  - variable: kibana.ingress.enabled
+    default: false
+    description: "Enable Kibana Ingress"
+    type: boolean
+    label: Enable Kibana Ingress
+    group: "Kibana Ingress"
+    show_if: "kibana.enabled=true"
+
+  - variable: kibana.ingress.className
+    default: ""
+    description: "Ingress class name"
+    type: string
+    label: Ingress Class
+    group: "Kibana Ingress"
+    show_if: "kibana.ingress.enabled=true"
+
+  - variable: kibana.ingress.hosts[0].host
+    default: "kibana.example.com"
+    description: "Hostname for Kibana Ingress"
+    type: hostname
+    label: Kibana Hostname
+    group: "Kibana Ingress"
+    show_if: "kibana.ingress.enabled=true"
+
+  - variable: kibana.ingress.tls[0].secretName
+    default: ""
+    description: "TLS secret name for Kibana"
+    type: string
+    label: TLS Secret Name
+    group: "Kibana Ingress"
+    show_if: "kibana.ingress.enabled=true"
+
+  # Cerebro Configuration
+  - variable: cerebro.enabled
+    default: true
+    description: "Enable Cerebro (Elasticsearch monitoring tool)"
+    type: boolean
+    label: Enable Cerebro
+    group: "Cerebro"
+
+  - variable: cerebro.user
+    default: "admin"
+    description: "Cerebro username"
+    type: string
+    label: Cerebro Username
+    group: "Cerebro"
+    show_if: "cerebro.enabled=true"
+
+  - variable: cerebro.password
+    default: "secret"
+    description: "Cerebro password"
+    type: password
+    label: Cerebro Password
+    group: "Cerebro"
+    show_if: "cerebro.enabled=true"
+
+  - variable: cerebro.service.type
+    default: "ClusterIP"
+    description: "Cerebro service type"
+    type: enum
+    options:
+      - "ClusterIP"
+      - "NodePort"
+      - "LoadBalancer"
+    label: Cerebro Service Type
+    group: "Cerebro"
+    show_if: "cerebro.enabled=true"
+
+  - variable: cerebro.service.port
+    default: 9000
+    description: "Cerebro service port"
+    type: int
+    label: Cerebro Service Port
+    group: "Cerebro"
+    show_if: "cerebro.enabled=true"
+
+  # Security Configuration
+  - variable: enableReadonlyRest
+    default: true
+    description: "Enable ReadonlyREST security plugin"
+    type: boolean
+    label: Enable ReadonlyREST
+    group: "Security"
+
+  - variable: readOnlyUser
+    default: "ro"
+    description: "Read-only username"
+    type: string
+    label: Read-only Username
+    group: "Security"
+    show_if: "enableReadonlyRest=true"
+
+  - variable: readOnlyPassword
+    default: "rotest"
+    description: "Read-only password"
+    type: password
+    label: Read-only Password
+    group: "Security"
+    show_if: "enableReadonlyRest=true"
+
+  - variable: readWriteUser
+    default: "rw"
+    description: "Read-write username"
+    type: string
+    label: Read-write Username
+    group: "Security"
+    show_if: "enableReadonlyRest=true"
+
+  - variable: readWritePassword
+    default: "rwtest"
+    description: "Read-write password"
+    type: password
+    label: Read-write Password
+    group: "Security"
+    show_if: "enableReadonlyRest=true"
+
+  # Advanced Configuration
+  - variable: nameOverride
+    default: ""
+    description: "Override the name of the chart"
+    type: string
+    label: Name Override
+    group: "Advanced"
+
+  - variable: fullnameOverride
+    default: ""
+    description: "Override the fullname of the chart"
+    type: string
+    label: Full Name Override
+    group: "Advanced"
+
+  - variable: serviceAccount.create
+    default: true
+    description: "Create a service account"
+    type: boolean
+    label: Create Service Account
+    group: "Advanced"
+
+  - variable: serviceAccount.name
+    default: ""
+    description: "Name of the service account (auto-generated if empty)"
+    type: string
+    label: Service Account Name
+    group: "Advanced"
+    show_if: "serviceAccount.create=true"
