@@ -19,17 +19,6 @@ questions:
     label: Image Tag
     group: "Image Configuration"
 
-  - variable: image.pullPolicy
-    default: "IfNotPresent"
-    description: "Image pull policy"
-    type: enum
-    options:
-      - "IfNotPresent"
-      - "Always"
-      - "Never"
-    label: Image Pull Policy
-    group: "Image Configuration"
-
   # Elasticsearch Configuration
   - variable: useXPack
     default: true
@@ -152,48 +141,6 @@ questions:
     group: "Worker Nodes"
     show_if: "esworker.persistence.enabled=true"
 
-  # Client Nodes Configuration
-  - variable: esclient.replicaCount
-    default: 1
-    description: "Number of client node replicas"
-    type: int
-    label: Client Nodes Count
-    group: "Client Nodes"
-    min: 0
-    max: 10
-
-  - variable: esclient.service.type
-    default: "ClusterIP"
-    description: "Service type for client nodes"
-    type: enum
-    options:
-      - "ClusterIP"
-      - "NodePort"
-      - "LoadBalancer"
-    label: Client Service Type
-    group: "Client Nodes"
-
-  - variable: esclient.service.port
-    default: 9200
-    description: "Service port for client nodes"
-    type: int
-    label: Client Service Port
-    group: "Client Nodes"
-
-  - variable: esclient.resources.requests.memory
-    default: "1512Mi"
-    description: "Memory request for client nodes"
-    type: string
-    label: Client Memory Request
-    group: "Client Nodes"
-
-  - variable: esclient.resources.limits.memory
-    default: "1512Mi"
-    description: "Memory limit for client nodes"
-    type: string
-    label: Client Memory Limit
-    group: "Client Nodes"
-
   # Kibana Configuration
   - variable: kibana.enabled
     default: true
@@ -215,18 +162,6 @@ questions:
     description: "Kibana password"
     type: password
     label: Kibana Password
-    group: "Kibana"
-    show_if: "kibana.enabled=true"
-
-  - variable: kibana.service.type
-    default: "ClusterIP"
-    description: "Kibana service type"
-    type: enum
-    options:
-      - "ClusterIP"
-      - "NodePort"
-      - "LoadBalancer"
-    label: Kibana Service Type
     group: "Kibana"
     show_if: "kibana.enabled=true"
 
@@ -263,27 +198,11 @@ questions:
     group: "Kibana Ingress"
     show_if: "kibana.enabled=true"
 
-  - variable: kibana.ingress.className
-    default: ""
-    description: "Ingress class name"
-    type: string
-    label: Ingress Class
-    group: "Kibana Ingress"
-    show_if: "kibana.ingress.enabled=true"
-
   - variable: kibana.ingress.hosts[0].host
     default: "kibana.example.com"
     description: "Hostname for Kibana Ingress"
     type: hostname
     label: Kibana Hostname
-    group: "Kibana Ingress"
-    show_if: "kibana.ingress.enabled=true"
-
-  - variable: kibana.ingress.tls[0].secretName
-    default: ""
-    description: "TLS secret name for Kibana"
-    type: string
-    label: TLS Secret Name
     group: "Kibana Ingress"
     show_if: "kibana.ingress.enabled=true"
 
@@ -308,18 +227,6 @@ questions:
     description: "Cerebro password"
     type: password
     label: Cerebro Password
-    group: "Cerebro"
-    show_if: "cerebro.enabled=true"
-
-  - variable: cerebro.service.type
-    default: "ClusterIP"
-    description: "Cerebro service type"
-    type: enum
-    options:
-      - "ClusterIP"
-      - "NodePort"
-      - "LoadBalancer"
-    label: Cerebro Service Type
     group: "Cerebro"
     show_if: "cerebro.enabled=true"
 
@@ -372,20 +279,6 @@ questions:
     show_if: "enableReadonlyRest=true"
 
   # Advanced Configuration
-  - variable: nameOverride
-    default: ""
-    description: "Override the name of the chart"
-    type: string
-    label: Name Override
-    group: "Advanced"
-
-  - variable: fullnameOverride
-    default: ""
-    description: "Override the fullname of the chart"
-    type: string
-    label: Full Name Override
-    group: "Advanced"
-
   - variable: serviceAccount.create
     default: true
     description: "Create a service account"
