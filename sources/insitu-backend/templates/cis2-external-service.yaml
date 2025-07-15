@@ -1,4 +1,5 @@
 {{- if .Values.cis2import.enabled }}
+{{- if .Values.cis2import.externalIP }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -8,14 +9,9 @@ metadata:
     component: cis2
 spec:
   type: ExternalName
-  externalName: {{ .Values.cis2import.externalIP | default "127.0.0.1" | quote }}
-  ports:
-  - port: 80
-    targetPort: 80
-    protocol: TCP
-    name: http
-  - port: 443
-    targetPort: 443
-    protocol: TCP
-    name: https
+  externalName: {{ .Values.cis2import.externalIP | quote }}
+{{- else }}
+# CIS2 service not created - externalIP is empty
+# Please configure cis2import.externalIP with the correct IP address
+{{- end }}
 {{- end }}
