@@ -1,0 +1,61 @@
+{{- if .Values.cis2import.enabled }}
+
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ .Release.Name }}-cis2import-cron
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: cis2import
+
+spec:
+  schedule: "{{ .Values.cis2import.schedule }}"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: {{ .Values.cis2import.keepSuccessfulPods }}
+  failedJobsHistoryLimit: {{ .Values.cis2import.keepFailedPods }}
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          {{- with .Values.cis2import.podAnnotations }}
+          annotations:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+        spec:
+          {{- with .Values.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          serviceAccountName: {{ include "appl.serviceAccountName" . }}
+          securityContext:
+            {{- toYaml .Values.cis2import.podSecurityContext | nindent 12 }}
+          containers:
+          - name: cis2import
+            image: curlimages/curl:8.8.0
+            command:
+            - /bin/sh
+            - -c
+            - curl -v "https://insitu.copernicus.eu/admin/cis2_import_data?token=${CIS2_IMPORT_VIEW_TOKEN}"
+            env:
+            - name: CIS2_IMPORT_VIEW_TOKEN
+              value: "{{ .Values.cis2import.token }}"
+            resources:
+              {{- toYaml .Values.cis2import.resources | nindent 14 }}
+            securityContext:
+              {{- toYaml .Values.cis2import.securityContext | nindent 14 }}
+            
+          {{- with .Values.cis2import.nodeSelector }}
+          nodeSelector:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          {{- with .Values.cis2import.affinity }}
+          affinity:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          {{- with .Values.cis2import.tolerations }}
+          tolerations:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          restartPolicy: Never
+
+{{- end }}

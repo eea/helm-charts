@@ -79,6 +79,29 @@ questions:
     group: "General"
     show_if: "zodbpack.enabled=true"
 
+  - variable: "cis2import.enabled"
+    label: "Enable CIS2 data import"
+    default: false
+    type: "boolean"
+    required: true
+    group: "General"
+
+  - variable: "cis2import.schedule"
+    label: "Scheduled CIS2 data import time"
+    type: "string"
+    default: "0 0 3 * * *"
+    required: true
+    group: "General"
+    show_if: "cis2import.enabled=true"
+
+  - variable: "cis2import.token"
+    label: "CIS2 import view token"
+    type: "string"
+    default: ""
+    required: true
+    group: "General"
+    show_if: "cis2import.enabled=true"
+
   - variable: "varnish.serviceType"
     label: "Expose varnish"
     description: "Select NodePort to expose varnish"
@@ -323,6 +346,22 @@ questions:
     default: "1Gi"
     group: "Memory"
     show_if: "zodbpack.enabled=true"
+
+  - variable: "cis2import.resources.requests.memory"
+    label: "CIS2 import cron job memory reservation"
+    type: "string"
+    required: true
+    default: "100Mi"
+    group: "Memory"
+    show_if: "cis2import.enabled=true"
+  - variable: "cis2import.resources.limits.memory"
+    label: "CIS2 import cron job memory limit"
+    description: ">= memory reservation"
+    type: "string"
+    required: true
+    default: "100Mi"
+    group: "Memory"
+    show_if: "cis2import.enabled=true"
 
   - variable: "varnish.resources.requests.memory"
     label: "Varnish memory reservation"
