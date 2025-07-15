@@ -54,6 +54,9 @@ plone:
     DEFAULT_ORGANISATIONS: ""
     STATIC_BANNER_ENABLED_copernicus: ""
     DYNAMIC_BANNER_ENABLED: ""
+    CIS2_IMPORT_VIEW_TOKEN: ""
+    CIS2_IMPORT_TOKEN: ""
+    CIS2_IMPORT_URL: ""
   annotations: {}
   livenessProbe:
     httpGet:
@@ -177,7 +180,9 @@ zodbpack:
 cis2import:
   enabled: false
   schedule: "0 3 * * *"
+  viewToken: ""
   token: ""
+  url: ""
   keepSuccessfulPods: 3
   keepFailedPods: 5
   resources:

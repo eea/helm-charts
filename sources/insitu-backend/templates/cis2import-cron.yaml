@@ -38,7 +38,11 @@ spec:
             - curl -v "https://{{ .Values.plone.hostname }}/admin/cis2_import_data?token=${CIS2_IMPORT_VIEW_TOKEN}"
             env:
             - name: CIS2_IMPORT_VIEW_TOKEN
+              value: "{{ .Values.cis2import.viewToken }}"
+            - name: CIS2_IMPORT_TOKEN
               value: "{{ .Values.cis2import.token }}"
+            - name: CIS2_IMPORT_URL
+              value: "{{ .Values.cis2import.url }}"
             resources:
               {{- toYaml .Values.cis2import.resources | nindent 14 }}
             securityContext:

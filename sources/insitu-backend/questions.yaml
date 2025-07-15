@@ -94,13 +94,45 @@ questions:
     group: "General"
     show_if: "cis2import.enabled=true"
 
-  - variable: "cis2import.token"
+  - variable: "cis2import.viewToken"
     label: "CIS2 import view token"
     type: "string"
     default: ""
     required: true
     group: "General"
     show_if: "cis2import.enabled=true"
+  - variable: "cis2import.token"
+    label: "CIS2 import token"
+    type: "string"
+    default: ""
+    required: false
+    group: "General"
+    show_if: "cis2import.enabled=true"
+  - variable: "cis2import.url"
+    label: "CIS2 import URL"
+    type: "string"
+    default: ""
+    required: false
+    group: "General"
+    show_if: "cis2import.enabled=true"
+  - variable: "plone.environment.CIS2_IMPORT_VIEW_TOKEN"
+    label: "CIS2 import view token (for Plone)"
+    type: "string"
+    default: ""
+    required: false
+    group: "General"
+  - variable: "plone.environment.CIS2_IMPORT_TOKEN"
+    label: "CIS2 import token (for Plone)"
+    type: "string"
+    default: ""
+    required: false
+    group: "General"
+  - variable: "plone.environment.CIS2_IMPORT_URL"
+    label: "CIS2 import URL (for Plone)"
+    type: "string"
+    default: ""
+    required: false
+    group: "General"
 
   - variable: "varnish.serviceType"
     label: "Expose varnish"
