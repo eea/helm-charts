@@ -1,8 +1,8 @@
-{{- if .Values.cis2import.enabled }}
+{{- if and .Values.cis2import.enabled .Values.cis2import.externalIP }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Release.Name }}-cis2
+  name: cis2
   labels:
     {{- include "appl.labels" . | nindent 4 }}
     component: cis2
