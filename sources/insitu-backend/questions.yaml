@@ -94,6 +94,14 @@ questions:
     group: "General"
     show_if: "cis2import.enabled=true"
 
+  - variable: "cis2import.externalIP"
+    label: "CIS2 external service IP"
+    type: "string"
+    default: ""
+    required: true
+    group: "General"
+    show_if: "cis2import.enabled=true"
+
   - variable: "plone.environment.CIS2_IMPORT_VIEW_TOKEN"
     label: "CIS2 import view token"
     type: "string"
