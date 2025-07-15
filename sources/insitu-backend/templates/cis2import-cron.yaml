@@ -35,7 +35,7 @@ spec:
             command:
             - /bin/sh
             - -c
-            - curl -v "https://insitu.copernicus.eu/admin/cis2_import_data?token=${CIS2_IMPORT_VIEW_TOKEN}"
+            - curl -v "https://{{ .Values.plone.hostname }}/admin/cis2_import_data?token=${CIS2_IMPORT_VIEW_TOKEN}"
             env:
             - name: CIS2_IMPORT_VIEW_TOKEN
               value: "{{ .Values.cis2import.token }}"
