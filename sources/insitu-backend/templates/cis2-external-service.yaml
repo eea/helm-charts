@@ -1,0 +1,21 @@
+{{- if .Values.cis2import.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-cis2
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: cis2
+spec:
+  type: ExternalName
+  externalName: {{ .Values.cis2import.externalIP | quote }}
+  ports:
+  - port: 80
+    targetPort: 80
+    protocol: TCP
+    name: http
+  - port: 443
+    targetPort: 443
+    protocol: TCP
+    name: https
+{{- end }}
