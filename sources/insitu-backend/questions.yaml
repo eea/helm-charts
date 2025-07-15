@@ -89,7 +89,7 @@ questions:
   - variable: "cis2import.schedule"
     label: "Scheduled CIS2 data import time"
     type: "string"
-    default: "0 0 3 * * *"
+    default: "0 3 * * *"
     required: true
     group: "General"
     show_if: "cis2import.enabled=true"
