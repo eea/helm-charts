@@ -15839,6 +15839,27 @@ entries:
   login-eea:
   - apiVersion: v2
     appVersion: 17.0.0
+    created: "2025-07-18T15:04:43.991633962+02:00"
+    dependencies:
+    - condition: haproxy.enabled
+      name: haproxy
+      repository: https://charts.bitnami.com/bitnami
+      version: 2.1.10
+    - name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 15.2.8
+    description: Identity provider based on Keycloak for EEA use
+    digest: c931f90d071533ec77b2f3d15f4e4180229e7eb7ee3a19c26f19f14b50a0cdb8
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/login-eea/keycloak.svg
+    keywords:
+    - Authentication
+    name: login-eea
+    type: application
+    urls:
+    - login-eea-1.0.0.tgz
+    version: 1.0.0
+  - apiVersion: v2
+    appVersion: 17.0.0
     created: "2025-07-14T23:42:31.599298+02:00"
     dependencies:
     - condition: haproxy.enabled
@@ -22041,4 +22062,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2025-07-16T23:21:55.663756427Z"
+generated: "2025-07-18T15:04:43.985470213+02:00"
