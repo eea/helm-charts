@@ -20,35 +20,17 @@ Configured for EEA use only. Depends on the TLS certificate to be in the Secret 
 
 ## Releases
 
-<dl>
+| Version | Date | Description |
+| ------- | ---- | ----------- |
+| Version 1.0.0 | 2025-07-18 | Upgrade HAProxy to 2.1.10. Chart is no longer in draft. |
+| Version 0.6.2 | 2024-05-03 | Upgrade to new version of postgresql subchart. This does not change the postgreSQL version. |
+| Version 0.6.1 | | Wrong location for containerPorts. |
+| Version 0.6.0 | | Replaced the handmade postgresql config with the bitnami postgresql subchart.  This also upgrades postgresql to version 16.2.0. |
+| Version 0.5.1 | | Increase bitnami haproxy subchart from 0.12.0 to 1.0.1. |
+| Version 0.5.0 | | Removed the Ingress configuration. |
+| Version 0.4.0 | | Uses HAProxy to restrict access to admin pages. |
+| Version 0.3.0 | | Standalone profile |
+| Version 0.2.0 | | Can set log level. |
+| Version 0.1.0 | | Initial version. |
 
-  <dt>Version 0.6.2 - 2024-05-03</dt>
-  <dd>Upgrade to new version of postgresql subchart. This does not change the postgreSQL version.</dd>
-
-  <dt>Version 0.6.1</dt>
-  <dd>Wrong location for containerPorts.</dd>
-
-  <dt>Version 0.6.0</dt>
-  <dd>Replaced the handmade postgresql config with the bitnami postgresql subchart.
-      This also upgrades postgresql to version 16.2.0.</dd>
-
-  <dt>Version 0.5.1</dt>
-  <dd>Increase bitnami haproxy subchart from 0.12.0 to 1.0.1.</dd>
-
-  <dt>Version 0.5.0</dt>
-  <dd>Removed the Ingress configuration.</dd>
-
-  <dt>Version 0.4.0</dt>
-  <dd>Uses HAProxy to restrict access to admin pages.</dd>
-
-  <dt>Version 0.3.0</dt>
-  <dd>Standalone profile</dd>
-
-  <dt>Version 0.2.0</dt>
-  <dd>Can set log level.</dd>
-
-  <dt>Version 0.1.0</dt>
-  <dd>Initial version.</dd>
-
-</dl>
 
