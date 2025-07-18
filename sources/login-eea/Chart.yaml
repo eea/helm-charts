@@ -8,16 +8,17 @@ type: application
 keywords:
 - Authentication
 
-version: 0.6.2
+version: 1.0.0
 
 # Version for the main container
 appVersion: "17.0.0"
 
 dependencies:
   - name: haproxy
-    version: 1.0.4
+    version: 2.1.10
     repository: https://charts.bitnami.com/bitnami
     condition: haproxy.enabled
   - name: postgresql
     version: 15.2.8
     repository: https://charts.bitnami.com/bitnami
+
