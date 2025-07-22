@@ -7,8 +7,12 @@ metadata:
     component: master
 
 spec:
+  {{- if .Values.esPort }}
+  type: NodePort
+  {{- else }}
   type: ClusterIP
   clusterIP: None
+  {{- end }}
   ports:
   - name: "http"
     port: 9200

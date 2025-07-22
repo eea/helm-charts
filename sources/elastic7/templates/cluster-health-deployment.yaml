@@ -26,25 +26,19 @@ spec:
 
       containers:
       - name: cluster-health
-        image: eeacms/esclusterhealth:1.1
+        image: {{ .Values.clusterhealth.image }}
         env:
-        - name: ES_PASSWORD
-          value: "{{ .Values.readOnlyPassword }}"
         - name: ES_URL
-          value: http://{{ .Release.Name }}-master:9200
-        - name: ES_USER
-          value: "{{ .Values.readOnlyUser }}"
+          value: http://{{ .Release.Name }}-data:9200
         - name: PORT
           value: "12345"
+        - name: ES_USER
+          value: "elastic"
+        - name: ES_PASSWORD
+          value: "{{ .Values.esmaster.password }}"
 
         ports:
         - containerPort: 12345
-
-        livenessProbe:
-          tcpSocket:
-            port: 12345
-          initialDelaySeconds: 60
-          periodSeconds: 10
 
         resources:
           {{- toYaml .Values.clusterhealth.resources | nindent 10 }}

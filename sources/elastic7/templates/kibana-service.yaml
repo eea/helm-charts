@@ -1,4 +1,4 @@
-{{-  if .Values.kibana.enabled -}}
+{{-  if .Values.addKibana -}}
 apiVersion: v1
 kind: Service
 metadata:
@@ -8,7 +8,11 @@ metadata:
     component: kibana
 
 spec:
+  {{- if .Values.kibanaPort }}
+  type: NodePort
+  {{- else }}
   type: {{ .Values.kibana.service.type }}
+  {{- end }}
   ports:
   - port: {{ .Values.kibana.service.port }}
     targetPort: 5601

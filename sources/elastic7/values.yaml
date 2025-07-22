@@ -1,8 +1,7 @@
 image:
   repository: eeacms/elastic
   pullPolicy: IfNotPresent
-  # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
+  tag: "7.17-1.1"
 
 imagePullSecrets: []
 nameOverride: ""
@@ -26,30 +25,65 @@ securityContext:
   # runAsNonRoot: true
   # runAsUser: 1000
 
+# Cluster name
+clusterName: "es-cluster"
+
 # Enable ElasticSearch monitoring
 useMonitoring: false
-# Install free X-PACK modules on elastic containers
-useXPack: true
+# Update host sysctl
 updateSysctl: false
+# Enable bootstrap memory lock (set to false for most Kubernetes environments)
+bootstrapMemoryLock: false
+# Add Kibana container
+addKibana: true
+# Enable ES port exposure
+esPort: false
+# Enable Cerebro port exposure
+cerebroPort: false
+# Enable Kibana port exposure
+kibanaPort: false
 
-esJavaOpts: -Xmx512m -Xms512m
+# Number of initial data nodes
+initialDataNodes: 2
+# Heap size for master nodes
+masterHeapSize: "512m"
+# Memory reservation for master nodes
+masterMemReservation: "1536Mi"
+# Memory limit for master nodes
+masterMemLimit: "1536Mi"
+# Heap size for data nodes
+dataHeapSize: "512m"
+# Memory reservation for data nodes
+dataMemReservation: "1536Mi"
+# Memory limit for data nodes
+dataMemLimit: "1536Mi"
+
 sysctlVmMaxMapCount: 262144
+timezone: "Europe/Copenhagen"
 
-enableReadonlyRest: true
-readOnlyUser: ro
-readOnlyPassword: rotest
-readWriteUser: rw
-readWritePassword: rwtest
-keyPassword: ""
-keystorePassword: ""
-timezone: Europe/Copenhagen
+# Volume configuration
+volumeDriver: "rancher-nfs"
+volumeDriverOpts: ""
+volumeConfigDriver: "netapp"
+volumeConfigDriverOpts: ""
+backupVolumeName: ""
+backupVolumeDriver: "rancher-nfs"
+backupVolumeExternal: "yes"
+backupVolumeDriverOpts: ""
+
+# Host labels for scheduling
+hostLabels: ""
 
 cerebro:
   enabled: true
-  user: admin
-  password: secret
+  user: "admin"
+  password: "secret"
   # Used in cookies, generate it with `pwgen  -y 64  | head -n 1` or `openssl rand -base64 32`
   secret: ""
+  # Memory limit for cerebro container
+  memLimit: "512Mi"
+  # Memory reservation for cerebro container
+  memReservation: "512Mi"
   # Use ClusterIP if you don't want the Cerebro web interface exposed on the server
   service:
     type: ClusterIP
@@ -65,6 +99,7 @@ cerebro:
   podAnnotations: {}
 
 clusterhealth:
+  image: "eeacms/esclusterhealth:1.2"
   resources:
     requests:
       memory: 8Mi
@@ -77,15 +112,15 @@ clusterhealth:
   podSecurityContext: {}
 
 esmaster:
-  replicaCount: 3
+  replicaCount: 1
   # Note: minimumMasterNodes is deprecated in favor of dynamic discovery.seed_hosts configuration
   # The discovery.seed_hosts is now automatically generated based on replicaCount
   minimumMasterNodes: 1
   resources:
     requests:
-      memory: 1512Mi
+      memory: 1536Mi
     limits:
-      memory: 1512Mi
+      memory: 1536Mi
   nodeSelector: {}
   tolerations: []
   affinity: {}
@@ -94,14 +129,20 @@ esmaster:
   persistence:
     enabled: true
     size: 1Gi
+  # Elasticsearch superuser password (elastic user) - empty for no authentication, minimum 6 characters
+  password: ""
+  backup:
+    enabled: false
 
 esworker:
-  replicaCount: 2
+  replicaCount: 2 # Should match initialDataNodes
+  # This represents es-data from docker-compose
+  name: "data"
   resources:
     requests:
-      memory: 1512Mi
+      memory: 1536Mi
     limits:
-      memory: 1512Mi
+      memory: 1536Mi
   nodeSelector: {}
   tolerations: []
   affinity: {}
@@ -113,8 +154,29 @@ esworker:
 
 kibana:
   enabled: true
-  user: kibana
-  password: kibanatest
+  image: "eeacms/elk-kibana:7.17.28"
+  # kibana_system user password - minimum 6 characters, needs superuser password to not be empty
+  password: ""
+  # Kibana URL - public facing url, without / in the end
+  url: ""
+  # Allow anonymous readonly access to kibana
+  allowAnonRo: true
+  # Anonymous user password (used in background) - minimum 6 characters
+  anonPassword: "RandomPassword1"
+  # Kibana guest user permission configuration
+  readOnlyRoleJson: ""
+  # Kibana autocomplete timeout
+  autocompleteTimeout: ""
+  # Kibana autocomplete terminate after
+  autocompleteTerminateAfter: ""
+  # Kibana elasticsearch timeout
+  requestTimeout: "300000"
+  # Heap size kibana - used for NodeJs --max-old-space-size setting
+  spaceSize: "1024"
+  # Memory reservation for kibana container
+  memReservation: "1024Mi"
+  # Memory limit for kibana container
+  memLimit: "2048Mi"
   # Use ClusterIP if you don't want the Kibana web interface exposed on the server
   service:
     type: ClusterIP

@@ -1,23 +1,25 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ .Release.Name }}-master
+  name: {{ .Release.Name }}-data
   labels:
     {{- include "appl.labels" . | nindent 4 }}
-    component: master
+    component: data
+
 spec:
-  replicas: {{ .Values.esmaster.replicaCount }}
-  serviceName: {{ .Release.Name }}-master
+  replicas: {{ .Values.initialDataNodes }}
+  serviceName: {{ .Release.Name }}-data
   selector:
     matchLabels:
       {{- include "appl.selectorLabels" . | nindent 6 }}
-      component: master
+      component: data
 
   template:
     metadata:
       labels:
         {{- include "appl.selectorLabels" . | nindent 8 }}
-        component: master
+        component: data
+
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -26,31 +28,25 @@ spec:
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
       
       containers:
-      - name: {{ .Release.Name }}-master
-        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+      - name: {{ .Release.Name }}-data
         imagePullPolicy: {{ .Values.image.pullPolicy }}
-
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
         env:
         - name: cluster.name
           value: "{{ .Values.clusterName }}"
         - name: node.name
           value: "${HOSTNAME}"
         - name: cluster.initial_master_nodes
-          value: "${HOSTNAME}"
+          value: "{{ .Release.Name }}-master"
         - name: discovery.seed_hosts
           value: "{{ .Release.Name }}-master,{{ .Release.Name }}-data"
         - name: bootstrap.memory_lock
           value: "{{ .Values.bootstrapMemoryLock }}"
-        - name: ES_JAVA_OPTS
-          value: "-Xms{{ .Values.masterHeapSize }} -Xmx{{ .Values.masterHeapSize }}"
+        - name: node.roles
+          value: "data"
         {{- if .Values.useMonitoring }}
         - name: xpack.monitoring.collection.enabled
           value: "true"
-        - name: node.roles
-          value: "master,ingest"
-        {{- else }}
-        - name: node.roles
-          value: "master"
         {{- end }}
         {{- if .Values.esmaster.password }}
         - name: xpack.security.enabled
@@ -67,6 +63,8 @@ spec:
           value: "{{ .Values.esmaster.password }}"
         - name: kibana_system_password
           value: "{{ .Values.kibana.password }}"
+        - name: DO_NOT_CREATE_USERS
+          value: "yes"
         {{- else }}
         - name: xpack.security.enabled
           value: "false"
@@ -77,12 +75,14 @@ spec:
         - name: path.repo
           value: "/backup"
         {{- end }}
+        - name: TZ
+          value: "{{ .Values.timezone }}"
+        - name: ES_JAVA_OPTS
+          value: "-Xms{{ .Values.dataHeapSize }} -Xmx{{ .Values.dataHeapSize }}"
         - name: cluster.routing.allocation.disk.watermark.high
           value: "95%"
         - name: cluster.routing.allocation.disk.watermark.low
           value: "93%"
-        - name: TZ
-          value: "{{ .Values.timezone }}"
 
         ports:
         - containerPort: 9200
@@ -90,9 +90,9 @@ spec:
 
         resources:
           requests:
-            memory: {{ .Values.masterMemReservation }}
+            memory: {{ .Values.dataMemReservation }}
           limits:
-            memory: {{ .Values.masterMemLimit }}
+            memory: {{ .Values.dataMemLimit }}
             # Equivalent to ulimits nofile 65536
             ephemeral-storage: 1Gi
 
@@ -115,13 +115,11 @@ spec:
           name: elasticconfig
         {{- end }}
 
-      restartPolicy: Always
-
       volumes:
-      {{- if not .Values.esmaster.persistence.enabled }}
+      {{- if not .Values.esworker.persistence.enabled }}
       - name: esworkdata
         emptyDir:
-          sizeLimit: {{ .Values.esmaster.persistence.size }}
+          sizeLimit: 1Gi
       {{- end }}
       {{- if .Values.esmaster.backup.enabled }}
       - name: esbackup
@@ -133,7 +131,7 @@ spec:
         persistentVolumeClaim:
           claimName: elasticconfig
       {{- end }}
-  {{- if .Values.esmaster.persistence.enabled }}
+  {{- if .Values.esworker.persistence.enabled }}
   volumeClaimTemplates:
   - metadata:
       name: esworkdata
@@ -142,5 +140,5 @@ spec:
       - ReadWriteOnce
       resources:
         requests:
-          storage: {{ .Values.esmaster.persistence.size }}
+          storage: {{ .Values.esworker.persistence.size }}
   {{- end }}
