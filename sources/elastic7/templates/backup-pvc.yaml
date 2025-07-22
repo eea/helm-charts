@@ -1,0 +1,17 @@
+{{- if .Values.esmaster.backup.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Values.backupVolumeName }}
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 10Gi
+  {{- if .Values.backupVolumeDriver }}
+  storageClassName: {{ .Values.backupVolumeDriver }}
+  {{- end }}
+{{- end }}

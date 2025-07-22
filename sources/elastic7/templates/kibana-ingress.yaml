@@ -1,4 +1,4 @@
-{{- if and .Values.kibana.enabled .Values.kibana.ingress.enabled -}}
+{{- if and .Values.addKibana .Values.kibana.ingress.enabled -}}
 {{- $fullName := include "appl.fullname" . -}}
 {{- $svcPort := .Values.kibana.service.port -}}
 {{- if and .Values.kibana.ingress.className (not (hasKey .Values.kibana.ingress.annotations "kubernetes.io/ingress.class")) }}

@@ -27,30 +27,35 @@ spec:
 
       containers:
       - name: cerebro
-        image: eeacms/cerebro:0.9.0
+        image: eeacms/cerebro:0.9.4-1
         env:
-        - name: BASIC_AUTH_PWD
-          value: "{{ .Values.cerebro.password }}"
-        - name: BASIC_AUTH_USER
-          value: "{{ .Values.cerebro.user }}"
-        - name: CEREBRO_PORT
-          value: "9000"
-        {{- if .Values.enableReadonlyRest }}
-        - name: ELASTIC_PASSWORD
-          value: "{{ .Values.readWritePassword }}"
-        - name: ELASTIC_USER
-          value: "{{ .Values.readWriteUser }}"
-        {{- end }}
         - name: ELASTIC_URL
           value: http://{{ .Release.Name }}-master:9200
+        - name: BASIC_AUTH_USER
+          value: "{{ .Values.cerebro.user }}"
+        - name: BASIC_AUTH_PWD
+          value: "{{ .Values.cerebro.password }}"
+        - name: CEREBRO_PORT
+          value: "9000"
+        - name: CEREBRO_SECRET
+          value: "{{ .Values.cerebro.secret }}"
         - name: TZ
-          value: Europe/Copenhagen
+          value: "{{ .Values.timezone }}"
+        {{- if .Values.esmaster.password }}
+        - name: ELASTIC_USER
+          value: "elastic"
+        - name: ELASTIC_PASSWORD
+          value: "{{ .Values.esmaster.password }}"
+        {{- end }}
 
         ports:
         - containerPort: 9000
 
         resources:
-          {{- toYaml .Values.cerebro.resources | nindent 10 }}
+          requests:
+            memory: {{ .Values.cerebro.memReservation }}
+          limits:
+            memory: {{ .Values.cerebro.memLimit }}
 
       restartPolicy: Always
 {{- end }}

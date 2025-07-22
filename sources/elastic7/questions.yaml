@@ -4,292 +4,345 @@ categories:
   - Elasticsearch
 
 questions:
-  # Image Configuration
-  - variable: image.repository
-    default: "eeacms/elastic"
-    description: "Elasticsearch Docker image repository"
-    type: string
-    label: Image Repository
-    group: "Image Configuration"
-
-  - variable: image.tag
-    default: ""
-    description: "Elasticsearch image tag (leave empty to use chart appVersion)"
-    type: string
-    label: Image Tag
-    group: "Image Configuration"
-
-  # Elasticsearch Configuration
-  - variable: useXPack
-    default: true
-    description: "Install free X-PACK modules on elastic containers"
-    type: boolean
-    label: Enable X-Pack
+  - variable: "clusterName"
+    type: "string"
+    required: true
+    label: "Cluster name"
+    description: "Name of the Elasticsearch Cluster"
+    default: "es-cluster"
     group: "Elasticsearch Configuration"
 
-  - variable: useMonitoring
+  - variable: "hostLabels"
+    description: "Comma separated list of host labels (e.g. key1=value1, key2=value2) to be used for scheduling the services."
+    label: "Schedule on hosts with following host labels"
+    type: "string"
+    group: "Elasticsearch Configuration"
+
+  - variable: "useMonitoring"
+    label: "Enable ElasticSearch monitoring"
+    description: |
+      Set true to use the monitoring X-Pack module  - https://www.elastic.co/what-is/open-x-pack.
+      You will need kibana and X-PACK to be installed.
     default: false
-    description: "Enable ElasticSearch monitoring"
+    required: true
     type: boolean
-    label: Enable Monitoring
     group: "Elasticsearch Configuration"
 
-  - variable: esJavaOpts
-    default: "-Xmx512m -Xms512m"
-    description: "Java options for Elasticsearch (heap size)"
-    type: string
-    label: Java Options
-    group: "Elasticsearch Configuration"
-
-  - variable: updateSysctl
+  - variable: "updateSysctl"
+    label: "Update host sysctl:"
+    description: |
+      Set true to avoid vm.max_map_count errors. ES will not start without vm.max_map_count updated.
+      WARN: If set true, host param vm.max_map_count will be update to 262144.
     default: false
-    description: "Update vm.max_map_count sysctl parameter"
+    required: true
     type: boolean
-    label: Update Sysctl
     group: "Elasticsearch Configuration"
 
-  - variable: sysctlVmMaxMapCount
-    default: 262144
-    description: "Value for vm.max_map_count sysctl parameter"
-    type: int
-    label: Sysctl vm.max_map_count
-    group: "Elasticsearch Configuration"
-    show_if: "updateSysctl=true"
-
-  - variable: timezone
-    default: "Europe/Copenhagen"
-    description: "Timezone for containers"
-    type: string
-    label: Timezone
+  - variable: "bootstrapMemoryLock"
+    label: "Enable bootstrap memory lock:"
+    description: |
+      Enable memory locking for Elasticsearch. In most Kubernetes environments, this should be false.
+      Only enable if your cluster supports memory locking and you need maximum performance.
+    default: false
+    required: true
+    type: boolean
     group: "Elasticsearch Configuration"
 
-  # Master Nodes Configuration
-  - variable: esmaster.replicaCount
-    default: 3
-    description: "Number of master node replicas"
-    type: int
-    label: Master Nodes Count
-    group: "Master Nodes"
-    min: 1
-    max: 9
-
-  - variable: esmaster.resources.requests.memory
-    default: "1512Mi"
-    description: "Memory request for master nodes"
-    type: string
-    label: Master Memory Request
-    group: "Master Nodes"
-
-  - variable: esmaster.resources.limits.memory
-    default: "1512Mi"
-    description: "Memory limit for master nodes"
-    type: string
-    label: Master Memory Limit
-    group: "Master Nodes"
-
-  - variable: esmaster.persistence.enabled
+  - variable: "addKibana"
+    label: "Add kibana container:"
+    description: |
+      Set true to add a Kibana container.
+      If false, Kibana will not be added.
     default: true
-    description: "Enable persistent storage for master nodes"
+    required: true
     type: boolean
-    label: Enable Master Persistence
-    group: "Master Nodes"
+    group: "Kibana Configuration"
 
-  - variable: esmaster.persistence.size
-    default: "1Gi"
-    description: "Size of persistent volume for master nodes"
-    type: string
-    label: Master Storage Size
-    group: "Master Nodes"
-    show_if: "esmaster.persistence.enabled=true"
+  - variable: "kibana.url"
+    description: "Public facing url, without / in the end"
+    label: "Kibana URL"
+    type: "string"
+    group: "Kibana Configuration"
+    show_if: "addKibana=true"
 
-  # Worker Nodes Configuration
-  - variable: esworker.replicaCount
+  - variable: "esPort"
+    label: "ElasticSearch expose port"
+    description: "Select true to expose it"
+    default: false
+    required: true
+    type: boolean
+    group: "Port Configuration"
+
+  - variable: "cerebroPort"
+    label: "Cerebro client expose port"
+    description: "Select true to expose it"
+    default: false
+    required: true
+    type: boolean
+    group: "Port Configuration"
+
+  - variable: "kibanaPort"
+    label: "Kibana client expose port"
+    description: "Select true to expose it"
+    default: false
+    required: true
+    type: boolean
+    group: "Port Configuration"
+
+  - variable: "initialDataNodes"
+    type: "int"
+    required: true
+    label: "# of initial data nodes"
+    description: "Set the initial number of data nodes"
     default: 2
-    description: "Number of worker (data) node replicas"
-    type: int
-    label: Worker Nodes Count
-    group: "Worker Nodes"
-    min: 0
-    max: 20
+    group: "Data Nodes"
 
-  - variable: esworker.resources.requests.memory
-    default: "1512Mi"
-    description: "Memory request for worker nodes"
-    type: string
-    label: Worker Memory Request
-    group: "Worker Nodes"
+  - variable: "masterHeapSize"
+    type: "string"
+    required: true
+    label: "Heap size (master nodes)"
+    description: "Heap size to be allocated for Java (master nodes)"
+    default: "512m"
+    group: "Master Nodes"
 
-  - variable: esworker.resources.limits.memory
-    default: "1512Mi"
-    description: "Memory limit for worker nodes"
-    type: string
-    label: Worker Memory Limit
-    group: "Worker Nodes"
+  - variable: "masterMemReservation"
+    type: "string"
+    required: true
+    label: "Memory reservation (master nodes)"
+    description: "Memory reservation per elasticsearch container. Recommended - triple the heap size! (master nodes)"
+    default: "1536m"
+    group: "Master Nodes"
 
-  - variable: esworker.persistence.enabled
-    default: true
-    description: "Enable persistent storage for worker nodes"
-    type: boolean
-    label: Enable Worker Persistence
-    group: "Worker Nodes"
+  - variable: "masterMemLimit"
+    type: "string"
+    required: true
+    label: "Memory limit (master nodes)"
+    description: "Memory limit per elasticsearch container. Recommended - triple the heap size! (master nodes)"
+    default: "1536m"
+    group: "Master Nodes"
 
-  - variable: esworker.persistence.size
-    default: "1Gi"
-    description: "Size of persistent volume for worker nodes"
-    type: string
-    label: Worker Storage Size
-    group: "Worker Nodes"
-    show_if: "esworker.persistence.enabled=true"
+  - variable: "dataHeapSize"
+    type: "string"
+    required: true
+    label: "Heap size (data nodes)"
+    description: "Heap size to be allocated for Java (data nodes)"
+    default: "512m"
+    group: "Data Nodes"
 
-  # Kibana Configuration
-  - variable: kibana.enabled
-    default: true
-    description: "Enable Kibana deployment"
-    type: boolean
-    label: Enable Kibana
-    group: "Kibana"
+  - variable: "dataMemReservation"
+    type: "string"
+    required: true
+    label: "Memory reservation (data nodes)"
+    description: "Memory reservation per elasticsearch container. Recommended - triple the heap size! (master nodes)"
+    default: "1536m"
+    group: "Data Nodes"
 
-  - variable: kibana.user
-    default: "kibana"
-    description: "Kibana username"
-    type: string
-    label: Kibana Username
-    group: "Kibana"
-    show_if: "kibana.enabled=true"
+  - variable: "dataMemLimit"
+    type: "string"
+    required: true
+    label: "Memory limit (data nodes)"
+    description: "Memory limit per elasticsearch container.  Recommended - triple the heap size! (data nodes)"
+    default: "1536m"
+    group: "Data Nodes"
 
-  - variable: kibana.password
-    default: "kibanatest"
-    description: "Kibana password"
-    type: password
-    label: Kibana Password
-    group: "Kibana"
-    show_if: "kibana.enabled=true"
+  - variable: "cerebro.memLimit"
+    type: "string"
+    required: true
+    label: "Memory limit for cerebro container"
+    description: "AT LEAST double the heap size!"
+    default: "512m"
+    group: "Cerebro Configuration"
 
-  - variable: kibana.service.port
-    default: 5601
-    description: "Kibana service port"
-    type: int
-    label: Kibana Service Port
-    group: "Kibana"
-    show_if: "kibana.enabled=true"
+  - variable: "cerebro.memReservation"
+    type: "string"
+    required: true
+    label: "Memory reservation for cerebro container"
+    description: "AT LEAST double the heap size!"
+    default: "512m"
+    group: "Cerebro Configuration"
 
-  - variable: kibana.resources.requests.memory
-    default: "1Gi"
-    description: "Memory request for Kibana"
-    type: string
-    label: Kibana Memory Request
-    group: "Kibana"
-    show_if: "kibana.enabled=true"
+  - variable: "kibana.spaceSize"
+    type: "string"
+    required: true
+    label: "Heap size kibana"
+    description: "Used for NodeJs --max-old-space-size setting"
+    default: "1024"
+    group: "Kibana Configuration"
+    show_if: "addKibana=true"
 
-  - variable: kibana.resources.limits.memory
-    default: "2Gi"
-    description: "Memory limit for Kibana"
-    type: string
-    label: Kibana Memory Limit
-    group: "Kibana"
-    show_if: "kibana.enabled=true"
+  - variable: "kibana.memReservation"
+    type: "string"
+    required: true
+    label: "Memory reservation for kibana container"
+    description: "AT LEAST the heap size!"
+    default: "1024m"
+    group: "Kibana Configuration"
+    show_if: "addKibana=true"
 
-  # Kibana Ingress Configuration
-  - variable: kibana.ingress.enabled
-    default: false
-    description: "Enable Kibana Ingress"
-    type: boolean
-    label: Enable Kibana Ingress
-    group: "Kibana Ingress"
-    show_if: "kibana.enabled=true"
+  - variable: "kibana.memLimit"
+    type: "string"
+    required: true
+    label: "Memory limit for kibana container"
+    description: "AT LEAST double the heap size!"
+    default: "2048m"
+    group: "Kibana Configuration"
+    show_if: "addKibana=true"
 
-  - variable: kibana.ingress.hosts[0].host
-    default: "kibana.example.com"
-    description: "Hostname for Kibana Ingress"
-    type: hostname
-    label: Kibana Hostname
-    group: "Kibana Ingress"
-    show_if: "kibana.ingress.enabled=true"
-
-  # Cerebro Configuration
-  - variable: cerebro.enabled
-    default: true
-    description: "Enable Cerebro (Elasticsearch monitoring tool)"
-    type: boolean
-    label: Enable Cerebro
-    group: "Cerebro"
-
-  - variable: cerebro.user
+  - variable: "cerebro.user"
+    label: "Cerebro username"
+    description: "Leave blank for no authentification, not recommended"
+    type: "string"
     default: "admin"
-    description: "Cerebro username"
-    type: string
-    label: Cerebro Username
-    group: "Cerebro"
-    show_if: "cerebro.enabled=true"
+    group: "Cerebro Configuration"
 
-  - variable: cerebro.password
+  - variable: "cerebro.password"
+    label: "Cerebro password"
+    type: "password"
     default: "secret"
-    description: "Cerebro password"
-    type: password
-    label: Cerebro Password
-    group: "Cerebro"
-    show_if: "cerebro.enabled=true"
+    group: "Cerebro Configuration"
 
-  - variable: cerebro.service.port
-    default: 9000
-    description: "Cerebro service port"
-    type: int
-    label: Cerebro Service Port
-    group: "Cerebro"
-    show_if: "cerebro.enabled=true"
+  - variable: "cerebro.secret"
+    label: "Cerebro secret"
+    description: "Used in cookies, generate it with `pwgen  -y 64  | head -n 1` or `openssl rand -base64 32`. Will be randomly generated if not given"
+    type: "string"
+    group: "Cerebro Configuration"
 
-  # Security Configuration
-  - variable: enableReadonlyRest
+  - variable: "esmaster.password"
+    label: "Superuser ( elastic ) password"
+    description: "Empty for no authentification, minimum 6 characters"
+    type: "password"
+    group: "Security Configuration"
+
+  - variable: "kibana.password"
+    description: "Minumum 6 characters, needs Superuser password to not be empty"
+    label: "kibana user password (kibana_system)"
+    type: "password"
+    group: "Security Configuration"
+
+  - variable: "kibana.allowAnonRo"
+    label: "Allow anonymous readonly access to kibana:"
+    description: |
+      Will be used if there is a Kibana container and 
+      Elasticsearch is secured with passwords
     default: true
-    description: "Enable ReadonlyREST security plugin"
+    required: true
     type: boolean
-    label: Enable ReadonlyREST
-    group: "Security"
+    group: "Security Configuration"
 
-  - variable: readOnlyUser
-    default: "ro"
-    description: "Read-only username"
+  - variable: "kibana.anonPassword"
+    description: "Minumum 6 characters, if given will be used to configure anonymous access to elasticsearch"
+    label: "Anonymous user password (used in background)"
+    default: "RandomPassword1"
+    type: "password"
+    group: "Security Configuration"
+
+  - variable: "kibana.readOnlyRoleJson"
+    description: "Default is empty, will use the value from the kibana image, examples of json - https://www.elastic.co/guide/en/kibana/current/role-management-api-put.html"
+    label: "Kibana guest user permission configuration"
+    type: "string"
+    group: "Security Configuration"
+
+  - variable: "kibana.autocompleteTimeout"
+    label: "Kibana autocomplete timeout"
     type: string
-    label: Read-only Username
-    group: "Security"
-    show_if: "enableReadonlyRest=true"
+    group: "Kibana Configuration"
+    show_if: "addKibana=true"
 
-  - variable: readOnlyPassword
-    default: "rotest"
-    description: "Read-only password"
-    type: password
-    label: Read-only Password
-    group: "Security"
-    show_if: "enableReadonlyRest=true"
-
-  - variable: readWriteUser
-    default: "rw"
-    description: "Read-write username"
+  - variable: "kibana.autocompleteTerminateAfter"
+    label: "Kibana autocomplete terminate after"
     type: string
-    label: Read-write Username
-    group: "Security"
-    show_if: "enableReadonlyRest=true"
+    group: "Kibana Configuration"
+    show_if: "addKibana=true"
 
-  - variable: readWritePassword
-    default: "rwtest"
-    description: "Read-write password"
-    type: password
-    label: Read-write Password
-    group: "Security"
-    show_if: "enableReadonlyRest=true"
+  - variable: "kibana.requestTimeout"
+    label: "Kibana elasticsearch timeout"
+    type: string
+    default: "300000"
+    group: "Kibana Configuration"
+    show_if: "addKibana=true"
 
-  # Advanced Configuration
-  - variable: serviceAccount.create
-    default: true
-    description: "Create a service account"
-    type: boolean
-    label: Create Service Account
-    group: "Advanced"
+  - variable: "timezone"
+    label: "Time zone"
+    description: "Time zone"
+    default: "Europe/Copenhagen"
+    required: true
+    type: "string"
+    group: "General Configuration"
 
-  - variable: serviceAccount.name
+  - variable: "volumeDriver"
+    label: "Data volumes driver"
+    description: "ElasticSearch data volume driver, choose rancher_ebs only for Amazon"
+    default: "rancher-nfs"
+    type: "enum"
+    options:
+      - "rancher-ebs"
+      - "rancher-nfs"
+      - "netapp"
+    required: true
+    group: "Volume Configuration"
+
+  - variable: "volumeDriverOpts"
+    label: "Data volume driver options"
+    description: |
+      Specify "driver_opts" key/value pair in the format "optionName: optionValue".
+      E.g. for the `rancher-ebs` driver you should specify the required 'size' option like this: "size: 1".
+      Empty if  driver is not `rancher-ebs`.
+    type: "multiline"
+    group: "Volume Configuration"
+
+  - variable: "volumeConfigDriver"
+    label: "Configuration volume driver"
+    description: "ElasticSearch configuration volume driver, used if security is enabled to store certificates"
+    default: "netapp"
+    type: "enum"
+    options:
+      - "rancher-ebs"
+      - "netapp"
+    required: true
+    group: "Volume Configuration"
+
+  - variable: "volumeConfigDriverOpts"
+    label: "Configuration volume driver options"
+    description: |
+      Specify "driver_opts" key/value pair in the format "optionName: optionValue".
+      E.g. for the `rancher-ebs` driver you should specify the required 'size' option like this: "size: 1".
+      Empty if  driver is not `rancher-ebs`.
+    type: "multiline"
+    group: "Volume Configuration"
+
+  - variable: "backupVolumeName"
+    label: "Backup volume name"
+    description: "Volume name to manually backup ES data, empty if no backup necessary"
+    type: "string"
+    group: "Backup Configuration"
+
+  - variable: "backupVolumeDriver"
+    label: "Backup volumes driver"
+    description: "ElasticSearch data volume driver, choose rancher_ebs only for Amazon"
+    default: "rancher-nfs"
+    type: "enum"
+    options:
+      - "rancher-nfs"
+      - "rancher-ebs"
+      - "netapp"
+    group: "Backup Configuration"
+
+  - variable: "backupVolumeExternal"
+    label: "Backup volumes environment scoped (external)"
+    description: "ElasticSearch data is environment scoped (externally created by other stack)"
+    default: "yes"
+    type: "enum"
+    options:
+      - "yes"
+      - "no"
+    group: "Backup Configuration"
+
+  - variable: "backupVolumeDriverOpts"
+    label: "Backup volume driver options"
+    description: |
+      Specify "driver_opts" key/value pair in the format "optionName: optionValue".
+      E.g. for the `rancher-ebs` driver you should specify the required 'size' option like this: "size: 1".
+      Empty if  driver is not `rancher-ebs`.
+    type: "multiline"
     default: ""
-    description: "Name of the service account (auto-generated if empty)"
-    type: string
-    label: Service Account Name
-    group: "Advanced"
-    show_if: "serviceAccount.create=true"
+    group: "Backup Configuration"

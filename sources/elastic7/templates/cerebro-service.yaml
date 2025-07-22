@@ -8,7 +8,11 @@ metadata:
     component: cerebro
 
 spec:
+  {{- if .Values.cerebroPort }}
+  type: NodePort
+  {{- else }}
   type: {{ .Values.cerebro.service.type }}
+  {{- end }}
   ports:
   - port: {{ .Values.cerebro.service.port }}
     targetPort: 9000

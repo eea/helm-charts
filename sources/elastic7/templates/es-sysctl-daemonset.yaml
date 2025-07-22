@@ -1,0 +1,39 @@
+{{- if .Values.updateSysctl }}
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: {{ .Release.Name }}-es-sysctl
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: es-sysctl
+spec:
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: es-sysctl
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: es-sysctl
+    spec:
+      hostNetwork: true
+      containers:
+      - name: es-sysctl
+        image: eeacms/alpine-sysctl:0.3
+        env:
+        - name: SYSCTL_KEY
+          value: "vm.max_map_count"
+        - name: SYSCTL_VALUE
+          value: "{{ .Values.sysctlVmMaxMapCount }}"
+        - name: KEEP_ALIVE
+          value: "1"
+        securityContext:
+          privileged: true
+        resources:
+          requests:
+            memory: 8Mi
+          limits:
+            memory: 32Mi
+      restartPolicy: Always
+{{- end }}

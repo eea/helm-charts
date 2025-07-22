@@ -1,4 +1,4 @@
-{{-  if .Values.kibana.enabled -}}
+{{-  if .Values.addKibana -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -27,25 +27,46 @@ spec:
 
       containers:
       - name: kibana
-        image: eeacms/elk-kibana:7.17.28
+        image: {{ .Values.kibana.image }}
         env:
-        - name: ELASTICSEARCH_REQUESTTIMEOUT
-          value: "300000"
         - name: ELASTICSEARCH_URL
-          value: http://{{ .Release.Name }}-master:9200
-        - name: KIBANA_RW_USERNAME
-          value: {{ .Values.kibana.user }}
-        - name: KIBANA_RW_PASSWORD
-          value: {{ .Values.kibana.password }}
+          value: http://{{ .Release.Name }}-data:9200
+        {{- if .Values.esmaster.password }}
+        - name: ELASTICSEARCH_PASSWORD
+          value: "{{ .Values.kibana.password }}"
+        {{- if .Values.kibana.allowAnonRo }}
+        - name: ALLOW_ANON_RO
+          value: "true"
+        - name: ANON_PASSWORD
+          value: "{{ .Values.kibana.anonPassword }}"
+        - name: READ_ONLY_ROLE_JSON
+          value: "{{ .Values.kibana.readOnlyRoleJson }}"
+        - name: elastic_password
+          value: "{{ .Values.esmaster.password }}"
+        {{- end }}
+        {{- end }}
         - name: NODE_OPTIONS
-          value: --max-old-space-size=1024
+          value: "--max-old-space-size={{ .Values.kibana.spaceSize }}"
+        - name: ELASTICSEARCH_REQUESTTIMEOUT
+          value: "{{ .Values.kibana.requestTimeout }}"
+        - name: TELEMETRY_ENABLED
+          value: "false"
+        - name: KIBANA_AUTOCOMPLETETIMEOUT
+          value: "{{ .Values.kibana.autocompleteTimeout }}"
+        - name: KIBANA_AUTOCOMPLETETERMINATEAFTER
+          value: "{{ .Values.kibana.autocompleteTerminateAfter }}"
+        - name: SERVER_PUBLICBASEURL
+          value: "{{ .Values.kibana.url }}"
         - name: TZ
-          value: {{ .Values.timezone }}
+          value: "{{ .Values.timezone }}"
 
         ports:
          - containerPort: 5601
 
         resources:
-          {{- toYaml .Values.kibana.resources | nindent 10 }}
+          requests:
+            memory: {{ .Values.kibana.memReservation }}
+          limits:
+            memory: {{ .Values.kibana.memLimit }}
 
 {{- end }}

@@ -1,0 +1,17 @@
+{{- if .Values.esmaster.password }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: elasticconfig
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+  {{- if .Values.volumeConfigDriver }}
+  storageClassName: {{ .Values.volumeConfigDriver }}
+  {{- end }}
+{{- end }}
