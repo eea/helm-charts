@@ -56,23 +56,22 @@ volto:
     requests:
       memory: 2Gi
   environment:
-    SENTRY_URL: 
-    SENTRY_AUTH_TOKEN: 
-    SENTRY_ORG: 
-    SENTRY_PROJECT: 
-    RAZZLE_SENTRY_DSN: 
+    CSP_HEADER:
+    DANSWER_URL:
+    DANSWER_API_KEY:
+    SENTRY_URL:
+    SENTRY_AUTH_TOKEN:
+    SENTRY_ORG:
+    SENTRY_PROJECT:
+    RAZZLE_SENTRY_DSN:
     RAZZLE_BACKEND_NAME: 'eea-website-backend'
-    RAZZLE_ALLOWED_CORS_DESTINATIONS: 
+    RAZZLE_ALLOWED_CORS_DESTINATIONS:
     RAZZLE_MATOMO_URL:
-    RAZZLE_MATOMO_SITE_ID: 
+    RAZZLE_MATOMO_SITE_ID:
     RAZZLE_MATOMO_SECOND_SITE_ID:
     RAZZLE_INTERNAL_API_PATH:
     RAZZLE_PUBLIC_URL:
-    VOLTO_ROBOTSTXT: 
-    RAZZLE_DISABLE_DRAFT_WATERMARK: 
-    DANSWER_URL:
-    DANSWER_USERNAME:
-    DANSWER_PASSWORD:
+    RAZZLE_DISABLE_DRAFT_WATERMARK:
     RAZZLE_PROXY_ES_DSN_datahub:
     RAZZLE_PROXY_QA_DSN_datahub:
     RAZZLE_PROXY_ES_DSN_globalsearch:
@@ -83,6 +82,7 @@ volto:
     RAZZLE_PROXY_DOCUMENTCOUNTTHRESHOLD_globalsearch:
     RAZZLE_PROXY_QUERYTIMESECONDSTHRESHOLD_OK_globalsearch:
     RAZZLE_PROXY_QUERYTIMESECONDSTHRESHOLD_WARNING_globalsearch:
+    VOLTO_ROBOTSTXT:
   annotations: {}
   livenessProbe:
     httpGet:
@@ -194,5 +194,4 @@ nginx:
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
       }
-    }   
-  
+    }
