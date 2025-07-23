@@ -1,5 +1,8 @@
 # Releases
 
+### Version 0.0.4 - 23 July 2025
+- upgrade jenkins to 2.519 [Silviu - [`5986202d`](https://github.com/eea/helm-charts/commit/5986202df63605c5f81214222e7bd5c54a8c1245)]
+
 ### Version 0.0.3 - 22 May 2025
 - add postfix dependency [Silviu - [`d290348`](https://github.com/eea/helm-charts/commit/d290348d66326caa0fe5e974db98726e33f3c56c)]
 
