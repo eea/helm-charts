@@ -6,6 +6,30 @@
     default: true
     required: true
     group: "General"
+  - variable: "ingress.letsencrypt"
+    label: "Ingress letsencrypt cluster-issuer"
+    description: "Leave empty when not using letsencrypt"
+    default: "01dev-eea-letsencrypt"
+    type: "string"
+    group: "General"
+  - variable: "ingress.configuration.proxy-body-size"
+    label: "Rancher LB body size"
+    description: "Example 100m"
+    type: "string"
+    default: "100m"
+    group: "General"
+  - variable: "ingress.configuration.proxy-read-timeout"
+    label: "Rancher LB read timeout"
+    description: "Maximum response time from upstream server, in seconds, example 60s"
+    type: "string"
+    default: "120s"
+    group: "General"
+  - variable: "ingress.configuration.proxy-send-timeout"
+    label: "Rancher LB send timeout"
+    description: "Timeout before closing the connection"
+    type: "string"
+    default: "60s"
+    group: "General"
   - variable: "ingress.certificate"
     label: "Certificate name"
     description: "Use a new name for letsencrypt certificates, for existing certificate write the correct name for the domain, leave blank for kube default"
@@ -56,7 +80,7 @@
     required: true
     group: "General"
     show_if: "debug.enabled=true"
-      
+
   - variable: "plone.hostname"
     label: "Server name"
     description: "DNS name for this deployment"
@@ -283,12 +307,12 @@
       default: true
       type: "boolean"
       required: true
-  
+
   - variable: "postfix.mailtrap.ingress.hostname"
     label: "Mailtrap URL"
     show_if: "postfix.mailtrap.ingress.enabled"
     required: true
-    type: "string"  
+    type: "string"
     default: "mailtrap-demo-www.01dev.eea.europa.eu"
     group: "Mail"
   - variable: "postfix.mailtrap.ingress.certificate"
