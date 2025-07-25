@@ -217,6 +217,9 @@ When deploying through Rancher UI, follow these steps for proper Kibana ingress 
 
 <dl>
 
+  <dt>Version 0.1.14</dt>
+  <dd>Fixed Kubernetes ingress validation error - prevented creation of ingress with empty rules when hostname is not properly set. Added proper hostname validation to ensure ingress is only created when valid hostnames are configured.</dd>
+
   <dt>Version 0.1.13</dt>
   <dd>Improved Kibana ingress validation - fixed issue where ingress was not generated when using Rancher UI due to overly strict hostname validation. Simplified template logic for better compatibility with different deployment methods.</dd>
 
