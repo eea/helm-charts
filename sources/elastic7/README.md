@@ -30,6 +30,31 @@ This indicates JVM configuration compatibility issues. The chart now uses a cons
 
 **Solution**: Upgrade to chart version 0.1.3 or later which includes compatible JVM options.
 
+### Missing log4j2.properties Error
+
+If you encounter errors like:
+```
+ERROR: no log4j2.properties found; tried [/usr/share/elasticsearch/config] and its subdirectories
+ERROR: Elasticsearch did not exit normally - check the logs at /usr/share/elasticsearch/logs/es-cluster.log
+```
+
+This happens when the logging configuration is missing. The chart now includes a complete log4j2.properties configuration.
+
+**Solution**: Upgrade to chart version 0.1.4 or later which includes the logging configuration.
+
+### Kibana URL Configuration
+
+The chart automatically generates the correct Kibana URL from ingress configuration. You have two options:
+
+1. **Automatic URL (Recommended)**: Leave `kibana.url` empty and configure ingress settings. The chart will automatically generate the URL using:
+   - `https://` if TLS is configured, otherwise `http://`
+   - Host from `kibana.ingress.hosts[0].host`
+   - Path from `kibana.ingress.hosts[0].paths[0].path`
+
+2. **Manual URL**: Set `kibana.url` explicitly to override automatic generation.
+
+**Note**: If you're seeing `http://kibana.example.com/` despite setting different ingress hosts, upgrade to version 0.1.5 or later.
+
 ### Troubleshooting
 
 1. **Check pod status**:
@@ -58,6 +83,7 @@ The chart supports configuring Kubernetes Ingress for Kibana access through the 
 
 | Parameter | Description | Default |
 |-----------|-------------|---------|
+| `kibana.url` | Manual Kibana URL override (optional) | `""` (auto-generated) |
 | `kibana.ingress.enabled` | Enable ingress for Kibana | `true` |
 | `kibana.ingress.hosts[0].host` | Hostname for Kibana ingress | `kibana.example.com` |
 | `kibana.ingress.hosts[0].paths[0].path` | Path for Kibana ingress | `/` |
@@ -134,6 +160,12 @@ helm install elastic7 ./elastic7 \
 ## Releases
 
 <dl>
+
+  <dt>Version 0.1.5</dt>
+  <dd>Fixed Kibana URL auto-generation from ingress configuration. The chart now automatically builds the correct URL from ingress settings.</dd>
+
+  <dt>Version 0.1.4</dt>
+  <dd>Added missing log4j2.properties configuration file to fix logging initialization errors.</dd>
 
   <dt>Version 0.1.3</dt>
   <dd>Fixed JVM options compatibility issue - removed experimental G1MixedGCLiveThresholdPercent option that caused startup failures.</dd>

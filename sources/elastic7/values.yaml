@@ -157,7 +157,7 @@ kibana:
   image: "eeacms/elk-kibana:7.17.28"
   # kibana_system user password - minimum 6 characters, needs superuser password to not be empty
   password: ""
-  # Kibana URL - public facing url, without / in the end
+  # Kibana URL - public facing URL, without / at the end. Leave empty to auto-generate from ingress configuration.
   url: ""
   # Allow anonymous readonly access to kibana
   allowAnonRo: true

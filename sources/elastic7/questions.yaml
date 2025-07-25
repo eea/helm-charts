@@ -59,8 +59,8 @@ questions:
     group: "Kibana Configuration"
 
   - variable: "kibana.url"
-    description: "Public facing url, without / in the end"
-    label: "Kibana URL"
+    description: "Public facing URL for Kibana (without / at the end). Leave empty to auto-generate from ingress configuration."
+    label: "Kibana URL (Optional)"
     type: "string"
     group: "Kibana Configuration"
     show_if: "addKibana=true"
