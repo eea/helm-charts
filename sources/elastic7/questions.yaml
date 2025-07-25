@@ -162,11 +162,11 @@ questions:
     type: boolean
     group: "Port Configuration"
 
-  - variable: "initialDataNodes"
+  - variable: "esworker.replicaCount"
     type: "int"
     required: true
-    label: "# of initial data nodes"
-    description: "Set the initial number of data nodes"
+    label: "# of data nodes"
+    description: "Set the number of data nodes"
     default: 2
     group: "Data Nodes"
 

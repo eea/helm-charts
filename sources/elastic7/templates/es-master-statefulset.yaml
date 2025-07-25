@@ -36,14 +36,27 @@ spec:
             # Copy config files from ConfigMap to shared volume
             cp /tmp/config/* /usr/share/elasticsearch/config/
             
-            # Generate certificates if they don't exist
+            # Generate certificates if they don't exist (only on master-0)
             if [ ! -f /usr/share/elasticsearch/config/elastic-certificates.p12 ]; then
               echo "Generating SSL certificates..."
               cd /usr/share/elasticsearch
               echo "Generating PKCS12 certificates..."
+              
+              # Build DNS list for all master and data nodes
+              DNS_LIST="{{ .Release.Name }}-master,{{ .Release.Name }}-data,localhost"
+              {{- range $i := until (int .Values.esmaster.replicaCount) }}
+              DNS_LIST="$DNS_LIST,{{ $.Release.Name }}-master-{{ $i }}"
+              {{- end }}
+              {{- range $i := until (int .Values.esworker.replicaCount) }}
+              DNS_LIST="$DNS_LIST,{{ $.Release.Name }}-data-{{ $i }}"
+              {{- end }}
+              
               bin/elasticsearch-certutil cert --silent --out config/elastic-certificates.p12 \
-                --dns {{ .Release.Name }}-master,{{ .Release.Name }}-data,localhost \
+                --dns "$DNS_LIST" \
                 --ip 127.0.0.1,::1 --pass "" || echo "Certificate generation failed, but continuing..."
+              echo "Certificates generated successfully with DNS names: $DNS_LIST"
+            else
+              echo "SSL certificates already exist, skipping generation"
             fi
             
             # Set proper permissions
@@ -69,9 +82,9 @@ spec:
         - name: node.name
           value: "${HOSTNAME}"
         - name: cluster.initial_master_nodes
-          value: "${HOSTNAME}"
+          value: "{{- range $i := until (int .Values.esmaster.replicaCount) }}{{ $.Release.Name }}-master-{{ $i }}{{ if lt $i (sub (int $.Values.esmaster.replicaCount) 1) }},{{ end }}{{- end }}"
         - name: discovery.seed_hosts
-          value: "{{ .Release.Name }}-master,{{ .Release.Name }}-data"
+          value: "{{- $masterList := list -}}{{- range $i := until (int .Values.esmaster.replicaCount) -}}{{- $masterList = append $masterList (printf "%s-master-%d.%s-master.%s.svc.cluster.local" $.Release.Name $i $.Release.Name $.Release.Namespace) -}}{{- end -}}{{- $workerList := list -}}{{- range $i := until (int .Values.esworker.replicaCount) -}}{{- $workerList = append $workerList (printf "%s-data-%d.%s-data.%s.svc.cluster.local" $.Release.Name $i $.Release.Name $.Release.Namespace) -}}{{- end -}}{{- $allNodes := concat $masterList $workerList -}}{{ join "," $allNodes }}"
         - name: bootstrap.memory_lock
           value: "{{ .Values.bootstrapMemoryLock }}"
         - name: ES_JAVA_OPTS
@@ -80,10 +93,10 @@ spec:
         - name: xpack.monitoring.collection.enabled
           value: "true"
         - name: node.roles
-          value: "master,ingest"
+          value: "master,data,ingest"
         {{- else }}
         - name: node.roles
-          value: "master"
+          value: "master,data"
         {{- end }}
         {{- if .Values.esmaster.password }}
         - name: xpack.security.enabled
