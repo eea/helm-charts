@@ -21,22 +21,16 @@ data:
     ## tamper with them unless you understand what you are doing
     ################################################################
 
-    ## GC configuration
-    8-13:-XX:+UseConcMarkSweepGC
-    8-13:-XX:CMSInitiatingOccupancyFraction=75
-    8-13:-XX:+UseCMSInitiatingOccupancyOnly
+    ## GC configuration for Java 8-11
+    8-11:-XX:+UseConcMarkSweepGC
+    8-11:-XX:CMSInitiatingOccupancyFraction=75
+    8-11:-XX:+UseCMSInitiatingOccupancyOnly
 
-    ## G1GC Configuration
-    # NOTE: G1 GC is only supported on JDK version 10 or later
-    # to use G1GC, uncomment the next two lines and update the version on the
-    # following three lines to your version of the JDK
-    # 10-13:-XX:-UseConcMarkSweepGC
-    # 10-13:-XX:-UseCMSInitiatingOccupancyOnly
+    ## G1GC Configuration for Java 14+
     14-:-XX:+UseG1GC
     14-:-XX:G1HeapRegionSize=4m
     14-:-XX:InitiatingHeapOccupancyPercent=30
     14-:-XX:G1MixedGCCountTarget=4
-    14-:-XX:G1MixedGCLiveThresholdPercent=90
 
     ## optimizations
 
@@ -70,6 +64,7 @@ data:
     -Dlog4j.shutdownHookEnabled=false
     -Dlog4j2.disable.jmx=true
 
+    # temp directory
     -Djava.io.tmpdir=${ES_TMPDIR}
 
     ## heap dumps
