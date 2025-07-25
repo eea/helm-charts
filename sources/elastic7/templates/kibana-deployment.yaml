@@ -56,7 +56,20 @@ spec:
         - name: KIBANA_AUTOCOMPLETETERMINATEAFTER
           value: "{{ .Values.kibana.autocompleteTerminateAfter }}"
         - name: SERVER_PUBLICBASEURL
-          value: "{{ .Values.kibana.url }}"
+          value: "{{- if and .Values.kibana.ingress.enabled .Values.kibana.ingress.hosts -}}
+            {{- $host := (index .Values.kibana.ingress.hosts 0).host -}}
+            {{- $path := "/" -}}
+            {{- if (index .Values.kibana.ingress.hosts 0).paths -}}
+              {{- $path = (index (index .Values.kibana.ingress.hosts 0).paths 0).path -}}
+            {{- end -}}
+            {{- if .Values.kibana.ingress.tls -}}
+              https://{{ $host }}{{ $path }}
+            {{- else -}}
+              http://{{ $host }}{{ $path }}
+            {{- end -}}
+          {{- else -}}
+            {{ .Values.kibana.url }}
+          {{- end -}}"
         - name: TZ
           value: "{{ .Values.timezone }}"
 
