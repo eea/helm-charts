@@ -66,6 +66,20 @@ This indicates SSL certificate format issues. The chart now generates proper PKC
 
 **Solution**: Upgrade to chart version 0.1.6 or later which includes correct certificate generation.
 
+### Cluster Formation Issues
+
+If you see data nodes connecting and disconnecting rapidly, or cluster health showing `"number_of_data_nodes": 0`, this indicates discovery or SSL certificate sharing problems.
+
+**Common symptoms**:
+- Nodes join and leave cluster repeatedly
+- "transport connection closed by remote" messages
+- Cluster health shows 0 data nodes despite pods running
+
+**Solution**: Upgrade to chart version 0.1.7 or later which includes:
+- Fixed discovery configuration with proper DNS names
+- Shared SSL certificates across all nodes
+- Master nodes configured with data role for initial cluster bootstrap
+
 ### Troubleshooting
 
 1. **Check pod status**:
@@ -171,6 +185,15 @@ helm install elastic7 ./elastic7 \
 ## Releases
 
 <dl>
+
+  <dt>Version 0.1.9</dt>
+  <dd>Simplified configuration - removed redundant initialDataNodes variable, now using esworker.replicaCount consistently throughout the chart.</dd>
+
+  <dt>Version 0.1.8</dt>
+  <dd>Implemented dynamic node discovery - automatically generates seed hosts and initial master nodes based on replica counts for flexible cluster configurations.</dd>
+
+  <dt>Version 0.1.7</dt>
+  <dd>Fixed cluster formation issues - improved discovery configuration, shared SSL certificates, and added data role to master nodes for proper bootstrap.</dd>
 
   <dt>Version 0.1.6</dt>
   <dd>Fixed SSL certificate format issue - now generates proper PKCS12 certificates instead of PEM format to prevent TrustManager errors.</dd>

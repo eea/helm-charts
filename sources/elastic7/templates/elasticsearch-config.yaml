@@ -230,7 +230,7 @@ data:
     # Network settings
     network.host: 0.0.0.0
     
-    # Discovery settings
+    # Discovery settings (these will be overridden by environment variables for dynamic generation)
     discovery.seed_hosts: ["{{ .Release.Name }}-master", "{{ .Release.Name }}-data"]
     cluster.initial_master_nodes: ["{{ .Release.Name }}-master-0"]
     

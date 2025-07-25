@@ -43,8 +43,6 @@ cerebroPort: false
 # Enable Kibana port exposure
 kibanaPort: false
 
-# Number of initial data nodes
-initialDataNodes: 2
 # Heap size for master nodes
 masterHeapSize: "512m"
 # Memory reservation for master nodes
@@ -135,7 +133,7 @@ esmaster:
     enabled: false
 
 esworker:
-  replicaCount: 2 # Should match initialDataNodes
+  replicaCount: 2 # Number of data nodes in the cluster
   # This represents es-data from docker-compose
   name: "data"
   resources:
