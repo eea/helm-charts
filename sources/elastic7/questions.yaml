@@ -65,6 +65,79 @@ questions:
     group: "Kibana Configuration"
     show_if: "addKibana=true"
 
+  # Kibana Ingress Configuration
+  - variable: "kibana.ingress.enabled"
+    label: "Enable Kibana Ingress"
+    description: "Enable ingress controller for Kibana access"
+    default: true
+    required: true
+    type: boolean
+    group: "Kibana Configuration"
+    show_if: "addKibana=true"
+
+  - variable: "kibana.ingress.hosts[0].host"
+    description: "Hostname for Kibana ingress (e.g. kibana.company.com)"
+    label: "Kibana Ingress Hostname"
+    type: "string"
+    default: "kibana.example.com"
+    group: "Kibana Configuration"
+    show_if: "addKibana=true&&kibana.ingress.enabled=true"
+
+  - variable: "kibana.ingress.hosts[0].paths[0].path"
+    description: "Path prefix for Kibana ingress"
+    label: "Kibana Ingress Path"
+    type: "string"
+    default: "/"
+    group: "Kibana Configuration"
+    show_if: "addKibana=true&&kibana.ingress.enabled=true"
+
+  - variable: "kibana.ingress.hosts[0].paths[0].pathType"
+    description: "Path type for Kibana ingress"
+    label: "Kibana Ingress Path Type"
+    type: "enum"
+    default: "Prefix"
+    options:
+      - "Prefix"
+      - "Exact"
+      - "ImplementationSpecific"
+    group: "Kibana Configuration"
+    show_if: "addKibana=true&&kibana.ingress.enabled=true"
+
+  - variable: "kibana.ingress.className"
+    description: "Ingress class name (e.g. nginx, traefik)"
+    label: "Kibana Ingress Class"
+    type: "string"
+    default: ""
+    group: "Kibana Configuration"
+    show_if: "addKibana=true&&kibana.ingress.enabled=true"
+
+  - variable: "kibana.ingress.annotations"
+    description: "Additional ingress annotations (YAML format)"
+    label: "Kibana Ingress Annotations"
+    type: "multiline"
+    default: |
+      # Example annotations:
+      # nginx.ingress.kubernetes.io/rewrite-target: /
+      # cert-manager.io/cluster-issuer: letsencrypt-prod
+    group: "Kibana Configuration"
+    show_if: "addKibana=true&&kibana.ingress.enabled=true"
+
+  # TLS Configuration for Kibana Ingress
+  - variable: "kibana.ingress.tls[0].secretName"
+    description: "Secret name containing TLS certificate"
+    label: "TLS Secret Name"
+    type: "string"
+    group: "Kibana Configuration"
+    show_if: "addKibana=true&&kibana.ingress.enabled=true"
+
+  - variable: "kibana.ingress.tls[0].hosts[0]"
+    description: "Hostname for TLS certificate (should match ingress hostname)"
+    label: "TLS Certificate Hostname"
+    type: "string"
+    default: "kibana.example.com"
+    group: "Kibana Configuration"
+    show_if: "addKibana=true&&kibana.ingress.enabled=true"
+
   - variable: "esPort"
     label: "ElasticSearch expose port"
     description: "Select true to expose it"

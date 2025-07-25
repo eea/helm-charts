@@ -25,6 +25,39 @@ spec:
       {{- end }}
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
       
+      {{- if .Values.esmaster.password }}
+      initContainers:
+      - name: config-init
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        command: ['sh', '-c']
+        args:
+          - |
+            echo "Initializing Elasticsearch configuration..."
+            # Copy config files from ConfigMap to shared volume
+            cp /tmp/config/* /usr/share/elasticsearch/config/
+            
+            # Generate certificates if they don't exist
+            if [ ! -f /usr/share/elasticsearch/config/elastic-certificates.p12 ]; then
+              echo "Generating SSL certificates..."
+              cd /usr/share/elasticsearch
+              echo "elasticsearch-certutil cert --silent --pem --out config/elastic-certificates.p12"
+              bin/elasticsearch-certutil cert --silent --pem --out config/elastic-certificates.p12 \
+                --dns {{ .Release.Name }}-master,{{ .Release.Name }}-data,localhost \
+                --ip 127.0.0.1,::1 || echo "Certificate generation failed, but continuing..."
+            fi
+            
+            # Set proper permissions
+            chown -R elasticsearch:elasticsearch /usr/share/elasticsearch/config/
+            echo "Configuration initialization completed"
+        volumeMounts:
+        - mountPath: /usr/share/elasticsearch/config
+          name: elasticconfig
+        - mountPath: /tmp/config
+          name: elasticsearch-config
+        securityContext:
+          runAsUser: 0
+      {{- end }}
+      
       containers:
       - name: {{ .Release.Name }}-master
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -132,6 +165,9 @@ spec:
       - name: elasticconfig
         persistentVolumeClaim:
           claimName: elasticconfig
+      - name: elasticsearch-config
+        configMap:
+          name: {{ .Release.Name }}-elasticsearch-config
       {{- end }}
   {{- if .Values.esmaster.persistence.enabled }}
   volumeClaimTemplates:
