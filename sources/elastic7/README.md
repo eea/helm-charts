@@ -59,7 +59,7 @@ The chart automatically generates the correct Kibana URL from ingress configurat
 
 2. **Manual URL**: Set `kibana.url` explicitly to override automatic generation.
 
-**Note**: If you're seeing `http://kibana.example.com/` despite setting different ingress hosts, upgrade to version 0.1.12 or later. In version 0.1.12, the default hostname values have been removed to prevent this issue.
+**Note**: If you're seeing `http://kibana.example.com/` despite setting different ingress hosts, upgrade to version 0.1.13 or later. In version 0.1.12, the default hostname values were removed, and in version 0.1.13, the ingress validation was improved to handle Rancher UI configurations properly.
 
 ### SSL Certificate Format Error
 
@@ -85,6 +85,20 @@ If you see data nodes connecting and disconnecting rapidly, or cluster health sh
 - Fixed discovery configuration with proper DNS names
 - Shared SSL certificates across all nodes
 - Master nodes configured with data role for initial cluster bootstrap
+
+### Rancher UI Ingress Issues
+
+If you're using Rancher UI to configure the chart and the Kibana ingress is not being created despite setting the hostname correctly, this may be due to configuration format conflicts.
+
+**Common symptoms**:
+- Ingress not created after setting hostname in Rancher UI
+- Chart deployment succeeds but no ingress resource appears
+- Hostname appears to be set correctly in Rancher but ingress template doesn't pick it up
+
+**Solution**: 
+- Upgrade to chart version 0.1.13 or later which includes improved ingress validation
+- Ensure you're setting the hostname in the "Kibana Ingress Hostname" field under "Kibana Configuration"
+- If upgrading from version 0.1.12, the ingress validation has been simplified for better Rancher compatibility
 
 ### Troubleshooting
 
@@ -188,9 +202,29 @@ helm install elastic7 ./elastic7 \
   --set kibana.ingress.tls[0].hosts[0]=kibana.mycompany.com
 ```
 
+#### Rancher UI Configuration
+
+When deploying through Rancher UI, follow these steps for proper Kibana ingress configuration:
+
+1. **Enable Kibana**: Set `Add kibana container` to `true` (under Kibana Configuration)
+2. **Enable Ingress**: Set `Enable Kibana Ingress` to `true` (under Kibana Configuration)
+3. **Set Hostname**: Enter your desired hostname in `Kibana Ingress Hostname` field (e.g., `kibana.mycompany.com`)
+4. **Configure TLS** (optional): If using TLS, set `TLS Certificate Hostname` to match your ingress hostname
+
+**Important**: Ensure you're using chart version 0.1.13 or later for optimal Rancher UI compatibility.
+
 ## Releases
 
 <dl>
+
+  <dt>Version 0.1.13</dt>
+  <dd>Improved Kibana ingress validation - fixed issue where ingress was not generated when using Rancher UI due to overly strict hostname validation. Simplified template logic for better compatibility with different deployment methods.</dd>
+
+  <dt>Version 0.1.12</dt>
+  <dd>Fixed Kibana ingress hostname hardcoded issue - removed default 'kibana.example.com' values from values.yaml and questions.yaml to prevent overriding user-configured hostnames. Enhanced ingress template with hostname validation.</dd>
+
+  <dt>Version 0.1.11</dt>
+  <dd>Fixed duplicate node.roles environment variable in master StatefulSet - simplified template logic to avoid configuration conflicts.</dd>
 
   <dt>Version 0.1.10</dt>
   <dd>Added configurable data role for master nodes - allows proper dedicated master/data node separation or combined roles based on cluster size.</dd>
