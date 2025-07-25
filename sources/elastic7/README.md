@@ -19,6 +19,17 @@ This happens when security is enabled (by setting `esmaster.password`) but the c
 
 **Solution**: Upgrade to the latest version of this chart which includes the fix, or ensure your `esmaster.password` is properly set and the PVC has sufficient permissions.
 
+### JVM Options Error
+
+If you encounter errors like:
+```
+Error: VM option 'G1MixedGCLiveThresholdPercent' is experimental and must be enabled via -XX:+UnlockExperimentalVMOptions.
+```
+
+This indicates JVM configuration compatibility issues. The chart now uses a conservative JVM configuration that works across different Java versions without experimental options.
+
+**Solution**: Upgrade to chart version 0.1.3 or later which includes compatible JVM options.
+
 ### Troubleshooting
 
 1. **Check pod status**:
@@ -123,6 +134,9 @@ helm install elastic7 ./elastic7 \
 ## Releases
 
 <dl>
+
+  <dt>Version 0.1.3</dt>
+  <dd>Fixed JVM options compatibility issue - removed experimental G1MixedGCLiveThresholdPercent option that caused startup failures.</dd>
 
   <dt>Version 0.1.2</dt>
   <dd>Fixed missing jvm.options error when security is enabled. Added automatic configuration initialization.</dd>
