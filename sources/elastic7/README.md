@@ -8,7 +8,13 @@ This chart is configured for production.
 
 If you encounter the error:
 ```
-Exception in thread "main" java.nio.file.NoSuchFileException: /usr/share/elasticsearch/config/jvm.options
+Exception in thread "main" java.ni<dl>
+
+  <dt>Version 0.1.11</dt>
+  <dd>Fixed duplicate node.roles environment variable in master StatefulSet - simplified template logic to avoid configuration conflicts.</dd>
+
+  <dt>Version 0.1.10</dt>
+  <dd>Added configurable data role for master nodes - allows proper dedicated master/data node separation or combined roles based on cluster size.</dd>le.NoSuchFileException: /usr/share/elasticsearch/config/jvm.options
 ```
 
 This happens when security is enabled (by setting `esmaster.password`) but the configuration volume is not properly initialized. The chart now includes automatic configuration initialization through init containers that:
@@ -185,6 +191,9 @@ helm install elastic7 ./elastic7 \
 ## Releases
 
 <dl>
+
+  <dt>Version 0.1.10</dt>
+  <dd>Added configurable data role for master nodes - allows proper dedicated master/data node separation or combined roles based on cluster size.</dd>
 
   <dt>Version 0.1.9</dt>
   <dd>Simplified configuration - removed redundant initialDataNodes variable, now using esworker.replicaCount consistently throughout the chart.</dd>

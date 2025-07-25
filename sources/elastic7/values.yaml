@@ -111,6 +111,8 @@ clusterhealth:
 
 esmaster:
   replicaCount: 1
+  # Enable data role on master nodes (needed if you have only 1 master node)
+  enableDataRole: false
   # Note: minimumMasterNodes is deprecated in favor of dynamic discovery.seed_hosts configuration
   # The discovery.seed_hosts is now automatically generated based on replicaCount
   minimumMasterNodes: 1
