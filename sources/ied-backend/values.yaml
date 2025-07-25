@@ -55,52 +55,7 @@ plone:
     DEFAULT_ORGANISATIONS: ""
     STATIC_BANNER_ENABLED_ied: ""
     DYNAMIC_BANNER_ENABLED: ""
-    PLONE_REGISTRY_YAML_CONTENT: |
-      # Registry overrides should be in a YAML file. See https://github.com/collective/collective.regenv?tab=readme-ov-file#documentation
-
-      defaults: &defaults
-        volto.frontend_domain: https://staging.eea.europa.eu/en
-        pas.plugins.authomatic.interfaces.IPasPluginsAuthomaticSettings.json_config: |
-         {
-              "microsoft": {
-                  "id": 1,
-                  "scope": [
-                      "User.ReadBasic.All" 
-                  ],
-                  "domain": "EEA1.onmicrosoft.com",
-                  "display": {
-                      "title": "EEA Microsoft Azure",
-                      "cssclasses": {
-                          "button": "plone-btn plone-btn-default",
-                          "icon": "glypicon glyphicon-microsoft" 
-                      },
-                      "as_form": false
-                  },
-                  "propertymap": {
-                      "id": "id",
-                      "mail": "email",
-                      "country": "location",
-                      "name": "fullname" 
-                  },
-                  "sync_propertymap": {
-                      "id": "id",
-                      "mail": "email",
-                      "country": "location",
-                      "displayName": "fullname",
-                      "userPrincipalName": "email",
-                      "userType": null
-                  },
-                  "class_": "authomatic.providers.oauth2.MicrosoftOnline",
-                  "consumer_key": "secret",
-                  "consumer_secret": "secret",
-                  "access_headers": {
-                      "User-Agent": "Plone (pas.plugins.authomatic)" 
-                  }
-              }
-          }
-
-      /ied/portal_registry:
-        <<: *defaults
+    PLONE_REGISTRY_YAML_CONTENT: ""
   annotations: {}
   livenessProbe:
     httpGet:
