@@ -92,12 +92,17 @@ spec:
         {{- if .Values.useMonitoring }}
         - name: xpack.monitoring.collection.enabled
           value: "true"
-        - name: node.roles
-          value: "master,data,ingest"
-        {{- else }}
-        - name: node.roles
-          value: "master,data"
         {{- end }}
+        - name: node.roles
+          {{- if and .Values.useMonitoring .Values.esmaster.enableDataRole }}
+          value: "master,data,ingest"
+          {{- else if and (not .Values.useMonitoring) .Values.esmaster.enableDataRole }}
+          value: "master,data"
+          {{- else if and .Values.useMonitoring (not .Values.esmaster.enableDataRole) }}
+          value: "master,ingest"
+          {{- else }}
+          value: "master"
+          {{- end }}
         {{- if .Values.esmaster.password }}
         - name: xpack.security.enabled
           value: "true"

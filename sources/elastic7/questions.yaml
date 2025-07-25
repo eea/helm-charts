@@ -178,6 +178,16 @@ questions:
     default: "1"
     group: "Master Nodes"
 
+  - variable: "esmaster.enableDataRole"
+    label: "Enable data role on master nodes"
+    description: |
+      Set true to allow master nodes to store data. Recommended for small clusters.
+      Set false for dedicated master nodes in production clusters.
+    default: false
+    required: true
+    type: boolean
+    group: "Master Nodes"
+
   - variable: "masterHeapSize"
     type: "string"
     required: true
