@@ -40,10 +40,10 @@ spec:
             if [ ! -f /usr/share/elasticsearch/config/elastic-certificates.p12 ]; then
               echo "Generating SSL certificates..."
               cd /usr/share/elasticsearch
-              echo "elasticsearch-certutil cert --silent --pem --out config/elastic-certificates.p12"
-              bin/elasticsearch-certutil cert --silent --pem --out config/elastic-certificates.p12 \
+              echo "Generating PKCS12 certificates..."
+              bin/elasticsearch-certutil cert --silent --out config/elastic-certificates.p12 \
                 --dns {{ .Release.Name }}-master,{{ .Release.Name }}-data,localhost \
-                --ip 127.0.0.1,::1 || echo "Certificate generation failed, but continuing..."
+                --ip 127.0.0.1,::1 --pass "" || echo "Certificate generation failed, but continuing..."
             fi
             
             # Set proper permissions
