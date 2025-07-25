@@ -59,7 +59,7 @@ The chart automatically generates the correct Kibana URL from ingress configurat
 
 2. **Manual URL**: Set `kibana.url` explicitly to override automatic generation.
 
-**Note**: If you're seeing `http://kibana.example.com/` despite setting different ingress hosts, upgrade to version 0.1.5 or later.
+**Note**: If you're seeing `http://kibana.example.com/` despite setting different ingress hosts, upgrade to version 0.1.12 or later. In version 0.1.12, the default hostname values have been removed to prevent this issue.
 
 ### SSL Certificate Format Error
 
@@ -116,7 +116,7 @@ The chart supports configuring Kubernetes Ingress for Kibana access through the 
 |-----------|-------------|---------|
 | `kibana.url` | Manual Kibana URL override (optional) | `""` (auto-generated) |
 | `kibana.ingress.enabled` | Enable ingress for Kibana | `true` |
-| `kibana.ingress.hosts[0].host` | Hostname for Kibana ingress | `kibana.example.com` |
+| `kibana.ingress.hosts[0].host` | Hostname for Kibana ingress | `""` (must be set) |
 | `kibana.ingress.hosts[0].paths[0].path` | Path for Kibana ingress | `/` |
 | `kibana.ingress.hosts[0].paths[0].pathType` | Path type for ingress | `Prefix` |
 | `kibana.ingress.className` | Ingress class name | `""` |

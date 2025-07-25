@@ -1,4 +1,11 @@
-{{- if and .Values.addKibana .Values.kibana.ingress.enabled -}}
+{{- if and .Values.addKibana .Values.kibana.ingress.enabled .Values.kibana.ingress.hosts -}}
+{{- $hasValidHost := false -}}
+{{- range .Values.kibana.ingress.hosts -}}
+  {{- if and .host (ne .host "") -}}
+    {{- $hasValidHost = true -}}
+  {{- end -}}
+{{- end -}}
+{{- if $hasValidHost -}}
 {{- $fullName := include "appl.fullname" . -}}
 {{- $svcPort := .Values.kibana.service.port -}}
 {{- if and .Values.kibana.ingress.className (not (hasKey .Values.kibana.ingress.annotations "kubernetes.io/ingress.class")) }}
@@ -37,6 +44,7 @@ spec:
   {{- end }}
   rules:
     {{- range .Values.kibana.ingress.hosts }}
+    {{- if and .host (ne .host "") }}
     - host: {{ .host | quote }}
       http:
         paths:
@@ -57,4 +65,6 @@ spec:
               {{- end }}
           {{- end }}
     {{- end }}
+    {{- end }}
+{{- end }}
 {{- end }}

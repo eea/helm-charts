@@ -79,7 +79,7 @@ questions:
     description: "Hostname for Kibana ingress (e.g. kibana.company.com)"
     label: "Kibana Ingress Hostname"
     type: "string"
-    default: "kibana.example.com"
+    default: ""
     group: "Kibana Configuration"
     show_if: "addKibana=true&&kibana.ingress.enabled=true"
 
@@ -134,7 +134,7 @@ questions:
     description: "Hostname for TLS certificate (should match ingress hostname)"
     label: "TLS Certificate Hostname"
     type: "string"
-    default: "kibana.example.com"
+    default: ""
     group: "Kibana Configuration"
     show_if: "addKibana=true&&kibana.ingress.enabled=true"
 
