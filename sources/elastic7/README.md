@@ -55,6 +55,17 @@ The chart automatically generates the correct Kibana URL from ingress configurat
 
 **Note**: If you're seeing `http://kibana.example.com/` despite setting different ingress hosts, upgrade to version 0.1.5 or later.
 
+### SSL Certificate Format Error
+
+If you encounter errors like:
+```
+failed to load SSL configuration [xpack.security.transport.ssl]; nested: ElasticsearchException[failed to initialize SSL TrustManager]; nested: IOException[toDerInputStream rejects tag type 80];
+```
+
+This indicates SSL certificate format issues. The chart now generates proper PKCS12 certificates instead of PEM format.
+
+**Solution**: Upgrade to chart version 0.1.6 or later which includes correct certificate generation.
+
 ### Troubleshooting
 
 1. **Check pod status**:
@@ -160,6 +171,9 @@ helm install elastic7 ./elastic7 \
 ## Releases
 
 <dl>
+
+  <dt>Version 0.1.6</dt>
+  <dd>Fixed SSL certificate format issue - now generates proper PKCS12 certificates instead of PEM format to prevent TrustManager errors.</dd>
 
   <dt>Version 0.1.5</dt>
   <dd>Fixed Kibana URL auto-generation from ingress configuration. The chart now automatically builds the correct URL from ingress settings.</dd>
