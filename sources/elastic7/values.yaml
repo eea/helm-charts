@@ -62,12 +62,12 @@ sysctlVmMaxMapCount: 262144
 timezone: "Europe/Copenhagen"
 
 # Volume configuration
-volumeDriver: "rancher-nfs"
+volumeDriver: "nfs-client"
 volumeDriverOpts: ""
-volumeConfigDriver: "netapp"
+volumeConfigDriver: "nfs-client"
 volumeConfigDriverOpts: ""
 backupVolumeName: ""
-backupVolumeDriver: "rancher-nfs"
+backupVolumeDriver: "nfs-client"
 backupVolumeExternal: "yes"
 backupVolumeDriverOpts: ""
 

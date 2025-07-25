@@ -97,6 +97,14 @@ questions:
     default: 2
     group: "Data Nodes"
 
+  - variable: "esmaster.replicaCount"
+    type: "string"
+    required: true
+    label: "Replica count (master nodes)"
+    description: "Number of replicas for master nodes"
+    default: "1"
+    group: "Master Nodes"
+
   - variable: "masterHeapSize"
     type: "string"
     required: true
@@ -272,12 +280,10 @@ questions:
   - variable: "volumeDriver"
     label: "Data volumes driver"
     description: "ElasticSearch data volume driver, choose rancher_ebs only for Amazon"
-    default: "rancher-nfs"
+    default: "nfs-client"
     type: "enum"
     options:
-      - "rancher-ebs"
-      - "rancher-nfs"
-      - "netapp"
+      - "nfs-client"
     required: true
     group: "Volume Configuration"
 
@@ -293,11 +299,10 @@ questions:
   - variable: "volumeConfigDriver"
     label: "Configuration volume driver"
     description: "ElasticSearch configuration volume driver, used if security is enabled to store certificates"
-    default: "netapp"
+    default: "nfs-client"
     type: "enum"
     options:
-      - "rancher-ebs"
-      - "netapp"
+      - "nfs-client"
     required: true
     group: "Volume Configuration"
 
@@ -318,13 +323,11 @@ questions:
 
   - variable: "backupVolumeDriver"
     label: "Backup volumes driver"
-    description: "ElasticSearch data volume driver, choose rancher_ebs only for Amazon"
-    default: "rancher-nfs"
+    description: "ElasticSearch data volume driver"
+    default: "nfs-client"
     type: "enum"
     options:
-      - "rancher-nfs"
-      - "rancher-ebs"
-      - "netapp"
+      - "nfs-client"
     group: "Backup Configuration"
 
   - variable: "backupVolumeExternal"
