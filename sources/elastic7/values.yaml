@@ -185,11 +185,7 @@ kibana:
     enabled: true
     className: ""
     annotations: {}
-    hosts:
-      - host: ""
-        paths:
-          - path: /
-            pathType: Prefix
+    hostname: kibana.example.com
     tls: []
     # Example TLS configuration:
     #  - secretName: kibana-tls
