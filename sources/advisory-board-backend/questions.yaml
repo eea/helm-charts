@@ -197,6 +197,13 @@ questions:
       - "Yes"
       - "No"
     group: "Plone configuration"
+  - variable: "plone.environment.PLONE_REGISTRY_YAML_CONTENT"
+    label: "Plone Registry YAML Content"
+    description: "Registry overrides in YAML format for collective.regenv"
+    type: "multiline"
+    required: false
+    default: ""
+    group: "Plone configuration"
 
   - variable: "varnish.port"
     label: "Varnish backend/exposed port"
