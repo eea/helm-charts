@@ -1,0 +1,130 @@
+{{- if .Values.rbac.create -}}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ include "metricbeat.fullname" . }}
+  labels:
+    {{- include "metricbeat.labels" . | nindent 4 }}
+rules:
+- apiGroups: [""]
+  resources:
+  - nodes
+  - namespaces
+  - events
+  - pods
+  - services
+  - persistentvolumes
+  - persistentvolumeclaims
+  verbs: ["get", "list", "watch"]
+# Enable this rule only if planing to use Kubernetes keystore
+#- apiGroups: [""]
+#  resources:
+#  - secrets
+#  verbs: ["get"]
+- apiGroups: ["extensions"]
+  resources:
+  - replicasets
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["apps"]
+  resources:
+  - statefulsets
+  - deployments
+  - replicasets
+  - daemonsets
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["batch"]
+  resources:
+  - jobs
+  - cronjobs
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["storage.k8s.io"]
+  resources:
+    - storageclasses
+  verbs: ["get", "list", "watch"]
+- apiGroups:
+  - ""
+  resources:
+  - nodes/stats
+  verbs:
+  - get
+- nonResourceURLs:
+  - "/metrics"
+  verbs:
+  - get
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ include "metricbeat.fullname" . }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "metricbeat.labels" . | nindent 4 }}
+rules:
+  - apiGroups:
+      - coordination.k8s.io
+    resources:
+      - leases
+    verbs: ["get", "create", "update"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ include "metricbeat.fullname" . }}-kubeadm-config
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "metricbeat.labels" . | nindent 4 }}
+rules:
+  - apiGroups: [""]
+    resources:
+      - configmaps
+    resourceNames:
+      - kubeadm-config
+    verbs: ["get"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ include "metricbeat.fullname" . }}
+  labels:
+    {{- include "metricbeat.labels" . | nindent 4 }}
+subjects:
+- kind: ServiceAccount
+  name: {{ .Values.serviceAccount.name | default (include "metricbeat.fullname" .) }}
+  namespace: {{ .Values.namespace }}
+roleRef:
+  kind: ClusterRole
+  name: {{ include "metricbeat.fullname" . }}
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ include "metricbeat.fullname" . }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "metricbeat.labels" . | nindent 4 }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ .Values.serviceAccount.name | default (include "metricbeat.fullname" .) }}
+    namespace: {{ .Values.namespace }}
+roleRef:
+  kind: Role
+  name: {{ include "metricbeat.fullname" . }}
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ include "metricbeat.fullname" . }}-kubeadm-config
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "metricbeat.labels" . | nindent 4 }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ .Values.serviceAccount.name | default (include "metricbeat.fullname" .) }}
+    namespace: {{ .Values.namespace }}
+roleRef:
+  kind: Role
+  name: {{ include "metricbeat.fullname" . }}-kubeadm-config
+  apiGroup: rbac.authorization.k8s.io
+{{- end }}

@@ -1,0 +1,296 @@
+# Default values for metricbeat
+# This is a YAML-formatted file.
+
+# Image configuration
+image:
+  repository: docker.elastic.co/beats/metricbeat
+  tag: "8.12.2"
+  pullPolicy: IfNotPresent
+
+# ServiceAccount configuration
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # The name of the service account to use.
+  name: metricbeat
+  # Annotations to add to the service account
+  annotations: {}
+
+# Namespace where metricbeat will be deployed
+namespace: kube-system
+
+# RBAC configuration
+rbac:
+  # Specifies whether RBAC resources should be created
+  create: true
+
+# DaemonSet configuration
+daemonset:
+  # Termination grace period
+  terminationGracePeriodSeconds: 30
+  # Use host network
+  hostNetwork: true
+  # DNS policy
+  dnsPolicy: ClusterFirstWithHostNet
+
+# Container configuration
+container:
+  name: metricbeat
+  args:
+    - "-c"
+    - "/etc/metricbeat.yml"
+    - "-e"
+    - "-system.hostfs=/hostfs"
+
+  # Environment variables
+  env:
+    elasticsearch:
+      host: elasticsearch
+      port: "9200"
+      username: elastic
+      password: changeme
+    elastic:
+      cloudId: ""
+      cloudAuth: ""
+
+  # Security context
+  securityContext:
+    runAsUser: 0
+
+  # Resource limits and requests
+  resources:
+    limits:
+      memory: 200Mi
+    requests:
+      cpu: 100m
+      memory: 100Mi
+
+# Elasticsearch output configuration
+elasticsearch:
+  host: "elastic7-data.elastic.svc.cluster.local"
+  port: 9200
+  protocol: "http"
+  username: "${ELASTICSEARCH_USERNAME}"
+  password: "${ELASTICSEARCH_PASSWORD}"
+  apiKey: null
+  allowOlderVersions: true
+
+# Metricbeat configuration
+metricbeat:
+  config:
+    # Autodiscover configuration
+    autodiscover:
+      providers:
+        - type: kubernetes
+          scope: cluster
+          node: "${NODE_NAME}"
+          unique: true
+          templates:
+            - config:
+                - module: kubernetes
+                  hosts: ["kube-state-metrics:8080"]
+                  period: 10s
+                  add_metadata: true
+                  metricsets:
+                    - state_namespace
+                    - state_node
+                    - state_deployment
+                    - state_daemonset
+                    - state_replicaset
+                    - state_pod
+                    - state_container
+                    - state_job
+                    - state_cronjob
+                    - state_resourcequota
+                    - state_statefulset
+                    - state_service
+                    - state_persistentvolume
+                    - state_persistentvolumeclaim
+                    - state_storageclass
+                - module: kubernetes
+                  metricsets:
+                    - apiserver
+                  hosts:
+                    [
+                      "https://${KUBERNETES_SERVICE_HOST}:${KUBERNETES_SERVICE_PORT}",
+                    ]
+                  bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+                  ssl:
+                    certificate_authorities:
+                      - /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+                  period: 30s
+
+    # Processors configuration
+    processors:
+      - add_cloud_metadata: {}
+
+  # Module configurations
+  modules:
+    # System module configuration
+    system:
+      - module: system
+        period: 10s
+        metricsets:
+          - cpu
+          - load
+          - memory
+          - network
+          - process
+          - process_summary
+        processes: [".*"]
+        process:
+          include_top_n:
+            by_cpu: 5
+            by_memory: 5
+      - module: system
+        period: 1m
+        metricsets:
+          - filesystem
+          - fsstat
+        processors:
+          - drop_event:
+              when:
+                regexp:
+                  system.filesystem.mount_point: "^/(sys|cgroup|proc|dev|etc|host|lib|snap)($|/)"
+
+    # Kubernetes module configuration
+    kubernetes:
+      - module: kubernetes
+        metricsets:
+          - node
+          - system
+          - pod
+          - container
+          - volume
+        period: 10s
+        host: "${NODE_IP}"
+        hosts: ["https://${NODE_NAME}:10250"]
+        bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+        ssl:
+          verification_mode: "none"
+      - module: kubernetes
+        metricsets:
+          - proxy
+        period: 10s
+        host: "${NODE_IP}"
+        hosts: ["localhost:10249"]
+
+# Volume mounts and volumes
+volumes:
+  proc:
+    hostPath: /proc
+  cgroup:
+    hostPath: /sys/fs/cgroup
+  data:
+    hostPath: /var/lib/metricbeat-data
+    type: DirectoryOrCreate
+
+# ConfigMap settings
+configMaps:
+  config:
+    defaultMode: 0640
+  modules:
+    defaultMode: 0640
+
+# Labels to apply to all resources
+labels:
+  k8s-app: metricbeat
+
+# Node selector, tolerations and affinity
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+# Metrics Server configuration
+metricsServer:
+  # Enable/disable metrics-server installation
+  enabled: true
+
+  # Image configuration
+  image:
+    repository: registry.k8s.io/metrics-server/metrics-server
+    tag: "v0.8.0"
+    pullPolicy: IfNotPresent
+
+  # Service configuration
+  service:
+    port: 443
+    targetPort: https
+    protocol: TCP
+
+  # Container configuration
+  container:
+    name: metrics-server
+    port: 10250
+    args:
+      - --cert-dir=/tmp
+      - --secure-port=10250
+      - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
+      - --kubelet-use-node-status-port
+      - --metric-resolution=15s
+      - --kubelet-insecure-tls
+
+    # Resource configuration
+    resources:
+      requests:
+        cpu: 100m
+        memory: 200Mi
+
+    # Security context
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+          - ALL
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+      runAsUser: 1000
+      seccompProfile:
+        type: RuntimeDefault
+
+    # Probes
+    livenessProbe:
+      failureThreshold: 3
+      httpGet:
+        path: /livez
+        port: https
+        scheme: HTTPS
+      periodSeconds: 10
+
+    readinessProbe:
+      failureThreshold: 3
+      httpGet:
+        path: /readyz
+        port: https
+        scheme: HTTPS
+      initialDelaySeconds: 20
+      periodSeconds: 10
+
+  # Deployment configuration
+  deployment:
+    strategy:
+      rollingUpdate:
+        maxUnavailable: 0
+
+  # Node selector
+  nodeSelector:
+    kubernetes.io/os: linux
+
+  # Priority class
+  priorityClassName: system-cluster-critical
+
+  # API Service configuration
+  apiService:
+    group: metrics.k8s.io
+    groupPriorityMinimum: 100
+    insecureSkipTLSVerify: true
+    version: v1beta1
+    versionPriority: 100
+
+  # ServiceAccount configuration
+  serviceAccount:
+    name: metrics-server
+
+  # Labels
+  labels:
+    k8s-app: metrics-server

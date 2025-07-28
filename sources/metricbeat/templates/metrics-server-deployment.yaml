@@ -1,0 +1,66 @@
+{{- if .Values.metricsServer.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    {{- range $key, $value := .Values.metricsServer.labels }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+  name: metrics-server
+  namespace: {{ .Values.namespace }}
+spec:
+  selector:
+    matchLabels:
+      {{- range $key, $value := .Values.metricsServer.labels }}
+      {{ $key }}: {{ $value | quote }}
+      {{- end }}
+  strategy:
+    rollingUpdate:
+      maxUnavailable: {{ .Values.metricsServer.deployment.strategy.rollingUpdate.maxUnavailable }}
+  template:
+    metadata:
+      labels:
+        {{- range $key, $value := .Values.metricsServer.labels }}
+        {{ $key }}: {{ $value | quote }}
+        {{- end }}
+    spec:
+      containers:
+        - args:
+            {{- toYaml .Values.metricsServer.container.args | nindent 12 }}
+          image: "{{ .Values.metricsServer.image.repository }}:{{ .Values.metricsServer.image.tag }}"
+          imagePullPolicy: {{ .Values.metricsServer.image.pullPolicy }}
+          livenessProbe:
+            failureThreshold: {{ .Values.metricsServer.container.livenessProbe.failureThreshold }}
+            httpGet:
+              path: {{ .Values.metricsServer.container.livenessProbe.httpGet.path }}
+              port: {{ .Values.metricsServer.container.livenessProbe.httpGet.port }}
+              scheme: {{ .Values.metricsServer.container.livenessProbe.httpGet.scheme }}
+            periodSeconds: {{ .Values.metricsServer.container.livenessProbe.periodSeconds }}
+          name: {{ .Values.metricsServer.container.name }}
+          ports:
+            - containerPort: {{ .Values.metricsServer.container.port }}
+              name: https
+              protocol: TCP
+          readinessProbe:
+            failureThreshold: {{ .Values.metricsServer.container.readinessProbe.failureThreshold }}
+            httpGet:
+              path: {{ .Values.metricsServer.container.readinessProbe.httpGet.path }}
+              port: {{ .Values.metricsServer.container.readinessProbe.httpGet.port }}
+              scheme: {{ .Values.metricsServer.container.readinessProbe.httpGet.scheme }}
+            initialDelaySeconds: {{ .Values.metricsServer.container.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.metricsServer.container.readinessProbe.periodSeconds }}
+          resources:
+            {{- toYaml .Values.metricsServer.container.resources | nindent 12 }}
+          securityContext:
+            {{- toYaml .Values.metricsServer.container.securityContext | nindent 12 }}
+          volumeMounts:
+            - mountPath: /tmp
+              name: tmp-dir
+      nodeSelector:
+        {{- toYaml .Values.metricsServer.nodeSelector | nindent 8 }}
+      priorityClassName: {{ .Values.metricsServer.priorityClassName }}
+      serviceAccountName: {{ .Values.metricsServer.serviceAccount.name }}
+      volumes:
+        - emptyDir: {}
+          name: tmp-dir
+{{- end }}

@@ -1,0 +1,98 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: {{ include "metricbeat.fullname" . }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "metricbeat.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "metricbeat.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "metricbeat.selectorLabels" . | nindent 8 }}
+    spec:
+      serviceAccountName: {{ .Values.serviceAccount.name | default (include "metricbeat.fullname" .) }}
+      terminationGracePeriodSeconds: {{ .Values.daemonset.terminationGracePeriodSeconds }}
+      hostNetwork: {{ .Values.daemonset.hostNetwork }}
+      dnsPolicy: {{ .Values.daemonset.dnsPolicy }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+      - name: {{ .Values.container.name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        args:
+          {{- toYaml .Values.container.args | nindent 10 }}
+        env:
+        - name: ELASTICSEARCH_HOST
+          value: {{ .Values.container.env.elasticsearch.host | quote }}
+        - name: ELASTICSEARCH_PORT
+          value: {{ .Values.container.env.elasticsearch.port | quote }}
+        - name: ELASTICSEARCH_USERNAME
+          value: {{ .Values.container.env.elasticsearch.username | quote }}
+        - name: ELASTICSEARCH_PASSWORD
+          value: {{ .Values.container.env.elasticsearch.password | quote }}
+        - name: ELASTIC_CLOUD_ID
+          value: {{ .Values.container.env.elastic.cloudId | quote }}
+        - name: ELASTIC_CLOUD_AUTH
+          value: {{ .Values.container.env.elastic.cloudAuth | quote }}
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        - name: NODE_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
+        securityContext:
+          {{- toYaml .Values.container.securityContext | nindent 10 }}
+        resources:
+          {{- toYaml .Values.container.resources | nindent 10 }}
+        volumeMounts:
+        - name: config
+          mountPath: /etc/metricbeat.yml
+          readOnly: true
+          subPath: metricbeat.yml
+        - name: data
+          mountPath: /usr/share/metricbeat/data
+        - name: modules
+          mountPath: /usr/share/metricbeat/modules.d
+          readOnly: true
+        - name: proc
+          mountPath: /hostfs/proc
+          readOnly: true
+        - name: cgroup
+          mountPath: /hostfs/sys/fs/cgroup
+          readOnly: true
+      volumes:
+      - name: proc
+        hostPath:
+          path: {{ .Values.volumes.proc.hostPath }}
+      - name: cgroup
+        hostPath:
+          path: {{ .Values.volumes.cgroup.hostPath }}
+      - name: config
+        configMap:
+          defaultMode: {{ .Values.configMaps.config.defaultMode }}
+          name: {{ include "metricbeat.fullname" . }}-daemonset-config
+      - name: modules
+        configMap:
+          defaultMode: {{ .Values.configMaps.modules.defaultMode }}
+          name: {{ include "metricbeat.fullname" . }}-daemonset-modules
+      - name: data
+        hostPath:
+          path: {{ .Values.volumes.data.hostPath }}
+          type: {{ .Values.volumes.data.type }}
