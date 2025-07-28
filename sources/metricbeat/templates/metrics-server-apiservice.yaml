@@ -1,0 +1,19 @@
+{{- if .Values.metricsServer.enabled -}}
+apiVersion: apiregistration.k8s.io/v1
+kind: APIService
+metadata:
+  labels:
+    {{- range $key, $value := .Values.metricsServer.labels }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+  name: v1beta1.metrics.k8s.io
+spec:
+  group: {{ .Values.metricsServer.apiService.group }}
+  groupPriorityMinimum: {{ .Values.metricsServer.apiService.groupPriorityMinimum }}
+  insecureSkipTLSVerify: {{ .Values.metricsServer.apiService.insecureSkipTLSVerify }}
+  service:
+    name: metrics-server
+    namespace: {{ .Values.namespace }}
+  version: {{ .Values.metricsServer.apiService.version }}
+  versionPriority: {{ .Values.metricsServer.apiService.versionPriority }}
+{{- end }}

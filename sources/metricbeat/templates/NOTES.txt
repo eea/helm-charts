@@ -1,0 +1,41 @@
+Metricbeat has been successfully installed!
+
+Metricbeat is deployed as a DaemonSet and is now collecting metrics from:
+- Kubernetes cluster (kubelet, kube-state-metrics)
+- System metrics (cpu, memory, network, filesystem) 
+- Docker containers
+
+Configuration:
+- Namespace: {{ .Values.namespace }}
+- Image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+- Output: Elasticsearch at {{ .Values.elasticsearch.protocol }}://{{ .Values.elasticsearch.host }}:{{ .Values.elasticsearch.port }}
+
+{{- if .Values.metricsServer.enabled }}
+
+Metrics Server has also been installed:
+- Provides resource metrics API for HPA and kubectl top
+- Image: {{ .Values.metricsServer.image.repository }}:{{ .Values.metricsServer.image.tag }}
+- Priority Class: {{ .Values.metricsServer.priorityClassName }}
+
+You can test metrics server with:
+  kubectl top nodes
+  kubectl top pods
+{{- end }}
+
+To monitor the deployment:
+  kubectl get daemonset {{ include "metricbeat.fullname" . }} -n {{ .Values.namespace }}
+  kubectl get pods -l app.kubernetes.io/name={{ include "metricbeat.name" . }} -n {{ .Values.namespace }}
+{{- if .Values.metricsServer.enabled }}
+  kubectl get deployment metrics-server -n {{ .Values.namespace }}
+  kubectl get apiservice v1beta1.metrics.k8s.io
+{{- end }}
+
+For logs:
+  kubectl logs -f daemonset/{{ include "metricbeat.fullname" . }} -n {{ .Values.namespace }}
+{{- if .Values.metricsServer.enabled }}
+  kubectl logs -f deployment/metrics-server -n {{ .Values.namespace }}
+{{- end }}
+
+{{- if not .Values.elasticsearch.host }}
+⚠️  WARNING: No Elasticsearch host configured. Please update values.yaml with your Elasticsearch configuration.
+{{- end }}

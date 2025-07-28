@@ -1,0 +1,17 @@
+apiVersion: v2
+name: metricbeat
+description: A Helm chart for Metricbeat to collect Kubernetes metrics
+type: application
+version: 0.1.0
+appVersion: "8.12.2"
+keywords:
+  - metricbeat
+  - elastic
+  - monitoring
+  - metrics
+  - kubernetes
+home: https://www.elastic.co/beats/metricbeat
+sources:
+  - https://github.com/elastic/beats
+maintainers:
+  - name: EEA Team

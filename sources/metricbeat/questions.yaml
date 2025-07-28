@@ -1,0 +1,314 @@
+questions:
+  # Basic Configuration
+  - variable: namespace
+    default: "kube-system"
+    description: "Namespace where Metricbeat will be deployed"
+    type: string
+    label: Namespace
+    group: "Basic Configuration"
+
+  # Image Configuration
+  - variable: image.repository
+    default: "docker.elastic.co/beats/metricbeat"
+    description: "Metricbeat Docker image repository"
+    type: string
+    label: Image Repository
+    group: "Image Configuration"
+
+  - variable: image.tag
+    default: "8.12.2"
+    description: "Metricbeat Docker image tag"
+    type: string
+    label: Image Tag
+    group: "Image Configuration"
+
+  - variable: image.pullPolicy
+    default: "IfNotPresent"
+    description: "Image pull policy"
+    type: enum
+    label: Image Pull Policy
+    group: "Image Configuration"
+    options:
+      - "IfNotPresent"
+      - "Always"
+      - "Never"
+
+  # Elasticsearch Configuration
+  - variable: elasticsearch.host
+    default: "elastic7-data.elastic.svc.cluster.local"
+    description: "Elasticsearch host/hostname"
+    type: string
+    label: Elasticsearch Host
+    group: "Elasticsearch Configuration"
+    required: true
+
+  - variable: elasticsearch.port
+    default: 9200
+    description: "Elasticsearch port"
+    type: int
+    label: Elasticsearch Port
+    group: "Elasticsearch Configuration"
+    required: true
+
+  - variable: elasticsearch.protocol
+    default: "http"
+    description: "Protocol to use for Elasticsearch connection"
+    type: enum
+    label: Elasticsearch Protocol
+    group: "Elasticsearch Configuration"
+    options:
+      - "http"
+      - "https"
+
+  - variable: elasticsearch.username
+    default: "${ELASTICSEARCH_USERNAME}"
+    description: "Elasticsearch username"
+    type: string
+    label: Elasticsearch Username
+    group: "Elasticsearch Configuration"
+
+  - variable: elasticsearch.password
+    default: "${ELASTICSEARCH_PASSWORD}"
+    description: "Elasticsearch password"
+    type: password
+    label: Elasticsearch Password
+    group: "Elasticsearch Configuration"
+
+  - variable: elasticsearch.allowOlderVersions
+    default: true
+    description: "Allow connection to older Elasticsearch versions"
+    type: boolean
+    label: Allow Older Elasticsearch Versions
+    group: "Elasticsearch Configuration"
+
+  # Elastic Cloud Configuration
+  - variable: container.env.elastic.cloudId
+    default: ""
+    description: "Elastic Cloud ID (leave empty if not using Elastic Cloud)"
+    type: string
+    label: Elastic Cloud ID
+    group: "Elastic Cloud Configuration"
+
+  - variable: container.env.elastic.cloudAuth
+    default: ""
+    description: "Elastic Cloud authentication (leave empty if not using Elastic Cloud)"
+    type: password
+    label: Elastic Cloud Auth
+    group: "Elastic Cloud Configuration"
+
+  # Resource Configuration
+  - variable: container.resources.requests.cpu
+    default: "100m"
+    description: "CPU request for Metricbeat container"
+    type: string
+    label: CPU Request
+    group: "Resource Configuration"
+
+  - variable: container.resources.requests.memory
+    default: "100Mi"
+    description: "Memory request for Metricbeat container"
+    type: string
+    label: Memory Request
+    group: "Resource Configuration"
+
+  - variable: container.resources.limits.memory
+    default: "200Mi"
+    description: "Memory limit for Metricbeat container"
+    type: string
+    label: Memory Limit
+    group: "Resource Configuration"
+
+  # ServiceAccount Configuration
+  - variable: serviceAccount.create
+    default: true
+    description: "Create a new service account for Metricbeat"
+    type: boolean
+    label: Create Service Account
+    group: "RBAC Configuration"
+
+  - variable: serviceAccount.name
+    default: "metricbeat"
+    description: "Name of the service account to use"
+    type: string
+    label: Service Account Name
+    group: "RBAC Configuration"
+    show_if: "serviceAccount.create=true"
+
+  - variable: rbac.create
+    default: true
+    description: "Create RBAC resources (ClusterRole, RoleBinding, etc.)"
+    type: boolean
+    label: Create RBAC Resources
+    group: "RBAC Configuration"
+
+  # Kubernetes Metrics Configuration
+  - variable: metricbeat.config.autodiscover.providers[0].templates[0].config[0].hosts[0]
+    default: "kube-state-metrics:8080"
+    description: "Kube-state-metrics service endpoint"
+    type: string
+    label: Kube-state-metrics Host
+    group: "Kubernetes Metrics"
+
+  - variable: metricbeat.config.autodiscover.providers[0].templates[0].config[0].period
+    default: "10s"
+    description: "Collection period for Kubernetes state metrics"
+    type: string
+    label: State Metrics Collection Period
+    group: "Kubernetes Metrics"
+
+  - variable: metricbeat.config.autodiscover.providers[0].templates[0].config[1].period
+    default: "30s"
+    description: "Collection period for Kubernetes API server metrics"
+    type: string
+    label: API Server Metrics Collection Period
+    group: "Kubernetes Metrics"
+
+  # System Metrics Configuration
+  - variable: metricbeat.modules.system[0].period
+    default: "10s"
+    description: "Collection period for system metrics (CPU, memory, network, etc.)"
+    type: string
+    label: System Metrics Collection Period
+    group: "System Metrics"
+
+  - variable: metricbeat.modules.system[0].process.include_top_n.by_cpu
+    default: 5
+    description: "Number of top CPU consuming processes to include"
+    type: int
+    label: Top CPU Processes Count
+    group: "System Metrics"
+
+  - variable: metricbeat.modules.system[0].process.include_top_n.by_memory
+    default: 5
+    description: "Number of top memory consuming processes to include"
+    type: int
+    label: Top Memory Processes Count
+    group: "System Metrics"
+
+  - variable: metricbeat.modules.system[1].period
+    default: "1m"
+    description: "Collection period for filesystem metrics"
+    type: string
+    label: Filesystem Metrics Collection Period
+    group: "System Metrics"
+
+  # Node Metrics Configuration
+  - variable: metricbeat.modules.kubernetes[0].period
+    default: "10s"
+    description: "Collection period for Kubernetes node metrics"
+    type: string
+    label: Node Metrics Collection Period
+    group: "Node Metrics"
+
+  - variable: metricbeat.modules.kubernetes[1].period
+    default: "10s"
+    description: "Collection period for Kubernetes proxy metrics"
+    type: string
+    label: Proxy Metrics Collection Period
+    group: "Node Metrics"
+
+  # DaemonSet Configuration
+  - variable: daemonset.terminationGracePeriodSeconds
+    default: 30
+    description: "Grace period for pod termination"
+    type: int
+    label: Termination Grace Period (seconds)
+    group: "DaemonSet Configuration"
+
+  - variable: daemonset.hostNetwork
+    default: true
+    description: "Use host network for better node metrics collection"
+    type: boolean
+    label: Use Host Network
+    group: "DaemonSet Configuration"
+
+  - variable: daemonset.dnsPolicy
+    default: "ClusterFirstWithHostNet"
+    description: "DNS policy for the DaemonSet pods"
+    type: enum
+    label: DNS Policy
+    group: "DaemonSet Configuration"
+    options:
+      - "ClusterFirst"
+      - "ClusterFirstWithHostNet"
+      - "Default"
+      - "None"
+
+  # Storage Configuration
+  - variable: volumes.data.hostPath
+    default: "/var/lib/metricbeat-data"
+    description: "Host path for storing Metricbeat data"
+    type: string
+    label: Data Storage Path
+    group: "Storage Configuration"
+
+  # Advanced Configuration
+  - variable: container.securityContext.runAsUser
+    default: 0
+    description: "User ID to run the container as (0 = root, required for system metrics)"
+    type: int
+    label: Run As User ID
+    group: "Advanced Configuration"
+
+  - variable: metricbeat.config.autodiscover.providers[0].unique
+    default: true
+    description: "Use unique leader election for cluster-wide metrics collection"
+    type: boolean
+    label: Use Leader Election
+    group: "Advanced Configuration"
+
+  # Metrics Server Configuration
+  - variable: metricsServer.enabled
+    default: true
+    description: "Enable metrics-server installation alongside Metricbeat"
+    type: boolean
+    label: Enable Metrics Server
+    group: "Metrics Server"
+
+  - variable: metricsServer.image.repository
+    default: "registry.k8s.io/metrics-server/metrics-server"
+    description: "Metrics-server Docker image repository"
+    type: string
+    label: Metrics Server Image Repository
+    group: "Metrics Server"
+    show_if: "metricsServer.enabled=true"
+
+  - variable: metricsServer.image.tag
+    default: "v0.8.0"
+    description: "Metrics-server Docker image tag"
+    type: string
+    label: Metrics Server Image Tag
+    group: "Metrics Server"
+    show_if: "metricsServer.enabled=true"
+
+  - variable: metricsServer.container.resources.requests.cpu
+    default: "100m"
+    description: "CPU request for metrics-server container"
+    type: string
+    label: Metrics Server CPU Request
+    group: "Metrics Server"
+    show_if: "metricsServer.enabled=true"
+
+  - variable: metricsServer.container.resources.requests.memory
+    default: "200Mi"
+    description: "Memory request for metrics-server container"
+    type: string
+    label: Metrics Server Memory Request
+    group: "Metrics Server"
+    show_if: "metricsServer.enabled=true"
+
+  - variable: metricsServer.priorityClassName
+    default: "system-cluster-critical"
+    description: "Priority class for metrics-server pods"
+    type: string
+    label: Priority Class Name
+    group: "Metrics Server"
+    show_if: "metricsServer.enabled=true"
+
+  - variable: metricsServer.apiService.insecureSkipTLSVerify
+    default: true
+    description: "Skip TLS verification for metrics-server API service"
+    type: boolean
+    label: Skip TLS Verification
+    group: "Metrics Server"
+    show_if: "metricsServer.enabled=true"
