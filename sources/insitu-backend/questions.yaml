@@ -198,6 +198,13 @@ questions:
     required: false
     default: ""
     group: "Plone configuration"
+  - variable: "plone.environment.PLONE_REGISTRY_YAML_CONTENT"
+    label: "Plone Registry YAML Content"
+    description: "Registry overrides in YAML format for collective.regenv"
+    type: "multiline"
+    required: false
+    default: ""
+    group: "Plone configuration"
   - variable: "plone.environment.SENTRY_DSN"
     label: "Sentry DSN"
     description: "Sentry client key. If set, Sentry error reporting and User feedback will be enabled."
