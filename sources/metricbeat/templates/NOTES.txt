@@ -10,6 +10,14 @@ Configuration:
 - Image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
 - Output: Elasticsearch at {{ .Values.elasticsearch.protocol }}://{{ .Values.elasticsearch.host }}:{{ .Values.elasticsearch.port }}
 
+{{- if .Values.kubeStateMetrics.enabled }}
+
+Kube State Metrics has been installed:
+- Provides Kubernetes object state metrics
+- Image: {{ .Values.kubeStateMetrics.image.repository }}:{{ .Values.kubeStateMetrics.image.tag }}
+- Service: kube-state-metrics:{{ .Values.kubeStateMetrics.service.port }}
+{{- end }}
+
 {{- if .Values.metricsServer.enabled }}
 
 Metrics Server has also been installed:
@@ -25,6 +33,10 @@ You can test metrics server with:
 To monitor the deployment:
   kubectl get daemonset {{ include "metricbeat.fullname" . }} -n {{ .Values.namespace }}
   kubectl get pods -l app.kubernetes.io/name={{ include "metricbeat.name" . }} -n {{ .Values.namespace }}
+{{- if .Values.kubeStateMetrics.enabled }}
+  kubectl get deployment kube-state-metrics -n {{ .Values.namespace }}
+  kubectl get service kube-state-metrics -n {{ .Values.namespace }}
+{{- end }}
 {{- if .Values.metricsServer.enabled }}
   kubectl get deployment metrics-server -n {{ .Values.namespace }}
   kubectl get apiservice v1beta1.metrics.k8s.io

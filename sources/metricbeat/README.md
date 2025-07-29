@@ -1,6 +1,6 @@
 # Metricbeat Helm Chart
 
-This Helm chart deploys Metricbeat as a DaemonSet to collect Kubernetes metrics and system metrics from all nodes in the cluster.
+This Helm chart deploys Metricbeat as a DaemonSet to collect Kubernetes metrics and system metrics from all nodes in the cluster. It also includes kube-state-metrics for comprehensive Kubernetes object state collection.
 
 ## Prerequisites
 
@@ -30,6 +30,7 @@ helm delete metricbeat
 
 The following table lists the configurable parameters of the Metricbeat chart and their default values.
 
+### Metricbeat Configuration
 | Parameter | Description | Default |
 |-----------|-------------|---------|
 | `image.repository` | Metricbeat image repository | `docker.elastic.co/beats/metricbeat` |
@@ -47,6 +48,20 @@ The following table lists the configurable parameters of the Metricbeat chart an
 | `container.resources.limits.memory` | Memory limit | `200Mi` |
 | `container.resources.requests.cpu` | CPU request | `100m` |
 | `container.resources.requests.memory` | Memory request | `100Mi` |
+
+### Kube State Metrics Configuration
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| `kubeStateMetrics.enabled` | Enable kube-state-metrics deployment | `true` |
+| `kubeStateMetrics.image.repository` | Kube-state-metrics image repository | `k8s.gcr.io/kube-state-metrics/kube-state-metrics` |
+| `kubeStateMetrics.image.tag` | Kube-state-metrics image tag | `v1.9.8` |
+| `kubeStateMetrics.image.pullPolicy` | Image pull policy | `IfNotPresent` |
+| `kubeStateMetrics.service.port` | Service port | `8080` |
+| `kubeStateMetrics.deployment.replicas` | Number of replicas | `1` |
+| `kubeStateMetrics.container.resources.requests.cpu` | CPU request | `100m` |
+| `kubeStateMetrics.container.resources.requests.memory` | Memory request | `200Mi` |
+| `kubeStateMetrics.container.resources.limits.cpu` | CPU limit | `200m` |
+| `kubeStateMetrics.container.resources.limits.memory` | Memory limit | `300Mi` |
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example:
 
@@ -85,10 +100,19 @@ helm install metricbeat ./metricbeat \
   --set elasticsearch.protocol=http
 ```
 
-### Metricbeat only (without metrics-server)
+### Metricbeat only (without metrics-server and kube-state-metrics)
 ```bash
 helm install metricbeat ./metricbeat \
   --set metricsServer.enabled=false \
+  --set kubeStateMetrics.enabled=false \
+  --set elasticsearch.host=my-elasticsearch.com
+```
+
+### With custom kube-state-metrics image
+```bash
+helm install metricbeat ./metricbeat \
+  --set kubeStateMetrics.image.repository=registry.k8s.io/kube-state-metrics/kube-state-metrics \
+  --set kubeStateMetrics.image.tag=v2.10.1 \
   --set elasticsearch.host=my-elasticsearch.com
 ```
 
@@ -100,6 +124,7 @@ This Metricbeat chart includes:
 - **RBAC configuration** - Proper permissions to access Kubernetes APIs
 - **Flexible Elasticsearch configuration** - Separate host, port, and protocol settings for easy customization
 - **Optional Metrics Server** - Includes metrics-server deployment (can be disabled)
+- **Integrated Kube State Metrics** - Deploys kube-state-metrics for comprehensive Kubernetes object monitoring
 - **Multiple metric collection**:
   - Kubernetes cluster state metrics (via kube-state-metrics)
   - Node system metrics (CPU, memory, filesystem, network)
@@ -138,4 +163,21 @@ This Metricbeat chart includes:
 4. **Check Elasticsearch connectivity**:
    ```bash
    kubectl exec -it ds/metricbeat -n kube-system -- metricbeat test output
+   ```
+
+5. **Check kube-state-metrics status**:
+   ```bash
+   kubectl get deployment kube-state-metrics -n kube-system
+   kubectl get service kube-state-metrics -n kube-system
+   ```
+
+6. **Test kube-state-metrics connectivity**:
+   ```bash
+   kubectl port-forward service/kube-state-metrics 8080:8080 -n kube-system
+   curl http://localhost:8080/metrics
+   ```
+
+7. **Verify kube-state-metrics RBAC**:
+   ```bash
+   kubectl auth can-i get pods --as=system:serviceaccount:kube-system:kube-state-metrics
    ```
