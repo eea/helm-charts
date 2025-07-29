@@ -1,8 +1,8 @@
 apiVersion: v2
 name: metricbeat
-description: A Helm chart for Metricbeat to collect Kubernetes metrics
+description: A Helm chart for Metricbeat with integrated kube-state-metrics to collect Kubernetes metrics
 type: application
-version: 0.1.0
+version: 0.2.0
 appVersion: "8.12.2"
 keywords:
   - metricbeat
@@ -10,6 +10,7 @@ keywords:
   - monitoring
   - metrics
   - kubernetes
+  - kube-state-metrics
 home: https://www.elastic.co/beats/metricbeat
 sources:
   - https://github.com/elastic/beats

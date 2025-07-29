@@ -110,7 +110,7 @@ clusterhealth:
   podSecurityContext: {}
 
 esmaster:
-  replicaCount: 1
+  replicaCount: 2
   # Enable data role on master nodes (needed if you have only 1 master node)
   enableDataRole: false
   # Note: minimumMasterNodes is deprecated in favor of dynamic discovery.seed_hosts configuration
@@ -135,7 +135,7 @@ esmaster:
     enabled: false
 
 esworker:
-  replicaCount: 2 # Number of data nodes in the cluster
+  replicaCount: 3 # Number of data nodes in the cluster
   # This represents es-data from docker-compose
   name: "data"
   resources:

@@ -1,0 +1,68 @@
+{{- if .Values.kubeStateMetrics.enabled }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    {{- include "metricbeat.labels" . | nindent 4 }}
+    {{- with .Values.kubeStateMetrics.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  name: {{ include "metricbeat.fullname" . }}-kube-state-metrics
+rules:
+  - apiGroups: [""]
+    resources:
+      - configmaps
+      - secrets
+      - nodes
+      - pods
+      - services
+      - resourcequotas
+      - replicationcontrollers
+      - limitranges
+      - persistentvolumeclaims
+      - persistentvolumes
+      - namespaces
+      - endpoints
+    verbs: ["list", "watch"]
+  - apiGroups: ["apps"]
+    resources:
+      - statefulsets
+      - daemonsets
+      - deployments
+      - replicasets
+    verbs: ["list", "watch"]
+  - apiGroups: ["batch"]
+    resources:
+      - cronjobs
+      - jobs
+    verbs: ["list", "watch"]
+  - apiGroups: ["autoscaling"]
+    resources:
+      - horizontalpodautoscalers
+    verbs: ["list", "watch"]
+  - apiGroups: ["storage.k8s.io"]
+    resources:
+      - storageclasses
+    verbs: ["list", "watch"]
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ include "metricbeat.fullname" . }}-kube-state-metrics
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "metricbeat.labels" . | nindent 4 }}
+    {{- with .Values.kubeStateMetrics.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ include "metricbeat.fullname" . }}-kube-state-metrics
+subjects:
+  - kind: ServiceAccount
+    name: {{ .Values.kubeStateMetrics.serviceAccount.name }}
+    namespace: {{ .Values.namespace }}
+{{- end }}

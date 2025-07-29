@@ -1,0 +1,23 @@
+{{- if .Values.kubeStateMetrics.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    {{- include "metricbeat.labels" . | nindent 4 }}
+    {{- with .Values.kubeStateMetrics.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  name: kube-state-metrics
+  namespace: {{ .Values.namespace }}
+spec:
+  clusterIP: None
+  ports:
+    - name: http
+      port: {{ .Values.kubeStateMetrics.service.port }}
+      targetPort: {{ .Values.kubeStateMetrics.service.targetPort }}
+      protocol: {{ .Values.kubeStateMetrics.service.protocol }}
+  selector:
+    {{- with .Values.kubeStateMetrics.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+{{- end }}

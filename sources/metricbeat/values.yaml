@@ -67,7 +67,7 @@ container:
 
 # Elasticsearch output configuration
 elasticsearch:
-  host: "elastic7-data.elastic.svc.cluster.local"
+  host: "elastic-data.test.svc.cluster.local"
   port: 9200
   protocol: "http"
   username: "${ELASTICSEARCH_USERNAME}"
@@ -164,7 +164,7 @@ metricbeat:
           - volume
         period: 10s
         host: "${NODE_IP}"
-        hosts: ["https://${NODE_NAME}:10250"]
+        hosts: ["https://${NODE_IP}:10250"]
         bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
         ssl:
           verification_mode: "none"
@@ -200,6 +200,49 @@ labels:
 nodeSelector: {}
 tolerations: []
 affinity: {}
+
+# Kube State Metrics configuration
+kubeStateMetrics:
+  # Enable/disable kube-state-metrics installation
+  enabled: true
+
+  # Image configuration
+  image:
+    repository: k8s.gcr.io/kube-state-metrics/kube-state-metrics
+    tag: "v1.9.8"
+    pullPolicy: IfNotPresent
+
+  # Service configuration
+  service:
+    port: 8080
+    targetPort: http-metrics
+    protocol: TCP
+
+  # Container configuration
+  container:
+    name: kube-state-metrics
+    port: 8080
+
+    # Resource configuration
+    resources:
+      requests:
+        cpu: 100m
+        memory: 200Mi
+      limits:
+        cpu: 200m
+        memory: 300Mi
+
+  # Deployment configuration
+  deployment:
+    replicas: 1
+
+  # ServiceAccount configuration
+  serviceAccount:
+    name: kube-state-metrics
+
+  # Labels
+  labels:
+    k8s-app: kube-state-metrics
 
 # Metrics Server configuration
 metricsServer:
