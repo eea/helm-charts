@@ -343,3 +343,7 @@ Add a new shell command. Should be in  the format:
 ### Matomo log import
 https://github.com/eea/eea.docker.matomo-log-analytics
 You don't need to change anything on this container, it should work by having the logs located in the new <SITE_ID> directory. This job will run every hour and will import all unprocessed ( or unsuccesfully processed) logs found in /analytics/logs/<SITE>/*
+
+
+## Releases
+
