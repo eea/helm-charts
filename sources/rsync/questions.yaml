@@ -30,12 +30,27 @@ questions:
     show_if: "server.enabled=true"
 
   - variable: "server.port"
-    label: "Expose rsync server on external port:"
+    label: "Expose rsync server on port:"
     type: string
     required: true
     default: 2222
     group: "Configuration"
     show_if: "server.enabled=true"
+
+  - variable: "server.nodePort"
+    label: "Expose rsync server on Node Port:"
+    type: string
+    default: 22222
+    group: "Configuration"
+    show_if: "server.serviceType=NodePort"
+
+  - variable: "server.lbIP"
+    label: "Expose rsync server on LB IP:"
+    type: string
+    group: "Configuration"
+    show_if: "server.serviceType=LoadBalancer"
+
+
 
   - variable: "server.SSH_AUTH_KEYS"
     label: "SSH Public Keys allowed to connect"

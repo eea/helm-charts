@@ -8,8 +8,17 @@ metadata:
 
 spec:
   type: {{ .Values.server.serviceType }}
+  {{- if and (eq .Values.server.serviceType "LoadBalancer") .Values.server.lbIP }}
+  loadBalancerIP: {{ .Values.server.lbIP }}
+  {{- end }}
+
   ports:
   - name: ssh
+    
+    {{- if and (eq .Values.server.serviceType "NodePort") .Values.server.nodePort }}
+    nodePort: {{ .Values.services.webServer.service.nodePort }}
+    {{- end }}
+
     port: {{ .Values.server.port }}
     targetPort: 22
   selector:
