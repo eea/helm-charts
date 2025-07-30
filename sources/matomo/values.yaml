@@ -11,8 +11,6 @@ mariadb:
   image:
     repository: mariadb
     tag: 10.11.11
-  environment:
-    MYSQL_ALLOW_EMPTY_PASSWORD: '"no"'
   user: eea_matomo
   commands:
     - "--max_allowed_packet=128M"
@@ -101,7 +99,7 @@ matomocronDeleteData:
     requests:
       memory: 512Mi
     limits:
-      memory: 2Gi
+      memory: 512Mi
 
 geoipupdate:
   image:
@@ -139,7 +137,7 @@ matomoAnalytics:
     requests:
       memory: 512Mi
     limits:
-      memory: 1Gi
+      memory: 512Mi
   token: "ff1ebc487371031f2ba9556e5b7dc1ee"
 
 

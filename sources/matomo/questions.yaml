@@ -320,7 +320,7 @@ questions:
     label: "Matomo delete data container memory requests"
     description: "At least 512MB"
     type: string
-    default: "512MB"
+    default: "512Mi"
     required: true
     group: Memory
 
@@ -328,7 +328,7 @@ questions:
     label: "Matomo delete data container memory limit"
     description: "Must be more than the requests"
     type: string
-    default: "2Gi"
+    default: "512Mi"
     required: true
     group: Memory
 
