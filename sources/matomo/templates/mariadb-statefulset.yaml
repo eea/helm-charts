@@ -42,7 +42,7 @@ spec:
                   name: {{ .Release.Name }}-matomo-secrets
                   key: mariadbRootPassword
             - name: MYSQL_ALLOW_EMPTY_PASSWORD
-              value: {{ .Values.mariadb.environment.MYSQL_ALLOW_EMPTY_PASSWORD }}
+              value: "no"
             - name: TZ
               value: {{ .Values.timezone }}
           args: {{ .Values.mariadb.commands }}
