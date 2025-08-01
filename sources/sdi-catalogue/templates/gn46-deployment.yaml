@@ -28,7 +28,7 @@ spec:
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
       containers:
       - name: gn46
-        image: eeacms/eea-geonetwork@sha256:2f9d718b1b4c54aa9a757117361834b5a6d722b9f7f93a9e91fe1a7873cc8a6c
+        image: eeacms/eea-geonetwork@sha256:8d07ada3e55a173bcda71ef5a5f2f0ebb08db4539a9b35b2bd29bde94d0c84a3
         env:
         - name: WEBAPP_CONTEXT_PATH
           value: {{ .Values.gn46.webapp_context }}
@@ -75,6 +75,10 @@ spec:
         - mountPath: /var/local/gis_sdi
           name: gis-sdi
           readOnly: false
+        - mountPath: /catalogue-data/config/security.properties
+          name: sdi-gn46-config
+          readOnly: true
+          subPath: security.properties
         
 
       {{- with .Values.nodeSelector }}
@@ -99,4 +103,9 @@ spec:
         persistentVolumeClaim:
           claimName: gis-sdi
           readOnly: false
+      - name: sdi-gn46-config
+        configMap:
+          defaultMode: 0444
+          optional: false
+          name: sdi-gn46-config
 {{- end }}

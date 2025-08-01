@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sdi-gn46-config
+
+data:
+  security.properties: |
+    logout.success.url=https://galliwasp.eea.europa.eu/geonetwork/srv/eng/catalog.search
+    loginForm=https://galliwasp.eea.europa.eu/geonetwork/srv/eng/catalog.signin
+    loginErrorForm=https://galliwasp.eea.europa.eu/geonetwork/srv/engcatalog.signin?failure=true
+ 

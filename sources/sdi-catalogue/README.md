@@ -19,6 +19,9 @@ When the application was running on Rancher 1.6, it had a container, which ran t
 ## Releases
 
 <dl>
+  <dt>Version 0.7.18 - 01 Aug 2025</dt>
+  <dd>Update GN46 and GN5. Add config map for security properties.</dd>
+
   <dt>Version 0.7.17 - 01 Jul 2025</dt>
   <dd>Update GN46.</dd>
 
