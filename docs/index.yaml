@@ -9436,6 +9436,26 @@ entries:
     version: 1.1.0
   eea-website-backend:
   - apiVersion: v2
+    appVersion: internal
+    created: "2025-08-01T08:57:12.567369946Z"
+    dependencies:
+    - name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.0.6
+    description: EEA Main Website Plone 6 Backend
+    digest: 0a319ceb1ba5fe220f953d0cc8a699c951ec2b4701b35a8b05a3be1c4f39b65f
+    home: https://github.com/eea/eea-website-backend
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/eea-website-backend/eea-website-backend.svg
+    keywords:
+    - CMS
+    - Plone
+    - EEA
+    name: eea-website-backend
+    type: application
+    urls:
+    - eea-website-backend-1.8.0.tgz
+    version: 1.8.0
+  - apiVersion: v2
     appVersion: 6.0.15-32
     created: "2025-07-29T16:18:08.062675+02:00"
     dependencies:
@@ -22822,4 +22842,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2025-07-31T10:28:33.917819581Z"
+generated: "2025-08-01T08:57:12.565555968Z"
