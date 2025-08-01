@@ -10,6 +10,9 @@ This chart deployes the Forest Information System of Europe website backend app
 
 ## Releases
 
+### Version 1.15.1 - 01 August 2025
+- Automated release of [eeacms/plone-varnish:7.7-1.1](https://github.com/eea/plone-varnish/releases) [EEA Jenkins - [`362fdc52`](https://github.com/eea/helm-charts/commit/362fdc52b92e41974aaba0287dd51d1bcb3ba2d0)]
+
 ### Version 1.15.0 - 24 July 2025
 - Automated release of [eeacms/fise-backend:6.0.15-14](https://github.com/eea/fise-backend/releases) [EEA Jenkins - [`0d0f2f5f`](https://github.com/eea/helm-charts/commit/0d0f2f5f71c049e40cd2916de46bfe38c435bae7)]
 
