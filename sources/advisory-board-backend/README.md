@@ -11,6 +11,9 @@ This chart deployes the Climate Advisory Board backend app
 
 ## Releases
 
+### Version 1.16.1 - 01 August 2025
+- Automated release of [eeacms/plone-varnish:7.7-1.1](https://github.com/eea/plone-varnish/releases) [EEA Jenkins - [`25f49f9e`](https://github.com/eea/helm-charts/commit/25f49f9e689b1646bd458dc9d8e390d823a335b1)]
+
 ### Version 1.16.0 - 29 July 2025
 - Automated release of [eeacms/advisory-board-backend:6.0.15-13](https://github.com/eea/advisory-board-backend/releases) [EEA Jenkins - [`b2667f63`](https://github.com/eea/helm-charts/commit/b2667f630be4098852829da258257e0c24975ed3)]
 
