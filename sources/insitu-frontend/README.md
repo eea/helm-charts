@@ -1,7 +1,6 @@
-# INSITU frontend - Plone 6
+# COPERNICUS IN-SITU COMPONENT frontend - Plone 6
 
-This chart deployes the Insitu frontend app 
-
+This chart deployes the COPERNICUS IN-SITU COMPONENT frontend app 
 
 ## Values
 
