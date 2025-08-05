@@ -25,6 +25,9 @@ Enable client, add crontab with rsync jobs, if needed
 
 ## Releases
 
+### Version 1.0.4 - 05 August 2025
+- Fix enabled server service [valentinab25 - [`b3ef8b8f`](https://github.com/eea/helm-charts/commit/b3ef8b8f93ef0823fd7f0962c6b9450be475830a)]
+
 ### Version 1.0.3 - 30 July 2025
 - Add NodePort/LB variables [valentinab25 - [`246cbe24`](https://github.com/eea/helm-charts/commit/246cbe24fef1e7d3ef8be8e0b69be9947fa30608)]
 
