@@ -18,7 +18,7 @@ spec:
   - name: ssh
     
     {{- if and (eq .Values.server.serviceType "NodePort") .Values.server.nodePort }}
-    nodePort: {{ .Values.services.webServer.service.nodePort }}
+    nodePort: {{ .Values.server.nodePort }}
     {{- end }}
 
     port: {{ .Values.server.port }}
