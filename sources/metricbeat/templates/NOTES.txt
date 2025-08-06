@@ -1,14 +1,21 @@
 Metricbeat has been successfully installed!
 
 Metricbeat is deployed as a DaemonSet and is now collecting metrics from:
-- Kubernetes cluster (kubelet, kube-state-metrics)
+- Kubernetes cluster (kubelet, kube-state-metrics) with enhanced metadata
 - System metrics (cpu, memory, network, filesystem) 
-- Docker containers
+- Container runtime (containerd) with Kubernetes context
 
 Configuration:
 - Namespace: {{ .Values.namespace }}
 - Image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
 - Output: Elasticsearch at {{ .Values.elasticsearch.protocol }}://{{ .Values.elasticsearch.host }}:{{ .Values.elasticsearch.port }}
+- Cluster Name: {{ .Values.global.cattle.clusterName | default "kubernetes" }}
+- Container Runtime: containerd
+
+Enhanced metadata features:
+- Kubernetes cluster, namespace, pod, and node information added to all metrics
+- Orchestrator cluster name for multi-cluster identification
+- Cloud provider metadata enrichment
 
 {{- if .Values.kubeStateMetrics.enabled }}
 

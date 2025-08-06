@@ -1,6 +1,15 @@
 # Metricbeat Helm Chart
 
-This Helm chart deploys Metricbeat as a DaemonSet to collect Kubernetes metrics and system metrics from all nodes in the cluster. It also includes kube-state-metrics for comprehensive Kubernetes object state collection.
+This Helm chart deploys Metricbeat as a DaemonSet to collect Kubernetes metrics and system metrics from all nodes in the cluster. It also includes kube-state-metrics for comprehensive Kubernetes object state collection and enhanced Kubernetes metadata enrichment.
+
+## Features
+
+- **Enhanced Kubernetes metadata**: Automatically enriches metrics with cluster, namespace, pod, and node information
+- **Container runtime support**: Optimized for containerd runtime environments
+- **Orchestrator identification**: Adds cluster name metadata for multi-cluster deployments
+- **DaemonSet deployment**: Runs on every node to collect node-level metrics
+- **RBAC configuration**: Proper permissions to access Kubernetes APIs
+- **Flexible Elasticsearch configuration**: Separate host, port, and protocol settings for easy customization
 
 ## Prerequisites
 
@@ -48,6 +57,17 @@ The following table lists the configurable parameters of the Metricbeat chart an
 | `container.resources.limits.memory` | Memory limit | `200Mi` |
 | `container.resources.requests.cpu` | CPU request | `100m` |
 | `container.resources.requests.memory` | Memory request | `100Mi` |
+
+### Processors Configuration
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| `metricbeat.config.processors` | List of processors for metadata enrichment | See values.yaml |
+| `global.cattle.clusterName` | Cluster name for orchestrator metadata | Used for cluster identification |
+
+**Note**: The chart automatically configures the following processors:
+- `add_cloud_metadata`: Adds cloud provider metadata
+- `add_kubernetes_metadata`: Enriches metrics with Kubernetes metadata (namespace, pod, node info)
+- `add_fields`: Adds orchestrator cluster name and container runtime information
 
 ### Kube State Metrics Configuration
 | Parameter | Description | Default |
@@ -108,18 +128,27 @@ helm install metricbeat ./metricbeat \
   --set elasticsearch.host=my-elasticsearch.com
 ```
 
-### With custom kube-state-metrics image
+### With cluster name for multi-cluster environments
 ```bash
 helm install metricbeat ./metricbeat \
-  --set kubeStateMetrics.image.repository=registry.k8s.io/kube-state-metrics/kube-state-metrics \
-  --set kubeStateMetrics.image.tag=v2.10.1 \
+  --set elasticsearch.host=my-elasticsearch.com \
+  --set global.cattle.clusterName=production-cluster
+```
+
+### For containerd runtime environments (default configuration)
+```bash
+helm install metricbeat ./metricbeat \
   --set elasticsearch.host=my-elasticsearch.com
+  # Container runtime is automatically set to 'containerd'
 ```
 
 ## Features
 
 This Metricbeat chart includes:
 
+- **Enhanced metadata enrichment** - Automatically adds Kubernetes cluster, namespace, pod, and node metadata to all metrics
+- **Container runtime support** - Optimized for containerd environments (also supports other CRI runtimes)
+- **Multi-cluster identification** - Adds orchestrator cluster name for identifying metrics origin in multi-cluster setups
 - **DaemonSet deployment** - Runs on every node to collect node-level metrics
 - **RBAC configuration** - Proper permissions to access Kubernetes APIs
 - **Flexible Elasticsearch configuration** - Separate host, port, and protocol settings for easy customization
@@ -142,6 +171,13 @@ This Metricbeat chart includes:
   - Service and persistent volume information
   - Job and CronJob status
   - Namespace and resource quota information
+- **Enhanced metadata fields**:
+  - `orchestrator.cluster.name`: Cluster identification
+  - `kubernetes.namespace`: Pod namespace
+  - `kubernetes.pod.name`: Pod name
+  - `kubernetes.node.name`: Node name
+  - `container.runtime`: Container runtime (containerd)
+  - Cloud provider metadata (when available)
 
 ## Troubleshooting
 

@@ -123,6 +123,33 @@ metricbeat:
     # Processors configuration
     processors:
       - add_cloud_metadata: {}
+      - add_kubernetes_metadata:
+          host: "${NODE_IP}"
+          scope: node
+          node: "${NODE_NAME}"
+          labels.dedot: true
+          annotations.dedot: true
+          default_indexers.enabled: true
+          default_matchers.enabled: true
+          indexers:
+            - ip_port:
+            - container:
+          matchers:
+            - fields:
+                lookup_fields: ["container.id"]
+                target_field: "container.id"
+            - field_format:
+                format: "%{[kubernetes.namespace]}.%{[kubernetes.pod.name]}"
+                target_field: "kubernetes.pod.uid"
+      - add_fields:
+          target: orchestrator
+          fields:
+            cluster:
+              name: "${CLUSTER_NAME:kubernetes}"
+      - add_fields:
+          target: container
+          fields:
+            runtime: "containerd"
 
   # Module configurations
   modules:
