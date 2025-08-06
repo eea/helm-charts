@@ -312,3 +312,103 @@ questions:
     label: Skip TLS Verification
     group: "Metrics Server"
     show_if: "metricsServer.enabled=true"
+
+  # Kube State Metrics Configuration
+  - variable: kubeStateMetrics.enabled
+    default: false
+    description: "Enable kube-state-metrics installation alongside Metricbeat"
+    type: boolean
+    label: Enable Kube State Metrics
+    group: "Kube State Metrics"
+
+  - variable: kubeStateMetrics.image.repository
+    default: "k8s.gcr.io/kube-state-metrics/kube-state-metrics"
+    description: "Kube-state-metrics Docker image repository"
+    type: string
+    label: Kube State Metrics Image Repository
+    group: "Kube State Metrics"
+    show_if: "kubeStateMetrics.enabled=true"
+
+  - variable: kubeStateMetrics.image.tag
+    default: "v1.9.8"
+    description: "Kube-state-metrics Docker image tag"
+    type: string
+    label: Kube State Metrics Image Tag
+    group: "Kube State Metrics"
+    show_if: "kubeStateMetrics.enabled=true"
+
+  - variable: kubeStateMetrics.image.pullPolicy
+    default: "IfNotPresent"
+    description: "Image pull policy for kube-state-metrics"
+    type: enum
+    label: Kube State Metrics Image Pull Policy
+    group: "Kube State Metrics"
+    show_if: "kubeStateMetrics.enabled=true"
+    options:
+      - "IfNotPresent"
+      - "Always"
+      - "Never"
+
+  - variable: kubeStateMetrics.service.port
+    default: 8080
+    description: "Service port for kube-state-metrics"
+    type: int
+    label: Service Port
+    group: "Kube State Metrics"
+    show_if: "kubeStateMetrics.enabled=true"
+
+  - variable: kubeStateMetrics.container.port
+    default: 8080
+    description: "Container port for kube-state-metrics"
+    type: int
+    label: Container Port
+    group: "Kube State Metrics"
+    show_if: "kubeStateMetrics.enabled=true"
+
+  - variable: kubeStateMetrics.container.resources.requests.cpu
+    default: "100m"
+    description: "CPU request for kube-state-metrics container"
+    type: string
+    label: Kube State Metrics CPU Request
+    group: "Kube State Metrics"
+    show_if: "kubeStateMetrics.enabled=true"
+
+  - variable: kubeStateMetrics.container.resources.requests.memory
+    default: "200Mi"
+    description: "Memory request for kube-state-metrics container"
+    type: string
+    label: Kube State Metrics Memory Request
+    group: "Kube State Metrics"
+    show_if: "kubeStateMetrics.enabled=true"
+
+  - variable: kubeStateMetrics.container.resources.limits.cpu
+    default: "200m"
+    description: "CPU limit for kube-state-metrics container"
+    type: string
+    label: Kube State Metrics CPU Limit
+    group: "Kube State Metrics"
+    show_if: "kubeStateMetrics.enabled=true"
+
+  - variable: kubeStateMetrics.container.resources.limits.memory
+    default: "300Mi"
+    description: "Memory limit for kube-state-metrics container"
+    type: string
+    label: Kube State Metrics Memory Limit
+    group: "Kube State Metrics"
+    show_if: "kubeStateMetrics.enabled=true"
+
+  - variable: kubeStateMetrics.deployment.replicas
+    default: 1
+    description: "Number of replicas for kube-state-metrics deployment"
+    type: int
+    label: Deployment Replicas
+    group: "Kube State Metrics"
+    show_if: "kubeStateMetrics.enabled=true"
+
+  - variable: kubeStateMetrics.serviceAccount.name
+    default: "kube-state-metrics"
+    description: "Name of the service account for kube-state-metrics"
+    type: string
+    label: Service Account Name
+    group: "Kube State Metrics"
+    show_if: "kubeStateMetrics.enabled=true"
