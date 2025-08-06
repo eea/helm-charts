@@ -57,6 +57,8 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: status.hostIP
+        - name: CLUSTER_NAME
+          value: {{ .Values.global.cattle.clusterName | default "kubernetes" | quote }}
         securityContext:
           {{- toYaml .Values.container.securityContext | nindent 10 }}
         resources:
