@@ -417,7 +417,7 @@ clickhouse:
       value: "Europe/Copenhagen"
 
   # -- Subchart specific settings
-  shards: 1 # Fixed - Langfuse does not support sharding
+  shards: 1
   # -- Number of replicas to use for the ClickHouse cluster. 1 corresponds to a single, non-HA deployment.
   replicaCount: 3
   # -- The resources preset to use for the ClickHouse cluster.
@@ -571,7 +571,7 @@ litellm:
     # -- The pull policy to use for the LiteLLM pods
     pullPolicy: IfNotPresent
     # -- The image tag to use for the LiteLLM pods
-    tag: "v1.72.6-stable"
+    tag: "v1.74.9-stable"
 
   llmGuardPlugin:
     enabled: false

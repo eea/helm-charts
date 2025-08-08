@@ -264,6 +264,9 @@ helm delete llm-toolkit
 
 ## Releases
 
+### Version 0.1.9
+- Updated appVersion to v3.95.2 and liteLLM to v1.74.9-stable.
+
 ### Version 0.1.8
 - Updated LiteLLM to v1.72.6-stable and increased it's memory limits.
 
