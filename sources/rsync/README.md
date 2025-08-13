@@ -25,6 +25,9 @@ Enable client, add crontab with rsync jobs, if needed
 
 ## Releases
 
+### Version 1.0.6 - 13 August 2025
+- Fix questions [valentinab25 - [`e81ab175`](https://github.com/eea/helm-charts/commit/e81ab17530ea0c12e7a1c17fa792cc1b935c0c99)]
+
 ### Version 1.0.5 - 05 August 2025
 - Fix variable name [valentinab25 - [`73ce98ca`](https://github.com/eea/helm-charts/commit/73ce98ca658ea0cca79d6d9e65186bccd542e536)]
 
