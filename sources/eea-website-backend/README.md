@@ -10,6 +10,9 @@ This chart deployes the EEA Website Plone 6 backend app
 
 ## Releases
 
+### Version 1.12.4 - 13 August 2025
+- Use ingress class name in configuration [valentinab25 - [`80728629`](https://github.com/eea/helm-charts/commit/807286291165f56ee9a87ca01e2cf07cb45bc937)]
+
 ### Version 1.12.3 - 13 August 2025
 - Use selector labels [valentinab25 - [`b30ea52d`](https://github.com/eea/helm-charts/commit/b30ea52d07799ba75a97700fa682a2d67ee7700b)]
 
