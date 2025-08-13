@@ -10,6 +10,9 @@ This chart deployes the EEA Website Plone 6 backend app
 
 ## Releases
 
+### Version 1.12.3 - 13 August 2025
+- Use selector labels [valentinab25 - [`b30ea52d`](https://github.com/eea/helm-charts/commit/b30ea52d07799ba75a97700fa682a2d67ee7700b)]
+
 ### Version 1.12.2 - 13 August 2025
 - Fix postgres service if external [valentinab25 - [`06e1a86a`](https://github.com/eea/helm-charts/commit/06e1a86a3e418b268dbac27b83d2ea9a14ad4ee7)]
 
