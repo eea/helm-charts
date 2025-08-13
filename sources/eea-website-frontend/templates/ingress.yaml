@@ -19,7 +19,7 @@ metadata:
   {{- end }}
 
 spec:
-  ingressClassName: nginx
+  ingressClassName: {{ .Values.ingress.ingressClassName }}
   rules:
   - host: {{ .Values.volto.hostname }}
     http:
