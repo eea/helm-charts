@@ -11,6 +11,9 @@ This chart deploys the EEA Main Website frontend app
 
 ## Releases
 
+### Version 1.17.4 - 13 August 2025
+- add default nginx logs to stdout [Silviu - [`14660f60`](https://github.com/eea/helm-charts/commit/14660f60499ec6d054d59a96cb86796447e0f16b)]
+
 ### Version 1.17.3 - 13 August 2025
 - fix selector labels nginx [valentinab25 - [`aefd42e0`](https://github.com/eea/helm-charts/commit/aefd42e0c9bd6fb1ecc19f0310c92e0f6e97279f)]
 
