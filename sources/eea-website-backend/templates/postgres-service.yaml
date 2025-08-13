@@ -4,6 +4,10 @@ metadata:
   name: "postgres"
 spec:
   type: ExternalName
+  {{- if .Values.links.external }}
+  externalName: "{{ .Values.links.database }}"
+  {{- else }}
   externalName: "{{ .Values.links.database }}.svc.cluster.local"
+  {{- end }}
 
 
