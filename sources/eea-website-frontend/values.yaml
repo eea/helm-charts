@@ -36,6 +36,7 @@ ingress:
     proxy-send-timeout: "60s"
   tls: true
   certificate: "demo-www.01dev.eea.europa.eu-tls"
+  ingressClassName: ""
 
 links:
   backend:
