@@ -90,7 +90,7 @@ redmine:
     timeoutSeconds: 15
     initialDelaySeconds: 0
     failureThreshold: 10
-    successThreshold: 3
+    successThreshold: 1
   startupProbe:
     tcpSocket:
       port: 3000
@@ -205,7 +205,7 @@ mysqlbackup:
   affinity: {}
   storage:
     size: 10Gi
-    storageClassName: "nfs-client"
+    className: "nfs-client"
 
 
 memcached:
