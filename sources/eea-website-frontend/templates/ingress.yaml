@@ -1,3 +1,4 @@
+{{- $className := .Values.ingress.ingressClassName | default "nginx" -}}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -11,7 +12,7 @@ metadata:
   {{- end }}
   {{- range $key, $value := .Values.ingress.configuration }}
     {{- if ($value) }}
-    nginx.ingress.kubernetes.io/{{ $key }}: {{ $value | quote }}
+    {{ $className }}.ingress.kubernetes.io/{{ $key }}: {{ $value | quote }}
     {{- end }}
   {{- end }}
   {{- with .Values.ingress.annotations }}
@@ -19,7 +20,7 @@ metadata:
   {{- end }}
 
 spec:
-  ingressClassName: {{ .Values.ingress.ingressClassName }}
+  ingressClassName: {{ $className }}
   rules:
   - host: {{ .Values.volto.hostname }}
     http:
