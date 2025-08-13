@@ -11,6 +11,9 @@ This chart deploys the EEA Main Website frontend app
 
 ## Releases
 
+### Version 1.17.3 - 13 August 2025
+- fix selector labels nginx [valentinab25 - [`aefd42e0`](https://github.com/eea/helm-charts/commit/aefd42e0c9bd6fb1ecc19f0310c92e0f6e97279f)]
+
 ### Version 1.17.2 - 13 August 2025
 - Use ingress class in configuration [valentinab25 - [`43b18ff1`](https://github.com/eea/helm-charts/commit/43b18ff13263d7298bc0e44e46cec3a6d22e3288)]
 
