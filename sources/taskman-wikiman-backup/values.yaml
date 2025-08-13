@@ -1,0 +1,187 @@
+# Default values for audit-logger.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# ==============================================================================
+# DEPLOYMENT CONFIGURATION
+# ==============================================================================
+
+# IMPORTANT: Only 1 replica allowed - multiple instances not supported
+replicaCount: 1
+
+# Container image configuration
+image:
+  repository: eeacms/redmine-wikiman
+  tag: "backup-{{ .Chart.AppVersion }}"
+  pullPolicy: Always
+
+# Image pull secrets for private registries
+imagePullSecrets: []
+
+# Override default names
+nameOverride: ""
+fullnameOverride: ""
+
+# ==============================================================================
+# POD CONFIGURATION
+# ==============================================================================
+
+# Pod annotations
+podAnnotations: {}
+
+# Pod security context
+podSecurityContext: {}
+
+# Container security context
+securityContext: {}
+
+# Resource limits and requests
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+# Node selection constraints
+nodeSelector: {}
+
+# Tolerations for pod assignment
+tolerations: []
+
+# Affinity rules
+affinity: {}
+
+# ==============================================================================
+# APPLICATION CONFIGURATION
+# ==============================================================================
+
+# Application configuration
+config:
+  logLevel: INFO
+
+# Storage configuration
+storage:
+  path: "/app/logs"
+  size: 1Gi
+
+# Persistence
+persistence:
+  enabled: false
+
+# ==============================================================================
+# SERVICE & NETWORKING
+# ==============================================================================
+
+# Service configuration
+service:
+  type: ClusterIP
+  port: 8080
+
+# Webhook configuration
+webhook:
+  enabled: true
+  port: 8080
+  # CRITICAL: failurePolicy set to 'Ignore' to prevent cluster lockout when webhook is down
+  # This allows deployments to proceed even if the audit webhook is unavailable
+  failurePolicy: Ignore
+  # Webhook timeout - keep low to avoid blocking deployments
+  timeoutSeconds: 3
+  
+  # TLS configuration for webhook
+  tls:
+    # Base64 encoded TLS certificate for the webhook
+    cert: ""
+    # Base64 encoded TLS private key for the webhook  
+    key: ""
+  
+  # Namespaces to exclude from webhook monitoring
+  excludedNamespaces:
+    - kube-system
+    - kube-public
+    - kube-node-lease
+    - kube-root
+    - cattle-system
+    - cattle-fleet-system
+    - cattle-fleet-local-system
+    - cattle-impersonation-system
+    - cattle-logging-system
+    - cattle-monitoring-system
+    - cattle-neuvector-system
+    - cattle-ui-plugin-system
+    - rancher-operator-system
+
+# ==============================================================================
+# SERVICE ACCOUNT
+# ==============================================================================
+
+# Service Account - always created
+serviceAccount:
+  # Annotations to add to the service account
+  annotations: {}
+  # Use existing service account instead of creating one
+  create: true
+  # Name of existing service account to use (if create is false)
+  name: ""
+  # Prevent service account deletion when helm release is removed
+  keepOnDelete: true
+
+# ==============================================================================
+# GIT INTEGRATION
+# ==============================================================================
+
+# Git repository configuration for audit log storage
+git:
+  enabled: true
+  repository: ""
+  branch: "master"
+  
+  # Authentication method: ssh or token
+  authMethod: "ssh"
+  
+  # SSH credentials configuration
+  sshCredentials:
+    secretName: "git-ssh-credentials"
+    privateKeyFile: "id_rsa"
+    configFile: "config"
+    # Secret data - base64 encoded SSH credentials
+    data:
+      # Base64 encoded SSH private key (id_rsa)
+      privateKey: ""
+      # Base64 encoded SSH config file (leave empty to use default)
+      config: ""
+      # Default SSH config template (used when config is empty)
+      defaultConfig: |
+        Host *
+          StrictHostKeyChecking no
+          UserKnownHostsFile=/dev/null
+          IdentitiesOnly yes
+          IdentityFile /home/audit/.ssh/id_rsa
+          ServerAliveInterval 60
+          ServerAliveCountMax 3
+  
+  # SSH connection configuration
+  sshConfig:
+    host: ""
+    hostname: ""
+    port: "1022"
+    user: "git"
+  
+  # Token credentials configuration (used when authMethod is "token")
+  tokenCredentials:
+    secretName: "git-token-credentials"
+    usernameKey: "username"
+    tokenKey: "token"
+    # Secret data - base64 encoded token credentials
+    data:
+      # Base64 encoded Git username
+      username: ""
+      # Base64 encoded Git project access token
+      token: ""
+  
+  # Git user configuration
+  config:
+    user:
+      name: "Audit Logger"
+      email: "audit-logger@local"
