@@ -24,6 +24,7 @@ links:
 ingress:
   annotations: {}
   letsencrypt: "01dev-eea-letsencrypt"
+  ingressClassName: ""
   configuration:
     proxy-body-size: "100m"
     proxy-read-timeout: "480s"
