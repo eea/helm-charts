@@ -1,6 +1,6 @@
 questions:
 
- - variable: "redmine.hostname"
+  - variable: "redmine.hostname"
     label: "Url"
     description: "DNS name for this deployment"
     default: "taskman.eea.europa.eu"
@@ -18,7 +18,6 @@ questions:
     description: "Leave empty when not using letsencrypt"
     default: "01dev-eea-letsencrypt"
     show_if: "ingress.tls"
-	
   - variable: "ingress.configuration.proxy-body-size"
     label: "Rancher LB body size"
     description: "Example 100m"
@@ -44,9 +43,6 @@ questions:
     type: "string"
     show_if: "ingress.tls"
 
-
-
-
   - variable: "redmine.environment.RESTART_CRON"
     label: "Taskman restart crontab schedule(UTC):"
     description: "Stops redmine process and container, to be restarted by rancher. Linux crontab format - for example, `0 2 * * *` is daily at 02:00 UTC. If empty, will not run."
@@ -64,8 +60,8 @@ questions:
     default: "true"
     type: "enum"
     options:
-    - "true"
-    - "false"  
+      - "true"
+      - "false"  
     group: "Redmine configuration"
   - variable: "redmine.environment.REDMINE_SMTP_STARTTLSAUTO"
     label: "Taskman default Outgoing SMTP SSL enabled"
@@ -73,8 +69,8 @@ questions:
     default: "true"
     type: "enum"
     options:
-    - "true"
-    - "false"      
+      - "true"
+      - "false"      
     group: "Redmine configuration"
   - variable: "redmine.environment.INCOMING_MAIL_API_KEY"
     label: "Incoming mail API key"
@@ -162,10 +158,6 @@ questions:
     required: true
     group: "Redmine configuration"
 
-
-
-
-
   - variable: "mysql.environment.MYSQL_DATABASE"
     label: "Redmine database name"
     description: "Mysql database name"
@@ -190,8 +182,6 @@ questions:
     type: "string"
     required: true
     group: "Database"
-	
-	
   - variable: "mysqlbackup.environment.DB_DUMP_BEGIN"
     label: "Time to start database backup"
     default: "1720"
@@ -297,6 +287,3 @@ questions:
     default: "mailtrap.01dev.eea.europa.eu-tls"
     group: "Mail"
 
-
-
- 
