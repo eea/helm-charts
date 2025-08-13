@@ -459,6 +459,9 @@ grunt
 
 ## Releases
 
+### Version 0.0.2 - 13 August 2025
+- Fix questions [valentinab25 - [`02160c2e`](https://github.com/eea/helm-charts/commit/02160c2e8fc00adcbb703197220d70e16e934162)]
+
 ### Version 0.0.1
 - First draft
 
