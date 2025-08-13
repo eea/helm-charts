@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-apache-config-cm
+
+data:
+  vh-my-app.conf: |-
+        <VirtualHost *:80>
+            Protocols h2 http/1.1
+            KeepAliveTimeout 30
+            ErrorDocument 404 /errors/404.html
+            ErrorDocument 500 /errors/50x.html
+            ErrorDocument 501 /errors/50x.html
+            ErrorDocument 502 /errors/maintenance.html
+            ErrorDocument 503 /errors/maintenance.html
+            ErrorDocument 504 /errors/50x.html
+            ErrorDocument 505 /errors/50x.html
+
+            <Location /errors>
+                ProxyPass !
+            </Location>
+
+            ProxyTimeout 600
+            ProxyRequests Off
+            ProxyErrorOverride On
+
+            RewriteEngine On
+
+            LimitRequestBody 104857600
+            RequestHeader set Host "%{HTTP_HOST}s"
+            RequestHeader set X-Real-IP "%{REMOTE_ADDR}s"
+            RequestHeader set X-Frame-Options SAMEORIGIN
+
+            RewriteCond %{HTTP_COOKIE} !_redmine_eea=1.*$ [NC]
+            RewriteRule ^/search?.*$  / [NC,L,R,QSD]
+
+            RewriteRule ^/google1c3b89acd75baccf\.html$ /google1c3b89acd75baccf.html [PT]
+            RewriteRule ^/robots\.txt$ /robots.txt [PT]
+            RewriteCond %{REQUEST_URI} !^/errors/
+            RewriteRule ^(.*)$ http://redmine:3000$1 [P]
+        </VirtualHost>
+    

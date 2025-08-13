@@ -1,0 +1,19 @@
+{{- if .Values.drawio.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-drawio
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: drawio
+spec:
+  type: {{ .Values.drawio.serviceType }}
+  ports:
+    - port: 8080
+      targetPort: 8080
+      name: http
+      protocol: TCP
+  selector:
+    {{- include "appl.selectorLabels" . | nindent 4 }}
+    component: drawio
+{{- end }}

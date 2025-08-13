@@ -1,0 +1,96 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Release.Name }}-mysql-ss
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: mysql
+spec:
+  replicas: 1
+  serviceName: {{ .Release.Name }}-mysql
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: mysql
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: mysql
+      annotations:
+        {{- toYaml .Values.mysql.podAnnotations | nindent 8 }}
+    spec:
+      terminationGracePeriodSeconds: 10
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      containers:
+        - name: mysql
+          image: mysql:8.0.41
+          imagePullPolicy: {{ .Values.mysql.pullPolicy }}
+          ports:
+            - containerPort: 3306
+              protocol: TCP
+          env:
+            - name: TZ
+              value: "{{ .Values.timezone }}"
+            {{- range $key, $value := .Values.mysql.environment }}
+            {{- if ($value) }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+            {{- end }}
+          args:
+            - "--innodb-buffer-pool-size=1G"
+            - "--innodb-buffer-pool-instances=4"
+            - "--net-read-timeout=7200"
+            - "--net-write-timeout=7200"
+            - "--max-allowed-packet=128M"
+            - "--tmp-table-size=384M"
+            - "--max-heap-table-size=384M"
+            - "--join-buffer-size=256M"
+            - "--character_set_server=utf8mb4"
+          securityContext:
+            {{- toYaml .Values.mysql.securityContext | nindent 12 }}
+          volumeMounts:
+            - mountPath: /var/lib/mysql
+              name: mysqldata
+          {{- if .Values.mysql.livenessProbe }}
+          livenessProbe:
+            {{- toYaml .Values.mysql.livenessProbe | nindent 12 }}
+          {{- end }}
+          {{- if .Values.mysql.startupProbe }}
+          startupProbe:
+            {{- toYaml .Values.mysql.startupProbe | nindent 12 }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.mysql.resources | nindent 12 }}
+      {{- with .Values.mysql.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.mysql.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.mysql.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.mysql.podSecurityContext | nindent 8 }}
+      restartPolicy: Always
+  volumeClaimTemplates:
+    - metadata:
+        name: mysqldata
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        {{- if .Values.mysql.datastorage.storageClassName }}
+        storageClassName: "{{ .Values.mysql.datastorage.storageClassName }}"
+        {{- end }}
+        resources:
+          requests:
+            storage: "{{ .Values.mysql.datastorage.size }}"

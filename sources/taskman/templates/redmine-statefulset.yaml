@@ -1,0 +1,137 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Release.Name }}-redmine-ss
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: redmine
+spec:
+  replicas: 1
+  serviceName: redmine
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: redmine
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: redmine
+    spec:
+      terminationGracePeriodSeconds: 10
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      containers:
+      - name: {{ .Release.Name }}-redmine
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        ports:
+        - containerPort: 3000
+          protocol: TCP
+        env:
+        - name: TZ
+          value: "{{ .Values.timezone }}"
+        - name: REDMINE_DB_DATABASE
+          value: "{{ .Values.mysql.environment.MYSQL_DATABASE }}"
+        - name: REDMINE_DB_USERNAME
+          value: "{{ .Values.mysql.environment.MYSQL_USER }}"
+        - name: REDMINE_DB_PASSWORD
+          value: "{{ .Values.mysql.environment.MYSQL_PASSWORD }}"
+        {{- range $key, $value := .Values.redmine.environment }}
+        {{- if ($value) }}
+        - name: {{ $key }}
+          value: {{ $value | quote }}
+        {{- end }}
+        {{- end }}
+        securityContext:
+          {{- toYaml .Values.securityContext | nindent 10 }}
+        volumeMounts:
+        - name: redmine-files
+          mountPath: /usr/src/redmine/files
+        - name: redmine-tmp
+          mountPath: /usr/src/redmine/tmp
+        - name: github
+          mountPath: /var/local/redmine/github/
+        - name: plugins
+          mountPath: /install_plugins
+
+        resources:
+          {{- toYaml .Values.redmine.resources | nindent 10 }}
+        securityContext:
+          {{- toYaml .Values.redmine.securityContext | nindent 12 }}
+
+        {{- if (.Values.redmine.livenessProbe) }}
+        livenessProbe:
+          {{- toYaml .Values.redmine.livenessProbe | nindent 10 }}
+        {{- end }}
+
+        {{- if (.Values.redmine.startupProbe) }}
+        startupProbe:
+          {{- toYaml .Values.redmine.startupProbe | nindent 10 }}
+        {{- end }}
+
+        {{- if (.Values.redmine.readinessProbe) }}
+        readinessProbe:
+          {{- toYaml .Values.redmine.readinessProbe | nindent 10 }}
+        {{- end }}
+      {{- with .Values.redmine.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.redmine.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.redmine.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+  volumeClaimTemplates:
+    - metadata:
+        name: redmine-files
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        {{- if .Values.storage.filesDir.className }}
+        storageClass: "{{ .Values.storage.filesDir.className }}"
+        {{- end }}
+        resources:
+          requests:
+            storage: "{{ .Values.storage.filesDir.size }}"
+    - metadata:
+        name: redmine-tmp
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        {{- if .Values.storage.tmpDir.className }}
+        storageClass: "{{ .Values.storage.tmpDir.className }}"
+        {{- end }}
+        resources:
+          requests:
+            storage: "{{ .Values.storage.tmpDir.size }}"
+    - metadata:
+        name: plugins
+      spec:
+        accessModes:
+          - ReadWriteMany
+        {{- if .Values.storage.filesDir.className }}
+        storageClass: "{{ .Values.storage.plugins.className }}"
+        {{- end }}
+        resources:
+          requests:
+            storage: "{{ .Values.storage.plugins.size }}"
+    - metadata:
+        name: github
+      spec:
+        accessModes:
+          - ReadWriteMany
+        {{- if .Values.storage.tmpDir.className }}
+        storageClass: "{{ .Values.storage.github.className }}"
+        {{- end }}
+        resources:
+          requests:
+            storage: "{{ .Values.storage.github.size }}"
+
