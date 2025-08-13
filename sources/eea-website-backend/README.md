@@ -10,6 +10,9 @@ This chart deployes the EEA Website Plone 6 backend app
 
 ## Releases
 
+### Version 1.12.5 - 13 August 2025
+- add log to stdout for nginx [Silviu - [`dd4f5421`](https://github.com/eea/helm-charts/commit/dd4f542153adb1265fcce49e0936e96e25214a91)]
+
 ### Version 1.12.4 - 13 August 2025
 - Use ingress class name in configuration [valentinab25 - [`80728629`](https://github.com/eea/helm-charts/commit/807286291165f56ee9a87ca01e2cf07cb45bc937)]
 
