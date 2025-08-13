@@ -1,0 +1,69 @@
+{{- if .Values.webhook.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-webhook
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Release.Name }}
+spec:
+  selector:
+    app: {{ .Release.Name }}
+  ports:
+    - port: {{ .Values.webhook.port }}
+      targetPort: {{ .Values.webhook.port }}
+      protocol: TCP
+      name: http
+  type: {{ .Values.service.type }}
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: {{ .Release.Name }}-webhook
+  labels:
+    app: {{ .Release.Name }}
+webhooks:
+  - name: audit-logger.{{ .Release.Namespace }}.svc
+    clientConfig:
+      service:
+        name: {{ .Release.Name }}-webhook
+        namespace: {{ .Release.Namespace }}
+        path: "/audit"
+        port: {{ .Values.webhook.port }}
+      caBundle: {{ .Values.webhook.tls.cert }}
+    admissionReviewVersions: ["v1"]
+    failurePolicy: {{ .Values.webhook.failurePolicy }}
+    matchPolicy: Equivalent
+    timeoutSeconds: {{ .Values.webhook.timeoutSeconds }}
+    sideEffects: None
+    rules:
+      - apiGroups: [""]
+        apiVersions: ["v1"]
+        operations: ["CREATE", "UPDATE", "DELETE"]
+        resources:
+          # Workload resources
+          - deployments
+          - statefulsets
+          - daemonsets
+          - replicasets
+          - cronjobs
+          # Networking resources
+          - services
+          - ingresses
+          - networkpolicies
+          # Configuration resources
+          - configmaps
+          - secrets
+          - persistentvolumeclaims
+          # Management resources
+          - namespaces
+    namespaceSelector:
+      matchExpressions:
+        - key: kubernetes.io/metadata.name
+          operator: NotIn
+          values:
+            - {{ .Release.Namespace }}
+{{- range .Values.webhook.excludedNamespaces }}
+            - {{ . | quote }}
+{{- end }}
+{{- end }}

@@ -1,0 +1,171 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Release.Name }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      serviceAccountName: {{ .Release.Name }}
+      terminationGracePeriodSeconds: 30
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+      # Files are now included in Docker image, no init container needed
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default (printf "backup-%s" .Chart.AppVersion) }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false
+            capabilities:
+              drop:
+                - ALL
+          env:
+            - name: LOG_LEVEL
+              value: {{ .Values.config.logLevel | quote }}
+            - name: STORAGE_PATH
+              value: "/app/logs"
+            - name: PORT
+              value: {{ .Values.webhook.port | quote }}
+            - name: HELM_TRACKING
+              value: {{ .Values.config.helmTracking | default true | quote }}
+            - name: GIT_REMOTE_URL
+              value: {{ .Values.git.repository | quote }}
+            - name: GIT_BRANCH
+              value: {{ .Values.git.branch | quote }}
+            - name: GIT_AUTH_METHOD
+              value: {{ .Values.git.authMethod | default "ssh" | quote }}
+            {{- if eq .Values.git.authMethod "ssh" }}
+            - name: GIT_SSH_KEY_PATH
+              value: "/home/audit/.ssh/id_rsa"
+            - name: GIT_SSH_HOST
+              value: {{ .Values.git.sshConfig.host | default "" | quote }}
+            - name: GIT_SSH_HOSTNAME
+              value: {{ .Values.git.sshConfig.hostname | default "" | quote }}
+            - name: GIT_SSH_PORT
+              value: {{ .Values.git.sshConfig.port | default "1022" | quote }}
+            {{- else if eq .Values.git.authMethod "token" }}
+            - name: GIT_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.git.tokenCredentials.secretName }}
+                  key: {{ .Values.git.tokenCredentials.usernameKey }}
+            - name: GIT_HTTPS_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.git.tokenCredentials.secretName }}
+                  key: {{ .Values.git.tokenCredentials.tokenKey }}
+            {{- end }}
+            - name: GIT_USER_NAME
+              value: {{ .Values.git.config.user.name | quote }}
+            - name: GIT_USER_EMAIL
+              value: {{ .Values.git.config.user.email | quote }}
+            - name: EXCLUDED_NAMESPACES
+              value: "{{ .Values.webhook.excludedNamespaces | join "," }}"
+            - name: RELEASE_NAMESPACE
+              value: "{{ .Release.Namespace }}"
+          ports:
+            - name: http
+              containerPort: {{ .Values.webhook.port }}
+              protocol: TCP
+          startupProbe:
+            httpGet:
+              path: /health
+              port: http
+              scheme: HTTPS
+            initialDelaySeconds: 10
+            periodSeconds: 2
+            timeoutSeconds: 1
+            failureThreshold: 15
+            successThreshold: 1
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+              scheme: HTTPS
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 1
+            failureThreshold: 3
+            successThreshold: 1
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+              scheme: HTTPS
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 1
+            failureThreshold: 3
+            successThreshold: 1
+          resources:
+            limits:
+              cpu: 1
+              memory: 1Gi
+            requests:
+              cpu: 500m
+              memory: 512Mi
+          volumeMounts:
+            - name: audit-logs
+              mountPath: /app/logs
+            - name: webhook-certs
+              mountPath: /etc/webhook/certs
+              readOnly: true
+            {{- if eq .Values.git.authMethod "ssh" }}
+            - name: git-ssh-key
+              mountPath: /home/audit/.ssh
+              readOnly: true
+            {{- end }}
+          command: ["python", "api.py"]
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+        - name: audit-logs
+          emptyDir: {}
+        - name: webhook-certs
+          secret:
+            secretName: {{ .Release.Name }}-webhook-tls
+            items:
+              - key: tls.crt
+                path: tls.crt
+              - key: tls.key
+                path: tls.key
+        {{- if eq .Values.git.authMethod "ssh" }}
+        - name: git-ssh-key
+          secret:
+            secretName: {{ .Values.git.sshCredentials.secretName }}
+            items:
+              - key: id_rsa
+                path: id_rsa
+              - key: config
+                path: config
+        {{- end }}
