@@ -11,6 +11,9 @@ This chart deploys the EEA Main Website frontend app
 
 ## Releases
 
+### Version 1.17.1 - 13 August 2025
+- Add ingress classname [valentinab25 - [`11e7f584`](https://github.com/eea/helm-charts/commit/11e7f584796ea48eb2640fa15e931cdc5edaed7a)]
+
 ### Version 1.17.0 - 04 August 2025
 - Automated release of [eeacms/eea-website-frontend:2.36.1-beta.0](https://github.com/eea/eea-website-frontend/releases) [EEA Jenkins - [`08f3e227`](https://github.com/eea/helm-charts/commit/08f3e22702e0d56ea293976b6cf79f463cf9bd6a)]
 
