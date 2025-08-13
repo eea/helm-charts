@@ -1,0 +1,64 @@
+{{- if .Values.drawio.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-drawio-dpl
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: drawio
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: drawio
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: drawio
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
+      containers:
+      - name: drawio
+        image: eeacms/redmine-drawio-alpine:26.2.8
+        env:
+        - name: TZ
+          value: "{{ .Values.timezone }}"
+
+        ports:
+        - containerPort: 8080
+
+        {{- if (.Values.drawio.livenessProbe) }}
+        livenessProbe:
+          {{- toYaml .Values.drawio.livenessProbe | nindent 10 }}
+        {{- end }}
+        {{- if (.Values.drawio.startupProbe) }}
+        startupProbe:
+          {{- toYaml .Values.drawio.startupProbe | nindent 10 }}
+        {{- end }}
+
+        resources:
+          {{- toYaml .Values.drawio.resources | nindent 10 }}
+
+      {{- with .Values.drawio.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.drawio.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.drawio.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+      restartPolicy: Always
+{{- end }}

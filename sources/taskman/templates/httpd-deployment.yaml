@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-apache-dpl
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: httpd
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: httpd
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: httpd
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      containers:
+      - name: {{ .Release.Name }}-httpd
+        image: eeacms/apache-taskman:2.4-3.4
+        ports:
+        - containerPort: 80
+          protocol: TCP
+        env:
+        - name: TZ
+          value: "{{ .Values.timezone }}"
+        - name: APACHE_MODULES
+          value: "http2_module"    
+        - name: APACHE_CONFIG
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Release.Name }}-apache-config-cm
+              key: vh-my-app.conf
+        resources:
+          {{- toYaml .Values.httpd.resources | nindent 10 }}
+        securityContext:
+          {{- toYaml .Values.httpd.securityContext | nindent 12 }}
+
+        {{- if (.Values.httpd.livenessProbe) }}
+        livenessProbe:
+          {{- toYaml .Values.httpd.livenessProbe | nindent 10 }}
+        {{- end }}
+
+        {{- if (.Values.httpd.startupProbe) }}
+        startupProbe:
+          {{- toYaml .Values.httpd.startupProbe | nindent 10 }}
+        {{- end }}
+
+        {{- if (.Values.httpd.readinessProbe) }}
+        readinessProbe:
+          {{- toYaml .Values.httpd.readinessProbe | nindent 10 }}
+        {{- end }}
+
+      {{- with .Values.httpd.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.httpd.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.httpd.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+

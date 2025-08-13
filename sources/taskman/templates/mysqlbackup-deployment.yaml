@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-mysqlbackup-dpl
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: mysqlbackup
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: mysqlbackup
+
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: mysqlbackup
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      volumes:
+        - name: backup
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-mysqlbackup-pvc
+      containers:
+      - name: mysqlbackup
+        image: databack/mysql-backup:1.2.2
+        env:
+        - name: DB_DUMP_TARGET
+          value: "/db"
+        - name: DB_PASS
+          value: "{{ .Values.mysql.environment.MYSQL_ROOT_PASSWORD }}"
+        - name: DB_SERVER
+          value: "mysql"
+        - name: DB_PORT
+          value: "3306"
+        - name: DB_USER
+          value: "root"
+        - name: DB_DUMP_FILEDATE
+          value: "no"
+
+        {{- range $key, $value := .Values.mysqlbackup.environment }}
+        {{- if ($value) }}
+        - name: {{ $key }}
+          value: {{ $value | quote }}
+        {{- end }}
+        {{- end }}
+        args:
+        - dump
+        - --debug
+        ports:
+        - name: http
+          containerPort: 8080
+        volumeMounts:
+        - name: backup
+          mountPath: /db        
+                   
+        resources:
+          {{- toYaml .Values.mysqlbackup.resources | nindent 10 }}
+
+      {{- with .Values.mysqlbackup.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.mysqlbackup.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.mysqlbackup.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+

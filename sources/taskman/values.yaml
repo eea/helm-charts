@@ -1,0 +1,272 @@
+
+
+image:
+  repository: eeacms/redmine
+  pullPolicy: Always
+  tag: ""
+
+imagePullSecrets: []
+
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: false
+  annotations: {}
+  name: ""
+
+timezone: Europe/Copenhagen
+
+
+ingress:
+  enabled: true
+  className: ""
+  annotations: {}
+  letsencrypt: "01dev-eea-letsencrypt"
+  configuration:
+    proxy-body-size: "256m"
+    proxy-read-timeout: "180s"
+    proxy-send-timeout: "120s"
+  tls: true
+  certificate: ""
+
+storage:
+  filesDir:
+    className: "nfs-client"
+    size: 200Gi
+  tmpDir:
+    className: "nfs-client"
+    size: 10Gi
+  github:
+    className: "nfs-client"
+    size: 1Gi
+  plugins:
+    className: "nfs-client"
+    size: 1Gi
+
+
+redmine:
+  serviceType: ClusterIP
+  hostname: taskman.eea.europa.eu
+  resources:
+    limits:
+      memory: 4Gi
+    requests:
+      memory: 4Gi
+  environment:
+      GITHUB_AUTHENTICATION: ''
+      HELPDESK_EMAIL_KEY: ''
+      PLUGINS_PASSWORD: ''
+      PLUGINS_URL: https://cmshare.eea.europa.eu/remote.php/dav/files/redmine_plugin_installer/taskman
+      PLUGINS_USER: redmine_plugin_installer
+      REDMINE_DB_ENCODING: utf8mb4
+      REDMINE_DB_MYSQL: mysql
+      REDMINE_DB_POOL: '10'
+      REDMINE_HOST: redmine:3000
+      REDMINE_SMTP_DOMAIN: eionet.europa.eu
+      REDMINE_SMTP_STARTTLSAUTO: 'true'
+      REDMINE_SMTP_TLS: 'true'
+      RESTART_CRON: 0 1 * * *
+      SYNC_API_KEY: ''
+      SYNC_REDMINE_URL: http://redmine:3000/sys/fetch_changesets?key=%s
+      T_EMAIL_HOST: gayal.eea.europa.eu
+      T_EMAIL_PASS: ''
+      T_EMAIL_PORT: '993'
+      T_EMAIL_USER: ''
+      REDMINE_SMTP_DOMAIN: "eionet.europa.eu"
+      REDMINE_SMTP_TLS: "true"
+      REDMINE_SMTP_STARTTLSAUTO: "true"
+      SECRET_KEY_BASE: ""
+      ENTRA_ID_TENANT_ID: ""
+      ENTRA_ID_CLIENT_ID: ""
+      ENTRA_ID_CLIENT_SECRET: ""
+
+  annotations: {}
+  livenessProbe:
+    httpGet:
+      path: /
+      port: 3000
+    periodSeconds: 30
+    timeoutSeconds: 15
+    initialDelaySeconds: 0
+    failureThreshold: 10
+    successThreshold: 3
+  startupProbe:
+    tcpSocket:
+      port: 3000
+    periodSeconds: 10
+    timeoutSeconds: 5
+    initialDelaySeconds: 60
+    failureThreshold: 30
+    successThreshold: 1
+    
+drawio:
+  serviceType: ClusterIP
+  hostname: drawio.eea.europa.eu
+  ingress:
+    enabled: true
+    className: ""
+    annotations: {}
+    letsencrypt: "01dev-eea-letsencrypt"
+    configuration:
+      proxy-body-size: "256m"
+      proxy-read-timeout: "180s"
+      proxy-send-timeout: "120s"
+    tls: true
+    certificate: ""
+  livenessProbe:
+    httpGet:
+      path: /
+      port: 80
+    periodSeconds: 10
+    timeoutSeconds: 5
+    initialDelaySeconds: 0
+    failureThreshold: 5
+    successThreshold: 2
+  startupProbe:
+    tcpSocket:
+      port: 80
+    periodSeconds: 5
+    timeoutSeconds: 5
+    initialDelaySeconds: 5
+    failureThreshold: 30
+    successThreshold: 1
+
+    
+postfix:
+  fullnameOverride: ''
+  dryrun: false
+  serverName: taskman.eea.europa.eu
+  mtpPass: ''
+  mtpPort: ''
+  mtpRelay: ''
+  mtpUser: ''
+  serviceName: 'postfix'
+  mailtrap:
+    httpenabled: false
+    serviceType: NodePort
+    ingress:
+      enabled: false
+      hostname: mailtrap.01dev.eea.europa.eu
+      annotations:
+        cert-manager.io/cluster-issuer: 01dev-eea-letsencrypt
+      certificate: mailtrap.01dev.eea.europa.eu-tls
+   
+mysql:
+  pullPolicy: IfNotPresent
+  podAnnotations: {}
+  podSecurityContext: {}
+  securityContext: {}
+  environment:
+    MYSQL_DATABASE: redmine
+    MYSQL_USER: redmine
+    MYSQL_PASSWORD: redmine
+    MYSQL_ROOT_PASSWORD: password
+  datastorage:
+    size: 50Gi
+    storageClassName: "nfs-client"
+  resources:
+    requests:
+      memory: 16Gi
+    limits:
+      memory: 16Gi
+  livenessProbe:
+    tcpSocket:
+      port: 3306
+    periodSeconds: 10
+    timeoutSeconds: 3
+  startupProbe:
+    tcpSocket:
+      port: 3306
+    failureThreshold: 10
+    periodSeconds: 5
+    initialDelaySeconds: 5
+    timeoutSeconds: 2
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+mysqlbackup:
+  pullPolicy: IfNotPresent
+  podAnnotations: {}
+  podSecurityContext: {}
+  securityContext: {}
+  environment:
+    DB_DUMP_BEGIN: '1720'
+    DB_DUMP_FILENAME_PATTERN: taskman_db_dump.gz
+    DB_DUMP_FREQUENCY: '1440'    
+  resources:
+    requests:
+      memory: 2Gi
+    limits:
+      memory: 2Gi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  storage:
+    size: 10Gi
+    storageClassName: "nfs-client"
+
+
+memcached:
+  enabled: true
+  securityContext: {}
+  resources:
+    requests:
+      memory: 512Mi
+    limits:
+      memory: 512Mi
+  #needs < = memory request and limit
+  cache_size_m: 512
+  slab_page_size: 100m
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  pullPolicy: IfNotPresent
+  podAnnotations: {}
+  livenessProbe:
+    tcpSocket:
+      port: 11211
+    periodSeconds: 10
+    timeoutSeconds: 3
+    successThreshold: 1
+    failureThreshold: 5
+  startupProbe:
+    tcpSocket:
+      port: 11211
+    failureThreshold: 9
+    periodSeconds: 10
+    timeoutSeconds: 3
+    successThreshold: 1
+       
+httpd:
+  serviceType: ClusterIP
+  securityContext: {}
+  resources:
+    requests:
+      memory: 512Mi
+    limits:
+      memory: 512Mi
+  livenessProbe:
+    httpGet:
+      path: /
+      port: 80
+    periodSeconds: 60
+    timeoutSeconds: 15
+    failureThreshold: 5
+    successThreshold: 1
+  startupProbe:
+    httpGet:
+      path: /
+      port: 80
+    periodSeconds: 15
+    timeoutSeconds: 15
+    initialDelaySeconds: 5
+    failureThreshold: 30
+    successThreshold: 1
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+
+      

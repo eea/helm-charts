@@ -1,0 +1,302 @@
+questions:
+
+ - variable: "redmine.hostname"
+    label: "Url"
+    description: "DNS name for this deployment"
+    default: "taskman.eea.europa.eu"
+    type: "string"
+    required: true
+
+  - variable: "ingress.tls"
+    label: "Enable https"
+    default: true
+    type: "boolean"
+    required: true
+
+  - variable: "ingress.letsencrypt"
+    label: "Ingress letsencrypt cluster-issuer"
+    description: "Leave empty when not using letsencrypt"
+    default: "01dev-eea-letsencrypt"
+    show_if: "ingress.tls"
+	
+  - variable: "ingress.configuration.proxy-body-size"
+    label: "Rancher LB body size"
+    description: "Example 100m"
+    type: "string"
+    default: "100m"
+
+  - variable: "ingress.configuration.proxy-read-timeout"
+    label: "Rancher LB read timeout"
+    description: "Maximum response time from upstream server, in seconds, example 60s"
+    type: "string"
+    default: "120s"
+
+  - variable: "ingress.configuration.proxy-send-timeout"
+    label: "Rancher LB send timeout"
+    description: "Timeout before closing the connection"
+    type: "string"
+    default: "60s"
+
+  - variable: "ingress.certificate"
+    label: "Certificate name"
+    description: "Leave blank for default certificate"
+    default: "taskman.eea.europa.eu-tls"
+    type: "string"
+    show_if: "ingress.tls"
+
+
+
+
+  - variable: "redmine.environment.RESTART_CRON"
+    label: "Taskman restart crontab schedule(UTC):"
+    description: "Stops redmine process and container, to be restarted by rancher. Linux crontab format - for example, `0 2 * * *` is daily at 02:00 UTC. If empty, will not run."
+    type: "string"
+    group: "Redmine configuration"
+  - variable: "redmine.environment.REDMINE_SMTP_DOMAIN"
+    label: "Taskman default Outgoing SMTP domain"
+    description: "Used in default outgoing mail settings, postfix"
+    default: "eionet.europa.eu"
+    type: "string"
+    group: "Redmine configuration"
+  - variable: "redmine.environment.REDMINE_SMTP_TLS"
+    label: "Taskman default Outgoing SMTP TLS enabled"
+    description: "Used in default outgoing mail settings, postfix"
+    default: "true"
+    type: "enum"
+    options:
+    - "true"
+    - "false"  
+    group: "Redmine configuration"
+  - variable: "redmine.environment.REDMINE_SMTP_STARTTLSAUTO"
+    label: "Taskman default Outgoing SMTP SSL enabled"
+    description: "Used in default mail settings, postfix"
+    default: "true"
+    type: "enum"
+    options:
+    - "true"
+    - "false"      
+    group: "Redmine configuration"
+  - variable: "redmine.environment.INCOMING_MAIL_API_KEY"
+    label: "Incoming mail API key"
+    description: " incoming emails API: Administration -> Settings -> Incoming email - API key"
+    type: "string"
+    group: "Redmine configuration"
+  - variable: "redmine.environment.T_EMAIL_HOST"
+    label: "Taskman email host"
+    description: " Taskman email configuration: hostname"
+    default: "gayal.eea.europa.eu"
+    type: "string"
+    group: "Redmine configuration"
+  - variable: "redmine.environment.T_EMAIL_PORT"
+    label: "Taskman email port"
+    default: "993"
+    description: " Taskman email configuration: port"
+    type: "int"
+    group: "Redmine configuration"
+  - variable: "redmine.environment.T_EMAIL_USER"
+    label: "Taskman email user"
+    description: " Taskman email configuration: user"
+    type: "string"
+    group: "Redmine configuration"
+  - variable: "redmine.environment.T_EMAIL_PASS"
+    label: "Taskman email user password"
+    description: " Taskman email configuration: user password"
+    type: "string"
+    group: "Redmine configuration"
+  - variable: "redmine.environment.SYNC_API_KEY"
+    label: "GitHub synchronisation API KEY"
+    description: "Can be found under /settings?tab=repositories"
+    type: "string"
+    required: true
+    group: "Redmine configuration"
+  - variable: "redmine.environment.SECRET_KEY_BASE"
+    label: "Redmine SECRET_KEY_BASE"
+    type: "string"
+    required: true    
+    group: "Redmine configuration"
+  - variable: "redmine.environment.GITHUB_AUTHENTICATION"
+    label: "GitHub user:token"
+    description: "Added from github, used in GitHub repo sync to connect to API"
+    type: "string"
+    group: "Redmine configuration"
+  - variable: "redmine.environment.PLUGINS_URL"
+    label: "Plugins location SVN URL"
+    default: "https://eeasvn.eea.europa.eu/repositories/deployment/production/taskman"
+    description: "The SVN URL that point to the folder where the PRO plugins are located"
+    type: "string"
+    required: true
+    group: "Redmine configuration"
+  - variable: "redmine.environment.PLUGINS_USER"
+    label: "Plugins SVN User"
+    description: "The SVN user"
+    type: "string"
+    required: true
+    group: "Redmine configuration"
+  - variable: "redmine.environment.PLUGINS_PASSWORD"
+    label: "Plugins SVN User password"
+    description: "The SVN user password"
+    type: "string"
+    required: true
+    group: "Redmine configuration"
+  - variable: "redmine.environment.DB_POOL"
+    label: "Redmine database connection pool"
+    description: "Default 5"
+    type: "int"
+    default: 10
+    group: "Redmine configuration"
+  - variable: "redmine.environment.ENTRA_ID_TENANT_ID"
+    label: "Entra ID: tenant ID"
+    description: "Microsoft EEA Entra ID - tenant ID"
+    type: "string"
+    default: "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+    group: "Redmine configuration"
+  - variable: "redmine.environment.ENTRA_ID_CLIENT_ID"
+    label: "Entra ID: client ID"
+    description: "Microsoft EEA Entra ID - cliend ID"
+    type: "string"
+    default: "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+    group: "Redmine configuration"
+  - variable: "redmine.environment.ENTRA_ID_CLIENT_SECRET"
+    label: "Entra ID: client secret"
+    type: "string"
+    required: true
+    group: "Redmine configuration"
+
+
+
+
+
+  - variable: "mysql.environment.MYSQL_DATABASE"
+    label: "Redmine database name"
+    description: "Mysql database name"
+    type: "string"
+    required: true
+    group: "Database"
+  - variable: "mysql.environment.MYSQL_USER"
+    label: "Redmine database username"
+    description: "Mysql database username"
+    type: "string"
+    required: true
+    group: "Database"
+  - variable: "mysql.environment.MYSQL_PASSWORD"
+    label: "Redmine database user password"
+    description: "Mysql database user password"
+    type: "string"
+    required: true
+    group: "Database"
+  - variable: "mysql.environment.MYSQL_ROOT_PASSWORD"
+    label: "Redmine database server root password"
+    description: "Mysql server root password"
+    type: "string"
+    required: true
+    group: "Database"
+	
+	
+  - variable: "mysqlbackup.environment.DB_DUMP_BEGIN"
+    label: "Time to start database backup"
+    default: "1720"
+    description: "UTC time, formatted as a 4 digit number"
+    type: "int"
+    required: true
+    group: "Database"
+  - variable: "mysqlbackup.environment.DB_DUMP_FREQUENCY"
+    label: "Frequency of backup"
+    default: "1440"
+    description: "Minutes between backups, set 1440 for daily"
+    type: "int"
+    required: true
+    group: "Database"
+  - variable: "mysqlbackup.environment.DB_DUMP_FILENAME_PATTERN"
+    label: "Database backup filename"
+    default: "taskman_db_dump"
+    description: "The name of the database dump file"
+    type: "string"
+    required: true
+    group: "Database"
+ 
+ 
+  - variable: "postfix.serviceName"
+    label: "Postfix service name"
+    description: "Default is application full name ( application-postfix ) "
+    default: ""
+    type: "string"
+    group: "Mail"
+  - variable: "postfix.dryrun"
+    label: "Run in development mode"
+    description: "If checked, will not send emails, but use mailtrap to catch them"
+    default: false
+    type: "boolean"
+    required: true
+    show_subquestion_if: false
+    group: "Mail"
+    subquestions:
+      - variable: "postfix.mtpRelay"
+        label: "Postfix relay"
+        required: true
+        description: "Postfix SMTP relay"
+        type: "string"
+        default: "ironports.eea.europa.eu"
+      - variable: "postfix.mtpPort"
+        label: "Postfix relay port"
+        description: "Postfix SMTP relay port"
+        type: "int"
+        required: true
+        default: 8587
+      - variable: "postfix.mtpUser"
+        label: "Postfix user"
+        description: "Without authentication, emails will not be sent"
+        type: "string"
+        required: true
+      - variable: "postfix.mtpPass"
+        label: "Postfix password"
+        description: "Without authentication, emails will not be sent"
+        type: "string"
+        required: true
+      - variable: "postfix.serverName"
+        label: "Application url"
+        type: "string"
+        required: true
+ 
+ 
+  - variable: "postfix.mailtrap.httpenabled"
+    label: "Create mailtrap service for port 80"
+    description: "Keep unchecked if you don't want to view the emails in a webinterface"
+    type: "boolean"
+    default: false
+    required: true
+    show_if: "postfix.dryrun"
+    show_subquestion_if: true
+    group: "Mail"
+    subquestions:
+      - variable: "postfix.mailtrap.serviceType"
+        label: "Mailtrap service type"
+        description: "Select NodePort to expose mailtrap on port"
+        type: "enum"
+        options:
+          - "NodePort"
+          - "ClusterIP"
+        default: "ClusterIP"
+        required: true
+      - variable: "postfix.mailtrap.ingress.enabled"
+        label: "Add mailtrap url in ingress"
+        default: false
+        type: "boolean"
+        required: true
+
+  - variable: "postfix.mailtrap.ingress.hostname"
+    label: "Mailtrap URL"
+    show_if: "postfix.mailtrap.ingress.enabled"
+    required: true
+    type: "string"
+    default: "mailtrap.01dev.eea.europa.eu"
+    group: "Mail"
+  - variable: "postfix.mailtrap.ingress.certificate"
+    label: "Mailtrap certificate name"
+    show_if: "postfix.mailtrap.ingress.enabled"
+    description: "If empty, https will not be enabled"
+    default: "mailtrap.01dev.eea.europa.eu-tls"
+    group: "Mail"
+
+
+
+ 
