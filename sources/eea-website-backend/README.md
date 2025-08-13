@@ -10,6 +10,9 @@ This chart deployes the EEA Website Plone 6 backend app
 
 ## Releases
 
+### Version 1.12.2 - 13 August 2025
+- Fix postgres service if external [valentinab25 - [`06e1a86a`](https://github.com/eea/helm-charts/commit/06e1a86a3e418b268dbac27b83d2ea9a14ad4ee7)]
+
 ### Version 1.12.1 - 13 August 2025
 - Add ingressClassName variable [valentinab25 - [`e9e1b6e6`](https://github.com/eea/helm-charts/commit/e9e1b6e6a47b4bd4c0a9591276ec492b7a40ef7f)]
 
