@@ -118,6 +118,9 @@ imageMapping:
 
 ## Releases
 
+### Version 0.1.3
+- Added ENABLED_EMAIL_INVITES env variable and missing TZ.
+
 ### Version 0.1.2
 - Added APP_VERSION and TZ env variables in configmap.
 
