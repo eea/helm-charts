@@ -7,9 +7,11 @@ metadata:
     {{- include "appl.labels" . | nindent 4 }}
     component: debug-addons
 spec:
+spec:
   accessModes:
   - ReadWriteMany
   resources:
     requests:
-      storage: 10Gi
+      storage: {{ .Values.debug.storage.size | default "10Gi" }}
+  storageClassName: {{ .Values.debug.storage.storageClassName | quote }}
 {{- end }}
