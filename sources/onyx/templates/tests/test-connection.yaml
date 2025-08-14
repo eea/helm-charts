@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "onyx-stack.fullname" . }}-test-connection"
+  labels:
+    {{- include "onyx-stack.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command:
+        - /bin/sh
+        - -c
+      args:
+        - |
+          for i in $(seq 1 40); do
+            echo "Attempt $i: wget {{ include "onyx-stack.fullname" . }}-webserver:{{ .Values.webserver.service.servicePort }}"
+            wget {{ include "onyx-stack.fullname" . }}-webserver:{{ .Values.webserver.service.servicePort }} && exit 0
+            sleep 15
+          done
+          echo "Service unavailable after 40 attempts"
+          exit 1
+  restartPolicy: Never

@@ -1,0 +1,36 @@
+{{- if .Values.flower.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "onyx-stack.fullname" . }}-flower
+  labels:
+    {{- include "onyx-stack.labels" . | nindent 4 }}
+  {{- with .Values.flower.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if .Values.flower.ingress.tls }}
+  tls:
+    {{- range .Values.flower.ingress.tls }}
+    - hosts:
+        {{- range .hosts }}
+        - {{ . | quote }}
+        {{- end }}
+      secretName: {{ .secretName }}
+    {{- end }}
+  {{- end }}
+  rules:
+    - host: {{ .Values.flower.ingress.host | quote }}
+      http:
+        paths:
+          {{- range $idx, $db := .Values.flower.redisDBS }}
+          - path: /db{{ toString $db }}
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "onyx-stack.fullname" $ }}-flower-db{{ $db }}
+                port:
+                  number: {{ $.Values.flower.service.port }}
+          {{- end }}
+{{- end }}
