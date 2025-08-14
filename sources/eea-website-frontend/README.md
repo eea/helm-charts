@@ -11,6 +11,9 @@ This chart deploys the EEA Main Website frontend app
 
 ## Releases
 
+### Version 1.17.6 - 14 August 2025
+- add storage accessmode var [valentinab25 - [`56767b15`](https://github.com/eea/helm-charts/commit/56767b15aa73846f538c5faa9ebbb3680811be45)]
+
 ### Version 1.17.5 - 14 August 2025
 - Add storageclass, allow ingress backend redirect [valentinab25 - [`4dc2a2ea`](https://github.com/eea/helm-charts/commit/4dc2a2eaefba690b9c12719d37d0a527df5abf10)]
 
