@@ -118,5 +118,8 @@ imageMapping:
 
 ## Releases
 
+### Version 0.1.1
+- Image helper fixes.
+
 ### Version 0.1.0
 - Initial release. Upstream chart version 0.2.3

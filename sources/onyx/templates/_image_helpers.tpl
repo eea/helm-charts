@@ -14,7 +14,11 @@ Usage:
   {{- if and $tag (ne $tag "") }}
     {{- printf "%s:%s-%s" $newRepo $tagSuffix $tag -}}
   {{- else if and $ctx.Chart.AppVersion (ne $ctx.Chart.AppVersion "") }}
-    {{- printf "%s:%s-v%s" $newRepo $tagSuffix $ctx.Chart.AppVersion -}}
+    {{- if hasPrefix "v" $ctx.Chart.AppVersion }}
+      {{- printf "%s:%s-%s" $newRepo $tagSuffix $ctx.Chart.AppVersion -}}
+    {{- else }}
+      {{- printf "%s:%s-v%s" $newRepo $tagSuffix $ctx.Chart.AppVersion -}}
+    {{- end }}
   {{- else }}
     {{- printf "%s:%s-latest" $newRepo $tagSuffix -}}
   {{- end }}
