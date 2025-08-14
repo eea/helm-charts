@@ -11,6 +11,7 @@ data:
   REDIS_HOST: {{ .Release.Name }}-redis-master
   MODEL_SERVER_HOST: "{{ include "onyx-stack.fullname" . }}-inference-model-service"
   INDEXING_MODEL_SERVER_HOST: "{{ include "onyx-stack.fullname" . }}-indexing-model-service"
+  APP_VERSION: "{{ .Chart.AppVersion }}"
 {{- range $key, $value := .Values.configMap }}
   {{ $key }}: "{{ $value }}"
 {{- end }}

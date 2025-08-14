@@ -118,6 +118,9 @@ imageMapping:
 
 ## Releases
 
+### Version 0.1.2
+- Added APP_VERSION and TZ env variables in configmap.
+
 ### Version 0.1.1
 - Image helper fixes.
 
