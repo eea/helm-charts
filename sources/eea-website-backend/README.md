@@ -10,6 +10,9 @@ This chart deployes the EEA Website Plone 6 backend app
 
 ## Releases
 
+### Version 1.12.6 - 14 August 2025
+- Add ingress.enabled variable [valentinab25 - [`4121ae87`](https://github.com/eea/helm-charts/commit/4121ae8734e8c3aaa1c29b5ff2af17cb7f27313e)]
+
 ### Version 1.12.5 - 13 August 2025
 - add log to stdout for nginx [Silviu - [`dd4f5421`](https://github.com/eea/helm-charts/commit/dd4f542153adb1265fcce49e0936e96e25214a91)]
 
