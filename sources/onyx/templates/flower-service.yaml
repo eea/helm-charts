@@ -1,0 +1,24 @@
+{{- if .Values.flower.enabled }}
+{{- range $idx, $db := .Values.flower.redisDBS }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "onyx-stack.fullname" $ }}-flower-db{{ $db }}
+  labels:
+    {{- include "onyx-stack.labels" $ | nindent 4 }}
+    app.kubernetes.io/component: flower
+    flower-db: "{{ $db }}"
+spec:
+  type: {{ $.Values.flower.service.type }}
+  ports:
+    - port: {{ $.Values.flower.service.port }}
+      targetPort: {{ $.Values.flower.service.targetPort | default $.Values.flower.service.port }}
+      protocol: TCP
+      name: {{ $.Values.flower.service.portName | default "http" }}
+  selector:
+    {{- include "onyx-stack.selectorLabels" $ | nindent 4 }}
+    app: flower
+    flower-db: "{{ $db }}"
+---
+{{- end }}
+{{- end }}

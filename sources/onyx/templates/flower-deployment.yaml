@@ -1,0 +1,128 @@
+{{- if .Values.flower.enabled }}
+{{- range $idx, $db := .Values.flower.redisDBS }}
+{{- $basicAuth := (default "" $.Values.flower.basicAuth | toString) }}
+{{- $firstPair := regexFind "^[^,]+" $basicAuth }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "onyx-stack.fullname" $ }}-flower-db{{ $db }}
+  labels:
+    {{- include "onyx-stack.labels" $ | nindent 4 }}
+    app.kubernetes.io/component: flower
+    flower-db: "{{ $db }}"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "onyx-stack.selectorLabels" $ | nindent 6 }}
+      app: flower
+      flower-db: "{{ $db }}"
+  template:
+    metadata:
+      {{- with $.Values.flower.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "onyx-stack.labels" $ | nindent 8 }}
+        app: flower
+        flower-db: "{{ $db }}"
+        {{- with $.Values.flower.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      containers:
+      - name: flower
+        image: "{{ $.Values.flower.image.repository }}:{{ $.Values.flower.image.tag }}"
+        imagePullPolicy: {{ $.Values.flower.image.pullPolicy }}
+        ports:
+          - name: http
+            containerPort: {{ $.Values.flower.service.port }}
+            protocol: TCP
+        env:
+          - name: FLOWER_PORT
+            value: "{{ $.Values.flower.service.port }}"
+          {{- if $.Values.flower.basicAuth }}
+          - name: FLOWER_BASIC_AUTH
+            value: "{{ $.Values.flower.basicAuth | default "" }}"
+          {{- end }}
+          {{- if $.Values.flower.useUrlPrefix }}
+          - name: FLOWER_URL_PREFIX
+            value: "db{{ $db }}"
+          {{- end }}
+          - name: REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "onyx-stack.secretName" $ }}
+                key: {{ $.Values.auth.secretKeys.redis_password }}
+          - name: REDIS_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: {{ $.Values.config.envConfigMapName }}
+                key: REDIS_HOST
+          - name: REDIS_PORT
+            value: "{{ $.Values.flower.redisPort | default 6379 }}"
+          - name: REDIS_DB
+            value: "{{ $db }}"
+        command:
+          - /bin/sh
+          - -c
+          - |
+            export CELERY_BROKER_URL="redis://:${REDIS_PASSWORD}@${REDIS_HOST}:${REDIS_PORT}/${REDIS_DB}" && \
+            celery flower
+        livenessProbe:
+          {{- if $.Values.flower.livenessProbe }}
+          {{- toYaml $.Values.flower.livenessProbe | nindent 12 }}
+          {{- else }}
+          httpGet:
+            path: "{{ if $.Values.flower.useUrlPrefix }}/db{{ $db }}/{{ else }}/{{ end }}"
+            port: http
+            {{- if $firstPair }}
+            httpHeaders:
+              - name: Authorization
+                value: "Basic {{ $firstPair | b64enc }}"
+            {{- end }}
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+          successThreshold: 1
+          {{- end }}
+        readinessProbe:
+          {{- if $.Values.flower.readinessProbe }}
+          {{- toYaml $.Values.flower.readinessProbe | nindent 12 }}
+          {{- else }}
+          httpGet:
+            path: "{{ if $.Values.flower.useUrlPrefix }}/db{{ $db }}/{{ else }}/{{ end }}"
+            port: http
+            {{- if $firstPair }}
+            httpHeaders:
+              - name: Authorization
+                value: "Basic {{ $firstPair | b64enc }}"
+            {{- end }}
+          initialDelaySeconds: 20
+          periodSeconds: 10
+          timeoutSeconds: 3
+          failureThreshold: 3
+          successThreshold: 1
+          {{- end }}
+        {{- with $.Values.flower.resources }}
+        resources:
+          {{- toYaml . | nindent 12 }}
+        {{- end }}
+
+      {{- with $.Values.flower.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $.Values.flower.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $.Values.flower.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+---
+{{- end }}
+{{- end }}

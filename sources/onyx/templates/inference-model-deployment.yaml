@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "onyx-stack.fullname" . }}-inference-model
+  labels:
+    {{- range .Values.inferenceCapability.labels }}
+    {{ .key }}: {{ .value }}
+    {{- end }}
+spec:
+  replicas: {{ .Values.inferenceCapability.replicaCount }}
+  selector:
+    matchLabels:
+      {{- range .Values.inferenceCapability.labels }}
+      {{ .key }}: {{ .value }}
+      {{- end }}
+  template:
+    metadata:
+      labels:
+        {{- range .Values.inferenceCapability.podLabels }}
+        {{ .key }}: {{ .value }}
+        {{- end }}
+    spec:
+      containers:
+      - name: model-server-inference
+        image: {{ include "onyx-stack.image" (dict "image" .Values.inferenceCapability.image.repository "tag" .Values.inferenceCapability.image.tag "context" .) }}
+        imagePullPolicy: {{ .Values.global.pullPolicy }}
+        command: [ "uvicorn", "model_server.main:app", "--host", "0.0.0.0", "--port", "{{ .Values.inferenceCapability.containerPorts.server }}" ]
+        ports:
+        - name: model-server
+          containerPort: {{ .Values.inferenceCapability.containerPorts.server }}
+          protocol: TCP
+        envFrom:
+        - configMapRef:
+            name: {{ .Values.config.envConfigMapName }}
+        env:
+          {{- include "onyx-stack.envSecrets" . | nindent 12}}
+        {{- if .Values.inferenceCapability.resources }}
+        resources:
+          {{- toYaml .Values.inferenceCapability.resources | nindent 10 }}
+        {{- end }}
+
