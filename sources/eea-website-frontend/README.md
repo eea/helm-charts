@@ -11,6 +11,9 @@ This chart deploys the EEA Main Website frontend app
 
 ## Releases
 
+### Version 1.17.5 - 14 August 2025
+- Add storageclass, allow ingress backend redirect [valentinab25 - [`4dc2a2ea`](https://github.com/eea/helm-charts/commit/4dc2a2eaefba690b9c12719d37d0a527df5abf10)]
+
 ### Version 1.17.4 - 13 August 2025
 - add default nginx logs to stdout [Silviu - [`14660f60`](https://github.com/eea/helm-charts/commit/14660f60499ec6d054d59a96cb86796447e0f16b)]
 
