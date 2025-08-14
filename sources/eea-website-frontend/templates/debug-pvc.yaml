@@ -9,7 +9,7 @@ metadata:
 spec:
 spec:
   accessModes:
-  - ReadWriteMany
+  - {{ .Values.debug.storage.accessMode | default "ReadWriteMany" }}
   resources:
     requests:
       storage: {{ .Values.debug.storage.size | default "10Gi" }}
