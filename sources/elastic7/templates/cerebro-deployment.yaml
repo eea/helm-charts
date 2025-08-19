@@ -51,6 +51,39 @@ spec:
         ports:
         - containerPort: 9000
 
+        # Startup probe - check if Cerebro is starting up
+        startupProbe:
+          httpGet:
+            path: /
+            port: 9000
+          initialDelaySeconds: {{ .Values.cerebro.healthChecks.startup.initialDelaySeconds }}
+          periodSeconds: {{ .Values.cerebro.healthChecks.startup.periodSeconds }}
+          timeoutSeconds: {{ .Values.cerebro.healthChecks.startup.timeoutSeconds }}
+          failureThreshold: {{ .Values.cerebro.healthChecks.startup.failureThreshold }}
+          successThreshold: {{ .Values.cerebro.healthChecks.startup.successThreshold }}
+
+        # Readiness probe - check if Cerebro is ready to serve requests
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 9000
+          initialDelaySeconds: {{ .Values.cerebro.healthChecks.readiness.initialDelaySeconds }}
+          periodSeconds: {{ .Values.cerebro.healthChecks.readiness.periodSeconds }}
+          timeoutSeconds: {{ .Values.cerebro.healthChecks.readiness.timeoutSeconds }}
+          failureThreshold: {{ .Values.cerebro.healthChecks.readiness.failureThreshold }}
+          successThreshold: {{ .Values.cerebro.healthChecks.readiness.successThreshold }}
+
+        # Liveness probe - check if Cerebro is responsive
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 9000
+          initialDelaySeconds: {{ .Values.cerebro.healthChecks.liveness.initialDelaySeconds }}
+          periodSeconds: {{ .Values.cerebro.healthChecks.liveness.periodSeconds }}
+          timeoutSeconds: {{ .Values.cerebro.healthChecks.liveness.timeoutSeconds }}
+          failureThreshold: {{ .Values.cerebro.healthChecks.liveness.failureThreshold }}
+          successThreshold: {{ .Values.cerebro.healthChecks.liveness.successThreshold }}
+
         resources:
           requests:
             memory: {{ .Values.cerebro.memReservation }}
