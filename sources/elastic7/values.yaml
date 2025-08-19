@@ -95,19 +95,29 @@ cerebro:
   tolerations: []
   affinity: {}
   podAnnotations: {}
-
-clusterhealth:
-  image: "eeacms/esclusterhealth:1.2"
-  resources:
-    requests:
-      memory: 8Mi
-    limits:
-      memory: 64Mi
-  nodeSelector: {}
-  tolerations: []
-  affinity: {}
-  podAnnotations: {}
-  podSecurityContext: {}
+  # Health check configuration for Cerebro
+  healthChecks:
+    # Startup probe configuration for Cerebro
+    startup:
+      initialDelaySeconds: 30
+      periodSeconds: 10
+      timeoutSeconds: 5
+      failureThreshold: 30 # Allow up to 5 minutes for startup
+      successThreshold: 1
+    # Readiness probe configuration for Cerebro
+    readiness:
+      initialDelaySeconds: 15
+      periodSeconds: 30
+      timeoutSeconds: 5
+      failureThreshold: 3
+      successThreshold: 1
+    # Liveness probe configuration for Cerebro
+    liveness:
+      initialDelaySeconds: 60
+      periodSeconds: 60
+      timeoutSeconds: 5
+      failureThreshold: 3
+      successThreshold: 1
 
 esmaster:
   replicaCount: 2
@@ -133,6 +143,44 @@ esmaster:
   password: ""
   backup:
     enabled: false
+  # Health check configuration for Elasticsearch master nodes
+  healthChecks:
+    # Startup probe configuration
+    startup:
+      # Initial delay before starting startup probes
+      initialDelaySeconds: 30
+      # How often to perform the probe
+      periodSeconds: 10
+      # Timeout for each probe
+      timeoutSeconds: 5
+      # Number of failures before marking container as failed to start
+      failureThreshold: 30
+      # Number of successes before marking container as started
+      successThreshold: 1
+    # Readiness probe configuration
+    readiness:
+      # Initial delay before starting readiness probes
+      initialDelaySeconds: 60
+      # How often to perform the probe
+      periodSeconds: 30
+      # Timeout for each probe
+      timeoutSeconds: 10
+      # Number of failures before marking container as not ready
+      failureThreshold: 3
+      # Number of successes before marking container as ready
+      successThreshold: 1
+    # Liveness probe configuration
+    liveness:
+      # Initial delay before starting liveness probes
+      initialDelaySeconds: 120
+      # How often to perform the probe
+      periodSeconds: 60
+      # Timeout for each probe
+      timeoutSeconds: 10
+      # Number of failures before restarting container
+      failureThreshold: 5
+      # Number of successes before marking container as alive
+      successThreshold: 1
 
 esworker:
   replicaCount: 3 # Number of data nodes in the cluster
@@ -151,6 +199,44 @@ esworker:
   persistence:
     enabled: true
     size: 1Gi
+  # Health check configuration for Elasticsearch data nodes (same as master)
+  healthChecks:
+    # Startup probe configuration
+    startup:
+      # Initial delay before starting startup probes
+      initialDelaySeconds: 30
+      # How often to perform the probe
+      periodSeconds: 10
+      # Timeout for each probe
+      timeoutSeconds: 5
+      # Number of failures before marking container as failed to start
+      failureThreshold: 30
+      # Number of successes before marking container as started
+      successThreshold: 1
+    # Readiness probe configuration
+    readiness:
+      # Initial delay before starting readiness probes
+      initialDelaySeconds: 60
+      # How often to perform the probe
+      periodSeconds: 30
+      # Timeout for each probe
+      timeoutSeconds: 10
+      # Number of failures before marking container as not ready
+      failureThreshold: 3
+      # Number of successes before marking container as ready
+      successThreshold: 1
+    # Liveness probe configuration
+    liveness:
+      # Initial delay before starting liveness probes
+      initialDelaySeconds: 120
+      # How often to perform the probe
+      periodSeconds: 60
+      # Timeout for each probe
+      timeoutSeconds: 10
+      # Number of failures before restarting container
+      failureThreshold: 5
+      # Number of successes before marking container as alive
+      successThreshold: 1
 
 kibana:
   enabled: true
@@ -201,3 +287,26 @@ kibana:
   affinity: {}
   podAnnotations: {}
   podSecurityContext: {}
+  # Health check configuration for Kibana
+  healthChecks:
+    # Startup probe configuration for Kibana
+    startup:
+      initialDelaySeconds: 60
+      periodSeconds: 10
+      timeoutSeconds: 5
+      failureThreshold: 60 # Allow up to 10 minutes for startup
+      successThreshold: 1
+    # Readiness probe configuration for Kibana
+    readiness:
+      initialDelaySeconds: 30
+      periodSeconds: 30
+      timeoutSeconds: 10
+      failureThreshold: 3
+      successThreshold: 1
+    # Liveness probe configuration for Kibana
+    liveness:
+      initialDelaySeconds: 120
+      periodSeconds: 60
+      timeoutSeconds: 10
+      failureThreshold: 3
+      successThreshold: 1
