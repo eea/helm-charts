@@ -26,14 +26,14 @@ ingress:
     proxy-read-timeout: "120s"
     proxy-send-timeout: "60s"
     configuration-snippet: |-
-      more_set_headers 'Server HTTPS'
-        'Strict-Transport-Security max-age=31536000; includeSubDomains; preload'
-        "Expect-CT max-age=604800, report-uri='https://sentry.eea.europa.eu/api/45/security/?sentry_key=0343e20fc4e0469790b6016561f032e3'"
-        'X-Content-Type-Options "nosniff"'
-        'X-XSS-Protection "1; mode=block"'
-        "X-Frame-Options 'SAMEORIGIN'"
-        "Referrer-Policy origin"
-        'Permissions-Policy accelerometer=(), autoplay=(), camera=(), encrypted-media=(), fullscreen=(self), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), midi=(), payment=(), picture-in-picture=(), sync-xhr=(self), usb=()';
+      add_header Server "HTTPS" always;
+      add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
+      add_header Expect-CT "max-age=604800, report-uri='https://sentry.eea.europa.eu/api/45/security/?sentry_key=0343e20fc4e0469790b6016561f032e3'" always;
+      add_header X-Content-Type-Options "nosniff" always;
+      add_header X-XSS-Protection "1; mode=block" always;
+      add_header X-Frame-Options "SAMEORIGIN" always;
+      add_header Referrer-Policy "origin" always;
+      add_header Permissions-Policy "accelerometer=(), autoplay=(), camera=(), encrypted-media=(), fullscreen=(self), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), midi=(), payment=(), picture-in-picture=(), sync-xhr=(self), usb=()" always; 
 
   tls: true
   certificate: "demo-www.01dev.eea.europa.eu-tls"
@@ -182,8 +182,8 @@ varnish:
 
 nginx:
   conf: |-
-    # Trust only your VPC/ELB subnets (example 10.120.0.0/16).
-    set_real_ip_from 10.140.0.0/16;
+    # Trust only your VPC/ELB subnets
+    # set_real_ip_from 10.140.0.0/16;
     real_ip_header X-Forwarded-For;
     real_ip_recursive on;
 
@@ -191,7 +191,17 @@ nginx:
     log_format realip '$remote_addr (lb) $http_x_forwarded_for (client) - $remote_user '
                       '[$time_local] "$request" $status $body_bytes_sent '
                       '"$http_referer" "$http_user_agent" '
-                      'rt=$request_time ua="$upstream_addr" uat="$upstream_response_time"';     
+                      'rt=$request_time ua="$upstream_addr" uat="$upstream_response_time"';  
+
+    # --- CORS allowlist for eea.europa.eu origins ---
+    map $http_origin $cors_origin {
+      default                        "";
+      ~^https?://([a-z0-9.-]+\.)?eea\.europa\.eu$  $http_origin;
+    }
+    map $cors_origin $cors_allow_methods     { default ""; "~." "GET"; }
+    map $cors_origin $cors_allow_credentials { default ""; "~." "true"; }
+    map $cors_origin $cors_max_age           { default ""; "~." "1728000"; }
+      
     server {
       listen 80;
       server_name _;
@@ -199,7 +209,18 @@ nginx:
       # Direct logs to stdout/stderr
       access_log /dev/stdout realip;
       error_log /dev/stderr;  
-      
+
+
+      add_header Access-Control-Allow-Origin      $cors_origin always;
+      add_header Access-Control-Allow-Methods     $cors_allow_methods always;
+      add_header Access-Control-Allow-Credentials $cors_allow_credentials always;
+      add_header Access-Control-Max-Age           $cors_max_age always;
+      add_header Vary                             "Origin" always;
+
+      # Fix eks default add of script-scr csp
+      proxy_hide_header Content-Security-Policy;   # strip Helmet/app CSP
+      add_header Content-Security-Policy "default-src 'self' blob: data: https://*.eea.europa.eu; base-uri 'self' https://*.eea.europa.eu; form-action 'self' https://*.eea.europa.eu; script-src 'self' blob: data: https://www.eea.europa.eu https://*.eea.europa.eu 'unsafe-inline' 'unsafe-eval'; script-src-elem 'self' blob: data: https://www.eea.europa.eu https://*.eea.europa.eu 'unsafe-inline' 'unsafe-eval'; connect-src 'self' https://api.openaire.eu https://api.openaire.com https://api.zotero.org/ https://taskman.eionet.europa.eu/ https://api.friendlycaptcha.com/api/v1/ https://*.openstreetmap.org https://*.arcgis.com/ https://*.arcgisonline.com/ https://portal.discomap.eea.europa.eu/ https://*.eea.europa.eu; font-src 'self' data: https://js.arcgis.com/ https://*.eea.europa.eu; frame-src 'self' https://airindex.eea.europa.eu/ https://portal.discomap.eea.europa.eu/ https://*.europa.eu/ https://europa.eu/ https://*.eea.europa.eu; img-src http: https: blob: data:; style-src 'self' 'unsafe-inline' https://api.openaire.eu https://api.openaire.com https://api.zotero.org https://taskman.eionet.europa.eu/ https://openlayers.org/ https://js.arcgis.com/ https://*.eea.europa.eu; frame-ancestors 'self' https://biodiversity.europa.eu/ https://water.europa.eu/ https://*.eea.europa.eu; object-src 'self' https://*.eea.europa.eu; report-uri https://sentry.eea.europa.eu/api/22/security/?sentry_key=c2d7a7ca8deb46909d3bfc1bd468eb3d" always;
+
       location ~ ^/(cors-proxy|login-authomatic|controlpanel|static|_es|ok|personal-information|fallback_login|_da|en|voltoCustom.css) {
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
