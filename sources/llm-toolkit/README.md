@@ -264,6 +264,9 @@ helm delete llm-toolkit
 
 ## Releases
 
+### Version 0.2.0
+- Switched to bitnamilegacy repository and added additional LiteLLM env variables as well as changed the arguments for litellm.
+
 ### Version 0.1.9
 - Updated appVersion to v3.95.2 and liteLLM to v1.74.9-stable.
 
