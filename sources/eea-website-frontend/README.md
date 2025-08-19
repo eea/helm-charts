@@ -11,6 +11,9 @@ This chart deploys the EEA Main Website frontend app
 
 ## Releases
 
+### Version 1.17.7 - 19 August 2025
+- update default values [Silviu - [`8c4d15b2`](https://github.com/eea/helm-charts/commit/8c4d15b2319f0e5dbc429ad8326ba6740695055e)]
+
 ### Version 1.17.6 - 14 August 2025
 - add storage accessmode var [valentinab25 - [`56767b15`](https://github.com/eea/helm-charts/commit/56767b15aa73846f538c5faa9ebbb3680811be45)]
 
