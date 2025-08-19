@@ -1,3 +1,7 @@
+global:
+  security:
+    allowInsecureImages: true
+
 timezone: Europe/Copenhagen
 
 # Core Langfuse Configuration
@@ -108,7 +112,7 @@ langfuse:
 
   image:
     # -- The image tag to use for all langfuse deployments. Can be overridden by the individual deployments. Falls back to appVersion if not set.
-    tag: Null
+    tag: ""
     # -- The pull policy to use for all langfuse deployments. Can be overridden by the individual deployments.
     pullPolicy: Always
     # -- The pull secrets to use for all langfuse deployments. Can be overridden by the individual deployments.
@@ -130,11 +134,11 @@ langfuse:
       # -- The image repository to use for the langfuse web pods.
       repository: langfuse/langfuse
       # -- The tag to use for the langfuse web pods. Using `langfuse.image.tag` if not set.
-      tag: Null
+      tag: ""
       # -- The pull policy to use for the langfuse web pods. Using `langfuse.image.pullPolicy` if not set.
-      pullPolicy: Null
+      pullPolicy: ""
       # -- The pull secrets to use for the langfuse web pods. Using `langfuse.image.pullSecrets` if not set.
-      pullSecrets: Null
+      pullSecrets: ""
     deployment:
       # -- Annotations for the web deployment
       annotations: {}
@@ -145,8 +149,6 @@ langfuse:
       annotations: {}
       # -- Labels for the web pods
       labels: {}
-      # -- Topology spread constraints for the web pods. Overrides the global topologySpreadConstraints
-      topologySpreadConstraints: null
     service:
       # -- The type of service to use for the langfuse web application
       type: ClusterIP
@@ -214,11 +216,11 @@ langfuse:
       # -- The image repository to use for the langfuse worker pods
       repository: langfuse/langfuse-worker
       # -- The tag to use for the langfuse worker pods. Using `langfuse.image.tag` if not set.
-      tag: Null
+      tag: ""
       # -- The pull policy to use for the langfuse worker pods. Using `langfuse.image.pullPolicy` if not set.
-      pullPolicy: Null
+      pullPolicy: ""
       # -- The pull secrets to use for the langfuse worker pods. Using `langfuse.image.pullSecrets` if not set.
-      pullSecrets: Null
+      pullSecrets: ""
     deployment:
       # -- Annotations for the worker deployment
       annotations: {}
@@ -229,8 +231,6 @@ langfuse:
       annotations: {}
       # -- Labels for the worker pods
       labels: {}
-      # -- Topology spread constraints for the worker pods. Overrides the global topologySpreadConstraints
-      topologySpreadConstraints: null
 
     # -- Resources for the langfuse worker pods. Defaults to the global resources
     resources: {}
@@ -278,6 +278,8 @@ postgresql:
   # -- Enable PostgreSQL deployment (via Bitnami Helm Chart). If you want to use an external Postgres server (or a managed one), set this to false
   deploy: true
 
+  image:
+    repository: bitnamilegacy/postgresql
   # -- PostgreSQL host to connect to. If postgresql.deploy is true, this will be set automatically based on the release name.
   host: ""
   # -- Port of the postgres server to use. Defaults to 5432.
@@ -335,6 +337,8 @@ redis:
   # -- Enable valkey deployment (via Bitnami Helm Chart). If you want to use a Redis or Valkey server already deployed, set to false.
   deploy: true
 
+  image:
+    repository: bitnamilegacy/redis
   # -- Redis host to connect to. If redis.deploy is true, this will be set automatically based on the release name.
   host: ""
   # -- Redis port to connect to.
@@ -381,6 +385,8 @@ clickhouse:
   # -- Enable ClickHouse deployment (via Bitnami Helm Chart). If you want to use an external Clickhouse server (or a managed one), set this to false
   deploy: true
 
+  image:
+    repository: bitnamilegacy/clickhouse
   # -- ClickHouse host to connect to. If clickhouse.deploy is true, this will be set automatically based on the release name.
   host: ""
   # -- ClickHouse HTTP port to connect to.
@@ -428,6 +434,9 @@ minio:
   # -- Enable MinIO deployment (via Bitnami Helm Chart). If you want to use a custom BlobStorage, e.g. S3, set to false.
   deploy: true
 
+  image:
+    repository: bitnamilegacy/minio
+
   extraEnvVars:
     - name: TZ
       value: "Europe/Copenhagen"
@@ -474,7 +483,7 @@ minio:
     # -- S3 endpoint to use for event uploads.
     endpoint: ""
     # -- Whether to force path style on requests. Required for MinIO.
-    forcePathStyle: Null
+    forcePathStyle: ""
     # -- S3 accessKeyId to use for event uploads.
     accessKeyId:
       value: ""
@@ -501,7 +510,7 @@ minio:
     # -- S3 endpoint to use for batch exports.
     endpoint: ""
     # -- Whether to force path style on requests. Required for MinIO.
-    forcePathStyle: Null
+    forcePathStyle: ""
     # -- S3 accessKeyId to use for batch exports.
     accessKeyId:
       value: ""
@@ -528,7 +537,7 @@ minio:
     # -- S3 endpoint to use for media uploads.
     endpoint: ""
     # -- Whether to force path style on requests. Required for MinIO.
-    forcePathStyle: Null
+    forcePathStyle: ""
     # -- S3 accessKeyId to use for media uploads.
     accessKeyId:
       value: ""
@@ -603,6 +612,10 @@ litellm:
   # -- LiteLLM master key for authentication
   masterKey: ""
 
+  saltKey: ""
+  llmGuardApiUrl: ""
+  llmGuardResponsePrompt: ""
+
   # -- Langfuse public API key for LiteLLM integration
   langfusePublicKey: ""
   # -- Langfuse secret API key for LiteLLM integration
@@ -643,7 +656,7 @@ litellm:
     # -- Target CPU utilization percentage
     targetCPUUtilizationPercentage: 80
     # -- Target memory utilization percentage
-    targetMemoryUtilizationPercentage: null
+    targetMemoryUtilizationPercentage: 80
 
   # -- Resources for the LiteLLM pods
   resources:

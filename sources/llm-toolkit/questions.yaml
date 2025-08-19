@@ -327,6 +327,33 @@ questions:
     group: "LiteLLM Langfuse Integration"
     show_if: "litellm.enabled=true"
 
+  - variable: "litellm.saltKey"
+    default: ""
+    description: "Salt key for LiteLLM"
+    type: "password"
+    label: "LiteLLM Salt Key"
+    group: "LiteLLM Langfuse Integration"
+    required: true
+    show_if: "litellm.enabled=true"
+
+  - variable: "litellm.llmGuardApiUrl"
+    default: ""
+    description: "LLM Guard API URL"
+    type: "string"
+    label: "LLM Guard API URL"
+    group: "LiteLLM Langfuse Integration"
+    required: false
+    show_if: "litellm.enabled=true"
+
+  - variable: "litellm.llmGuardResponsePrompt"
+    default: ""
+    description: "LLM Guard Response Prompt"
+    type: "string"
+    label: "LLM Guard Response Prompt"
+    group: "LiteLLM Langfuse Integration"
+    required: false
+    show_if: "litellm.enabled=true"
+
   - variable: "litellm.replicaCount"
     default: 1
     description: "Number of LiteLLM replicas"

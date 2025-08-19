@@ -89,6 +89,13 @@ spec:
           {{- end }}
           image: "{{ .Values.litellm.image.repository }}:{{ .Values.litellm.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.litellm.image.pullPolicy }}
+          args:
+            - --port
+            - "4000"
+            - --num_workers
+            - "8"
+            - --config
+            - /app/litellm/llmguard-plugin/plugin/plugin/llmguard_config.yaml
           env:
             - name: PORT
               value: {{ .Values.litellm.service.port | quote }}
@@ -115,6 +122,12 @@ spec:
                   name: {{ include "appl.fullname" . }}-litellm-master-key
                   key: master-key
                   optional: true
+            - name: LITELLM_SALT_KEY
+              value: {{ .Values.litellm.saltKey | quote }}
+            - name: LLM_GUARD_API_URL
+              value: {{ .Values.litellm.llmGuardApiUrl | quote }}
+            - name: LLM_GUARD_RESPONSE_PROMPT
+              value: {{ .Values.litellm.llmGuardResponsePrompt | quote }}
           ports:
             - name: http
               containerPort: {{ .Values.litellm.service.port }}
