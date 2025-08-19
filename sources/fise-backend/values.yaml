@@ -157,6 +157,23 @@ entrasync:
   podSecurityContext: {}
   securityContext: {}
 
+zodbpack:
+  enabled: false
+  schedule: "0 0 3 * *"
+  keepSuccessfulPods: 3
+  keepFailedPods: 5
+  resources:
+    limits:
+      memory: 1Gi
+    requests:
+      memory: 1Gi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  podAnnotations: {}
+  podSecurityContext: {}
+  securityContext: {}
+
 postfix:
   dryrun: true
   fullnameOverride: ''
