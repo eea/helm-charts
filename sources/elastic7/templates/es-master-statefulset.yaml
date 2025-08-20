@@ -8,10 +8,7 @@ metadata:
 spec:
   replicas: {{ .Values.esmaster.replicaCount }}
   serviceName: {{ .Release.Name }}-master
-  updateStrategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 1
+
   selector:
     matchLabels:
       {{- include "appl.selectorLabels" . | nindent 6 }}
