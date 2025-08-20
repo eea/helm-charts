@@ -9,6 +9,10 @@ metadata:
 spec:
   replicas: {{ .Values.esworker.replicaCount }}
   serviceName: {{ .Release.Name }}-data
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
   selector:
     matchLabels:
       {{- include "appl.selectorLabels" . | nindent 6 }}
@@ -21,6 +25,7 @@ spec:
         component: data
 
     spec:
+      terminationGracePeriodSeconds: 300
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -191,6 +196,38 @@ spec:
           timeoutSeconds: {{ .Values.esworker.healthChecks.liveness.timeoutSeconds }}
           failureThreshold: {{ .Values.esworker.healthChecks.liveness.failureThreshold }}
           successThreshold: {{ .Values.esworker.healthChecks.liveness.successThreshold }}
+
+        lifecycle:
+          preStop:
+            exec:
+              command:
+              - sh
+              - -c
+              - |
+                echo "Starting graceful shutdown of data node..."
+                # Disable shard allocation to prevent data movement during shutdown
+                {{- if .Values.esmaster.password }}
+                curl -s -X PUT -u "elastic:{{ .Values.esmaster.password }}" "http://localhost:9200/_cluster/settings" \
+                  -H "Content-Type: application/json" \
+                  -d '{"persistent": {"cluster.routing.allocation.enable": "primaries"}}' || true
+                {{- else }}
+                curl -s -X PUT "http://localhost:9200/_cluster/settings" \
+                  -H "Content-Type: application/json" \
+                  -d '{"persistent": {"cluster.routing.allocation.enable": "primaries"}}' || true
+                {{- end }}
+                
+                # Wait for ongoing operations to complete
+                echo "Waiting for ongoing operations to complete..."
+                sleep 30
+                
+                # Flush and sync
+                {{- if .Values.esmaster.password }}
+                curl -s -X POST -u "elastic:{{ .Values.esmaster.password }}" "http://localhost:9200/_flush/synced" || true
+                {{- else }}
+                curl -s -X POST "http://localhost:9200/_flush/synced" || true
+                {{- end }}
+                
+                echo "Graceful shutdown preparation completed"
 
         resources:
           requests:

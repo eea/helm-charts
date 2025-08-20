@@ -48,6 +48,16 @@ questions:
     type: boolean
     group: "Elasticsearch Configuration"
 
+  - variable: "podDisruptionBudget.enabled"
+    label: "Enable Pod Disruption Budgets"
+    description: |
+      Enable Pod Disruption Budgets to ensure minimum availability during cluster maintenance.
+      Recommended for production environments to prevent too many Elasticsearch pods being unavailable simultaneously.
+    default: true
+    required: true
+    type: boolean
+    group: "Elasticsearch Configuration"
+
   - variable: "addKibana"
     label: "Add kibana container:"
     description: |
@@ -195,44 +205,44 @@ questions:
   # Master Nodes Health Check Configuration
   - variable: "esmaster.healthChecks.startup.initialDelaySeconds"
     label: "Master Startup Probe Initial Delay (seconds)"
-    description: "Initial delay before starting startup probes for master nodes"
-    type: "int"
-    default: 30
-    group: "Master Nodes"
-
-  - variable: "esmaster.healthChecks.startup.failureThreshold"
-    label: "Master Startup Probe Failure Threshold"
-    description: "Number of failures before marking master container as failed to start (allows 5 minutes)"
-    type: "int"
-    default: 30
-    group: "Master Nodes"
-
-  - variable: "esmaster.healthChecks.readiness.initialDelaySeconds"
-    label: "Master Readiness Probe Initial Delay (seconds)"
-    description: "Initial delay before starting readiness probes for master nodes"
+    description: "Initial delay before starting startup probes for master nodes (production-safe: 60s)"
     type: "int"
     default: 60
     group: "Master Nodes"
 
-  - variable: "esmaster.healthChecks.readiness.periodSeconds"
-    label: "Master Readiness Probe Period (seconds)"
-    description: "How often to perform readiness probes for master nodes"
+  - variable: "esmaster.healthChecks.startup.failureThreshold"
+    label: "Master Startup Probe Failure Threshold"
+    description: "Number of failures before marking master container as failed to start (production-safe: allows 15+ minutes)"
     type: "int"
-    default: 30
+    default: 60
     group: "Master Nodes"
 
-  - variable: "esmaster.healthChecks.liveness.initialDelaySeconds"
-    label: "Master Liveness Probe Initial Delay (seconds)"
-    description: "Initial delay before starting liveness probes for master nodes"
+  - variable: "esmaster.healthChecks.readiness.initialDelaySeconds"
+    label: "Master Readiness Probe Initial Delay (seconds)"
+    description: "Initial delay before starting readiness probes for master nodes (production-safe: 120s)"
     type: "int"
     default: 120
     group: "Master Nodes"
 
+  - variable: "esmaster.healthChecks.readiness.periodSeconds"
+    label: "Master Readiness Probe Period (seconds)"
+    description: "How often to perform readiness probes for master nodes (production-safe: 45s)"
+    type: "int"
+    default: 45
+    group: "Master Nodes"
+
+  - variable: "esmaster.healthChecks.liveness.initialDelaySeconds"
+    label: "Master Liveness Probe Initial Delay (seconds)"
+    description: "Initial delay before starting liveness probes for master nodes (production-safe: 300s)"
+    type: "int"
+    default: 300
+    group: "Master Nodes"
+
   - variable: "esmaster.healthChecks.liveness.failureThreshold"
     label: "Master Liveness Probe Failure Threshold"
-    description: "Number of failures before restarting master container (allows cluster to be red for 5+ minutes)"
+    description: "Number of failures before restarting master container (production-safe: allows 15+ minutes red state)"
     type: "int"
-    default: 5
+    default: 10
     group: "Master Nodes"
 
   - variable: "dataHeapSize"
@@ -262,44 +272,44 @@ questions:
   # Data Nodes Health Check Configuration
   - variable: "esworker.healthChecks.startup.initialDelaySeconds"
     label: "Data Startup Probe Initial Delay (seconds)"
-    description: "Initial delay before starting startup probes for data nodes"
-    type: "int"
-    default: 30
-    group: "Data Nodes"
-
-  - variable: "esworker.healthChecks.startup.failureThreshold"
-    label: "Data Startup Probe Failure Threshold"
-    description: "Number of failures before marking data container as failed to start (allows 5 minutes)"
-    type: "int"
-    default: 30
-    group: "Data Nodes"
-
-  - variable: "esworker.healthChecks.readiness.initialDelaySeconds"
-    label: "Data Readiness Probe Initial Delay (seconds)"
-    description: "Initial delay before starting readiness probes for data nodes"
+    description: "Initial delay before starting startup probes for data nodes (production-safe: 60s)"
     type: "int"
     default: 60
     group: "Data Nodes"
 
-  - variable: "esworker.healthChecks.readiness.periodSeconds"
-    label: "Data Readiness Probe Period (seconds)"
-    description: "How often to perform readiness probes for data nodes"
+  - variable: "esworker.healthChecks.startup.failureThreshold"
+    label: "Data Startup Probe Failure Threshold"
+    description: "Number of failures before marking data container as failed to start (production-safe: allows 15+ minutes)"
     type: "int"
-    default: 30
+    default: 60
     group: "Data Nodes"
 
-  - variable: "esworker.healthChecks.liveness.initialDelaySeconds"
-    label: "Data Liveness Probe Initial Delay (seconds)"
-    description: "Initial delay before starting liveness probes for data nodes"
+  - variable: "esworker.healthChecks.readiness.initialDelaySeconds"
+    label: "Data Readiness Probe Initial Delay (seconds)"
+    description: "Initial delay before starting readiness probes for data nodes (production-safe: 120s)"
     type: "int"
     default: 120
     group: "Data Nodes"
 
+  - variable: "esworker.healthChecks.readiness.periodSeconds"
+    label: "Data Readiness Probe Period (seconds)"
+    description: "How often to perform readiness probes for data nodes (production-safe: 45s)"
+    type: "int"
+    default: 45
+    group: "Data Nodes"
+
+  - variable: "esworker.healthChecks.liveness.initialDelaySeconds"
+    label: "Data Liveness Probe Initial Delay (seconds)"
+    description: "Initial delay before starting liveness probes for data nodes (production-safe: 300s)"
+    type: "int"
+    default: 300
+    group: "Data Nodes"
+
   - variable: "esworker.healthChecks.liveness.failureThreshold"
     label: "Data Liveness Probe Failure Threshold"
-    description: "Number of failures before restarting data container (allows cluster to be red for 5+ minutes)"
+    description: "Number of failures before restarting data container (production-safe: allows 15+ minutes red state)"
     type: "int"
-    default: 5
+    default: 10
     group: "Data Nodes"
 
   - variable: "cerebro.memLimit"
@@ -367,30 +377,30 @@ questions:
   # Cerebro Health Check Configuration
   - variable: "cerebro.healthChecks.startup.initialDelaySeconds"
     label: "Cerebro Startup Probe Initial Delay (seconds)"
-    description: "Initial delay before starting startup probes for Cerebro"
+    description: "Initial delay before starting startup probes for Cerebro (production-safe: 45s)"
     type: "int"
-    default: 30
+    default: 45
     group: "Cerebro Configuration"
 
   - variable: "cerebro.healthChecks.startup.failureThreshold"
     label: "Cerebro Startup Probe Failure Threshold"
-    description: "Number of failures before marking Cerebro as failed to start (allows 5 minutes)"
+    description: "Number of failures before marking Cerebro as failed to start (production-safe: allows 10 minutes)"
     type: "int"
-    default: 30
+    default: 40
     group: "Cerebro Configuration"
 
   - variable: "cerebro.healthChecks.readiness.initialDelaySeconds"
     label: "Cerebro Readiness Probe Initial Delay (seconds)"
-    description: "Initial delay before starting readiness probes for Cerebro"
+    description: "Initial delay before starting readiness probes for Cerebro (production-safe: 30s)"
     type: "int"
-    default: 15
+    default: 30
     group: "Cerebro Configuration"
 
   - variable: "cerebro.healthChecks.liveness.initialDelaySeconds"
     label: "Cerebro Liveness Probe Initial Delay (seconds)"
-    description: "Initial delay before starting liveness probes for Cerebro"
+    description: "Initial delay before starting liveness probes for Cerebro (production-safe: 90s)"
     type: "int"
-    default: 60
+    default: 90
     group: "Cerebro Configuration"
 
   - variable: "esmaster.password"
@@ -450,33 +460,33 @@ questions:
   # Kibana Health Check Configuration
   - variable: "kibana.healthChecks.startup.initialDelaySeconds"
     label: "Kibana Startup Probe Initial Delay (seconds)"
-    description: "Initial delay before starting startup probes for Kibana"
+    description: "Initial delay before starting startup probes for Kibana (production-safe: 90s)"
     type: "int"
-    default: 60
+    default: 90
     group: "Kibana Configuration"
     show_if: "addKibana=true"
 
   - variable: "kibana.healthChecks.startup.failureThreshold"
     label: "Kibana Startup Probe Failure Threshold"
-    description: "Number of failures before marking Kibana as failed to start (allows up to 10 minutes)"
+    description: "Number of failures before marking Kibana as failed to start (production-safe: allows up to 20 minutes)"
     type: "int"
-    default: 60
+    default: 80
     group: "Kibana Configuration"
     show_if: "addKibana=true"
 
   - variable: "kibana.healthChecks.readiness.initialDelaySeconds"
     label: "Kibana Readiness Probe Initial Delay (seconds)"
-    description: "Initial delay before starting readiness probes for Kibana"
+    description: "Initial delay before starting readiness probes for Kibana (production-safe: 60s)"
     type: "int"
-    default: 30
+    default: 60
     group: "Kibana Configuration"
     show_if: "addKibana=true"
 
   - variable: "kibana.healthChecks.liveness.initialDelaySeconds"
     label: "Kibana Liveness Probe Initial Delay (seconds)"
-    description: "Initial delay before starting liveness probes for Kibana"
+    description: "Initial delay before starting liveness probes for Kibana (production-safe: 180s)"
     type: "int"
-    default: 120
+    default: 180
     group: "Kibana Configuration"
     show_if: "addKibana=true"
 
