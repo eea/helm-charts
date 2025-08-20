@@ -8,11 +8,7 @@ metadata:
     component: kibana
 spec:
   replicas: 1
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 0
-      maxSurge: 1
+
   selector:
     matchLabels:
       {{- include "appl.selectorLabels" . | nindent 6 }}
@@ -73,7 +69,7 @@ spec:
         # Kibana takes time to initialize, especially with security enabled
         startupProbe:
           httpGet:
-            path: /api/status
+            path: /login
             port: 5601
           initialDelaySeconds: {{ .Values.kibana.healthChecks.startup.initialDelaySeconds }}
           periodSeconds: {{ .Values.kibana.healthChecks.startup.periodSeconds }}
@@ -84,7 +80,7 @@ spec:
         # Readiness probe - check if Kibana is ready to serve requests
         readinessProbe:
           httpGet:
-            path: /api/status
+            path: /login
             port: 5601
           initialDelaySeconds: {{ .Values.kibana.healthChecks.readiness.initialDelaySeconds }}
           periodSeconds: {{ .Values.kibana.healthChecks.readiness.periodSeconds }}
@@ -96,7 +92,7 @@ spec:
         # More permissive than readiness to avoid unnecessary restarts
         livenessProbe:
           httpGet:
-            path: /api/status
+            path: /login
             port: 5601
           initialDelaySeconds: {{ .Values.kibana.healthChecks.liveness.initialDelaySeconds }}
           periodSeconds: {{ .Values.kibana.healthChecks.liveness.periodSeconds }}
