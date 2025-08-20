@@ -31,6 +31,9 @@ in order to succesfully send emails.
 
 ## Releases
 
+### Version 3.0.9 - 20 August 2025
+- Use mailtrap:2.5 with all network relay fix [valentinab25 - [`e9512db9`](https://github.com/eea/helm-charts/commit/e9512db9bd07147ce221a73b53b291d0dcb9d8d7)]
+
 ### Version 3.0.8 - 20 August 2025
 - Switched to single quote for password in deployment.
 
