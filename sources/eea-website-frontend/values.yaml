@@ -217,9 +217,6 @@ nginx:
       add_header Access-Control-Max-Age           $cors_max_age always;
       add_header Vary                             "Origin" always;
 
-      # Fix eks default add of script-scr csp
-      proxy_hide_header Content-Security-Policy;   # strip Helmet/app CSP
-      add_header Content-Security-Policy "default-src 'self' blob: data: https://*.eea.europa.eu; base-uri 'self' https://*.eea.europa.eu; form-action 'self' https://*.eea.europa.eu; script-src 'self' blob: data: https://www.eea.europa.eu https://*.eea.europa.eu 'unsafe-inline' 'unsafe-eval'; script-src-elem 'self' blob: data: https://www.eea.europa.eu https://*.eea.europa.eu 'unsafe-inline' 'unsafe-eval'; connect-src 'self' https://api.openaire.eu https://api.openaire.com https://api.zotero.org/ https://taskman.eionet.europa.eu/ https://api.friendlycaptcha.com/api/v1/ https://*.openstreetmap.org https://*.arcgis.com/ https://*.arcgisonline.com/ https://portal.discomap.eea.europa.eu/ https://*.eea.europa.eu; font-src 'self' data: https://js.arcgis.com/ https://*.eea.europa.eu; frame-src 'self' https://airindex.eea.europa.eu/ https://portal.discomap.eea.europa.eu/ https://*.europa.eu/ https://europa.eu/ https://*.eea.europa.eu; img-src http: https: blob: data:; style-src 'self' 'unsafe-inline' https://api.openaire.eu https://api.openaire.com https://api.zotero.org https://taskman.eionet.europa.eu/ https://openlayers.org/ https://js.arcgis.com/ https://*.eea.europa.eu; frame-ancestors 'self' https://biodiversity.europa.eu/ https://water.europa.eu/ https://*.eea.europa.eu; object-src 'self' https://*.eea.europa.eu; report-uri https://sentry.eea.europa.eu/api/22/security/?sentry_key=c2d7a7ca8deb46909d3bfc1bd468eb3d" always;
 
       location ~ ^/(cors-proxy|login-authomatic|controlpanel|static|_es|ok|personal-information|fallback_login|_da|en|voltoCustom.css) {
         proxy_set_header Host $host;
