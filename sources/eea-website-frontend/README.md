@@ -11,6 +11,9 @@ This chart deploys the EEA Main Website frontend app
 
 ## Releases
 
+### Version 1.17.8 - 20 August 2025
+- Remove CSP as its not needed [valentinab25 - [`cad2c579`](https://github.com/eea/helm-charts/commit/cad2c5790cb10ae87b7eb2b4f766ba2fcb627eea)]
+
 ### Version 1.17.7 - 19 August 2025
 - update default values [Silviu - [`8c4d15b2`](https://github.com/eea/helm-charts/commit/8c4d15b2319f0e5dbc429ad8326ba6740695055e)]
 
