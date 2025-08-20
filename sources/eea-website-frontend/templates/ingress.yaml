@@ -27,7 +27,7 @@ spec:
     http:
       paths:
       - path: /
-        pathType: Prefix
+        pathType: {{ .Values.ingress.pathType | default "Prefix" }}
         backend:
           service:
             name: frontend-nginx
@@ -35,14 +35,14 @@ spec:
               number: 80
       {{- if .Values.ingress.backend }}
       - path: /++api++
-        pathType: ImplementationSpecific
+        pathType: {{ .Values.ingress.pathType | default "Prefix" }}
         backend:
           service:
             name: {{ .Values.ingress.backendService | default "backend-nginx" }}
             port:
               number: 80
       - path: /admin
-        pathType: ImplementationSpecific
+        pathType: {{ .Values.ingress.pathType | default "Prefix" }}
         backend:
           service:
             name: {{ .Values.ingress.backendService | default "backend-nginx" }}
