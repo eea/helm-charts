@@ -28,6 +28,9 @@ database:
 ## Release notes
 
 <dl>
+  <dt>Version 1.0.7</dt>
+  <dd>Tomcat upgrade.</dd>
+
   <dt>Version 1.0.6</dt>
   <dd>Liquibase new version fixes.</dd>
 
