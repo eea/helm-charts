@@ -31,6 +31,9 @@ in order to succesfully send emails.
 
 ## Releases
 
+### Version 3.0.8 - 20 August 2025
+- Switched to single quote for password in deployment.
+
 ### Version 3.0.7 - 20 August 2025
 - Updated postfix deployment to quote mtPasswd
 
