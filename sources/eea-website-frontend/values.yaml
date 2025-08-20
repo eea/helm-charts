@@ -40,6 +40,7 @@ ingress:
   ingressClassName: "nginx"
   backend: false
   backendService: backend-nginx
+  pathType: Prefix  # Options: Prefix, ImplementationSpecific
 
 links:
   backend:
