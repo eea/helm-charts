@@ -140,69 +140,18 @@ spec:
         - containerPort: 9200
         - containerPort: 9300
 
-        # Startup probe - check if Elasticsearch is starting up
-        # This gives ES time to start without readiness/liveness interfering
         startupProbe:
-          httpGet:
-            path: /
+          tcpSocket:
             port: 9200
-            {{- if .Values.esmaster.password }}
-            httpHeaders:
-            - name: Authorization
-              value: "Basic {{ printf "%s:%s" "elastic" .Values.esmaster.password | b64enc }}"
-            {{- end }}
           initialDelaySeconds: {{ .Values.esmaster.healthChecks.startup.initialDelaySeconds }}
           periodSeconds: {{ .Values.esmaster.healthChecks.startup.periodSeconds }}
           timeoutSeconds: {{ .Values.esmaster.healthChecks.startup.timeoutSeconds }}
           failureThreshold: {{ .Values.esmaster.healthChecks.startup.failureThreshold }}
           successThreshold: {{ .Values.esmaster.healthChecks.startup.successThreshold }}
 
-        # Readiness probe - check if cluster is green or yellow
-        # This ensures the service only receives traffic when healthy
-        readinessProbe:
-          exec:
-            command:
-            - sh
-            - -c
-            - |
-              set -e
-              {{- if .Values.esmaster.password }}
-              status=$(curl -s --max-time 5 -u "elastic:{{ .Values.esmaster.password }}" "http://localhost:9200/_cluster/health" | grep -o '"status":"[^"]*"' | cut -d'"' -f4)
-              {{- else }}
-              status=$(curl -s --max-time 5 "http://localhost:9200/_cluster/health" | grep -o '"status":"[^"]*"' | cut -d'"' -f4)
-              {{- end }}
-              if [ "$status" = "green" ] || [ "$status" = "yellow" ]; then
-                exit 0
-              else
-                echo "Cluster status is: $status"
-                exit 1
-              fi
-          initialDelaySeconds: {{ .Values.esmaster.healthChecks.readiness.initialDelaySeconds }}
-          periodSeconds: {{ .Values.esmaster.healthChecks.readiness.periodSeconds }}
-          timeoutSeconds: {{ .Values.esmaster.healthChecks.readiness.timeoutSeconds }}
-          failureThreshold: {{ .Values.esmaster.healthChecks.readiness.failureThreshold }}
-          successThreshold: {{ .Values.esmaster.healthChecks.readiness.successThreshold }}
-
-        # Liveness probe - only restart if cluster is red for extended period
-        # This is more conservative to avoid unnecessary restarts
         livenessProbe:
-          exec:
-            command:
-            - sh
-            - -c
-            - |
-              set -e
-              {{- if .Values.esmaster.password }}
-              status=$(curl -s --max-time 5 -u "elastic:{{ .Values.esmaster.password }}" "http://localhost:9200/_cluster/health" | grep -o '"status":"[^"]*"' | cut -d'"' -f4)
-              {{- else }}
-              status=$(curl -s --max-time 5 "http://localhost:9200/_cluster/health" | grep -o '"status":"[^"]*"' | cut -d'"' -f4)
-              {{- end }}
-              if [ "$status" = "red" ]; then
-                echo "Cluster status is red - failing liveness check"
-                exit 1
-              else
-                exit 0
-              fi
+          tcpSocket:
+            port: 9200
           initialDelaySeconds: {{ .Values.esmaster.healthChecks.liveness.initialDelaySeconds }}
           periodSeconds: {{ .Values.esmaster.healthChecks.liveness.periodSeconds }}
           timeoutSeconds: {{ .Values.esmaster.healthChecks.liveness.timeoutSeconds }}

@@ -202,45 +202,45 @@ questions:
     default: "1536m"
     group: "Master Nodes"
 
-  # Master Nodes Health Check Configuration
+  # Master Nodes Health Check Configuration (TCP-based)
   - variable: "esmaster.healthChecks.startup.initialDelaySeconds"
     label: "Master Startup Probe Initial Delay (seconds)"
-    description: "Initial delay before starting startup probes for master nodes (production-safe: 60s)"
+    description: "Initial delay before starting TCP startup probes for master nodes (production-safe: 60s)"
     type: "int"
     default: 60
     group: "Master Nodes"
 
   - variable: "esmaster.healthChecks.startup.failureThreshold"
     label: "Master Startup Probe Failure Threshold"
-    description: "Number of failures before marking master container as failed to start (production-safe: allows 15+ minutes)"
+    description: "Number of TCP probe failures before marking master container as failed to start (production-safe: allows 15+ minutes)"
     type: "int"
     default: 60
     group: "Master Nodes"
 
   - variable: "esmaster.healthChecks.readiness.initialDelaySeconds"
     label: "Master Readiness Probe Initial Delay (seconds)"
-    description: "Initial delay before starting readiness probes for master nodes (production-safe: 120s)"
+    description: "Initial delay before starting TCP readiness probes for master nodes (production-safe: 120s)"
     type: "int"
     default: 120
     group: "Master Nodes"
 
   - variable: "esmaster.healthChecks.readiness.periodSeconds"
     label: "Master Readiness Probe Period (seconds)"
-    description: "How often to perform readiness probes for master nodes (production-safe: 45s)"
+    description: "How often to perform TCP readiness probes for master nodes (production-safe: 45s)"
     type: "int"
     default: 45
     group: "Master Nodes"
 
   - variable: "esmaster.healthChecks.liveness.initialDelaySeconds"
     label: "Master Liveness Probe Initial Delay (seconds)"
-    description: "Initial delay before starting liveness probes for master nodes (production-safe: 300s)"
+    description: "Initial delay before starting TCP liveness probes for master nodes (production-safe: 300s)"
     type: "int"
     default: 300
     group: "Master Nodes"
 
   - variable: "esmaster.healthChecks.liveness.failureThreshold"
     label: "Master Liveness Probe Failure Threshold"
-    description: "Number of failures before restarting master container (production-safe: allows 15+ minutes red state)"
+    description: "Number of TCP probe failures before restarting master container (production-safe: allows 15+ minutes)"
     type: "int"
     default: 10
     group: "Master Nodes"
@@ -269,45 +269,45 @@ questions:
     default: "1536m"
     group: "Data Nodes"
 
-  # Data Nodes Health Check Configuration
+  # Data Nodes Health Check Configuration (TCP-based)
   - variable: "esworker.healthChecks.startup.initialDelaySeconds"
     label: "Data Startup Probe Initial Delay (seconds)"
-    description: "Initial delay before starting startup probes for data nodes (production-safe: 60s)"
+    description: "Initial delay before starting TCP startup probes for data nodes (production-safe: 60s)"
     type: "int"
     default: 60
     group: "Data Nodes"
 
   - variable: "esworker.healthChecks.startup.failureThreshold"
     label: "Data Startup Probe Failure Threshold"
-    description: "Number of failures before marking data container as failed to start (production-safe: allows 15+ minutes)"
+    description: "Number of TCP probe failures before marking data container as failed to start (production-safe: allows 15+ minutes)"
     type: "int"
     default: 60
     group: "Data Nodes"
 
   - variable: "esworker.healthChecks.readiness.initialDelaySeconds"
     label: "Data Readiness Probe Initial Delay (seconds)"
-    description: "Initial delay before starting readiness probes for data nodes (production-safe: 120s)"
+    description: "Initial delay before starting TCP readiness probes for data nodes (production-safe: 120s)"
     type: "int"
     default: 120
     group: "Data Nodes"
 
   - variable: "esworker.healthChecks.readiness.periodSeconds"
     label: "Data Readiness Probe Period (seconds)"
-    description: "How often to perform readiness probes for data nodes (production-safe: 45s)"
+    description: "How often to perform TCP readiness probes for data nodes (production-safe: 45s)"
     type: "int"
     default: 45
     group: "Data Nodes"
 
   - variable: "esworker.healthChecks.liveness.initialDelaySeconds"
     label: "Data Liveness Probe Initial Delay (seconds)"
-    description: "Initial delay before starting liveness probes for data nodes (production-safe: 300s)"
+    description: "Initial delay before starting TCP liveness probes for data nodes (production-safe: 300s)"
     type: "int"
     default: 300
     group: "Data Nodes"
 
   - variable: "esworker.healthChecks.liveness.failureThreshold"
     label: "Data Liveness Probe Failure Threshold"
-    description: "Number of failures before restarting data container (production-safe: allows 15+ minutes red state)"
+    description: "Number of TCP probe failures before restarting data container (production-safe: allows 15+ minutes)"
     type: "int"
     default: 10
     group: "Data Nodes"
