@@ -31,6 +31,9 @@ in order to succesfully send emails.
 
 ## Releases
 
+### Version 3.0.7 - 20 August 2025
+- Updated postfix deployment to quote mtPasswd
+
 ### Version 3.0.6 - 09 December 2024
 - Fixed mailtrap expected envinronment variable
 
