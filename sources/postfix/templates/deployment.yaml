@@ -56,7 +56,7 @@ spec:
         - name: MT_USER
           value: {{ .Values.mailtrap.mtUser }}
         - name: MT_PASSWD
-          value: {{ .Values.mailtrap.mtPasswd | quote }}
+          value: {{ .Values.mailtrap.mtPasswd | squote }}
         - name: MT_MAILBOX_LIMIT
           value: "{{ .Values.mailtrap.mtMailboxLimit }}"
         - name: MT_MESSAGE_LIMIT
@@ -65,7 +65,7 @@ spec:
         - name: MTP_HOST
           value: {{ .Values.serverName }}
         - name: MTP_PASS
-          value: "{{ .Values.mtpPass }}"
+          value: {{ .Values.mtpPass | squote }}
         - name: MTP_PORT
           value: "{{ .Values.mtpPort }}"
         - name: MTP_RELAY
