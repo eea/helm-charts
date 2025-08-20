@@ -124,6 +124,19 @@ The chart supports configuring Kubernetes Ingress for Kibana access through the 
 | `kibana.ingress.tls[0].secretName` | TLS secret name | `""` |
 | `kibana.ingress.tls[0].hosts[0]` | TLS hostname | `""` |
 
+#### Elasticsearch Data Nodes Ingress Configuration
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| `esworker.ingress.enabled` | Enable ingress for Elasticsearch data nodes | `false` |
+| `esworker.ingress.hostname` | Hostname for Elasticsearch ingress | `elasticsearch.example.com` |
+| `esworker.ingress.className` | Ingress class name | `""` |
+| `esworker.ingress.annotations` | Ingress annotations | `{}` |
+| `esworker.ingress.tls[0].secretName` | TLS secret name | `""` |
+| `esworker.ingress.tls[0].hosts[0]` | TLS hostname | `""` |
+
+**Note**: When enabled, this creates a dedicated ClusterIP service (`{{ .Release.Name }}-data-ingress`) for ingress traffic, separate from the main data service.
+
 ### Security Configuration
 
 When enabling security features by setting `esmaster.password`, the chart automatically:
