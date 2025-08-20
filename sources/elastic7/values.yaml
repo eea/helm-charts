@@ -28,6 +28,13 @@ securityContext:
 # Cluster name
 clusterName: "es-cluster"
 
+# Pod Disruption Budget settings for production safety
+podDisruptionBudget:
+  # Enable PodDisruptionBudgets to prevent too many pods being unavailable during maintenance
+  enabled: true
+  # For master nodes: ensure at least 1 master is always available (if >1 replica)
+  # For data nodes: ensure at least N-1 data nodes are available (if >1 replica)
+
 # Enable ElasticSearch monitoring
 useMonitoring: false
 # Update host sysctl
@@ -99,24 +106,24 @@ cerebro:
   healthChecks:
     # Startup probe configuration for Cerebro
     startup:
-      initialDelaySeconds: 30
-      periodSeconds: 10
-      timeoutSeconds: 5
-      failureThreshold: 30 # Allow up to 5 minutes for startup
+      initialDelaySeconds: 45
+      periodSeconds: 15
+      timeoutSeconds: 10
+      failureThreshold: 40 # Allow up to 10 minutes for startup
       successThreshold: 1
     # Readiness probe configuration for Cerebro
     readiness:
-      initialDelaySeconds: 15
-      periodSeconds: 30
-      timeoutSeconds: 5
-      failureThreshold: 3
+      initialDelaySeconds: 30
+      periodSeconds: 45
+      timeoutSeconds: 10
+      failureThreshold: 5
       successThreshold: 1
     # Liveness probe configuration for Cerebro
     liveness:
-      initialDelaySeconds: 60
-      periodSeconds: 60
-      timeoutSeconds: 5
-      failureThreshold: 3
+      initialDelaySeconds: 90
+      periodSeconds: 90
+      timeoutSeconds: 10
+      failureThreshold: 5
       successThreshold: 1
 
 esmaster:
@@ -148,37 +155,37 @@ esmaster:
     # Startup probe configuration
     startup:
       # Initial delay before starting startup probes
-      initialDelaySeconds: 30
+      initialDelaySeconds: 60
       # How often to perform the probe
-      periodSeconds: 10
+      periodSeconds: 15
       # Timeout for each probe
-      timeoutSeconds: 5
-      # Number of failures before marking container as failed to start
-      failureThreshold: 30
+      timeoutSeconds: 10
+      # Number of failures before marking container as failed to start (allows 15+ minutes)
+      failureThreshold: 60
       # Number of successes before marking container as started
       successThreshold: 1
     # Readiness probe configuration
     readiness:
       # Initial delay before starting readiness probes
-      initialDelaySeconds: 60
+      initialDelaySeconds: 120
       # How often to perform the probe
-      periodSeconds: 30
+      periodSeconds: 45
       # Timeout for each probe
-      timeoutSeconds: 10
-      # Number of failures before marking container as not ready
-      failureThreshold: 3
+      timeoutSeconds: 15
+      # Number of failures before marking container as not ready (allows 3+ minutes)
+      failureThreshold: 5
       # Number of successes before marking container as ready
       successThreshold: 1
     # Liveness probe configuration
     liveness:
       # Initial delay before starting liveness probes
-      initialDelaySeconds: 120
+      initialDelaySeconds: 300
       # How often to perform the probe
-      periodSeconds: 60
+      periodSeconds: 90
       # Timeout for each probe
-      timeoutSeconds: 10
-      # Number of failures before restarting container
-      failureThreshold: 5
+      timeoutSeconds: 15
+      # Number of failures before restarting container (allows 15+ minutes red state)
+      failureThreshold: 10
       # Number of successes before marking container as alive
       successThreshold: 1
 
@@ -204,37 +211,37 @@ esworker:
     # Startup probe configuration
     startup:
       # Initial delay before starting startup probes
-      initialDelaySeconds: 30
+      initialDelaySeconds: 60
       # How often to perform the probe
-      periodSeconds: 10
+      periodSeconds: 15
       # Timeout for each probe
-      timeoutSeconds: 5
-      # Number of failures before marking container as failed to start
-      failureThreshold: 30
+      timeoutSeconds: 10
+      # Number of failures before marking container as failed to start (allows 15+ minutes)
+      failureThreshold: 60
       # Number of successes before marking container as started
       successThreshold: 1
     # Readiness probe configuration
     readiness:
       # Initial delay before starting readiness probes
-      initialDelaySeconds: 60
+      initialDelaySeconds: 120
       # How often to perform the probe
-      periodSeconds: 30
+      periodSeconds: 45
       # Timeout for each probe
-      timeoutSeconds: 10
-      # Number of failures before marking container as not ready
-      failureThreshold: 3
+      timeoutSeconds: 15
+      # Number of failures before marking container as not ready (allows 3+ minutes)
+      failureThreshold: 5
       # Number of successes before marking container as ready
       successThreshold: 1
     # Liveness probe configuration
     liveness:
       # Initial delay before starting liveness probes
-      initialDelaySeconds: 120
+      initialDelaySeconds: 300
       # How often to perform the probe
-      periodSeconds: 60
+      periodSeconds: 90
       # Timeout for each probe
-      timeoutSeconds: 10
-      # Number of failures before restarting container
-      failureThreshold: 5
+      timeoutSeconds: 15
+      # Number of failures before restarting container (allows 15+ minutes red state)
+      failureThreshold: 10
       # Number of successes before marking container as alive
       successThreshold: 1
 
@@ -291,22 +298,22 @@ kibana:
   healthChecks:
     # Startup probe configuration for Kibana
     startup:
-      initialDelaySeconds: 60
-      periodSeconds: 10
-      timeoutSeconds: 5
-      failureThreshold: 60 # Allow up to 10 minutes for startup
+      initialDelaySeconds: 90
+      periodSeconds: 15
+      timeoutSeconds: 10
+      failureThreshold: 80 # Allow up to 20 minutes for startup
       successThreshold: 1
     # Readiness probe configuration for Kibana
     readiness:
-      initialDelaySeconds: 30
-      periodSeconds: 30
-      timeoutSeconds: 10
-      failureThreshold: 3
+      initialDelaySeconds: 60
+      periodSeconds: 45
+      timeoutSeconds: 15
+      failureThreshold: 5
       successThreshold: 1
     # Liveness probe configuration for Kibana
     liveness:
-      initialDelaySeconds: 120
-      periodSeconds: 60
-      timeoutSeconds: 10
-      failureThreshold: 3
+      initialDelaySeconds: 180
+      periodSeconds: 90
+      timeoutSeconds: 15
+      failureThreshold: 5
       successThreshold: 1

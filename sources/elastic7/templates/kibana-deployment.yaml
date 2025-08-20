@@ -8,6 +8,11 @@ metadata:
     component: kibana
 spec:
   replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
   selector:
     matchLabels:
       {{- include "appl.selectorLabels" . | nindent 6 }}
@@ -19,6 +24,7 @@ spec:
         {{- include "appl.selectorLabels" . | nindent 8 }}
         component: kibana
     spec:
+      terminationGracePeriodSeconds: 60
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
