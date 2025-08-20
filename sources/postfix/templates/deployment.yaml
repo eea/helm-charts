@@ -36,7 +36,7 @@ spec:
       containers:
       - name: postfix
         {{- if .Values.dryrun }}
-        image: eaudeweb/mailtrap:2.4
+        image: eaudeweb/mailtrap:2.5
         {{- else }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
         {{- end }}
