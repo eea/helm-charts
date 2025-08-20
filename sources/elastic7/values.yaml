@@ -244,6 +244,21 @@ esworker:
       failureThreshold: 10
       # Number of successes before marking container as alive
       successThreshold: 1
+  # Service configuration for Elasticsearch data nodes
+  service:
+    type: ClusterIP
+    port: 9200
+  # Ingress configuration for Elasticsearch data nodes
+  ingress:
+    enabled: true
+    className: ""
+    annotations: {}
+    hostname: elasticsearch.example.com
+    tls: []
+    # Example TLS configuration:
+    #  - secretName: elasticsearch-tls
+    #    hosts:
+    #      - elasticsearch.example.com
 
 kibana:
   enabled: true

@@ -128,6 +128,58 @@ questions:
     group: "Kibana Configuration"
     show_if: "addKibana=true&&kibana.ingress.enabled=true"
 
+  # Elasticsearch Ingress Configuration
+  - variable: "esworker.ingress.enabled"
+    label: "Enable Elasticsearch Ingress"
+    description: "Enable ingress controller for Elasticsearch access"
+    default: true
+    required: true
+    type: boolean
+    group: "Elasticsearch Ingress"
+
+  - variable: "esworker.ingress.hostname"
+    description: "Hostname for Elasticsearch ingress (e.g. elasticsearch.company.com)"
+    label: "Elasticsearch Ingress Hostname"
+    type: "string"
+    default: "elasticsearch.example.com"
+    group: "Elasticsearch Ingress"
+    show_if: "esworker.ingress.enabled=true"
+
+  - variable: "esworker.ingress.className"
+    description: "Ingress class name (e.g. nginx, traefik)"
+    label: "Elasticsearch Ingress Class"
+    type: "string"
+    default: ""
+    group: "Elasticsearch Ingress"
+    show_if: "esworker.ingress.enabled=true"
+
+  - variable: "esworker.ingress.annotations"
+    description: "Additional ingress annotations (YAML format)"
+    label: "Elasticsearch Ingress Annotations"
+    type: "multiline"
+    default: |
+      # Example annotations:
+      # nginx.ingress.kubernetes.io/rewrite-target: /
+      # cert-manager.io/cluster-issuer: letsencrypt-prod
+    group: "Elasticsearch Ingress"
+    show_if: "esworker.ingress.enabled=true"
+
+  # TLS Configuration for Elasticsearch Ingress
+  - variable: "esworker.ingress.tls[0].secretName"
+    description: "Secret name containing TLS certificate"
+    label: "TLS Secret Name"
+    type: "string"
+    group: "Elasticsearch Ingress"
+    show_if: "esworker.ingress.enabled=true"
+
+  - variable: "esworker.ingress.tls[0].hosts[0]"
+    description: "Hostname for TLS certificate"
+    label: "TLS Certificate Hostname"
+    type: "string"
+    default: "elasticsearch.example.com"
+    group: "Elasticsearch Ingress"
+    show_if: "esworker.ingress.enabled=true"
+
   - variable: "esPort"
     label: "ElasticSearch expose port"
     description: "Select true to expose it"

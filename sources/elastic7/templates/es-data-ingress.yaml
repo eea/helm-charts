@@ -1,0 +1,54 @@
+{{- if .Values.esworker.ingress.enabled -}}
+{{- $fullName := include "appl.fullname" . -}}
+{{- $svcPort := .Values.esworker.service.port -}}
+{{- if and .Values.esworker.ingress.className (not (hasKey .Values.esworker.ingress.annotations "kubernetes.io/ingress.class")) }}
+  {{- $_ := set .Values.esworker.ingress.annotations "kubernetes.io/ingress.class" .Values.esworker.ingress.className}}
+{{- end }}
+{{- if semverCompare ">=1.19-0" .Capabilities.KubeVersion.GitVersion -}}
+apiVersion: networking.k8s.io/v1
+{{- else if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
+apiVersion: networking.k8s.io/v1beta1
+{{- else -}}
+apiVersion: extensions/v1beta1
+{{- end }}
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-elasticsearch
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: elasticsearch
+  {{- with .Values.esworker.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if and .Values.esworker.ingress.className (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion) }}
+  ingressClassName: {{ .Values.esworker.ingress.className }}
+  {{- end }}
+  {{- if .Values.esworker.ingress.tls }}
+  tls:
+    {{- range .Values.esworker.ingress.tls }}
+    - hosts:
+        {{- range .hosts }}
+        - {{ . | quote }}
+        {{- end }}
+      secretName: {{ .secretName }}
+    {{- end }}
+  {{- end }}
+  rules:
+    - host: {{ $.Values.esworker.ingress.hostname | quote }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
+              service:
+                name: {{ $.Release.Name }}-data-ingress
+                port:
+                  number: {{ $svcPort }}
+              {{- else }}
+              serviceName: {{ $.Release.Name }}-data-ingress
+              servicePort: {{ $svcPort }}
+              {{- end }}
+{{- end }}
