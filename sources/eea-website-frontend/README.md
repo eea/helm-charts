@@ -11,6 +11,9 @@ This chart deploys the EEA Main Website frontend app
 
 ## Releases
 
+### Version 1.17.9 - 20 August 2025
+- add ingress pathType as a value [Silviu - [`df4f0fc8`](https://github.com/eea/helm-charts/commit/df4f0fc84940386611a1a85c113133045f27019f)]
+
 ### Version 1.17.8 - 20 August 2025
 - Remove CSP as its not needed [valentinab25 - [`cad2c579`](https://github.com/eea/helm-charts/commit/cad2c5790cb10ae87b7eb2b4f766ba2fcb627eea)]
 
