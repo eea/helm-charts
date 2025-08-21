@@ -24,6 +24,12 @@ serviceAccount:
   ##
   annotations: {}
 
+tags:
+  # If true, this chart will install opensearch from requirement dependencies
+  install-opensearch: true
+  # If true, this chart will install MongoDB replicaset from requirement dependencies
+  install-mongodb: true
+
 ## Enable only if your current release was migrated from helm2 (using 2to3 plugin).
 ##
 ## Because Kubernetes considers some StatefulSets fields/labels immutable,
@@ -335,6 +341,25 @@ graylog:
     ## An URL path
     path: /
 
+  istio:
+    ## If true, Graylog server Istio Ingress Gateway will be created
+    ##
+    enabled: false
+
+    ## Change if you use custom ingressgateway controller
+    gatewaySelector:
+      istio: ingressgateway
+
+    ## Graylog server Istio Ingress Gateway hostnames with optional path
+    ## Must be provided if Ingress is enabled
+    ## Note: Graylog does not support two URL. You can specify only single URL
+    ##
+    host: graylog.yourdomain.com
+
+    ## Please note that tls secret should reside in istio-system namespace
+    ## leave blanc for disabling TLS
+    tlsSecretName: ""
+
   ## Configure resource requests and limits
   ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
   ##
@@ -576,7 +601,7 @@ opensearch:
     - name: plugins.security.disabled
       value: "true"
     - name: OPENSEARCH_INITIAL_ADMIN_PASSWORD
-      value: "Graylog@2024" # Strong password meeting requirements: uppercase, lowercase, number, special char, >8 chars
+      value: "Graylog@2024"  # Strong password meeting requirements: uppercase, lowercase, number, special char, >8 chars
   ## Set default resource very low. This help reduce resources usage on GitHub Action when performing chart-testing.
   opensearchJavaOpts: "-Xmx128M -Xms128M"
   resources:

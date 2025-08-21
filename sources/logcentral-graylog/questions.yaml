@@ -1,40 +1,62 @@
 questions:
   - variable: graylog.image.tag
     default: "6.3.1"
-    description: "Graylog Docker image tag"
+    description: "Graylog Docker image tag version"
     type: string
-    label: Graylog Version
+    label: Graylog Image Version
     group: "Container Images"
 
   - variable: graylog.replicas
     default: 1
     description: "Number of Graylog instances"
     type: int
-    min: 1
-    max: 10
     label: Graylog Replicas
-    group: "Scaling"
+    group: "Container Images"
 
-  - variable: graylog.rootUsername
-    default: "admin"
-    description: "Graylog root administrator username"
+  - variable: graylog.heapSize
+    default: "16g"
+    description: "Graylog Java heap size"
     type: string
-    label: Root Username
-    group: "Authentication"
+    label: Java Heap Size
+    group: "Container Images"
 
-  - variable: graylog.rootPassword
+  - variable: graylog.externalUri
     default: ""
-    description: "Graylog root administrator password (leave empty for auto-generated)"
-    type: password
-    label: Root Password
-    group: "Authentication"
-
-  - variable: graylog.rootEmail
-    default: ""
-    description: "Email address for the root user"
+    description: "External URL to access Graylog (e.g., https://graylog.mycompany.com)"
     type: string
-    label: Root Email
-    group: "Authentication"
+    label: External URI
+    group: "Networking"
+
+  - variable: graylog.ingress.enabled
+    default: false
+    description: "Enable ingress for Graylog"
+    type: boolean
+    label: Enable Ingress
+    group: "Networking"
+
+  - variable: graylog.ingress.hosts[0]
+    default: "graylog.yourdomain.com"
+    description: "Hostname for the ingress"
+    type: hostname
+    label: Ingress Hostname
+    group: "Networking"
+    show_if: "graylog.ingress.enabled=true"
+
+  - variable: graylog.ingress.ingressClassName
+    default: ""
+    description: "Ingress class name"
+    type: string
+    label: Ingress Class
+    group: "Networking"
+    show_if: "graylog.ingress.enabled=true"
+
+  - variable: graylog.ingress.tls[0].secretName
+    default: "graylog-server-tls"
+    description: "TLS secret name for ingress"
+    type: string
+    label: TLS Secret Name
+    group: "Networking"
+    show_if: "graylog.ingress.enabled=true"
 
   - variable: graylog.persistence.enabled
     default: true
@@ -51,62 +73,63 @@ questions:
     group: "Storage"
     show_if: "graylog.persistence.enabled=true"
 
-  - variable: graylog.service.port
-    default: 9000
-    description: "Port for Graylog web interface"
-    type: int
-    label: Web Interface Port
-    group: "Networking"
+  - variable: graylog.persistence.storageClass
+    default: ""
+    description: "Storage class for the persistent volume"
+    type: storageclass
+    label: Storage Class
+    group: "Storage"
+    show_if: "graylog.persistence.enabled=true"
 
-  - variable: graylog.ingress.enabled
-    default: false
-    description: "Enable ingress for Graylog web interface"
+  - variable: graylog.rootUsername
+    default: "admin"
+    description: "Graylog root user name"
+    type: string
+    label: Root Username
+    group: "Authentication"
+
+  - variable: graylog.rootPassword
+    default: ""
+    description: "Graylog root password (leave empty to auto-generate)"
+    type: password
+    label: Root Password
+    group: "Authentication"
+
+  - variable: graylog.rootEmail
+    default: ""
+    description: "Graylog root user email"
+    type: string
+    label: Root Email
+    group: "Authentication"
+
+  - variable: graylog.rootTimezone
+    default: "UTC"
+    description: "Graylog root timezone"
+    type: string
+    label: Root Timezone
+    group: "Authentication"
+
+  - variable: tags.install-opensearch
+    default: true
+    description: "Install OpenSearch from dependencies"
     type: boolean
-    label: Enable Ingress
-    group: "Networking"
+    label: Install OpenSearch
+    group: "Dependencies"
 
-  - variable: graylog.ingress.hosts
-    default: []
-    description: "Hostnames for ingress (e.g., graylog.example.com)"
-    type: array[string]
-    label: Ingress Hosts
-    group: "Networking"
-    show_if: "graylog.ingress.enabled=true"
-
-  - variable: graylog.resources.requests.cpu
-    default: "200m"
-    description: "CPU request for Graylog pods"
-    type: string
-    label: CPU Request
-    group: "Resources"
-
-  - variable: graylog.resources.requests.memory
-    default: "512Mi"
-    description: "Memory request for Graylog pods"
-    type: string
-    label: Memory Request
-    group: "Resources"
-
-  - variable: graylog.resources.limits.cpu
-    default: "1"
-    description: "CPU limit for Graylog pods"
-    type: string
-    label: CPU Limit
-    group: "Resources"
-
-  - variable: graylog.heapSize
-    default: "16g"
-    description: "Java heap size for Graylog"
-    type: string
-    label: Java Heap Size
-    group: "Resources"
+  - variable: tags.install-mongodb
+    default: true
+    description: "Install MongoDB from dependencies"
+    type: boolean
+    label: Install MongoDB
+    group: "Dependencies"
 
   - variable: graylog.opensearch.hosts
     default: ""
-    description: "OpenSearch hosts (comma-separated list)"
+    description: "OpenSearch hosts (comma-separated URIs). Leave empty to use installed OpenSearch"
     type: string
-    label: External OpenSearch Hosts
+    label: OpenSearch Hosts
     group: "Dependencies"
+    show_if: "tags.install-opensearch=false"
 
   - variable: graylog.opensearch.username
     default: "admin"
@@ -114,14 +137,124 @@ questions:
     type: string
     label: OpenSearch Username
     group: "Dependencies"
-    show_if: "graylog.opensearch.hosts!="
+    show_if: "tags.install-opensearch=false"
 
   - variable: graylog.mongodb.uri
     default: ""
-    description: "MongoDB connection URI"
+    description: "MongoDB connection string. Leave empty to use installed MongoDB"
     type: string
-    label: External MongoDB URI
+    label: MongoDB URI
     group: "Dependencies"
+    show_if: "tags.install-mongodb=false"
+
+  - variable: graylog.mongodb.maxConnections
+    default: 1000
+    description: "Maximum connections to MongoDB"
+    type: int
+    label: MongoDB Max Connections
+    group: "Dependencies"
+
+  - variable: graylog.resources.requests.memory
+    default: "512Mi"
+    description: "Memory request for Graylog container"
+    type: string
+    label: Memory Request
+    group: "Resources"
+
+  - variable: graylog.resources.requests.cpu
+    default: "200m"
+    description: "CPU request for Graylog container"
+    type: string
+    label: CPU Request
+    group: "Resources"
+
+  - variable: graylog.resources.limits.cpu
+    default: "1"
+    description: "CPU limit for Graylog container"
+    type: string
+    label: CPU Limit
+    group: "Resources"
+
+  - variable: graylog.service.type
+    default: "ClusterIP"
+    description: "Graylog service type"
+    type: enum
+    options:
+      - "ClusterIP"
+      - "NodePort"
+      - "LoadBalancer"
+    label: Service Type
+    group: "Services"
+
+  - variable: graylog.service.port
+    default: 9000
+    description: "Graylog web interface port"
+    type: int
+    label: Web Interface Port
+    group: "Services"
+
+  - variable: graylog.transportEmail.enabled
+    default: false
+    description: "Enable email transport for Graylog"
+    type: boolean
+    label: Enable Email Transport
+    group: "Email Configuration"
+
+  - variable: graylog.transportEmail.hostname
+    default: ""
+    description: "SMTP hostname"
+    type: string
+    label: SMTP Hostname
+    group: "Email Configuration"
+    show_if: "graylog.transportEmail.enabled=true"
+
+  - variable: graylog.transportEmail.port
+    default: 2587
+    description: "SMTP port"
+    type: int
+    label: SMTP Port
+    group: "Email Configuration"
+    show_if: "graylog.transportEmail.enabled=true"
+
+  - variable: graylog.transportEmail.useAuth
+    default: true
+    description: "Use SMTP authentication"
+    type: boolean
+    label: Use SMTP Auth
+    group: "Email Configuration"
+    show_if: "graylog.transportEmail.enabled=true"
+
+  - variable: graylog.transportEmail.useTls
+    default: true
+    description: "Use TLS for SMTP"
+    type: boolean
+    label: Use TLS
+    group: "Email Configuration"
+    show_if: "graylog.transportEmail.enabled=true"
+
+  - variable: graylog.transportEmail.authUsername
+    default: ""
+    description: "SMTP authentication username"
+    type: string
+    label: SMTP Username
+    group: "Email Configuration"
+    show_if: "graylog.transportEmail.enabled=true"
+
+  - variable: graylog.transportEmail.authPassword
+    default: ""
+    description: "SMTP authentication password"
+    type: password
+    label: SMTP Password
+    group: "Email Configuration"
+    show_if: "graylog.transportEmail.enabled=true"
+
+  - variable: graylog.transportEmail.fromEmail
+    default: ""
+    description: "From email address"
+    type: string
+    label: From Email
+    group: "Email Configuration"
+    show_if: "graylog.transportEmail.enabled=true"
 
   - variable: graylog.metrics.enabled
     default: false
@@ -132,61 +265,48 @@ questions:
 
   - variable: graylog.metrics.serviceMonitor.enabled
     default: false
-    description: "Create ServiceMonitor for Prometheus operator"
+    description: "Enable ServiceMonitor for Prometheus"
     type: boolean
-    label: Create ServiceMonitor
+    label: Enable ServiceMonitor
     group: "Monitoring"
     show_if: "graylog.metrics.enabled=true"
 
-  - variable: graylog.geoip.enabled
-    default: false
-    description: "Enable GeoIP database for location lookups"
-    type: boolean
-    label: Enable GeoIP
-    group: "Features"
-
-  - variable: graylog.transportEmail.enabled
-    default: false
-    description: "Enable email transport for notifications"
-    type: boolean
-    label: Enable Email Transport
-    group: "Features"
-
-  - variable: graylog.transportEmail.hostname
-    default: ""
-    description: "SMTP server hostname"
+  - variable: opensearch.opensearchJavaOpts
+    default: "-Xmx128M -Xms128M"
+    description: "OpenSearch Java options"
     type: string
-    label: SMTP Hostname
-    group: "Features"
-    show_if: "graylog.transportEmail.enabled=true"
+    label: OpenSearch Java Options
+    group: "OpenSearch Configuration"
+    show_if: "tags.install-opensearch=true"
 
-  - variable: graylog.transportEmail.port
-    default: 587
-    description: "SMTP server port"
+  - variable: opensearch.resources.requests.memory
+    default: "100Mi"
+    description: "Memory request for OpenSearch"
+    type: string
+    label: OpenSearch Memory Request
+    group: "OpenSearch Configuration"
+    show_if: "tags.install-opensearch=true"
+
+  - variable: opensearch.resources.requests.cpu
+    default: "100m"
+    description: "CPU request for OpenSearch"
+    type: string
+    label: OpenSearch CPU Request
+    group: "OpenSearch Configuration"
+    show_if: "tags.install-opensearch=true"
+
+  - variable: mongodb.replicaCount
+    default: 1
+    description: "Number of MongoDB replicas"
     type: int
-    label: SMTP Port
-    group: "Features"
-    show_if: "graylog.transportEmail.enabled=true"
+    label: MongoDB Replicas
+    group: "MongoDB Configuration"
+    show_if: "tags.install-mongodb=true"
 
-  - variable: graylog.transportEmail.authUsername
-    default: ""
-    description: "SMTP authentication username"
-    type: string
-    label: SMTP Username
-    group: "Features"
-    show_if: "graylog.transportEmail.enabled=true"
-
-  - variable: graylog.transportEmail.authPassword
-    default: ""
-    description: "SMTP authentication password"
-    type: password
-    label: SMTP Password
-    group: "Features"
-    show_if: "graylog.transportEmail.enabled=true"
-
-  - variable: graylog.journal.maxSize
-    default: "5gb"
-    description: "Maximum size of the Graylog journal"
-    type: string
-    label: Journal Max Size
-    group: "Advanced"
+  - variable: mongodb.auth.enabled
+    default: false
+    description: "Enable MongoDB authentication"
+    type: boolean
+    label: Enable MongoDB Auth
+    group: "MongoDB Configuration"
+    show_if: "tags.install-mongodb=true"
