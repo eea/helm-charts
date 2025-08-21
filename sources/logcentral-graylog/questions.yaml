@@ -463,14 +463,14 @@ questions:
     show_if: "graylog.input.udp.enabled=true"
 
   # Common input buffer settings
-  - variable: graylog.config.inputbufferProcessors
+  - variable: graylog.options.inputbufferProcessors
     default: 2
     description: "Number of input buffer processors (should not exceed CPU cores)"
     type: int
     label: Input Buffer Processors
     group: "Data Inputs"
 
-  - variable: graylog.config.inputBufferRingSize
+  - variable: graylog.options.inputBufferRingSize
     default: ""
     description: "Size of input buffer ring (must be power of 2: 512, 1024, 2048, etc.)"
     type: string
