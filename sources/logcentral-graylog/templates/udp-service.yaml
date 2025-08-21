@@ -1,4 +1,11 @@
-{{- if .Values.graylog.input.udp }}
+{{- if .Values.graylog.input.udp.enabled }}
+{{- $hasValidPorts := false }}
+{{- range .Values.graylog.input.udp.ports }}
+{{- if .name }}
+{{- $hasValidPorts = true }}
+{{- end }}
+{{- end }}
+{{- if $hasValidPorts }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -54,4 +61,5 @@ spec:
   {{- end }}
   {{- end -}}
 {{- end -}}
+{{- end }}
 {{- end }}
