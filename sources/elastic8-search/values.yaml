@@ -111,12 +111,25 @@ ingress:
     nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
     nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
   hosts:
-    - host: elastic8_internal.ai-lab-aws.eea.europa.eu
+    - host: elastic8-internal.ai-lab-aws.eea.europa.eu
       paths:
         - path: /
           pathType: Prefix
           service: es-data
           port: 9200
+    # Example of additional hosts (uncomment and modify as needed):
+    # - host: elastic8-kibana.ai-lab-aws.eea.europa.eu
+    #   paths:
+    #     - path: /
+    #       pathType: Prefix
+    #       service: kibana
+    #       port: 5601
+    # - host: elastic8-cerebro.ai-lab-aws.eea.europa.eu
+    #   paths:
+    #     - path: /
+    #       pathType: Prefix
+    #       service: cerebro
+    #       port: 9000
   tls:
     enabled: false
     secretName: ""
