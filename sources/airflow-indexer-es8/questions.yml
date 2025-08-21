@@ -1,0 +1,287 @@
+questions:
+- variable: global.nodeSelector.ReservedFor
+  label: "Node Selector - Reserved For"
+  description: "Node selector label for pod placement"
+  type: string
+  default: "GPTLab"
+  group: "Global Settings"
+
+- variable: global.tolerations[0].key
+  label: "Toleration Key"
+  description: "Toleration key for pod scheduling"
+  type: string
+  default: "ReservedFor"
+  group: "Global Settings"
+
+- variable: global.tolerations[0].value
+  label: "Toleration Value"
+  description: "Toleration value for pod scheduling"
+  type: string
+  default: "GPTLab"
+  group: "Global Settings"
+
+- variable: replicaCount
+  label: "Default Replica Count"
+  description: "Default number of replicas"
+  type: int
+  default: 1
+  group: "General"
+
+- variable: airflowInit.replicaCount
+  label: "Airflow Init Replica Count"
+  description: "Number of Airflow init replicas"
+  type: int
+  default: 1
+  group: "Airflow Init"
+
+- variable: airflowInit.image.repository
+  label: "Airflow Init Image Repository"
+  description: "Docker image repository for Airflow init"
+  type: string
+  default: "apache/airflow"
+  group: "Airflow Init"
+
+- variable: airflowInit.image.tag
+  label: "Airflow Init Image Tag"
+  description: "Docker image tag for Airflow init"
+  type: string
+  default: "2.7.0"
+  group: "Airflow Init"
+
+- variable: airflowInit.resources.limits.memory
+  label: "Airflow Init Memory Limit"
+  description: "Memory limit for Airflow init container"
+  type: string
+  default: "1Gi"
+  group: "Airflow Init"
+
+- variable: airflowInit.resources.requests.memory
+  label: "Airflow Init Memory Request"
+  description: "Memory request for Airflow init container"
+  type: string
+  default: "512Mi"
+  group: "Airflow Init"
+
+- variable: airflowWorker.replicaCount
+  label: "Airflow Worker Replica Count"
+  description: "Number of Airflow worker replicas"
+  type: int
+  default: 1
+  group: "Airflow Worker"
+
+- variable: airflowWorker.image.repository
+  label: "Airflow Worker Image Repository"
+  description: "Docker image repository for Airflow worker"
+  type: string
+  default: "apache/airflow"
+  group: "Airflow Worker"
+
+- variable: airflowWorker.image.tag
+  label: "Airflow Worker Image Tag"
+  description: "Docker image tag for Airflow worker"
+  type: string
+  default: "2.7.0"
+  group: "Airflow Worker"
+
+- variable: airflowWorker.resources.limits.memory
+  label: "Airflow Worker Memory Limit"
+  description: "Memory limit for Airflow worker container"
+  type: string
+  default: "16Gi"
+  group: "Airflow Worker"
+
+- variable: airflowWorker.resources.requests.memory
+  label: "Airflow Worker Memory Request"
+  description: "Memory request for Airflow worker container"
+  type: string
+  default: "8Gi"
+  group: "Airflow Worker"
+
+- variable: headlessChromeApi.replicaCount
+  label: "Headless Chrome API Replica Count"
+  description: "Number of Headless Chrome API replicas"
+  type: int
+  default: 1
+  group: "Headless Chrome API"
+
+- variable: headlessChromeApi.image.repository
+  label: "Headless Chrome API Image Repository"
+  description: "Docker image repository for Headless Chrome API"
+  type: string
+  default: "eeacms/headless-chrome-api"
+  group: "Headless Chrome API"
+
+- variable: headlessChromeApi.image.tag
+  label: "Headless Chrome API Image Tag"
+  description: "Docker image tag for Headless Chrome API"
+  type: string
+  default: "0.1.16"
+  group: "Headless Chrome API"
+
+- variable: ide.replicaCount
+  label: "IDE Replica Count"
+  description: "Number of IDE replicas"
+  type: int
+  default: 1
+  group: "IDE"
+
+- variable: ide.image.repository
+  label: "IDE Image Repository"
+  description: "Docker image repository for IDE"
+  type: string
+  default: "linuxserver/code-server"
+  group: "IDE"
+
+- variable: ide.service.port
+  label: "IDE Service Port"
+  description: "Port for IDE service"
+  type: int
+  default: 55721
+  group: "IDE"
+
+- variable: rabbitmq.replicaCount
+  label: "RabbitMQ Replica Count"
+  description: "Number of RabbitMQ replicas"
+  type: int
+  default: 1
+  group: "RabbitMQ"
+
+- variable: rabbitmq.image.repository
+  label: "RabbitMQ Image Repository"
+  description: "Docker image repository for RabbitMQ"
+  type: string
+  default: "eeacms/rabbitmq"
+  group: "RabbitMQ"
+
+- variable: rabbitmq.image.tag
+  label: "RabbitMQ Image Tag"
+  description: "Docker image tag for RabbitMQ"
+  type: string
+  default: "3.7.15-1"
+  group: "RabbitMQ"
+
+- variable: rabbitmq.service.port
+  label: "RabbitMQ Service Port"
+  description: "Port for RabbitMQ service"
+  type: int
+  default: 53532
+  group: "RabbitMQ"
+
+- variable: redis.replicaCount
+  label: "Redis Replica Count"
+  description: "Number of Redis replicas"
+  type: int
+  default: 1
+  group: "Redis"
+
+- variable: redis.image.repository
+  label: "Redis Image Repository"
+  description: "Docker image repository for Redis"
+  type: string
+  default: "redis"
+  group: "Redis"
+
+- variable: redis.image.tag
+  label: "Redis Image Tag"
+  description: "Docker image tag for Redis"
+  type: string
+  default: "6.2.4"
+  group: "Redis"
+
+- variable: redis.service.port
+  label: "Redis Service Port"
+  description: "Port for Redis service"
+  type: int
+  default: 49732
+  group: "Redis"
+
+- variable: postgres.replicaCount
+  label: "PostgreSQL Replica Count"
+  description: "Number of PostgreSQL replicas"
+  type: int
+  default: 1
+  group: "PostgreSQL"
+
+- variable: postgres.image.repository
+  label: "PostgreSQL Image Repository"
+  description: "Docker image repository for PostgreSQL"
+  type: string
+  default: "postgres"
+  group: "PostgreSQL"
+
+- variable: postgres.image.tag
+  label: "PostgreSQL Image Tag"
+  description: "Docker image tag for PostgreSQL"
+  type: string
+  default: "13-bullseye"
+  group: "PostgreSQL"
+
+- variable: postgres.env.POSTGRES_DB
+  label: "PostgreSQL Database Name"
+  description: "Name of the PostgreSQL database"
+  type: string
+  default: "airflow"
+  group: "PostgreSQL"
+
+- variable: postgres.env.POSTGRES_USER
+  label: "PostgreSQL User"
+  description: "PostgreSQL username"
+  type: string
+  default: "airflow"
+  group: "PostgreSQL"
+
+- variable: postgres.env.POSTGRES_PASSWORD
+  label: "PostgreSQL Password"
+  description: "PostgreSQL password"
+  type: password
+  default: "airflow"
+  group: "PostgreSQL"
+
+- variable: persistence.storageClass
+  label: "Storage Class"
+  description: "Storage class for persistent volumes"
+  type: string
+  default: "local-path"
+  group: "Persistence"
+
+- variable: persistence.eeacrawlerconfig.size
+  label: "EEA Crawler Config Volume Size"
+  description: "Size of the EEA crawler config persistent volume"
+  type: string
+  default: "1Gi"
+  group: "Persistence"
+
+- variable: persistence.eeacrawlerlogs.size
+  label: "EEA Crawler Logs Volume Size"
+  description: "Size of the EEA crawler logs persistent volume"
+  type: string
+  default: "5Gi"
+  group: "Persistence"
+
+- variable: persistence.postgresdata.size
+  label: "PostgreSQL Data Volume Size"
+  description: "Size of the PostgreSQL data persistent volume"
+  type: string
+  default: "10Gi"
+  group: "Persistence"
+
+- variable: ingress.enabled
+  label: "Enable Ingress"
+  description: "Enable ingress for the application"
+  type: boolean
+  default: true
+  group: "Ingress"
+
+- variable: ingress.className
+  label: "Ingress Class Name"
+  description: "Ingress class name"
+  type: string
+  default: "nginx"
+  group: "Ingress"
+
+- variable: ingress.hosts[0].host
+  label: "Ingress Host"
+  description: "Hostname for ingress"
+  type: string
+  default: "airflow-indexer.example.com"
+  group: "Ingress"

@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-{{ .Chart.Name }}-rabbitmq
+  labels:
+    app.kubernetes.io/name: {{ .Chart.Name }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/version: "{{ .Chart.AppVersion }}"
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.rabbitmq.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ .Chart.Name }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/version: "{{ .Chart.AppVersion }}"
+      app.kubernetes.io/managed-by: {{ .Release.Service }}
+      app.kubernetes.io/component: rabbitmq
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ .Chart.Name }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/version: "{{ .Chart.AppVersion }}"
+        app.kubernetes.io/managed-by: {{ .Release.Service }}
+        app.kubernetes.io/component: rabbitmq
+    spec:
+      containers:
+      - name: rabbitmq
+        image: "{{ .Values.rabbitmq.image.repository }}:{{ .Values.rabbitmq.image.tag }}"
+        imagePullPolicy: {{ .Values.rabbitmq.image.pullPolicy }}
+        env:
+        - name: RABBITMQ_DEFAULT_PASS
+          value: "{{ .Values.rabbitmq.env.RABBITMQ_DEFAULT_PASS }}"
+        - name: RABBITMQ_DEFAULT_USER
+          value: "{{ .Values.rabbitmq.env.RABBITMQ_DEFAULT_USER }}"
+        - name: TZ
+          value: "{{ .Values.rabbitmq.env.TZ }}"
+        volumeMounts:
+        - name: rabbitmq-data
+          mountPath: /var/lib/rabbitmq
+        resources:
+          limits:
+            memory: "{{ .Values.rabbitmq.resources.limits.memory }}"
+          requests:
+            memory: "{{ .Values.rabbitmq.resources.requests.memory }}"
+        ports:
+        - containerPort: 5672
+        - containerPort: 15672
+      volumes:
+      - name: rabbitmq-data
+        persistentVolumeClaim:
+          claimName: {{ (index .Values.rabbitmq.volumes 0).persistentVolumeClaim.claimName }}

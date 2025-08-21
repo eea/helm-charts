@@ -1,0 +1,342 @@
+
+replicaCount: 1
+airflowInit:
+  replicaCount: 1
+  image:
+    repository: apache/airflow
+    pullPolicy: IfNotPresent
+    tag: 2.7.0
+  env:
+    AIRFLOW__API__AUTH_BACKEND: airflow.api.auth.backend.basic_auth
+    AIRFLOW__CELERY__BROKER_URL: redis://:@redis:6379/0
+    AIRFLOW__CELERY__RESULT_BACKEND: db+postgresql://airflow:airflow@postgres/airflow
+    AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
+    AIRFLOW__CORE__DAG_CONCURRENCY: '64'
+    AIRFLOW__CORE__EXECUTOR: CeleryExecutor
+    AIRFLOW__CORE__FERNET_KEY: ''
+    AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
+    AIRFLOW__CORE__PARALLELISM: '128'
+    AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
+    TZ: Europe/Copenhagen
+    _AIRFLOW_DB_UPGRADE: 'true'
+    _AIRFLOW_WWW_USER_CREATE: 'true'
+    _AIRFLOW_WWW_USER_PASSWORD: airflow
+    _AIRFLOW_WWW_USER_USERNAME: airflow
+  resources:
+    limits:
+      memory: 1Gi
+    requests:
+      memory: 512Mi
+  volumes:
+    - name: eeacrawlerconfigEs8
+      persistentVolumeClaim:
+        claimName: eeacrawlerconfig-es8
+    - name: eeacrawlerlogsEs8
+      persistentVolumeClaim:
+        claimName: eeacrawlerlogs-es8
+airflowWorker:
+  replicaCount: 1
+  image:
+    repository: apache/airflow
+    pullPolicy: IfNotPresent
+    tag: 2.7.0
+  env:
+    AIRFLOW_VAR_SDI_AUTH: Basic <encoded-credentials>
+    AIRFLOW__API__AUTH_BACKEND: airflow.api.auth.backend.basic_auth
+    AIRFLOW__CELERY__BROKER_URL: redis://:@redis:6379/0
+    AIRFLOW__CELERY__RESULT_BACKEND: db+postgresql://airflow:airflow@postgres/airflow
+    AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
+    AIRFLOW__CORE__DAG_CONCURRENCY: '64'
+    AIRFLOW__CORE__EXECUTOR: CeleryExecutor
+    AIRFLOW__CORE__FERNET_KEY: ''
+    AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
+    AIRFLOW__CORE__PARALLELISM: '128'
+    AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
+    SENTRY_DSN: https://<sentry-key>@sentry.example.com/53
+    TZ: Europe/Copenhagen
+  resources:
+    limits:
+      memory: 16Gi
+    requests:
+      memory: 8Gi
+  volumes:
+    - name: eeacrawlerconfigEs8
+      persistentVolumeClaim:
+        claimName: eeacrawlerconfig-es8
+    - name: eeacrawlerlogsEs8
+      persistentVolumeClaim:
+        claimName: eeacrawlerlogs-es8
+headlessChromeApi:
+  replicaCount: 1
+  image:
+    repository: eeacms/headless-chrome-api
+    pullPolicy: IfNotPresent
+    tag: 0.1.16
+  env:
+    TZ: Europe/Copenhagen
+  resources:
+    limits:
+      memory: 1Gi
+    requests:
+      memory: 512Mi
+ide:
+  replicaCount: 1
+  image:
+    repository: linuxserver/code-server
+    pullPolicy: IfNotPresent
+    tag: latest
+  env:
+    C9_WORKSPACE: /config
+    TZ: Europe/Copenhagen
+  resources:
+    limits:
+      memory: 2Gi
+    requests:
+      memory: 512Mi
+  service:
+    type: ClusterIP
+    port: 55721
+  volumes:
+    - name: eeacrawlerconfigEs8
+      persistentVolumeClaim:
+        claimName: eeacrawlerconfig-es8
+    - name: nlpServiceSrc
+      persistentVolumeClaim:
+        claimName: nlp-service-src
+rabbitmq:
+  replicaCount: 1
+  image:
+    repository: eeacms/rabbitmq
+    pullPolicy: IfNotPresent
+    tag: 3.7.15-1
+  env:
+    RABBITMQ_DEFAULT_PASS: guest
+    RABBITMQ_DEFAULT_USER: guest
+    TZ: Europe/Copenhagen
+  resources:
+    limits:
+      memory: 4Gi
+    requests:
+      memory: 4Gi
+  service:
+    type: ClusterIP
+    port: 53532
+  volumes:
+    - name: crawlerrabbitmqEs8
+      persistentVolumeClaim:
+        claimName: crawlerrabbitmq-es8
+redis:
+  replicaCount: 1
+  image:
+    repository: redis
+    pullPolicy: IfNotPresent
+    tag: 6.2.4
+  env:
+    TZ: Europe/Copenhagen
+  resources:
+    limits:
+      memory: 512Mi
+    requests:
+      memory: 512Mi
+  service:
+    type: ClusterIP
+    port: 49732
+flower:
+  replicaCount: 1
+  image:
+    repository: apache/airflow
+    pullPolicy: IfNotPresent
+    tag: 2.7.0
+  env:
+    AIRFLOW__API__AUTH_BACKEND: airflow.api.auth.backend.basic_auth
+    AIRFLOW__CELERY__BROKER_URL: redis://:@redis:6379/0
+    AIRFLOW__CELERY__RESULT_BACKEND: db+postgresql://airflow:airflow@postgres/airflow
+    AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
+    AIRFLOW__CORE__DAG_CONCURRENCY: '64'
+    AIRFLOW__CORE__EXECUTOR: CeleryExecutor
+    AIRFLOW__CORE__FERNET_KEY: ''
+    AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
+    AIRFLOW__CORE__PARALLELISM: '128'
+    AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
+    TZ: Europe/Copenhagen
+  resources:
+    limits:
+      memory: 1Gi
+    requests:
+      memory: 512Mi
+  service:
+    type: ClusterIP
+    port: 54060
+  volumes:
+    - name: eeacrawlerconfigEs8
+      persistentVolumeClaim:
+        claimName: eeacrawlerconfig-es8
+    - name: eeacrawlerlogsEs8
+      persistentVolumeClaim:
+        claimName: eeacrawlerlogs-es8
+logstash:
+  replicaCount: 1
+  image:
+    repository: eeacms/logstash
+    pullPolicy: IfNotPresent
+    tag: v0.0.3
+  env:
+    TZ: Europe/Copenhagen
+    LS_HEAP_SIZE: 2048m
+  resources:
+    limits:
+      memory: 8Gi
+    requests:
+      memory: 4Gi
+  service:
+    type: ClusterIP
+    port: 5044
+  volumes:
+    - name: eeacrawlerconfigEs8
+      persistentVolumeClaim:
+        claimName: eeacrawlerconfig-es8
+airflowScheduler:
+  replicaCount: 1
+  image:
+    repository: apache/airflow
+    pullPolicy: IfNotPresent
+    tag: 2.7.0
+  env:
+    AIRFLOW__API__AUTH_BACKEND: airflow.api.auth.backend.basic_auth
+    AIRFLOW__CELERY__BROKER_URL: redis://:@redis:6379/0
+    AIRFLOW__CELERY__RESULT_BACKEND: db+postgresql://airflow:airflow@postgres/airflow
+    AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
+    AIRFLOW__CORE__DAG_CONCURRENCY: '64'
+    AIRFLOW__CORE__EXECUTOR: CeleryExecutor
+    AIRFLOW__CORE__FERNET_KEY: ''
+    AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
+    AIRFLOW__CORE__PARALLELISM: '128'
+    AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
+    TZ: Europe/Copenhagen
+  resources:
+    limits:
+      memory: 8Gi
+    requests:
+      memory: 4Gi
+  volumes:
+    - name: eeacrawlerconfigEs8
+      persistentVolumeClaim:
+        claimName: eeacrawlerconfig-es8
+    - name: eeacrawlerlogsEs8
+      persistentVolumeClaim:
+        claimName: eeacrawlerlogs-es8
+airflowWebserver:
+  replicaCount: 1
+  image:
+    repository: apache/airflow
+    pullPolicy: IfNotPresent
+    tag: 2.7.0
+  env:
+    AIRFLOW__API__AUTH_BACKEND: airflow.api.auth.backend.basic_auth
+    AIRFLOW__CELERY__BROKER_URL: redis://:@redis:6379/0
+    AIRFLOW__CELERY__RESULT_BACKEND: db+postgresql://airflow:airflow@postgres/airflow
+    AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
+    AIRFLOW__CORE__DAG_CONCURRENCY: '64'
+    AIRFLOW__CORE__EXECUTOR: CeleryExecutor
+    AIRFLOW__CORE__FERNET_KEY: ''
+    AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
+    AIRFLOW__CORE__PARALLELISM: '128'
+    AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
+    TZ: Europe/Copenhagen
+  resources:
+    limits:
+      memory: 4Gi
+    requests:
+      memory: 2Gi
+  service:
+    type: ClusterIP
+    port: 59232
+  volumes:
+    - name: eeacrawlerconfigEs8
+      persistentVolumeClaim:
+        claimName: eeacrawlerconfig-es8
+    - name: eeacrawlerlogsEs8
+      persistentVolumeClaim:
+        claimName: eeacrawlerlogs-es8
+postgres:
+  replicaCount: 1
+  image:
+    repository: postgres
+    pullPolicy: IfNotPresent
+    tag: 13-bullseye
+  env:
+    POSTGRES_DB: airflow
+    POSTGRES_PASSWORD: airflow
+    POSTGRES_USER: airflow
+    TZ: Europe/Copenhagen
+  resources:
+    limits:
+      memory: 4Gi
+    requests:
+      memory: 4Gi
+  service:
+    type: ClusterIP
+    port: 5432
+  volumes:
+    - name: postgresdataEs8
+      persistentVolumeClaim:
+        claimName: postgresdata-es8
+eeaCrawlerConfig:
+  replicaCount: 1
+  image:
+    repository: busybox
+    pullPolicy: IfNotPresent
+    tag: latest
+  env:
+    DEV_ENV: 'true'
+    TZ: Europe/Copenhagen
+    github_repo: example/crawler-config
+  resources:
+    limits:
+      memory: 512Mi
+    requests:
+      memory: 256Mi
+  volumes:
+    - name: eeacrawlerconfigEs8
+      persistentVolumeClaim:
+        claimName: eeacrawlerconfig-es8
+image:
+  repository: my-image
+  pullPolicy: IfNotPresent
+  tag: latest
+service:
+  type: ClusterIP
+  port: 80
+
+persistence:
+  storageClass: "local-path"
+  eeacrawlerconfig:
+    size: "1Gi"
+  eeacrawlerlogs:
+    size: "5Gi"
+  nlpServiceSrc:
+    size: "1Gi"
+  crawlerrabbitmq:
+    size: "5Gi"
+  postgresdata:
+    size: "10Gi"
+
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    nginx.ingress.kubernetes.io/whitelist-source-range: "10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
+  hosts:
+    - host: airflow-indexer.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+          service: airflow-webserver
+          port: 59232
+  tls:
+    enabled: false
+    secretName: ""
+    hosts: []

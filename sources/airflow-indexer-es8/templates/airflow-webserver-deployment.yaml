@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-{{ .Chart.Name }}-airflow-webserver
+  labels:
+    app.kubernetes.io/name: {{ .Chart.Name }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/version: "{{ .Chart.AppVersion }}"
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.airflowWebserver.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ .Chart.Name }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/version: "{{ .Chart.AppVersion }}"
+      app.kubernetes.io/managed-by: {{ .Release.Service }}
+      app.kubernetes.io/component: airflow-webserver
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ .Chart.Name }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/version: "{{ .Chart.AppVersion }}"
+        app.kubernetes.io/managed-by: {{ .Release.Service }}
+        app.kubernetes.io/component: airflow-webserver
+    spec:
+      containers:
+      - name: airflow-webserver
+        image: "{{ .Values.airflowWebserver.image.repository }}:{{ .Values.airflowWebserver.image.tag }}"
+        imagePullPolicy: {{ .Values.airflowWebserver.image.pullPolicy }}
+        env:
+        - name: AIRFLOW__API__AUTH_BACKEND
+          value: "{{ .Values.airflowWebserver.env.AIRFLOW__API__AUTH_BACKEND }}"
+        - name: AIRFLOW__CELERY__BROKER_URL
+          value: "{{ .Values.airflowWebserver.env.AIRFLOW__CELERY__BROKER_URL }}"
+        - name: AIRFLOW__CELERY__RESULT_BACKEND
+          value: "{{ .Values.airflowWebserver.env.AIRFLOW__CELERY__RESULT_BACKEND }}"
+        - name: AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION
+          value: "{{ .Values.airflowWebserver.env.AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION }}"
+        - name: AIRFLOW__CORE__DAG_CONCURRENCY
+          value: "{{ .Values.airflowWebserver.env.AIRFLOW__CORE__DAG_CONCURRENCY }}"
+        - name: AIRFLOW__CORE__EXECUTOR
+          value: "{{ .Values.airflowWebserver.env.AIRFLOW__CORE__EXECUTOR }}"
+        - name: AIRFLOW__CORE__FERNET_KEY
+          value: "{{ .Values.airflowWebserver.env.AIRFLOW__CORE__FERNET_KEY }}"
+        - name: AIRFLOW__CORE__LOAD_EXAMPLES
+          value: "{{ .Values.airflowWebserver.env.AIRFLOW__CORE__LOAD_EXAMPLES }}"
+        - name: AIRFLOW__CORE__PARALLELISM
+          value: "{{ .Values.airflowWebserver.env.AIRFLOW__CORE__PARALLELISM }}"
+        - name: AIRFLOW__CORE__SQL_ALCHEMY_CONN
+          value: "{{ .Values.airflowWebserver.env.AIRFLOW__CORE__SQL_ALCHEMY_CONN }}"
+        - name: TZ
+          value: "{{ .Values.airflowWebserver.env.TZ }}"
+        volumeMounts:
+        - name: custom-config
+          mountPath: /custom_config
+        - name: airflow-logs
+          mountPath: /opt/airflow/logs
+        resources:
+          limits:
+            memory: "{{ .Values.airflowWebserver.resources.limits.memory }}"
+          requests:
+            memory: "{{ .Values.airflowWebserver.resources.requests.memory }}"
+        command:
+        - airflow
+        - webserver
+        ports:
+        - containerPort: 8080
+      volumes:
+      - name: custom-config
+        persistentVolumeClaim:
+          claimName: {{ (index .Values.airflowWebserver.volumes 0).persistentVolumeClaim.claimName }}
+      - name: airflow-logs
+        persistentVolumeClaim:
+          claimName: {{ (index .Values.airflowWebserver.volumes 1).persistentVolumeClaim.claimName }}
