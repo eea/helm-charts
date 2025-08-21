@@ -1,11 +1,15 @@
 global:
   nodeSelector:
     enabled: true
-    ReservedFor: AiLab
+    ReservedFor: AILab
   tolerations:
     - key: "ReservedFor"
       operator: "Equal"
-      value: "AiLab"
+      value: "AILab"
+      effect: "NoSchedule"
+    - key: "HasGPU"
+      operator: "Equal"
+      value: "Yes"
       effect: "NoSchedule"
 
 storage:
