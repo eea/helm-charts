@@ -1,10 +1,11 @@
 global:
   nodeSelector:
-    ReservedFor: GPTLab
+    enabled: true
+    ReservedFor: AiLab
   tolerations:
     - key: "ReservedFor"
       operator: "Equal"
-      value: "GPTLab"
+      value: "AiLab"
       effect: "NoSchedule"
 
 storage:

@@ -55,9 +55,13 @@ spec:
       - name: elastic-data
         persistentVolumeClaim:
           claimName: elastic-data-pvc
-      {{- with .Values.global.nodeSelector }}
+      {{- if and .Values.global.nodeSelector .Values.global.nodeSelector.enabled }}
       nodeSelector:
-        {{- toYaml . | nindent 8 }}
+        {{- range $key, $value := .Values.global.nodeSelector }}
+        {{- if ne $key "enabled" }}
+        {{ $key }}: {{ $value }}
+        {{- end }}
+        {{- end }}
       {{- end }}
       {{- with .Values.global.tolerations }}
       tolerations:
