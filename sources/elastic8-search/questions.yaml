@@ -105,6 +105,13 @@ questions:
   label: Cerebro Admin Password
   group: "Authentication"
 
+- variable: environment.cerebro.CEREBRO_SECRET
+  default: "CHANGE_THIS"
+  description: "Secret key for Cerebro application"
+  type: password
+  label: Cerebro Secret Key
+  group: "Authentication"
+
 - variable: environment.elasticMaster.cluster_name
   default: "es8-cluster"
   description: "Elasticsearch cluster name"
@@ -148,7 +155,7 @@ questions:
   group: "Kibana Configuration"
 
 - variable: global.nodeSelector.ReservedFor
-  default: "AiLab"
+  default: "AILab"
   description: "Node selector label value for scheduling pods on specific nodes"
   type: string
   label: Node Selector Value
@@ -171,7 +178,7 @@ questions:
   show_if: "global.nodeSelector.enabled=true"
 
 - variable: global.tolerations[0].value
-  default: "AiLab"
+  default: "AILab"
   description: "Toleration value for node taints"
   type: string
   label: Toleration Value
@@ -187,6 +194,34 @@ questions:
     - "PreferNoSchedule"
     - "NoExecute"
   label: Toleration Effect
+  group: "Node Configuration"
+  show_if: "global.nodeSelector.enabled=true"
+
+- variable: global.tolerations[1].key
+  default: "HasGPU"
+  description: "Second toleration key for GPU node taints"
+  type: string
+  label: GPU Toleration Key
+  group: "Node Configuration"
+  show_if: "global.nodeSelector.enabled=true"
+
+- variable: global.tolerations[1].value
+  default: "Yes"
+  description: "Second toleration value for GPU node taints"
+  type: string
+  label: GPU Toleration Value
+  group: "Node Configuration"
+  show_if: "global.nodeSelector.enabled=true"
+
+- variable: global.tolerations[1].effect
+  default: "NoSchedule"
+  description: "Second toleration effect for GPU node taints"
+  type: enum
+  options:
+    - "NoSchedule"
+    - "PreferNoSchedule"
+    - "NoExecute"
+  label: GPU Toleration Effect
   group: "Node Configuration"
   show_if: "global.nodeSelector.enabled=true"
 
