@@ -10,7 +10,7 @@ spec:
   storageClassName: {{ .Values.storage.className | default "" }}
   resources:
     requests:
-      storage: 10Gi
+      storage: {{ .Values.storage.elasticData.size | default "10Gi" }}
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -24,4 +24,4 @@ spec:
   storageClassName: {{ .Values.storage.className | default "" }}
   resources:
     requests:
-      storage: 5Gi
+      storage: {{ .Values.storage.elasticMaster.size | default "5Gi" }}

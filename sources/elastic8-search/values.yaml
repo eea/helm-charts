@@ -14,6 +14,11 @@ global:
 
 storage:
   className: "local-path"  # Uses local-path as the default storage class
+  elasticData:
+    size: "10Gi"
+  elasticMaster:
+    size: "5Gi"
+  reclaimPolicy: "Retain"  # Retain, Delete, or Recycle
 
 image:
   cerebro: eeacms/cerebro:0.9.4
