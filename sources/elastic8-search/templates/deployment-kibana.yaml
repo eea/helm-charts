@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kibana
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kibana
+  template:
+    metadata:
+      labels:
+        app: kibana
+    spec:
+      containers:
+      - name: kibana
+        image: {{ .Values.image.elkKibana }}
+        env:
+        - name: ELASTICSEARCH_REQUESTTIMEOUT
+          value: "{{ .Values.environment.kibana.ELASTICSEARCH_REQUESTTIMEOUT }}"
+        - name: ELASTICSEARCH_URL
+          value: {{ .Values.environment.kibana.ELASTICSEARCH_URL }}
+        - name: KIBANA_AUTOCOMPLETETERMINATEAFTER
+          value: {{ .Values.environment.kibana.KIBANA_AUTOCOMPLETETERMINATEAFTER }}
+        - name: KIBANA_AUTOCOMPLETETIMEOUT
+          value: {{ .Values.environment.kibana.KIBANA_AUTOCOMPLETETIMEOUT }}
+        - name: NODE_OPTIONS
+          value: "{{ .Values.environment.kibana.NODE_OPTIONS }}"
+        - name: SERVER_PUBLICBASEURL
+          value: {{ .Values.environment.kibana.SERVER_PUBLICBASEURL }}
+        - name: TELEMETRY_ENABLED
+          value: "{{ .Values.environment.kibana.TELEMETRY_ENABLED }}"
+        - name: TZ
+          value: {{ .Values.environment.kibana.TZ }}
+        resources:
+          limits:
+            memory: {{ .Values.resources.kibana.limits.memory }}
+          requests:
+            memory: {{ .Values.resources.kibana.requests.memory }}
+        ports:
+        - containerPort: 5601
+      {{- with .Values.global.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.global.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

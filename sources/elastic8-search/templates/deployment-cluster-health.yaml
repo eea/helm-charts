@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cluster-health
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cluster-health
+  template:
+    metadata:
+      labels:
+        app: cluster-health
+    spec:
+      containers:
+      - name: cluster-health
+        image: {{ .Values.image.esclusterhealth }}
+        env:
+        - name: ES_PASSWORD
+          value: {{ .Values.environment.clusterHealth.ES_PASSWORD }}
+        - name: ES_URL
+          value: {{ .Values.environment.clusterHealth.ES_URL }}
+        - name: ES_USER
+          value: {{ .Values.environment.clusterHealth.ES_USER }}
+        - name: PORT
+          value: "{{ .Values.environment.clusterHealth.PORT }}"
+        resources:
+          limits:
+            memory: {{ .Values.resources.clusterHealth.limits.memory }}
+          requests:
+            memory: {{ .Values.resources.clusterHealth.requests.memory }}
+      {{- with .Values.global.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.global.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

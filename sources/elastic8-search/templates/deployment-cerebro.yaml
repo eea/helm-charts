@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cerebro
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cerebro
+  template:
+    metadata:
+      labels:
+        app: cerebro
+    spec:
+      containers:
+      - name: cerebro
+        image: {{ .Values.image.cerebro }}
+        env:
+        - name: BASIC_AUTH_PWD
+          value: {{ .Values.environment.cerebro.BASIC_AUTH_PWD }}
+        - name: BASIC_AUTH_USER
+          value: {{ .Values.environment.cerebro.BASIC_AUTH_USER }}
+        - name: CEREBRO_SECRET
+          value: {{ .Values.environment.cerebro.CEREBRO_SECRET }}
+        - name: ELASTIC_URL
+          value: {{ .Values.environment.cerebro.ELASTIC_URL }}
+        - name: CEREBRO_PORT
+          value: {{ .Values.environment.cerebro.CEREBRO_PORT | quote }}
+        - name: TZ
+          value: {{ .Values.environment.cerebro.TZ }}
+        resources:
+          limits:
+            memory: {{ .Values.resources.cerebro.limits.memory }}
+          requests:
+            memory: {{ .Values.resources.cerebro.requests.memory }}
+        ports:
+        - containerPort: 9000
+      {{- with .Values.global.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.global.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

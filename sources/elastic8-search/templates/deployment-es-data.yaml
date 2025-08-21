@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: es-data
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: es-data
+  template:
+    metadata:
+      labels:
+        app: es-data
+    spec:
+      containers:
+      - name: es-data
+        image: {{ .Values.image.elastic }}
+        env:
+        - name: ES_JAVA_OPTS
+          value: {{ .Values.environment.elasticData.ES_JAVA_OPTS }}
+        - name: TZ
+          value: {{ .Values.environment.elasticData.TZ }}
+        - name: bootstrap.memory_lock
+          value: "{{ .Values.environment.elasticData.bootstrap_memory_lock }}"
+        - name: cluster.initial_master_nodes
+          value: {{ .Values.environment.elasticData.cluster_initial_master_nodes }}
+        - name: cluster.name
+          value: {{ .Values.environment.elasticData.cluster_name }}
+        - name: cluster.routing.allocation.disk.watermark.high
+          value: "{{ .Values.environment.elasticData.cluster_routing_allocation_disk_watermark_high }}"
+        - name: cluster.routing.allocation.disk.watermark.low
+          value: "{{ .Values.environment.elasticData.cluster_routing_allocation_disk_watermark_low }}"
+        - name: discovery.seed_hosts
+          value: {{ .Values.environment.elasticData.discovery_seed_hosts }}
+        - name: node.name
+          value: ${HOSTNAME}
+        - name: node.roles
+          value: {{ .Values.environment.elasticData.node_roles }}
+        - name: xpack.security.enabled
+          value: "{{ .Values.environment.elasticData.xpack_security_enabled }}"
+        - name: xpack.security.transport.ssl.enabled
+          value: "{{ .Values.environment.elasticData.xpack_security_transport_ssl_enabled }}"
+
+        resources:
+          limits:
+            memory: {{ .Values.resources.elasticData.limits.memory }}
+          requests:
+            memory: {{ .Values.resources.elasticData.requests.memory }}
+        ports:
+        - containerPort: 9200
+        volumeMounts:
+        - name: elastic-data
+          mountPath: /usr/share/elasticsearch/data
+      volumes:
+      - name: elastic-data
+        persistentVolumeClaim:
+          claimName: elastic-data-pvc
+      {{- with .Values.global.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.global.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
