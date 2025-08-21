@@ -35,7 +35,7 @@ questions:
     group: "Networking"
 
   - variable: graylog.ingress.hosts
-    default: 
+    default:
       - "graylog.yourdomain.com"
     description: "Hostnames for the ingress"
     type: array
@@ -119,11 +119,12 @@ questions:
     group: "Authentication"
 
   - variable: graylog.rootPassword
-    default: ""
-    description: "Graylog root password (leave empty to auto-generate)"
+    default: "GraylogAdminPass123!"
+    description: "IMPORTANT: Graylog root password (MUST be minimum 16 characters or deployment will fail!)"
     type: password
-    label: Root Password
+    label: "Root Password (min 16 chars)"
     group: "Authentication"
+    required: true
 
   - variable: graylog.rootEmail
     default: ""
