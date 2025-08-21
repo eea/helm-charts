@@ -36,7 +36,7 @@ questions:
 
   - variable: graylog.ingress.hosts[0]
     default: "graylog.yourdomain.com"
-    description: "Hostname for the ingress"
+    description: "Primary hostname for the ingress"
     type: hostname
     label: Ingress Hostname
     group: "Networking"
@@ -50,11 +50,39 @@ questions:
     group: "Networking"
     show_if: "graylog.ingress.enabled=true"
 
-  - variable: graylog.ingress.tls[0].secretName
-    default: "graylog-server-tls"
-    description: "TLS secret name for ingress"
+  - variable: graylog.ingress.tls
+    default: []
+    description: "TLS configuration (leave empty to disable TLS)"
     type: string
-    label: TLS Secret Name
+    label: TLS Configuration
+    group: "Networking"
+    show_if: "graylog.ingress.enabled=true"
+
+  - variable: graylog.ingress.annotations
+    default: {}
+    description: "Additional annotations for the ingress"
+    type: string
+    label: Ingress Annotations
+    group: "Networking"
+    show_if: "graylog.ingress.enabled=true"
+
+  - variable: graylog.ingress.path
+    default: "/"
+    description: "URL path for the ingress"
+    type: string
+    label: Ingress Path
+    group: "Networking"
+    show_if: "graylog.ingress.enabled=true"
+
+  - variable: graylog.ingress.pathType
+    default: "Prefix"
+    description: "Path type for Kubernetes 1.18+"
+    type: enum
+    options:
+      - "Prefix"
+      - "Exact"
+      - "ImplementationSpecific"
+    label: Path Type
     group: "Networking"
     show_if: "graylog.ingress.enabled=true"
 
