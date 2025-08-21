@@ -371,11 +371,35 @@ questions:
     group: "Data Inputs"
     show_if: "graylog.input.tcp.enabled=true"
 
-  - variable: graylog.input.tcp.ports
-    default: []
-    description: 'TCP input ports configuration (JSON array format: [{"name":"gelf","port":12201},{"name":"syslog","port":514}])'
+  - variable: graylog.input.tcp.ports[0].name
+    default: "gelf"
+    description: "Name for the first TCP port"
     type: string
-    label: TCP Ports Configuration
+    label: TCP Port 1 Name
+    group: "Data Inputs"
+    show_if: "graylog.input.tcp.enabled=true"
+
+  - variable: graylog.input.tcp.ports[0].port
+    default: 12201
+    description: "First TCP port number"
+    type: int
+    label: TCP Port 1 Number
+    group: "Data Inputs"
+    show_if: "graylog.input.tcp.enabled=true"
+
+  - variable: graylog.input.tcp.ports[1].name
+    default: "syslog"
+    description: "Name for the second TCP port (leave empty to disable)"
+    type: string
+    label: TCP Port 2 Name
+    group: "Data Inputs"
+    show_if: "graylog.input.tcp.enabled=true"
+
+  - variable: graylog.input.tcp.ports[1].port
+    default: 514
+    description: "Second TCP port number"
+    type: int
+    label: TCP Port 2 Number
     group: "Data Inputs"
     show_if: "graylog.input.tcp.enabled=true"
 
@@ -406,11 +430,35 @@ questions:
     group: "Data Inputs"
     show_if: "graylog.input.udp.enabled=true"
 
-  - variable: graylog.input.udp.ports
-    default: []
-    description: 'UDP input ports configuration (JSON array format: [{"name":"syslog","port":514},{"name":"gelf","port":12201}])'
+  - variable: graylog.input.udp.ports[0].name
+    default: "syslog"
+    description: "Name for the first UDP port"
     type: string
-    label: UDP Ports Configuration
+    label: UDP Port 1 Name
+    group: "Data Inputs"
+    show_if: "graylog.input.udp.enabled=true"
+
+  - variable: graylog.input.udp.ports[0].port
+    default: 514
+    description: "First UDP port number"
+    type: int
+    label: UDP Port 1 Number
+    group: "Data Inputs"
+    show_if: "graylog.input.udp.enabled=true"
+
+  - variable: graylog.input.udp.ports[1].name
+    default: "gelf"
+    description: "Name for the second UDP port (leave empty to disable)"
+    type: string
+    label: UDP Port 2 Name
+    group: "Data Inputs"
+    show_if: "graylog.input.udp.enabled=true"
+
+  - variable: graylog.input.udp.ports[1].port
+    default: 12201
+    description: "Second UDP port number"
+    type: int
+    label: UDP Port 2 Number
     group: "Data Inputs"
     show_if: "graylog.input.udp.enabled=true"
 
