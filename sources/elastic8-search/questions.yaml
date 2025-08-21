@@ -59,7 +59,8 @@ questions:
   default: "10Gi"
   description: "Memory limit for Elasticsearch data node"
   type: string
-  label: Data Node Memory Limit
+  label: Data 
+   Memory Limit
   group: "Resource Configuration"
 
 - variable: resources.kibana.requests.memory
@@ -147,7 +148,7 @@ questions:
   group: "Kibana Configuration"
 
 - variable: global.nodeSelector.ReservedFor
-  default: "GPTLab"
+  default: "AiLab"
   description: "Node selector label value for scheduling pods on specific nodes"
   type: string
   label: Node Selector Value
@@ -170,7 +171,7 @@ questions:
   show_if: "global.nodeSelector.enabled=true"
 
 - variable: global.tolerations[0].value
-  default: "GPTLab"
+  default: "AiLab"
   description: "Toleration value for node taints"
   type: string
   label: Toleration Value

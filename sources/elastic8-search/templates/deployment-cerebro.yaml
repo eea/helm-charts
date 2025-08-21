@@ -35,9 +35,13 @@ spec:
             memory: {{ .Values.resources.cerebro.requests.memory }}
         ports:
         - containerPort: 9000
-      {{- with .Values.global.nodeSelector }}
+      {{- if and .Values.global.nodeSelector .Values.global.nodeSelector.enabled }}
       nodeSelector:
-        {{- toYaml . | nindent 8 }}
+        {{- range $key, $value := .Values.global.nodeSelector }}
+        {{- if ne $key "enabled" }}
+        {{ $key }}: {{ $value }}
+        {{- end }}
+        {{- end }}
       {{- end }}
       {{- with .Values.global.tolerations }}
       tolerations:
