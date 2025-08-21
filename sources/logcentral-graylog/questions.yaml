@@ -342,3 +342,89 @@ questions:
     label: Enable MongoDB Auth
     group: "MongoDB Configuration"
     show_if: "tags.install-mongodb=true"
+
+  # Data Inputs Configuration
+  - variable: graylog.input.tcp.enabled
+    default: false
+    description: "Enable TCP input for receiving log data"
+    type: boolean
+    label: Enable TCP Input
+    group: "Data Inputs"
+
+  - variable: graylog.input.tcp.service.type
+    default: "ClusterIP"
+    description: "TCP input service type"
+    type: enum
+    options:
+      - "ClusterIP"
+      - "NodePort"
+      - "LoadBalancer"
+    label: TCP Service Type
+    group: "Data Inputs"
+    show_if: "graylog.input.tcp.enabled=true"
+
+  - variable: graylog.input.tcp.service.name
+    default: "graylog-tcp-input"
+    description: "TCP input service name (max 15 chars, lowercase, alphanumeric with hyphens)"
+    type: string
+    label: TCP Service Name
+    group: "Data Inputs"
+    show_if: "graylog.input.tcp.enabled=true"
+
+  - variable: graylog.input.tcp.ports
+    default: []
+    description: 'TCP input ports configuration (JSON array format: [{"name":"gelf","port":12201},{"name":"syslog","port":514}])'
+    type: string
+    label: TCP Ports Configuration
+    group: "Data Inputs"
+    show_if: "graylog.input.tcp.enabled=true"
+
+  - variable: graylog.input.udp.enabled
+    default: false
+    description: "Enable UDP input for receiving log data"
+    type: boolean
+    label: Enable UDP Input
+    group: "Data Inputs"
+
+  - variable: graylog.input.udp.service.type
+    default: "ClusterIP"
+    description: "UDP input service type"
+    type: enum
+    options:
+      - "ClusterIP"
+      - "NodePort"
+      - "LoadBalancer"
+    label: UDP Service Type
+    group: "Data Inputs"
+    show_if: "graylog.input.udp.enabled=true"
+
+  - variable: graylog.input.udp.service.name
+    default: "graylog-udp-input"
+    description: "UDP input service name (max 15 chars, lowercase, alphanumeric with hyphens)"
+    type: string
+    label: UDP Service Name
+    group: "Data Inputs"
+    show_if: "graylog.input.udp.enabled=true"
+
+  - variable: graylog.input.udp.ports
+    default: []
+    description: 'UDP input ports configuration (JSON array format: [{"name":"syslog","port":514},{"name":"gelf","port":12201}])'
+    type: string
+    label: UDP Ports Configuration
+    group: "Data Inputs"
+    show_if: "graylog.input.udp.enabled=true"
+
+  # Common input buffer settings
+  - variable: graylog.config.inputbufferProcessors
+    default: 2
+    description: "Number of input buffer processors (should not exceed CPU cores)"
+    type: int
+    label: Input Buffer Processors
+    group: "Data Inputs"
+
+  - variable: graylog.config.inputBufferRingSize
+    default: ""
+    description: "Size of input buffer ring (must be power of 2: 512, 1024, 2048, etc.)"
+    type: string
+    label: Input Buffer Ring Size
+    group: "Data Inputs"
