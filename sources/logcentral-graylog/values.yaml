@@ -264,22 +264,26 @@ graylog:
   ## Note: Array must be sorted by port order
   ##
   input:
-    {}
-    # tcp:
-    #   service:
-    #     name: your-tcp-service-name
-    #     type: LoadBalancer
-    #     loadBalancerIP:
-    #   ports:
-    #     - name: gelf
-    #       port: 12222
-    # udp:
-    #   service:
-    #     name: your-udp-service-name
-    #     type: ClusterIP
-    #   ports:
-    #     - name: syslog
-    #       port: 12222
+    tcp:
+      enabled: true
+      service:
+        name: graylog-tcp-input
+        type: ClusterIP
+      ports:
+        - name: ""
+          port: 12201
+        - name: ""
+          port: 514
+    udp:
+      enabled: true
+      service:
+        name: graylog-udp-input
+        type: ClusterIP
+      ports:
+        - name: ""
+          port: 514
+        - name: ""
+          port: 12201
 
   tls:
     ## If true, Graylog server will run with TLS enabled
@@ -601,7 +605,7 @@ opensearch:
     - name: plugins.security.disabled
       value: "true"
     - name: OPENSEARCH_INITIAL_ADMIN_PASSWORD
-      value: "Graylog@2024"  # Strong password meeting requirements: uppercase, lowercase, number, special char, >8 chars
+      value: "Graylog@2024" # Strong password meeting requirements: uppercase, lowercase, number, special char, >8 chars
   ## Set default resource very low. This help reduce resources usage on GitHub Action when performing chart-testing.
   opensearchJavaOpts: "-Xmx128M -Xms128M"
   resources:

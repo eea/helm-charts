@@ -163,18 +163,22 @@ spec:
               protocol: {{ .protocol }}
           {{- end }}
           {{- with .Values.graylog.input }}
-          {{- if .udp }}
+          {{- if and .udp.enabled .udp.ports }}
           {{- range .udp.ports }}
+          {{- if .name }}
             - containerPort: {{ .port }}
               name: {{ .name }}
               protocol: UDP
           {{- end }}
           {{- end }}
-          {{- if .tcp }}
+          {{- end }}
+          {{- if and .tcp.enabled .tcp.ports }}
           {{- range .tcp.ports }}
+          {{- if .name }}
             - containerPort: {{ .port }}
               name: {{ .name }}
               protocol: TCP
+          {{- end }}
           {{- end }}
           {{- end }}
           {{- end }}
