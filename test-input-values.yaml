@@ -1,0 +1,22 @@
+graylog:
+  input:
+    tcp:
+      enabled: true
+      service:
+        name: graylog-tcp-input
+        type: ClusterIP
+      ports:
+        - name: "gelf"
+          port: 12201
+        - name: "syslog"
+          port: 514
+    udp:
+      enabled: true
+      service:
+        name: graylog-udp-input
+        type: ClusterIP
+      ports:
+        - name: "syslog"
+          port: 514
+        - name: "gelf"
+          port: 12201

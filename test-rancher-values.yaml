@@ -1,0 +1,16 @@
+graylog:
+  input:
+    tcp:
+      "ports[0]":
+        name: "gelf"
+        port: 12201
+      "ports[1]":
+        name: "syslog"
+        port: 514
+    udp:
+      "ports[0]":
+        name: "syslog"
+        port: 514
+      "ports[1]":
+        name: "gelf"
+        port: 12201
