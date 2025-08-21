@@ -1,4 +1,11 @@
-{{- if .Values.graylog.input.tcp }}
+{{- if .Values.graylog.input.tcp.enabled }}
+{{- $hasValidPorts := false }}
+{{- range .Values.graylog.input.tcp.ports }}
+{{- if .name }}
+{{- $hasValidPorts = true }}
+{{- end }}
+{{- end }}
+{{- if $hasValidPorts }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -54,4 +61,5 @@ spec:
   {{- end }}
   {{- end -}}
 {{- end -}}
+{{- end }}
 {{- end }}
