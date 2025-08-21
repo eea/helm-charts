@@ -1,8 +1,18 @@
-{{- if .Values.graylog.input.tcp.enabled }}
 {{- $hasValidPorts := false }}
+{{- if .Values.graylog.input.tcp }}
+{{- if .Values.graylog.input.tcp.ports }}
 {{- range .Values.graylog.input.tcp.ports }}
 {{- if .name }}
 {{- $hasValidPorts = true }}
+{{- end }}
+{{- end }}
+{{- else }}
+{{- /* Check for Rancher-style port configuration */ -}}
+{{- $port0Key := "ports[0]" }}
+{{- $port0 := index .Values.graylog.input.tcp $port0Key }}
+{{- if and $port0 $port0.name }}
+{{- $hasValidPorts = true }}
+{{- end }}
 {{- end }}
 {{- end }}
 {{- if $hasValidPorts }}
@@ -23,6 +33,7 @@ metadata:
     app.kubernetes.io/component: "TCP"
 spec:
   ports:
+  {{- if .Values.graylog.input.tcp.ports }}
   {{- range .Values.graylog.input.tcp.ports }}
     {{- if .name }}
     - name: {{ .name }}
@@ -35,6 +46,24 @@ spec:
       {{- end }}
     {{- end }}
     {{- end }}
+  {{- end }}
+  {{- else }}
+  {{- /* Handle Rancher-style port configuration */ -}}
+  {{- range $i := list 0 1 }}
+  {{- $portKey := printf "ports[%d]" $i }}
+  {{- $port := index $.Values.graylog.input.tcp $portKey }}
+  {{- if and $port $port.name }}
+    - name: {{ $port.name }}
+      port: {{ $port.port }}
+      protocol: TCP
+      targetPort: {{ $port.port }}
+    {{- if eq "NodePort" $.Values.graylog.input.tcp.service.type }}
+      {{- if $port.nodePort }}
+      nodePort: {{ $port.nodePort }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
+  {{- end }}
   {{- end }}
 {{- if .Values.graylog.input.tcp.service.externalIPs }}
   externalIPs:
@@ -61,5 +90,4 @@ spec:
   {{- end }}
   {{- end -}}
 {{- end -}}
-{{- end }}
 {{- end }}

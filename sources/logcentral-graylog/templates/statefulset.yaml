@@ -163,7 +163,8 @@ spec:
               protocol: {{ .protocol }}
           {{- end }}
           {{- with .Values.graylog.input }}
-          {{- if and .udp.enabled .udp.ports }}
+          {{- if .udp }}
+          {{- if .udp.ports }}
           {{- range .udp.ports }}
           {{- if .name }}
             - containerPort: {{ .port }}
@@ -171,13 +172,38 @@ spec:
               protocol: UDP
           {{- end }}
           {{- end }}
+          {{- else }}
+          {{- /* Handle Rancher-style port configuration */ -}}
+          {{- range $i := list 0 1 }}
+          {{- $portKey := printf "ports[%d]" $i }}
+          {{- $port := index .udp $portKey }}
+          {{- if and $port $port.name }}
+            - containerPort: {{ $port.port }}
+              name: {{ $port.name }}
+              protocol: UDP
           {{- end }}
-          {{- if and .tcp.enabled .tcp.ports }}
+          {{- end }}
+          {{- end }}
+          {{- end }}
+          {{- if .tcp }}
+          {{- if .tcp.ports }}
           {{- range .tcp.ports }}
           {{- if .name }}
             - containerPort: {{ .port }}
               name: {{ .name }}
               protocol: TCP
+          {{- end }}
+          {{- end }}
+          {{- else }}
+          {{- /* Handle Rancher-style port configuration */ -}}
+          {{- range $i := list 0 1 }}
+          {{- $portKey := printf "ports[%d]" $i }}
+          {{- $port := index .tcp $portKey }}
+          {{- if and $port $port.name }}
+            - containerPort: {{ $port.port }}
+              name: {{ $port.name }}
+              protocol: TCP
+          {{- end }}
           {{- end }}
           {{- end }}
           {{- end }}
