@@ -34,12 +34,14 @@ questions:
     label: Enable Ingress
     group: "Networking"
 
-  - variable: graylog.ingress.hosts[0]
-    default: "graylog.yourdomain.com"
-    description: "Primary hostname for the ingress"
-    type: hostname
-    label: Ingress Hostname
+  - variable: graylog.ingress.hosts
+    default: 
+      - "graylog.yourdomain.com"
+    description: "Hostnames for the ingress"
+    type: array
+    label: Ingress Hostnames
     group: "Networking"
+    required: true
     show_if: "graylog.ingress.enabled=true"
 
   - variable: graylog.ingress.ingressClassName
