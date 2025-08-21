@@ -6,6 +6,31 @@ questions:
   label: Storage Class
   group: "Storage Configuration"
 
+- variable: storage.elasticData.size
+  default: "10Gi"
+  description: "Storage size for Elasticsearch data node"
+  type: string
+  label: Data Node Storage Size
+  group: "Storage Configuration"
+
+- variable: storage.elasticMaster.size
+  default: "5Gi"
+  description: "Storage size for Elasticsearch master node"
+  type: string
+  label: Master Node Storage Size
+  group: "Storage Configuration"
+
+- variable: storage.reclaimPolicy
+  default: "Retain"
+  description: "Reclaim policy for persistent volumes (Retain keeps data after deletion)"
+  type: enum
+  options:
+    - "Retain"
+    - "Delete"
+    - "Recycle"
+  label: Storage Reclaim Policy
+  group: "Storage Configuration"
+
 - variable: image.elastic
   default: "eeacms/elastic:8"
   description: "Elasticsearch Docker image"
