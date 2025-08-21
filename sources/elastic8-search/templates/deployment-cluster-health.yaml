@@ -37,7 +37,7 @@ spec:
         {{- end }}
         {{- end }}
       {{- end }}
-      {{- with .Values.global.tolerations }}
+      {{- if and .Values.global.tolerations .Values.global.tolerations.enabled }}
       tolerations:
-        {{- toYaml . | nindent 8 }}
+        {{- toYaml .Values.global.tolerations.values | nindent 8 }}
       {{- end }}
