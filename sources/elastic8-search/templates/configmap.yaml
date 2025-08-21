@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: elasticsearch-config
+data:
+  common-config.yml: |
+    # Common configuration settings
+    cluster.name: es8-cluster
+    node.name: ${HOSTNAME}
+    network.host: 0.0.0.0
+    discovery.seed_hosts: es-master,es-data
+    cluster.initial_master_nodes: es-master
+    cluster.routing.allocation.disk.watermark.high: 95%
+    cluster.routing.allocation.disk.watermark.low: 93%
+    bootstrap.memory_lock: 'true'
+    xpack.security.enabled: 'false'
+    xpack.security.transport.ssl.enabled: 'false'

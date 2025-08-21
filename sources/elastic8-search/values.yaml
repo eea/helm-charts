@@ -1,0 +1,123 @@
+global:
+  nodeSelector:
+    ReservedFor: GPTLab
+  tolerations:
+    - key: "ReservedFor"
+      operator: "Equal"
+      value: "GPTLab"
+      effect: "NoSchedule"
+
+storage:
+  className: "local-path"  # Uses local-path as the default storage class
+
+image:
+  cerebro: eeacms/cerebro:0.9.4
+  elastic: eeacms/elastic:8
+  esclusterhealth: eeacms/esclusterhealth:1.1
+  elkKibana: eeacms/elk-kibana:8.1.0
+  alpineSysctl: rawmind/alpine-sysctl:0.1
+
+resources:
+  cerebro:
+    limits:
+      memory: 1Gi
+    requests:
+      memory: 256Mi
+  elasticData:
+    limits:
+      memory: 10Gi
+    requests:
+      memory: 6Gi
+  elasticMaster:
+    limits:
+      memory: 4Gi
+    requests:
+      memory: 4Gi
+  esSysctl:
+    limits:
+      memory: 32Mi
+    requests:
+      memory: 8Mi
+  clusterHealth:
+    limits:
+      memory: 64Mi
+    requests:
+      memory: 8Mi
+  kibana:
+    limits:
+      memory: 2Gi
+    requests:
+      memory: 1Gi
+
+environment:
+  cerebro:
+    BASIC_AUTH_PWD: admin
+    BASIC_AUTH_USER: admin
+    CEREBRO_SECRET: 'ki:s:[[@=Ag?QI`W2jMa9`J`YOQrfLBdgpAJ3[1nrJD9MZdJJ[uTdlFOo?QlFDaU25lk'
+    ELASTIC_URL: http://es-master:9200
+    CEREBRO_PORT: "9000"
+    TZ: Europe/Copenhagen
+  elasticData:
+    ES_JAVA_OPTS: -Xms4096m -Xmx4096m
+    TZ: Europe/Copenhagen
+    bootstrap_memory_lock: "false"
+    cluster_initial_master_nodes: es-master
+    cluster_name: es8-cluster
+    cluster_routing_allocation_disk_watermark_high: "95%"
+    cluster_routing_allocation_disk_watermark_low: "93%"
+    discovery_seed_hosts: es-master,es-data
+    node_name: ${HOSTNAME}
+    node_roles: data
+    xpack_security_enabled: "false"
+    xpack_security_transport_ssl_enabled: "false"
+  elasticMaster:
+    ES_JAVA_OPTS: -Xms2048m -Xmx2048m
+    TZ: Europe/Copenhagen
+    bootstrap_memory_lock: "false"
+    cluster_initial_master_nodes: ${HOSTNAME}
+    cluster_name: es8-cluster
+    cluster_routing_allocation_disk_watermark_high: "95%"
+    cluster_routing_allocation_disk_watermark_low: "93%"
+    discovery_seed_hosts: es-master,es-data
+    node_name: ${HOSTNAME}
+    node_roles: master
+    xpack_security_enabled: "false"
+    xpack_security_transport_ssl_enabled: "false"
+  esSysctl:
+    KEEP_ALIVE: "1"
+    SYSCTL_KEY: vm.max_map_count
+    SYSCTL_VALUE: "262144"
+  clusterHealth:
+    ES_PASSWORD: ''
+    ES_URL: http://es-data:9200
+    ES_USER: elastic
+    PORT: "12345"
+  kibana:
+    ELASTICSEARCH_REQUESTTIMEOUT: "300000"
+    ELASTICSEARCH_URL: http://es-data:9200
+    KIBANA_AUTOCOMPLETETERMINATEAFTER: ''
+    KIBANA_AUTOCOMPLETETIMEOUT: ''
+    NODE_OPTIONS: "--max-old-space-size=1024"
+    SERVER_PUBLICBASEURL: ''
+    TELEMETRY_ENABLED: "false"
+    TZ: Europe/Copenhagen
+
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    nginx.ingress.kubernetes.io/whitelist-source-range: "10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
+  hosts:
+    - host: elastic8_internal.ai-lab-aws.eea.europa.eu
+      paths:
+        - path: /
+          pathType: Prefix
+          service: es-data
+          port: 9200
+  tls:
+    enabled: false
+    secretName: ""
+    hosts: []

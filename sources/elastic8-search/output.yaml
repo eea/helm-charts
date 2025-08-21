@@ -1,0 +1,322 @@
+---
+# Source: elasticsearch-cluster/templates/secret.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: elasticsearch-secrets
+type: Opaque
+data:
+  BASIC_AUTH_PWD: YWRtaW4=  # base64 encoded 'admin'
+  BASIC_AUTH_USER: YWRtaW4=  # base64 encoded 'admin'
+  CEREBRO_SECRET: ""
+---
+# Source: elasticsearch-cluster/templates/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: elasticsearch-config
+data:
+  common-config.yml: |
+    # Common configuration settings
+    cluster.name: es8-cluster
+    node.name: ${HOSTNAME}
+    network.host: 0.0.0.0
+    discovery.seed_hosts: es-master,es-data
+    cluster.initial_master_nodes: es-master
+    cluster.routing.allocation.disk.watermark.high: 95%
+    cluster.routing.allocation.disk.watermark.low: 93%
+    bootstrap.memory_lock: 'true'
+    xpack.security.enabled: 'false'
+    xpack.security.transport.ssl.enabled: 'false'
+---
+# Source: elasticsearch-cluster/templates/pvc-elasticsearch.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: elastic-data-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: rancher-nfs
+  resources:
+    requests:
+      storage: 10Gi
+---
+# Source: elasticsearch-cluster/templates/service-cerebro.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: cerebro
+spec:
+  selector:
+    app: cerebro
+  ports:
+    - protocol: TCP
+      port: 9000
+      targetPort: 9000
+  type: NodePort
+---
+# Source: elasticsearch-cluster/templates/service-kibana.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: kibana
+spec:
+  selector:
+    app: kibana
+  ports:
+    - protocol: TCP
+      port: 5601
+      targetPort: 5601
+  type: NodePort
+---
+# Source: elasticsearch-cluster/templates/deployment-cerebro.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cerebro
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cerebro
+  template:
+    metadata:
+      labels:
+        app: cerebro
+    spec:
+      containers:
+      - name: cerebro
+        image: eeacms/cerebro:0.9.4
+        env:
+        - name: BASIC_AUTH_PWD
+          value: admin
+        - name: BASIC_AUTH_USER
+          value: admin
+        - name: CEREBRO_SECRET
+          value: 
+        - name: ELASTIC_URL
+          value: http://es-master:9200
+        - name: TZ
+          value: Europe/Copenhagen
+        resources:
+          limits:
+            memory: 512Mi
+          requests:
+            memory: 512Mi
+        ports:
+        - containerPort: 9000
+---
+# Source: elasticsearch-cluster/templates/deployment-cluster-health.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cluster-health
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cluster-health
+  template:
+    metadata:
+      labels:
+        app: cluster-health
+    spec:
+      containers:
+      - name: cluster-health
+        image: eeacms/esclusterhealth:1.1
+        env:
+        - name: ES_PASSWORD
+          value: 
+        - name: ES_URL
+          value: http://es-data:9200
+        - name: ES_USER
+          value: elastic
+        - name: PORT
+          value: 12345
+        resources:
+          limits:
+            memory: 64Mi
+          requests:
+            memory: 8Mi
+---
+# Source: elasticsearch-cluster/templates/deployment-es-data.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: es-data
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: es-data
+  template:
+    metadata:
+      labels:
+        app: es-data
+    spec:
+      containers:
+      - name: es-data
+        image: eeacms/elastic:8
+        env:
+        - name: ES_JAVA_OPTS
+          value: -Xms4096m -Xmx4096m
+        - name: TZ
+          value: Europe/Copenhagen
+        - name: bootstrap.memory_lock
+          value: true
+        - name: cluster.initial_master_nodes
+          value: es-master
+        - name: cluster.name
+          value: es8-cluster
+        - name: cluster.routing.allocation.disk.watermark.high
+          value: 95%
+        - name: cluster.routing.allocation.disk.watermark.low
+          value: 93%
+        - name: discovery.seed_hosts
+          value: es-master,es-data
+        - name: node.name
+          value: ${HOSTNAME}
+        - name: node.roles
+          value: data
+        - name: xpack.security.enabled
+          value: false
+        - name: xpack.security.transport.ssl.enabled
+          value: false
+        resources:
+          limits:
+            memory: 10Gi
+          requests:
+            memory: 6Gi
+        ports:
+        - containerPort: 9200
+        volumeMounts:
+        - name: elastic-data
+          mountPath: /usr/share/elasticsearch/data
+        securityContext:
+          capabilities:
+            add:
+            - IPC_LOCK
+        ulimits:
+          memlock:
+            hard: -1
+            soft: -1
+          nofile:
+            hard: 65536
+            soft: 65536
+      volumes:
+      - name: elastic-data
+        persistentVolumeClaim:
+          claimName: elastic-data-pvc
+---
+# Source: elasticsearch-cluster/templates/deployment-es-master.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: es-master
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: es-master
+  template:
+    metadata:
+      labels:
+        app: es-master
+    spec:
+      containers:
+      - name: es-master
+        image: eeacms/elastic:8
+        env:
+        - name: ES_JAVA_OPTS
+          value: -Xms2048m -Xmx2048m
+        - name: TZ
+          value: Europe/Copenhagen
+        - name: bootstrap.memory_lock
+          value: true
+        - name: cluster.initial_master_nodes
+          value: ${HOSTNAME}
+        - name: cluster.name
+          value: es8-cluster
+        - name: cluster.routing.allocation.disk.watermark.high
+          value: 95%
+        - name: cluster.routing.allocation.disk.watermark.low
+          value: 93%
+        - name: discovery.seed_hosts
+          value: es-master,es-data
+        - name: node.name
+          value: ${HOSTNAME}
+        - name: node.roles
+          value: master
+        - name: xpack.security.enabled
+          value: false
+        - name: xpack.security.transport.ssl.enabled
+          value: false
+        resources:
+          limits:
+            memory: 4Gi
+          requests:
+            memory: 4Gi
+        ports:
+        - containerPort: 9200
+        volumeMounts:
+        - name: elastic-data
+          mountPath: /usr/share/elasticsearch/data
+        securityContext:
+          capabilities:
+            add:
+            - IPC_LOCK
+        ulimits:
+          memlock:
+            hard: -1
+            soft: -1
+          nofile:
+            hard: 65536
+            soft: 65536
+      volumes:
+      - name: elastic-data
+        persistentVolumeClaim:
+          claimName: elastic-data-pvc
+---
+# Source: elasticsearch-cluster/templates/deployment-kibana.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kibana
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kibana
+  template:
+    metadata:
+      labels:
+        app: kibana
+    spec:
+      containers:
+      - name: kibana
+        image: eeacms/elk-kibana:8.1.0
+        env:
+        - name: ELASTICSEARCH_REQUESTTIMEOUT
+          value: 300000
+        - name: ELASTICSEARCH_URL
+          value: http://es-data:9200
+        - name: KIBANA_AUTOCOMPLETETERMINATEAFTER
+          value: 
+        - name: KIBANA_AUTOCOMPLETETIMEOUT
+          value: 
+        - name: NODE_OPTIONS
+          value: --max-old-space-size=1024
+        - name: SERVER_PUBLICBASEURL
+          value: 
+        - name: TELEMETRY_ENABLED
+          value: false
+        - name: TZ
+          value: Europe/Copenhagen
+        resources:
+          limits:
+            memory: 2Gi
+          requests:
+            memory: 1Gi
+        ports:
+        - containerPort: 5601
