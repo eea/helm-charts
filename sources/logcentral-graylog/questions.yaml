@@ -21,11 +21,12 @@ questions:
     group: "Container Images"
 
   - variable: graylog.externalUri
-    default: ""
-    description: "External URL to access Graylog (e.g., https://graylog.mycompany.com)"
+    default: "http://graylog.01dev.eea.europa.eu"
+    description: "REQUIRED: External URL with protocol (http:// or https://) - MUST match your actual URL or you'll get blank page"
     type: string
-    label: External URI
+    label: External URI (with http:// or https://)
     group: "Networking"
+    required: true
 
   - variable: graylog.ingress.enabled
     default: false
@@ -36,8 +37,8 @@ questions:
 
   - variable: graylog.ingress.hosts
     default:
-      - "graylog.yourdomain.com"
-    description: "Hostnames for the ingress"
+      - "graylog.01dev.eea.europa.eu"
+    description: "Hostnames for the ingress (must match External URI hostname)"
     type: array
     label: Ingress Hostnames
     group: "Networking"
