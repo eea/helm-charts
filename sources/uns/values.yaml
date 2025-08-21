@@ -94,6 +94,8 @@ affinity: {}
 
 # See https://artifacthub.io/packages/helm/bitnami/mariadb
 mariadb:
+  image:
+    repository: bitnamilegacy/mariadb
   auth:
     rootPassword: REPLACEME
     database: uns

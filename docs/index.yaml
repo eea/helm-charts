@@ -24603,6 +24603,27 @@ entries:
   uns:
   - apiVersion: v2
     appVersion: 2025-03-21T1026
+    created: "2025-08-21T12:47:10.0584846+03:00"
+    dependencies:
+    - condition: postfix.enabled
+      name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.0.2
+    - name: mariadb
+      repository: https://charts.bitnami.com/bitnami
+      version: 19.1.0
+    description: Unified Notification Service (UNS) software
+    digest: d94400512e8fe0dc3bb9eb037c08303815d15beece0ab9ce5151a9867afd47ea
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/uns/logo_eionet.png
+    keywords:
+    - Reportnet
+    name: uns
+    type: application
+    urls:
+    - uns-0.3.7.tgz
+    version: 0.3.7
+  - apiVersion: v2
+    appVersion: 2025-03-21T1026
     created: "2025-08-21T11:40:30.297034+02:00"
     dependencies:
     - condition: postfix.enabled
@@ -25034,4 +25055,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2025-08-21T11:40:27.614736+02:00"
+generated: "2025-08-21T12:47:10.0521147+03:00"

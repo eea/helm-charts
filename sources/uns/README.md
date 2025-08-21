@@ -12,6 +12,9 @@ set the values in the database section.
 
 <dl>
 
+  <dt>Version 0.3.7</dt>
+  <dd>Use of bitnamilegacy repository.</dd>
+
   <dt>Version 0.3.6</dt>
   <dd>Libraries upgrades.</dd>
 
