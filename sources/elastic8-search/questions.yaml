@@ -194,23 +194,31 @@ questions:
   label: Enable Node Selector
   group: "Node Configuration"
 
-- variable: global.tolerations[0].key
+- variable: global.tolerations.enabled
+  default: true
+  description: "Enable tolerations for node taints (requires node selector to be enabled)"
+  type: boolean
+  label: Enable Tolerations
+  group: "Node Configuration"
+  show_if: "global.nodeSelector.enabled=true"
+
+- variable: global.tolerations.values[0].key
   default: "ReservedFor"
   description: "Toleration key for node taints"
   type: string
   label: Toleration Key
   group: "Node Configuration"
-  show_if: "global.nodeSelector.enabled=true"
+  show_if: "global.tolerations.enabled=true"
 
-- variable: global.tolerations[0].value
+- variable: global.tolerations.values[0].value
   default: "AILab"
   description: "Toleration value for node taints"
   type: string
   label: Toleration Value
   group: "Node Configuration"
-  show_if: "global.nodeSelector.enabled=true"
+  show_if: "global.tolerations.enabled=true"
 
-- variable: global.tolerations[0].effect
+- variable: global.tolerations.values[0].effect
   default: "NoSchedule"
   description: "Toleration effect for node taints"
   type: enum
@@ -220,25 +228,25 @@ questions:
     - "NoExecute"
   label: Toleration Effect
   group: "Node Configuration"
-  show_if: "global.nodeSelector.enabled=true"
+  show_if: "global.tolerations.enabled=true"
 
-- variable: global.tolerations[1].key
+- variable: global.tolerations.values[1].key
   default: "HasGPU"
   description: "Second toleration key for GPU node taints"
   type: string
   label: GPU Toleration Key
   group: "Node Configuration"
-  show_if: "global.nodeSelector.enabled=true"
+  show_if: "global.tolerations.enabled=true"
 
-- variable: global.tolerations[1].value
+- variable: global.tolerations.values[1].value
   default: "Yes"
   description: "Second toleration value for GPU node taints"
   type: string
   label: GPU Toleration Value
   group: "Node Configuration"
-  show_if: "global.nodeSelector.enabled=true"
+  show_if: "global.tolerations.enabled=true"
 
-- variable: global.tolerations[1].effect
+- variable: global.tolerations.values[1].effect
   default: "NoSchedule"
   description: "Second toleration effect for GPU node taints"
   type: enum
@@ -248,7 +256,7 @@ questions:
     - "NoExecute"
   label: GPU Toleration Effect
   group: "Node Configuration"
-  show_if: "global.nodeSelector.enabled=true"
+  show_if: "global.tolerations.enabled=true"
 
 - variable: ingress.enabled
   default: true

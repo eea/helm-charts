@@ -3,14 +3,16 @@ global:
     enabled: true
     ReservedFor: AILab
   tolerations:
-    - key: "ReservedFor"
-      operator: "Equal"
-      value: "AILab"
-      effect: "NoSchedule"
-    - key: "HasGPU"
-      operator: "Equal"
-      value: "Yes"
-      effect: "NoSchedule"
+    enabled: true
+    values:
+      - key: "ReservedFor"
+        operator: "Equal"
+        value: "AILab"
+        effect: "NoSchedule"
+      - key: "HasGPU"
+        operator: "Equal"
+        value: "Yes"
+        effect: "NoSchedule"
 
 storage:
   className: "local-path"  # Uses local-path as the default storage class
