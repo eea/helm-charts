@@ -25,6 +25,9 @@ Enable client, add crontab with rsync jobs, if needed
 
 ## Releases
 
+### Version 1.1.0 - 21 August 2025
+- Automated release of [eeacms/rsync:2.8](https://github.com/eea/eea.docker.rsync/releases) [EEA Jenkins - [`9bafcf6e`](https://github.com/eea/helm-charts/commit/9bafcf6e2b2973e1e51866ea376abf76215d371f)]
+
 ### Version 1.0.6 - 13 August 2025
 - Fix questions [valentinab25 - [`e81ab175`](https://github.com/eea/helm-charts/commit/e81ab17530ea0c12e7a1c17fa792cc1b935c0c99)]
 
