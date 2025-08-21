@@ -1,0 +1,70 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: eeacrawlerconfig-es8
+  annotations:
+    "helm.sh/resource-policy": keep
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: {{ .Values.persistence.storageClass | default "default" }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.eeacrawlerconfig.size | default "1Gi" }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: eeacrawlerlogs-es8
+  annotations:
+    "helm.sh/resource-policy": keep
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: {{ .Values.persistence.storageClass | default "default" }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.eeacrawlerlogs.size | default "5Gi" }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nlp-service-src
+  annotations:
+    "helm.sh/resource-policy": keep
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: {{ .Values.persistence.storageClass | default "default" }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.nlpServiceSrc.size | default "1Gi" }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: crawlerrabbitmq-es8
+  annotations:
+    "helm.sh/resource-policy": keep
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: {{ .Values.persistence.storageClass | default "default" }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.crawlerrabbitmq.size | default "5Gi" }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgresdata-es8
+  annotations:
+    "helm.sh/resource-policy": keep
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: {{ .Values.persistence.storageClass | default "default" }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.postgresdata.size | default "10Gi" }}

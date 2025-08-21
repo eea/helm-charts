@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-{{ .Chart.Name }}-airflow-scheduler
+  labels:
+    app.kubernetes.io/name: {{ .Chart.Name }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/version: "{{ .Chart.AppVersion }}"
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.airflowScheduler.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ .Chart.Name }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/version: "{{ .Chart.AppVersion }}"
+      app.kubernetes.io/managed-by: {{ .Release.Service }}
+      app.kubernetes.io/component: airflow-scheduler
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ .Chart.Name }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/version: "{{ .Chart.AppVersion }}"
+        app.kubernetes.io/managed-by: {{ .Release.Service }}
+        app.kubernetes.io/component: airflow-scheduler
+    spec:
+      containers:
+      - name: airflow-scheduler
+        image: "{{ .Values.airflowScheduler.image.repository }}:{{ .Values.airflowScheduler.image.tag }}"
+        imagePullPolicy: {{ .Values.airflowScheduler.image.pullPolicy }}
+        env:
+        - name: AIRFLOW__API__AUTH_BACKEND
+          value: "{{ .Values.airflowScheduler.env.AIRFLOW__API__AUTH_BACKEND }}"
+        - name: AIRFLOW__CELERY__BROKER_URL
+          value: "{{ .Values.airflowScheduler.env.AIRFLOW__CELERY__BROKER_URL }}"
+        - name: AIRFLOW__CELERY__RESULT_BACKEND
+          value: "{{ .Values.airflowScheduler.env.AIRFLOW__CELERY__RESULT_BACKEND }}"
+        - name: AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION
+          value: "{{ .Values.airflowScheduler.env.AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION }}"
+        - name: AIRFLOW__CORE__DAG_CONCURRENCY
+          value: "{{ .Values.airflowScheduler.env.AIRFLOW__CORE__DAG_CONCURRENCY }}"
+        - name: AIRFLOW__CORE__EXECUTOR
+          value: "{{ .Values.airflowScheduler.env.AIRFLOW__CORE__EXECUTOR }}"
+        - name: AIRFLOW__CORE__FERNET_KEY
+          value: "{{ .Values.airflowScheduler.env.AIRFLOW__CORE__FERNET_KEY }}"
+        - name: AIRFLOW__CORE__LOAD_EXAMPLES
+          value: "{{ .Values.airflowScheduler.env.AIRFLOW__CORE__LOAD_EXAMPLES }}"
+        - name: AIRFLOW__CORE__PARALLELISM
+          value: "{{ .Values.airflowScheduler.env.AIRFLOW__CORE__PARALLELISM }}"
+        - name: AIRFLOW__CORE__SQL_ALCHEMY_CONN
+          value: "{{ .Values.airflowScheduler.env.AIRFLOW__CORE__SQL_ALCHEMY_CONN }}"
+        - name: TZ
+          value: "{{ .Values.airflowScheduler.env.TZ }}"
+        volumeMounts:
+        - name: custom-config
+          mountPath: /custom_config
+        - name: airflow-logs
+          mountPath: /opt/airflow/logs
+        resources:
+          limits:
+            memory: "{{ .Values.airflowScheduler.resources.limits.memory }}"
+          requests:
+            memory: "{{ .Values.airflowScheduler.resources.requests.memory }}"
+        command:
+        - airflow
+        - scheduler
+      volumes:
+      - name: custom-config
+        persistentVolumeClaim:
+          claimName: {{ (index .Values.airflowScheduler.volumes 0).persistentVolumeClaim.claimName }}
+      - name: airflow-logs
+        persistentVolumeClaim:
+          claimName: {{ (index .Values.airflowScheduler.volumes 1).persistentVolumeClaim.claimName }}

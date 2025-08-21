@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-{{ .Chart.Name }}-airflow-worker
+  labels:
+    app.kubernetes.io/name: {{ .Chart.Name }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/version: "{{ .Chart.AppVersion }}"
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.airflowWorker.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ .Chart.Name }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/version: "{{ .Chart.AppVersion }}"
+      app.kubernetes.io/managed-by: {{ .Release.Service }}
+      app.kubernetes.io/component: airflow-worker
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ .Chart.Name }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/version: "{{ .Chart.AppVersion }}"
+        app.kubernetes.io/managed-by: {{ .Release.Service }}
+        app.kubernetes.io/component: airflow-worker
+    spec:
+      containers:
+      - name: airflow-worker
+        image: "{{ .Values.airflowWorker.image.repository }}:{{ .Values.airflowWorker.image.tag }}"
+        imagePullPolicy: {{ .Values.airflowWorker.image.pullPolicy }}
+        env:
+        - name: AIRFLOW_VAR_SDI_AUTH
+          value: "{{ .Values.airflowWorker.env.AIRFLOW_VAR_SDI_AUTH }}"
+        - name: AIRFLOW__API__AUTH_BACKEND
+          value: "{{ .Values.airflowWorker.env.AIRFLOW__API__AUTH_BACKEND }}"
+        - name: AIRFLOW__CELERY__BROKER_URL
+          value: "{{ .Values.airflowWorker.env.AIRFLOW__CELERY__BROKER_URL }}"
+        - name: AIRFLOW__CELERY__RESULT_BACKEND
+          value: "{{ .Values.airflowWorker.env.AIRFLOW__CELERY__RESULT_BACKEND }}"
+        - name: AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION
+          value: "{{ .Values.airflowWorker.env.AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION }}"
+        - name: AIRFLOW__CORE__DAG_CONCURRENCY
+          value: "{{ .Values.airflowWorker.env.AIRFLOW__CORE__DAG_CONCURRENCY }}"
+        - name: AIRFLOW__CORE__EXECUTOR
+          value: "{{ .Values.airflowWorker.env.AIRFLOW__CORE__EXECUTOR }}"
+        - name: AIRFLOW__CORE__FERNET_KEY
+          value: "{{ .Values.airflowWorker.env.AIRFLOW__CORE__FERNET_KEY }}"
+        - name: AIRFLOW__CORE__LOAD_EXAMPLES
+          value: "{{ .Values.airflowWorker.env.AIRFLOW__CORE__LOAD_EXAMPLES }}"
+        - name: AIRFLOW__CORE__PARALLELISM
+          value: "{{ .Values.airflowWorker.env.AIRFLOW__CORE__PARALLELISM }}"
+        - name: AIRFLOW__CORE__SQL_ALCHEMY_CONN
+          value: "{{ .Values.airflowWorker.env.AIRFLOW__CORE__SQL_ALCHEMY_CONN }}"
+        - name: SENTRY_DSN
+          value: "{{ .Values.airflowWorker.env.SENTRY_DSN }}"
+        - name: TZ
+          value: "{{ .Values.airflowWorker.env.TZ }}"
+        volumeMounts:
+        - name: custom-config
+          mountPath: /custom_config
+        - name: airflow-logs
+          mountPath: /opt/airflow/logs
+        resources:
+          limits:
+            memory: "{{ .Values.airflowWorker.resources.limits.memory }}"
+          requests:
+            memory: "{{ .Values.airflowWorker.resources.requests.memory }}"
+        command:
+        - airflow
+        - celery
+        - worker
+      volumes:
+      - name: custom-config
+        persistentVolumeClaim:
+          claimName: {{ (index .Values.airflowWorker.volumes 0).persistentVolumeClaim.claimName }}
+      - name: airflow-logs
+        persistentVolumeClaim:
+          claimName: {{ (index .Values.airflowWorker.volumes 1).persistentVolumeClaim.claimName }}
