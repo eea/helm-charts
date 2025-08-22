@@ -1,0 +1,93 @@
+{{- if .Values.loadbalancer.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "logcentral-graylog5.fullname" . }}-loadbalancer
+  labels:
+    {{- include "logcentral-graylog5.loadbalancer.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "logcentral-graylog5.loadbalancer.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "logcentral-graylog5.loadbalancer.selectorLabels" . | nindent 8 }}
+    spec:
+      serviceAccountName: {{ include "logcentral-graylog5.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: loadbalancer
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.loadbalancer.image.repository }}:{{ .Values.loadbalancer.image.tag }}"
+          imagePullPolicy: {{ .Values.loadbalancer.image.pullPolicy }}
+          env:
+            - name: GRAYLOG_HOST
+              value: {{ .Values.loadbalancer.config.graylogHost | quote }}
+            - name: LOGSPOUT
+              value: "ignore"
+            - name: TZ
+              value: {{ .Values.global.timezone | quote }}
+          ports:
+            - name: syslog-tcp
+              containerPort: 1514
+              protocol: TCP
+            - name: syslog-udp
+              containerPort: 1514
+              protocol: UDP
+            - name: gelf-tcp
+              containerPort: 12201
+              protocol: TCP
+            - name: gelf-udp
+              containerPort: 12201
+              protocol: UDP
+          resources:
+            {{- toYaml .Values.loadbalancer.resources | nindent 12 }}
+      {{- with .Values.loadbalancer.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.loadbalancer.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.loadbalancer.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "logcentral-graylog5.fullname" . }}-loadbalancer
+  labels:
+    {{- include "logcentral-graylog5.loadbalancer.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.loadbalancer.service.type }}
+  ports:
+    - port: {{ .Values.loadbalancer.service.ports.syslogTcp }}
+      targetPort: 1514
+      protocol: TCP
+      name: syslog-tcp
+    - port: {{ .Values.loadbalancer.service.ports.syslogUdp }}
+      targetPort: 1514
+      protocol: UDP
+      name: syslog-udp
+    - port: {{ .Values.loadbalancer.service.ports.gelfTcp }}
+      targetPort: 12201
+      protocol: TCP
+      name: gelf-tcp
+    - port: {{ .Values.loadbalancer.service.ports.gelfUdp }}
+      targetPort: 12201
+      protocol: UDP
+      name: gelf-udp
+  selector:
+    {{- include "logcentral-graylog5.loadbalancer.selectorLabels" . | nindent 4 }}
+{{- end }}

@@ -1,0 +1,151 @@
+{{- if .Values.graylogMaster.enabled }}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "logcentral-graylog5.fullname" . }}-graylog-master
+  labels:
+    {{- include "logcentral-graylog5.graylog-master.labels" . | nindent 4 }}
+spec:
+  serviceName: {{ include "logcentral-graylog5.fullname" . }}-graylog-master
+  replicas: {{ .Values.graylogMaster.replicas }}
+  selector:
+    matchLabels:
+      {{- include "logcentral-graylog5.graylog-master.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "logcentral-graylog5.graylog-master.selectorLabels" . | nindent 8 }}
+    spec:
+      serviceAccountName: {{ include "logcentral-graylog5.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.securityContext | nindent 8 }}
+      containers:
+        - name: graylog-master
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.graylogMaster.image.repository }}:{{ .Values.graylogMaster.image.tag }}"
+          imagePullPolicy: {{ .Values.graylogMaster.image.pullPolicy }}
+          env:
+            - name: GRAYLOG_HTTP_BIND_ADDRESS
+              value: {{ .Values.graylogMaster.config.httpBindAddress | quote }}
+            - name: GRAYLOG_HTTP_EXTERNAL_URI
+              value: {{ .Values.graylogMaster.config.httpExternalUri | quote }}
+            - name: GRAYLOG_TRANSPORT_EMAIL_ENABLED
+              value: {{ .Values.graylogMaster.config.email.enabled | quote }}
+            - name: GRAYLOG_TRANSPORT_EMAIL_HOSTNAME
+              value: {{ .Values.graylogMaster.config.email.hostname | quote }}
+            - name: GRAYLOG_TRANSPORT_EMAIL_PORT
+              value: {{ .Values.graylogMaster.config.email.port | quote }}
+            - name: GRAYLOG_TRANSPORT_EMAIL_SUBJECT_PREFIX
+              value: {{ .Values.graylogMaster.config.email.subjectPrefix | quote }}
+            - name: GRAYLOG_TRANSPORT_EMAIL_FROM_EMAIL
+              value: {{ .Values.graylogMaster.config.email.fromEmail | quote }}
+            - name: GRAYLOG_TRANSPORT_EMAIL_WEB_INTERFACE_URL
+              value: {{ .Values.graylogMaster.config.httpExternalUri | quote }}
+            - name: GRAYLOG_TRANSPORT_EMAIL_USE_AUTH
+              value: {{ .Values.graylogMaster.config.email.useAuth | quote }}
+            - name: GRAYLOG_TRANSPORT_EMAIL_USE_TLS
+              value: {{ .Values.graylogMaster.config.email.useTls | quote }}
+            - name: GRAYLOG_TRANSPORT_EMAIL_USE_SSL
+              value: {{ .Values.graylogMaster.config.email.useSsl | quote }}
+            - name: GRAYLOG_SERVER_JAVA_OPTS
+              value: "{{ .Values.graylogMaster.config.java.heapSize }} {{ .Values.graylogMaster.config.java.opts }}"
+            - name: GRAYLOG_PROCESSBUFFER_PROCESSORS
+              value: {{ .Values.graylogMaster.config.processbufferProcessors | quote }}
+            - name: GRAYLOG_PASSWORD_SECRET
+              value: {{ .Values.graylogMaster.config.passwordSecret | quote }}
+            - name: GRAYLOG_ROOT_PASSWORD_SHA2
+              value: {{ .Values.graylogMaster.config.rootPasswordSha2 | quote }}
+            - name: GRAYLOG_ELASTICSEARCH_HOSTS
+              value: {{ .Values.graylogMaster.config.elasticsearch.hosts | quote }}
+            - name: GRAYLOG_TELEMETRY_ENABLED
+              value: {{ .Values.graylogMaster.config.telemetryEnabled | quote }}
+            - name: GRAYLOG_IS_LEADER
+              value: {{ .Values.graylogMaster.config.isLeader | quote }}
+            - name: TZ
+              value: {{ .Values.global.timezone | quote }}
+            - name: GRAYLOG_MONGODB_URI
+              value: "mongodb://{{ include "logcentral-graylog5.fullname" . }}-mongodb:27017/graylog"
+          ports:
+            - name: graylog
+              containerPort: 9000
+              protocol: TCP
+          volumeMounts:
+            - name: graylog-data
+              mountPath: /usr/share/graylog/data
+            - name: graylog-journal
+              mountPath: /usr/share/graylog/data/journal
+            - name: graylog-plugins
+              mountPath: /usr/share/graylog/plugin
+          resources:
+            {{- toYaml .Values.graylogMaster.resources | nindent 12 }}
+      {{- with .Values.graylogMaster.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.graylogMaster.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.graylogMaster.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+  volumeClaimTemplates:
+    {{- if .Values.graylogMaster.persistence.data.enabled }}
+    - metadata:
+        name: graylog-data
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        {{- if .Values.graylogMaster.persistence.data.storageClass }}
+        storageClassName: {{ .Values.graylogMaster.persistence.data.storageClass }}
+        {{- end }}
+        resources:
+          requests:
+            storage: {{ .Values.graylogMaster.persistence.data.size }}
+    {{- end }}
+    {{- if .Values.graylogMaster.persistence.journal.enabled }}
+    - metadata:
+        name: graylog-journal
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        {{- if .Values.graylogMaster.persistence.journal.storageClass }}
+        storageClassName: {{ .Values.graylogMaster.persistence.journal.storageClass }}
+        {{- end }}
+        resources:
+          requests:
+            storage: {{ .Values.graylogMaster.persistence.journal.size }}
+    {{- end }}
+    {{- if and .Values.graylogMaster.persistence.plugins.enabled (not .Values.graylogMaster.persistence.plugins.external) }}
+    - metadata:
+        name: graylog-plugins
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        {{- if .Values.graylogMaster.persistence.plugins.storageClass }}
+        storageClassName: {{ .Values.graylogMaster.persistence.plugins.storageClass }}
+        {{- end }}
+        resources:
+          requests:
+            storage: {{ .Values.graylogMaster.persistence.plugins.size }}
+    {{- end }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "logcentral-graylog5.fullname" . }}-graylog-master
+  labels:
+    {{- include "logcentral-graylog5.graylog-master.labels" . | nindent 4 }}
+spec:
+  type: ClusterIP
+  ports:
+    - port: 9000
+      targetPort: 9000
+      protocol: TCP
+      name: graylog
+  selector:
+    {{- include "logcentral-graylog5.graylog-master.selectorLabels" . | nindent 4 }}
+{{- end }}

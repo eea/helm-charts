@@ -1,0 +1,89 @@
+{{- if .Values.mongodb.enabled }}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "logcentral-graylog5.fullname" . }}-mongodb
+  labels:
+    {{- include "logcentral-graylog5.mongodb.labels" . | nindent 4 }}
+spec:
+  serviceName: {{ include "logcentral-graylog5.fullname" . }}-mongodb
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "logcentral-graylog5.mongodb.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "logcentral-graylog5.mongodb.selectorLabels" . | nindent 8 }}
+    spec:
+      serviceAccountName: {{ include "logcentral-graylog5.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: mongodb
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.mongodb.image.repository }}:{{ .Values.mongodb.image.tag }}"
+          imagePullPolicy: {{ .Values.mongodb.image.pullPolicy }}
+          env:
+            - name: TZ
+              value: {{ .Values.global.timezone | quote }}
+          ports:
+            - name: mongodb
+              containerPort: 27017
+              protocol: TCP
+          volumeMounts:
+            - name: mongodb-data
+              mountPath: /data/db
+          resources:
+            {{- toYaml .Values.mongodb.resources | nindent 12 }}
+      {{- with .Values.mongodb.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.mongodb.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.mongodb.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+  {{- if .Values.mongodb.persistence.enabled }}
+  volumeClaimTemplates:
+    - metadata:
+        name: mongodb-data
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        {{- if .Values.mongodb.persistence.storageClass }}
+        storageClassName: {{ .Values.mongodb.persistence.storageClass }}
+        {{- end }}
+        resources:
+          requests:
+            storage: {{ .Values.mongodb.persistence.size }}
+  {{- else }}
+      volumes:
+        - name: mongodb-data
+          emptyDir: {}
+  {{- end }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "logcentral-graylog5.fullname" . }}-mongodb
+  labels:
+    {{- include "logcentral-graylog5.mongodb.labels" . | nindent 4 }}
+spec:
+  type: ClusterIP
+  ports:
+    - port: 27017
+      targetPort: 27017
+      protocol: TCP
+      name: mongodb
+  selector:
+    {{- include "logcentral-graylog5.mongodb.selectorLabels" . | nindent 4 }}
+{{- end }}
