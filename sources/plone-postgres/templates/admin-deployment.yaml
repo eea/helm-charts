@@ -35,7 +35,7 @@ spec:
           value: "{{ .Values.timezone }}"
         - name: "PGHOST" 
           value: "postgres"
-        {{- range $key, $value := .Values.plone.environment }}
+        {{- range $key, $value := .Values.admin.environment }}
         {{- if ($value) }}
         - name: {{ $key }}
           value: {{ $value | quote }}
