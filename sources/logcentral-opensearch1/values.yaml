@@ -46,15 +46,11 @@ opensearch:
 
   maxUnavailable: 0
 
-ingress:
-  enabled: true
-  className: "nginx"
-  annotations: {}
-  hosts:
-    - host: opensearch.01dev.eea.europa.eu
-      paths:
-        - path: /
-          pathType: Prefix
-  tls:
-    enabled: false
-    secretName: opensearch-tls
+  ingress:
+    enabled: true
+    ingressClassName: "nginx"
+    annotations: {}
+    path: /
+    hosts:
+      - opensearch.01dev.eea.europa.eu
+    tls: []
