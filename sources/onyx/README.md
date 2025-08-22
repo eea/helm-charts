@@ -118,6 +118,14 @@ imageMapping:
 
 ## Releases
 
+### Version 0.2.0
+- Updated vespa to 0.2.24
+- Added additional ENV variables
+- Switched to bitnamilegacy
+- Updated appVersion to v1.3.1-eea.0.0.71
+- Added missing affinity and tolerations in the templates
+- Added volumes for indexing-model and inference-model
+
 ### Version 0.1.3
 - Added ENABLED_EMAIL_INVITES env variable and missing TZ.
 

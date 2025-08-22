@@ -38,4 +38,23 @@ spec:
         resources:
           {{- toYaml .Values.inferenceCapability.resources | nindent 10 }}
         {{- end }}
-
+        {{- with .Values.inferenceCapability.volumeMounts }}
+        volumeMounts:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+      {{- with .Values.inferenceCapability.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.inferenceCapability.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.inferenceCapability.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.inferenceCapability.volumes }}
+      volumes:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
