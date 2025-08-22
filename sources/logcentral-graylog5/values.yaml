@@ -222,6 +222,7 @@ service:
 # Ingress configuration
 ingress:
   enabled: false
+  hostname: "graylog.local" # Single hostname variable for Rancher UI
   className: ""
   annotations:
     {}

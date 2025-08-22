@@ -149,7 +149,7 @@ questions:
     label: Enable Ingress
     group: "Networking"
 
-  - variable: ingress.hosts[0].host
+  - variable: ingress.hostname
     default: "graylog.local"
     description: "Hostname for ingress"
     type: hostname
