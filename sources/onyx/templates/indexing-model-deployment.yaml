@@ -44,3 +44,23 @@ spec:
         resources:
           {{- toYaml .Values.indexCapability.resources | nindent 10 }}
         {{- end }}
+        {{- with .Values.indexCapability.volumeMounts }}
+        volumeMounts:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+      {{- with .Values.indexCapability.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.indexCapability.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.indexCapability.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.indexCapability.volumes }}
+      volumes:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
