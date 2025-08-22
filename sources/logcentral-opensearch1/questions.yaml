@@ -1,0 +1,187 @@
+questions:
+  - variable: opensearch.clusterName
+    default: "opensearch-cluster"
+    description: "Name of the OpenSearch cluster"
+    type: string
+    label: Cluster Name
+    group: "General Configuration"
+
+  - variable: opensearch.image
+    default: "opensearchproject/opensearch"
+    description: "OpenSearch Docker image repository"
+    type: string
+    label: OpenSearch Image Repository
+    group: "Container Images"
+
+  - variable: opensearch.imageTag
+    default: "1.1.0"
+    description: "OpenSearch Docker image tag"
+    type: string
+    label: OpenSearch Image Tag
+    group: "Container Images"
+
+  - variable: opensearch.replicas
+    default: 3
+    description: "Number of OpenSearch replicas"
+    type: int
+    label: OpenSearch Replicas
+    group: "General Configuration"
+
+  - variable: opensearch.opensearchJavaOpts
+    default: "-Xmx2g -Xms2g"
+    description: "Java heap size for OpenSearch"
+    type: string
+    label: Java Heap Size
+    group: "Resource Configuration"
+
+  - variable: opensearch.resources.requests.cpu
+    default: "500m"
+    description: "CPU request for OpenSearch nodes"
+    type: string
+    label: OpenSearch CPU Request
+    group: "Resource Configuration"
+
+  - variable: opensearch.resources.requests.memory
+    default: "2Gi"
+    description: "Memory request for OpenSearch nodes"
+    type: string
+    label: OpenSearch Memory Request
+    group: "Resource Configuration"
+
+  - variable: opensearch.resources.limits.cpu
+    default: "2"
+    description: "CPU limit for OpenSearch nodes"
+    type: string
+    label: OpenSearch CPU Limit
+    group: "Resource Configuration"
+
+  - variable: opensearch.resources.limits.memory
+    default: "4Gi"
+    description: "Memory limit for OpenSearch nodes"
+    type: string
+    label: OpenSearch Memory Limit
+    group: "Resource Configuration"
+
+  - variable: opensearch.service.type
+    default: "ClusterIP"
+    description: "Service type for OpenSearch"
+    type: enum
+    options:
+      - "ClusterIP"
+      - "NodePort"
+      - "LoadBalancer"
+    label: OpenSearch Service Type
+    group: "Network Configuration"
+
+  - variable: opensearch.service.port
+    default: 9200
+    description: "Service port for OpenSearch"
+    type: int
+    label: OpenSearch Service Port
+    group: "Network Configuration"
+
+  - variable: opensearch.persistence.enabled
+    default: true
+    description: "Enable persistent storage for OpenSearch"
+    type: boolean
+    label: Enable Persistence
+    group: "Storage Configuration"
+
+  - variable: opensearch.persistence.storageClass
+    default: ""
+    description: "Storage class for OpenSearch persistent volumes"
+    type: string
+    label: Storage Class
+    group: "Storage Configuration"
+
+  - variable: opensearch.persistence.size
+    default: "20Gi"
+    description: "Size of persistent volume for OpenSearch"
+    type: string
+    label: Storage Size
+    group: "Storage Configuration"
+
+  - variable: opensearch.roles
+    default:
+      - master
+      - ingest
+      - data
+      - remote_cluster_client
+    description: "Node roles for OpenSearch nodes"
+    type: multiline
+    label: Node Roles
+    group: "Node Roles"
+
+  - variable: opensearch.maxUnavailable
+    default: 0
+    description: "Max unavailable pods for Pod Disruption Budget (0 to disable)"
+    type: int
+    label: Max Unavailable Pods
+    group: "High Availability"
+
+  - variable: ingress.enabled
+    default: false
+    description: "Enable Ingress for OpenSearch"
+    type: boolean
+    label: Enable Ingress
+    group: "Ingress Configuration"
+
+  - variable: ingress.className
+    default: "nginx"
+    description: "Ingress class name"
+    type: string
+    label: Ingress Class Name
+    group: "Ingress Configuration"
+    show_if: "ingress.enabled=true"
+
+  - variable: ingress.annotations
+    default: {}
+    description: "Ingress annotations (YAML format)"
+    type: multiline
+    label: Ingress Annotations
+    group: "Ingress Configuration"
+    show_if: "ingress.enabled=true"
+
+  - variable: ingress.hosts[0].host
+    default: "opensearch.01dev.eea.europa.eu"
+    description: "Hostname for OpenSearch Ingress"
+    type: string
+    label: Ingress Hostname
+    group: "Ingress Configuration"
+    show_if: "ingress.enabled=true"
+
+  - variable: ingress.hosts[0].paths[0].path
+    default: "/"
+    description: "Path for OpenSearch Ingress"
+    type: string
+    label: Ingress Path
+    group: "Ingress Configuration"
+    show_if: "ingress.enabled=true"
+
+  - variable: ingress.hosts[0].paths[0].pathType
+    default: "Prefix"
+    description: "Path type for OpenSearch Ingress"
+    type: enum
+    options:
+      - "Prefix"
+      - "Exact"
+      - "ImplementationSpecific"
+    label: Ingress Path Type
+    group: "Ingress Configuration"
+    show_if: "ingress.enabled=true"
+
+  - variable: ingress.tls.enabled
+    default: false
+    description: "Enable TLS for Ingress"
+    type: boolean
+    label: Enable TLS
+    group: "Ingress Configuration"
+    show_if: "ingress.enabled=true"
+
+  - variable: ingress.tls.secretName
+    default: "opensearch-tls"
+    description: "Secret name for TLS certificate"
+    type: string
+    label: TLS Secret Name
+    group: "Ingress Configuration"
+    show_if: "ingress.tls.enabled=true"
