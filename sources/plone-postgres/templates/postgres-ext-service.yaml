@@ -1,0 +1,9 @@
+{{- if .Values.admin.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: "postgres"
+spec:
+  type: ExternalName
+  externalName: "{{ .Values.admin.link }}"
+{{- end }}

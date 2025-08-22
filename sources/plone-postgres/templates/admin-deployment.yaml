@@ -1,0 +1,62 @@
+{{- if .Values.admin.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-dpl-admin
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: admin
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: admin
+
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: admin
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      containers:
+      - name: admin
+        image: "{{ .Values.image.repository }}:{{ .Values.admin.tag | default .Chart.AppVersion }}"
+        env:
+        - name: "POSTGRES_HOST"
+          value: "postgres"
+        - name: TZ
+          value: "{{ .Values.timezone }}"
+        - name: "PGHOST" 
+          value: "postgres"
+        {{- range $key, $value := .Values.plone.environment }}
+        {{- if ($value) }}
+        - name: {{ $key }}
+          value: {{ $value | quote }}
+        {{- end }}
+        {{- end }}
+
+
+        resources:
+          {{- toYaml .Values.plone.resources | nindent 10 }}
+
+      {{- with .Values.plone.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.plone.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.plone.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+{{- end }}
