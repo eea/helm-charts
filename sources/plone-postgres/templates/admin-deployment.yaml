@@ -30,11 +30,11 @@ spec:
         image: "{{ .Values.image.repository }}:{{ .Values.admin.tag | default .Chart.AppVersion }}"
         env:
         - name: "POSTGRES_HOST"
-          value: "postgres"
+          value:  "{{ .Values.admin.serviceName }}"
         - name: TZ
           value: "{{ .Values.timezone }}"
         - name: "PGHOST" 
-          value: "postgres"
+          value: "{{ .Values.admin.serviceName }}"
         {{- range $key, $value := .Values.admin.environment }}
         {{- if ($value) }}
         - name: {{ $key }}

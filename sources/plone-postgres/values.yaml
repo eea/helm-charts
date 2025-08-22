@@ -28,12 +28,15 @@ admin:
   enabled: false
   tag: "17.5-1" 
   link: postgres
+  serviceName: master
   storage:
     size: 10G
     storageClassName:
   environment:
     PGUSER: zope
     PGPASSWORD: zope
+    POSTGRES_PASSWORD: zope
+    POSTGRES_USER: zope  
     POSTGRES_CRONS: |-
   resources:
     requests:
