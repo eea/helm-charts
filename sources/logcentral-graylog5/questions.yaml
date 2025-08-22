@@ -14,19 +14,11 @@ questions:
     required: true
     group: "Graylog Configuration"
 
-  - variable: graylogMaster.config.passwordSecret
-    default: "forpasswordencryptionandhmacogeneration64charactersminimumrequired!"
-    description: "Password secret for Graylog (minimum 64 characters) - same for all nodes"
+  - variable: global.adminPassword
+    default: "admin"
+    description: "Admin password for Graylog (will be hashed automatically)"
     type: password
-    label: Graylog Password Secret
-    required: true
-    group: "Graylog Configuration"
-
-  - variable: graylogMaster.config.rootPasswordSha2
-    default: "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918"
-    description: "SHA2 hash of the root password (default: 'admin')"
-    type: password
-    label: Root Password SHA2 Hash
+    label: Graylog Admin Password
     required: true
     group: "Graylog Configuration"
 
@@ -43,24 +35,6 @@ questions:
     type: string
     label: Graylog Client External URL
     show_if: "graylogClient.enabled=true"
-    group: "Graylog Configuration"
-
-  - variable: graylogClient.config.passwordSecret
-    default: "forpasswordencryptionandhmacogeneration64charactersminimumrequired!"
-    description: "Password secret for Graylog Client (must match master)"
-    type: password
-    label: Graylog Client Password Secret
-    show_if: "graylogClient.enabled=true"
-    required: true
-    group: "Graylog Configuration"
-
-  - variable: graylogClient.config.rootPasswordSha2
-    default: "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918"
-    description: "SHA2 hash of the root password (must match master)"
-    type: password
-    label: Graylog Client Root Password SHA2 Hash
-    show_if: "graylogClient.enabled=true"
-    required: true
     group: "Graylog Configuration"
 
   - variable: graylogMaster.config.elasticsearch.hosts

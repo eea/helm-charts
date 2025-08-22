@@ -56,10 +56,6 @@ spec:
               value: "{{ .Values.graylogClient.config.java.heapSize }} {{ .Values.graylogClient.config.java.opts }}"
             - name: GRAYLOG_PROCESSBUFFER_PROCESSORS
               value: {{ .Values.graylogClient.config.processbufferProcessors | quote }}
-            - name: GRAYLOG_PASSWORD_SECRET
-              value: {{ .Values.graylogClient.config.passwordSecret | quote }}
-            - name: GRAYLOG_ROOT_PASSWORD_SHA2
-              value: {{ .Values.graylogClient.config.rootPasswordSha2 | quote }}
             - name: GRAYLOG_ELASTICSEARCH_HOSTS
               value: {{ .Values.graylogClient.config.elasticsearch.hosts | quote }}
             - name: GRAYLOG_TELEMETRY_ENABLED

@@ -5,6 +5,8 @@
 # Global settings
 global:
   timezone: "Europe/Bucharest"
+  # Graylog admin password (will be hashed automatically)
+  adminPassword: "admin"
 
 # Postfix configuration
 postfix:
@@ -86,8 +88,6 @@ graylogMaster:
       opts: "-XX:NewRatio=1 -XX:MaxMetaspaceSize=256m -server -XX:+ResizeTLAB -XX:-OmitStackTraceInFastThrow"
 
     processbufferProcessors: "5"
-    passwordSecret: "forpasswordencryptionandhmacogeneration64charactersminimumrequired!" # Must be at least 64 characters
-    rootPasswordSha2: "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918" # SHA2 hash of "admin"
 
     elasticsearch:
       hosts: "http://elasticsearch:9200"
@@ -151,8 +151,6 @@ graylogClient:
       opts: "-XX:NewRatio=1 -XX:MaxMetaspaceSize=256m -server -XX:+ResizeTLAB -XX:-OmitStackTraceInFastThrow"
 
     processbufferProcessors: "5"
-    passwordSecret: "forpasswordencryptionandhmacogeneration64charactersminimumrequired!" # Must be at least 64 characters (same as master)
-    rootPasswordSha2: "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918" # SHA2 hash of "admin" (same as master)
 
     elasticsearch:
       hosts: "http://elasticsearch:9200"
