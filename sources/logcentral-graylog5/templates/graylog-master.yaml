@@ -81,8 +81,14 @@ spec:
               mountPath: /usr/share/graylog/data/journal
             - name: graylog-plugins
               mountPath: /usr/share/graylog/plugin
+            - name: graylog-config
+              mountPath: /usr/share/graylog/data/config
           resources:
             {{- toYaml .Values.graylogMaster.resources | nindent 12 }}
+      volumes:
+        - name: graylog-config
+          configMap:
+            name: {{ include "logcentral-graylog5.fullname" . }}-graylog-config
       {{- with .Values.graylogMaster.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

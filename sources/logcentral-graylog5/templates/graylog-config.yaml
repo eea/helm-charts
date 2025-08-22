@@ -1,0 +1,519 @@
+{{- if .Values.graylogMaster.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "logcentral-graylog5.fullname" . }}-graylog-config
+  labels:
+    {{- include "logcentral-graylog5.labels" . | nindent 4 }}
+data:
+  graylog.conf: |
+    # Graylog configuration file
+    # See https://docs.graylog.org/docs/server-conf for documentation
+
+    # If you are running more than one instances of Graylog server you have to select one of these
+    # instances as leader. The leader will perform some periodical tasks that non-leaders won't perform.
+    is_leader = {{ .Values.graylogMaster.config.isLeader }}
+
+    # The auto-generated node ID will be stored in this file and read after restarts. It is a good idea
+    # to use an absolute file path here if you are starting Graylog server from init scripts or similar.
+    node_id_file = /usr/share/graylog/data/config/node-id
+
+    # You MUST set a secret to secure/pepper the stored user passwords here. Use at least 64 characters.
+    # Generate one by using for example: pwgen -N 1 -s 96
+    # ATTENTION: This value must be the same on all Graylog nodes in the cluster.
+    # Changing this value after installation will render all user sessions and encrypted values in the database invalid. (Default: empty)
+    password_secret = {{ .Values.graylogMaster.config.passwordSecret }}
+
+    # The default root user is named 'admin'
+    # You MUST specify a hash password for the root user (which you only need to initially set up the
+    # system and in case you lose connectivity to your authentication backend)
+    # This password cannot be changed using the API or via the web interface. If you need to change it,
+    # modify it in this file.
+    # Create one by using for example: echo -n yourpassword | shasum -a 256
+    # and put the resulting hash value into the following line
+    # ATTENTION: This value must be the same on all Graylog nodes in the cluster.
+    root_password_sha2 = {{ .Values.graylogMaster.config.rootPasswordSha2 }}
+
+    # The email address of the root user.
+    # Default is empty
+    #root_email = ""
+
+    # The timezone setting of the root user. See http://www.joda.org/joda-time/timezones.html for a list of valid time zones.
+    # Default is UTC
+    root_timezone = {{ .Values.global.timezone }}
+
+    # Set plugin directory here (relative or absolute)
+    plugin_dir = /usr/share/graylog/plugin
+
+    # REST API listen URI. Must be reachable by other Graylog server nodes if you run a cluster.
+    # When using Graylog Collectors, this URI will be used to receive heartbeat messages and must be accessible for all collectors.
+    rest_listen_uri = http://0.0.0.0:9001/
+
+    # REST API transport address. Defaults to the value of rest_listen_uri. Exception: If rest_listen_uri
+    # is set to a wildcard IP address (0.0.0.0) the first non-loopback IPv4 system address is used.
+    # If set, this will be promoted in the cluster discovery APIs, so other nodes may try to connect on
+    # this address and it is used to generate URLs addressing entities in the REST API. (see rest_listen_uri)
+    # You will need to define this, if your Graylog server is running behind a HTTP proxy that is rewriting
+    # the scheme, host name or URI.
+    # rest_transport_uri = http://192.168.1.1:9001/
+
+    # Enable CORS headers for REST API. This is necessary for JS-clients accessing the server directly.
+    # If these are disabled, modern browsers will refuse to execute AJAX requests to the REST API.
+    # Enable this if you want to use the web interface on a different server.
+    rest_enable_cors = true
+
+    # Enable GZIP support for REST API. This compresses API responses and therefore helps to reduce
+    # overall round trip times.
+    rest_enable_gzip = true
+
+    # Enable HTTPS support for the REST API. This secures the communication with the REST API with
+    # TLS to prevent request and response tampering. This is disabled by default. Uncomment the next line to enable it.
+    #rest_enable_tls = true
+
+    # The X.509 certificate chain file in PEM format to use for securing the REST API.
+    #rest_tls_cert_file = /path/to/graylog.crt
+
+    # The PKCS#8 private key file in PEM format to use for securing the REST API.
+    #rest_tls_key_file = /path/to/graylog.key
+
+    # The password to unlock the private key used for securing the REST API.
+    #rest_tls_key_password = secret
+
+    # The maximum size of the HTTP request headers in bytes.
+    #rest_max_header_size = 8192
+
+    # The HTTP External URI of this Graylog node. This setting is only used in this node as fallback.
+    #
+    # This will be promoted in the cluster discovery APIs, so other nodes may try to connect on this
+    # address and it is used to generate URLs addressing entities in the REST API. (see rest_listen_uri)
+    # You will need to define this, if your Graylog server is running behind a HTTP proxy that is rewriting
+    # the scheme, host name or URI.
+    # This must not contain a path other than "/".
+    http_external_uri = {{ .Values.graylogMaster.config.httpExternalUri }}
+
+    # Enable the embedded Graylog web interface.
+    # Default: true
+    web_enable = true
+
+    # Web interface listen URI.
+    # Configuring a path for the URI here effectively prefixes all URIs in the web interface. This is a replacement
+    # for the application.context configuration parameter in pre-2.0 versions of the Graylog web interface.
+    web_listen_uri = {{ .Values.graylogMaster.config.httpBindAddress }}
+
+    # Web interface X-Forwarded-For, X-Real-IP and X-Forwarded-Proto headers handling.
+    # Defaults to false. Enable this if you are using a reverse proxy or load balancer and want to use the client IP
+    # address in audit logs and for the login form.
+    #web_enable_cors = false
+    #web_enable_gzip = true
+    #web_enable_tls = false
+    #web_tls_cert_file = /path/to/graylog-web.crt
+    #web_tls_key_file = /path/to/graylog-web.key
+    #web_tls_key_password = secret
+    #web_max_header_size = 8192
+
+    # Enable extraction of the client SSL certificate from X-Forwarded-For header.
+    # Defaults to false.
+    #trusted_proxies = 127.0.0.1/32, 0:0:0:0:0:0:0:1/128
+
+    # List of Elasticsearch hosts Graylog should connect to.
+    # Need to be specified as a comma-separated list of valid URIs for the http ports of your elasticsearch nodes.
+    # If one or more of your elasticsearch hosts require authentication, include the credentials in each node URI that
+    # requires authentication.
+    #
+    # Default: http://127.0.0.1:9200
+    elasticsearch_hosts = {{ .Values.graylogMaster.config.elasticsearch.hosts }}
+
+    # Automatically try to discover other Elasticsearch nodes from your existing cluster.
+    # If automatic discovery is disabled, Graylog will only connect to the hosts in elasticsearch_hosts.
+    # Setting this to true will make Graylog round-robin between your hosts on every request. This is helpful
+    # if you have multiple Elasticsearch hosts.
+    # Default: false
+    #elasticsearch_discovery_enabled = true
+
+    # Change the default Elasticsearch analyzer used for message indexing. The default is standard.
+    # If this setting is changed and you have already stored messages in Graylog, the existing messages
+    # will not be searchable until the index is rebuilt or the messages are re-indexed.
+    # Default: standard
+    #elasticsearch_analyzer = standard
+
+    # Global request timeout for Elasticsearch requests (e. g. during search, index creation, or index time-range
+    # calculations) based on a best-effort to restrict the runtime of Elasticsearch operations.
+    # Default: 1m
+    #elasticsearch_request_timeout = 1m
+
+    # Time interval between index optimization runs. This number should be higher than your specified
+    # index rotation period. Setting this to a lower value might slow down your Elasticsearch cluster.
+    #elasticsearch_index_optimization_timeout = 1h
+
+    # Disable checking the version of Elasticsearch for being compatible with this Graylog release.
+    # WARNING: Using Graylog with unsupported and untested versions of Elasticsearch may lead to data loss!
+    #elasticsearch_disable_version_check = true
+
+    # For how many minutes should we wait for Elasticsearch to be available and only then start startup process.
+    #startup_timeout = 5m
+
+    # Disable message retention and therefore message deletion in Elasticsearch or MongoDB.
+    # Attention: Not running retention means that Graylog will never delete any data. You should manually delete old messages/indexes or your storage will run full very soon.
+    # Default: true
+    #disable_retention = false
+
+    # Do not send usage statistics to Graylog, Inc.
+    usage_statistics_enabled = {{ .Values.graylogMaster.config.telemetryEnabled }}
+
+    # The threshold of the garbage collection runs. If GC runs take longer than this threshold, a system notification
+    # will be generated to inform the administrator about possible problems with the system. Default: 1s
+    #gc_warning_threshold = 1s
+
+    # Connection timeout for a configured LDAP server (e. g. ActiveDirectory) in milliseconds.
+    #ldap_connection_timeout = 2000
+
+    # MongoDB connection string
+    # See https://docs.mongodb.com/manual/reference/connection-string/ for details
+    mongodb_uri = mongodb://{{ include "logcentral-graylog5.fullname" . }}-mongodb:27017/graylog
+
+    # Authenticate against the MongoDB server
+    #mongodb_username = grayloguser
+    #mongodb_password = secret
+
+    # Use a replica set instead of a single host
+    #mongodb_replica_set = localhost:27017,localhost:27018,localhost:27019
+
+    # DNS Seedlist Connection Format
+    # Use the +srv connection string modifier to automatically set the replicaSet option and obtain the host list
+    # mongodb_uri = mongodb+srv://server.example.com/database
+
+    # Increase this value according to the maximum connections your MongoDB server can handle from a single client
+    # if you encounter MongoDB connection problems.
+    mongodb_max_connections = 100
+
+    # Number of threads allowed to be blocked by MongoDB connections multiplier. Default: 5
+    # If mongodb_max_connections is 100, and mongodb_threads_allowed_to_block_multiplier is 5,
+    # then 500 threads can be blocked. More than that and an exception will be thrown.
+    # http://api.mongodb.com/java/current/com/mongodb/MongoOptions.html#threadsAllowedToBlockForConnectionMultiplier
+    mongodb_threads_allowed_to_block_multiplier = 5
+
+    # Email transport
+    transport_email_enabled = {{ .Values.graylogMaster.config.email.enabled }}
+    transport_email_hostname = {{ .Values.graylogMaster.config.email.hostname }}
+    transport_email_port = {{ .Values.graylogMaster.config.email.port }}
+    transport_email_use_auth = {{ .Values.graylogMaster.config.email.useAuth }}
+    transport_email_use_tls = {{ .Values.graylogMaster.config.email.useTls }}
+    transport_email_use_ssl = {{ .Values.graylogMaster.config.email.useSsl }}
+    transport_email_auth_username = 
+    transport_email_auth_password = 
+    transport_email_subject_prefix = {{ .Values.graylogMaster.config.email.subjectPrefix }}
+    transport_email_from_email = {{ .Values.graylogMaster.config.email.fromEmail }}
+
+    # HTTP settings
+    # Uncomment the next line if you are running Graylog behind a HTTP proxy and want to use the client IP
+    # address in audit logs and for the login form.
+    #http_connect_timeout = 5s
+    #http_read_timeout = 10s
+    #http_write_timeout = 10s
+
+    # Enable the disk-based message journal.
+    message_journal_enabled = true
+
+    # The directory which will be used to store the message journal. The directory must be exclusively used by Graylog and
+    # must not contain any other files than the ones created by Graylog itself.
+    #
+    # ATTENTION: This path must be readable and writable for the Graylog server user on all Graylog server nodes.
+    message_journal_dir = /usr/share/graylog/data/journal
+
+    # Journal hold messages before they could be written to Elasticsearch.
+    # For a maximum of 12 hours or 5 GB whichever happens first.
+    # During normal operation the journal will be smaller.
+    #message_journal_max_age = 12h
+    #message_journal_max_size = 5gb
+
+    #message_journal_flush_age = 1m
+    #message_journal_flush_interval = 1000000
+    #message_journal_segment_age = 1h
+    #message_journal_segment_size = 100mb
+
+    # Number of old segments to keep beyond the calculated segment count from max size and segment size
+    # Defaults: 0
+    #message_journal_max_segments = 0
+
+    # The number of parallel running processors.
+    # Raise this number if your buffers are filling up.
+    processbuffer_processors = {{ .Values.graylogMaster.config.processbufferProcessors }}
+    outputbuffer_processors = 3
+
+    #outputbuffer_processor_keep_alive_time = 5000
+    #outputbuffer_processor_threads_core_pool_size = 3
+    #outputbuffer_processor_threads_max_pool_size = 30
+
+    # The number of entries in the ring buffers. Must be a power of 2. (512, 1024, 2048, ...)
+    #ring_size = 65536
+
+    inputbuffer_ring_size = 65536
+    inputbuffer_processors = 2
+    inputbuffer_wait_strategy = blocking
+
+    # Size of internal ring buffers. Raise this if raising outputbuffer_processors does not help anymore.
+    # For optimum performance your LogMessage objects in the ring buffer should fit in your CPU L3 cache.
+    # Start server with --statistics flag to see buffer utilization.
+    # Must be a power of 2. (512, 1024, 2048, ...)
+    #outputbuffer_ring_size = 65536
+---
+{{- end }}
+{{- if .Values.graylogClient.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "logcentral-graylog5.fullname" . }}-graylog-client-config
+  labels:
+    {{- include "logcentral-graylog5.labels" . | nindent 4 }}
+data:
+  graylog.conf: |
+    # Graylog configuration file
+    # See https://docs.graylog.org/docs/server-conf for documentation
+
+    # If you are running more than one instances of Graylog server you have to select one of these
+    # instances as leader. The leader will perform some periodical tasks that non-leaders won't perform.
+    is_leader = {{ .Values.graylogClient.config.isLeader }}
+
+    # The auto-generated node ID will be stored in this file and read after restarts. It is a good idea
+    # to use an absolute file path here if you are starting Graylog server from init scripts or similar.
+    node_id_file = /usr/share/graylog/data/config/node-id
+
+    # You MUST set a secret to secure/pepper the stored user passwords here. Use at least 64 characters.
+    # Generate one by using for example: pwgen -N 1 -s 96
+    # ATTENTION: This value must be the same on all Graylog nodes in the cluster.
+    # Changing this value after installation will render all user sessions and encrypted values in the database invalid. (Default: empty)
+    password_secret = {{ .Values.graylogClient.config.passwordSecret }}
+
+    # The default root user is named 'admin'
+    # You MUST specify a hash password for the root user (which you only need to initially set up the
+    # system and in case you lose connectivity to your authentication backend)
+    # This password cannot be changed using the API or via the web interface. If you need to change it,
+    # modify it in this file.
+    # Create one by using for example: echo -n yourpassword | shasum -a 256
+    # and put the resulting hash value into the following line
+    # ATTENTION: This value must be the same on all Graylog nodes in the cluster.
+    root_password_sha2 = {{ .Values.graylogClient.config.rootPasswordSha2 }}
+
+    # The email address of the root user.
+    # Default is empty
+    #root_email = ""
+
+    # The timezone setting of the root user. See http://www.joda.org/joda-time/timezones.html for a list of valid time zones.
+    # Default is UTC
+    root_timezone = {{ .Values.global.timezone }}
+
+    # Set plugin directory here (relative or absolute)
+    plugin_dir = /usr/share/graylog/plugin
+
+    # REST API listen URI. Must be reachable by other Graylog server nodes if you run a cluster.
+    # When using Graylog Collectors, this URI will be used to receive heartbeat messages and must be accessible for all collectors.
+    rest_listen_uri = http://0.0.0.0:9001/
+
+    # REST API transport address. Defaults to the value of rest_listen_uri. Exception: If rest_listen_uri
+    # is set to a wildcard IP address (0.0.0.0) the first non-loopback IPv4 system address is used.
+    # If set, this will be promoted in the cluster discovery APIs, so other nodes may try to connect on
+    # this address and it is used to generate URLs addressing entities in the REST API. (see rest_listen_uri)
+    # You will need to define this, if your Graylog server is running behind a HTTP proxy that is rewriting
+    # the scheme, host name or URI.
+    # rest_transport_uri = http://192.168.1.1:9001/
+
+    # Enable CORS headers for REST API. This is necessary for JS-clients accessing the server directly.
+    # If these are disabled, modern browsers will refuse to execute AJAX requests to the REST API.
+    # Enable this if you want to use the web interface on a different server.
+    rest_enable_cors = true
+
+    # Enable GZIP support for REST API. This compresses API responses and therefore helps to reduce
+    # overall round trip times.
+    rest_enable_gzip = true
+
+    # Enable HTTPS support for the REST API. This secures the communication with the REST API with
+    # TLS to prevent request and response tampering. This is disabled by default. Uncomment the next line to enable it.
+    #rest_enable_tls = true
+
+    # The X.509 certificate chain file in PEM format to use for securing the REST API.
+    #rest_tls_cert_file = /path/to/graylog.crt
+
+    # The PKCS#8 private key file in PEM format to use for securing the REST API.
+    #rest_tls_key_file = /path/to/graylog.key
+
+    # The password to unlock the private key used for securing the REST API.
+    #rest_tls_key_password = secret
+
+    # The maximum size of the HTTP request headers in bytes.
+    #rest_max_header_size = 8192
+
+    # The HTTP External URI of this Graylog node. This setting is only used in this node as fallback.
+    #
+    # This will be promoted in the cluster discovery APIs, so other nodes may try to connect on this
+    # address and it is used to generate URLs addressing entities in the REST API. (see rest_listen_uri)
+    # You will need to define this, if your Graylog server is running behind a HTTP proxy that is rewriting
+    # the scheme, host name or URI.
+    # This must not contain a path other than "/".
+    http_external_uri = {{ .Values.graylogClient.config.httpExternalUri }}
+
+    # Enable the embedded Graylog web interface.
+    # Default: true
+    web_enable = true
+
+    # Web interface listen URI.
+    # Configuring a path for the URI here effectively prefixes all URIs in the web interface. This is a replacement
+    # for the application.context configuration parameter in pre-2.0 versions of the Graylog web interface.
+    web_listen_uri = {{ .Values.graylogClient.config.httpBindAddress }}
+
+    # Web interface X-Forwarded-For, X-Real-IP and X-Forwarded-Proto headers handling.
+    # Defaults to false. Enable this if you are using a reverse proxy or load balancer and want to use the client IP
+    # address in audit logs and for the login form.
+    #web_enable_cors = false
+    #web_enable_gzip = true
+    #web_enable_tls = false
+    #web_tls_cert_file = /path/to/graylog-web.crt
+    #web_tls_key_file = /path/to/graylog-web.key
+    #web_tls_key_password = secret
+    #web_max_header_size = 8192
+
+    # Enable extraction of the client SSL certificate from X-Forwarded-For header.
+    # Defaults to false.
+    #trusted_proxies = 127.0.0.1/32, 0:0:0:0:0:0:0:1/128
+
+    # List of Elasticsearch hosts Graylog should connect to.
+    # Need to be specified as a comma-separated list of valid URIs for the http ports of your elasticsearch nodes.
+    # If one or more of your elasticsearch hosts require authentication, include the credentials in each node URI that
+    # requires authentication.
+    #
+    # Default: http://127.0.0.1:9200
+    elasticsearch_hosts = {{ .Values.graylogClient.config.elasticsearch.hosts }}
+
+    # Automatically try to discover other Elasticsearch nodes from your existing cluster.
+    # If automatic discovery is disabled, Graylog will only connect to the hosts in elasticsearch_hosts.
+    # Setting this to true will make Graylog round-robin between your hosts on every request. This is helpful
+    # if you have multiple Elasticsearch hosts.
+    # Default: false
+    #elasticsearch_discovery_enabled = true
+
+    # Change the default Elasticsearch analyzer used for message indexing. The default is standard.
+    # If this setting is changed and you have already stored messages in Graylog, the existing messages
+    # will not be searchable until the index is rebuilt or the messages are re-indexed.
+    # Default: standard
+    #elasticsearch_analyzer = standard
+
+    # Global request timeout for Elasticsearch requests (e. g. during search, index creation, or index time-range
+    # calculations) based on a best-effort to restrict the runtime of Elasticsearch operations.
+    # Default: 1m
+    #elasticsearch_request_timeout = 1m
+
+    # Time interval between index optimization runs. This number should be higher than your specified
+    # index rotation period. Setting this to a lower value might slow down your Elasticsearch cluster.
+    #elasticsearch_index_optimization_timeout = 1h
+
+    # Disable checking the version of Elasticsearch for being compatible with this Graylog release.
+    # WARNING: Using Graylog with unsupported and untested versions of Elasticsearch may lead to data loss!
+    #elasticsearch_disable_version_check = true
+
+    # For how many minutes should we wait for Elasticsearch to be available and only then start startup process.
+    #startup_timeout = 5m
+
+    # Disable message retention and therefore message deletion in Elasticsearch or MongoDB.
+    # Attention: Not running retention means that Graylog will never delete any data. You should manually delete old messages/indexes or your storage will run full very soon.
+    # Default: true
+    #disable_retention = false
+
+    # Do not send usage statistics to Graylog, Inc.
+    usage_statistics_enabled = {{ .Values.graylogClient.config.telemetryEnabled }}
+
+    # The threshold of the garbage collection runs. If GC runs take longer than this threshold, a system notification
+    # will be generated to inform the administrator about possible problems with the system. Default: 1s
+    #gc_warning_threshold = 1s
+
+    # Connection timeout for a configured LDAP server (e. g. ActiveDirectory) in milliseconds.
+    #ldap_connection_timeout = 2000
+
+    # MongoDB connection string
+    # See https://docs.mongodb.com/manual/reference/connection-string/ for details
+    mongodb_uri = mongodb://{{ include "logcentral-graylog5.fullname" . }}-mongodb:27017/graylog
+
+    # Authenticate against the MongoDB server
+    #mongodb_username = grayloguser
+    #mongodb_password = secret
+
+    # Use a replica set instead of a single host
+    #mongodb_replica_set = localhost:27017,localhost:27018,localhost:27019
+
+    # DNS Seedlist Connection Format
+    # Use the +srv connection string modifier to automatically set the replicaSet option and obtain the host list
+    # mongodb_uri = mongodb+srv://server.example.com/database
+
+    # Increase this value according to the maximum connections your MongoDB server can handle from a single client
+    # if you encounter MongoDB connection problems.
+    mongodb_max_connections = 100
+
+    # Number of threads allowed to be blocked by MongoDB connections multiplier. Default: 5
+    # If mongodb_max_connections is 100, and mongodb_threads_allowed_to_block_multiplier is 5,
+    # then 500 threads can be blocked. More than that and an exception will be thrown.
+    # http://api.mongodb.com/java/current/com/mongodb/MongoOptions.html#threadsAllowedToBlockForConnectionMultiplier
+    mongodb_threads_allowed_to_block_multiplier = 5
+
+    # Email transport
+    transport_email_enabled = {{ .Values.graylogClient.config.email.enabled }}
+    transport_email_hostname = {{ .Values.graylogClient.config.email.hostname }}
+    transport_email_port = {{ .Values.graylogClient.config.email.port }}
+    transport_email_use_auth = {{ .Values.graylogClient.config.email.useAuth }}
+    transport_email_use_tls = {{ .Values.graylogClient.config.email.useTls }}
+    transport_email_use_ssl = {{ .Values.graylogClient.config.email.useSsl }}
+    transport_email_auth_username = 
+    transport_email_auth_password = 
+    transport_email_subject_prefix = {{ .Values.graylogClient.config.email.subjectPrefix }}
+    transport_email_from_email = {{ .Values.graylogClient.config.email.fromEmail }}
+
+    # HTTP settings
+    # Uncomment the next line if you are running Graylog behind a HTTP proxy and want to use the client IP
+    # address in audit logs and for the login form.
+    #http_connect_timeout = 5s
+    #http_read_timeout = 10s
+    #http_write_timeout = 10s
+
+    # Enable the disk-based message journal.
+    message_journal_enabled = true
+
+    # The directory which will be used to store the message journal. The directory must be exclusively used by Graylog and
+    # must not contain any other files than the ones created by Graylog itself.
+    #
+    # ATTENTION: This path must be readable and writable for the Graylog server user on all Graylog server nodes.
+    message_journal_dir = /usr/share/graylog/data/journal
+
+    # Journal hold messages before they could be written to Elasticsearch.
+    # For a maximum of 12 hours or 5 GB whichever happens first.
+    # During normal operation the journal will be smaller.
+    #message_journal_max_age = 12h
+    #message_journal_max_size = 5gb
+
+    #message_journal_flush_age = 1m
+    #message_journal_flush_interval = 1000000
+    #message_journal_segment_age = 1h
+    #message_journal_segment_size = 100mb
+
+    # Number of old segments to keep beyond the calculated segment count from max size and segment size
+    # Defaults: 0
+    #message_journal_max_segments = 0
+
+    # The number of parallel running processors.
+    # Raise this number if your buffers are filling up.
+    processbuffer_processors = {{ .Values.graylogClient.config.processbufferProcessors }}
+    outputbuffer_processors = 3
+
+    #outputbuffer_processor_keep_alive_time = 5000
+    #outputbuffer_processor_threads_core_pool_size = 3
+    #outputbuffer_processor_threads_max_pool_size = 30
+
+    # The number of entries in the ring buffers. Must be a power of 2. (512, 1024, 2048, ...)
+    #ring_size = 65536
+
+    inputbuffer_ring_size = 65536
+    inputbuffer_processors = 2
+    inputbuffer_wait_strategy = blocking
+
+    # Size of internal ring buffers. Raise this if raising outputbuffer_processors does not help anymore.
+    # For optimum performance your LogMessage objects in the ring buffer should fit in your CPU L3 cache.
+    # Start server with --statistics flag to see buffer utilization.
+    # Must be a power of 2. (512, 1024, 2048, ...)
+    #outputbuffer_ring_size = 65536
+{{- end }}

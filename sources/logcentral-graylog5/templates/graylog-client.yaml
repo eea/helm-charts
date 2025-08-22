@@ -81,6 +81,8 @@ spec:
               mountPath: /usr/share/graylog/data/journal
             - name: graylog-plugins
               mountPath: /usr/share/graylog/plugin
+            - name: graylog-config
+              mountPath: /usr/share/graylog/data/config
           resources:
             {{- toYaml .Values.graylogClient.resources | nindent 12 }}
       {{- with .Values.graylogClient.nodeSelector }}
@@ -96,6 +98,9 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       volumes:
+        - name: graylog-config
+          configMap:
+            name: {{ include "logcentral-graylog5.fullname" . }}-graylog-client-config
         {{- if .Values.graylogMaster.persistence.plugins.external }}
         - name: graylog-plugins
           persistentVolumeClaim:
