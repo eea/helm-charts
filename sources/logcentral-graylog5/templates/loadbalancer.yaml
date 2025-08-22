@@ -30,7 +30,7 @@ spec:
           imagePullPolicy: {{ .Values.loadbalancer.image.pullPolicy }}
           env:
             - name: GRAYLOG_HOST
-              value: {{ .Values.loadbalancer.config.graylogHost | quote }}
+              value: "{{ include "logcentral-graylog5.fullname" . }}-graylog-client"
             - name: LOGSPOUT
               value: "ignore"
             - name: TZ
