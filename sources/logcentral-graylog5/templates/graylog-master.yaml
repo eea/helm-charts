@@ -56,10 +56,6 @@ spec:
               value: "{{ .Values.graylogMaster.config.java.heapSize }} {{ .Values.graylogMaster.config.java.opts }}"
             - name: GRAYLOG_PROCESSBUFFER_PROCESSORS
               value: {{ .Values.graylogMaster.config.processbufferProcessors | quote }}
-            - name: GRAYLOG_PASSWORD_SECRET
-              value: {{ .Values.graylogMaster.config.passwordSecret | quote }}
-            - name: GRAYLOG_ROOT_PASSWORD_SHA2
-              value: {{ .Values.graylogMaster.config.rootPasswordSha2 | quote }}
             - name: GRAYLOG_ELASTICSEARCH_HOSTS
               value: {{ .Values.graylogMaster.config.elasticsearch.hosts | quote }}
             - name: GRAYLOG_TELEMETRY_ENABLED
