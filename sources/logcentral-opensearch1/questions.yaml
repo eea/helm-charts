@@ -119,7 +119,7 @@ questions:
     label: Max Unavailable Pods
     group: "High Availability"
 
-  - variable: ingress.enabled
+  - variable: opensearch.ingress.enabled
     default: false
     description: "Enable Ingress for OpenSearch"
     type: boolean
@@ -132,33 +132,33 @@ questions:
     type: string
     label: Ingress Class Name
     group: "Ingress Configuration"
-    show_if: "ingress.enabled=true"
+    show_if: "opensearch.ingress.enabled=true"
 
-  - variable: ingress.annotations
+  - variable: opensearch.ingress.annotations
     default: {}
     description: "Ingress annotations (YAML format)"
     type: multiline
     label: Ingress Annotations
     group: "Ingress Configuration"
-    show_if: "ingress.enabled=true"
+    show_if: "opensearch.ingress.enabled=true"
 
-  - variable: ingress.hosts[0].host
+  - variable: opensearch.ingress.hosts[0].host
     default: "opensearch.01dev.eea.europa.eu"
     description: "Hostname for OpenSearch Ingress"
     type: string
     label: Ingress Hostname
     group: "Ingress Configuration"
-    show_if: "ingress.enabled=true"
+    show_if: "opensearch.ingress.enabled=true"
 
-  - variable: ingress.hosts[0].paths[0].path
+  - variable: opensearch.ingress.hosts[0].paths[0].path
     default: "/"
     description: "Path for OpenSearch Ingress"
     type: string
     label: Ingress Path
     group: "Ingress Configuration"
-    show_if: "ingress.enabled=true"
+    show_if: "opensearch.ingress.enabled=true"
 
-  - variable: ingress.hosts[0].paths[0].pathType
+  - variable: opensearch.ingress.hosts[0].paths[0].pathType
     default: "Prefix"
     description: "Path type for OpenSearch Ingress"
     type: enum
@@ -168,20 +168,20 @@ questions:
       - "ImplementationSpecific"
     label: Ingress Path Type
     group: "Ingress Configuration"
-    show_if: "ingress.enabled=true"
+    show_if: "opensearch.ingress.enabled=true"
 
-  - variable: ingress.tls.enabled
+  - variable: opensearch.ingress.tls.enabled
     default: false
     description: "Enable TLS for Ingress"
     type: boolean
     label: Enable TLS
     group: "Ingress Configuration"
-    show_if: "ingress.enabled=true"
+    show_if: "opensearch.ingress.enabled=true"
 
-  - variable: ingress.tls.secretName
+  - variable: opensearch.ingress.tls.secretName
     default: "opensearch-tls"
     description: "Secret name for TLS certificate"
     type: string
     label: TLS Secret Name
     group: "Ingress Configuration"
-    show_if: "ingress.tls.enabled=true"
+    show_if: "opensearch.ingress.tls.enabled=true"
