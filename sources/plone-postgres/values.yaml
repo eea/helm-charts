@@ -31,7 +31,8 @@ admin:
   serviceName: master
   storage:
     size: 10G
-    storageClassName:
+    storageClassName: nfs-class
+    accessMode: ReadWriteOnce
   environment:
     PGUSER: zope
     PGPASSWORD: zope
