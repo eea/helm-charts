@@ -1,0 +1,60 @@
+# Sample values for testing logcentral-graylog5
+# Copy this file and modify for your environment
+
+global:
+  timezone: "Europe/Bucharest"
+
+# Configure these required values before installation
+graylogMaster:
+  config:
+    httpExternalUri: "https://graylog.example.com/"
+    passwordSecret: "your-secret-must-be-at-least-16-chars"
+    rootPasswordSha2: "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918" # SHA2 of "admin"
+
+graylogClient:
+  config:
+    httpExternalUri: "https://graylog.example.com/"
+    passwordSecret: "your-secret-must-be-at-least-16-chars" # Same as master
+    rootPasswordSha2: "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918" # Same as master
+
+postfix:
+  config:
+    mtpUser: "your-smtp-user"
+    mtpPassword: "your-smtp-password"
+    mtpHost: "graylog.example.com"
+
+# Configure your external Elasticsearch connection
+externalServices:
+  elasticsearch:
+    link: "elasticsearch-service:9200"
+
+# Enable ingress for web access
+ingress:
+  enabled: true
+  hosts:
+    - host: graylog.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+  tls:
+    - secretName: graylog-tls
+      hosts:
+        - graylog.example.com
+
+# Configure storage classes for your environment
+storageOverrides:
+  mongodb:
+    persistence:
+      storageClass: "fast-ssd"
+
+  graylogMaster:
+    persistence:
+      data:
+        storageClass: "standard"
+      journal:
+        storageClass: "fast-ssd"
+      plugins:
+        storageClass: "standard"

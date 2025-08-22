@@ -1,0 +1,260 @@
+# Default values for logcentral-graylog5
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# Global settings
+global:
+  timezone: "Europe/Bucharest"
+
+# Postfix configuration
+postfix:
+  enabled: true
+  image:
+    repository: "eeacms/postfix"
+    tag: "3.5-1.0"
+    pullPolicy: IfNotPresent
+
+  config:
+    mtpUser: ""
+    mtpPassword: ""
+    mtpHost: ""
+    mtpRelay: "ironports.eea.europa.eu"
+    mtpPort: "8587"
+
+  resources:
+    limits:
+      memory: "512Mi"
+    requests:
+      memory: "256Mi"
+
+  nodeSelector: {}
+  affinity: {}
+  tolerations: []
+
+# MongoDB configuration
+mongodb:
+  enabled: true
+  image:
+    repository: "mongo"
+    tag: "5.0.31"
+    pullPolicy: IfNotPresent
+
+  auth:
+    enabled: false
+
+  persistence:
+    enabled: true
+    storageClass: ""
+    size: 20Gi
+
+  resources:
+    limits:
+      memory: "2Gi"
+    requests:
+      memory: "1Gi"
+
+  nodeSelector: {}
+  affinity: {}
+  tolerations: []
+
+# Graylog Master configuration
+graylogMaster:
+  enabled: true
+  image:
+    repository: "graylog/graylog"
+    tag: "5.2.12"
+    pullPolicy: IfNotPresent
+
+  replicas: 1
+
+  config:
+    httpBindAddress: "0.0.0.0:9000"
+    httpExternalUri: "" # Should be set to https://your-graylog-domain/
+
+    email:
+      enabled: true
+      hostname: "postfix"
+      port: "25"
+      subjectPrefix: "[graylog2]"
+      fromEmail: "graylog@eea.europa.eu"
+      useAuth: false
+      useTls: false
+      useSsl: false
+
+    java:
+      heapSize: "-Xms1g -Xmx1g"
+      opts: "-XX:NewRatio=1 -XX:MaxMetaspaceSize=256m -server -XX:+ResizeTLAB -XX:-OmitStackTraceInFastThrow"
+
+    processbufferProcessors: "5"
+    passwordSecret: "" # Must be at least 16 characters
+    rootPasswordSha2: "" # SHA2 hash of root password
+
+    elasticsearch:
+      hosts: "http://elasticsearch:9200"
+
+    telemetryEnabled: false
+    isLeader: true
+
+  persistence:
+    data:
+      enabled: true
+      storageClass: ""
+      size: 10Gi
+
+    journal:
+      enabled: true
+      storageClass: ""
+      size: 50Gi
+
+    plugins:
+      enabled: true
+      storageClass: ""
+      size: 1Gi
+      external: false
+
+  resources:
+    limits:
+      memory: "2Gi"
+    requests:
+      memory: "1Gi"
+
+  nodeSelector: {}
+  affinity: {}
+  tolerations: []
+
+# Graylog Client configuration
+graylogClient:
+  enabled: true
+  image:
+    repository: "graylog/graylog"
+    tag: "5.2.12"
+    pullPolicy: IfNotPresent
+
+  replicas: 1
+
+  config:
+    httpBindAddress: "0.0.0.0:9000"
+    httpExternalUri: "" # Should be set to https://your-graylog-domain/
+
+    email:
+      enabled: true
+      hostname: "postfix"
+      port: "25"
+      subjectPrefix: "[graylog2]"
+      fromEmail: "graylog@eea.europa.eu"
+      useAuth: false
+      useTls: false
+      useSsl: false
+
+    java:
+      heapSize: "-Xms1g -Xmx1g"
+      opts: "-XX:NewRatio=1 -XX:MaxMetaspaceSize=256m -server -XX:+ResizeTLAB -XX:-OmitStackTraceInFastThrow"
+
+    processbufferProcessors: "5"
+    passwordSecret: "" # Must be at least 16 characters (same as master)
+    rootPasswordSha2: "" # SHA2 hash of root password (same as master)
+
+    elasticsearch:
+      hosts: "http://elasticsearch:9200"
+
+    telemetryEnabled: false
+    isLeader: false
+
+  resources:
+    limits:
+      memory: "2Gi"
+    requests:
+      memory: "1Gi"
+
+  nodeSelector: {}
+  affinity: {}
+  tolerations: []
+
+# Load Balancer configuration
+loadbalancer:
+  enabled: true
+  image:
+    repository: "eeacms/logcentralbalancer"
+    tag: "3.1"
+    pullPolicy: IfNotPresent
+
+  config:
+    graylogHost: "graylog-client"
+
+  service:
+    type: LoadBalancer
+    ports:
+      syslogTcp: 1514
+      syslogUdp: 1514
+      gelfTcp: 12201
+      gelfUdp: 12201
+
+  resources:
+    limits:
+      memory: "512Mi"
+    requests:
+      memory: "256Mi"
+
+  nodeSelector: {}
+  affinity: {}
+  tolerations: []
+
+# External services configuration
+externalServices:
+  elasticsearch:
+    link: "" # External elasticsearch service link
+
+# Volume configurations
+volumes:
+  localVolumeDriver: "local"
+  dataVolumeDriver: "rancher-nfs"
+  dataVolumeDriverOpts: ""
+  pluginVolumeDriver: "rancher-nfs"
+  pluginVolumeDriverOpts: ""
+  volumeDriver: "rancher-nfs"
+  volumeDriverOpts: ""
+
+# Service configuration
+service:
+  type: ClusterIP
+  port: 9000
+
+# Ingress configuration
+ingress:
+  enabled: false
+  className: ""
+  annotations:
+    {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: graylog.local
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+  #  - secretName: graylog-tls
+  #    hosts:
+  #      - graylog.local
+
+# Security context
+securityContext:
+  runAsUser: 0
+  runAsGroup: 0
+  fsGroup: 0
+
+# Service account
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+# Pod annotations
+podAnnotations: {}
+
+# Pod security context
+podSecurityContext: {}
+
+# RBAC
+rbac:
+  create: true
