@@ -1,0 +1,20 @@
+{{- if .Values.inferenceCapability.ephemeralPVC.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "onyx-stack.fullname" $ }}-inference-model-ephemeral-pvc
+  labels:
+    {{- include "onyx-stack.labels" . | nindent 4 }}
+    app.kubernetes.io/component: inference-model-ephemeral-storage
+spec:
+  accessModes:
+  {{- if .Values.inferenceCapability.ephemeralPVC.accessModes }}
+  {{- toYaml .Values.inferenceCapability.ephemeralPVC.accessModes | nindent 4 }}
+  {{- else }}
+  - ReadWriteOnce
+  {{- end }}
+  storageClassName: {{ .Values.inferenceCapability.ephemeralPVC.storageClassName }}
+  resources:
+    requests:
+      storage: {{ .Values.inferenceCapability.ephemeralPVC.size }}
+{{- end }}

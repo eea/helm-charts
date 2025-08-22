@@ -114,6 +114,12 @@ inferenceCapability:
     limits:
       cpu: 4000m
       memory: 10Gi
+  ephemeralPVC:
+    enabled: false
+    accessModes:
+      - ReadWriteOnce
+    storageClassName: ""
+    size: 2Gi
   volumes: []
   volumeMounts: []
   affinity: {}
@@ -147,6 +153,12 @@ indexCapability:
     limits:
       cpu: 4000m
       memory: 10Gi
+  ephemeralPVC:
+    enabled: false
+    accessModes:
+      - ReadWriteOnce
+    storageClassName: ""
+    size: 2Gi
   affinity: {}
   tolerations: []
   volumes: []
@@ -228,8 +240,6 @@ webserver:
   #   readOnly: true
 
   nodeSelector: {}
-  tolerations: []
-  affinity: {}
 
 api:
   replicaCount: 1
