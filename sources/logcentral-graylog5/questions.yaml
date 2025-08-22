@@ -15,26 +15,67 @@ questions:
     group: "Graylog Configuration"
 
   - variable: graylogMaster.config.passwordSecret
-    default: ""
-    description: "Password secret for Graylog (minimum 16 characters)"
+    default: "forpasswordencryptionandhmacogeneration64charactersminimumrequired!"
+    description: "Password secret for Graylog (minimum 64 characters) - same for all nodes"
     type: password
     label: Graylog Password Secret
     required: true
     group: "Graylog Configuration"
 
   - variable: graylogMaster.config.rootPasswordSha2
-    default: ""
-    description: "SHA2 hash of the root password for admin user"
+    default: "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918"
+    description: "SHA2 hash of the root password (default: 'admin')"
     type: password
     label: Root Password SHA2 Hash
     required: true
     group: "Graylog Configuration"
 
-  - variable: externalServices.elasticsearch.link
+  - variable: graylogClient.enabled
+    default: true
+    description: "Enable Graylog Client (worker node)"
+    type: boolean
+    label: Enable Graylog Client
+    group: "Graylog Configuration"
+
+  - variable: graylogClient.config.httpExternalUri
     default: ""
-    description: "External Elasticsearch service endpoint"
+    description: "External URL for Graylog Client web interface"
     type: string
-    label: Elasticsearch Connection
+    label: Graylog Client External URL
+    show_if: "graylogClient.enabled=true"
+    group: "Graylog Configuration"
+
+  - variable: graylogClient.config.passwordSecret
+    default: "forpasswordencryptionandhmacogeneration64charactersminimumrequired!"
+    description: "Password secret for Graylog Client (must match master)"
+    type: password
+    label: Graylog Client Password Secret
+    show_if: "graylogClient.enabled=true"
+    required: true
+    group: "Graylog Configuration"
+
+  - variable: graylogClient.config.rootPasswordSha2
+    default: "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918"
+    description: "SHA2 hash of the root password (must match master)"
+    type: password
+    label: Graylog Client Root Password SHA2 Hash
+    show_if: "graylogClient.enabled=true"
+    required: true
+    group: "Graylog Configuration"
+
+  - variable: graylogMaster.config.elasticsearch.hosts
+    default: "http://elasticsearch:9200"
+    description: "Elasticsearch hosts for Graylog (comma-separated)"
+    type: string
+    label: Elasticsearch Hosts
+    required: true
+    group: "External Services"
+
+  - variable: graylogClient.config.elasticsearch.hosts
+    default: "http://elasticsearch:9200"
+    description: "Elasticsearch hosts for Graylog Client (same as master)"
+    type: string
+    label: Elasticsearch Hosts (Client)
     required: true
     group: "External Services"
 
@@ -139,6 +180,22 @@ questions:
     description: "Memory limit for Graylog Master"
     type: string
     label: Graylog Master Memory Limit
+    group: "Resources"
+
+  - variable: graylogClient.resources.requests.memory
+    default: "1Gi"
+    description: "Memory request for Graylog Client"
+    type: string
+    label: Graylog Client Memory Request
+    show_if: "graylogClient.enabled=true"
+    group: "Resources"
+
+  - variable: graylogClient.resources.limits.memory
+    default: "2Gi"
+    description: "Memory limit for Graylog Client"
+    type: string
+    label: Graylog Client Memory Limit
+    show_if: "graylogClient.enabled=true"
     group: "Resources"
 
   - variable: mongodb.resources.requests.memory
