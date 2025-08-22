@@ -35,6 +35,11 @@ admin:
     PGUSER: zope
     PGPASSWORD: zope
     POSTGRES_CRONS: |-
+  resources:
+    requests:
+      memory: 1024Mi
+    limits:
+      memory: 1024Mi
 
 postgres:
   enabled: true
@@ -131,5 +136,4 @@ memcachedflush:
   tolerations: []
   affinity: {}
   resources: {}
-
 

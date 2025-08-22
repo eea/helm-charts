@@ -44,17 +44,17 @@ spec:
 
 
         resources:
-          {{- toYaml .Values.plone.resources | nindent 10 }}
+          {{- toYaml .Values.admin.resources | nindent 10 }}
 
-      {{- with .Values.plone.nodeSelector }}
+      {{- with .Values.admin.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.plone.affinity }}
+      {{- with .Values.admin.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.plone.tolerations }}
+      {{- with .Values.admin.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
