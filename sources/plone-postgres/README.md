@@ -4,6 +4,9 @@ Postgres for plone Apps.
 
 ## Releases
 
+### Version 1.0.5 - 22 August 2025
+- Add serviceName [valentinab25 - [`19e5bc6d`](https://github.com/eea/helm-charts/commit/19e5bc6db1f23e1b1c5c67a410cabe53ba1ee573)]
+
 ### Version 1.0.4 - 22 August 2025
 - fix resources [valentinab25 - [`34776523`](https://github.com/eea/helm-charts/commit/34776523793d1e808c884d2f02c667152c53264d)]
 
