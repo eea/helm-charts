@@ -118,6 +118,9 @@ imageMapping:
 
 ## Releases
 
+### Version 0.2.1
+- Added ephemeral PVC's for indexing-model and inference-model
+
 ### Version 0.2.0
 - Updated vespa to 0.2.24
 - Added additional ENV variables

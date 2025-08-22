@@ -1,0 +1,20 @@
+{{- if .Values.indexCapability.ephemeralPVC.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "onyx-stack.fullname" $ }}-indexing-model-ephemeral-pvc
+  labels:
+    {{- include "onyx-stack.labels" . | nindent 4 }}
+    app.kubernetes.io/component: indexing-model-ephemeral-storage
+spec:
+  accessModes:
+  {{- if .Values.indexCapability.ephemeralPVC.accessModes }}
+  {{- toYaml .Values.indexCapability.ephemeralPVC.accessModes | nindent 4 }}
+  {{- else }}
+  - ReadWriteOnce
+  {{- end }}
+  storageClassName: {{ .Values.indexCapability.ephemeralPVC.storageClassName }}
+  resources:
+    requests:
+      storage: {{ .Values.indexCapability.ephemeralPVC.size }}
+{{- end }}
