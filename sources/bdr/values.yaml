@@ -205,6 +205,8 @@ clamav:
 # See https://artifacthub.io/packages/helm/bitnami/postgresql
 postgresql:
   fullnameOverride: "bdr-postgres"
+  image:
+    repository: bitnamilegacy/postgresql
   auth:
     password: ""
     enablePostgresUser: true
