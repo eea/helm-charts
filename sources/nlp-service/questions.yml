@@ -11,7 +11,7 @@ questions:
   label: "Node Selector - Reserved For"
   description: "Node selector label value for pod placement"
   type: string
-  default: "GPTLab"
+  default: "AILab"
   group: "Global Settings"
   show_if: "global.nodeSelector.enabled=true"
 
@@ -45,13 +45,52 @@ questions:
   label: "Toleration Value"
   description: "Toleration value for pod scheduling"
   type: string
-  default: "GPTLab"
+  default: "AILab"
   group: "Global Settings"
   show_if: "global.tolerations.enabled=true"
 
 - variable: global.tolerations.values[0].effect
   label: "Toleration Effect"
   description: "Toleration effect (NoSchedule, PreferNoSchedule, NoExecute)"
+  type: enum
+  default: "NoSchedule"
+  options:
+    - "NoSchedule"
+    - "PreferNoSchedule" 
+    - "NoExecute"
+  group: "Global Settings"
+  show_if: "global.tolerations.enabled=true"
+
+- variable: global.tolerations.values[1].key
+  label: "Second Toleration Key"
+  description: "Second toleration key for GPU nodes"
+  type: string
+  default: "HasGPU"
+  group: "Global Settings"
+  show_if: "global.tolerations.enabled=true"
+
+- variable: global.tolerations.values[1].operator
+  label: "Second Toleration Operator"
+  description: "Second toleration operator (Equal, Exists)"
+  type: enum
+  default: "Equal"
+  options:
+    - "Equal"
+    - "Exists"
+  group: "Global Settings"
+  show_if: "global.tolerations.enabled=true"
+
+- variable: global.tolerations.values[1].value
+  label: "Second Toleration Value"
+  description: "Second toleration value for GPU nodes"
+  type: string
+  default: "Yes"
+  group: "Global Settings"
+  show_if: "global.tolerations.enabled=true"
+
+- variable: global.tolerations.values[1].effect
+  label: "Second Toleration Effect"
+  description: "Second toleration effect (NoSchedule, PreferNoSchedule, NoExecute)"
   type: enum
   default: "NoSchedule"
   options:
