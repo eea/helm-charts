@@ -1,13 +1,17 @@
 global:
   nodeSelector:
     enabled: true
-    ReservedFor: GPTLab
+    ReservedFor: AILab
   tolerations:
     enabled: true
     values:
       - key: "ReservedFor"
         operator: "Equal"
-        value: "GPTLab"
+        value: "AILab"
+        effect: "NoSchedule"
+      - key: "HasGPU"
+        operator: "Equal"
+        value: "Yes"
         effect: "NoSchedule"
 
 nlpSearchlib:
