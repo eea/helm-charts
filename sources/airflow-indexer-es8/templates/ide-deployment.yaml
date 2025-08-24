@@ -39,7 +39,7 @@ spec:
         volumeMounts:
         - name: config
           mountPath: /config
-        - name: nlp-service-src
+        - name: airflow-indexer-workspace
           mountPath: /app
         resources:
           limits:
@@ -52,6 +52,6 @@ spec:
       - name: config
         persistentVolumeClaim:
           claimName: {{ (index .Values.ide.volumes 0).persistentVolumeClaim.claimName }}
-      - name: nlp-service-src
+      - name: airflow-indexer-workspace
         persistentVolumeClaim:
           claimName: {{ (index .Values.ide.volumes 1).persistentVolumeClaim.claimName }}
