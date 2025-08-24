@@ -30,16 +30,16 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: nlp-service-src
+  name: airflow-indexer-workspace
   annotations:
-    "helm.sh/resource-policy": {{ .Values.persistence.nlpServiceSrc.reclaimPolicy | default .Values.persistence.reclaimPolicy | default "keep" }}
+    "helm.sh/resource-policy": {{ .Values.persistence.airflowIndexerWorkspace.reclaimPolicy | default .Values.persistence.reclaimPolicy | default "keep" }}
 spec:
   accessModes:
-    - {{ .Values.persistence.nlpServiceSrc.accessMode | default .Values.persistence.accessMode | default "ReadWriteOnce" }}
+    - {{ .Values.persistence.airflowIndexerWorkspace.accessMode | default .Values.persistence.accessMode | default "ReadWriteOnce" }}
   storageClassName: {{ .Values.persistence.storageClass | default "default" }}
   resources:
     requests:
-      storage: {{ .Values.persistence.nlpServiceSrc.size | default "1Gi" }}
+      storage: {{ .Values.persistence.airflowIndexerWorkspace.size | default "1Gi" }}
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

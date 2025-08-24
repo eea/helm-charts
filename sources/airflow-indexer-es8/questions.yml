@@ -209,19 +209,6 @@ questions:
   default: "airflow"
   group: "PostgreSQL"
 
-- variable: persistence.eeacrawlerconfig.size
-  label: "EEA Crawler Config Volume Size"
-  description: "Size of the EEA crawler config persistent volume"
-  type: string
-  default: "1Gi"
-  group: "Persistence"
-
-- variable: persistence.eeacrawlerlogs.size
-  label: "EEA Crawler Logs Volume Size"
-  description: "Size of the EEA crawler logs persistent volume"
-  type: string
-  default: "5Gi"
-  group: "Persistence"
 
 - variable: persistence.postgresdata.size
   label: "PostgreSQL Data Volume Size"
@@ -401,17 +388,17 @@ questions:
   default: "Retain"
   group: "Persistence"
 
-# NLP Service Source Volume
-- variable: persistence.nlpServiceSrc.size
-  label: "NLP Service Source Volume Size"
-  description: "Storage size for NLP service source volume"
+# Airflow Indexer Workspace Volume
+- variable: persistence.airflowIndexerWorkspace.size
+  label: "Airflow Workspace Volume Size"
+  description: "Storage size for Airflow development workspace volume"
   type: string
   default: "1Gi"
   group: "Persistence"
 
-- variable: persistence.nlpServiceSrc.accessMode
-  label: "NLP Service Access Mode"
-  description: "Access mode for NLP service source volume (ReadWriteOnce for single pod)"
+- variable: persistence.airflowIndexerWorkspace.accessMode
+  label: "Airflow Workspace Access Mode"
+  description: "Access mode for Airflow workspace volume (ReadWriteOnce for single pod)"
   type: enum
   options:
     - "ReadWriteOnce"
@@ -420,9 +407,9 @@ questions:
   default: "ReadWriteOnce"
   group: "Persistence"
 
-- variable: persistence.nlpServiceSrc.reclaimPolicy
-  label: "NLP Service Reclaim Policy"
-  description: "Reclaim policy for NLP service source volume"
+- variable: persistence.airflowIndexerWorkspace.reclaimPolicy
+  label: "Airflow Workspace Reclaim Policy"
+  description: "Reclaim policy for Airflow workspace volume"
   type: enum
   options:
     - "Retain"

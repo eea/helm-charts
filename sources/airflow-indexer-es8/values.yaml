@@ -99,9 +99,9 @@ ide:
     - name: airflow-indexer-config-es8
       persistentVolumeClaim:
         claimName: airflow-indexer-config-es8
-    - name: nlpServiceSrc
+    - name: airflow-indexer-workspace
       persistentVolumeClaim:
-        claimName: nlp-service-src
+        claimName: airflow-indexer-workspace
 rabbitmq:
   replicaCount: 1
   image:
@@ -319,7 +319,7 @@ persistence:
     size: "5Gi"
     accessMode: "ReadWriteMany"  # Override global setting if needed
     reclaimPolicy: "Retain"  # Override global setting if needed
-  nlpServiceSrc:
+  airflowIndexerWorkspace:
     size: "1Gi"
     accessMode: "ReadWriteOnce"  # Single pod access
     reclaimPolicy: "Retain"  # Override global setting if needed
