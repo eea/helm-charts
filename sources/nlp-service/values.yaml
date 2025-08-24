@@ -40,12 +40,6 @@ nlpSearchlib:
     enabled: true
     size: "2Gi"
   
-  # Ulimit configurations
-  ulimits:
-    n: 65536        # nofile (number of open files)
-    u: 32768        # nproc (number of processes)
-    c: unlimited    # core (core file size)
-    m: unlimited    # memlock (memory lock)
   
   environment:
     DISABLE_RUNTIME_TESTS: "1"
