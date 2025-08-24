@@ -209,13 +209,6 @@ questions:
   default: "airflow"
   group: "PostgreSQL"
 
-- variable: persistence.storageClass
-  label: "Storage Class"
-  description: "Storage class for persistent volumes"
-  type: string
-  default: "local-path"
-  group: "Persistence"
-
 - variable: persistence.eeacrawlerconfig.size
   label: "EEA Crawler Config Volume Size"
   description: "Size of the EEA crawler config persistent volume"
