@@ -1,5 +1,5 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: batch/v1
+kind: Job
 metadata:
   name: {{ .Release.Name }}-{{ .Chart.Name }}-airflow-init
   labels:
@@ -8,14 +8,6 @@ metadata:
     app.kubernetes.io/version: "{{ .Chart.AppVersion }}"
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
-  replicas: {{ .Values.airflowInit.replicaCount }}
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: {{ .Chart.Name }}
-      app.kubernetes.io/instance: {{ .Release.Name }}
-      app.kubernetes.io/version: "{{ .Chart.AppVersion }}"
-      app.kubernetes.io/managed-by: {{ .Release.Service }}
-      app.kubernetes.io/component: airflow-init
   template:
     metadata:
       labels:
@@ -25,6 +17,7 @@ spec:
         app.kubernetes.io/managed-by: {{ .Release.Service }}
         app.kubernetes.io/component: airflow-init
     spec:
+      restartPolicy: OnFailure
       containers:
       - name: airflow-init
         image: "{{ .Values.airflowInit.image.repository }}:{{ .Values.airflowInit.image.tag }}"
