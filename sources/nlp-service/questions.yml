@@ -61,22 +61,6 @@ questions:
   group: "Global Settings"
   show_if: "global.tolerations.enabled=true"
 
-# Namespace Configuration
-- variable: namespace.create
-  label: "Create Namespace"
-  description: "Create a new namespace for the NLP service"
-  type: boolean
-  default: true
-  group: "Namespace"
-
-- variable: namespace.name
-  label: "Namespace Name"
-  description: "Name of the namespace"
-  type: string
-  default: "nlp-service"
-  group: "Namespace"
-  show_if: "namespace.create=true"
-
 # NLP Searchlib Configuration
 - variable: nlpSearchlib.image.repository
   label: "NLP Searchlib Image Repository"

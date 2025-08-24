@@ -3,7 +3,6 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ include "nlp-service.fullname" . }}-ingress
-  namespace: {{ .Values.namespace.name }}
   labels:
     {{- include "nlp-service.labels" . | nindent 4 }}
   {{- with .Values.ingress.annotations }}

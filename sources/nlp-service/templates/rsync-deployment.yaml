@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "nlp-service.fullname" . }}-rsync
-  namespace: {{ .Values.namespace.name }}
   labels:
     {{- include "nlp-service.labels" . | nindent 4 }}
     app.kubernetes.io/component: rsync
