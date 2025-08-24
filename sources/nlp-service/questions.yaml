@@ -1,0 +1,256 @@
+categories:
+- NLP
+- AI/ML
+
+questions:
+- variable: namespace.create
+  default: true
+  description: "Create the namespace?"
+  type: boolean
+  label: Create Namespace
+  group: "Namespace Configuration"
+
+- variable: namespace.name
+  default: "nlp-service"
+  description: "Namespace name"
+  type: string
+  label: Namespace Name
+  group: "Namespace Configuration"
+
+- variable: nlpSearchlib.image.tag
+  default: "v0.0.63"
+  description: "Image tag for NLP Service"
+  type: string
+  label: NLP Service Image Tag
+  group: "Container Configuration"
+
+- variable: nlpSearchlib.replicaCount
+  default: 1
+  description: "Number of NLP Service replicas"
+  type: int
+  label: NLP Service Replicas
+  group: "Container Configuration"
+  min: 1
+  max: 10
+
+- variable: nlpSearchlib.resources.requests.memory
+  default: "4Gi"
+  description: "Memory request for NLP Service"
+  type: string
+  label: Memory Request
+  group: "Resource Configuration"
+
+- variable: nlpSearchlib.resources.requests.cpu
+  default: "1000m"
+  description: "CPU request for NLP Service"
+  type: string
+  label: CPU Request
+  group: "Resource Configuration"
+
+- variable: nlpSearchlib.resources.limits.memory
+  default: "8Gi"
+  description: "Memory limit for NLP Service"
+  type: string
+  label: Memory Limit
+  group: "Resource Configuration"
+
+- variable: nlpSearchlib.resources.limits.cpu
+  default: "2000m"
+  description: "CPU limit for NLP Service"
+  type: string
+  label: CPU Limit
+  group: "Resource Configuration"
+
+- variable: nlpSearchlib.sharedMemory.enabled
+  default: true
+  description: "Enable shared memory for NVIDIA/PyTorch"
+  type: boolean
+  label: Enable Shared Memory
+  group: "Resource Configuration"
+
+- variable: nlpSearchlib.sharedMemory.size
+  default: "2Gi"
+  description: "Shared memory size"
+  type: string
+  label: Shared Memory Size
+  group: "Resource Configuration"
+  show_if: "nlpSearchlib.sharedMemory.enabled=true"
+
+- variable: persistence.nlpcache.enabled
+  default: true
+  description: "Enable persistent volume for NLP cache"
+  type: boolean
+  label: Enable NLP Cache Persistence
+  group: "Storage Configuration"
+
+- variable: persistence.nlpcache.size
+  default: "10Gi"
+  description: "Size of NLP cache persistent volume"
+  type: string
+  label: NLP Cache Volume Size
+  group: "Storage Configuration"
+  show_if: "persistence.nlpcache.enabled=true"
+
+- variable: persistence.nlpcache.storageClass
+  default: "local-path"
+  description: "Storage class for NLP cache"
+  type: storageclass
+  label: NLP Cache Storage Class
+  group: "Storage Configuration"
+  show_if: "persistence.nlpcache.enabled=true"
+
+- variable: persistence.nlplogs.enabled
+  default: true
+  description: "Enable persistent volume for NLP logs"
+  type: boolean
+  label: Enable NLP Logs Persistence
+  group: "Storage Configuration"
+
+- variable: persistence.nlplogs.size
+  default: "5Gi"
+  description: "Size of NLP logs persistent volume"
+  type: string
+  label: NLP Logs Volume Size
+  group: "Storage Configuration"
+  show_if: "persistence.nlplogs.enabled=true"
+
+- variable: ingress.enabled
+  default: true
+  description: "Enable ingress"
+  type: boolean
+  label: Enable Ingress
+  group: "Network Configuration"
+
+- variable: ingress.className
+  default: "nginx"
+  description: "Ingress class name"
+  type: string
+  label: Ingress Class Name
+  group: "Network Configuration"
+  show_if: "ingress.enabled=true"
+
+- variable: ingress.hosts[0].host
+  default: "nlp_internal.ai-lab-aws.eea.europa.eu"
+  description: "Hostname for the ingress"
+  type: hostname
+  label: Ingress Hostname
+  group: "Network Configuration"
+  show_if: "ingress.enabled=true"
+
+- variable: ingress.tls.enabled
+  default: false
+  description: "Enable TLS for ingress"
+  type: boolean
+  label: Enable TLS
+  group: "TLS Configuration"
+  show_if: "ingress.enabled=true"
+
+- variable: ingress.tls.secretName
+  default: ""
+  description: "Name of the TLS secret"
+  type: string
+  label: TLS Secret Name
+  group: "TLS Configuration"
+  show_if: "ingress.tls.enabled=true"
+
+- variable: ingress.tls.hosts[0]
+  default: ""
+  description: "TLS hostname (should match ingress hostname)"
+  type: hostname
+  label: TLS Hostname
+  group: "TLS Configuration"
+  show_if: "ingress.tls.enabled=true"
+
+- variable: tika.enabled
+  default: true
+  description: "Enable Apache Tika service"
+  type: boolean
+  label: Enable Tika Service
+  group: "Services Configuration"
+
+- variable: tika.image.tag
+  default: "2.3.0-full"
+  description: "Apache Tika image tag"
+  type: string
+  label: Tika Image Tag
+  group: "Services Configuration"
+  show_if: "tika.enabled=true"
+
+- variable: rsync.enabled
+  default: true
+  description: "Enable Rsync service"
+  type: boolean
+  label: Enable Rsync Service
+  group: "Services Configuration"
+
+- variable: nlpSearchlib.environment.NLP_SERVICES
+  default: "feedback,qa,search,similarity,qasearch,embedding,converter,split"
+  description: "NLP services to enable (comma-separated)"
+  type: string
+  label: Enabled NLP Services
+  group: "NLP Configuration"
+
+- variable: nlpSearchlib.environment.NLP_LOGLEVEL
+  default: "20"
+  description: "NLP log level (10=DEBUG, 20=INFO, 30=WARNING, 40=ERROR)"
+  type: enum
+  options:
+    - "10"
+    - "20" 
+    - "30"
+    - "40"
+  label: NLP Log Level
+  group: "NLP Configuration"
+
+- variable: nlpSearchlib.environment.FEEDBACK_FEEDBACKSTORE_PARAMS_HOST
+  default: "elastic"
+  description: "Elasticsearch host for feedback storage"
+  type: string
+  label: Elasticsearch Host
+  group: "NLP Configuration"
+
+- variable: nlpSearchlib.environment.FEEDBACK_FEEDBACKSTORE_PARAMS_INDEX
+  default: "data_searchui"
+  description: "Elasticsearch index for data storage"
+  type: string
+  label: Elasticsearch Data Index
+  group: "NLP Configuration"
+
+- variable: nlpSearchlib.environment.FEEDBACK_FEEDBACKSTORE_PARAMS_LABEL_INDEX
+  default: "data_searchui-feedback"
+  description: "Elasticsearch index for feedback storage"
+  type: string
+  label: Elasticsearch Feedback Index
+  group: "NLP Configuration"
+
+- variable: global.nodeSelector.ReservedFor
+  default: "GPTLab"
+  description: "Node selector label for all services"
+  type: string
+  label: Reserved For Label
+  group: "Node Scheduling"
+
+- variable: global.tolerations.key
+  default: "ReservedFor"
+  description: "Toleration key for all services"
+  type: string
+  label: Toleration Key
+  group: "Node Scheduling"
+
+- variable: global.tolerations.value
+  default: "GPTLab"
+  description: "Toleration value for all services"
+  type: string
+  label: Toleration Value
+  group: "Node Scheduling"
+
+- variable: global.tolerations.effect
+  default: "NoSchedule"
+  description: "Toleration effect for all services"
+  type: enum
+  options:
+    - "NoSchedule"
+    - "PreferNoSchedule"
+    - "NoExecute"
+  label: Toleration Effect
+  group: "Node Scheduling"

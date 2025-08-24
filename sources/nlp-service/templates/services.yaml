@@ -1,0 +1,62 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "nlp-service.fullname" . }}-nlp-searchlib
+  namespace: {{ .Values.namespace.name }}
+  labels:
+    {{- include "nlp-service.labels" . | nindent 4 }}
+    app.kubernetes.io/component: nlp-searchlib
+spec:
+  type: {{ .Values.nlpSearchlib.service.type }}
+  ports:
+  - port: {{ .Values.nlpSearchlib.service.port }}
+    targetPort: {{ .Values.nlpSearchlib.service.targetPort }}
+    protocol: TCP
+    name: http
+  selector:
+    {{- include "nlp-service.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: nlp-searchlib
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "nlp-service.fullname" . }}-tika
+  namespace: {{ .Values.namespace.name }}
+  labels:
+    {{- include "nlp-service.labels" . | nindent 4 }}
+    app.kubernetes.io/component: tika
+spec:
+  type: {{ .Values.tika.service.type }}
+  ports:
+  - port: {{ .Values.tika.service.port }}
+    targetPort: {{ .Values.tika.service.targetPort }}
+    protocol: TCP
+    name: http
+  selector:
+    {{- include "nlp-service.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: tika
+---
+{{- if .Values.elastic.service.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: elastic
+  namespace: {{ .Values.namespace.name }}
+  labels:
+    {{- include "nlp-service.labels" . | nindent 4 }}
+    app.kubernetes.io/component: elastic
+spec:
+  type: {{ .Values.elastic.service.type }}
+  {{- if eq .Values.elastic.service.type "ExternalName" }}
+  externalName: {{ .Values.elastic.service.externalName }}
+  {{- else }}
+  ports:
+  - port: {{ .Values.elastic.service.port }}
+    targetPort: {{ .Values.elastic.service.targetPort }}
+    protocol: TCP
+    name: http
+  selector:
+    {{- include "nlp-service.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: elastic
+  {{- end }}
+{{- end }}

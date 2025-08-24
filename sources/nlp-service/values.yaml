@@ -1,0 +1,150 @@
+global:
+  nodeSelector:
+    enabled: true
+    ReservedFor: GPTLab
+  tolerations:
+    enabled: true
+    values:
+      - key: "ReservedFor"
+        operator: "Equal"
+        value: "GPTLab"
+        effect: "NoSchedule"
+
+namespace:
+  create: true
+  name: nlp-service
+
+nlpSearchlib:
+  image:
+    repository: eeacms/nlp-service
+    tag: v0.0.63
+    pullPolicy: IfNotPresent
+  
+  replicaCount: 1
+  
+  service:
+    type: ClusterIP
+    port: 8000
+    targetPort: 8000
+  
+  resources:
+    limits:
+      memory: "8Gi"
+      cpu: "2000m"
+    requests:
+      memory: "4Gi"
+      cpu: "1000m"
+  
+  # Shared memory configuration for NVIDIA/PyTorch
+  sharedMemory:
+    enabled: true
+    size: "2Gi"
+  
+  # Ulimit configurations
+  ulimits:
+    n: 65536        # nofile (number of open files)
+    u: 32768        # nproc (number of processes)
+    c: unlimited    # core (core file size)
+    m: unlimited    # memlock (memory lock)
+  
+  environment:
+    DISABLE_RUNTIME_TESTS: "1"
+    FEEDBACK_FEEDBACKSTORE_PARAMS_CREATE_INDEX: "true"
+    FEEDBACK_FEEDBACKSTORE_PARAMS_HOST: "elastic"
+    FEEDBACK_FEEDBACKSTORE_PARAMS_INDEX: "data_searchui"
+    FEEDBACK_FEEDBACKSTORE_PARAMS_LABEL_INDEX: "data_searchui-feedback"
+    NLP_LOGFILE: "/nlp_log/nlp-searchlib.log"
+    NLP_LOGLEVEL: "20"
+    NLP_SERVICES: "feedback,qa,search,similarity,qasearch,embedding,converter,split"
+    QA_FACETEDDOCUMENTSTORE_PARAMS_CONTENT_FIELD: "text"
+    QA_FACETEDDOCUMENTSTORE_PARAMS_EMBEDDING_FIELD: "embedding"
+    QA_FACETEDDOCUMENTSTORE_PARAMS_HOST: "elastic"
+    QA_FACETEDDOCUMENTSTORE_PARAMS_INDEX: "data_searchui"
+    SEARCH_FACETEDDOCUMENTSTORE_PARAMS_CONTENT_FIELD: "text"
+    SEARCH_FACETEDDOCUMENTSTORE_PARAMS_EMBEDDING_FIELD: "embedding"
+    SEARCH_FACETEDDOCUMENTSTORE_PARAMS_HOST: "elastic"
+    SEARCH_FACETEDDOCUMENTSTORE_PARAMS_INDEX: "data_searchui"
+    TZ: "Europe/Copenhagen"
+    QA_ANSWEREXTRACTION_PARAMS_MODEL_NAME_OR_PATH: "deepset/roberta-base-squad2"
+    QA_FACETEDDOCUMENTSTORE_PARAMS_NESTED_CONTENT_FIELD: "text"
+    SEARCH_FACETEDDOCUMENTSTORE_PARAMS_NESTED_CONTENT_FIELD: "text"
+    QA_FACETEDDOCUMENTSTORE_PARAMS_NLP_PATH: "nlp_250"
+    CONCURRENT_REQUEST_PER_WORKER: "1000"
+
+elastic:
+  service:
+    enabled: true
+    type: ExternalName
+    externalName: "elastic.elastic-namespace.svc.cluster.local"
+    port: 9200
+    targetPort: 9200
+
+rsync:
+  image:
+    repository: eeacms/rsync
+    tag: latest
+    pullPolicy: Always
+  
+  replicaCount: 1
+  
+  resources: {}
+
+tika:
+  image:
+    repository: apache/tika
+    tag: 2.3.0-full
+    pullPolicy: IfNotPresent
+  
+  replicaCount: 1
+  
+  service:
+    type: ClusterIP
+    port: 9998
+    targetPort: 9998
+  
+  resources: {}
+  
+  environment:
+    TZ: "Europe/Copenhagen"
+
+persistence:
+  nlpcache:
+    enabled: true
+    size: 10Gi
+    storageClass: "nfs-rancher"
+    retain: true
+  
+  nlplogs:
+    enabled: true
+    size: 5Gi
+    storageClass: "nfs-rancher"
+    retain: true
+  
+  nlpServiceSrc:
+    enabled: true
+    size: 1Gi
+    storageClass: "nfs-rancher"
+    retain: true
+
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    nginx.ingress.kubernetes.io/whitelist-source-range: "10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
+  hosts:
+    - host: nlp-service.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    enabled: false
+    secretName: ""
+    hosts: []
+    # Example configuration when enabled:
+    # enabled: true
+    # secretName: nlp-service-tls
+    # hosts:
+    #   - nlp-service.example.com

@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "nlp-service.fullname" . }}-rsync
+  namespace: {{ .Values.namespace.name }}
+  labels:
+    {{- include "nlp-service.labels" . | nindent 4 }}
+    app.kubernetes.io/component: rsync
+spec:
+  replicas: {{ .Values.rsync.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "nlp-service.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: rsync
+  template:
+    metadata:
+      labels:
+        {{- include "nlp-service.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: rsync
+    spec:
+      containers:
+      - name: rsync
+        image: "{{ .Values.rsync.image.repository }}:{{ .Values.rsync.image.tag }}"
+        imagePullPolicy: {{ .Values.rsync.image.pullPolicy }}
+        stdin: true
+        tty: true
+        volumeMounts:
+        {{- if .Values.persistence.nlpServiceSrc.enabled }}
+        - name: nlp-service-src
+          mountPath: /app
+        {{- end }}
+        resources:
+          {{- toYaml .Values.rsync.resources | nindent 10 }}
+      volumes:
+      {{- if .Values.persistence.nlpServiceSrc.enabled }}
+      - name: nlp-service-src
+        persistentVolumeClaim:
+          claimName: {{ include "nlp-service.fullname" . }}-nlp-service-src
+      {{- end }}
+      {{- if .Values.global.nodeSelector.enabled }}
+      nodeSelector:
+        {{- range $key, $value := .Values.global.nodeSelector }}
+        {{- if ne $key "enabled" }}
+        {{ $key }}: {{ $value }}
+        {{- end }}
+        {{- end }}
+      {{- end }}
+      {{- if .Values.global.tolerations.enabled }}
+      tolerations:
+        {{- toYaml .Values.global.tolerations.values | nindent 8 }}
+      {{- end }}

@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "nlp-service.fullname" . }}-tika
+  namespace: {{ .Values.namespace.name }}
+  labels:
+    {{- include "nlp-service.labels" . | nindent 4 }}
+    app.kubernetes.io/component: tika
+spec:
+  replicas: {{ .Values.tika.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "nlp-service.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: tika
+  template:
+    metadata:
+      labels:
+        {{- include "nlp-service.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: tika
+    spec:
+      containers:
+      - name: tika
+        image: "{{ .Values.tika.image.repository }}:{{ .Values.tika.image.tag }}"
+        imagePullPolicy: {{ .Values.tika.image.pullPolicy }}
+        ports:
+        - containerPort: 9998
+          protocol: TCP
+        env:
+        {{- range $key, $value := .Values.tika.environment }}
+        - name: {{ $key }}
+          value: {{ $value | quote }}
+        {{- end }}
+        resources:
+          {{- toYaml .Values.tika.resources | nindent 10 }}
+      {{- if .Values.global.nodeSelector.enabled }}
+      nodeSelector:
+        {{- range $key, $value := .Values.global.nodeSelector }}
+        {{- if ne $key "enabled" }}
+        {{ $key }}: {{ $value }}
+        {{- end }}
+        {{- end }}
+      {{- end }}
+      {{- if .Values.global.tolerations.enabled }}
+      tolerations:
+        {{- toYaml .Values.global.tolerations.values | nindent 8 }}
+      {{- end }}
