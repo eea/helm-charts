@@ -22,6 +22,45 @@ questions:
   default: true
   group: "Global Settings"
 
+- variable: global.tolerations.values[0].key
+  label: "Toleration Key"
+  description: "Toleration key for pod scheduling"
+  type: string
+  default: "ReservedFor"
+  group: "Global Settings"
+  show_if: "global.tolerations.enabled=true"
+
+- variable: global.tolerations.values[0].operator
+  label: "Toleration Operator"
+  description: "Toleration operator (Equal, Exists)"
+  type: enum
+  default: "Equal"
+  options:
+    - "Equal"
+    - "Exists"
+  group: "Global Settings"
+  show_if: "global.tolerations.enabled=true"
+
+- variable: global.tolerations.values[0].value
+  label: "Toleration Value"
+  description: "Toleration value for pod scheduling"
+  type: string
+  default: "GPTLab"
+  group: "Global Settings"
+  show_if: "global.tolerations.enabled=true"
+
+- variable: global.tolerations.values[0].effect
+  label: "Toleration Effect"
+  description: "Toleration effect (NoSchedule, PreferNoSchedule, NoExecute)"
+  type: enum
+  default: "NoSchedule"
+  options:
+    - "NoSchedule"
+    - "PreferNoSchedule" 
+    - "NoExecute"
+  group: "Global Settings"
+  show_if: "global.tolerations.enabled=true"
+
 # Namespace Configuration
 - variable: namespace.create
   label: "Create Namespace"
