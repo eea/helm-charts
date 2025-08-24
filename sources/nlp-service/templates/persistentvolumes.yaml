@@ -5,7 +5,7 @@ metadata:
   name: {{ include "nlp-service.fullname" . }}-nlpcache
   labels:
     {{- include "nlp-service.labels" . | nindent 4 }}
-  {{- if .Values.persistence.nlpcache.retain }}
+  {{- if or .Values.persistence.keepVolumes .Values.persistence.nlpcache.retain }}
   annotations:
     "helm.sh/resource-policy": keep
   {{- end }}
@@ -27,7 +27,7 @@ metadata:
   name: {{ include "nlp-service.fullname" . }}-nlplogs
   labels:
     {{- include "nlp-service.labels" . | nindent 4 }}
-  {{- if .Values.persistence.nlplogs.retain }}
+  {{- if or .Values.persistence.keepVolumes .Values.persistence.nlplogs.retain }}
   annotations:
     "helm.sh/resource-policy": keep
   {{- end }}
@@ -49,7 +49,7 @@ metadata:
   name: {{ include "nlp-service.fullname" . }}-nlp-service-src
   labels:
     {{- include "nlp-service.labels" . | nindent 4 }}
-  {{- if .Values.persistence.nlpServiceSrc.retain }}
+  {{- if or .Values.persistence.keepVolumes .Values.persistence.nlpServiceSrc.retain }}
   annotations:
     "helm.sh/resource-policy": keep
   {{- end }}
