@@ -1,0 +1,68 @@
+{{- if .Values.persistence.nlpcache.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "nlp-service.fullname" . }}-nlpcache
+  namespace: {{ .Values.namespace.name }}
+  labels:
+    {{- include "nlp-service.labels" . | nindent 4 }}
+  {{- if .Values.persistence.nlpcache.retain }}
+  annotations:
+    "helm.sh/resource-policy": keep
+  {{- end }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.persistence.nlpcache.size }}
+  {{- if .Values.persistence.nlpcache.storageClass }}
+  storageClassName: {{ .Values.persistence.nlpcache.storageClass }}
+  {{- end }}
+---
+{{- end }}
+{{- if .Values.persistence.nlplogs.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "nlp-service.fullname" . }}-nlplogs
+  namespace: {{ .Values.namespace.name }}
+  labels:
+    {{- include "nlp-service.labels" . | nindent 4 }}
+  {{- if .Values.persistence.nlplogs.retain }}
+  annotations:
+    "helm.sh/resource-policy": keep
+  {{- end }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.persistence.nlplogs.size }}
+  {{- if .Values.persistence.nlplogs.storageClass }}
+  storageClassName: {{ .Values.persistence.nlplogs.storageClass }}
+  {{- end }}
+---
+{{- end }}
+{{- if .Values.persistence.nlpServiceSrc.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "nlp-service.fullname" . }}-nlp-service-src
+  namespace: {{ .Values.namespace.name }}
+  labels:
+    {{- include "nlp-service.labels" . | nindent 4 }}
+  {{- if .Values.persistence.nlpServiceSrc.retain }}
+  annotations:
+    "helm.sh/resource-policy": keep
+  {{- end }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.persistence.nlpServiceSrc.size }}
+  {{- if .Values.persistence.nlpServiceSrc.storageClass }}
+  storageClassName: {{ .Values.persistence.nlpServiceSrc.storageClass }}
+  {{- end }}
+{{- end }}

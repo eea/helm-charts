@@ -1,0 +1,295 @@
+questions:
+# Global Configuration
+- variable: global.nodeSelector.enabled
+  label: "Enable Node Selector"
+  description: "Enable node selector for pod placement"
+  type: boolean
+  default: true
+  group: "Global Settings"
+
+- variable: global.nodeSelector.ReservedFor
+  label: "Node Selector - Reserved For"
+  description: "Node selector label value for pod placement"
+  type: string
+  default: "GPTLab"
+  group: "Global Settings"
+  show_if: "global.nodeSelector.enabled=true"
+
+- variable: global.tolerations.enabled
+  label: "Enable Tolerations"
+  description: "Enable tolerations for pod scheduling"
+  type: boolean
+  default: true
+  group: "Global Settings"
+
+# Namespace Configuration
+- variable: namespace.create
+  label: "Create Namespace"
+  description: "Create a new namespace for the NLP service"
+  type: boolean
+  default: true
+  group: "Namespace"
+
+- variable: namespace.name
+  label: "Namespace Name"
+  description: "Name of the namespace"
+  type: string
+  default: "nlp-service"
+  group: "Namespace"
+  show_if: "namespace.create=true"
+
+# NLP Searchlib Configuration
+- variable: nlpSearchlib.image.repository
+  label: "NLP Searchlib Image Repository"
+  description: "Docker image repository for NLP searchlib service"
+  type: string
+  default: "eeacms/nlp-service"
+  group: "NLP Searchlib"
+
+- variable: nlpSearchlib.image.tag
+  label: "NLP Searchlib Image Tag"
+  description: "Docker image tag for NLP searchlib service"
+  type: string
+  default: "v0.0.63"
+  group: "NLP Searchlib"
+
+- variable: nlpSearchlib.replicaCount
+  label: "NLP Searchlib Replica Count"
+  description: "Number of NLP searchlib replicas"
+  type: int
+  default: 1
+  group: "NLP Searchlib"
+
+- variable: nlpSearchlib.service.port
+  label: "NLP Searchlib Service Port"
+  description: "Port for NLP searchlib service"
+  type: int
+  default: 8000
+  group: "NLP Searchlib"
+
+- variable: nlpSearchlib.resources.limits.memory
+  label: "NLP Searchlib Memory Limit"
+  description: "Memory limit for NLP searchlib container"
+  type: string
+  default: "8Gi"
+  group: "NLP Searchlib"
+
+- variable: nlpSearchlib.resources.requests.memory
+  label: "NLP Searchlib Memory Request"
+  description: "Memory request for NLP searchlib container"
+  type: string
+  default: "4Gi"
+  group: "NLP Searchlib"
+
+- variable: nlpSearchlib.resources.limits.cpu
+  label: "NLP Searchlib CPU Limit"
+  description: "CPU limit for NLP searchlib container"
+  type: string
+  default: "2000m"
+  group: "NLP Searchlib"
+
+- variable: nlpSearchlib.resources.requests.cpu
+  label: "NLP Searchlib CPU Request"
+  description: "CPU request for NLP searchlib container"
+  type: string
+  default: "1000m"
+  group: "NLP Searchlib"
+
+- variable: nlpSearchlib.sharedMemory.enabled
+  label: "Enable Shared Memory"
+  description: "Enable shared memory configuration for NVIDIA/PyTorch"
+  type: boolean
+  default: true
+  group: "NLP Searchlib"
+
+- variable: nlpSearchlib.sharedMemory.size
+  label: "Shared Memory Size"
+  description: "Size of shared memory"
+  type: string
+  default: "2Gi"
+  group: "NLP Searchlib"
+  show_if: "nlpSearchlib.sharedMemory.enabled=true"
+
+# Elasticsearch Configuration
+- variable: elastic.service.enabled
+  label: "Enable Elasticsearch Service"
+  description: "Enable external Elasticsearch service"
+  type: boolean
+  default: true
+  group: "Elasticsearch"
+
+- variable: elastic.service.externalName
+  label: "Elasticsearch External Name"
+  description: "External service name for Elasticsearch"
+  type: string
+  default: "elastic.elastic-namespace.svc.cluster.local"
+  group: "Elasticsearch"
+  show_if: "elastic.service.enabled=true"
+
+- variable: elastic.service.port
+  label: "Elasticsearch Service Port"
+  description: "Port for Elasticsearch service"
+  type: int
+  default: 9200
+  group: "Elasticsearch"
+
+# Rsync Configuration
+- variable: rsync.image.repository
+  label: "Rsync Image Repository"
+  description: "Docker image repository for Rsync"
+  type: string
+  default: "eeacms/rsync"
+  group: "Rsync"
+
+- variable: rsync.image.tag
+  label: "Rsync Image Tag"
+  description: "Docker image tag for Rsync"
+  type: string
+  default: "latest"
+  group: "Rsync"
+
+- variable: rsync.replicaCount
+  label: "Rsync Replica Count"
+  description: "Number of Rsync replicas"
+  type: int
+  default: 1
+  group: "Rsync"
+
+# Tika Configuration
+- variable: tika.image.repository
+  label: "Tika Image Repository"
+  description: "Docker image repository for Apache Tika"
+  type: string
+  default: "apache/tika"
+  group: "Tika"
+
+- variable: tika.image.tag
+  label: "Tika Image Tag"
+  description: "Docker image tag for Apache Tika"
+  type: string
+  default: "2.3.0-full"
+  group: "Tika"
+
+- variable: tika.replicaCount
+  label: "Tika Replica Count"
+  description: "Number of Tika replicas"
+  type: int
+  default: 1
+  group: "Tika"
+
+- variable: tika.service.port
+  label: "Tika Service Port"
+  description: "Port for Tika service"
+  type: int
+  default: 9998
+  group: "Tika"
+
+# Persistence Configuration
+- variable: persistence.nlpcache.enabled
+  label: "Enable NLP Cache Storage"
+  description: "Enable persistent storage for NLP cache"
+  type: boolean
+  default: true
+  group: "Persistence"
+
+- variable: persistence.nlpcache.size
+  label: "NLP Cache Storage Size"
+  description: "Size of NLP cache persistent volume"
+  type: string
+  default: "10Gi"
+  group: "Persistence"
+  show_if: "persistence.nlpcache.enabled=true"
+
+- variable: persistence.nlpcache.storageClass
+  label: "NLP Cache Storage Class"
+  description: "Storage class for NLP cache persistent volume"
+  type: string
+  default: "nfs-rancher"
+  group: "Persistence"
+  show_if: "persistence.nlpcache.enabled=true"
+
+- variable: persistence.nlplogs.enabled
+  label: "Enable NLP Logs Storage"
+  description: "Enable persistent storage for NLP logs"
+  type: boolean
+  default: true
+  group: "Persistence"
+
+- variable: persistence.nlplogs.size
+  label: "NLP Logs Storage Size"
+  description: "Size of NLP logs persistent volume"
+  type: string
+  default: "5Gi"
+  group: "Persistence"
+  show_if: "persistence.nlplogs.enabled=true"
+
+- variable: persistence.nlplogs.storageClass
+  label: "NLP Logs Storage Class"
+  description: "Storage class for NLP logs persistent volume"
+  type: string
+  default: "nfs-rancher"
+  group: "Persistence"
+  show_if: "persistence.nlplogs.enabled=true"
+
+- variable: persistence.nlpServiceSrc.enabled
+  label: "Enable NLP Service Source Storage"
+  description: "Enable persistent storage for NLP service source"
+  type: boolean
+  default: true
+  group: "Persistence"
+
+- variable: persistence.nlpServiceSrc.size
+  label: "NLP Service Source Storage Size"
+  description: "Size of NLP service source persistent volume"
+  type: string
+  default: "1Gi"
+  group: "Persistence"
+  show_if: "persistence.nlpServiceSrc.enabled=true"
+
+- variable: persistence.nlpServiceSrc.storageClass
+  label: "NLP Service Source Storage Class"
+  description: "Storage class for NLP service source persistent volume"
+  type: string
+  default: "nfs-rancher"
+  group: "Persistence"
+  show_if: "persistence.nlpServiceSrc.enabled=true"
+
+# Ingress Configuration
+- variable: ingress.enabled
+  label: "Enable Ingress"
+  description: "Enable ingress for the NLP service"
+  type: boolean
+  default: true
+  group: "Ingress"
+
+- variable: ingress.className
+  label: "Ingress Class Name"
+  description: "Ingress class name"
+  type: string
+  default: "nginx"
+  group: "Ingress"
+  show_if: "ingress.enabled=true"
+
+- variable: ingress.hosts[0].host
+  label: "Ingress Host"
+  description: "Hostname for ingress"
+  type: string
+  default: "nlp-service.example.com"
+  group: "Ingress"
+  show_if: "ingress.enabled=true"
+
+- variable: ingress.tls.enabled
+  label: "Enable TLS"
+  description: "Enable TLS for ingress"
+  type: boolean
+  default: false
+  group: "Ingress"
+  show_if: "ingress.enabled=true"
+
+- variable: ingress.tls.secretName
+  label: "TLS Secret Name"
+  description: "Name of the TLS secret"
+  type: string
+  default: "nlp-service-tls"
+  group: "Ingress"
+  show_if: "ingress.tls.enabled=true"

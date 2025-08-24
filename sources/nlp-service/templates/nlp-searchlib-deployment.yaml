@@ -1,0 +1,122 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "nlp-service.fullname" . }}-nlp-searchlib
+  namespace: {{ .Values.namespace.name }}
+  labels:
+    {{- include "nlp-service.labels" . | nindent 4 }}
+    app.kubernetes.io/component: nlp-searchlib
+spec:
+  replicas: {{ .Values.nlpSearchlib.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "nlp-service.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: nlp-searchlib
+  template:
+    metadata:
+      labels:
+        {{- include "nlp-service.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: nlp-searchlib
+    spec:
+      {{- if .Values.nlpSearchlib.ulimits }}
+      securityContext:
+        fsGroup: 2000
+        runAsUser: 1000
+        runAsGroup: 3000
+      initContainers:
+      - name: init-ulimits
+        image: busybox:1.35
+        command: ['sh', '-c']
+        args:
+          - |
+            echo "Setting ulimits..."
+            {{- if .Values.nlpSearchlib.ulimits.n }}
+            ulimit -n {{ .Values.nlpSearchlib.ulimits.n }}
+            {{- end }}
+            {{- if .Values.nlpSearchlib.ulimits.u }}
+            ulimit -u {{ .Values.nlpSearchlib.ulimits.u }}
+            {{- end }}
+            {{- if .Values.nlpSearchlib.ulimits.c }}
+            ulimit -c {{ .Values.nlpSearchlib.ulimits.c }}
+            {{- end }}
+            {{- if .Values.nlpSearchlib.ulimits.m }}
+            ulimit -m {{ .Values.nlpSearchlib.ulimits.m }}
+            {{- end }}
+            echo "Ulimits configured"
+        securityContext:
+          runAsUser: 0
+          capabilities:
+            add:
+              - SYS_RESOURCE
+      {{- end }}
+      containers:
+      - name: nlp-searchlib
+        image: "{{ .Values.nlpSearchlib.image.repository }}:{{ .Values.nlpSearchlib.image.tag }}"
+        imagePullPolicy: {{ .Values.nlpSearchlib.image.pullPolicy }}
+        ports:
+        - containerPort: 8000
+          protocol: TCP
+        env:
+        {{- range $key, $value := .Values.nlpSearchlib.environment }}
+        - name: {{ $key }}
+          value: {{ $value | quote }}
+        {{- end }}
+        volumeMounts:
+        {{- if .Values.persistence.nlpcache.enabled }}
+        - name: nlpcache
+          mountPath: /root/.cache
+        {{- end }}
+        {{- if .Values.persistence.nlplogs.enabled }}
+        - name: nlplogs
+          mountPath: /nlp_log
+        {{- end }}
+        {{- if .Values.persistence.nlpServiceSrc.enabled }}
+        - name: nlp-service-src
+          mountPath: /app
+        {{- end }}
+        {{- if .Values.nlpSearchlib.sharedMemory.enabled }}
+        - name: shm
+          mountPath: /dev/shm
+        {{- end }}
+        resources:
+          {{- toYaml .Values.nlpSearchlib.resources | nindent 10 }}
+        securityContext:
+          {{- if not .Values.nlpSearchlib.ulimits }}
+          runAsNonRoot: false
+          {{- end }}
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: false
+      volumes:
+      {{- if .Values.persistence.nlpcache.enabled }}
+      - name: nlpcache
+        persistentVolumeClaim:
+          claimName: {{ include "nlp-service.fullname" . }}-nlpcache
+      {{- end }}
+      {{- if .Values.persistence.nlplogs.enabled }}
+      - name: nlplogs
+        persistentVolumeClaim:
+          claimName: {{ include "nlp-service.fullname" . }}-nlplogs
+      {{- end }}
+      {{- if .Values.persistence.nlpServiceSrc.enabled }}
+      - name: nlp-service-src
+        persistentVolumeClaim:
+          claimName: {{ include "nlp-service.fullname" . }}-nlp-service-src
+      {{- end }}
+      {{- if .Values.nlpSearchlib.sharedMemory.enabled }}
+      - name: shm
+        emptyDir:
+          medium: Memory
+          sizeLimit: {{ .Values.nlpSearchlib.sharedMemory.size }}
+      {{- end }}
+      {{- if .Values.global.nodeSelector.enabled }}
+      nodeSelector:
+        {{- range $key, $value := .Values.global.nodeSelector }}
+        {{- if ne $key "enabled" }}
+        {{ $key }}: {{ $value }}
+        {{- end }}
+        {{- end }}
+      {{- end }}
+      {{- if .Values.global.tolerations.enabled }}
+      tolerations:
+        {{- toYaml .Values.global.tolerations.values | nindent 8 }}
+      {{- end }}
