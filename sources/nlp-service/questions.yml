@@ -247,6 +247,13 @@ questions:
   group: "Tika"
 
 # Persistence Configuration
+- variable: persistence.keepVolumes
+  label: "Keep Volumes on Uninstall"
+  description: "Retain all persistent volumes when uninstalling the chart (global setting)"
+  type: boolean
+  default: true
+  group: "Persistence"
+
 - variable: persistence.nlpcache.enabled
   label: "Enable NLP Cache Storage"
   description: "Enable persistent storage for NLP cache"
