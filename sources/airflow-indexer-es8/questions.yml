@@ -257,3 +257,183 @@ questions:
   type: string
   default: "airflow-indexer.example.com"
   group: "Ingress"
+
+# Persistence Configuration
+- variable: persistence.storageClass
+  label: "Storage Class"
+  description: "Storage class for persistent volumes"
+  type: string
+  default: "local-path"
+  group: "Persistence"
+
+- variable: persistence.reclaimPolicy
+  label: "Default Reclaim Policy"
+  description: "Default reclaim policy for persistent volumes (Retain keeps data after deletion)"
+  type: enum
+  options:
+    - "Retain"
+    - "Delete"
+    - "Recycle"
+  default: "Retain"
+  group: "Persistence"
+
+- variable: persistence.accessMode
+  label: "Default Access Mode"
+  description: "Default access mode for persistent volumes"
+  type: enum
+  options:
+    - "ReadWriteOnce"
+    - "ReadWriteMany"
+    - "ReadOnlyMany"
+  default: "ReadWriteMany"
+  group: "Persistence"
+
+# Airflow Indexer Config Volume
+- variable: persistence.airflowIndexerConfig.size
+  label: "Airflow Config Volume Size"
+  description: "Storage size for Airflow configuration volume (shared by multiple components)"
+  type: string
+  default: "1Gi"
+  group: "Persistence"
+
+- variable: persistence.airflowIndexerConfig.accessMode
+  label: "Airflow Config Access Mode"
+  description: "Access mode for Airflow config volume (ReadWriteMany needed for shared access)"
+  type: enum
+  options:
+    - "ReadWriteOnce"
+    - "ReadWriteMany"
+    - "ReadOnlyMany"
+  default: "ReadWriteMany"
+  group: "Persistence"
+
+- variable: persistence.airflowIndexerConfig.reclaimPolicy
+  label: "Airflow Config Reclaim Policy"
+  description: "Reclaim policy for Airflow config volume"
+  type: enum
+  options:
+    - "Retain"
+    - "Delete" 
+    - "Recycle"
+  default: "Retain"
+  group: "Persistence"
+
+# Airflow Indexer Logs Volume
+- variable: persistence.airflowIndexerLogs.size
+  label: "Airflow Logs Volume Size"
+  description: "Storage size for Airflow logs volume (shared by multiple components)"
+  type: string
+  default: "5Gi"
+  group: "Persistence"
+
+- variable: persistence.airflowIndexerLogs.accessMode
+  label: "Airflow Logs Access Mode"
+  description: "Access mode for Airflow logs volume (ReadWriteMany needed for shared access)"
+  type: enum
+  options:
+    - "ReadWriteOnce"
+    - "ReadWriteMany"
+    - "ReadOnlyMany"
+  default: "ReadWriteMany"
+  group: "Persistence"
+
+- variable: persistence.airflowIndexerLogs.reclaimPolicy
+  label: "Airflow Logs Reclaim Policy"
+  description: "Reclaim policy for Airflow logs volume"
+  type: enum
+  options:
+    - "Retain"
+    - "Delete"
+    - "Recycle"
+  default: "Retain"
+  group: "Persistence"
+
+# PostgreSQL Data Volume
+- variable: persistence.postgresdata.size
+  label: "PostgreSQL Data Volume Size"
+  description: "Storage size for PostgreSQL data volume"
+  type: string
+  default: "10Gi"
+  group: "Persistence"
+
+- variable: persistence.postgresdata.accessMode
+  label: "PostgreSQL Access Mode"
+  description: "Access mode for PostgreSQL data volume (ReadWriteOnce for single pod)"
+  type: enum
+  options:
+    - "ReadWriteOnce"
+    - "ReadWriteMany"
+    - "ReadOnlyMany"
+  default: "ReadWriteOnce"
+  group: "Persistence"
+
+- variable: persistence.postgresdata.reclaimPolicy
+  label: "PostgreSQL Reclaim Policy"
+  description: "Reclaim policy for PostgreSQL data volume"
+  type: enum
+  options:
+    - "Retain"
+    - "Delete"
+    - "Recycle"
+  default: "Retain"
+  group: "Persistence"
+
+# RabbitMQ Data Volume
+- variable: persistence.airflowIndexerRabbitmq.size
+  label: "RabbitMQ Data Volume Size"
+  description: "Storage size for RabbitMQ data volume"
+  type: string
+  default: "5Gi"
+  group: "Persistence"
+
+- variable: persistence.airflowIndexerRabbitmq.accessMode
+  label: "RabbitMQ Access Mode"
+  description: "Access mode for RabbitMQ data volume (ReadWriteOnce for single pod)"
+  type: enum
+  options:
+    - "ReadWriteOnce"
+    - "ReadWriteMany"
+    - "ReadOnlyMany"
+  default: "ReadWriteOnce"
+  group: "Persistence"
+
+- variable: persistence.airflowIndexerRabbitmq.reclaimPolicy
+  label: "RabbitMQ Reclaim Policy"
+  description: "Reclaim policy for RabbitMQ data volume"
+  type: enum
+  options:
+    - "Retain"
+    - "Delete"
+    - "Recycle"
+  default: "Retain"
+  group: "Persistence"
+
+# NLP Service Source Volume
+- variable: persistence.nlpServiceSrc.size
+  label: "NLP Service Source Volume Size"
+  description: "Storage size for NLP service source volume"
+  type: string
+  default: "1Gi"
+  group: "Persistence"
+
+- variable: persistence.nlpServiceSrc.accessMode
+  label: "NLP Service Access Mode"
+  description: "Access mode for NLP service source volume (ReadWriteOnce for single pod)"
+  type: enum
+  options:
+    - "ReadWriteOnce"
+    - "ReadWriteMany"
+    - "ReadOnlyMany"
+  default: "ReadWriteOnce"
+  group: "Persistence"
+
+- variable: persistence.nlpServiceSrc.reclaimPolicy
+  label: "NLP Service Reclaim Policy"
+  description: "Reclaim policy for NLP service source volume"
+  type: enum
+  options:
+    - "Retain"
+    - "Delete"
+    - "Recycle"
+  default: "Retain"
+  group: "Persistence"

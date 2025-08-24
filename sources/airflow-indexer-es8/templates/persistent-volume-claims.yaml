@@ -2,40 +2,40 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: eeacrawlerconfig-es8
+  name: airflow-indexer-config-es8
   annotations:
-    "helm.sh/resource-policy": keep
+    "helm.sh/resource-policy": {{ .Values.persistence.airflowIndexerConfig.reclaimPolicy | default .Values.persistence.reclaimPolicy | default "keep" }}
 spec:
   accessModes:
-    - ReadWriteOnce
+    - {{ .Values.persistence.airflowIndexerConfig.accessMode | default .Values.persistence.accessMode | default "ReadWriteMany" }}
   storageClassName: {{ .Values.persistence.storageClass | default "default" }}
   resources:
     requests:
-      storage: {{ .Values.persistence.eeacrawlerconfig.size | default "1Gi" }}
+      storage: {{ .Values.persistence.airflowIndexerConfig.size | default "1Gi" }}
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: eeacrawlerlogs-es8
+  name: airflow-indexer-logs-es8
   annotations:
-    "helm.sh/resource-policy": keep
+    "helm.sh/resource-policy": {{ .Values.persistence.airflowIndexerLogs.reclaimPolicy | default .Values.persistence.reclaimPolicy | default "keep" }}
 spec:
   accessModes:
-    - ReadWriteOnce
+    - {{ .Values.persistence.airflowIndexerLogs.accessMode | default .Values.persistence.accessMode | default "ReadWriteMany" }}
   storageClassName: {{ .Values.persistence.storageClass | default "default" }}
   resources:
     requests:
-      storage: {{ .Values.persistence.eeacrawlerlogs.size | default "5Gi" }}
+      storage: {{ .Values.persistence.airflowIndexerLogs.size | default "5Gi" }}
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: nlp-service-src
   annotations:
-    "helm.sh/resource-policy": keep
+    "helm.sh/resource-policy": {{ .Values.persistence.nlpServiceSrc.reclaimPolicy | default .Values.persistence.reclaimPolicy | default "keep" }}
 spec:
   accessModes:
-    - ReadWriteOnce
+    - {{ .Values.persistence.nlpServiceSrc.accessMode | default .Values.persistence.accessMode | default "ReadWriteOnce" }}
   storageClassName: {{ .Values.persistence.storageClass | default "default" }}
   resources:
     requests:
@@ -44,26 +44,26 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: crawlerrabbitmq-es8
+  name: airflow-indexer-rabbitmq-es8
   annotations:
-    "helm.sh/resource-policy": keep
+    "helm.sh/resource-policy": {{ .Values.persistence.airflowIndexerRabbitmq.reclaimPolicy | default .Values.persistence.reclaimPolicy | default "keep" }}
 spec:
   accessModes:
-    - ReadWriteOnce
+    - {{ .Values.persistence.airflowIndexerRabbitmq.accessMode | default .Values.persistence.accessMode | default "ReadWriteOnce" }}
   storageClassName: {{ .Values.persistence.storageClass | default "default" }}
   resources:
     requests:
-      storage: {{ .Values.persistence.crawlerrabbitmq.size | default "5Gi" }}
+      storage: {{ .Values.persistence.airflowIndexerRabbitmq.size | default "5Gi" }}
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: postgresdata-es8
   annotations:
-    "helm.sh/resource-policy": keep
+    "helm.sh/resource-policy": {{ .Values.persistence.postgresdata.reclaimPolicy | default .Values.persistence.reclaimPolicy | default "keep" }}
 spec:
   accessModes:
-    - ReadWriteOnce
+    - {{ .Values.persistence.postgresdata.accessMode | default .Values.persistence.accessMode | default "ReadWriteOnce" }}
   storageClassName: {{ .Values.persistence.storageClass | default "default" }}
   resources:
     requests:

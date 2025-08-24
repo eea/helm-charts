@@ -27,12 +27,12 @@ airflowInit:
     requests:
       memory: 512Mi
   volumes:
-    - name: eeacrawlerconfigEs8
+    - name: airflow-indexer-config-es8
       persistentVolumeClaim:
-        claimName: eeacrawlerconfig-es8
-    - name: eeacrawlerlogsEs8
+        claimName: airflow-indexer-config-es8
+    - name: airflow-indexer-logs-es8
       persistentVolumeClaim:
-        claimName: eeacrawlerlogs-es8
+        claimName: airflow-indexer-logs-es8
 airflowWorker:
   replicaCount: 1
   image:
@@ -59,12 +59,12 @@ airflowWorker:
     requests:
       memory: 8Gi
   volumes:
-    - name: eeacrawlerconfigEs8
+    - name: airflow-indexer-config-es8
       persistentVolumeClaim:
-        claimName: eeacrawlerconfig-es8
-    - name: eeacrawlerlogsEs8
+        claimName: airflow-indexer-config-es8
+    - name: airflow-indexer-logs-es8
       persistentVolumeClaim:
-        claimName: eeacrawlerlogs-es8
+        claimName: airflow-indexer-logs-es8
 headlessChromeApi:
   replicaCount: 1
   image:
@@ -96,9 +96,9 @@ ide:
     type: ClusterIP
     port: 55721
   volumes:
-    - name: eeacrawlerconfigEs8
+    - name: airflow-indexer-config-es8
       persistentVolumeClaim:
-        claimName: eeacrawlerconfig-es8
+        claimName: airflow-indexer-config-es8
     - name: nlpServiceSrc
       persistentVolumeClaim:
         claimName: nlp-service-src
@@ -121,9 +121,9 @@ rabbitmq:
     type: ClusterIP
     port: 53532
   volumes:
-    - name: crawlerrabbitmqEs8
+    - name: airflow-indexer-rabbitmq-es8
       persistentVolumeClaim:
-        claimName: crawlerrabbitmq-es8
+        claimName: airflow-indexer-rabbitmq-es8
 redis:
   replicaCount: 1
   image:
@@ -167,12 +167,12 @@ flower:
     type: ClusterIP
     port: 54060
   volumes:
-    - name: eeacrawlerconfigEs8
+    - name: airflow-indexer-config-es8
       persistentVolumeClaim:
-        claimName: eeacrawlerconfig-es8
-    - name: eeacrawlerlogsEs8
+        claimName: airflow-indexer-config-es8
+    - name: airflow-indexer-logs-es8
       persistentVolumeClaim:
-        claimName: eeacrawlerlogs-es8
+        claimName: airflow-indexer-logs-es8
 logstash:
   replicaCount: 1
   image:
@@ -191,9 +191,9 @@ logstash:
     type: ClusterIP
     port: 5044
   volumes:
-    - name: eeacrawlerconfigEs8
+    - name: airflow-indexer-config-es8
       persistentVolumeClaim:
-        claimName: eeacrawlerconfig-es8
+        claimName: airflow-indexer-config-es8
 airflowScheduler:
   replicaCount: 1
   image:
@@ -218,12 +218,12 @@ airflowScheduler:
     requests:
       memory: 4Gi
   volumes:
-    - name: eeacrawlerconfigEs8
+    - name: airflow-indexer-config-es8
       persistentVolumeClaim:
-        claimName: eeacrawlerconfig-es8
-    - name: eeacrawlerlogsEs8
+        claimName: airflow-indexer-config-es8
+    - name: airflow-indexer-logs-es8
       persistentVolumeClaim:
-        claimName: eeacrawlerlogs-es8
+        claimName: airflow-indexer-logs-es8
 airflowWebserver:
   replicaCount: 1
   image:
@@ -251,12 +251,12 @@ airflowWebserver:
     type: ClusterIP
     port: 59232
   volumes:
-    - name: eeacrawlerconfigEs8
+    - name: airflow-indexer-config-es8
       persistentVolumeClaim:
-        claimName: eeacrawlerconfig-es8
-    - name: eeacrawlerlogsEs8
+        claimName: airflow-indexer-config-es8
+    - name: airflow-indexer-logs-es8
       persistentVolumeClaim:
-        claimName: eeacrawlerlogs-es8
+        claimName: airflow-indexer-logs-es8
 postgres:
   replicaCount: 1
   image:
@@ -296,9 +296,9 @@ eeaCrawlerConfig:
     requests:
       memory: 256Mi
   volumes:
-    - name: eeacrawlerconfigEs8
+    - name: airflow-indexer-config-es8
       persistentVolumeClaim:
-        claimName: eeacrawlerconfig-es8
+        claimName: airflow-indexer-config-es8
 image:
   repository: my-image
   pullPolicy: IfNotPresent
@@ -309,16 +309,28 @@ service:
 
 persistence:
   storageClass: "local-path"
-  eeacrawlerconfig:
+  reclaimPolicy: "Retain"  # Retain, Delete, or Recycle
+  accessMode: "ReadWriteMany"  # ReadWriteOnce, ReadWriteMany, ReadOnlyMany
+  airflowIndexerConfig:
     size: "1Gi"
-  eeacrawlerlogs:
+    accessMode: "ReadWriteMany"  # Override global setting if needed
+    reclaimPolicy: "Retain"  # Override global setting if needed
+  airflowIndexerLogs:
     size: "5Gi"
+    accessMode: "ReadWriteMany"  # Override global setting if needed
+    reclaimPolicy: "Retain"  # Override global setting if needed
   nlpServiceSrc:
     size: "1Gi"
-  crawlerrabbitmq:
+    accessMode: "ReadWriteOnce"  # Single pod access
+    reclaimPolicy: "Retain"  # Override global setting if needed
+  airflowIndexerRabbitmq:
     size: "5Gi"
+    accessMode: "ReadWriteOnce"  # Single pod access
+    reclaimPolicy: "Retain"  # Override global setting if needed
   postgresdata:
     size: "10Gi"
+    accessMode: "ReadWriteOnce"  # Single pod access
+    reclaimPolicy: "Retain"  # Override global setting if needed
 
 ingress:
   enabled: true
