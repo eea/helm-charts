@@ -6,13 +6,6 @@ questions:
   default: 1
   group: "General"
 
-- variable: airflowInit.replicaCount
-  label: "Airflow Init Replica Count"
-  description: "Number of Airflow init replicas"
-  type: int
-  default: 1
-  group: "Airflow Init"
-
 - variable: airflowInit.image.repository
   label: "Airflow Init Image Repository"
   description: "Docker image repository for Airflow init"
