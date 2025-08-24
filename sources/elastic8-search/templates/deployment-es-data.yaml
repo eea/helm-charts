@@ -1,9 +1,10 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: es-data
 spec:
-  replicas: 1
+  serviceName: es-data
+  replicas: {{ .Values.replicas.elasticData | default 1 }}
   selector:
     matchLabels:
       app: es-data
@@ -51,10 +52,18 @@ spec:
         volumeMounts:
         - name: elastic-data
           mountPath: /usr/share/elasticsearch/data
-      volumes:
-      - name: elastic-data
-        persistentVolumeClaim:
-          claimName: elastic-data-pvc
+  volumeClaimTemplates:
+  - metadata:
+      name: elastic-data
+      annotations:
+        helm.sh/resource-policy: {{ .Values.storage.reclaimPolicy | default "keep" }}
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      storageClassName: {{ .Values.storage.className | default "" }}
+      resources:
+        requests:
+          storage: {{ .Values.storage.elasticData.size | default "10Gi" }}
       {{- if and .Values.global.nodeSelector .Values.global.nodeSelector.enabled }}
       nodeSelector:
         {{- range $key, $value := .Values.global.nodeSelector }}
