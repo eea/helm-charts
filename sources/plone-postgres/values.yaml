@@ -30,9 +30,9 @@ admin:
   link: postgres
   serviceName: master
   storage:
-    size: 10G
-    storageClassName: nfs-class
-    accessMode: ReadWriteOnce
+    size: 500Gi
+    storageClassName: efs-class
+    accessMode: ReadWriteMany
   environment:
     PGUSER: zope
     PGPASSWORD: zope
