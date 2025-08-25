@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 1.0.4 - 25 August 2025
+- Release of dependent chart postfix:3.1.0 [EEA Jenkins - [`c775ddb1`](https://github.com/eea/helm-charts/commit/c775ddb12127674de76257eae9fabb54ed0d02a6)]
+
 ### Version 1.0.3
 Upgrade of ingress resource, rolling back app version. 
 
