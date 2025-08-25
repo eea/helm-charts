@@ -50,6 +50,33 @@
     type: "string"
     required: true
     group: "General"
+  
+  - variable: "entrasync.enabled"
+    label: "Enable Entra Id synchronization"
+    default: false
+    type: "boolean"
+    required: true
+    group: "General"
+  - variable: "entrasync.schedule"
+    label: "Scheduled Entra ID synchronization time"
+    type: "string"
+    default: "0 0 3 * *"
+    required: true
+    group: "General"
+    show_if: "entrasync.enabled=true"
+  - variable: "zodbpack.enabled"
+    label: "Enable Zodbpack cleanup"
+    default: false
+    type: "boolean"
+    required: true
+    group: "General"
+  - variable: "zodbpack.schedule"
+    label: "Scheduled Zodbpack cleanup time"
+    type: "string"
+    default: "0 0 1 * *"
+    required: true
+    group: "General"
+    show_if: "zodbpack.enabled=true"
 
   - variable: "varnish.serviceType"
     label: "Expose varnish"
@@ -261,6 +288,37 @@
     required: true
     default: "4Gi"
     group: "Memory"
+    show_if: "debug.enabled=true"
+  - variable: "entrasync.resources.requests.memory"
+    label: "Entrasync cron job memory reservation"
+    type: "string"
+    required: true
+    default: "1Gi"
+    group: "Memory"
+    show_if: "entrasync.enabled=true"
+  - variable: "entrasync.resources.limits.memory"
+    label: "Entrasync cron job memory limit"
+    description: ">= memory reservation"
+    type: "string"
+    required: true
+    default: "1Gi"
+    group: "Memory"
+    show_if: "entrasync.enabled=true"
+  - variable: "zodbpack.resources.requests.memory"
+    label: "Zodbpack cron job memory reservation"
+    type: "string"
+    required: true
+    default: "1Gi"
+    group: "Memory"
+    show_if: "zodbpack.enabled=true"
+  - variable: "zodbpack.resources.limits.memory"
+    label: "Zodbpack cron job memory limit"
+    description: ">= memory reservation"
+    type: "string"
+    required: true
+    default: "1Gi"
+    group: "Memory"
+    show_if: "zodbpack.enabled=true"
   - variable: "varnish.resources.requests.memory"
     label: "Varnish memory reservation"
     type: "string"
