@@ -12890,6 +12890,25 @@ entries:
   eni-seis:
   - apiVersion: v2
     appVersion: 20.6.6-9.19
+    created: "2025-08-25T14:24:35.763184514Z"
+    dependencies:
+    - name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.1.0
+    - name: memcached
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.4.7
+    description: Implementation of the SEIS principles and practices in the Eastern
+      and Southern Partnership countries (ended 2020)
+    digest: dc2783e8c08382054aae9305b9f00d4c1523ca2cde945b5f9734226521991f8a
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/eni-seis/eni-map.png
+    name: eni-seis
+    type: application
+    urls:
+    - eni-seis-1.0.4.tgz
+    version: 1.0.4
+  - apiVersion: v2
+    appVersion: 20.6.6-9.19
     created: "2025-08-22T15:34:10.005674+02:00"
     dependencies:
     - name: postfix
@@ -26251,4 +26270,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2025-08-25T14:24:24.659922467Z"
+generated: "2025-08-25T14:24:35.759042467Z"
