@@ -459,6 +459,9 @@ grunt
 
 ## Releases
 
+### Version 0.3.3 - 25 August 2025
+- Set last version of postfix [valentinab25 - [`d3445e0a`](https://github.com/eea/helm-charts/commit/d3445e0a93e71c7b8e1616442d0837e3f4af7021)]
+
 ### Version 0.3.2 - 25 August 2025
 - Fix default drawio port [valentinab25 - [`2f03c758`](https://github.com/eea/helm-charts/commit/2f03c7588df1a9146fb0294a953c792fb69d0ebc)]
 
