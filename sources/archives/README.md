@@ -4,30 +4,33 @@ This chart is configured for production. Must run in its own namespace.
 
 ## Releases
 
-<dl>
-  <dt>Version 0.2.4</dt>
-  <dd>Upgrade the postfix version</dd>
+### Version 0.2.5 - 25 August 2025
+- Release of dependent chart postfix:3.1.0 [EEA Jenkins - [`b479f89f`](https://github.com/eea/helm-charts/commit/b479f89f4cdf1629b9f002c65c757c78530b2826)]
 
-  <dt>Version 0.2.3</dt>
-  <dd>Give zeo its own resource params.</dd>
 
-  <dt>Version 0.2.2</dt>
-  <dd>debugMode must be empty (=false) or 'True'.</dd>
+### Version 0.2.4
+- Upgrade the postfix version
 
-  <dt>Version 0.2.1</dt>
-  <dd>Alignment with forum-test values.</dd>
+### Version 0.2.3
+- Give zeo its own resource params.
 
-  <dt>Version 0.2.0</dt>
-  <dd>Use subchart for postfix.</dd>
+### Version 0.2.2
+- debugMode must be empty (=false) or 'True'.
 
-  <dt>Version 0.1.2</dt>
-  <dd>Archives with hostname for zeo.</dd>
+### Version 0.2.1
+- Alignment with forum-test values.
 
-  <dt>Version 0.1.1</dt>
-  <dd>Typo in archives.</dd>
+### Version 0.2.0
+- Use subchart for postfix.
 
-  <dt>Version 0.1.0</dt>
-  <dd>Initial version.</dd>
+### Version 0.1.2
+- Archives with hostname for zeo.
 
-</dl>
+### Version 0.1.1
+- Typo in archives.
+
+### Version 0.1.0
+- Initial version.
+
+
 
