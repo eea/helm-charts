@@ -2,22 +2,17 @@ apiVersion: v2
 name: datadict
 description: Reportnet Data Dictionary
 icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/datadict/logo_eionet.png
-
 type: application
-
 keywords:
-- Reportnet
-
+  - Reportnet
 # This is the chart version. This version number should be incremented each time you make changes
 # to the chart and its templates, including the app version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
 version: 1.3.8
-
 appVersion: "2025-03-27T1635"
-
 # Remember to do helm dep up
 dependencies:
   - name: postfix
-    version: 3.0.6
+    version: 3.1.0
     repository: https://eea.github.io/helm-charts
     condition: postfix.enabled
