@@ -2,27 +2,21 @@ apiVersion: v2
 name: uns
 description: Unified Notification Service (UNS) software
 icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/uns/logo_eionet.png
-
 type: application
-
 keywords:
-- Reportnet
-
+  - Reportnet
 # This is the chart version. This version number should be incremented each time you make changes
 # to the chart and its templates, including the app version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
 version: 0.3.7
-
 # Version for the uns container
 appVersion: "2025-03-21T1026"
-
 # Remember to do helm dep up
 dependencies:
   - name: postfix
-    version: 3.0.2
+    version: 3.1.0
     repository: https://eea.github.io/helm-charts
     condition: postfix.enabled
   - name: mariadb
     version: 19.1.0
     repository: https://charts.bitnami.com/bitnami
-
