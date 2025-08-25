@@ -43,7 +43,7 @@ spec:
         {{- end }}
 
         volumeMounts:
-        - mountPath: /postgresql.backup
+        - mountPath: /backup
           name: postgresql-backup
 
         resources:
