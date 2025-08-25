@@ -31,6 +31,9 @@ in order to succesfully send emails.
 
 ## Releases
 
+### Version 3.1.0 - 25 August 2025
+- Automated release of [eeacms/postfix:3.5-1.1](https://github.com/eea/eea.docker.postfix/releases) [EEA Jenkins - [`3040d65e`](https://github.com/eea/helm-charts/commit/3040d65e44a174648b2536a3592c5e45949d8758)]
+
 ### Version 3.0.9 - 20 August 2025
 - Use mailtrap:2.5 with all network relay fix [valentinab25 - [`e9512db9`](https://github.com/eea/helm-charts/commit/e9512db9bd07147ce221a73b53b291d0dcb9d8d7)]
 
