@@ -25774,6 +25774,26 @@ entries:
   taskman:
   - apiVersion: v2
     appVersion: 5.1-1.22
+    created: "2025-08-25T14:26:15.12275824Z"
+    dependencies:
+    - name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.1.0
+    description: taskman.eionet.europa.eu - Redmine based Agile project management
+      tool
+    digest: 35fcaffc84b2d6c40444dc931e063a8fa4d0be21b10d8cf3f590d77c455878ee
+    home: https://github.com/eea/eea.docker.redmine
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/taskman/taskman.png
+    keywords:
+    - Redmine
+    - Tickets
+    name: taskman
+    type: application
+    urls:
+    - taskman-0.3.5.tgz
+    version: 0.3.5
+  - apiVersion: v2
+    appVersion: 5.1-1.22
     created: "2025-08-25T17:06:03.808936963+03:00"
     dependencies:
     - name: postfix
@@ -26589,4 +26609,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2025-08-25T14:26:12.109377242Z"
+generated: "2025-08-25T14:26:15.120911075Z"

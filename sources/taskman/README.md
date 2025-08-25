@@ -459,6 +459,9 @@ grunt
 
 ## Releases
 
+### Version 0.3.5 - 25 August 2025
+- Release of dependent chart postfix:3.1.0 [EEA Jenkins - [`c160dd82`](https://github.com/eea/helm-charts/commit/c160dd822b0f3638f0e4e920fea09aedf0a9509e)]
+
 ### Version 0.3.4 - 25 August 2025
 - Add colation variable [valentinab25 - [`b23f30f9`](https://github.com/eea/helm-charts/commit/b23f30f9a4d0a40c89cc6fcbde7e3d14cd00a31b)]
 
