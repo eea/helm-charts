@@ -31,7 +31,7 @@ admin:
   serviceName: master
   storage:
     size: 500Gi
-    storageClassName: efs-class
+    storageClassName: efs
     accessMode: ReadWriteMany
   environment:
     PGUSER: zope
