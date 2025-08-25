@@ -95,8 +95,8 @@ spec:
       spec:
         accessModes:
           - ReadWriteOnce
-        {{- if .Values.storage.filesDir.className }}
-        storageClassName: "{{ .Values.storage.filesDir.className }}"
+        {{- if .Values.storage.filesDir.storageClassName }}
+        storageClassName: "{{ .Values.storage.filesDir.storageClassName }}"
         {{- end }}
         resources:
           requests:
@@ -106,8 +106,8 @@ spec:
       spec:
         accessModes:
           - ReadWriteOnce
-        {{- if .Values.storage.tmpDir.className }}
-        storageClassName: "{{ .Values.storage.tmpDir.className }}"
+        {{- if .Values.storage.tmpDir.storageClassName }}
+        storageClassName: "{{ .Values.storage.tmpDir.storageClassName }}"
         {{- end }}
         resources:
           requests:
@@ -117,8 +117,8 @@ spec:
       spec:
         accessModes:
           - ReadWriteMany
-        {{- if .Values.storage.filesDir.className }}
-        storageClassName: "{{ .Values.storage.plugins.className }}"
+        {{- if .Values.storage.filesDir.storageClassName }}
+        storageClassName: "{{ .Values.storage.plugins.storageClassName }}"
         {{- end }}
         resources:
           requests:
@@ -128,8 +128,8 @@ spec:
       spec:
         accessModes:
           - ReadWriteMany
-        {{- if .Values.storage.tmpDir.className }}
-        storageClassName: "{{ .Values.storage.github.className }}"
+        {{- if .Values.storage.tmpDir.storageClassName }}
+        storageClassName: "{{ .Values.storage.github.storageClassName }}"
         {{- end }}
         resources:
           requests:

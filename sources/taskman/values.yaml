@@ -20,7 +20,7 @@ timezone: Europe/Copenhagen
 
 ingress:
   enabled: true
-  className: ""
+  className: "nginx"
   annotations: {}
   letsencrypt: "01dev-eea-letsencrypt"
   configuration:
@@ -32,16 +32,16 @@ ingress:
 
 storage:
   filesDir:
-    className: "nfs-client"
+    storageClassName: "nfs-client"
     size: 200Gi
   tmpDir:
-    className: "nfs-client"
+    storageClassName: "nfs-client"
     size: 10Gi
   github:
-    className: "nfs-client"
+    storageClassName: "nfs-client"
     size: 1Gi
   plugins:
-    className: "nfs-client"
+    storageClassName: "nfs-client"
     size: 1Gi
 
 
@@ -101,11 +101,12 @@ redmine:
     successThreshold: 1
     
 drawio:
+  enabled: true
   serviceType: ClusterIP
   hostname: drawio.eea.europa.eu
   ingress:
     enabled: true
-    className: ""
+    className: "nginx"
     annotations: {}
     letsencrypt: "01dev-eea-letsencrypt"
     configuration:
@@ -122,7 +123,7 @@ drawio:
     timeoutSeconds: 5
     initialDelaySeconds: 0
     failureThreshold: 5
-    successThreshold: 2
+    successThreshold: 1
   startupProbe:
     tcpSocket:
       port: 80
@@ -205,7 +206,7 @@ mysqlbackup:
   affinity: {}
   storage:
     size: 10Gi
-    className: "nfs-client"
+    storageClassName: "nfs-client"
 
 
 memcached:
