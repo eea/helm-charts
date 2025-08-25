@@ -459,6 +459,9 @@ grunt
 
 ## Releases
 
+### Version 0.3.1 - 25 August 2025
+- small variable name fixes [valentinab25 - [`33bc0802`](https://github.com/eea/helm-charts/commit/33bc08023319fc1200dc23afefcf3e454128e28e)]
+
 ### Version 0.3.0 - 18 August 2025
 - Automated release of [eeacms/redmine:5.1-1.22](https://github.com/eea/eea.docker.redmine/releases) [EEA Jenkins - [`c459a21d`](https://github.com/eea/helm-charts/commit/c459a21d40be5cab28c43c99e33effd5485f8b22)]
 
