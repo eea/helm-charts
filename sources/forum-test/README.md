@@ -4,25 +4,28 @@ This chart is configured for production. Must run in its own namespace.
 
 ## Releases
 
-<dl>
+### Version 1.0.2 - 25 August 2025
+- Release of dependent chart postfix:3.1.0 [EEA Jenkins - [`0ef429e4`](https://github.com/eea/helm-charts/commit/0ef429e40637ee5a69b2f184a7fb5adc418942f0)]
 
-  <dt>Version 1.0.1 - 3 September 2024</dt>
-  <dd>Upgrade postfix version to 2.0.1.</dd>
 
-  <dt>Version 1.0.0 - 2 September 2024</dt>
-  <dd>Upgrade postfix version to 2.0.0.</dd>
 
-  <dt>Version 0.1.3</dt>
-  <dd>Upgrade postfix version.</dd>
+### Version 1.0.1 - 3 September 2024
+- Upgrade postfix version to 2.0.1.
 
-  <dt>Version 0.1.2</dt>
-  <dd>Upgrade postfix version.</dd>
+### Version 1.0.0 - 2 September 2024
+- Upgrade postfix version to 2.0.0.
 
-  <dt>Version 0.1.1</dt>
-  <dd>Give zeo its own resource params.</dd>
+### Version 0.1.3
+- Upgrade postfix version.
 
-  <dt>Version 0.1.0</dt>
-  <dd>Initial version.</dd>
+### Version 0.1.2
+- Upgrade postfix version.
 
-</dl>
+### Version 0.1.1
+- Give zeo its own resource params.
+
+### Version 0.1.0
+- Initial version.
+
+
 
