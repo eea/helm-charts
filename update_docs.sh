@@ -2,7 +2,16 @@
 
 set -e
 
-chart="$1"
+
+if [[ $(pwd) == */sources/* ]] && [ -f ../../docs/index.yaml ]; then
+       echo "Running update script from sources, will set it from pwd"
+       chart=$(pwd)
+       chart=${chart#*sources/}
+       cd ../..
+else       
+  chart="$1"
+fi
+
 if [[ $1 == sources/* ]]; then 
 	chart=$(echo $1 | awk -F'/' '{print $2}')
 fi
@@ -13,6 +22,7 @@ if [ -z "$chart" ] || [ ! -d sources/$chart ]; then
     exit 1
 fi
 
+echo "Starting update on chart $chart"
 
 git pull
 

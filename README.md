@@ -67,6 +67,9 @@ or
 
     ./update_docs.sh sources/toypackage
 
+Or inside the helm chart directory:
+
+    ../../update_docs.sh
 
 The script does:
 
