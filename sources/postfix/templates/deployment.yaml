@@ -73,6 +73,12 @@ spec:
         - name: MTP_USER
           value: {{ .Values.mtpUser }}
         {{- end }}
+        {{- range $key, $value := .Values.environment }}
+        {{- if ($value) }}
+        - name: {{ $key }}
+          value: {{ $value | quote }}
+        {{- end }}
+        {{- end }}
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
         securityContext:
