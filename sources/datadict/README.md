@@ -4,74 +4,77 @@ This chart is configured for production use.
 
 ## Releases
 
-<dl>
-  <dt>Version 1.3.8</dt>
-  <dd>Xalan serializer fix.</dd>
+### Version 1.3.9 - 25 August 2025
+- Release of dependent chart postfix:3.1.0 [EEA Jenkins - [`19b8463c`](https://github.com/eea/helm-charts/commit/19b8463c9b0aeef751a8196da9d82a49ce647459)]
 
-  <dt>Version 1.3.7</dt>
-  <dd>Libraries upgrades.</dd>
 
-  <dt>Version 1.3.6</dt>
-  <dd>UI update.</dd>
+### Version 1.3.8
+- Xalan serializer fix.
 
-  <dt>Version 1.3.5</dt>
-  <dd>Tomcat upgrade to 9.0.99. Helpdesk email update. Postfix upgrade.</dd>
+### Version 1.3.7
+- Libraries upgrades.
 
-  <dt>Version 1.3.4</dt>
-  <dd>XSS fixes.</dd>
+### Version 1.3.6
+- UI update.
 
-  <dt>Version 1.3.3</dt>
-  <dd>Security fixes</dd>
+### Version 1.3.5
+- Tomcat upgrade to 9.0.99. Helpdesk email update. Postfix upgrade.
 
-  <dt>Version 1.3.2 - 12 September 2024</dt>
-  <dd>Updated mail forwarder subchart to 2.0.1.</dd>
+### Version 1.3.4
+- XSS fixes.
 
-  <dt>Version 1.3.1</dt>
-  <dd>XSS fix, migration from archiva repositoy to maven package repository.</dd>
+### Version 1.3.3
+- Security fixes
 
-  <dt>Version 1.3.0</dt>
-  <dd>Added mail forwarder pod. Usage to be specified in mailHost.</dd>
+### Version 1.3.2 - 12 September 2024
+- Updated mail forwarder subchart to 2.0.1.
 
-  <dt>Version 1.2.5</dt>
+### Version 1.3.1
+- XSS fix, migration from archiva repositoy to maven package repository.
+
+### Version 1.3.0
+- Added mail forwarder pod. Usage to be specified in mailHost.
+
+### Version 1.2.5
   <dd>Upload RDF API gzip compressed, base64 encoded RDF content, db column type change,
       site code allocation service notifications update, xss fix</dd>
 
-  <dt>Version 1.2.4</dt>
-  <dd>Typo in database chart.</dd>
+### Version 1.2.4
+- Typo in database chart.
 
-  <dt>Version 1.2.3</dt>
-  <dd>XSS fix.</dd>
+### Version 1.2.3
+- XSS fix.
 
-  <dt>Version 1.2.2</dt>
-  <dd>Additional network security policies.</dd>
+### Version 1.2.2
+- Additional network security policies.
 
-  <dt>Version 1.2.1</dt>
-  <dd>Buildsw now uses centos7dev image version 3.0.0.</dd>
+### Version 1.2.1
+- Buildsw now uses centos7dev image version 3.0.0.
 
-  <dt>Version 1.2.0</dt>
-  <dd>Builddict and buildsw no longer enabled by default.</dd>
+### Version 1.2.0
+- Builddict and buildsw no longer enabled by default.
 
-  <dt>Version 1.1.1</dt>
+### Version 1.1.1
   <dd>Set up startupProbe to allow liquibase to complete.
      Added netsecpol to block egress from database.</dd>
 
-  <dt>Version 1.1.0</dt>
-  <dd>Make it possible to connect to database over load-balancer.</dd>
+### Version 1.1.0
+- Make it possible to connect to database over load-balancer.
 
-  <dt>Version 1.0.2</dt>
-  <dd>Bugfix in ldap system properties.</dd>
+### Version 1.0.2
+- Bugfix in ldap system properties.
 
-  <dt>Version 1.0.1</dt>
-  <dd>Use http for env.dd.url instead of https.</dd>
+### Version 1.0.1
+- Use http for env.dd.url instead of https.
 
-  <dt>Version 1.0.0</dt>
-  <dd>First version to be used in production.</dd>
+### Version 1.0.0
+- First version to be used in production.
 
-  <dt>Version 0.1.1</dt>
-  <dd>The service name for the database must apparently be dbservice-upd.</dd>
+### Version 0.1.1
+- The service name for the database must apparently be dbservice-upd.
 
-  <dt>Version 0.1.0</dt>
-  <dd>Initial version.</dd>
+### Version 0.1.0
+- Initial version.
 
-</dl>
+
 
