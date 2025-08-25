@@ -2,30 +2,25 @@ apiVersion: v2
 name: helpdesk-otrs
 description: Eionet helpdesk
 icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/helpdesk-otrs/otrs-icon.png
-
 type: application
-
 keywords:
-- Tickets
-
+  - Tickets
 # This is the chart version. This version number should be incremented each time you make changes
 # to the chart and its templates, including the app version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
 version: 0.6.0
-
 # Version for the main container
 appVersion: "v6.0.43-openid-06"
-
 # Remember to do: helm dep up
 dependencies:
   - name: postfix
-    version: 3.0.6
+    version: 3.1.0
     repository: https://eea.github.io/helm-charts
-# - name: mariadb
-#   version: 13.1.3
-#   repository: https://charts.bitnami.com/bitnami
-
   - name: haproxy
+    # - name: mariadb
+    #   version: 13.1.3
+    #   repository: https://charts.bitnami.com/bitnami
+
     version: 2.1.1
     repository: https://charts.bitnami.com/bitnami
     condition: haproxy.enabled
