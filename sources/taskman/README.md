@@ -459,6 +459,9 @@ grunt
 
 ## Releases
 
+### Version 0.3.2 - 25 August 2025
+- Fix default drawio port [valentinab25 - [`2f03c758`](https://github.com/eea/helm-charts/commit/2f03c7588df1a9146fb0294a953c792fb69d0ebc)]
+
 ### Version 0.3.1 - 25 August 2025
 - small variable name fixes [valentinab25 - [`33bc0802`](https://github.com/eea/helm-charts/commit/33bc08023319fc1200dc23afefcf3e454128e28e)]
 
