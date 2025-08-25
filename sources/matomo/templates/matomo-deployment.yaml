@@ -89,26 +89,26 @@ spec:
             httpGet:
               path: /matomo.php
               port: {{ .Values.matomo.environment.APACHE_HTTP_PORT_NUMBER }}
-            initialDelaySeconds: 600
+            initialDelaySeconds: 30
             periodSeconds: 10
             timeoutSeconds: 5
-            failureThreshold: 5
+            failureThreshold: 15
             successThreshold: 1
           livenessProbe:
             tcpSocket:
               port: {{ .Values.matomo.environment.APACHE_HTTP_PORT_NUMBER }}
-            initialDelaySeconds: 600
-            periodSeconds: 10
-            timeoutSeconds: 5
-            failureThreshold: 5
+            initialDelaySeconds: 10
+            periodSeconds: 20
+            timeoutSeconds: 10
+            failureThreshold: 9
             successThreshold: 1
           readinessProbe:
             httpGet:
               path: /matomo.php
               port: {{ .Values.matomo.environment.APACHE_HTTP_PORT_NUMBER }}
-            initialDelaySeconds: 30
-            periodSeconds: 5
-            timeoutSeconds: 1
+            initialDelaySeconds: 10
+            periodSeconds: 20
+            timeoutSeconds: 10
             failureThreshold: 5
             successThreshold: 1
 
