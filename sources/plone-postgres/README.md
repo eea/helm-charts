@@ -4,6 +4,9 @@ Postgres for plone Apps.
 
 ## Releases
 
+### Version 1.0.8 - 25 August 2025
+- Mount postgresql-backup to /backup [Alin Voinea - [`b56532d5`](https://github.com/eea/helm-charts/commit/b56532d5f96661a6a96a6d25140dbae692187956)]
+
 ### Version 1.0.7 - 25 August 2025
 - Mount admin volume [valentinab25 - [`b6de5923`](https://github.com/eea/helm-charts/commit/b6de59238a01b5f3d89b53ea7729b77b7e17f0ba)]
 
