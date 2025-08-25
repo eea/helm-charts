@@ -219,7 +219,7 @@ nginx:
       add_header Vary                             "Origin" always;
 
 
-      location ~ ^/(cors-proxy|login-authomatic|controlpanel|static|_es|ok|personal-information|fallback_login|_da|en|voltoCustom.css) {
+      location ~ ^/(cors-proxy|login-authomatic|controlpanel|static|_es|_da|_ha|ok|personal-information|fallback_login|en|voltoCustom.css) {
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -230,9 +230,47 @@ nginx:
         proxy_pass http://varnish_frontend$request_uri;
       }
 
+      # Redirect old /ims paths
+      location /ims {
+        rewrite ^/ims(/.*)?$ /en/analysis/indicators$1 permanent;
+      }
+
+      # Redirect root and specific paths to /en
+      location = / {
+          return 301 https://$host/en;
+      }
+      location = /view {
+          return 301 https://$host/en;
+      }
+      location = /view/ {
+          return 301 https://$host/en;
+      }
+      location = /frontpage_view {
+          return 301 https://$host/en;
+      }
+      location = /frontpage_view/ {
+          return 301 https://$host/en;
+      }
+
+      # Redirect login paths to /en/login
+      location = /login {
+          return 301 https://$host/en/login;
+      }
+      location = /login_form {
+          return 301 https://$host/en/login;
+      }
+
+      # Redirect azure login paths to /en/login
+      location = /azure_login {
+          return 301 https://$host/en/login;
+      }
+      location = /en/azure_login {
+          return 301 https://$host/en/login;
+      }
+
       # Fallback: proxy everything else to old deployment
       location / {
-        proxy_pass https://10.120.31.65$request_uri;
+        proxy_pass https://34.246.63.148$request_uri;
         proxy_set_header Host www.eea.europa.eu;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
