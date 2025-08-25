@@ -20,7 +20,7 @@ spec:
       containers:
         - name: postfix
           {{ if eq .Values.postfix.variant "prod" }}
-          image: eeacms/postfix:3.5-1.0
+          image: eeacms/postfix:3.5-1.1
           {{ else }}
           image: eaudeweb/mailtrap:2.3
           {{ end }}
