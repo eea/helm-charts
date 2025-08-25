@@ -26,6 +26,9 @@ expects to find a certificate secret matching the name at `haproxy.extraVolumes.
 
 ## Releases
 
+### Version 0.6.1 - 25 August 2025
+- Release of dependent chart postfix:3.1.0 [EEA Jenkins - [`68bb2228`](https://github.com/eea/helm-charts/commit/68bb2228ff218533dcaf3c99c6b6bd28c5e09d54)]
+
 | Version | Notes |
 | ------- | ----- |
 | 0.6.0 - 16-APR-2025 | Make the probes configurable with sane defaults. |
