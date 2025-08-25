@@ -2,20 +2,15 @@ apiVersion: v2
 name: sdi-catalogue
 description: A CSW service and front end application to search and find EEA GIS datasets.
 icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/sdi-catalogue/logo.svg
-
 type: application
-
 keywords:
-- GIS
-
+  - GIS
 # This is the chart version. This version number should be incremented each time you make changes
 # to the chart and its templates, including the app version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
 version: 0.7.19
-
 # Remember to do helm dep up .
 dependencies:
   - name: postfix
-    version: 2.0.1
+    version: 3.1.0
     repository: https://eea.github.io/helm-charts
-
