@@ -31,6 +31,9 @@ in order to succesfully send emails.
 
 ## Releases
 
+### Version 3.1.1 - 25 August 2025
+- Add postfix variables from values file [valentinab25 - [`dc293926`](https://github.com/eea/helm-charts/commit/dc2939260f1525d3dd3e69124770a7f007789fc8)]
+
 ### Version 3.1.0 - 25 August 2025
 - Automated release of [eeacms/postfix:3.5-1.1](https://github.com/eea/eea.docker.postfix/releases) [EEA Jenkins - [`3040d65e`](https://github.com/eea/helm-charts/commit/3040d65e44a174648b2536a3592c5e45949d8758)]
 
