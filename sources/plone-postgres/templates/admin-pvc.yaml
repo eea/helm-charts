@@ -7,7 +7,7 @@ metadata:
     {{- include "appl.labels" . | nindent 4 }}
     component: admin
 spec:
-spec:
+  volumeMode: Filesystem
   accessModes:
   - {{ .Values.admin.storage.accessMode | default "ReadWriteMany" }}
   resources:
@@ -15,4 +15,3 @@ spec:
       storage: {{ .Values.admin.storage.size | default "10Gi" }}
   storageClassName: {{ .Values.admin.storage.storageClassName | quote }}
 {{- end }}
-
