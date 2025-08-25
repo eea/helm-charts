@@ -23,44 +23,47 @@ To set the app up for Article 12 do:
 
 ## Releases
 
-<dl>
-  <dt>Version 0.4.8 - 24 February 2025</dt>
-  <dd>Remove unused mysql service</dd>
+### Version 0.4.9 - 25 August 2025
+- Release of dependent chart postfix:3.1.0 [EEA Jenkins - [`d8254400`](https://github.com/eea/helm-charts/commit/d8254400f6daf9436a933c38d5033fad6264b5a1)]
 
-  <dt>Version 0.4.7 - 03 February 2025</dt>
-  <dd>Upgraded eeacms/eeacms/art17-consultation</dd>
 
-  <dt>Version 0.4.6 - 15 November 2024</dt>
-  <dd>Upgraded eeacms/eeacms/art17-consultation</dd>
+### Version 0.4.8 - 24 February 2025
+- Remove unused mysql service
 
-  <dt>Version 0.4.5 - 13 November 2024</dt>
-  <dd>Upgraded eeacms/art12-viewer</dd>
+### Version 0.4.7 - 03 February 2025
+- Upgraded eeacms/eeacms/art17-consultation
 
-  <dt>Version 0.4.4 - 30 October 2024</dt>
-  <dd>Upgraded eeacms/art12-viewer</dd>
+### Version 0.4.6 - 15 November 2024
+- Upgraded eeacms/eeacms/art17-consultation
 
-  <dt>Version 0.4.3 - 3 September 2024</dt>
-  <dd>Reverted incorrect use of values.yaml file. Updated version of postfix subchart to 2.0.0.</dd>
+### Version 0.4.5 - 13 November 2024
+- Upgraded eeacms/art12-viewer
 
-  <dt>Version 0.4.2</dt>
-  <dd>Upgraded art17 ingress.</dd>
+### Version 0.4.4 - 30 October 2024
+- Upgraded eeacms/art12-viewer
 
-  <dt>Version 0.4.1</dt>
+### Version 0.4.3 - 3 September 2024
+- Reverted incorrect use of values.yaml file. Updated version of postfix subchart to 2.0.0.
+
+### Version 0.4.2
+- Upgraded art17 ingress.
+
+### Version 0.4.1
   <dd>Update eeacms/art17-consultation and eeacms/art12-viewer<dd>
 
-  <dt>Version 0.4.0</dt>
-  <dd>Replace mailfwd with postfix subchart.</dd>
+### Version 0.4.0
+- Replace mailfwd with postfix subchart.
 
-  <dt>Version 0.3.3</dt>
-  <dd>Hardwire versions of mariadb and postgresql.</dd>
+### Version 0.3.3
+- Hardwire versions of mariadb and postgresql.
 
-  <dt>Version 0.3.2</dt>
-  <dd>Also allow ingress to reach static resources.</dd>
+### Version 0.3.2
+- Also allow ingress to reach static resources.
 
-  <dt>Version 0.3.1</dt>
-  <dd>More network security policies for ingress.</dd>
+### Version 0.3.1
+- More network security policies for ingress.
 
-  <dt>Version 0.3.0</dt>
-  <dd>Added network security policy to prevent egress from database pods.</dd>
+### Version 0.3.0
+- Added network security policy to prevent egress from database pods.
 
-</dl>
+
