@@ -27,7 +27,7 @@ spec:
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
       containers:
       - name: {{ .Release.Name }}-postfix
-        image: eeacms/postfix:2.10-3.6
+        image: eeacms/postfix:3.5-1.1
         ports:
         - containerPort: 25
           protocol: TCP
