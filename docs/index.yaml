@@ -22405,6 +22405,25 @@ entries:
   projects:
   - apiVersion: v2
     appVersion: projects-23.09.22
+    created: "2025-08-25T14:26:03.123878646Z"
+    dependencies:
+    - condition: postfix.enabled
+      name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.1.0
+    description: Forum Interest Groups and projects
+    digest: a2195e36b6a038f2367768e4e4f202018198dfa780e6dbcf7a7d08ba812ba078
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/projects/logo_eionet.png
+    keywords:
+    - Eionet
+    - Groupware
+    name: projects
+    type: application
+    urls:
+    - projects-0.3.2.tgz
+    version: 0.3.2
+  - apiVersion: v2
+    appVersion: projects-23.09.22
     created: "2025-08-22T15:34:11.048045+02:00"
     dependencies:
     - condition: postfix.enabled
@@ -26517,4 +26536,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2025-08-25T14:26:00.230151808Z"
+generated: "2025-08-25T14:26:03.121415015Z"
