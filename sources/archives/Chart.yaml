@@ -2,24 +2,19 @@ apiVersion: v2
 name: archives
 description: Archived Interest Groups and projects
 icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/archives/logo_eionet.png
-
 type: application
-
 keywords:
-- Eionet
-- Groupware
-
+  - Eionet
+  - Groupware
 # This is the chart version. This version number should be incremented each time you make changes
 # to the chart and its templates, including the app version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
 version: 0.2.4
-
 # Version for the main container
 appVersion: "archives-22.09.06"
-
 # Remember to do helm dep up .
 dependencies:
   - name: postfix
-    version: 0.2.1
+    version: 3.1.0
     repository: https://eea.github.io/helm-charts
     condition: postfix.enabled
