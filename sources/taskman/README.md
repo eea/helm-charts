@@ -459,6 +459,9 @@ grunt
 
 ## Releases
 
+### Version 0.3.6 - 25 August 2025
+- Upgrade postfix chart, allow custom vars on postfix [valentinab25 - [`f99625b5`](https://github.com/eea/helm-charts/commit/f99625b5e488cd742c1d7be09315f5121c035743)]
+
 ### Version 0.3.5 - 25 August 2025
 - Release of dependent chart postfix:3.1.0 [EEA Jenkins - [`c160dd82`](https://github.com/eea/helm-charts/commit/c160dd822b0f3638f0e4e920fea09aedf0a9509e)]
 
