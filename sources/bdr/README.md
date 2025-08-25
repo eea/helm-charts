@@ -67,6 +67,9 @@ This can be used to set the rabbitmq host to be used.
 
 ## Releases
 
+### Version 0.26.2 - 25 August 2025
+- Release of dependent chart postfix:3.1.0 [EEA Jenkins - [`100170be`](https://github.com/eea/helm-charts/commit/100170be7a15eb6b66088f8799a3133a46240ad5)]
+
 ### Version 0.26.1 - 22 August 2025
 - Switched to bitnamilegacy repository
 
