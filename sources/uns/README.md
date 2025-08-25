@@ -10,46 +10,49 @@ set the values in the database section.
 
 ## Releases
 
-<dl>
+### Version 0.3.8 - 25 August 2025
+- Release of dependent chart postfix:3.1.0 [EEA Jenkins - [`b305c02c`](https://github.com/eea/helm-charts/commit/b305c02c474c577c079c0e84b4029fdef4194e1f)]
 
-  <dt>Version 0.3.7</dt>
-  <dd>Use of bitnamilegacy repository.</dd>
 
-  <dt>Version 0.3.6</dt>
-  <dd>Libraries upgrades.</dd>
 
-  <dt>Version 0.3.5</dt>
-  <dd>Updated helpdesk email address.</dd>
+### Version 0.3.7
+- Use of bitnamilegacy repository.
 
-  <dt>Version 0.3.4</dt>
-  <dd>UTF-8 charset for plain/html email body.</dd>
+### Version 0.3.6
+- Libraries upgrades.
 
-  <dt>Version 0.3.3</dt>
-  <dd>Unicode error fix in notification creation.</dd>
+### Version 0.3.5
+- Updated helpdesk email address.
 
-  <dt>Version 0.3.2</dt>
-  <dd>Notification generation fix, Upgrade postfix subchart to 3.0.2.</dd>
+### Version 0.3.4
+- UTF-8 charset for plain/html email body.
 
-  <dt>Version 0.3.1</dt>
-  <dd>Upgrade postfix subchart to 2.0.1, dependencies update, ClassCastException fix.</dd>
+### Version 0.3.3
+- Unicode error fix in notification creation.
 
-  <dt>Version 0.3.0</dt>
-  <dd>Switch to mariadb subchart.</dd>
+### Version 0.3.2
+- Notification generation fix, Upgrade postfix subchart to 3.0.2.
 
-  <dt>Version 0.2.1 - 20 Aug. 2024</dt>
-  <dd>Upgrade postfix subchart to 1.1.0.</dd>
+### Version 0.3.1
+- Upgrade postfix subchart to 2.0.1, dependencies update, ClassCastException fix.
 
-  <dt>Version 0.2.0</dt>
-  <dd>Switch to postfix subchart.</dd>
+### Version 0.3.0
+- Switch to mariadb subchart.
 
-  <dt>Version 0.1.5</dt>
-  <dd>Preparation to switch to postfix subchart.</dd>
+### Version 0.2.1 - 20 Aug. 2024
+- Upgrade postfix subchart to 1.1.0.
 
-  <dt>Version 0.1.4</dt>
-  <dd>Update mailsvc-deployment.yaml.</dd>
+### Version 0.2.0
+- Switch to postfix subchart.
 
-  <dt>Version 0.1.0</dt>
-  <dd>Initial version.</dd>
+### Version 0.1.5
+- Preparation to switch to postfix subchart.
 
-</dl>
+### Version 0.1.4
+- Update mailsvc-deployment.yaml.
+
+### Version 0.1.0
+- Initial version.
+
+
 
