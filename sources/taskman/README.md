@@ -459,6 +459,9 @@ grunt
 
 ## Releases
 
+### Version 0.3.4 - 25 August 2025
+- Add colation variable [valentinab25 - [`b23f30f9`](https://github.com/eea/helm-charts/commit/b23f30f9a4d0a40c89cc6fcbde7e3d14cd00a31b)]
+
 ### Version 0.3.3 - 25 August 2025
 - Set last version of postfix [valentinab25 - [`d3445e0a`](https://github.com/eea/helm-charts/commit/d3445e0a93e71c7b8e1616442d0837e3f4af7021)]
 
