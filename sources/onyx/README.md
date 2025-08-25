@@ -118,6 +118,9 @@ imageMapping:
 
 ## Releases
 
+### Version 0.2.2 - 25 August 2025
+- Release of dependent chart postfix:3.1.0 [EEA Jenkins - [`327268b6`](https://github.com/eea/helm-charts/commit/327268b6e8b9231486e86f027447e4e51cf0cdca)]
+
 ### Version 0.2.1
 - Added ephemeral PVC's for indexing-model and inference-model
 
