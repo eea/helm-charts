@@ -4,6 +4,9 @@ Postgres for plone Apps.
 
 ## Releases
 
+### Version 1.0.6 - 25 August 2025
+- Set postgresql-backup as name for admin volume [valentinab25 - [`6940d874`](https://github.com/eea/helm-charts/commit/6940d8749e39a3b03b0b760e6cc5444541ab55ea)]
+
 ### Version 1.0.5 - 22 August 2025
 - Add serviceName [valentinab25 - [`19e5bc6d`](https://github.com/eea/helm-charts/commit/19e5bc6db1f23e1b1c5c67a410cabe53ba1ee573)]
 
