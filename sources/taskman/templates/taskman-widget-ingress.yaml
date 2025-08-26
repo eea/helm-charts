@@ -32,7 +32,7 @@ spec:
     http:
       paths:
       - path: /helpdesk_widget/create_ticket.js
-        pathType: Prefix
+        pathType: ImplementationSpecific
         backend:
           service:
             name: {{ .Release.Name }}-apache 
