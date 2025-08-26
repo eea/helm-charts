@@ -459,6 +459,9 @@ grunt
 
 ## Releases
 
+### Version 0.3.8 - 26 August 2025
+- Fix ingress path type [valentinab25 - [`f9061efb`](https://github.com/eea/helm-charts/commit/f9061efba86b964b67465bbc7a95c92b11cd59d1)]
+
 ### Version 0.3.7 - 26 August 2025
 - Add widget ingress rate limiting [valentinab25 - [`f9739612`](https://github.com/eea/helm-charts/commit/f97396124e922ab6c841e4787eb31c1ed8426f4f)]
 
