@@ -80,8 +80,13 @@ spec:
               volumeMounts:
                 - name: matomo-pv
                   mountPath: /bitnami
+                - name: matomo-tmp
+                  mountPath: /bitnami/matomo/tmp
           restartPolicy: Never
           volumes:
             - name: matomo-pv
               persistentVolumeClaim:
                 claimName: {{ .Release.Name }}-matomo-pvc
+            - name: matomo-tmp
+              persistentVolumeClaim:
+                claimName: {{ .Release.Name }}-archive-tmp-pvc

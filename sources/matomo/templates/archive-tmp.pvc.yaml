@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Release.Name }}-archive-tmp-pvc
+  annotations:
+    {{- if .Values.pvc.resourcePolicyKeep }}
+    "helm.sh/resource-policy": keep
+    {{- end }}
+spec:
+  {{- if .Values.matomo.storageClassName }}
+  storageClass: "{{ .Values.matomo.storageClassName }}"
+  {{- end }}
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
