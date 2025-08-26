@@ -118,6 +118,11 @@ imageMapping:
 
 ## Releases
 
+### Version 0.2.3 - 26 August 2025
+- Updated appVersion to v1.3.1-eea.0.0.73.
+- Added VESPA_RESOURCE_LIMITS_DISK environment variable.
+- Added runtimeClassName to be used by inference and indexing on gpu powered machines. Can take `nvidia` value for nvidia GPU's.
+
 ### Version 0.2.2 - 25 August 2025
 - Release of dependent chart postfix:3.1.0 [EEA Jenkins - [`327268b6`](https://github.com/eea/helm-charts/commit/327268b6e8b9231486e86f027447e4e51cf0cdca)]
 

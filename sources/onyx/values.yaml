@@ -114,6 +114,7 @@ inferenceCapability:
     limits:
       cpu: 4000m
       memory: 10Gi
+  runtimeClassName: ""
   ephemeralPVC:
     enabled: false
     accessModes:
@@ -153,6 +154,7 @@ indexCapability:
     limits:
       cpu: 4000m
       memory: 10Gi
+  runtimeClassName: ""
   ephemeralPVC:
     enabled: false
     accessModes:
@@ -870,3 +872,4 @@ configMap:
   TZ: "Europe/Copenhagen"
   ENABLE_EMAIL_INVITES: false
   SENTRY_DSN: ""
+  VESPA_RESOURCE_LIMITS_DISK: "0.95"

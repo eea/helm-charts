@@ -24,6 +24,9 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
+      {{- if .Values.indexCapability.runtimeClassName }}
+      runtimeClassName: {{ .Values.indexCapability.runtimeClassName }}
+      {{- end }}
       containers:
       - name: {{ .Values.indexCapability.name }}
         image: {{ include "onyx-stack.image" (dict "image" .Values.indexCapability.image.repository "tag" .Values.indexCapability.image.tag "context" .) }}

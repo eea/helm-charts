@@ -20,6 +20,9 @@ spec:
         {{ .key }}: {{ .value }}
         {{- end }}
     spec:
+      {{- if .Values.inferenceCapability.runtimeClassName }}
+      runtimeClassName: {{ .Values.inferenceCapability.runtimeClassName }}
+      {{- end }}
       containers:
       - name: model-server-inference
         image: {{ include "onyx-stack.image" (dict "image" .Values.inferenceCapability.image.repository "tag" .Values.inferenceCapability.image.tag "context" .) }}
