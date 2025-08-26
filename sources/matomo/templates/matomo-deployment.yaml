@@ -85,32 +85,19 @@ spec:
             - name: geoipupdate-pv
               mountPath: /geoupdate
               readOnly: true
-          startupProbe:
-            httpGet:
-              path: /matomo.php
-              port: {{ .Values.matomo.environment.APACHE_HTTP_PORT_NUMBER }}
-            initialDelaySeconds: 30
-            periodSeconds: 10
-            timeoutSeconds: 5
-            failureThreshold: 15
-            successThreshold: 1
+          {{- if (.Values.matomo.livenessProbe) }}
           livenessProbe:
-            tcpSocket:
-              port: {{ .Values.matomo.environment.APACHE_HTTP_PORT_NUMBER }}
-            initialDelaySeconds: 10
-            periodSeconds: 20
-            timeoutSeconds: 10
-            failureThreshold: 9
-            successThreshold: 1
-          readinessProbe:
-            httpGet:
-              path: /matomo.php
-              port: {{ .Values.matomo.environment.APACHE_HTTP_PORT_NUMBER }}
-            initialDelaySeconds: 10
-            periodSeconds: 20
-            timeoutSeconds: 10
-            failureThreshold: 5
-            successThreshold: 1
+            {{- toYaml .Values.matomo.livenessProbe | nindent 10 }}
+          {{- end }}
+          {{- if (.Values.matomo.startupProbe) }}
+          startupProbe:
+            {{- toYaml .Values.matomo.startupProbe | nindent 10 }}
+          {{- end }}
+          {{- if (.Values.matomo.readinessProbe) }}
+          startupProbe:
+            {{- toYaml .Values.matomo.readinessProbe | nindent 10 }}
+          {{- end }}
+
 
       volumes:
         - name: matomo-pv
