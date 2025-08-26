@@ -459,6 +459,9 @@ grunt
 
 ## Releases
 
+### Version 0.3.7 - 26 August 2025
+- Add widget ingress rate limiting [valentinab25 - [`f9739612`](https://github.com/eea/helm-charts/commit/f97396124e922ab6c841e4787eb31c1ed8426f4f)]
+
 ### Version 0.3.6 - 25 August 2025
 - Upgrade postfix chart, allow custom vars on postfix [valentinab25 - [`f99625b5`](https://github.com/eea/helm-charts/commit/f99625b5e488cd742c1d7be09315f5121c035743)]
 
