@@ -29,6 +29,12 @@ ingress:
     proxy-send-timeout: "120s"
   tls: true
   certificate: ""
+  widget:
+    enabled: false
+    configuration:
+      limit-rph: 4
+
+
 
 storage:
   filesDir:
