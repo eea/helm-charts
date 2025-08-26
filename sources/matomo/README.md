@@ -347,6 +347,9 @@ You don't need to change anything on this container, it should work by having th
 
 ## Releases
 
+### Version 1.0.5 - 27 August 2025
+- Move healthchecks to values [valentinab25 - [`cb093518`](https://github.com/eea/helm-charts/commit/cb093518f8a8fa90b587a352f389a94a7bff62c7)]
+
 ### Version 1.0.4 - 25 August 2025
 - Release of dependent chart postfix:3.1.0 [EEA Jenkins - [`e4261cca`](https://github.com/eea/helm-charts/commit/e4261cca8271ffef5569c30648a2f57901398dd6)]
 
