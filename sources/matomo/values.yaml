@@ -58,6 +58,32 @@ matomo:
   replicaCount: 1
   username: ""
   password: ""
+  startupProbe:
+    tcpSocket:
+      port: 80
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 20
+    successThreshold: 1
+  livenessProbe:
+    httpGet:
+      path: /matomo.php
+      port: 80
+    initialDelaySeconds: 10
+    periodSeconds: 20
+    timeoutSeconds: 10
+    failureThreshold: 9
+    successThreshold: 1
+  readinessProbe:
+    httpGet:
+      path: /matomo.php
+      port: 80
+    initialDelaySeconds: 10
+    periodSeconds: 20
+    timeoutSeconds: 10
+    failureThreshold: 5
+    successThreshold: 1
 
 
 matomocronArchive:
