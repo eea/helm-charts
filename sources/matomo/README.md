@@ -347,6 +347,9 @@ You don't need to change anything on this container, it should work by having th
 
 ## Releases
 
+### Version 1.0.6 - 27 August 2025
+- add tmp volume for archive [valentinab25 - [`cf22209b`](https://github.com/eea/helm-charts/commit/cf22209bad6f867c9747678279f17b330ec3b52c)]
+
 ### Version 1.0.5 - 27 August 2025
 - Move healthchecks to values [valentinab25 - [`cb093518`](https://github.com/eea/helm-charts/commit/cb093518f8a8fa90b587a352f389a94a7bff62c7)]
 
