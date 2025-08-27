@@ -204,6 +204,13 @@
     required: false
     default: ""
     group: "Plone configuration"
+  - variable: "plone.environment.RAZZLE_PROXY_ES_DSN_globalsearch"
+    label: "RAZZLE Proxy ES DSN Global Search"
+    description: "Elasticsearch DSN for global search proxy"
+    type: "string"
+    required: false
+    default: ""
+    group: "Plone configuration"
 
 
   - variable: "varnish.port"
