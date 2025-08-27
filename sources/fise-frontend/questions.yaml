@@ -84,6 +84,13 @@ questions:
     required: true
     type: "string"
     group: "Volto configuration"
+  - variable: "volto.environment.RAZZLE_PUBLIC_URL"
+    label: "RAZZLE_PUBLIC_URL"
+    description: "Public URL for the frontend application"
+    default: ""
+    required: false
+    type: "string"
+    group: "Volto configuration"
   - variable: "volto.environment.ALLOWED_CORS_DESTINATIONS"
     label: "ALLOWED_CORS_DESTINATIONS"
     description: "Allowed CORS Proxy destinations, e.g.: staging.eea.europa.eu, ims.dev.eea.europa.eu"
