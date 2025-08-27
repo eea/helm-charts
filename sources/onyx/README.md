@@ -118,6 +118,9 @@ imageMapping:
 
 ## Releases
 
+### Version 0.2.4 - 27 August 2025
+- Updated appVersion to v1.3.1-eea.0.0.74.
+
 ### Version 0.2.3 - 26 August 2025
 - Updated appVersion to v1.3.1-eea.0.0.73.
 - Added VESPA_RESOURCE_LIMITS_DISK environment variable.
