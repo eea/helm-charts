@@ -11,7 +11,7 @@ spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: volto
+    name: frontend-dpl-volto
 
   minReplicas: {{ .Values.volto.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.volto.autoscaling.maxReplicas }}
