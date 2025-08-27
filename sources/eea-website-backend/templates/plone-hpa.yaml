@@ -11,7 +11,7 @@ spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: plone
+    name: {{ .Release.Name }}-dpl-plone
 
   minReplicas: {{ .Values.plone.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.plone.autoscaling.maxReplicas }}
