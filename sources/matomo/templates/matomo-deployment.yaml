@@ -82,7 +82,7 @@ spec:
             {{- toYaml .Values.matomo.startupProbe | nindent 12 }}
           {{- end }}
           {{- if (.Values.matomo.readinessProbe) }}
-          startupProbe:
+          readinessProbe:
             {{- toYaml .Values.matomo.readinessProbe | nindent 12 }}
           {{- end }}
 
