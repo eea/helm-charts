@@ -40,7 +40,7 @@ questions:
     default: 1
     group: Matomo
 
-  - variable: matomo.token
+  - variable: matomoAnalytics.token
     label: "Matomo authentication token"
     description: "Matomo API authentication token for a user with permissions to import logs. Found in Matomo Admin > Personal > API Authentication Token."
     type: password
@@ -63,7 +63,7 @@ questions:
 
 
 
-  - variable: mariadb.user
+  - variable: mariadb.environment.MARIADB_USER
     label: "MariaDB username"
     description: "Username for Matomo to connect to MariaDB."
     type: string
@@ -71,7 +71,7 @@ questions:
     default: eea_matomo
     group: Database
 
-  - variable: mariadb.database
+  - variable: mariadb.environment.MARIADB_DATABASE
     label: "MariaDB database"
     description: "Database name for Matomo within MariaDB."
     type: string
@@ -79,14 +79,14 @@ questions:
     default: eea_matomo_db
     group: Database
 
-  - variable: mariadb.password
+  - variable: mariadb.environment.MARIADB_PASSWORD
     label: "MariaDB database password"
     description: "Password for the MariaDB user specified in `mariadb.user`."
     type: password
     required: true
     group: Database
 
-  - variable: mariadb.rootPassword
+  - variable: mariadb.environment.MARIADB_ROOT_PASSWORD
     label: "MariaDB root password"
     description: "Password for the MariaDB root user."
     type: password
@@ -110,14 +110,14 @@ questions:
     required: true
     group: GeoIP
 
-  - variable: geoipupdate.accountId
+  - variable: geoipupdate.environment.GEOIPUPDATE_ACCOUNT_ID
     label: "Maxmind GeoIP account ID"
     description: "Used in updating GeoIP database"
     type: string
     required: true
     group: GeoIP
 
-  - variable: geoipupdate.licenseKey
+  - variable: geoipupdate.environment.GEOIPUPDATE_LICENSE_KEY
     label: "Maxmind license key"
     description: "Used in updating GeoIP database"
     type: password
