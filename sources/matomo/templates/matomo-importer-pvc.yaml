@@ -8,7 +8,7 @@ metadata:
     {{- end }}
 spec:
   {{- if .Values.rsyncAnalytics.storageClassName }}
-  storageClass: "{{ .Values.rsyncAnalytics.storageClassName }}"
+  storageClassName: "{{ .Values.rsyncAnalytics.storageClassName }}"
   {{- end }}
   accessModes:
     - ReadWriteOnce
