@@ -9871,6 +9871,26 @@ entries:
   eea-website-backend:
   - apiVersion: v2
     appVersion: 6.0.15-40
+    created: "2025-08-27T08:44:47.931383+03:00"
+    dependencies:
+    - name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.1.0
+    description: EEA Main Website Plone 6 Backend
+    digest: 41d2ff9ad2d353259652142036e84a09d789cd380206f4089404980891437c59
+    home: https://github.com/eea/eea-website-backend
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/eea-website-backend/eea-website-backend.svg
+    keywords:
+    - CMS
+    - Plone
+    - EEA
+    name: eea-website-backend
+    type: application
+    urls:
+    - eea-website-backend-1.15.2.tgz
+    version: 1.15.2
+  - apiVersion: v2
+    appVersion: 6.0.15-40
     created: "2025-08-25T18:42:18.909968+03:00"
     dependencies:
     - name: postfix
@@ -10470,6 +10490,20 @@ entries:
     - eea-website-backend-1.0.0.tgz
     version: 1.0.0
   eea-website-frontend:
+  - apiVersion: v2
+    appVersion: 2.40.0
+    created: "2025-08-27T08:39:58.469484+03:00"
+    description: EEA Website Frontend - Plone 6
+    digest: ba95a5f7314e3743841a29fe025b838dd9c9f237acbaa42578f86dbc18464898
+    home: https://github.com/eea/eea-website-frontend
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/eea-website-frontend/eea-website-frontend.svg
+    keywords:
+    - CMS
+    name: eea-website-frontend
+    type: application
+    urls:
+    - eea-website-frontend-1.20.1.tgz
+    version: 1.20.1
   - apiVersion: v2
     appVersion: 2.40.0
     created: "2025-08-25T18:42:51.648591+03:00"
@@ -15886,6 +15920,24 @@ entries:
     - helpdesk-otrs-0.3.1.tgz
     version: 0.3.1
   ied-backend:
+  - apiVersion: v2
+    appVersion: 6.0.15-72
+    created: "2025-08-26T23:23:05.760173279Z"
+    dependencies:
+    - name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.1.0
+    description: IED backend
+    digest: 254444e031be6ded3f68b8f3860b848b59bebc6871eab6aec77ae82149116700
+    home: https://github.com/eea/ied-backend
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/ied-backend/ied.png
+    keywords:
+    - CMS
+    name: ied-backend
+    type: application
+    urls:
+    - ied-backend-1.85.0.tgz
+    version: 1.85.0
   - apiVersion: v2
     appVersion: 6.0.15-71
     created: "2025-08-25T23:21:27.065883293Z"
@@ -26867,4 +26919,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2025-08-27T01:34:36.191499204+03:00"
+generated: "2025-08-27T08:44:47.930473+03:00"
