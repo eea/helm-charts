@@ -347,6 +347,9 @@ You don't need to change anything on this container, it should work by having th
 
 ## Releases
 
+### Version 1.0.10 - 27 August 2025
+- Add backoffLimit to not restart archiving [valentinab25 - [`0c8ba7b7`](https://github.com/eea/helm-charts/commit/0c8ba7b772389c0d7f204f6b430e102297cf1574)]
+
 ### Version 1.0.9 - 27 August 2025
 - Fix configuration storage [valentinab25 - [`125522d3`](https://github.com/eea/helm-charts/commit/125522d3f782f8197c31af78d93e39b71fb27b6c)]
 
