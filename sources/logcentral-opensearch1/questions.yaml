@@ -212,10 +212,10 @@ questions:
     group: "Ingress Configuration"
     show_if: "opensearch-data.ingress.enabled=true"
 
-  - variable: opensearch-data.ingress.hosts[0]
-    default: "opensearch.01dev.eea.europa.eu"
+  - variable: opensearch-data.ingress.hosts
+    default: ["opensearch.01dev.eea.europa.eu"]
     description: "Hostname for OpenSearch Ingress"
-    type: string
+    type: array
     label: Ingress Hostname
     group: "Ingress Configuration"
     show_if: "opensearch-data.ingress.enabled=true"
