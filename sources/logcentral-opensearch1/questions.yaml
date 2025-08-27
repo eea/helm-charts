@@ -1,68 +1,155 @@
 questions:
-  - variable: opensearch.clusterName
+  # Master Nodes Configuration
+  - variable: opensearch-master.clusterName
     default: "opensearch-cluster"
     description: "Name of the OpenSearch cluster"
     type: string
     label: Cluster Name
     group: "General Configuration"
 
-  - variable: opensearch.image
+  - variable: opensearch-master.image
     default: "opensearchproject/opensearch"
     description: "OpenSearch Docker image repository"
     type: string
     label: OpenSearch Image Repository
     group: "Container Images"
 
-  - variable: opensearch.imageTag
+  - variable: opensearch-master.imageTag
     default: "1.1.0"
     description: "OpenSearch Docker image tag"
     type: string
     label: OpenSearch Image Tag
     group: "Container Images"
 
-  - variable: opensearch.replicas
-    default: 3
-    description: "Number of OpenSearch replicas"
+  - variable: opensearch-master.replicas
+    default: 1
+    description: "Number of OpenSearch master replicas"
     type: int
-    label: OpenSearch Replicas
-    group: "General Configuration"
+    label: Master Node Replicas
+    group: "Master Nodes Configuration"
 
-  - variable: opensearch.opensearchJavaOpts
-    default: "-Xmx2g -Xms2g"
-    description: "Java heap size for OpenSearch"
+  - variable: opensearch-master.opensearchJavaOpts
+    default: "-Xmx1g -Xms1g"
+    description: "Java heap size for OpenSearch master nodes"
     type: string
-    label: Java Heap Size
-    group: "Resource Configuration"
+    label: Master Java Heap Size
+    group: "Master Nodes Configuration"
 
-  - variable: opensearch.resources.requests.cpu
+  - variable: opensearch-master.resources.requests.cpu
     default: "500m"
-    description: "CPU request for OpenSearch nodes"
+    description: "CPU request for OpenSearch master nodes"
     type: string
-    label: OpenSearch CPU Request
-    group: "Resource Configuration"
+    label: Master CPU Request
+    group: "Master Nodes Configuration"
 
-  - variable: opensearch.resources.requests.memory
+  - variable: opensearch-master.resources.requests.memory
+    default: "1Gi"
+    description: "Memory request for OpenSearch master nodes"
+    type: string
+    label: Master Memory Request
+    group: "Master Nodes Configuration"
+
+  - variable: opensearch-master.resources.limits.cpu
+    default: "1"
+    description: "CPU limit for OpenSearch master nodes"
+    type: string
+    label: Master CPU Limit
+    group: "Master Nodes Configuration"
+
+  - variable: opensearch-master.resources.limits.memory
     default: "2Gi"
-    description: "Memory request for OpenSearch nodes"
+    description: "Memory limit for OpenSearch master nodes"
     type: string
-    label: OpenSearch Memory Request
-    group: "Resource Configuration"
+    label: Master Memory Limit
+    group: "Master Nodes Configuration"
 
-  - variable: opensearch.resources.limits.cpu
+  - variable: opensearch-master.persistence.enabled
+    default: true
+    description: "Enable persistent storage for OpenSearch master nodes"
+    type: boolean
+    label: Enable Master Persistence
+    group: "Master Nodes Configuration"
+
+  - variable: opensearch-master.persistence.storageClass
+    default: ""
+    description: "Storage class for OpenSearch master persistent volumes"
+    type: string
+    label: Master Storage Class
+    group: "Master Nodes Configuration"
+
+  - variable: opensearch-master.persistence.size
+    default: "10Gi"
+    description: "Size of persistent volume for OpenSearch master nodes"
+    type: string
+    label: Master Storage Size
+    group: "Master Nodes Configuration"
+
+  # Data Nodes Configuration
+  - variable: opensearch-data.replicas
+    default: 2
+    description: "Number of OpenSearch data replicas"
+    type: int
+    label: Data Node Replicas
+    group: "Data Nodes Configuration"
+
+  - variable: opensearch-data.opensearchJavaOpts
+    default: "-Xmx2g -Xms2g"
+    description: "Java heap size for OpenSearch data nodes"
+    type: string
+    label: Data Java Heap Size
+    group: "Data Nodes Configuration"
+
+  - variable: opensearch-data.resources.requests.cpu
+    default: "500m"
+    description: "CPU request for OpenSearch data nodes"
+    type: string
+    label: Data CPU Request
+    group: "Data Nodes Configuration"
+
+  - variable: opensearch-data.resources.requests.memory
+    default: "2Gi"
+    description: "Memory request for OpenSearch data nodes"
+    type: string
+    label: Data Memory Request
+    group: "Data Nodes Configuration"
+
+  - variable: opensearch-data.resources.limits.cpu
     default: "2"
-    description: "CPU limit for OpenSearch nodes"
+    description: "CPU limit for OpenSearch data nodes"
     type: string
-    label: OpenSearch CPU Limit
-    group: "Resource Configuration"
+    label: Data CPU Limit
+    group: "Data Nodes Configuration"
 
-  - variable: opensearch.resources.limits.memory
+  - variable: opensearch-data.resources.limits.memory
     default: "4Gi"
-    description: "Memory limit for OpenSearch nodes"
+    description: "Memory limit for OpenSearch data nodes"
     type: string
-    label: OpenSearch Memory Limit
-    group: "Resource Configuration"
+    label: Data Memory Limit
+    group: "Data Nodes Configuration"
 
-  - variable: opensearch.service.type
+  - variable: opensearch-data.persistence.enabled
+    default: true
+    description: "Enable persistent storage for OpenSearch data nodes"
+    type: boolean
+    label: Enable Data Persistence
+    group: "Data Nodes Configuration"
+
+  - variable: opensearch-data.persistence.storageClass
+    default: ""
+    description: "Storage class for OpenSearch data persistent volumes"
+    type: string
+    label: Data Storage Class
+    group: "Data Nodes Configuration"
+
+  - variable: opensearch-data.persistence.size
+    default: "50Gi"
+    description: "Size of persistent volume for OpenSearch data nodes"
+    type: string
+    label: Data Storage Size
+    group: "Data Nodes Configuration"
+
+  # Network Configuration (only on data nodes)
+  - variable: opensearch-data.service.type
     default: "ClusterIP"
     description: "Service type for OpenSearch"
     type: enum
@@ -73,87 +160,62 @@ questions:
     label: OpenSearch Service Type
     group: "Network Configuration"
 
-  - variable: opensearch.service.port
+  - variable: opensearch-data.service.port
     default: 9200
     description: "Service port for OpenSearch"
     type: int
     label: OpenSearch Service Port
     group: "Network Configuration"
 
-  - variable: opensearch.persistence.enabled
+  - variable: opensearch-data.persistence.enabled
     default: true
     description: "Enable persistent storage for OpenSearch"
     type: boolean
     label: Enable Persistence
     group: "Storage Configuration"
 
-  - variable: opensearch.persistence.storageClass
+  - variable: opensearch-data.persistence.storageClass
     default: ""
     description: "Storage class for OpenSearch persistent volumes"
     type: string
     label: Storage Class
     group: "Storage Configuration"
 
-  - variable: opensearch.persistence.size
-    default: "20Gi"
-    description: "Size of persistent volume for OpenSearch"
-    type: string
-    label: Storage Size
-    group: "Storage Configuration"
-
-  - variable: opensearch.roles
-    default:
-      - master
-      - ingest
-      - data
-      - remote_cluster_client
-    description: "Node roles for OpenSearch nodes"
-    type: multiline
-    label: Node Roles
-    group: "Node Roles"
-
-  - variable: opensearch.maxUnavailable
-    default: 0
-    description: "Max unavailable pods for Pod Disruption Budget (0 to disable)"
-    type: int
-    label: Max Unavailable Pods
-    group: "High Availability"
-
-  - variable: opensearch.ingress.enabled
+  - variable: opensearch-data.ingress.enabled
     default: false
     description: "Enable Ingress for OpenSearch"
     type: boolean
     label: Enable Ingress
     group: "Ingress Configuration"
 
-  - variable: opensearch.ingress.ingressClassName
+  - variable: opensearch-data.ingress.ingressClassName
     default: "nginx"
     description: "Ingress class name"
     type: string
     label: Ingress Class Name
     group: "Ingress Configuration"
-    show_if: "opensearch.ingress.enabled=true"
+    show_if: "opensearch-data.ingress.enabled=true"
 
-  - variable: opensearch.ingress.annotations
+  - variable: opensearch-data.ingress.annotations
     default: {}
     description: "Ingress annotations (YAML format)"
     type: multiline
     label: Ingress Annotations
     group: "Ingress Configuration"
-    show_if: "opensearch.ingress.enabled=true"
+    show_if: "opensearch-data.ingress.enabled=true"
 
-  - variable: opensearch.ingress.path
+  - variable: opensearch-data.ingress.path
     default: "/"
     description: "Path for OpenSearch Ingress"
     type: string
     label: Ingress Path
     group: "Ingress Configuration"
-    show_if: "opensearch.ingress.enabled=true"
+    show_if: "opensearch-data.ingress.enabled=true"
 
-  - variable: opensearch.ingress.hosts[0]
+  - variable: opensearch-data.ingress.hosts[0]
     default: "opensearch.01dev.eea.europa.eu"
     description: "Hostname for OpenSearch Ingress"
     type: string
     label: Ingress Hostname
     group: "Ingress Configuration"
-    show_if: "opensearch.ingress.enabled=true"
+    show_if: "opensearch-data.ingress.enabled=true"
