@@ -1,0 +1,115 @@
+imagePullSecrets: []
+
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: false
+  annotations: {}
+  name: ""
+
+url: sentry.eea.europa.eu
+
+timezone: Europe/Copenhagen
+
+
+postgres:
+  pullPolicy: IfNotPresent
+  podAnnotations: {}
+  podSecurityContext: {}
+  securityContext: {}
+  environment:
+    POSTGRES_DBNAME: sentry
+    POSTGRES_DBUSER: sentry
+    POSTGRES_DBPASS: password
+    POSTGRES_PASSWORD: password
+  datastorage:
+    size: 1000Gi
+    storageClassName: nfs-client
+  resources:
+    requests:
+      memory: 14Gi
+    limits:
+      memory: 14Gi
+  livenessProbe:
+    tcpSocket:
+      port: 5432
+    periodSeconds: 10
+    timeoutSeconds: 3
+  startupProbe:
+    tcpSocket:
+      port: 5432
+    failureThreshold: 10
+    periodSeconds: 5
+    initialDelaySeconds: 10
+    timeoutSeconds: 2
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+redis:
+  pullPolicy: IfNotPresent
+  podAnnotations: {}
+  podSecurityContext: {}
+  securityContext: {}
+  datastorage:
+    size: 40Gi
+    storageClassName: nfs-client
+  resources:
+    requests:
+      memory: 14Gi
+    limits:
+      memory: 14Gi
+  livenessProbe:
+    tcpSocket:
+      port: 6379
+    periodSeconds: 10
+    timeoutSeconds: 3
+  startupProbe:
+    tcpSocket:
+      port: 6379
+    failureThreshold: 10
+    periodSeconds: 5
+    initialDelaySeconds: 10
+    timeoutSeconds: 2
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+
+
+postfix:
+  fullnameOverride: ''
+  dryrun: false
+  serverName: sentry.eea.europa.eu
+  mtpPass: ''
+  mtpPort: ''
+  mtpRelay: ''
+  mtpUser: ''
+  serviceName: 'postfix'
+  mailtrap:
+    httpenabled: false
+    serviceType: NodePort
+    ingress:
+      enabled: false
+      hostname: mailtrap.01dev.eea.europa.eu
+      annotations:
+        cert-manager.io/cluster-issuer: 01dev-eea-letsencrypt
+      certificate: mailtrap.01dev.eea.europa.eu-tls
+
+
+ingress:
+  enabled: true
+  className: ""
+  annotations: {}
+  letsencrypt: "01dev-eea-letsencrypt"
+  configuration:
+    proxy-body-size: "256m"
+    proxy-read-timeout: "180s"
+    proxy-send-timeout: "120s"
+  tls: true
+  certificate: ""
+
+nginx:
+  configMap: REPLACEME
+  serviceType: ClusterIP 

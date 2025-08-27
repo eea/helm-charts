@@ -1,0 +1,85 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Release.Name }}-redis-ss
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: redis
+spec:
+  replicas: 1
+  serviceName: {{ .Release.Name }}-redis
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: redis
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: redis
+      annotations:
+        {{- toYaml .Values.redis.podAnnotations | nindent 8 }}
+    spec:
+      terminationGracePeriodSeconds: 10
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      containers:
+        - name: redis
+          image: redis:6.2.4-alpine
+          imagePullPolicy: {{ .Values.redis.pullPolicy }}
+          ports:
+            - containerPort: 5432
+              protocol: TCP
+          ulimits:
+            nofile:
+              hard: 10032
+              soft: 10032
+          args:
+          - redis-server
+          - --appendonly
+          - 'yes'
+          securityContext:
+            {{- toYaml .Values.redis.securityContext | nindent 12 }}
+          volumeMounts:
+            - mountPath: /var/lib/redisql/data
+              name: psqldata
+          {{- if .Values.redis.livenessProbe }}
+          livenessProbe:
+            {{- toYaml .Values.redis.livenessProbe | nindent 12 }}
+          {{- end }}
+          {{- if .Values.redis.startupProbe }}
+          startupProbe:
+            {{- toYaml .Values.redis.startupProbe | nindent 12 }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.redis.resources | nindent 12 }}
+      {{- with .Values.redis.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.redis.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.redis.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.redis.podSecurityContext | nindent 8 }}
+      restartPolicy: Always
+  volumeClaimTemplates:
+    - metadata:
+        name: redisdata
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        {{- if .Values.redis.datastorage.storageClassName }}
+        storageClassName: "{{ .Values.redis.datastorage.storageClassName }}"
+        {{- end }}
+        resources:
+          requests:
+            storage: "{{ .Values.redis.datastorage.size }}"
