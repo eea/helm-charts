@@ -10,6 +10,9 @@ This chart deployes the EEA Website Plone 6 backend app
 
 ## Releases
 
+### Version 1.15.2 - 27 August 2025
+- Fix deployments/scale.apps plone not found [Alin Voinea - [`61e5fc40`](https://github.com/eea/helm-charts/commit/61e5fc4074f3729290260a7ac522d44946ee9b02)]
+
 ### Version 1.15.1 - 25 August 2025
 - Release of dependent chart postfix:3.1.0 [EEA Jenkins - [`6b299527`](https://github.com/eea/helm-charts/commit/6b299527cae96cccfc8170c80a78b37f47854d92)]
 
