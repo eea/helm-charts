@@ -64,7 +64,7 @@ spec:
         accessModes:
         - ReadWriteOnce
         {{- if .Values.mariadb.storageClassName }}
-        storageClass: "{{ .Values.mariadb.storageClassName }}"
+        storageClassName: "{{ .Values.mariadb.storageClassName }}"
         {{- end }}
         resources:
           requests:
