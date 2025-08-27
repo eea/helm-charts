@@ -24,25 +24,12 @@ spec:
             name: mysql
             protocol: TCP
           env:
-            - name: MARIADB_USER
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Release.Name }}-matomo-secrets
-                  key: mariadbUser
-            - name: MARIADB_DATABASE
-              value: {{ .Values.mariadb.database }}
-            - name: MARIADB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Release.Name }}-matomo-secrets
-                  key: mariadbPassword
-            - name: MARIADB_ROOT_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Release.Name }}-matomo-secrets
-                  key: mariadbRootPassword
-            - name: MYSQL_ALLOW_EMPTY_PASSWORD
-              value: "no"
+          {{- range $key, $value := .Values.mariadb.environment }}
+            {{- if ($value) }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+          {{- end }}
             - name: TZ
               value: {{ .Values.timezone }}
           args: {{ .Values.mariadb.commands }}

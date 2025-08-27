@@ -18,20 +18,12 @@ spec:
             - name: geoipupdate
               image: "{{ .Values.geoipupdate.image.repository }}:{{ .Values.geoipupdate.image.tag }}"
               env:
-                - name: GEOIPUPDATE_ACCOUNT_ID
-                  valueFrom:
-                    secretKeyRef:
-                      name: {{ .Release.Name }}-matomo-secrets
-                      key: geoipupdateAccountId
-                - name: GEOIPUPDATE_LICENSE_KEY
-                  valueFrom:
-                    secretKeyRef:
-                      name: {{ .Release.Name }}-matomo-secrets
-                      key: geoipupdateLicenseKey
-                - name: GEOIPUPDATE_EDITION_IDS
-                  value: {{ .Values.geoipupdate.environment.GEOIPUPDATE_EDITION_IDS }}
-                - name: GEOIPUPDATE_VERBOSE
-                  value: {{ .Values.geoipupdate.environment.GEOIPUPDATE_VERBOSE }}
+             {{- range $key, $value := .Values.geoipupdate.environment }}
+               {{- if ($value) }}
+               - name: {{ $key }}
+                 value: {{ $value | quote }}
+               {{- end }}
+             {{- end }}
               volumeMounts:
                 - mountPath: "/usr/share/GeoIP"
                   name: geoipupdate-pv

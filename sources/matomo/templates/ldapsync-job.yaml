@@ -36,17 +36,11 @@ spec:
                 - name: MATOMO_DATABASE_PORT_NUMBER
                   value: "3306"
                 - name: MATOMO_DATABASE_USER
-                  valueFrom:
-                    secretKeyRef:
-                      name: {{ .Release.Name }}-matomo-secrets
-                      key: mariadbUser
+                  value: {{ .Values.mariadb.environment.MARIADB_USER | quote }}
                 - name: MATOMO_DATABASE_NAME
-                  value: {{ .Values.mariadb.database }}
+                  value: {{ .Values.mariadb.environment.MARIADB_DATABASE | quote }}
                 - name: MATOMO_DATABASE_PASSWORD
-                  valueFrom:
-                    secretKeyRef:
-                      name: {{ .Release.Name }}-matomo-secrets
-                      key: mariadbPassword
+                  value: {{ .Values.mariadb.environment.MARIADB_PASSWORD | quote }}
                 - name: ALLOW_EMPTY_PASSWORD
                   value: "no"
                 - name: TZ

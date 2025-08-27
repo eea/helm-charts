@@ -37,17 +37,11 @@ spec:
             - name: MATOMO_DATABASE_PORT_NUMBER
               value: "3306"
             - name: MATOMO_DATABASE_USER
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Release.Name }}-matomo-secrets
-                  key: mariadbUser
+              value: {{ .Values.mariadb.environment.MARIADB_USER | quote }}
             - name: MATOMO_DATABASE_NAME
-              value: {{ .Values.mariadb.database }}
+              value: {{ .Values.mariadb.environment.MARIADB_DATABASE | quote }}
             - name: MATOMO_DATABASE_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Release.Name }}-matomo-secrets
-                  key: mariadbPassword
+              value: {{ .Values.mariadb.environment.MARIADB_PASSWORD | quote }}
             - name: ALLOW_EMPTY_PASSWORD
               value: "no"
             - name: PHP_MEMORY_LIMIT
@@ -62,17 +56,11 @@ spec:
               value: {{ quote .Values.matomo.environment.APACHE_HTTP_PORT_NUMBER }}
             {{- if .Values.matomo.username }}
             - name: MATOMO_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Release.Name }}-matomo-secrets
-                  key: username
+              value: {{ .Values.matomo.username }}
             {{- end }}
             {{- if .Values.matomo.password }}
             - name: MATOMO_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Release.Name }}-matomo-secrets
-                  key: password
+              value: {{ .Values.matomo.password }}
             {{- end }}
           resources:
             requests:
@@ -87,15 +75,15 @@ spec:
               readOnly: true
           {{- if (.Values.matomo.livenessProbe) }}
           livenessProbe:
-            {{- toYaml .Values.matomo.livenessProbe | nindent 10 }}
+            {{- toYaml .Values.matomo.livenessProbe | nindent 12 }}
           {{- end }}
           {{- if (.Values.matomo.startupProbe) }}
           startupProbe:
-            {{- toYaml .Values.matomo.startupProbe | nindent 10 }}
+            {{- toYaml .Values.matomo.startupProbe | nindent 12 }}
           {{- end }}
           {{- if (.Values.matomo.readinessProbe) }}
           startupProbe:
-            {{- toYaml .Values.matomo.readinessProbe | nindent 10 }}
+            {{- toYaml .Values.matomo.readinessProbe | nindent 12 }}
           {{- end }}
 
 

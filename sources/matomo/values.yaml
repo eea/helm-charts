@@ -29,14 +29,17 @@ mariadb:
     - "--query_cache_type=0"
   resources:
     requests:
-      memory: 7Gi
+      memory: 10Gi
     limits:
       memory: 10Gi
-  database: eea_matomo_db
-  password: ""
-  rootPassword: ""
-  storage: 10Gi
-  storageClassName: ""
+  environment:
+    MARIADB_USER: eea_matomo
+    MARIADB_DATABASE: eea_matomo_db
+    MARIADB_PASSWORD: password
+    MARIADB_ROOT_PASSWORD: password
+    MYSQL_ALLOW_EMPTY_PASSWORD: "no"  
+  storage: 400Gi
+  storageClassName: nfs-rancher
 
 matomo:
   hostname: "dev-matomo.01dev.eea.europa.eu"
@@ -134,14 +137,14 @@ geoipupdate:
   environment:
     GEOIPUPDATE_EDITION_IDS: GeoLite2-City
     GEOIPUPDATE_VERBOSE: '"1"'
+    GEOIPUPDATE_LICENSE_KEY: REPLACEME
+    GEOIPUPDATE_ACCOUNT_ID: REPLACEME
   cronSchedule: "0 4 5 * *"
-  accountId: REPLACEME
-  licenseKey: REPLACEME
   resources:
     requests:
-      memory: NODATA
+      memory: 512Mi
     limits:
-      memory: NODATA
+      memory: 512Mi
   storageClassName: ""
   storage: "1Gi"
  

@@ -31,10 +31,7 @@ spec:
                 - name: MATOMO_URL
                   value: "https://{{ .Values.matomo.hostname }}"
                 - name: MATOMO_TOKEN
-                  valueFrom:
-                    secretKeyRef:
-                      name: {{ .Release.Name }}-matomo-secrets
-                      key: matomoToken
+                  value: {{ .Values.matomoAnalytics.token | quote }}
                 - name: TZ
                   value: "{{ .Values.timezone }}"
               resources:
