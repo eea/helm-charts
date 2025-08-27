@@ -347,6 +347,9 @@ You don't need to change anything on this container, it should work by having th
 
 ## Releases
 
+### Version 1.0.7 - 27 August 2025
+- Remove secrets [valentinab25 - [`aebfeebf`](https://github.com/eea/helm-charts/commit/aebfeebf143ff37ab456753781f1f0170c3a7f35)]
+
 ### Version 1.0.6 - 27 August 2025
 - add tmp volume for archive [valentinab25 - [`cf22209b`](https://github.com/eea/helm-charts/commit/cf22209bad6f867c9747678279f17b330ec3b52c)]
 
