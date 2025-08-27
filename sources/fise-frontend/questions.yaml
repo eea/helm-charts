@@ -84,6 +84,13 @@ questions:
     required: true
     type: "string"
     group: "Volto configuration"
+  - variable: "volto.environment.RAZZLE_RESOURCE_CATALOG_INDEX"
+    label: "RAZZLE_RESOURCE_CATALOG_INDEX"
+    description: "Resource catalog index configuration"
+    default: ""
+    required: false
+    type: "string"
+    group: "Volto configuration"
   - variable: "volto.environment.RAZZLE_PUBLIC_URL"
     label: "RAZZLE_PUBLIC_URL"
     description: "Public URL for the frontend application"
