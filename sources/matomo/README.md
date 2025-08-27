@@ -347,6 +347,9 @@ You don't need to change anything on this container, it should work by having th
 
 ## Releases
 
+### Version 1.0.9 - 27 August 2025
+- Fix configuration storage [valentinab25 - [`125522d3`](https://github.com/eea/helm-charts/commit/125522d3f782f8197c31af78d93e39b71fb27b6c)]
+
 ### Version 1.0.8 - 27 August 2025
 - Fix typo [valentinab25 - [`df00ce4f`](https://github.com/eea/helm-charts/commit/df00ce4f6c90f62bc4e8abf4fa8bc01df5e156a1)]
 
