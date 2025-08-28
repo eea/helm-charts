@@ -35,7 +35,7 @@ spec:
                   mountPath: /ssh
           containers:
             - name: rsync-analytics
-              image: "{{ .Values.rsyncAnalytics.image.repository }}:{{ .Values.rsyncAnalytics.image.tag }}"
+              image: "{{ .Values.rsyncAnalytics.image }}"
               env:
                 - name: TZ
                   value: "{{ .Values.timezone }}"
