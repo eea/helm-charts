@@ -5,8 +5,8 @@
 # Global settings
 global:
   timezone: "Europe/Bucharest"
-  # Graylog admin password (will be hashed automatically)
-  adminPassword: "admin"
+  adminPassword: "sha"
+  rootPassword: "sha"
 
 # Postfix configuration
 postfix:
@@ -197,20 +197,7 @@ loadbalancer:
   affinity: {}
   tolerations: []
 
-# External services configuration
-externalServices:
-  elasticsearch:
-    link: "" # External elasticsearch service link
 
-# Volume configurations
-volumes:
-  localVolumeDriver: "local"
-  dataVolumeDriver: "rancher-nfs"
-  dataVolumeDriverOpts: ""
-  pluginVolumeDriver: "rancher-nfs"
-  pluginVolumeDriverOpts: ""
-  volumeDriver: "rancher-nfs"
-  volumeDriverOpts: ""
 
 # Service configuration
 service:
@@ -254,6 +241,3 @@ podAnnotations: {}
 # Pod security context
 podSecurityContext: {}
 
-# RBAC
-rbac:
-  create: true
