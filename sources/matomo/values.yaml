@@ -107,8 +107,14 @@ matomocronArchive:
 matomocronLdapSync:
   image:
     repository: eeacms/matomo
-    tag: 5.3.2-1
+    tag: 5.3.2-2
   cronSchedule: "10 1 * * *"
+  environment:
+    AZURE_TENANT_ID: REPLACEME
+    AZURE_CLIENT_ID: REPLACEME
+    AZURE_VIEW_GROUP: REPLACEME
+    AZURE_CLIENT_SECRET: REPLACEME
+    ADMIN_EMAIL: REPLACEME  
   resources:
     requests:
       memory: 256Mi
