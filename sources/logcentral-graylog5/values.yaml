@@ -134,8 +134,10 @@ graylogClient:
     tag: "5.2.12"
     pullPolicy: IfNotPresent
 
-  replicas: 1
-
+  replicas: 3
+  lb:
+    enabled: true
+    exposeIP: 10.50.7.xx
   config:
     httpBindAddress: "0.0.0.0:9000"
     httpExternalUri: "" # Should be set to https://your-graylog-domain/
@@ -174,7 +176,7 @@ graylogClient:
 
 # Load Balancer configuration
 loadbalancer:
-  enabled: true
+  enabled: false
   image:
     repository: "eeacms/logcentralbalancer"
     tag: "3.1"
@@ -226,19 +228,6 @@ ingress:
   #  - secretName: graylog-tls
   #    hosts:
   #      - graylog.local
-  apps:
-    enabled: false
-    hostname: "graylog.apps"
-    className: ""
-    annotations: {}
-    letsencrypt: "01dev-eea-letsencrypt"
-    configuration:
-      proxy-body-size: "256m"
-      proxy-read-timeout: "180s"
-      proxy-send-timeout: "120s"
-    tls: true
-    certificate: "logs.apps.01dev.eea.europa.eu-tls"
-    
 
 
 # Security context
