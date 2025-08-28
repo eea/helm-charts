@@ -1,0 +1,1148 @@
+asHook: true
+auth:
+  register: true
+
+rabbitmq:
+  enabled: false
+
+sentryexternal:
+  url: sentry.eea.europa.eu
+  timezone: Europe/Copenhagen
+  postgres:
+    service:
+      port: 5432
+    enabled: true
+    environment:
+      POSTGRES_DBNAME: sentry
+      POSTGRES_DBUSER: sentry
+      POSTGRES_DBPASS: password
+      POSTGRES_PASSWORD: password
+    datastorage:
+      size: 1000Gi
+      storageClassName: nfs-client
+    resources:
+      requests:
+        memory: 14Gi
+      limits:
+        memory: 14Gi
+  redis:
+    redisPort: 6379
+    password: ""
+    enabled: true
+    datastorage:
+      size: 40Gi
+      storageClassName: nfs-client
+    resources:
+      requests:
+        memory: 14Gi
+      limits:
+        memory: 14Gi
+  postfix:
+    serverName: sentry.eea.europa.eu
+    mtpPass: ''
+    mtpPort: ''
+    mtpRelay: ''
+    mtpUser: ''
+    serviceName: 'postfix'
+    mailtrap:
+      httpenabled: false
+      serviceType: NodePort
+  ingress:
+    enabled: true
+    className: ""
+    letsencrypt: "01dev-eea-letsencrypt"
+    configuration:
+      proxy-body-size: "256m"
+      proxy-read-timeout: "180s"
+      proxy-send-timeout: "120s"
+    tls: true
+    certificate: ""
+
+
+clickhouse:
+  clickhouse:
+    configmap:
+      builtin_dictionaries_reload_interval: "3600"
+      compression:
+        cases:
+        - method: zstd
+          min_part_size: "10000000000"
+          min_part_size_ratio: "0.01"
+        enabled: false
+      default_session_timeout: "60"
+      disable_internal_dns_cache: "1"
+      enabled: true
+      graphite:
+        config:
+        - asynchronous_metrics: true
+          events: true
+          events_cumulative: true
+          interval: "60"
+          metrics: true
+          root_path: one_min
+          timeout: "0.1"
+        enabled: false
+      keep_alive_timeout: "3"
+      logger:
+        count: "10"
+        level: trace
+        path: /var/log/clickhouse-server
+        size: 1000M
+        stdoutLogsEnabled: false
+      mark_cache_size: "5368709120"
+      max_concurrent_queries: "100"
+      max_connections: "4096"
+      max_session_timeout: "3600"
+      mlock_executable: false
+      profiles:
+        enabled: false
+        profile:
+        - config:
+            load_balancing: random
+            max_memory_usage: "10000000000"
+            use_uncompressed_cache: "0"
+          name: default
+      quotas:
+        enabled: false
+        quota:
+        - config:
+          - duration: "3600"
+            errors: "0"
+            execution_time: "0"
+            queries: "0"
+            read_rows: "0"
+            result_rows: "0"
+          name: default
+      remote_servers:
+        enabled: false
+        internal_replication: false
+        replica:
+          backup:
+            enabled: false
+          compression: true
+          user: default
+      umask: "022"
+      uncompressed_cache_size: "8589934592"
+      users:
+        enabled: false
+        user:
+        - config:
+            networks:
+            - ::/0
+            password: ""
+            profile: default
+            quota: default
+          name: default
+      zookeeper_servers:
+        config:
+        - host: ""
+          index: ""
+          port: ""
+        enabled: false
+        operation_timeout_ms: "10000"
+        session_timeout_ms: "30000"
+    http_port: "8123"
+    image: yandex/clickhouse-server
+    imagePullPolicy: IfNotPresent
+    imageVersion: 20.8.9.6
+    ingress:
+      enabled: false
+    init:
+      image: busybox
+      imagePullPolicy: IfNotPresent
+      imageVersion: 1.31.0
+    interserver_http_port: "9009"
+    livenessProbe:
+      enabled: true
+      failureThreshold: "3"
+      initialDelaySeconds: "30"
+      periodSeconds: "30"
+      successThreshold: "1"
+      timeoutSeconds: "5"
+    metrics:
+      enabled: false
+      image:
+        port: 9116
+        pullPolicy: IfNotPresent
+        registry: docker.io
+        repository: f1yegor/clickhouse-exporter
+        tag: latest
+      podAnnotations:
+        prometheus.io/port: "9116"
+        prometheus.io/scrape: "true"
+      podLabels: {}
+      prometheusRule:
+        additionalLabels: {}
+        enabled: false
+        namespace: ""
+        rules: []
+      service:
+        annotations: {}
+        labels: {}
+        type: ClusterIP
+      serviceMonitor:
+        enabled: false
+        selector:
+          prometheus: kube-prometheus
+    path: /var/lib/clickhouse
+    persistentVolumeClaim:
+      dataPersistentVolume:
+        accessModes:
+        - ReadWriteOnce
+        enabled: true
+        storage: 30Gi
+      enabled: true
+      logsPersistentVolume:
+        accessModes:
+        - ReadWriteOnce
+        enabled: false
+        storage: 50Gi
+    podManagementPolicy: Parallel
+    readinessProbe:
+      enabled: true
+      failureThreshold: "3"
+      initialDelaySeconds: "30"
+      periodSeconds: "30"
+      successThreshold: "1"
+      timeoutSeconds: "5"
+    replicas: "3"
+    resources: {}
+    tcp_port: "9000"
+    updateStrategy: RollingUpdate
+  clusterDomain: cluster.local
+  enabled: true
+  global: {}
+  tabix:
+    enabled: false
+    image: spoonest/clickhouse-tabix-web-client
+    imagePullPolicy: IfNotPresent
+    imageVersion: stable
+    ingress:
+      enabled: false
+    livenessProbe:
+      enabled: true
+      failureThreshold: "3"
+      initialDelaySeconds: "30"
+      periodSeconds: "30"
+      successThreshold: "1"
+      timeoutSeconds: "5"
+    podAnnotations: null
+    podLabels: null
+    readinessProbe:
+      enabled: true
+      failureThreshold: "3"
+      initialDelaySeconds: "30"
+      periodSeconds: "30"
+      successThreshold: "1"
+      timeoutSeconds: "5"
+    replicas: "1"
+    resources: {}
+    security:
+      password: admin
+      user: admin
+    updateStrategy:
+      maxSurge: 3
+      maxUnavailable: 1
+      type: RollingUpdate
+  timezone: UTC
+config:
+  configYml: {}
+  relay: |
+    # No YAML relay config given
+  sentryConfPy: |
+    # No Python Extension Config Given
+  snubaSettingsPy: |
+    # No Python Extension Config Given
+externalClickhouse:
+  database: default
+  host: clickhouse
+  httpPort: 8123
+  password: ""
+  tcpPort: 9000
+  username: default
+externalKafka:
+  port: 9092
+externalPostgresql:
+  database: sentry
+  port: 5432
+  username: sentry
+externalRedis:
+  port: 6379
+filestore:
+  backend: filesystem
+  filesystem:
+    path: /var/lib/sentry/files
+    persistence:
+      accessMode: ReadWriteOnce
+      enabled: true
+      persistentWorkers: false
+      size: 10Gi
+  gcs: {}
+  s3: {}
+github: {}
+google: {}
+hooks:
+  clickhouseInit:
+    affinity: {}
+    nodeSelector: {}
+    podAnnotations: {}
+  dbCheck:
+    affinity: {}
+    env: []
+    image:
+      imagePullSecrets: []
+    nodeSelector: {}
+    podAnnotations: {}
+    resources:
+      limits:
+        memory: 64Mi
+      requests:
+        cpu: 100m
+        memory: 64Mi
+  dbInit:
+    affinity: {}
+    env: []
+    nodeSelector: {}
+    podAnnotations: {}
+    resources:
+      limits:
+        memory: 2048Mi
+      requests:
+        cpu: 300m
+        memory: 2048Mi
+    sidecars: []
+    volumes: []
+  enabled: true
+  removeOnSuccess: true
+  snubaInit:
+    affinity: {}
+    nodeSelector: {}
+    podAnnotations: {}
+    resources:
+      limits:
+        cpu: 2000m
+        memory: 1Gi
+      requests:
+        cpu: 700m
+        memory: 1Gi
+images:
+  relay:
+    imagePullSecrets: []
+  sentry:
+    imagePullSecrets: []
+  snuba:
+    imagePullSecrets: []
+  symbolicator:
+    imagePullSecrets: []
+    tag: 0.3.3
+ingress:
+  alb:
+    httpRedirect: false
+  enabled: false
+  regexPathStyle: nginx
+kafka:
+  advertisedListeners: []
+  affinity: {}
+  allowPlaintextListener: true
+  auth:
+    clientProtocol: plaintext
+    interBrokerProtocol: plaintext
+    jaas:
+      clientPasswords: []
+      clientUsers:
+      - user
+      interBrokerPassword: ""
+      interBrokerUser: admin
+    saslInterBrokerMechanism: plain
+    saslMechanisms: plain,scram-sha-256,scram-sha-512
+    tlsEndpointIdentificationAlgorithm: https
+  autoCreateTopicsEnable: true
+  clusterDomain: cluster.local
+  command:
+  - /scripts/setup.sh
+  commonAnnotations: {}
+  commonLabels: {}
+  containerSecurityContext: {}
+  customLivenessProbe: {}
+  customReadinessProbe: {}
+  defaultReplicationFactor: 3
+  deleteTopicEnable: false
+  enabled: true
+  externalAccess:
+    autoDiscovery:
+      enabled: false
+      image:
+        pullPolicy: IfNotPresent
+        pullSecrets: []
+        registry: docker.io
+        repository: bitnami/kubectl
+        tag: 1.17.13-debian-10-r21
+      resources:
+        limits: {}
+        requests: {}
+    enabled: false
+    service:
+      annotations: {}
+      loadBalancerIPs: []
+      loadBalancerSourceRanges: []
+      nodePorts: []
+      port: 9094
+      type: LoadBalancer
+  externalZookeeper:
+    servers: []
+  extraDeploy: []
+  extraEnvVars: []
+  extraVolumeMounts: []
+  extraVolumes: []
+  global: {}
+  heapOpts: -Xmx1024m -Xms1024m
+  image:
+    debug: false
+    pullPolicy: IfNotPresent
+    pullSecrets: []
+    registry: docker.io
+    repository: bitnami/kafka
+    tag: 2.6.0-debian-10-r78
+  interBrokerListenerName: INTERNAL
+  listeners: []
+  livenessProbe:
+    enabled: true
+    initialDelaySeconds: 10
+    timeoutSeconds: 5
+  logFlushIntervalMessages: 10000
+  logFlushIntervalMs: 1000
+  logRetentionBytes: _1073741824
+  logRetentionCheckIntervalMs: 300000
+  logRetentionHours: 168
+  logSegmentBytes: _1073741824
+  logsDirs: /bitnami/kafka/data
+  maxMessageBytes: "50000000"
+  metrics:
+    jmx:
+      config: |-
+        jmxUrl: service:jmx:rmi:///jndi/rmi://127.0.0.1:5555/jmxrmi
+        lowercaseOutputName: true
+        lowercaseOutputLabelNames: true
+        ssl: false
+        {{- if .Values.metrics.jmx.whitelistObjectNames }}
+        whitelistObjectNames: ["{{ join "\",\"" .Values.metrics.jmx.whitelistObjectNames }}"]
+        {{- end }}
+      enabled: false
+      image:
+        pullPolicy: IfNotPresent
+        pullSecrets: []
+        registry: docker.io
+        repository: bitnami/jmx-exporter
+        tag: 0.14.0-debian-10-r64
+      resources:
+        limits: {}
+        requests: {}
+      service:
+        annotations:
+          prometheus.io/path: /
+          prometheus.io/port: '{{ .Values.metrics.jmx.service.port }}'
+          prometheus.io/scrape: "true"
+        loadBalancerSourceRanges: []
+        nodePort: ""
+        port: 5556
+        type: ClusterIP
+      whitelistObjectNames:
+      - kafka.controller:*
+      - kafka.server:*
+      - java.lang:*
+      - kafka.network:*
+      - kafka.log:*
+    kafka:
+      enabled: false
+      extraFlags: {}
+      image:
+        pullPolicy: IfNotPresent
+        pullSecrets: []
+        registry: docker.io
+        repository: bitnami/kafka-exporter
+        tag: 1.2.0-debian-10-r277
+      resources:
+        limits: {}
+        requests: {}
+      service:
+        annotations:
+          prometheus.io/path: /metrics
+          prometheus.io/port: '{{ .Values.metrics.kafka.service.port }}'
+          prometheus.io/scrape: "true"
+        loadBalancerSourceRanges: []
+        nodePort: ""
+        port: 9308
+        type: ClusterIP
+    serviceMonitor:
+      enabled: false
+  nodeSelector: {}
+  numIoThreads: 8
+  numNetworkThreads: 3
+  numPartitions: 1
+  numRecoveryThreadsPerDataDir: 1
+  offsetsTopicReplicationFactor: 3
+  pdb:
+    create: false
+    maxUnavailable: 1
+  persistence:
+    accessModes:
+    - ReadWriteOnce
+    annotations: {}
+    enabled: true
+    size: 8Gi
+  podAnnotations: {}
+  podLabels: {}
+  podSecurityContext:
+    fsGroup: 1001
+    runAsUser: 1001
+  priorityClassName: ""
+  rbac:
+    create: false
+  readinessProbe:
+    enabled: true
+    failureThreshold: 6
+    initialDelaySeconds: 5
+    timeoutSeconds: 5
+  replicaCount: 3
+  resources:
+    limits: {}
+    requests: {}
+  service:
+    annotations: {}
+    externalPort: 9094
+    internalPort: 9093
+    loadBalancerSourceRanges: []
+    nodePorts:
+      client: ""
+      external: ""
+    port: 9092
+    type: ClusterIP
+  serviceAccount:
+    create: true
+  sidecars: {}
+  socketReceiveBufferBytes: 102400
+  socketRequestMaxBytes: "50000000"
+  socketSendBufferBytes: 102400
+  tolerations: []
+  transactionStateLogMinIsr: 3
+  transactionStateLogReplicationFactor: 3
+  updateStrategy: RollingUpdate
+  volumePermissions:
+    enabled: false
+    image:
+      pullPolicy: Always
+      pullSecrets: []
+      registry: docker.io
+      repository: bitnami/minideb
+      tag: buster
+    resources:
+      limits: {}
+      requests: {}
+  zookeeper:
+    affinity: {}
+    allowAnonymousLogin: true
+    auth:
+      clientPassword: null
+      clientUser: null
+      enabled: false
+      serverPasswords: null
+      serverUsers: null
+    autopurge:
+      purgeInterval: 0
+      snapRetainCount: 3
+    clusterDomain: cluster.local
+    commonAnnotations: {}
+    commonLabels: {}
+    dataLogDir: ""
+    enabled: true
+    fourlwCommandsWhitelist: srvr, mntr, ruok
+    global: {}
+    heapSize: 1024
+    image:
+      debug: false
+      pullPolicy: IfNotPresent
+      registry: docker.io
+      repository: bitnami/zookeeper
+      tag: 3.6.2-debian-10-r58
+    initLimit: 10
+    listenOnAllIPs: false
+    livenessProbe:
+      enabled: true
+      failureThreshold: 6
+      initialDelaySeconds: 30
+      periodSeconds: 10
+      probeCommandTimeout: 2
+      successThreshold: 1
+      timeoutSeconds: 5
+    logLevel: ERROR
+    maxClientCnxns: 60
+    maxSessionTimeout: 40000
+    metrics:
+      containerPort: 9141
+      enabled: false
+      prometheusRule:
+        enabled: false
+        namespace: null
+        rules: []
+      service:
+        annotations:
+          prometheus.io/path: /metrics
+          prometheus.io/port: '{{ .Values.metrics.service.port }}'
+          prometheus.io/scrape: "true"
+        port: 9141
+        type: ClusterIP
+      serviceMonitor:
+        enabled: false
+        namespace: null
+    networkPolicy:
+      enabled: false
+    nodeSelector: {}
+    persistence:
+      accessModes:
+      - ReadWriteOnce
+      annotations: {}
+      dataLogDir:
+        size: 8Gi
+      enabled: true
+      size: 8Gi
+    podAnnotations: {}
+    podDisruptionBudget:
+      maxUnavailable: 1
+    podLabels: {}
+    podManagementPolicy: Parallel
+    priorityClassName: ""
+    readinessProbe:
+      enabled: true
+      failureThreshold: 6
+      initialDelaySeconds: 5
+      periodSeconds: 10
+      probeCommandTimeout: 2
+      successThreshold: 1
+      timeoutSeconds: 5
+    replicaCount: 1
+    resources:
+      requests:
+        cpu: 250m
+        memory: 256Mi
+    securityContext:
+      enabled: true
+      fsGroup: 1001
+      runAsUser: 1001
+    service:
+      annotations: {}
+      electionPort: 3888
+      followerPort: 2888
+      headless:
+        annotations: {}
+      port: 2181
+      publishNotReadyAddresses: true
+      tls:
+        client_enable: false
+        client_keystore_password: ""
+        client_keystore_path: /tls_key_store/key_store_file
+        client_port: 3181
+        client_truststore_password: ""
+        client_truststore_path: /tls_trust_store/trust_store_file
+        disable_base_client_port: false
+        quorum_enable: false
+        quorum_keystore_password: ""
+        quorum_keystore_path: /tls_key_store/key_store_file
+        quorum_truststore_password: ""
+        quorum_truststore_path: /tls_trust_store/trust_store_file
+      type: ClusterIP
+    serviceAccount:
+      create: false
+    syncLimit: 5
+    tickTime: 2000
+    tolerations: []
+    updateStrategy: RollingUpdate
+    volumePermissions:
+      enabled: false
+      image:
+        pullPolicy: Always
+        registry: docker.io
+        repository: bitnami/minideb
+        tag: buster
+      resources: {}
+  zookeeperConnectionTimeoutMs: 6000
+mail:
+  backend: dummy
+  from: ""
+  host: ""
+  password: ""
+  port: 25
+  useTls: false
+  username: ""
+metrics:
+  affinity: {}
+  enabled: false
+  image:
+    pullPolicy: IfNotPresent
+    repository: prom/statsd-exporter
+    tag: v0.17.0
+  livenessProbe:
+    enabled: true
+    failureThreshold: 3
+    initialDelaySeconds: 30
+    periodSeconds: 5
+    successThreshold: 1
+    timeoutSeconds: 2
+  nodeSelector: {}
+  readinessProbe:
+    enabled: true
+    failureThreshold: 3
+    initialDelaySeconds: 30
+    periodSeconds: 5
+    successThreshold: 1
+    timeoutSeconds: 2
+  resources: {}
+  securityContext: {}
+  service:
+    labels: {}
+    type: ClusterIP
+  serviceMonitor:
+    additionalLabels: {}
+    enabled: false
+    namespace: ""
+    namespaceSelector: {}
+    scrapeInterval: 30s
+  tolerations: []
+nginx:
+  affinity: {}
+  autoscaling:
+    enabled: false
+  cloneStaticSiteFromGit:
+    enabled: false
+    extraEnvVars: []
+    extraVolumeMounts: []
+    gitClone:
+      args: null
+      command: []
+    gitSync:
+      args: []
+      command: []
+    image:
+      pullPolicy: IfNotPresent
+      registry: docker.io
+      repository: bitnami/git
+      tag: 2.32.0-debian-10-r20
+    interval: 60
+  clusterDomain: cluster.local
+  common:
+    exampleValue: common-chart
+    global: {}
+  commonAnnotations: {}
+  commonLabels: {}
+  containerPort: 8080
+  containerPorts:
+    http: 8080
+  containerSecurityContext:
+    enabled: false
+    runAsNonRoot: true
+    runAsUser: 1001
+  customLivenessProbe: {}
+  customReadinessProbe: {}
+  enabled: true
+  existingServerBlockConfigmap: '{{ template "sentry.fullname" . }}'
+  extraDeploy: []
+  extraEnvVars: []
+  extraVolumeMounts: []
+  extraVolumes: []
+  global: {}
+  healthIngress:
+    annotations: {}
+    certManager: false
+    enabled: false
+    extraHosts: []
+    extraTls: []
+    hostname: example.local
+    pathType: ImplementationSpecific
+    secrets: []
+    tls: false
+  hostAliases: []
+  image:
+    debug: false
+    pullPolicy: IfNotPresent
+    pullSecrets: []
+    registry: docker.io
+    repository: bitnami/nginx
+    tag: 1.21.0-debian-10-r21
+  ingress:
+    annotations: {}
+    apiVersion: null
+    certManager: false
+    enabled: false
+    hostname: nginx.local
+    path: /
+    pathType: ImplementationSpecific
+    secrets: []
+    tls: false
+  ldapDaemon:
+    customLivenessProbe: {}
+    customReadinessProbe: {}
+    enabled: false
+    existingNginxServerBlockSecret: null
+    image:
+      pullPolicy: IfNotPresent
+      registry: docker.io
+      repository: bitnami/nginx-ldap-auth-daemon
+      tag: 0.20200116.0-debian-10-r382
+    ldapConfig:
+      baseDN: ""
+      bindDN: ""
+      bindPassword: ""
+      filter: ""
+      httpCookieName: ""
+      httpRealm: ""
+      uri: ""
+    livenessProbe:
+      enabled: true
+      failureThreshold: 6
+      initialDelaySeconds: 30
+      periodSeconds: 10
+      successThreshold: 1
+      timeoutSeconds: 5
+    nginxServerBlock: |-
+      server {
+      listen 0.0.0.0:{{ .Values.containerPorts.http }};
+
+      # You can provide a special subPath or the root
+      location = / {
+          auth_request /auth-proxy;
+      }
+
+      location = /auth-proxy {
+          internal;
+
+          proxy_pass http://127.0.0.1:{{ .Values.ldapDaemon.port }};
+
+          ###############################################################
+          # YOU SHOULD CHANGE THE FOLLOWING TO YOUR LDAP CONFIGURATION  #
+          ###############################################################
+
+          # URL and port for connecting to the LDAP server
+          # proxy_set_header X-Ldap-URL "ldap://YOUR_LDAP_SERVER_IP:YOUR_LDAP_SERVER_PORT";
+
+          # Base DN
+          # proxy_set_header X-Ldap-BaseDN "dc=example,dc=org";
+
+          # Bind DN
+          # proxy_set_header X-Ldap-BindDN "cn=admin,dc=example,dc=org";
+
+          # Bind password
+          # proxy_set_header X-Ldap-BindPass "adminpassword";
+      }
+      }
+    port: 8888
+    readinessProbe:
+      enabled: true
+      failureThreshold: 3
+      initialDelaySeconds: 5
+      periodSeconds: 5
+      successThreshold: 1
+      timeoutSeconds: 3
+  livenessProbe:
+    enabled: true
+    failureThreshold: 6
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 5
+  metrics:
+    enabled: false
+    image:
+      pullPolicy: IfNotPresent
+      registry: docker.io
+      repository: bitnami/nginx-exporter
+      tag: 0.9.0-debian-10-r87
+    podAnnotations: {}
+    port: null
+    resources:
+      limits: {}
+      requests: {}
+    securityContext:
+      enabled: false
+      runAsUser: 1001
+    service:
+      annotations:
+        prometheus.io/port: '{{ .Values.metrics.service.port }}'
+        prometheus.io/scrape: "true"
+      port: 9113
+    serviceMonitor:
+      enabled: false
+  nodeAffinityPreset:
+    key: ""
+    type: ""
+    values: []
+  nodeSelector: {}
+  pdb:
+    create: false
+    minAvailable: 1
+  podAffinityPreset: ""
+  podAnnotations: {}
+  podAntiAffinityPreset: soft
+  podLabels: {}
+  podSecurityContext:
+    enabled: false
+    fsGroup: 1001
+    sysctls: []
+  priorityClassName: ""
+  readinessProbe:
+    enabled: true
+    failureThreshold: 3
+    initialDelaySeconds: 5
+    periodSeconds: 5
+    successThreshold: 1
+    timeoutSeconds: 3
+  replicaCount: 1
+  resources:
+    limits: {}
+    requests: {}
+  service:
+    annotations: {}
+    externalTrafficPolicy: Cluster
+    httpsPort: 443
+    nodePorts:
+      http: ""
+      https: ""
+    port: 80
+    targetPort:
+      http: http
+      https: https
+    type: ClusterIP
+  serviceAccount:
+    annotations: {}
+    create: false
+  tolerations: {}
+
+    
+
+
+
+
+prefix: null
+relay:
+  affinity: {}
+  autoscaling:
+    enabled: false
+    maxReplicas: 5
+    minReplicas: 2
+    targetCPUUtilizationPercentage: 50
+  env: []
+  mode: managed
+  nodeSelector: {}
+  probeFailureThreshold: 5
+  probeInitialDelaySeconds: 10
+  probePeriodSeconds: 10
+  probeSuccessThreshold: 1
+  probeTimeoutSeconds: 2
+  replicas: 1
+  resources: {}
+  securityContext: {}
+  sidecars: []
+  volumes: []
+revisionHistoryLimit: 10
+sentry:
+  cleanup:
+    days: 90
+    enabled: true
+    schedule: 0 0 * * *
+    sidecars: []
+    volumes: []
+  cron:
+    affinity: {}
+    env: []
+    nodeSelector: {}
+    replicas: 1
+    resources: {}
+    sidecars: []
+    volumes: []
+  features:
+    orgSubdomains: false
+    vstsLimitedScopes: true
+  ingestConsumer:
+    affinity: {}
+    autoscaling:
+      enabled: false
+      maxReplicas: 3
+      minReplicas: 1
+      targetCPUUtilizationPercentage: 50
+    env: []
+    nodeSelector: {}
+    replicas: 1
+    resources: {}
+    securityContext: {}
+    sidecars: []
+    volumes: []
+  postProcessForward:
+    affinity: {}
+    env: []
+    nodeSelector: {}
+    replicas: 1
+    resources: {}
+    securityContext: {}
+    sidecars: []
+    volumes: []
+  singleOrganization: true
+  web:
+    affinity: {}
+    autoscaling:
+      enabled: false
+      maxReplicas: 5
+      minReplicas: 2
+      targetCPUUtilizationPercentage: 50
+    env: []
+    nodeSelector: {}
+    probeFailureThreshold: 5
+    probeInitialDelaySeconds: 10
+    probePeriodSeconds: 10
+    probeSuccessThreshold: 1
+    probeTimeoutSeconds: 2
+    replicas: 1
+    resources: {}
+    securityContext: {}
+    sidecars: []
+    strategyType: RollingUpdate
+    volumes: []
+  worker:
+    affinity: {}
+    autoscaling:
+      enabled: false
+      maxReplicas: 5
+      minReplicas: 2
+      targetCPUUtilizationPercentage: 50
+    env: []
+    nodeSelector: {}
+    replicas: 3
+    resources: {}
+    sidecars: []
+    volumes: []
+service:
+  annotations: {}
+  externalPort: 9000
+  name: sentry
+  type: ClusterIP
+serviceAccount:
+  annotations: {}
+  automountServiceAccountToken: true
+  enabled: false
+  name: sentry
+slack: {}
+snuba:
+  api:
+    affinity: {}
+    autoscaling:
+      enabled: false
+      maxReplicas: 5
+      minReplicas: 2
+      targetCPUUtilizationPercentage: 50
+    env: []
+    liveness:
+      timeoutSeconds: 2
+    nodeSelector: {}
+    probeInitialDelaySeconds: 10
+    readiness:
+      timeoutSeconds: 2
+    replicas: 1
+    resources: {}
+    securityContext: {}
+    sidecars: []
+    volumes: []
+  cleanupErrors:
+    enabled: true
+    schedule: 0 * * * *
+    sidecars: []
+    volumes: []
+  cleanupTransactions:
+    enabled: true
+    schedule: 0 * * * *
+    sidecars: []
+    volumes: []
+  consumer:
+    affinity: {}
+    env: []
+    nodeSelector: {}
+    replicas: 1
+    resources: {}
+    securityContext: {}
+  dbInitJob:
+    env: []
+  migrateJob:
+    env: []
+  outcomesConsumer:
+    affinity: {}
+    env: []
+    maxBatchSize: "3"
+    nodeSelector: {}
+    replicas: 1
+    resources: {}
+    securityContext: {}
+  replacer:
+    affinity: {}
+    env: []
+    maxBatchSize: "3"
+    nodeSelector: {}
+    replicas: 1
+    resources: {}
+    securityContext: {}
+  sessionsConsumer:
+    affinity: {}
+    env: []
+    nodeSelector: {}
+    replicas: 1
+    resources: {}
+    securityContext: {}
+  transactionsConsumer:
+    affinity: {}
+    env: []
+    nodeSelector: {}
+    replicas: 1
+    resources: {}
+    securityContext: {}
+symbolicator:
+  api:
+    affinity: {}
+    autoscaling:
+      enabled: false
+      maxReplicas: 5
+      minReplicas: 2
+      targetCPUUtilizationPercentage: 50
+    config: |-
+      # See: https://getsentry.github.io/symbolicator/#configuration
+      cache_dir: "/data"
+      bind: "0.0.0.0:3021"
+      logging:
+        level: "warn"
+      metrics:
+        statsd: null
+        prefix: "symbolicator"
+      sentry_dsn: null
+      connect_to_reserved_ips: true
+      # caches:
+      #   downloaded:
+      #     max_unused_for: 1w
+      #     retry_misses_after: 5m
+      #     retry_malformed_after: 5m
+      #   derived:
+      #     max_unused_for: 1w
+      #     retry_misses_after: 5m
+      #     retry_malformed_after: 5m
+      #   diagnostics:
+      #     retention: 1w
+    env: []
+    nodeSelector: {}
+    probeInitialDelaySeconds: 10
+    replicas: 1
+    resources: {}
+    securityContext: {}
+  cleanup:
+    enabled: false
+  enabled: false
+system:
+  adminEmail: ""
+  public: false
+  url: ""
+user:
+  create: true
+  email: admin@sentry.local
+  password: aaaa
