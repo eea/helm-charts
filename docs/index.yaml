@@ -19801,6 +19801,26 @@ entries:
   matomo:
   - apiVersion: v2
     appVersion: 5.3.2
+    created: "2025-08-28T11:46:29.643736779+03:00"
+    dependencies:
+    - name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.1.0
+    description: Matomo (formerly piwik) is a web analytics platform.
+    digest: 1c3151b495a5565c682d395118cf87bea4ec197e05635577e777402bc43eabea
+    home: https://github.com/eea/eea.docker.matomo
+    icon: https://raw.githubusercontent.com/eea/helm-charts/refs/heads/main/sources/matomo/logo_matomo.svg
+    keywords:
+    - matomo
+    - web-analytics
+    maintainers:
+    - name: 'EEA: IDM2 A-Team'
+    name: matomo
+    urls:
+    - matomo-1.0.11.tgz
+    version: 1.0.11
+  - apiVersion: v2
+    appVersion: 5.3.2
     created: "2025-08-27T16:41:34.702722802+03:00"
     dependencies:
     - name: postfix
@@ -26037,13 +26057,13 @@ entries:
   sentry-external:
   - apiVersion: v2
     appVersion: 0.0.1
-    created: "2025-08-28T04:47:12.432986236+03:00"
+    created: "2025-08-27T22:47:21.83886842+03:00"
     dependencies:
     - name: postfix
       repository: https://eea.github.io/helm-charts
       version: 3.1.1
     description: Sentry external services, subchart
-    digest: d182f0e9c9b265dbdc4fe61421fdb24da1d79d653cfb75ef4a8bebb98955623b
+    digest: e4dd2e8c6a9db03590efe5e8b2cee303632022a232f7e96bcce94efa4e08b6f4
     keywords:
     - Redmine
     - Tickets
@@ -27270,4 +27290,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2025-08-28T04:47:12.431643616+03:00"
+generated: "2025-08-28T11:46:29.642704712+03:00"
