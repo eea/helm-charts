@@ -347,6 +347,9 @@ You don't need to change anything on this container, it should work by having th
 
 ## Releases
 
+### Version 1.0.14 - 28 August 2025
+- fix backoffLimit [valentinab25 - [`ca677e31`](https://github.com/eea/helm-charts/commit/ca677e314af4dfcaa75b75eb799ea8706ed3181b)]
+
 ### Version 1.0.13 - 28 August 2025
 - Fix port checkmk [valentinab25 - [`bae02b10`](https://github.com/eea/helm-charts/commit/bae02b10601184bf8241c3af8bfbb930c9ed15df)]
 
