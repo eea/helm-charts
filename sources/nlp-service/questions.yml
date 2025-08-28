@@ -157,6 +157,13 @@ questions:
   default: "1000m"
   group: "NLP Searchlib"
 
+- variable: nlpSearchlib.resources.limits.nvidia.com/gpu
+  label: "NLP Searchlib GPU Limit"
+  description: "GPU limit for NLP searchlib container (number of GPUs)"
+  type: string
+  default: "1"
+  group: "NLP Searchlib"
+
 - variable: nlpSearchlib.sharedMemory.enabled
   label: "Enable Shared Memory"
   description: "Enable shared memory configuration for NVIDIA/PyTorch"
@@ -217,6 +224,34 @@ questions:
   default: 1
   group: "Rsync"
 
+- variable: rsync.resources.limits.memory
+  label: "Rsync Memory Limit"
+  description: "Memory limit for Rsync container"
+  type: string
+  default: "1Gi"
+  group: "Rsync"
+
+- variable: rsync.resources.requests.memory
+  label: "Rsync Memory Request"
+  description: "Memory request for Rsync container"
+  type: string
+  default: "512Mi"
+  group: "Rsync"
+
+- variable: rsync.resources.limits.cpu
+  label: "Rsync CPU Limit"
+  description: "CPU limit for Rsync container"
+  type: string
+  default: "500m"
+  group: "Rsync"
+
+- variable: rsync.resources.requests.cpu
+  label: "Rsync CPU Request"
+  description: "CPU request for Rsync container"
+  type: string
+  default: "250m"
+  group: "Rsync"
+
 # Tika Configuration
 - variable: tika.image.repository
   label: "Tika Image Repository"
@@ -244,6 +279,34 @@ questions:
   description: "Port for Tika service"
   type: int
   default: 9998
+  group: "Tika"
+
+- variable: tika.resources.limits.memory
+  label: "Tika Memory Limit"
+  description: "Memory limit for Tika container"
+  type: string
+  default: "1Gi"
+  group: "Tika"
+
+- variable: tika.resources.requests.memory
+  label: "Tika Memory Request"
+  description: "Memory request for Tika container"
+  type: string
+  default: "512Mi"
+  group: "Tika"
+
+- variable: tika.resources.limits.cpu
+  label: "Tika CPU Limit"
+  description: "CPU limit for Tika container"
+  type: string
+  default: "500m"
+  group: "Tika"
+
+- variable: tika.resources.requests.cpu
+  label: "Tika CPU Request"
+  description: "CPU request for Tika container"
+  type: string
+  default: "250m"
   group: "Tika"
 
 # Persistence Configuration

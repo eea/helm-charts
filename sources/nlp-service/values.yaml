@@ -31,6 +31,7 @@ nlpSearchlib:
     limits:
       memory: "8Gi"
       cpu: "2000m"
+      nvidia.com/gpu: "1"
     requests:
       memory: "4Gi"
       cpu: "1000m"
@@ -81,7 +82,13 @@ rsync:
   
   replicaCount: 1
   
-  resources: {}
+  resources:
+    limits:
+      memory: "1Gi"
+      cpu: "500m"
+    requests:
+      memory: "512Mi"
+      cpu: "250m"
 
 tika:
   image:
@@ -96,7 +103,13 @@ tika:
     port: 9998
     targetPort: 9998
   
-  resources: {}
+  resources:
+    limits:
+      memory: "1Gi"
+      cpu: "500m"
+    requests:
+      memory: "512Mi"
+      cpu: "250m"
   
   environment:
     TZ: "Europe/Copenhagen"
