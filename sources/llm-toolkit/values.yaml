@@ -692,7 +692,7 @@ litellm:
     httpGet:
       path: /health/liveliness
       port: http
-    initialDelaySeconds: 30
+    initialDelaySeconds: 120
     periodSeconds: 10
     timeoutSeconds: 5
     failureThreshold: 3
@@ -703,7 +703,7 @@ litellm:
     httpGet:
       path: /health/readiness
       port: http
-    initialDelaySeconds: 20
+    initialDelaySeconds: 120
     periodSeconds: 10
     timeoutSeconds: 3
     failureThreshold: 3
