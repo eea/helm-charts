@@ -53,7 +53,7 @@ Then it will add a changelog entry in README.md file with the following structur
     ### Version NEW_VERSION - DATE
     - HELM_UPGRADE_MESSAGE [AUTHOR - [`COMMIT`](COMMIT_LINK)]
 
-
+Note: `increase_version_helm.sh` requires `yq`, install it from https://github.com/mikefarah/yq?tab=readme-ov-file#install
 
 
 
