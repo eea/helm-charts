@@ -1,0 +1,123 @@
+affinity: {}
+allowAnonymousLogin: true
+auth:
+  clientPassword: null
+  clientUser: null
+  enabled: false
+  serverPasswords: null
+  serverUsers: null
+autopurge:
+  purgeInterval: 0
+  snapRetainCount: 3
+clusterDomain: cluster.local
+commonAnnotations: {}
+commonLabels: {}
+dataLogDir: ""
+fourlwCommandsWhitelist: srvr, mntr, ruok
+heapSize: 1024
+image:
+  debug: false
+  pullPolicy: IfNotPresent
+  registry: docker.io
+  repository: bitnami/zookeeper
+  tag: 3.6.2-debian-10-r58
+initLimit: 10
+listenOnAllIPs: false
+livenessProbe:
+  enabled: true
+  failureThreshold: 6
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  probeCommandTimeout: 2
+  successThreshold: 1
+  timeoutSeconds: 5
+logLevel: ERROR
+maxClientCnxns: 60
+maxSessionTimeout: 40000
+metrics:
+  containerPort: 9141
+  enabled: false
+  prometheusRule:
+    enabled: false
+    namespace: null
+    rules: []
+  service:
+    annotations:
+      prometheus.io/path: /metrics
+      prometheus.io/port: '{{ .Values.metrics.service.port }}'
+      prometheus.io/scrape: "true"
+    port: 9141
+    type: ClusterIP
+  serviceMonitor:
+    enabled: false
+    namespace: null
+networkPolicy:
+  enabled: false
+nodeSelector: {}
+persistence:
+  accessModes:
+  - ReadWriteOnce
+  annotations: {}
+  dataLogDir:
+    size: 8Gi
+  enabled: true
+  size: 8Gi
+podAnnotations: {}
+podDisruptionBudget:
+  maxUnavailable: 1
+podLabels: {}
+podManagementPolicy: Parallel
+priorityClassName: ""
+readinessProbe:
+  enabled: true
+  failureThreshold: 6
+  initialDelaySeconds: 5
+  periodSeconds: 10
+  probeCommandTimeout: 2
+  successThreshold: 1
+  timeoutSeconds: 5
+replicaCount: 1
+resources:
+  requests:
+    cpu: 250m
+    memory: 256Mi
+securityContext:
+  enabled: true
+  fsGroup: 1001
+  runAsUser: 1001
+service:
+  annotations: {}
+  electionPort: 3888
+  followerPort: 2888
+  headless:
+    annotations: {}
+  port: 2181
+  publishNotReadyAddresses: true
+  tls:
+    client_enable: false
+    client_keystore_password: ""
+    client_keystore_path: /tls_key_store/key_store_file
+    client_port: 3181
+    client_truststore_password: ""
+    client_truststore_path: /tls_trust_store/trust_store_file
+    disable_base_client_port: false
+    quorum_enable: false
+    quorum_keystore_password: ""
+    quorum_keystore_path: /tls_key_store/key_store_file
+    quorum_truststore_password: ""
+    quorum_truststore_path: /tls_trust_store/trust_store_file
+  type: ClusterIP
+serviceAccount:
+  create: false
+syncLimit: 5
+tickTime: 2000
+tolerations: []
+updateStrategy: RollingUpdate
+volumePermissions:
+  enabled: false
+  image:
+    pullPolicy: Always
+    registry: docker.io
+    repository: bitnami/minideb
+    tag: buster
+  resources: {}

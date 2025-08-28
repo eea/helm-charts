@@ -1,0 +1,323 @@
+advertisedListeners: []
+affinity: {}
+allowPlaintextListener: true
+args: null
+auth:
+  clientProtocol: plaintext
+  interBrokerProtocol: plaintext
+  jaas:
+    clientPasswords: []
+    clientUsers:
+    - user
+    interBrokerPassword: ""
+    interBrokerUser: admin
+  saslInterBrokerMechanism: plain
+  saslMechanisms: plain,scram-sha-256,scram-sha-512
+  tlsEndpointIdentificationAlgorithm: https
+autoCreateTopicsEnable: true
+clusterDomain: cluster.local
+command:
+- /scripts/setup.sh
+commonAnnotations: {}
+commonLabels: {}
+containerSecurityContext: {}
+customLivenessProbe: {}
+customReadinessProbe: {}
+defaultReplicationFactor: 1
+deleteTopicEnable: false
+externalAccess:
+  autoDiscovery:
+    enabled: false
+    image:
+      pullPolicy: IfNotPresent
+      pullSecrets: []
+      registry: docker.io
+      repository: bitnami/kubectl
+      tag: 1.17.13-debian-10-r21
+    resources:
+      limits: {}
+      requests: {}
+  enabled: false
+  service:
+    annotations: {}
+    loadBalancerIPs: []
+    loadBalancerSourceRanges: []
+    nodePorts: []
+    port: 9094
+    type: LoadBalancer
+externalZookeeper:
+  servers: []
+extraDeploy: []
+extraEnvVars: []
+extraVolumeMounts: []
+extraVolumes: []
+heapOpts: -Xmx1024m -Xms1024m
+image:
+  debug: false
+  pullPolicy: IfNotPresent
+  pullSecrets: []
+  registry: docker.io
+  repository: bitnami/kafka
+  tag: 2.6.0-debian-10-r78
+interBrokerListenerName: INTERNAL
+listeners: []
+livenessProbe:
+  enabled: true
+  initialDelaySeconds: 10
+  timeoutSeconds: 5
+logFlushIntervalMessages: 10000
+logFlushIntervalMs: 1000
+logRetentionBytes: _1073741824
+logRetentionCheckIntervalMs: 300000
+logRetentionHours: 168
+logSegmentBytes: _1073741824
+logsDirs: /bitnami/kafka/data
+maxMessageBytes: _1000012
+metrics:
+  jmx:
+    config: |-
+      jmxUrl: service:jmx:rmi:///jndi/rmi://127.0.0.1:5555/jmxrmi
+      lowercaseOutputName: true
+      lowercaseOutputLabelNames: true
+      ssl: false
+      {{- if .Values.metrics.jmx.whitelistObjectNames }}
+      whitelistObjectNames: ["{{ join "\",\"" .Values.metrics.jmx.whitelistObjectNames }}"]
+      {{- end }}
+    enabled: false
+    image:
+      pullPolicy: IfNotPresent
+      pullSecrets: []
+      registry: docker.io
+      repository: bitnami/jmx-exporter
+      tag: 0.14.0-debian-10-r64
+    resources:
+      limits: {}
+      requests: {}
+    service:
+      annotations:
+        prometheus.io/path: /
+        prometheus.io/port: '{{ .Values.metrics.jmx.service.port }}'
+        prometheus.io/scrape: "true"
+      loadBalancerSourceRanges: []
+      nodePort: ""
+      port: 5556
+      type: ClusterIP
+    whitelistObjectNames:
+    - kafka.controller:*
+    - kafka.server:*
+    - java.lang:*
+    - kafka.network:*
+    - kafka.log:*
+  kafka:
+    enabled: false
+    extraFlags: {}
+    image:
+      pullPolicy: IfNotPresent
+      pullSecrets: []
+      registry: docker.io
+      repository: bitnami/kafka-exporter
+      tag: 1.2.0-debian-10-r277
+    resources:
+      limits: {}
+      requests: {}
+    service:
+      annotations:
+        prometheus.io/path: /metrics
+        prometheus.io/port: '{{ .Values.metrics.kafka.service.port }}'
+        prometheus.io/scrape: "true"
+      loadBalancerSourceRanges: []
+      nodePort: ""
+      port: 9308
+      type: ClusterIP
+  serviceMonitor:
+    enabled: false
+nodeSelector: {}
+numIoThreads: 8
+numNetworkThreads: 3
+numPartitions: 1
+numRecoveryThreadsPerDataDir: 1
+offsetsTopicReplicationFactor: 1
+pdb:
+  create: false
+  maxUnavailable: 1
+persistence:
+  accessModes:
+  - ReadWriteOnce
+  annotations: {}
+  enabled: true
+  size: 8Gi
+podAnnotations: {}
+podLabels: {}
+podSecurityContext:
+  fsGroup: 1001
+  runAsUser: 1001
+priorityClassName: ""
+rbac:
+  create: false
+readinessProbe:
+  enabled: true
+  failureThreshold: 6
+  initialDelaySeconds: 5
+  timeoutSeconds: 5
+replicaCount: 1
+resources:
+  limits: {}
+  requests: {}
+service:
+  annotations: {}
+  externalPort: 9094
+  internalPort: 9093
+  loadBalancerSourceRanges: []
+  nodePorts:
+    client: ""
+    external: ""
+  port: 9092
+  type: ClusterIP
+serviceAccount:
+  create: true
+sidecars: {}
+socketReceiveBufferBytes: 102400
+socketRequestMaxBytes: _104857600
+socketSendBufferBytes: 102400
+tolerations: []
+transactionStateLogMinIsr: 1
+transactionStateLogReplicationFactor: 1
+updateStrategy: RollingUpdate
+volumePermissions:
+  enabled: false
+  image:
+    pullPolicy: Always
+    pullSecrets: []
+    registry: docker.io
+    repository: bitnami/minideb
+    tag: buster
+  resources:
+    limits: {}
+    requests: {}
+zookeeper:
+  affinity: {}
+  allowAnonymousLogin: true
+  auth:
+    clientPassword: null
+    clientUser: null
+    enabled: false
+    serverPasswords: null
+    serverUsers: null
+  autopurge:
+    purgeInterval: 0
+    snapRetainCount: 3
+  clusterDomain: cluster.local
+  commonAnnotations: {}
+  commonLabels: {}
+  dataLogDir: ""
+  enabled: true
+  fourlwCommandsWhitelist: srvr, mntr, ruok
+  global: {}
+  heapSize: 1024
+  image:
+    debug: false
+    pullPolicy: IfNotPresent
+    registry: docker.io
+    repository: bitnami/zookeeper
+    tag: 3.6.2-debian-10-r58
+  initLimit: 10
+  listenOnAllIPs: false
+  livenessProbe:
+    enabled: true
+    failureThreshold: 6
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    probeCommandTimeout: 2
+    successThreshold: 1
+    timeoutSeconds: 5
+  logLevel: ERROR
+  maxClientCnxns: 60
+  maxSessionTimeout: 40000
+  metrics:
+    containerPort: 9141
+    enabled: false
+    prometheusRule:
+      enabled: false
+      namespace: null
+      rules: []
+    service:
+      annotations:
+        prometheus.io/path: /metrics
+        prometheus.io/port: '{{ .Values.metrics.service.port }}'
+        prometheus.io/scrape: "true"
+      port: 9141
+      type: ClusterIP
+    serviceMonitor:
+      enabled: false
+      namespace: null
+  networkPolicy:
+    enabled: false
+  nodeSelector: {}
+  persistence:
+    accessModes:
+    - ReadWriteOnce
+    annotations: {}
+    dataLogDir:
+      size: 8Gi
+    enabled: true
+    size: 8Gi
+  podAnnotations: {}
+  podDisruptionBudget:
+    maxUnavailable: 1
+  podLabels: {}
+  podManagementPolicy: Parallel
+  priorityClassName: ""
+  readinessProbe:
+    enabled: true
+    failureThreshold: 6
+    initialDelaySeconds: 5
+    periodSeconds: 10
+    probeCommandTimeout: 2
+    successThreshold: 1
+    timeoutSeconds: 5
+  replicaCount: 1
+  resources:
+    requests:
+      cpu: 250m
+      memory: 256Mi
+  securityContext:
+    enabled: true
+    fsGroup: 1001
+    runAsUser: 1001
+  service:
+    annotations: {}
+    electionPort: 3888
+    followerPort: 2888
+    headless:
+      annotations: {}
+    port: 2181
+    publishNotReadyAddresses: true
+    tls:
+      client_enable: false
+      client_keystore_password: ""
+      client_keystore_path: /tls_key_store/key_store_file
+      client_port: 3181
+      client_truststore_password: ""
+      client_truststore_path: /tls_trust_store/trust_store_file
+      disable_base_client_port: false
+      quorum_enable: false
+      quorum_keystore_password: ""
+      quorum_keystore_path: /tls_key_store/key_store_file
+      quorum_truststore_password: ""
+      quorum_truststore_path: /tls_trust_store/trust_store_file
+    type: ClusterIP
+  serviceAccount:
+    create: false
+  syncLimit: 5
+  tickTime: 2000
+  tolerations: []
+  updateStrategy: RollingUpdate
+  volumePermissions:
+    enabled: false
+    image:
+      pullPolicy: Always
+      registry: docker.io
+      repository: bitnami/minideb
+      tag: buster
+    resources: {}
+zookeeperConnectionTimeoutMs: 6000
