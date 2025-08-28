@@ -128,6 +128,8 @@ spec:
               value: {{ .Values.litellm.llmGuardApiUrl | quote }}
             - name: LLM_GUARD_RESPONSE_PROMPT
               value: {{ .Values.litellm.llmGuardResponsePrompt | quote }}
+            - name: TZ
+              value: {{ .Values.timezone | default "Europe/Copenhagen" }}
           ports:
             - name: http
               containerPort: {{ .Values.litellm.service.port }}
@@ -139,7 +141,7 @@ spec:
             httpGet:
               path: /health/liveliness
               port: http
-            initialDelaySeconds: 120
+            initialDelaySeconds: 60
             periodSeconds: 10
             timeoutSeconds: 5
             failureThreshold: 3
