@@ -264,6 +264,9 @@ helm delete llm-toolkit
 
 ## Releases
 
+### Version 0.2.2
+- Added missing TZ to litellm.
+
 ### Version 0.2.1
 - Updated livenessProbe for litellm.
 
