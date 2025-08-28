@@ -1,0 +1,32 @@
+{{- if .Values.graylogClient.lb.enabled }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "logcentral-graylog5.fullname" . }}-graylog-client
+  labels:
+    {{- include "logcentral-graylog5.graylog-client.labels" . | nindent 4 }}
+  annotations:
+    metallb.universe.tf/loadBalancerIPs: {{ .Values.graylogClient.lb.exposeIP }}
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 1514
+      targetPort: 1514
+      protocol: TCP
+      name: syslog-tcp
+    - port: 1514
+      targetPort: 1514
+      protocol: UDP
+      name: syslog-udp
+    - port: 12201
+      targetPort: 12201
+      protocol: TCP
+      name: gelf-tcp
+    - port: 12201
+      targetPort: 12201
+      protocol: UDP
+      name: gelf-udp
+  selector:
+    {{- include "logcentral-graylog5.graylog-client.selectorLabels" . | nindent 4 }}
+{{- end }}
