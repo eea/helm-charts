@@ -1,21 +1,24 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: batch/v1
+kind: Job
 metadata:
   name: {{ .Release.Name }}-{{ .Chart.Name }}-eea-crawler-config
+  labels:
+    app.kubernetes.io/name: {{ .Chart.Name }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/version: "{{ .Chart.AppVersion }}"
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
-  replicas: {{ .Values.eeaCrawlerConfig.replicaCount }}
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: {{ .Chart.Name }}
-      app.kubernetes.io/instance: {{ .Release.Name }}
-      app.kubernetes.io/component: eea-crawler-config
+  backoffLimit: {{ .Values.eeaCrawlerConfig.backoffLimit | default 3 }}
   template:
     metadata:
       labels:
         app.kubernetes.io/name: {{ .Chart.Name }}
         app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/version: "{{ .Chart.AppVersion }}"
+        app.kubernetes.io/managed-by: {{ .Release.Service }}
         app.kubernetes.io/component: eea-crawler-config
     spec:
+      restartPolicy: {{ .Values.eeaCrawlerConfig.restartPolicy | default "OnFailure" }}
       containers:
       - name: eea-crawler-config
         image: "{{ .Values.eeaCrawlerConfig.image.repository }}:{{ .Values.eeaCrawlerConfig.image.tag }}"
@@ -35,9 +38,6 @@ spec:
             memory: "{{ .Values.eeaCrawlerConfig.resources.limits.memory }}"
           requests:
             memory: "{{ .Values.eeaCrawlerConfig.resources.requests.memory }}"
-        command:
-        - sleep
-        - "3600"
       volumes:
       - name: custom-config
         persistentVolumeClaim:
