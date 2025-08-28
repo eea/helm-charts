@@ -203,40 +203,43 @@ helm install elastic7 ./elastic7 \
 
 ## Releases
 
-<dl>
+### Version 0.3.1 - 28 August 2025
+- Set storageClassName [valentinab25 - [`966292c1`](https://github.com/eea/helm-charts/commit/966292c16bf6e7999b17201f50a8a5bb5657a9a7)]
 
-  <dt>Version 0.1.10</dt>
-  <dd>Added configurable data role for master nodes - allows proper dedicated master/data node separation or combined roles based on cluster size.</dd>
 
-  <dt>Version 0.1.9</dt>
-  <dd>Simplified configuration - removed redundant initialDataNodes variable, now using esworker.replicaCount consistently throughout the chart.</dd>
 
-  <dt>Version 0.1.8</dt>
-  <dd>Implemented dynamic node discovery - automatically generates seed hosts and initial master nodes based on replica counts for flexible cluster configurations.</dd>
+### Version 0.1.10
+- Added configurable data role for master nodes - allows proper dedicated master/data node separation or combined roles based on cluster size.
 
-  <dt>Version 0.1.7</dt>
-  <dd>Fixed cluster formation issues - improved discovery configuration, shared SSL certificates, and added data role to master nodes for proper bootstrap.</dd>
+### Version 0.1.9
+- Simplified configuration - removed redundant initialDataNodes variable, now using esworker.replicaCount consistently throughout the chart.
 
-  <dt>Version 0.1.6</dt>
-  <dd>Fixed SSL certificate format issue - now generates proper PKCS12 certificates instead of PEM format to prevent TrustManager errors.</dd>
+### Version 0.1.8
+- Implemented dynamic node discovery - automatically generates seed hosts and initial master nodes based on replica counts for flexible cluster configurations.
 
-  <dt>Version 0.1.5</dt>
-  <dd>Fixed Kibana URL auto-generation from ingress configuration. The chart now automatically builds the correct URL from ingress settings.</dd>
+### Version 0.1.7
+- Fixed cluster formation issues - improved discovery configuration, shared SSL certificates, and added data role to master nodes for proper bootstrap.
 
-  <dt>Version 0.1.4</dt>
-  <dd>Added missing log4j2.properties configuration file to fix logging initialization errors.</dd>
+### Version 0.1.6
+- Fixed SSL certificate format issue - now generates proper PKCS12 certificates instead of PEM format to prevent TrustManager errors.
 
-  <dt>Version 0.1.3</dt>
-  <dd>Fixed JVM options compatibility issue - removed experimental G1MixedGCLiveThresholdPercent option that caused startup failures.</dd>
+### Version 0.1.5
+- Fixed Kibana URL auto-generation from ingress configuration. The chart now automatically builds the correct URL from ingress settings.
 
-  <dt>Version 0.1.2</dt>
-  <dd>Fixed missing jvm.options error when security is enabled. Added automatic configuration initialization.</dd>
+### Version 0.1.4
+- Added missing log4j2.properties configuration file to fix logging initialization errors.
 
-  <dt>Version 0.1.1</dt>
-  <dd>Fix env variables.</dd>
+### Version 0.1.3
+- Fixed JVM options compatibility issue - removed experimental G1MixedGCLiveThresholdPercent option that caused startup failures.
 
-  <dt>Version 0.1.0</dt>
-  <dd>Initial version.</dd>
+### Version 0.1.2
+- Fixed missing jvm.options error when security is enabled. Added automatic configuration initialization.
 
-</dl>
+### Version 0.1.1
+- Fix env variables.
+
+### Version 0.1.0
+- Initial version.
+
+
 
