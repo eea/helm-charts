@@ -8,13 +8,13 @@ spec:
   concurrencyPolicy: Forbid
   jobTemplate:
     spec:
+      backoffLimit: 0
       ttlSecondsAfterFinished: {{ .Values.jobs.ttlSecondsAfterFinished }}
       template:
         metadata:
           labels:
             app.kubernetes.io/name: {{ .Release.Name }}-archive
         spec:
-          backoffLimit: 0
           securityContext:
             runAsUser: 0
             runAsGroup: 0
