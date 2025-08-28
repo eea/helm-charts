@@ -11,6 +11,9 @@ This chart deploys the EEA Main Website frontend app
 
 ## Releases
 
+### Version 1.21.1 - 28 August 2025
+- Add producton ingress settings [Alin Voinea - [`1db28c25`](https://github.com/eea/helm-charts/commit/1db28c25cd9a0560978579bd9db6d7ca890688bc)]
+
 ### Version 1.21.0 - 27 August 2025
 - Automated release of [eeacms/eea-website-frontend:2.41.0](https://github.com/eea/eea-website-frontend/releases) [EEA Jenkins - [`68b757c8`](https://github.com/eea/helm-charts/commit/68b757c8d3221b4c7aa38f65af0b95345a088e5c)]
 
