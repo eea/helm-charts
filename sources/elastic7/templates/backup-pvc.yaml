@@ -11,7 +11,7 @@ spec:
   resources:
     requests:
       storage: 10Gi
-  {{- if .Values.backupVolumeDriver }}
-  storageClassName: {{ .Values.backupVolumeDriver }}
+  {{- if .Values.storageClassName }}
+  storageClassName: {{ .Values.storageClassName }}
   {{- end }}
 {{- end }}

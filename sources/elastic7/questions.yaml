@@ -594,7 +594,7 @@ questions:
     type: "string"
     group: "Backup Configuration"
 
-  - variable: "backupVolumeDriver"
+  - variable: "storageClassName"
     label: "Backup volumes driver"
     description: "ElasticSearch data volume driver"
     default: "nfs-client"
@@ -613,7 +613,7 @@ questions:
       - "no"
     group: "Backup Configuration"
 
-  - variable: "backupVolumeDriverOpts"
+  - variable: "storageClassNameOpts"
     label: "Backup volume driver options"
     description: |
       Specify "driver_opts" key/value pair in the format "optionName: optionValue".

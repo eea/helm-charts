@@ -211,6 +211,7 @@ spec:
   - metadata:
       name: esworkdata
     spec:
+      storageClassName: {{ .Values.esmaster.persistence.storageClassName }}
       accessModes:
       - ReadWriteOnce
       resources:

@@ -11,7 +11,7 @@ spec:
   resources:
     requests:
       storage: 1Gi
-  {{- if .Values.volumeConfigDriver }}
-  storageClassName: {{ .Values.volumeConfigDriver }}
+  {{- if .Values.storageClassName }}
+  storageClassName: {{ .Values.storageClassName }}
   {{- end }}
 {{- end }}

@@ -66,15 +66,7 @@ dataMemLimit: "1536Mi"
 sysctlVmMaxMapCount: 262144
 timezone: "Europe/Copenhagen"
 
-# Volume configuration
-volumeDriver: "nfs-client"
-volumeDriverOpts: ""
-volumeConfigDriver: "nfs-client"
-volumeConfigDriverOpts: ""
-backupVolumeName: ""
-backupVolumeDriver: "nfs-client"
-backupVolumeExternal: "yes"
-backupVolumeDriverOpts: ""
+storageClassName: "nfs-client"
 
 # Host labels for scheduling
 hostLabels: ""
@@ -146,6 +138,7 @@ esmaster:
   persistence:
     enabled: true
     size: 1Gi
+    storageClassName: "nfs-client"
   # Elasticsearch superuser password (elastic user) - empty for no authentication, minimum 6 characters
   password: ""
   backup:
@@ -206,6 +199,7 @@ esworker:
   persistence:
     enabled: true
     size: 1Gi
+    storageClassName: "nfs-client"
   # Health check configuration for Elasticsearch data nodes (same as master)
   healthChecks:
     # Startup probe configuration
