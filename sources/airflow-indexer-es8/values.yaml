@@ -281,20 +281,21 @@ postgres:
       persistentVolumeClaim:
         claimName: postgresdata-es8
 eeaCrawlerConfig:
-  replicaCount: 1
   image:
-    repository: busybox
+    repository: eeacms/eea-crawler
     pullPolicy: IfNotPresent
-    tag: latest
+    tag: 0.0.5
   env:
     DEV_ENV: 'true'
     TZ: Europe/Copenhagen
-    github_repo: example/crawler-config
+    github_repo: https://github.com/eea/eea-crawler
   resources:
     limits:
       memory: 512Mi
     requests:
       memory: 256Mi
+  restartPolicy: OnFailure
+  backoffLimit: 3
   volumes:
     - name: airflow-indexer-config-es8
       persistentVolumeClaim:
@@ -328,7 +329,7 @@ persistence:
     accessMode: "ReadWriteOnce"  # Single pod access
     reclaimPolicy: "Retain"  # Override global setting if needed
   postgresdata:
-    size: "10Gi"
+    size: "30Gi"
     accessMode: "ReadWriteOnce"  # Single pod access
     reclaimPolicy: "Retain"  # Override global setting if needed
 

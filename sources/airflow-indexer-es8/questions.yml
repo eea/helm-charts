@@ -214,7 +214,7 @@ questions:
   label: "PostgreSQL Data Volume Size"
   description: "Size of the PostgreSQL data persistent volume"
   type: string
-  default: "10Gi"
+  default: "30Gi"
   group: "Persistence"
 
 - variable: ingress.enabled
@@ -333,7 +333,7 @@ questions:
   label: "PostgreSQL Data Volume Size"
   description: "Storage size for PostgreSQL data volume"
   type: string
-  default: "10Gi"
+  default: "30Gi"
   group: "Persistence"
 
 - variable: persistence.postgresdata.accessMode
