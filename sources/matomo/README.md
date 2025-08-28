@@ -347,6 +347,9 @@ You don't need to change anything on this container, it should work by having th
 
 ## Releases
 
+### Version 1.0.15 - 28 August 2025
+- Add annotations with IP to checkmk [valentinab25 - [`0eafb235`](https://github.com/eea/helm-charts/commit/0eafb23592aa99e1d84f2b11181404cb4e44c943)]
+
 ### Version 1.0.14 - 28 August 2025
 - fix backoffLimit [valentinab25 - [`ca677e31`](https://github.com/eea/helm-charts/commit/ca677e314af4dfcaa75b75eb799ea8706ed3181b)]
 
