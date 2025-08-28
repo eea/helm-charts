@@ -347,6 +347,9 @@ You don't need to change anything on this container, it should work by having th
 
 ## Releases
 
+### Version 1.0.13 - 28 August 2025
+- Fix port checkmk [valentinab25 - [`bae02b10`](https://github.com/eea/helm-charts/commit/bae02b10601184bf8241c3af8bfbb930c9ed15df)]
+
 ### Version 1.0.12 - 28 August 2025
 - Refactor images, mariadb service [valentinab25 - [`860408dd`](https://github.com/eea/helm-charts/commit/860408ddf68136eff5c3b313f1670622b1e79cd9)]
 
