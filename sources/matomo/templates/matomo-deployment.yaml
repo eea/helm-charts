@@ -26,14 +26,14 @@ spec:
           - sh
           - -c
           - >
-            until nc -z {{ .Release.Name }}-mariadb 3306;
-            do echo waiting for {{ .Release.Name }}-mariadb; sleep 2; done;
+            until nc -z mariadb 3306;
+            do echo waiting for mariadb; sleep 2; done;
       containers:
         - name: matomo
-          image: "{{ .Values.matomo.image.repository }}:{{ .Values.matomo.image.tag }}"
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           env:
             - name: MATOMO_DATABASE_HOST
-              value: {{ .Release.Name }}-mariadb
+              value: mariadb
             - name: MATOMO_DATABASE_PORT_NUMBER
               value: "3306"
             - name: MATOMO_DATABASE_USER

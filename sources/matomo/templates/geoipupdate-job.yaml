@@ -16,7 +16,7 @@ spec:
         spec:
           containers:
             - name: geoipupdate
-              image: "{{ .Values.geoipupdate.image.repository }}:{{ .Values.geoipupdate.image.tag }}"
+              image: "{{ .Values.geoipupdate.image }}"
               env:
              {{- range $key, $value := .Values.geoipupdate.environment }}
                {{- if ($value) }}

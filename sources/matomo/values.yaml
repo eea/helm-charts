@@ -7,10 +7,15 @@ pvc:
 jobs:
   ttlSecondsAfterFinished: 86400
 
+
+image:
+  repository: eeacms/matomo
+  pullPolicy: Always
+  tag: ""
+
+
 mariadb:
-  image:
-    repository: mariadb
-    tag: 10.11.11
+  image: mariadb:10.11.11
   user: eea_matomo
   commands:
     - "--max_allowed_packet=128M"
@@ -40,12 +45,10 @@ mariadb:
     MYSQL_ALLOW_EMPTY_PASSWORD: "no"  
   storage: 400Gi
   storageClassName: nfs-rancher
+  exposeCheckMK: false
 
 matomo:
   hostname: "dev-matomo.01dev.eea.europa.eu"
-  image:
-    repository: eeacms/matomo
-    tag: 5.3.2-1
   environment:
     PHP_MEMORY_LIMIT: 4096M
     PHP_MAX_EXECUTION_TIME: '"0"'
@@ -90,9 +93,6 @@ matomo:
 
 
 matomocronArchive:
-  image:
-    repository: eeacms/matomo
-    tag: 5.3.2-1
   environment:
     PHP_MEMORY_LIMIT: 7168M
     PHP_MAX_EXECUTION_TIME: 0
@@ -105,26 +105,20 @@ matomocronArchive:
       memory: 6Gi
 
 matomocronLdapSync:
-  image:
-    repository: eeacms/matomo
-    tag: 5.3.2-2
   cronSchedule: "10 1 * * *"
-  environment:
-    AZURE_TENANT_ID: REPLACEME
-    AZURE_CLIENT_ID: REPLACEME
-    AZURE_VIEW_GROUP: REPLACEME
-    AZURE_CLIENT_SECRET: REPLACEME
-    ADMIN_EMAIL: REPLACEME  
   resources:
     requests:
       memory: 256Mi
     limits:
       memory: 256Mi
+  environment:
+    AZURE_TENANT_ID: REPLACEME
+    AZURE_CLIENT_ID: REPLACEME
+    AZURE_VIEW_GROUP: REPLACEME
+    AZURE_CLIENT_SECRET: REPLACEME
+    ADMIN_EMAIL: REPLACEME
 
 matomocronDeleteData:
-  image:
-    repository: eeacms/matomo
-    tag: 5.3.2-1
   environment:
     PHP_MEMORY_LIMIT: 512M
     siteToDelete: "22"
@@ -137,9 +131,7 @@ matomocronDeleteData:
       memory: 512Mi
 
 geoipupdate:
-  image:
-    repository: maxmindinc/geoipupdate
-    tag: v7.1
+  image: maxmindinc/geoipupdate:v7.1
   environment:
     GEOIPUPDATE_EDITION_IDS: GeoLite2-City
     GEOIPUPDATE_VERBOSE: '"1"'
@@ -155,18 +147,14 @@ geoipupdate:
   storage: "1Gi"
  
 rsyncAnalytics:
-  image:
-    repository: eeacms/rsync
-    tag: 2.6
+  image: eeacms/rsync:2.8
   cronSchedule: "5 * * * *"
   rsyncCommands: ""
   storageClassName: ""
   storage: "1Gi"
 
 matomoAnalytics:
-  image:
-    repository: eeacms/matomo-log-analytics
-    tag: 2.4
+  image: eeacms/matomo-log-analytics:2.4
   cronSchedule: "15,45 22,23,0,1 * * *"
   resources:
     requests:

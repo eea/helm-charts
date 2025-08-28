@@ -9,7 +9,7 @@ spec:
     matchLabels:
         app.kubernetes.io/name: {{ .Release.Name }}-mariadb
         component: mariadb
-  serviceName: {{ .Release.Name }}-mariadb
+  serviceName: mariadb
   template:
     metadata:
       labels:
@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: mariadb
-          image: "{{ .Values.mariadb.image.repository }}:{{ .Values.mariadb.image.tag }}"
+          image: "{{ .Values.mariadb.image }}"
           ports:
           - containerPort: 3306
             name: mysql
