@@ -264,6 +264,9 @@ helm delete llm-toolkit
 
 ## Releases
 
+### Version 0.2.1
+- Updated livenessProbe for litellm.
+
 ### Version 0.2.0
 - Switched to bitnamilegacy repository and added additional LiteLLM env variables as well as changed the arguments for litellm.
 
