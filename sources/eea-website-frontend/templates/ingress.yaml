@@ -20,6 +20,63 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 
+{{- if .Values.ingress.production }}
+spec:
+  ingressClassName: alb
+  rules:
+  - host: www.eea.europa.eu
+    http:
+      paths:
+      - backend:
+          service:
+            name: frontend-nginx
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+      - backend:
+          service:
+            name: backend-nginx
+            port:
+              number: 80
+        path: /++api++
+        pathType: Prefix
+      - backend:
+          service:
+            name: backend-nginx
+            port:
+              number: 80
+        path: /admin
+        pathType: Prefix
+  - host: eea.europa.eu
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: redirect-to-www
+            port:
+              name: use-annotation
+  - host: datahub.eea.europa.eu
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: redirect-for-datahub
+            port:
+              name: use-annotation
+
+  tls:
+  - hosts:
+    - www.eea.europa.eu
+    - eea.europa.eu
+    - datahub.eea.europa.eu
+{{- end }}
+
+{{- if not .Values.ingress.production }}
 spec:
   ingressClassName: {{ $className }}
   rules:
@@ -58,5 +115,6 @@ spec:
     secretName: {{ .Values.ingress.certificate }}
     {{- end  }}
   {{- end  }}
+{{- end }}
 
 {{- end }}
