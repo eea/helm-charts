@@ -45,19 +45,21 @@ spec:
                   value: "no"
                 - name: TZ
                   value: "{{ .Values.timezone }}"
+                - name: AZURE_TENANT_ID
+                  value: {{ .Values.matomocronLdapSync.environment.AZURE_TENANT_ID | quote }}
+                - name: AZURE_CLIENT_ID
+                  value: {{ .Values.matomocronLdapSync.environment.AZURE_CLIENT_ID | quote }}
+                - name: AZURE_VIEW_GROUP
+                  value: {{ .Values.matomocronLdapSync.environment.AZURE_VIEW_GROUP | quote }}
+                - name: AZURE_CLIENT_SECRET
+                  value: {{ .Values.matomocronLdapSync.environment.AZURE_CLIENT_SECRET | quote }}
+                - name: ADMIN_EMAIL
+                  value: {{ .Values.matomocronLdapSync.environment.ADMIN_EMAIL | quote }}
               command:
                 - bash
                 - -c
               args:
-                - . /opt/bitnami/scripts/matomo-env.sh &&
-                  . /opt/bitnami/scripts/libbitnami.sh &&
-                  . /opt/bitnami/scripts/liblog.sh &&
-                  /opt/bitnami/scripts/apache/setup.sh &&
-                  /opt/bitnami/scripts/php/setup.sh &&
-                  /opt/bitnami/scripts/mysql-client/setup.sh &&
-                  /opt/bitnami/scripts/matomo/setup.sh &&
-                  /post-init.sh &&
-                  /usr/bin/run_ldapsync.sh || true
+                - /usr/bin/run_ldapsync.sh || true
               resources:
                 requests:
                   memory: "{{ .Values.matomocronLdapSync.resources.requests.memory }}"

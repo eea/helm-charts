@@ -347,6 +347,9 @@ You don't need to change anything on this container, it should work by having th
 
 ## Releases
 
+### Version 1.0.11 - 28 August 2025
+- Added Entra ID user sync in ldapsync [miahi - [`7d8f0b68`](https://github.com/eea/helm-charts/commit/7d8f0b689fe96461f3b63913cd528d2f4dfeec7f)]
+
 ### Version 1.0.10 - 27 August 2025
 - Add backoffLimit to not restart archiving [valentinab25 - [`0c8ba7b7`](https://github.com/eea/helm-charts/commit/0c8ba7b772389c0d7f204f6b430e102297cf1574)]
 
