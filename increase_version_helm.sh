@@ -2,6 +2,9 @@
 
 set -e
 
+command -v yq >/dev/null 2>&1 || { echo "yq is required but not installed. Install it from https://github.com/mikefarah/yq?tab=readme-ov-file#install"; exit 1; }
+
+
 if [ ! -f Chart.yaml ]; then
 
 	echo "Please run this script inside a helm chart directory !!!!"
