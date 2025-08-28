@@ -44,8 +44,8 @@ spec:
           securityContext:
             {{- toYaml .Values.redis.securityContext | nindent 12 }}
           volumeMounts:
-            - mountPath: /var/lib/redisql/data
-              name: psqldata
+            - mountPath: /data
+              name: redisdata
           {{- if .Values.redis.livenessProbe }}
           livenessProbe:
             {{- toYaml .Values.redis.livenessProbe | nindent 12 }}
