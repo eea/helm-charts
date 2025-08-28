@@ -347,6 +347,9 @@ You don't need to change anything on this container, it should work by having th
 
 ## Releases
 
+### Version 1.0.12 - 28 August 2025
+- Refactor images, mariadb service [valentinab25 - [`860408dd`](https://github.com/eea/helm-charts/commit/860408ddf68136eff5c3b313f1670622b1e79cd9)]
+
 ### Version 1.0.11 - 28 August 2025
 - Added Entra ID user sync in ldapsync [miahi - [`7d8f0b68`](https://github.com/eea/helm-charts/commit/7d8f0b689fe96461f3b63913cd528d2f4dfeec7f)]
 
