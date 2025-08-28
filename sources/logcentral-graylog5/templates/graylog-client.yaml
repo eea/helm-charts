@@ -66,6 +66,16 @@ spec:
               value: {{ .Values.global.timezone | quote }}
             - name: GRAYLOG_MONGODB_URI
               value: "mongodb://{{ include "logcentral-graylog5.fullname" . }}-mongodb:27017/graylog"
+            - name: GRAYLOG_PASSWORD_SECRET
+              value: {{ .Values.global.adminPassword | quote }}
+            - name: GRAYLOG_ROOT_PASSWORD_SHA2
+              value: {{ .Values.global.rootPassword | quote }}
+            {{- range $key, $value := .Values.graylog.environment }}
+              {{- if ($value) }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+              {{- end }}
+            {{- end }}
           ports:
             - name: graylog
               containerPort: 9000
