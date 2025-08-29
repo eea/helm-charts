@@ -118,35 +118,61 @@ environment:
     TELEMETRY_ENABLED: "false"
     TZ: Europe/Copenhagen
 
-ingress:
-  enabled: true
-  className: "nginx"
-  annotations:
-    nginx.ingress.kubernetes.io/whitelist-source-range: "10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
-    nginx.ingress.kubernetes.io/proxy-body-size: "0"
-    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
-    nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
-  hosts:
-    - host: elastic8-internal.ai-lab-aws.eea.europa.eu
-      paths:
-        - path: /
-          pathType: Prefix
-          service: es-data
-          port: 9200
-    # Example of additional hosts (uncomment and modify as needed):
-    # - host: elastic8-kibana.ai-lab-aws.eea.europa.eu
-    #   paths:
-    #     - path: /
-    #       pathType: Prefix
-    #       service: kibana
-    #       port: 5601
-    # - host: elastic8-cerebro.ai-lab-aws.eea.europa.eu
-    #   paths:
-    #     - path: /
-    #       pathType: Prefix
-    #       service: cerebro
-    #       port: 9000
-  tls:
+ingresses:
+  - name: elasticsearch
+    enabled: true
+    className: "nginx"
+    annotations:
+      nginx.ingress.kubernetes.io/whitelist-source-range: "10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
+      nginx.ingress.kubernetes.io/proxy-body-size: "0"
+      nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+      nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
+    hosts:
+      - host: elastic8-internal.ai-lab-aws.eea.europa.eu
+        paths:
+          - path: /
+            pathType: Prefix
+            service: es-data
+            port: 9200
+    tls:
+      enabled: false
+      secretName: ""
+      hosts: []
+  - name: kibana
     enabled: false
-    secretName: ""
-    hosts: []
+    className: "nginx"
+    annotations:
+      nginx.ingress.kubernetes.io/whitelist-source-range: "10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
+    hosts:
+      - host: elastic8-kibana.ai-lab-aws.eea.europa.eu
+        paths:
+          - path: /
+            pathType: Prefix
+            service: kibana
+            port: 5601
+    tls:
+      enabled: false
+      secretName: ""
+      hosts: []
+  - name: cerebro
+    enabled: false
+    className: "nginx"
+    annotations:
+      nginx.ingress.kubernetes.io/whitelist-source-range: "10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
+    hosts:
+      - host: elastic8-cerebro.ai-lab-aws.eea.europa.eu
+        paths:
+          - path: /
+            pathType: Prefix
+            service: cerebro
+            port: 9000
+    tls:
+      enabled: false
+      secretName: ""
+      hosts: []
+
+# LoadBalancer for es-master with persistent IP
+loadBalancer:
+  esMaster:
+    enabled: false
+    loadBalancerIP: ""
