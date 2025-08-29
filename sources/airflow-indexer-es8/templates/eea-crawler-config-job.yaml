@@ -9,6 +9,7 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   backoffLimit: {{ .Values.eeaCrawlerConfig.backoffLimit | default 3 }}
+  ttlSecondsAfterFinished: {{ .Values.eeaCrawlerConfig.ttlSecondsAfterFinished | default 86400 }}
   template:
     metadata:
       labels:
