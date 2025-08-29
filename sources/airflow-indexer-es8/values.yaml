@@ -82,7 +82,7 @@ headlessChromeApi:
 ide:
   replicaCount: 1
   image:
-    repository: linuxserver/code-server
+    repository: eeacms/cloud9
     pullPolicy: IfNotPresent
     tag: latest
   env:
@@ -354,3 +354,7 @@ ingress:
     enabled: false
     secretName: ""
     hosts: []
+
+runtimeClassName:
+  enabled: false
+  value: ""
