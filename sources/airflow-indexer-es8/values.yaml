@@ -1,6 +1,7 @@
 
 replicaCount: 1
 airflowInit:
+  enabled: true
   image:
     repository: eeacms/airflow
     pullPolicy: IfNotPresent
@@ -310,7 +311,7 @@ service:
   port: 80
 
 persistence:
-  storageClass: "local-path"
+  storageClass: "nfs-rancher"
   reclaimPolicy: "Retain"  # Retain, Delete, or Recycle
   accessMode: "ReadWriteMany"  # ReadWriteOnce, ReadWriteMany, ReadOnlyMany
   airflowIndexerConfig:
@@ -330,7 +331,7 @@ persistence:
     accessMode: "ReadWriteOnce"  # Single pod access
     reclaimPolicy: "Retain"  # Override global setting if needed
   postgresdata:
-    size: "30Gi"
+    size: "80Gi"
     accessMode: "ReadWriteOnce"  # Single pod access
     reclaimPolicy: "Retain"  # Override global setting if needed
 
