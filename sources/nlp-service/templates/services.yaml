@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "nlp-service.fullname" . }}-nlp-searchlib
+  name: nlp-searchlib
   labels:
     {{- include "nlp-service.labels" . | nindent 4 }}
     app.kubernetes.io/component: nlp-searchlib
@@ -19,7 +19,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "nlp-service.fullname" . }}-tika
+  name: tika
   labels:
     {{- include "nlp-service.labels" . | nindent 4 }}
     app.kubernetes.io/component: tika
