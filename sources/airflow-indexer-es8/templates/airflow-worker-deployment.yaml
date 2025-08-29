@@ -67,6 +67,7 @@ spec:
           requests:
             memory: "{{ .Values.airflowWorker.resources.requests.memory }}"
         command:
+        - /docker_start.sh
         - celery
         - worker
       volumes:

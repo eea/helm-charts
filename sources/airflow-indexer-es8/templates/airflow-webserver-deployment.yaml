@@ -63,6 +63,7 @@ spec:
           requests:
             memory: "{{ .Values.airflowWebserver.resources.requests.memory }}"
         command:
+        - /docker_start.sh
         - webserver
         ports:
         - containerPort: 8080

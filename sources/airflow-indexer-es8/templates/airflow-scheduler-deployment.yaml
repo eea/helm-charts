@@ -63,6 +63,7 @@ spec:
           requests:
             memory: "{{ .Values.airflowScheduler.resources.requests.memory }}"
         command:
+        - /docker_start.sh
         - scheduler
       volumes:
       - name: custom-config
