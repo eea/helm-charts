@@ -2,9 +2,9 @@
 replicaCount: 1
 airflowInit:
   image:
-    repository: apache/airflow
+    repository: eeacms/airflow
     pullPolicy: IfNotPresent
-    tag: 2.7.0
+    tag: 0.1.4
   env:
     AIRFLOW__API__AUTH_BACKEND: airflow.api.auth.backend.basic_auth
     AIRFLOW__CELERY__BROKER_URL: redis://:@redis:6379/0
@@ -36,9 +36,9 @@ airflowInit:
 airflowWorker:
   replicaCount: 1
   image:
-    repository: apache/airflow
+    repository: eeacms/airflow
     pullPolicy: IfNotPresent
-    tag: 2.7.0
+    tag: 0.1.4
   env:
     AIRFLOW_VAR_SDI_AUTH: Basic <encoded-credentials>
     AIRFLOW__API__AUTH_BACKEND: airflow.api.auth.backend.basic_auth
@@ -143,9 +143,9 @@ redis:
 flower:
   replicaCount: 1
   image:
-    repository: apache/airflow
+    repository: eeacms/airflow
     pullPolicy: IfNotPresent
-    tag: 2.7.0
+    tag: 0.1.4
   env:
     AIRFLOW__API__AUTH_BACKEND: airflow.api.auth.backend.basic_auth
     AIRFLOW__CELERY__BROKER_URL: redis://:@redis:6379/0
@@ -197,9 +197,9 @@ logstash:
 airflowScheduler:
   replicaCount: 1
   image:
-    repository: apache/airflow
+    repository: eeacms/airflow
     pullPolicy: IfNotPresent
-    tag: 2.7.0
+    tag: 0.1.4
   env:
     AIRFLOW__API__AUTH_BACKEND: airflow.api.auth.backend.basic_auth
     AIRFLOW__CELERY__BROKER_URL: redis://:@redis:6379/0
@@ -227,9 +227,9 @@ airflowScheduler:
 airflowWebserver:
   replicaCount: 1
   image:
-    repository: apache/airflow
+    repository: eeacms/airflow
     pullPolicy: IfNotPresent
-    tag: 2.7.0
+    tag: 0.1.4
   env:
     AIRFLOW__API__AUTH_BACKEND: airflow.api.auth.backend.basic_auth
     AIRFLOW__CELERY__BROKER_URL: redis://:@redis:6379/0
