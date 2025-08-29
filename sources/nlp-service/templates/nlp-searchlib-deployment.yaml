@@ -86,3 +86,4 @@ spec:
       tolerations:
         {{- toYaml .Values.global.tolerations.values | nindent 8 }}
       {{- end }}
+      runtimeClassName: nvidia
