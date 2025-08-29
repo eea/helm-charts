@@ -20,6 +20,13 @@ spec:
         app.kubernetes.io/component: eea-crawler-config
     spec:
       restartPolicy: {{ .Values.eeaCrawlerConfig.restartPolicy | default "OnFailure" }}
+      initContainers:
+      - name: cleanup-directory
+        image: busybox:latest
+        command: ['sh', '-c', 'rm -rf /custom_config/* /custom_config/.[^.]*']
+        volumeMounts:
+        - name: custom-config
+          mountPath: /custom_config
       containers:
       - name: eea-crawler-config
         image: "{{ .Values.eeaCrawlerConfig.image.repository }}:{{ .Values.eeaCrawlerConfig.image.tag }}"
