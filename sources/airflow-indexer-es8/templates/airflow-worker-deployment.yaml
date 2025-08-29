@@ -67,7 +67,6 @@ spec:
           requests:
             memory: "{{ .Values.airflowWorker.resources.requests.memory }}"
         command:
-        - airflow
         - celery
         - worker
       volumes:

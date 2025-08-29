@@ -63,7 +63,6 @@ spec:
           requests:
             memory: "{{ .Values.airflowScheduler.resources.requests.memory }}"
         command:
-        - airflow
         - scheduler
       volumes:
       - name: custom-config
