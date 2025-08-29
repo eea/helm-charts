@@ -115,16 +115,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 */}}
 {{- define "sentry.postgresql.fullname" -}}
-{{- if .Values.sentryexternal.postgres.fullnameOverride -}}
-{{- .Values.sentryexternal.postgres.fullnameOverride | trunc 63 | trimSuffix "-" -}}
-{{- else -}}
-{{- $name := default .Chart.Name .Values.sentryexternal.postgres.nameOverride -}}
-{{- if contains $name .Release.Name -}}
-{{- .Release.Name | trunc 63 | trimSuffix "-" -}}
-{{- else -}}
-{{- printf "%s-%s" .Release.Name "sentry-postgresql" | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-{{- end -}}
+postgres
 {{- end -}}
 
 {{- define "sentry.redis.fullname" -}}
@@ -169,11 +160,7 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 Set postgres host
 */}}
 {{- define "sentry.postgresql.host" -}}
-{{- if .Values.sentryexternal.postgres.enabled -}}
-{{- template "sentry.postgresql.fullname" . -}}
-{{- else -}}
-{{ required "A valid .Values.externalPostgresql.host is required" .Values.externalPostgresql.host }}
-{{- end -}}
+postgres
 {{- end -}}
 
 {{/*
@@ -236,7 +223,7 @@ Set redis host
 */}}
 {{- define "sentry.redis.host" -}}
 {{- if .Values.sentryexternal.redis.enabled -}}
-{{- template "sentry.redis.fullname" . -}}-master
+redis
 {{- else -}}
 {{ required "A valid .Values.externalRedis.host is required" .Values.externalRedis.host }}
 {{- end -}}
