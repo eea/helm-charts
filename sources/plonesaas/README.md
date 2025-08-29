@@ -14,7 +14,6 @@ This chart deployes the PloneSaaS app together with several frontends as Ingress
 | climateEnergy.enabled | bool | false | Activate the climateEnergy Ingress |
 | debug.enabled | bool | false | Activate the Plone debug instance |
 | epanet.enabled | bool | false | Activate the epanet Ingress |
-| forest.enabled | bool | false | Activate the forest Ingress |
 | ias.enabled | bool | false | Activate the ias Ingress |
 | industry.enabled | bool | false | Activate the industry Ingress |
 
