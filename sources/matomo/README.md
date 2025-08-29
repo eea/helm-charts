@@ -347,6 +347,9 @@ You don't need to change anything on this container, it should work by having th
 
 ## Releases
 
+### Version 1.0.16 - 29 August 2025
+- Set job history to 1 fail, 1 succ [valentinab25 - [`9ca15bb1`](https://github.com/eea/helm-charts/commit/9ca15bb1132424e66a58b72190d71de8471046fa)]
+
 ### Version 1.0.15 - 28 August 2025
 - Add annotations with IP to checkmk [valentinab25 - [`0eafb235`](https://github.com/eea/helm-charts/commit/0eafb23592aa99e1d84f2b11181404cb4e44c943)]
 
