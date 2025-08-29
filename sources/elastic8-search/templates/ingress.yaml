@@ -1,31 +1,36 @@
-{{- if .Values.ingress.enabled -}}
+{{- range .Values.ingresses }}
+{{- if .enabled }}
+---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: elastic8-search-ingress
+  name: {{ $.Release.Name }}-{{ .name }}-ingress
   labels:
     app.kubernetes.io/name: elastic8-search
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/version: {{ .Chart.AppVersion | default .Chart.Version | quote }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
-  {{- with .Values.ingress.annotations }}
+    app.kubernetes.io/instance: {{ $.Release.Name }}
+    app.kubernetes.io/version: {{ $.Chart.AppVersion | default $.Chart.Version | quote }}
+    app.kubernetes.io/managed-by: {{ $.Release.Service }}
+    app.kubernetes.io/component: {{ .name }}
+  {{- with .annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  {{- if .Values.ingress.className }}
-  ingressClassName: {{ .Values.ingress.className }}
+  {{- if .className }}
+  ingressClassName: {{ .className }}
   {{- end }}
-  {{- if .Values.ingress.tls.enabled }}
+  {{- if .tls.enabled }}
   tls:
     - hosts:
-        {{- range .Values.ingress.tls.hosts }}
+        {{- range .tls.hosts }}
         - {{ . | quote }}
         {{- end }}
-      secretName: {{ .Values.ingress.tls.secretName }}
+      {{- if .tls.secretName }}
+      secretName: {{ .tls.secretName }}
+      {{- end }}
   {{- end }}
   rules:
-    {{- range .Values.ingress.hosts }}
+    {{- range .hosts }}
     - host: {{ .host | quote }}
       http:
         paths:
@@ -41,4 +46,5 @@ spec:
                   number: {{ .port | int }}
           {{- end }}
     {{- end }}
+{{- end }}
 {{- end }}

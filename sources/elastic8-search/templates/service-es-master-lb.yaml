@@ -1,0 +1,24 @@
+{{- if .Values.loadBalancer.esMaster.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-es-master-lb
+  labels:
+    app.kubernetes.io/name: elastic8-search
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion | default .Chart.Version | quote }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/component: es-master-loadbalancer
+spec:
+  type: LoadBalancer
+  {{- if .Values.loadBalancer.esMaster.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.loadBalancer.esMaster.loadBalancerIP }}
+  {{- end }}
+  selector:
+    app: es-master
+  ports:
+    - name: http
+      protocol: TCP
+      port: 9200
+      targetPort: 9200
+{{- end }}

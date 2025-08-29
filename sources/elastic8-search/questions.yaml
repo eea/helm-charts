@@ -272,41 +272,159 @@ questions:
   group: "Node Configuration"
   show_if: "global.tolerations.enabled=true"
 
-- variable: ingress.enabled
+# Elasticsearch Ingress Configuration
+- variable: ingresses[0].name
+  default: "elasticsearch"
+  description: "Name for the Elasticsearch ingress"
+  type: string
+  label: Elasticsearch Ingress Name
+  group: "Ingress Configuration"
+
+- variable: ingresses[0].enabled
   default: true
-  description: "Enable ingress for external access"
+  description: "Enable ingress for Elasticsearch access"
   type: boolean
-  label: Enable Ingress
+  label: Enable Elasticsearch Ingress
   group: "Ingress Configuration"
 
-- variable: ingress.className
+- variable: ingresses[0].className
   default: "nginx"
-  description: "Ingress class name"
+  description: "Ingress class name for Elasticsearch"
   type: string
-  label: Ingress Class
+  label: Elasticsearch Ingress Class
   group: "Ingress Configuration"
-  show_if: "ingress.enabled=true"
+  show_if: "ingresses[0].enabled=true"
 
-- variable: ingress.hosts[0].host
-  default: "elastic8_internal.ai-lab-aws.eea.europa.eu"
-  description: "Hostname for ingress"
+- variable: ingresses[0].hosts[0].host
+  default: "elastic8-internal.ai-lab-aws.eea.europa.eu"
+  description: "Hostname for Elasticsearch ingress"
   type: string
-  label: Ingress Hostname
+  label: Elasticsearch Hostname
   group: "Ingress Configuration"
-  show_if: "ingress.enabled=true"
+  show_if: "ingresses[0].enabled=true"
 
-- variable: ingress.annotations."nginx.ingress.kubernetes.io/whitelist-source-range"
+- variable: ingresses[0].annotations."nginx.ingress.kubernetes.io/whitelist-source-range"
   default: "10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
-  description: "IP whitelist for ingress access"
+  description: "IP whitelist for Elasticsearch ingress access"
   type: string
-  label: IP Whitelist
+  label: Elasticsearch IP Whitelist
   group: "Ingress Configuration"
-  show_if: "ingress.enabled=true"
+  show_if: "ingresses[0].enabled=true"
 
-- variable: ingress.tls.enabled
+- variable: ingresses[0].tls.enabled
   default: false
-  description: "Enable TLS for ingress"
+  description: "Enable TLS for Elasticsearch ingress"
   type: boolean
-  label: Enable TLS
+  label: Enable Elasticsearch TLS
   group: "Ingress Configuration"
-  show_if: "ingress.enabled=true"
+  show_if: "ingresses[0].enabled=true"
+
+# Kibana Ingress Configuration
+- variable: ingresses[1].name
+  default: "kibana"
+  description: "Name for the Kibana ingress"
+  type: string
+  label: Kibana Ingress Name
+  group: "Ingress Configuration"
+
+- variable: ingresses[1].enabled
+  default: false
+  description: "Enable ingress for Kibana access"
+  type: boolean
+  label: Enable Kibana Ingress
+  group: "Ingress Configuration"
+
+- variable: ingresses[1].className
+  default: "nginx"
+  description: "Ingress class name for Kibana"
+  type: string
+  label: Kibana Ingress Class
+  group: "Ingress Configuration"
+  show_if: "ingresses[1].enabled=true"
+
+- variable: ingresses[1].hosts[0].host
+  default: "elastic8-kibana.ai-lab-aws.eea.europa.eu"
+  description: "Hostname for Kibana ingress"
+  type: string
+  label: Kibana Hostname
+  group: "Ingress Configuration"
+  show_if: "ingresses[1].enabled=true"
+
+- variable: ingresses[1].annotations."nginx.ingress.kubernetes.io/whitelist-source-range"
+  default: "10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
+  description: "IP whitelist for Kibana ingress access"
+  type: string
+  label: Kibana IP Whitelist
+  group: "Ingress Configuration"
+  show_if: "ingresses[1].enabled=true"
+
+- variable: ingresses[1].tls.enabled
+  default: false
+  description: "Enable TLS for Kibana ingress"
+  type: boolean
+  label: Enable Kibana TLS
+  group: "Ingress Configuration"
+  show_if: "ingresses[1].enabled=true"
+
+# Cerebro Ingress Configuration
+- variable: ingresses[2].name
+  default: "cerebro"
+  description: "Name for the Cerebro ingress"
+  type: string
+  label: Cerebro Ingress Name
+  group: "Ingress Configuration"
+
+- variable: ingresses[2].enabled
+  default: false
+  description: "Enable ingress for Cerebro access"
+  type: boolean
+  label: Enable Cerebro Ingress
+  group: "Ingress Configuration"
+
+- variable: ingresses[2].className
+  default: "nginx"
+  description: "Ingress class name for Cerebro"
+  type: string
+  label: Cerebro Ingress Class
+  group: "Ingress Configuration"
+  show_if: "ingresses[2].enabled=true"
+
+- variable: ingresses[2].hosts[0].host
+  default: "elastic8-cerebro.ai-lab-aws.eea.europa.eu"
+  description: "Hostname for Cerebro ingress"
+  type: string
+  label: Cerebro Hostname
+  group: "Ingress Configuration"
+  show_if: "ingresses[2].enabled=true"
+
+- variable: ingresses[2].annotations."nginx.ingress.kubernetes.io/whitelist-source-range"
+  default: "10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
+  description: "IP whitelist for Cerebro ingress access"
+  type: string
+  label: Cerebro IP Whitelist
+  group: "Ingress Configuration"
+  show_if: "ingresses[2].enabled=true"
+
+- variable: ingresses[2].tls.enabled
+  default: false
+  description: "Enable TLS for Cerebro ingress"
+  type: boolean
+  label: Enable Cerebro TLS
+  group: "Ingress Configuration"
+  show_if: "ingresses[2].enabled=true"
+
+# LoadBalancer Configuration
+- variable: loadBalancer.esMaster.enabled
+  default: false
+  description: "Enable LoadBalancer service for es-master with persistent IP"
+  type: boolean
+  label: Enable LoadBalancer for Elasticsearch Master
+  group: "LoadBalancer Configuration"
+
+- variable: loadBalancer.esMaster.loadBalancerIP
+  default: ""
+  description: "Static IP address for LoadBalancer (optional, keeps IP on upgrades)"
+  type: string
+  label: LoadBalancer Static IP
+  group: "LoadBalancer Configuration"
+  show_if: "loadBalancer.esMaster.enabled=true"
