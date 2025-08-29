@@ -5,6 +5,8 @@ metadata:
   name: {{ .Release.Name }}-analytics
 spec:
   schedule: "{{ .Values.matomoAnalytics.cronSchedule }}"
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
   concurrencyPolicy: Forbid
   jobTemplate:
     spec:

@@ -6,9 +6,10 @@ metadata:
 spec:
   schedule: "{{ .Values.matomocronArchive.cronSchedule }}"
   concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
   jobTemplate:
     spec:
-      backoffLimit: 0
       ttlSecondsAfterFinished: {{ .Values.jobs.ttlSecondsAfterFinished }}
       template:
         metadata:
