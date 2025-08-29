@@ -68,7 +68,6 @@ spec:
           requests:
             memory: "{{ .Values.airflowInit.resources.requests.memory }}"
         command:
-        - airflow
         - db
         - init
       volumes:
