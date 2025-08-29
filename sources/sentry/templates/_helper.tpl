@@ -203,7 +203,7 @@ Set postgresql username
 */}}
 {{- define "sentry.postgresql.username" -}}
 {{- if .Values.sentryexternal.postgres.enabled -}}
-{{- default "postgres" .Values.postgresql.postgresqlUsername }}
+{{- default "postgres" .Values.sentryexternal.postgres.environment.POSTGRES_USERNAME }}
 {{- else -}}
 {{ required "A valid .Values.externalPostgresql.username is required" .Values.externalPostgresql.username }}
 {{- end -}}
@@ -225,7 +225,7 @@ Set postgresql database
 */}}
 {{- define "sentry.postgresql.database" -}}
 {{- if .Values.sentryexternal.postgres.enabled -}}
-{{- default "sentry" .Values.postgresql.postgresqlDatabase }}
+{{- default "sentry" .Values.sentryexternal.postgres.environment.POSTGRES_DATABASE }}
 {{- else -}}
 {{ required "A valid .Values.externalPostgresql.database is required" .Values.externalPostgresql.database }}
 {{- end -}}
