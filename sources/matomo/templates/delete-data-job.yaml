@@ -6,6 +6,8 @@ metadata:
 spec:
   schedule: "{{ .Values.matomocronDeleteData.cronSchedule }}"
   concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
   jobTemplate:
     spec:
       ttlSecondsAfterFinished: {{ .Values.jobs.ttlSecondsAfterFinished }}
