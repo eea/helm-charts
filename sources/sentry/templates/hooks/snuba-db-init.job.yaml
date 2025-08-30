@@ -77,6 +77,29 @@ spec:
           value: debug
         - name: CLICKHOUSE_SINGLE_NODE
           value: "true"
+        - name: SENTRY_WEB_PORT
+          value: "9000"
+        - name: POSTFIX_PORT
+          value: "25"
+        - name: SENTRY_NGINX_PORT
+          value: "80"
+        - name: SENTRY_CLICKHOUSE_PORT
+          value: "9000"
+        - name: SENTRY_RELAY_PORT
+          value: "3000"
+        - name: POSTGRES_PORT
+          value: "5432"
+        - name: REDIS_PORT
+          value: "6379"
+        - name: KUBERNETES_PORT
+          value: "443"
+        - name: SENTRY_ZOOKEEPER_PORT
+          value: "2181"
+        - name: SENTRY_KAFKA_PORT
+          value: "9092"
+        - name: SENTRY_SNUBA_PORT
+          value: "1218"
+
 {{ include "sentry.snuba.env" . | indent 8 }}
 {{- if .Values.snuba.dbInitJob.env }}
 {{ toYaml .Values.snuba.dbInitJob.env | indent 8 }}

@@ -6,7 +6,7 @@ rabbitmq:
   enabled: false
 
 sentryexternal:
-  url: sentry.eea.europa.eu
+  url: sentry.01dev.eea.europa.eu
   timezone: Europe/Copenhagen
   postgres:
     service:
@@ -57,6 +57,8 @@ sentryexternal:
       proxy-send-timeout: "120s"
     tls: true
     certificate: ""
+
+
 
 
 clickhouse:
@@ -114,8 +116,8 @@ clickhouse:
             result_rows: "0"
           name: default
       remote_servers:
-        enabled: false
-        internal_replication: false
+        enabled: true
+        internal_replication: true
         replica:
           backup:
             enabled: false
@@ -135,10 +137,10 @@ clickhouse:
           name: default
       zookeeper_servers:
         config:
-        - host: ""
-          index: ""
-          port: ""
-        enabled: false
+        - host: sentry-zookeeper
+          index: default
+          port: 2181
+        enabled: true
         operation_timeout_ms: "10000"
         session_timeout_ms: "30000"
     http_port: "8123"
@@ -195,8 +197,8 @@ clickhouse:
       logsPersistentVolume:
         accessModes:
         - ReadWriteOnce
-        enabled: false
-        storage: 50Gi
+        enabled: true
+        storage: 100Gi
     podManagementPolicy: Parallel
     readinessProbe:
       enabled: true
@@ -205,7 +207,7 @@ clickhouse:
       periodSeconds: "30"
       successThreshold: "1"
       timeoutSeconds: "5"
-    replicas: "1"
+    replicas: "3"
     resources: {}
     tcp_port: "9000"
     updateStrategy: RollingUpdate
@@ -245,6 +247,9 @@ clickhouse:
       maxUnavailable: 1
       type: RollingUpdate
   timezone: UTC
+
+
+
 config:
   configYml: {}
   relay: |
@@ -666,12 +671,12 @@ kafka:
       resources: {}
   zookeeperConnectionTimeoutMs: 6000
 mail:
-  backend: dummy
-  from: ""
-  host: ""
+  backend: smtp
+  from: sentry@eea.europa.eu
+  host: postfix
   password: ""
   port: 25
-  useTls: false
+  useTls: true
   username: ""
 metrics:
   affinity: {}
@@ -1036,7 +1041,7 @@ snuba:
       maxReplicas: 5
       minReplicas: 2
       targetCPUUtilizationPercentage: 50
-    env: []
+    env:
     liveness:
       timeoutSeconds: 2
     nodeSelector: {}
@@ -1141,7 +1146,8 @@ symbolicator:
 system:
   adminEmail: ""
   public: false
-  url: ""
+  url: https://sentry.01dev.eea.europa.eu
+  secretKey: iaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaadsafdasfasfcakwqew
 user:
   create: true
   email: admin@sentry.local
