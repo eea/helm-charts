@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 0.0.6 - 31 August 2025
+- Add geoipupdate [valentinab25 - [`e716bf27`](https://github.com/eea/helm-charts/commit/e716bf27adbcc1c6983d38e7aefd00d4154ef880)]
+
 ### Version 0.0.5 - 30 August 2025
 - fix default sentry port [valentinab25 - [`4e378315`](https://github.com/eea/helm-charts/commit/4e3783150e876e25c27acb200432da16632942b8)]
 
