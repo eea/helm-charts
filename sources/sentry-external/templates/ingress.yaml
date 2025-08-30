@@ -30,7 +30,7 @@ spec:
           service:
             name: {{ .Release.Name }}-nginx 
             port:
-              number: 9000
+              number: 80
   {{- if .Values.ingress.tls }}
   tls:
   - hosts:
