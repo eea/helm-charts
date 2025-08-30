@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 0.0.5 - 30 August 2025
+- fix default sentry port [valentinab25 - [`4e378315`](https://github.com/eea/helm-charts/commit/4e3783150e876e25c27acb200432da16632942b8)]
+
 ### Version 0.0.4 - 30 August 2025
 - Fix ulimits error [valentinab25 - [`dfcea036`](https://github.com/eea/helm-charts/commit/dfcea036c7c9ac70563e384a69d7e93b0446b837)]
 
