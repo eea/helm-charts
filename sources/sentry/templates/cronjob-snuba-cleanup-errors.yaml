@@ -61,6 +61,7 @@ spec:
             env:
               - name: SNUBA_SETTINGS
                 value: /etc/snuba/settings.py
+{{ include "sentry.snuba.env" . | indent 14 }}
 {{- if .Values.snuba.cleanupErrors.env }}
 {{ toYaml .Values.snuba.cleanupErrors.env | indent 12 }}
 {{- end }}

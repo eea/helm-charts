@@ -244,11 +244,7 @@ Set redis secret
 Set redis port
 */}}
 {{- define "sentry.redis.port" -}}
-{{- if .Values.sentryexternal.redis.enabled -}}
-{{- default 6379 .Values.sentryexternal.redis.redisPort }}
-{{- else -}}
-{{ required "A valid .Values.externalRedis.port is required" .Values.externalRedis.port }}
-{{- end -}}
+6379
 {{- end -}}
 
 {{/*
@@ -419,4 +415,26 @@ Common Snuba environment variables
   value: /etc/snuba/settings.py
 - name: DEFAULT_BROKERS
   value: {{ include "sentry.kafka.bootstrap_servers_string" . | quote }}
+- name: SENTRY_WEB_PORT
+  value: "9000"
+- name: POSTFIX_PORT
+  value: "25"
+- name: SENTRY_NGINX_PORT
+  value: "80"
+- name: SENTRY_CLICKHOUSE_PORT
+  value: "9000"
+- name: SENTRY_RELAY_PORT
+  value: "3000"
+- name: POSTGRES_PORT
+  value: "5432"
+- name: REDIS_PORT
+  value: "6379"
+- name: KUBERNETES_PORT
+  value: "443"
+- name: SENTRY_ZOOKEEPER_PORT
+  value: "2181"
+- name: SENTRY_KAFKA_PORT
+  value: "9092"
+- name: SENTRY_SNUBA_PORT
+  value: "1218"
 {{- end -}}
