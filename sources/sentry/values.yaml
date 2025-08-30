@@ -40,6 +40,7 @@ sentryexternal:
   postfix:
     serverName: sentry.eea.europa.eu
     mtpPass: ''
+    dryrun: true
     mtpPort: ''
     mtpRelay: ''
     mtpUser: ''
@@ -676,7 +677,7 @@ mail:
   host: postfix
   password: ""
   port: 25
-  useTls: true
+  useTls: false
   username: ""
 metrics:
   affinity: {}
