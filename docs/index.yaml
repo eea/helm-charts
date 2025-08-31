@@ -26491,6 +26491,33 @@ entries:
   sentry:
   - apiVersion: v2
     appVersion: 21.7.0
+    created: "2025-08-31T03:40:59.049880479+03:00"
+    dependencies:
+    - condition: kafka.enabled
+      name: kafka
+      repository: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
+      version: 12.0.0
+    - condition: clickhouse.enabled
+      name: clickhouse
+      repository: https://sentry-kubernetes.github.io/charts
+      version: 3.11.0
+    - condition: nginx.enabled
+      name: nginx
+      repository: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
+      version: 9.3.3
+    - alias: sentryexternal
+      name: sentry-external
+      repository: https://eea.github.io/helm-charts
+      version: 0.0.7
+    description: A Helm chart for Kubernetes
+    digest: 3d04c6327f69b2a4b4993191952f06b73cedbe766cef3a73e5c6c952bd8e7036
+    name: sentry
+    type: application
+    urls:
+    - sentry-11.5.6.tgz
+    version: 11.5.6
+  - apiVersion: v2
+    appVersion: 21.7.0
     created: "2025-08-30T22:12:38.202910569+03:00"
     dependencies:
     - condition: kafka.enabled
@@ -27949,4 +27976,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2025-08-31T03:26:52.212196759+03:00"
+generated: "2025-08-31T03:40:58.775642815+03:00"
