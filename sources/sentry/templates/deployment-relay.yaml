@@ -98,6 +98,11 @@ spec:
             mountPath: /work/.relay/config.yml
             subPath: config.yml
             readOnly: true
+          {{- if .Values.sentryexternal.geoipupdate.enabled }}
+          - name: geoip
+            mountPath: /geoip
+            readonly: true
+          {{- end}}
         livenessProbe:
           failureThreshold: {{ .Values.relay.probeFailureThreshold }}
           httpGet:
@@ -131,6 +136,12 @@ spec:
         configMap:
           name: {{ template "sentry.fullname" . }}-relay
           defaultMode: 0644
+      {{- if .Values.sentryexternal.geoipupdate.enabled }}
+      - name: geoip-pv
+        persistentVolumeClaim:
+          claimName: {{ .Values.sentryexternal.geoipupdate.pvc }}
+      {{- end }}
+
       - name: credentials
         emptyDir: {}
 {{- if .Values.relay.volumes }}

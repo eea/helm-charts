@@ -58,8 +58,16 @@ sentryexternal:
       proxy-send-timeout: "120s"
     tls: true
     certificate: ""
-
-
+  geoipupdate:
+    enabled: true
+    pvc: sentry-geoupdate-pvc
+    environment:
+      GEOIPUPDATE_EDITION_IDS: GeoLite2-City
+      GEOIPUPDATE_VERBOSE: '1'
+      GEOIPUPDATE_LICENSE_KEY: REPLACEME
+      GEOIPUPDATE_ACCOUNT_ID: REPLACEME
+    cronSchedule: "0 4 15 * *"
+    storageClassName: nfs-client
 
 
 clickhouse:
@@ -936,6 +944,8 @@ relay:
     targetCPUUtilizationPercentage: 50
   env: []
   mode: managed
+  timeout: 15
+  connection_timeout: 10
   nodeSelector: {}
   probeFailureThreshold: 5
   probeInitialDelaySeconds: 10
