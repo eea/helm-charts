@@ -7,10 +7,10 @@ metadata:
 spec:
   schedule: {{ .Values.geoipupdate.cronSchedule }}
   concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
   jobTemplate:
     spec:
-      successfulJobsHistoryLimit: 1
-      failedJobsHistoryLimit: 1
       template:
         metadata:
           labels:
