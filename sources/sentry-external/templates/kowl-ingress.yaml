@@ -21,7 +21,7 @@ metadata:
   {{- end }}
 
 spec:
-  ingressClassName: nginx
+  ingressClassName: {{ .Values.kowl.ingress.className }}
   rules:
   - host: {{ .Values.kowl.hostname }}
     http:
