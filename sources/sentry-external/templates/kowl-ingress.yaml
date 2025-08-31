@@ -1,0 +1,44 @@
+{{- if and (.Values.kowl.enabled) (.Values.kowl.ingress.enabled) -}}
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-kowl-ingress
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: httpd
+  annotations:
+  {{- if .Values.kowl.ingress.letsencrypt }}
+    cert-manager.io/cluster-issuer: "{{ .Values.kowl.ingress.letsencrypt }}"
+  {{- end }}
+  {{- range $key, $value := .Values.kowl.ingress.configuration }}
+    {{- if ($value) }}
+    nginx.ingress.kubernetes.io/{{ $key }}: {{ $value | quote }}
+    {{- end }}
+  {{- end }}
+  {{- with .Values.kowl.ingress.annotations }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: {{ .Values.kowl.hostname }}
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ .Release.Name }}-kowl
+            port:
+              number: 8080
+  {{- if .Values.kowl.ingress.tls }}
+  tls:
+  - hosts:
+    - {{ .Values.kowl.hostname }}
+    {{- if .Values.kowl.ingress.certificate }}
+    secretName: {{ .Values.kowl.ingress.certificate }}
+    {{- end  }}
+    {{- end  }}
+{{- end }}    

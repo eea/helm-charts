@@ -1,0 +1,19 @@
+{{- if .Values.kowl.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-kowl
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: kowl
+spec:
+  type: {{ .Values.kowl.serviceType }}
+  ports:
+    - port: 8080
+      targetPort: 8080
+      name: http
+      protocol: TCP
+  selector:
+    {{- include "appl.selectorLabels" . | nindent 4 }}
+    component: kowl
+{{- end }}
