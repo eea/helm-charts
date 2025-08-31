@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 0.0.11 - 31 August 2025
+- fix kafka default url [valentinab25 - [`76ab0ae9`](https://github.com/eea/helm-charts/commit/76ab0ae92d84ba18d624abede6757ec59923651d)]
+
 ### Version 0.0.10 - 31 August 2025
 - fix classname [valentinab25 - [`b8b87d79`](https://github.com/eea/helm-charts/commit/b8b87d7908f63136f35296f7762266934766f4b4)]
 
