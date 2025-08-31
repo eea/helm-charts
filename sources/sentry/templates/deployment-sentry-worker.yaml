@@ -110,7 +110,7 @@ spec:
         configMap:
           name: {{ template "sentry.fullname" . }}-sentry
       {{- if .Values.sentryexternal.geoipupdate.enabled }}
-      - name: geoip-pv
+      - name: geoip
         persistentVolumeClaim:
           claimName: {{ .Values.sentryexternal.geoipupdate.pvc }}
       {{- end }}
