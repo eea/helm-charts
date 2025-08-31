@@ -116,6 +116,7 @@ postfix:
 kowl:
   enabled: true
   serviceType: ClusterIP
+  kafka: sentry-kafka:9092
   hostname: sentry-kowl.01dev.eea.europa.eu
   ingress:
     enabled: true
