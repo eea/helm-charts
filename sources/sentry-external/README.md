@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 0.0.9 - 31 August 2025
+- add kowl [valentinab25 - [`9c9aef1e`](https://github.com/eea/helm-charts/commit/9c9aef1e57f34cf9455767714b2cd1a63fecf0e9)]
+
 ### Version 0.0.8 - 31 August 2025
 - fix job config [valentinab25 - [`27ac3ec1`](https://github.com/eea/helm-charts/commit/27ac3ec133755b2375abb67597119cd42c538721)]
 
