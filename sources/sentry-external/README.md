@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 0.0.10 - 31 August 2025
+- fix classname [valentinab25 - [`b8b87d79`](https://github.com/eea/helm-charts/commit/b8b87d7908f63136f35296f7762266934766f4b4)]
+
 ### Version 0.0.9 - 31 August 2025
 - add kowl [valentinab25 - [`9c9aef1e`](https://github.com/eea/helm-charts/commit/9c9aef1e57f34cf9455767714b2cd1a63fecf0e9)]
 
