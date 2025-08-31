@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 0.0.8 - 31 August 2025
+- fix job config [valentinab25 - [`27ac3ec1`](https://github.com/eea/helm-charts/commit/27ac3ec133755b2375abb67597119cd42c538721)]
+
 ### Version 0.0.7 - 31 August 2025
 - Fix default values [valentinab25 - [`f6ebbb59`](https://github.com/eea/helm-charts/commit/f6ebbb59ea7d975276f86059bc767392bd4677bd)]
 
