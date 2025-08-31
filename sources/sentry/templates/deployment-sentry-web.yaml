@@ -85,6 +85,11 @@ spec:
         - mountPath: /etc/sentry
           name: config
           readOnly: true
+        {{- if .Values.sentryexternal.geoipupdate.enabled }}
+        - name: geoip
+          mountPath: /geoip
+          readOnly: true
+        {{- end}}
         - mountPath: {{ .Values.filestore.filesystem.path }}
           name: sentry-data
         {{- if and (eq .Values.filestore.backend "gcs") .Values.filestore.gcs.secretName }}
@@ -127,6 +132,11 @@ spec:
       - name: config
         configMap:
           name: {{ template "sentry.fullname" . }}-sentry
+      {{- if .Values.sentryexternal.geoipupdate.enabled }}
+      - name: geoip-pv
+        persistentVolumeClaim:
+          claimName: {{ .Values.sentryexternal.geoipupdate.pvc }}
+      {{- end }}
       - name: sentry-data
       {{- if and (eq .Values.filestore.backend "filesystem") .Values.filestore.filesystem.persistence.enabled }}
         persistentVolumeClaim:
