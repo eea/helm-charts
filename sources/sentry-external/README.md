@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 0.0.7 - 31 August 2025
+- Fix default values [valentinab25 - [`f6ebbb59`](https://github.com/eea/helm-charts/commit/f6ebbb59ea7d975276f86059bc767392bd4677bd)]
+
 ### Version 0.0.6 - 31 August 2025
 - Add geoipupdate [valentinab25 - [`e716bf27`](https://github.com/eea/helm-charts/commit/e716bf27adbcc1c6983d38e7aefd00d4154ef880)]
 
