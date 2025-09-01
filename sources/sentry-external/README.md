@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 0.0.12 - 01 September 2025
+- add memcached [valentinab25 - [`2da45378`](https://github.com/eea/helm-charts/commit/2da45378c0d419baa2a5696c1f2652f54a217036)]
+
 ### Version 0.0.11 - 31 August 2025
 - fix kafka default url [valentinab25 - [`76ab0ae9`](https://github.com/eea/helm-charts/commit/76ab0ae92d84ba18d624abede6757ec59923651d)]
 
