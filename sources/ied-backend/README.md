@@ -10,6 +10,9 @@ This chart deployes the European Industrial Emissions Portal backend app
 
 ## Releases
 
+### Version 1.94.0 - 01 September 2025
+- Automated release of [eeacms/ied-backend:6.0.15-81](https://github.com/eea/ied-backend/releases) [EEA Jenkins - [`e8532928`](https://github.com/eea/helm-charts/commit/e8532928c89bbb4dd970b53a9ef43149725df5eb)]
+
 ### Version 1.93.0 - 31 August 2025
 - Automated release of [eeacms/ied-backend:6.0.15-80](https://github.com/eea/ied-backend/releases) [EEA Jenkins - [`1951d081`](https://github.com/eea/helm-charts/commit/1951d0813f415ffc8583474963a61fa2b6670d78)]
 
