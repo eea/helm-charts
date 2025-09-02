@@ -177,6 +177,13 @@ questions:
     required: true
     group: "Volto configuration"
 
+  - variable: "volto.environment.CSP_HEADER"
+    label: "CSP Header"
+    description: "Content Security Policy header value"
+    type: "multiline"
+    required: false
+    group: "Volto configuration"
+
   - variable: "varnish.port"
     label: "Varnish backend/exposed port"
     description: "To simplify, we use the same port as the web application"
