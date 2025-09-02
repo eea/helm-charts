@@ -163,6 +163,13 @@
     required: true
     group: "Volto configuration"
 
+  - variable: "volto.environment.CSP_HEADER"
+    label: "CSP Header"
+    description: "Content Security Policy header value"
+    type: "multiline"
+    required: false
+    group: "Volto configuration"
+
 
 
   - variable: "varnish.port"
