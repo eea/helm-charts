@@ -18,12 +18,14 @@ When the application was running on Rancher 1.6, it had a container, which ran t
 
 ## Releases
 
-### Version 0.7.21 - 09 Seotenber 2025
+### Version 0.7.22 - 09 September 2025
+- Update GN46 with new docker tag format.
+
+### Version 0.7.21 - 09 Septenber 2025
 - Update GN46 to [`8568fc45`](https://github.com/eea/geonetwork-eea/commit/8568fc4557fd07857b12ee95101482f8b424b396) and GN5 to [`1a561dd7fb`](https://github.com/eea/geonetwork5-eea/commit/1a561dd7fb4df04c9e33ae0b0f239be5c0554d62).
   
 ### Version 0.7.20 - 25 August 2025
 - Release of dependent chart postfix:3.1.0 [EEA Jenkins - [`ecdf5d88`](https://github.com/eea/helm-charts/commit/ecdf5d884a7aca9cc563bab1477f010314d332f2)]
-
 
 ### Version 0.7.19- 06 Aug 2025
 - Update GN5.
