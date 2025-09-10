@@ -4,19 +4,25 @@ A csw service and front end application to search and find EEA GIS datasets.
 
 ## Cronjobs
 
-When the application was running on Rancher 1.6, it had a container, which ran the cron utility. It then ran three jobs periodically. The old mechanism is called cron and is now disabled by default. The three jobs are created as Kubernetes CronJobs, and can be enabled on an individual basis.
+Cronjobs have been removed since the update to GN 5/ GN 46 and the new folder structure.
 
 ## Values
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| cron.enabled | bool | false | Use the old crontab mechanism |
-| syncNcApache.enabled | bool | false | Sync NextCloud files with Apache |
-| webdavMetadata.enabled | bool | false | Update webdav meta data |
 | serverName | string | sdi.eea.europa.eu | Name of the server |
 | serverUrl | string | <https://sdi.eea.europa.eu:443> | URL of the server. The port is required. |
 
 ## Releases
+
+### Version 0.7.24 - 10 September 2025
+- Update Apache to 1.0.15 (httpd 2.4.65).
+- Update Nextcloud to 30.0.3
+- Remove nextcloud-redis deployment and service.
+- Update Elasticsearch to 8.14.3
+- Update Kibana to 8.14.3
+- Revome webdav-nc and sync-nc-apche cron jobs.
+- Disable samba contanier.
 
 ### Version 0.7.23 - 10 September 2025
 - Fix GN5 user and group to match other containers.
