@@ -70,15 +70,6 @@ apache:
     annotations: {}
 #     metallb.universe.tf/allow-shared-ip: "sdi-catalogue"
 
-cron:
-  enabled: false
-  crontab: |
-    # m h dom mon dow user  command
-    41 10,12,13,14,15,17,20 * * *  root     /opt/nextcloud_apache_conf_main.sh
-    * */12 * * *                root        /opt/transferit/cleanup_files.sh
-    0 2,12 * * *                www-data    /opt/webdav_public_links/webdav_metadata_download.sh
-    #*/15 * * * *               root        /opt/syncldapgroups/syncldapgroups.sh
-  resources: {}
 
 elasticsearch:
   password: changeme
@@ -181,7 +172,7 @@ publicCatalogue:
       memory: 4Gi
 
 samba:
-  enabled: true
+  enabled: false
   service:
     type: ClusterIP
     annotations: {}
@@ -192,27 +183,6 @@ samba:
 validator:
   resources: {}
 
-syncNcApache:
-  enabled: false
-  schedule: "41 9,11,12,13,14,16,19 * * *"
-  resources: {}
-  podSecurityContext: {}
-  securityContext: {}
-  nodeSelector: {}
-  tolerations: []
-  affinity: {}
-
-webdavMetadata:
-  enabled: false
-  schedule: "0 2,12 * * *"
-  resources: {}
-  podSecurityContext:
-    runAsUser: 33
-    runAsGroup: 33
-  securityContext: {}
-  nodeSelector: {}
-  tolerations: []
-  affinity: {}
 
 gn5:
   enabled: true
