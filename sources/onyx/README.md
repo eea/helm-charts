@@ -118,6 +118,9 @@ imageMapping:
 
 ## Releases
 
+### Version 0.2.7 - 10 September 2025
+- Removed ingress whitelist-source-range from values. [Olimpiu Rob - [`2aecceef`](https://github.com/eea/helm-charts/commit/2aecceef82bab23f8ba2d45a910dfbee6520eb09)]
+
 ### Version 0.2.6 - 10 September 2025
 - Updated appVersion to v1.3.1-eea.0.0.76. [Olimpiu Rob - [`e2791ebf`](https://github.com/eea/helm-charts/commit/e2791ebf165f99683d8fb29a3e89365b736fdf72)]
 

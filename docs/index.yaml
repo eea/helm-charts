@@ -22629,6 +22629,45 @@ entries:
   onyx-stack:
   - apiVersion: v2
     appVersion: v1.3.1-eea.0.0.76
+    created: "2025-09-10T10:38:05.06387+03:00"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 14.3.1
+    - condition: vespa.enabled
+      name: vespa
+      repository: https://onyx-dot-app.github.io/vespa-helm-charts
+      version: 0.2.24
+    - condition: redis.enabled
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 20.1.0
+    - condition: minio.enabled
+      name: minio
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 17.0.4
+    - condition: postfix.enabled
+      name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.1.0
+    description: An Onyx derived Helm chart for GPTLab
+    digest: 4ed5ff1018d005c4f784ec49b89bb8f2e2602bcd704dcd06bc400b923b0e75bb
+    home: https://www.onyx.app/
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/onyx/logo_onyx.png
+    keywords:
+    - gptlab
+    - ai
+    - search
+    - question-answering
+    - onyx
+    name: onyx-stack
+    type: application
+    urls:
+    - onyx-stack-0.2.7.tgz
+    version: 0.2.7
+  - apiVersion: v2
+    appVersion: v1.3.1-eea.0.0.76
     created: "2025-09-10T09:40:08.432542+03:00"
     dependencies:
     - condition: postgresql.enabled
@@ -28527,4 +28566,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2025-09-10T09:40:08.420673+03:00"
+generated: "2025-09-10T10:38:05.052421+03:00"
