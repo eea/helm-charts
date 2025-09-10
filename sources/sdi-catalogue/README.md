@@ -15,6 +15,10 @@ Cronjobs have been removed since the update to GN 5/ GN 46 and the new folder st
 
 ## Releases
 
+### Version 0.7.25 - 10 September 2025
+- Use GN5 image from eeacms/eea-geonetwork5.
+- Revert Nextcloud to 30.0.2 because image for 30.0.3 doesn't exist.
+
 ### Version 0.7.24 - 10 September 2025
 - Update Apache to 1.0.15 (httpd 2.4.65).
 - Update Nextcloud to 30.0.3
