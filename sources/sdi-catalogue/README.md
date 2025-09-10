@@ -18,6 +18,9 @@ When the application was running on Rancher 1.6, it had a container, which ran t
 
 ## Releases
 
+### Version 0.7.23 - 10 September 2025
+- Fix GN5 user and group to match other containers.
+
 ### Version 0.7.22 - 09 September 2025
 - Update GN46 with new docker tag format.
 
