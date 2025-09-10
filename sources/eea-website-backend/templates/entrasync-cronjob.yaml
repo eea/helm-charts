@@ -25,7 +25,12 @@ spec:
           containers:
           - name: entrasync
             image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-            command: {{- toYaml .Values.cronjobs.entrasync.command | nindent 12 }}
+            args:
+            - /app/bin/sync_eea_entra
+            - --portal
+            - {{ .Values.plone.site }}
+            - --zope-conf
+            - /app/etc/relstorage.conf
             env:
             - name: SERVER_NAME
               value: "{{ .Values.plone.hostname }}"

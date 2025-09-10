@@ -174,7 +174,6 @@ cronjobs:
   zodbpack:
     enabled: true
     schedule: "0 1 * * 0"
-    command: ["/app/bin/zodbpack", "/app/etc/zodbpack.conf"]
     resources:
       limits:
         memory: 2Gi
@@ -183,7 +182,6 @@ cronjobs:
   entrasync:
     enabled: true
     schedule: "0 0 * * *"
-    command: ["/app/bin/sync_eea_entra", "--portal", "www", "--zope-conf", "/app/etc/relstorage.conf"]
     resources:
       limits:
         memory: 2Gi

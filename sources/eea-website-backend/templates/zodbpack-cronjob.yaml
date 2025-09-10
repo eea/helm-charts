@@ -25,7 +25,9 @@ spec:
           containers:
           - name: zodbpack
             image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-            command: {{- toYaml .Values.cronjobs.zodbpack.command | nindent 12 }}
+            args:
+            - /app/bin/zodbpack
+            - /app/etc/zodbpack.conf
             env:
             - name: SERVER_NAME
               value: "{{ .Values.plone.hostname }}"
