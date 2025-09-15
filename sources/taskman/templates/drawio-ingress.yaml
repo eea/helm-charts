@@ -5,7 +5,7 @@ metadata:
   name: {{ .Release.Name }}-drawio-ingress
   labels:
     {{- include "appl.labels" . | nindent 4 }}
-    component: httpd
+    component: nginx
   annotations:
   {{- if .Values.drawio.ingress.letsencrypt }}
     cert-manager.io/cluster-issuer: "{{ .Values.drawio.ingress.letsencrypt }}"

@@ -1,42 +1,79 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .Release.Name }}-apache-config-cm
+  name: {{ .Release.Name }}-nginx-config-cm
 
 data:
-  vh-my-app.conf: |-
-        <VirtualHost *:80>
-            Protocols h2 http/1.1
-            KeepAliveTimeout 30
-            ErrorDocument 404 /errors/404.html
-            ErrorDocument 500 /errors/50x.html
-            ErrorDocument 501 /errors/50x.html
-            ErrorDocument 502 /errors/maintenance.html
-            ErrorDocument 503 /errors/maintenance.html
-            ErrorDocument 504 /errors/50x.html
-            ErrorDocument 505 /errors/50x.html
-
-            <Location /errors>
-                ProxyPass !
-            </Location>
-
-            ProxyTimeout 600
-            ProxyRequests Off
-            ProxyErrorOverride On
-
-            RewriteEngine On
-
-            LimitRequestBody 104857600
-            RequestHeader set Host "%{HTTP_HOST}s"
-            RequestHeader set X-Real-IP "%{REMOTE_ADDR}s"
-            RequestHeader set X-Frame-Options SAMEORIGIN
-
-            RewriteCond %{HTTP_COOKIE} !_redmine_eea=1.*$ [NC]
-            RewriteRule ^/search?.*$  / [NC,L,R,QSD]
-
-            RewriteRule ^/google1c3b89acd75baccf\.html$ /google1c3b89acd75baccf.html [PT]
-            RewriteRule ^/robots\.txt$ /robots.txt [PT]
-            RewriteCond %{REQUEST_URI} !^/errors/
-            RewriteRule ^(.*)$ http://redmine:3000$1 [P]
-        </VirtualHost>
+  nginx.conf: |-
+    events {
+        worker_connections 1024;
+    }
+    
+    http {
+        include       /etc/nginx/mime.types;
+        default_type  application/octet-stream;
+        
+        sendfile on;
+        keepalive_timeout 30;
+        client_max_body_size 100M;
+        
+        upstream redmine {
+            server redmine:3000;
+        }
+        
+        server {
+            listen 80;
+            listen [::]:80;
+            
+            # HTTP/2 support
+            http2 on;
+            
+            # Custom error pages
+            error_page 404 /errors/404.html;
+            error_page 500 501 504 505 /errors/50x.html;
+            error_page 502 503 /errors/maintenance.html;
+            
+            # Serve error pages locally
+            location /errors/ {
+                # No proxy pass - serve locally
+            }
+            
+            # Security headers
+            add_header X-Frame-Options SAMEORIGIN always;
+            
+            # Proxy timeout
+            proxy_read_timeout 600;
+            proxy_connect_timeout 600;
+            proxy_send_timeout 600;
+            
+            # Set headers for backend
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            
+            # Block search requests without specific cookie
+            location ~* ^/search {
+                if ($cookie__redmine_eea !~* "^1.*$") {
+                    return 302 /;
+                }
+                proxy_pass http://redmine;
+            }
+            
+            # Static files that should be served directly
+            location = /google1c3b89acd75baccf.html {
+                # Serve locally if file exists
+            }
+            
+            location = /robots.txt {
+                # Serve locally if file exists
+            }
+            
+            # Default proxy to Redmine
+            location / {
+                proxy_pass http://redmine;
+                proxy_intercept_errors on;
+            }
+        }
+    }
     

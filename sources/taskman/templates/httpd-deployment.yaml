@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-apache-dpl
+  name: {{ .Release.Name }}-nginx-dpl
   labels:
     {{- include "appl.labels" . | nindent 4 }}
-    component: httpd
+    component: nginx
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
       {{- include "appl.selectorLabels" . | nindent 6 }}
-      component: httpd
+      component: nginx
   template:
     metadata:
       labels:
         {{- include "appl.selectorLabels" . | nindent 8 }}
-        component: httpd
+        component: nginx
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -23,25 +23,26 @@ spec:
       {{- end }}
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
       containers:
-      - name: {{ .Release.Name }}-httpd
-        image: eeacms/apache-taskman:2.4-3.4
+      - name: {{ .Release.Name }}-nginx
+        image: nginx:1.25-alpine
         ports:
         - containerPort: 80
           protocol: TCP
         env:
         - name: TZ
           value: "{{ .Values.timezone }}"
-        - name: APACHE_MODULES
-          value: "http2_module"    
-        - name: APACHE_CONFIG
-          valueFrom:
-            configMapKeyRef:
-              name: {{ .Release.Name }}-apache-config-cm
-              key: vh-my-app.conf
+        volumeMounts:
+        - name: nginx-config
+          mountPath: /etc/nginx/nginx.conf
+          subPath: nginx.conf
         resources:
           {{- toYaml .Values.httpd.resources | nindent 10 }}
         securityContext:
           {{- toYaml .Values.httpd.securityContext | nindent 12 }}
+      volumes:
+      - name: nginx-config
+        configMap:
+          name: {{ .Release.Name }}-nginx-config-cm
 
         {{- if (.Values.httpd.livenessProbe) }}
         livenessProbe:

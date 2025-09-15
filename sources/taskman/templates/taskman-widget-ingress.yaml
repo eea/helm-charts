@@ -5,7 +5,7 @@ metadata:
   name: {{ .Release.Name }}-widget-ingress
   labels:
     {{- include "appl.labels" . | nindent 4 }}
-    component: httpd
+    component: nginx
   annotations:
   {{- if .Values.ingress.letsencrypt }}
     cert-manager.io/cluster-issuer: "{{ .Values.ingress.letsencrypt }}"
@@ -35,7 +35,7 @@ spec:
         pathType: ImplementationSpecific
         backend:
           service:
-            name: {{ .Release.Name }}-apache 
+            name: {{ .Release.Name }}-nginx 
             port:
               number: 80
   {{- if .Values.ingress.tls }}
