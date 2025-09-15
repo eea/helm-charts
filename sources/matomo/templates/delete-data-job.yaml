@@ -66,6 +66,7 @@ spec:
                   /opt/bitnami/scripts/php/setup.sh &&
                   /opt/bitnami/scripts/mysql-client/setup.sh &&
                   /opt/bitnami/scripts/matomo/setup.sh &&
+                  /use_matomo_in_rancher.sh &&
                   /post-init.sh &&
                   /usr/bin/run_delete_data.sh
               resources:
