@@ -459,6 +459,9 @@ grunt
 
 ## Releases
 
+### Version 0.3.9 - 15 September 2025
+- switch to nginx from apache [Silviu - [`27a7f8b9`](https://github.com/eea/helm-charts/commit/27a7f8b91db8b6baea29d937246b506056927173)]
+
 ### Version 0.3.8 - 26 August 2025
 - Fix ingress path type [valentinab25 - [`f9061efb`](https://github.com/eea/helm-charts/commit/f9061efba86b964b67465bbc7a95c92b11cd59d1)]
 
