@@ -24,7 +24,7 @@ spec:
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
       containers:
       - name: {{ .Release.Name }}-nginx
-        image: nginx:1.25-alpine
+        image: eeacms/nginx-taskman:1.25
         ports:
         - containerPort: 80
           protocol: TCP
