@@ -28,13 +28,13 @@ data:
         real_ip_header    X-Forwarded-For;
         real_ip_recursive on;
 
-        # --- Log format (must be here in http {}) ---
-        log_format graylog_strict
+        log_format graylog_strict_timed
             '$remote_addr - $remote_user [$time_local] '
             '"$request" $status $body_bytes_sent '
-            '"$http_referer" "$http_user_agent"';
+            '"$http_referer" "$http_user_agent" '
+            '$request_time';
 
-        access_log /var/log/nginx/access.log graylog_strict;
+        access_log /var/log/nginx/access.log graylog_strict_timed;
 
         upstream redmine {
             server redmine:3000;
