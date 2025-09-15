@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Release.Name }}-apache
+  name: {{ .Release.Name }}-nginx
   labels:
     {{- include "appl.labels" . | nindent 4 }}
-    component: httpd
+    component: nginx
 spec:
   type: {{ .Values.httpd.serviceType }}
   ports:
@@ -14,4 +14,4 @@ spec:
       name: http
   selector:
     {{- include "appl.selectorLabels" . | nindent 4 }}
-    component: httpd
+    component: nginx
