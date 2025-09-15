@@ -4,92 +4,6 @@ metadata:
   name: {{ .Release.Name }}-nginx-config-cm
 
 data:
-  404.html: |-
-    <html>
-    <head>
-    <link rel="stylesheet" type="text/css" href="/errors/static_errors/css/style.css">
-    </head>
-    <body class="err404">
-    <a href="https://www.eea.europa.eu" title="Go to homepage"><img class="eealogo" src="https://www.eea.europa.eu/about-us/documents/logos/eps_logos/eea-uk-white"></a>
-    <div class="message">
-    <h1>404 Not found!</h1>
-    <h2>Ooops the page you were looking for has melted away...</h2>
-    </div>
-    </body>
-    </html>
-  
-  50x.html: |-
-    <html>
-    <head>
-    <link rel="stylesheet" type="text/css" href="/errors/static_errors/css/style.css">
-    </head>
-    <body class="err50x">
-    <a href="https://www.eea.europa.eu" title="Go to homepage"><img class="eealogo" src="https://www.eea.europa.eu/about-us/documents/logos/eps_logos/eea-uk-white"></a>
-    <div class="message">
-    <h1>Our apologies, something went wrong!</h1>
-    <h2>We have recorded this issue and we will do our best to solve it.</h2>
-    </div>
-    </body>
-    </html>
-  
-  maintenance.html: |-
-    <html>
-    <head>
-    <link rel="stylesheet" type="text/css" href="/errors/static_errors/css/style.css">
-    </head>
-    <body class="err50xmaintenance">
-    <a href="http://www.eea.europa.eu" title="Go to homepage"><img class="eealogo" src="http://www.eea.europa.eu/about-us/documents/logos/eps_logos/eea-uk-white"></a>
-    <div class="message">
-    <h1>Server is undergoing maintenance</h1>
-    <h2>We are doing our best to restore it as fast as possible.</h2>
-    </div>
-    </body>
-    </html>
-
-  style.css: |-
-    @import url(http://fonts.googleapis.com/css?family=Open+Sans:100);
-    .err404 {
-      background:  url(/errors/static_errors/ice.gif) no-repeat center center fixed;
-      background-size: cover;
-    }
-
-    .err50x {
-      background:  url(/errors/static_errors/retrocars.gif) no-repeat center center fixed;
-      background-size: cover;
-    }
-
-    .err50xmaintenance {
-      background:  url(/errors/static_errors/containers.gif) no-repeat center center fixed;
-      background-size: cover;
-    }
-
-    h1{
-      font-size: 4em;
-    }
-    h2{
-      font-size: 2em;
-    }
-
-    body {
-      height: 100%;
-      font-family: 'Open Sans', sans-serif;
-    }
-
-    img.eealogo {
-        float:right;
-        padding:1em;
-        width: 30%;
-    }
-
-    .message {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translateX(-50%) translateY(-50%);
-      color: rgba(255,255,255, 0.9);
-      text-align: center;
-    }
-
   nginx.conf: |-
     events {
         worker_connections 1024;
@@ -102,6 +16,25 @@ data:
         sendfile on;
         keepalive_timeout 30;
         client_max_body_size 100M;
+
+        # Docker networks
+        set_real_ip_from 172.17.0.0/16;
+
+        # Kubernetes pod/service networks
+        set_real_ip_from 10.0.0.0/8;
+        set_real_ip_from 172.16.0.0/12;
+        set_real_ip_from 192.168.0.0/16;
+
+        real_ip_header    X-Forwarded-For;
+        real_ip_recursive on;
+
+        # --- Log format (must be here in http {}) ---
+        log_format graylog_strict
+            '$remote_addr - $remote_user [$time_local] '
+            '"$request" $status $body_bytes_sent '
+            '"$http_referer" "$http_user_agent"';
+
+        access_log /var/log/nginx/access.log graylog_strict;
 
         upstream redmine {
             server redmine:3000;
