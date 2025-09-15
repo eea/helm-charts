@@ -347,6 +347,9 @@ You don't need to change anything on this container, it should work by having th
 
 ## Releases
 
+### Version 1.0.17 - 15 September 2025
+- Add missing update script [valentinab25 - [`55f7c2c7`](https://github.com/eea/helm-charts/commit/55f7c2c7dd6297f36f24881b7a66e4f8d13ea68d)]
+
 ### Version 1.0.16 - 29 August 2025
 - Set job history to 1 fail, 1 succ [valentinab25 - [`9ca15bb1`](https://github.com/eea/helm-charts/commit/9ca15bb1132424e66a58b72190d71de8471046fa)]
 
