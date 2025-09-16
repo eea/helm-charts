@@ -3,6 +3,7 @@ kind: Deployment
 metadata:
   name: {{ include "onyx-stack.fullname" . }}-inference-model
   labels:
+    {{- include "onyx-stack.labels" . | nindent 4 }}
     {{- range .Values.inferenceCapability.labels }}
     {{ .key }}: {{ .value }}
     {{- end }}
