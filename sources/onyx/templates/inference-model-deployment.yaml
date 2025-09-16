@@ -17,6 +17,7 @@ spec:
   template:
     metadata:
       labels:
+        {{- include "onyx-stack.labels" . | nindent 8 }}
         {{- range .Values.inferenceCapability.podLabels }}
         {{ .key }}: {{ .value }}
         {{- end }}
