@@ -118,6 +118,9 @@ imageMapping:
 
 ## Releases
 
+### Version 0.2.10 - 16 September 2025
+- Added missing chart specific labels to inference-model deployment's pod. [Olimpiu Rob - [`3ac2e061`](https://github.com/eea/helm-charts/commit/3ac2e06135f6711d3e640ab550c5cfc9c9f7c1fb)]
+
 ### Version 0.2.9 - 16 September 2025
 - Added missing labels in inference-model-deployment. [Olimpiu Rob - [`0cecaa1c`](https://github.com/eea/helm-charts/commit/0cecaa1c0da1180a6225d79341e3ff8cf5ea4618)]
 
