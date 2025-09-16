@@ -118,6 +118,9 @@ imageMapping:
 
 ## Releases
 
+### Version 0.2.8 - 16 September 2025
+- Added liveness and readiness probes to api-server. [Olimpiu Rob - [`9ca401bc`](https://github.com/eea/helm-charts/commit/9ca401bcffd6943870518886aea870a9a77b111c)]
+
 ### Version 0.2.7 - 10 September 2025
 - Removed ingress whitelist-source-range from values. [Olimpiu Rob - [`2aecceef`](https://github.com/eea/helm-charts/commit/2aecceef82bab23f8ba2d45a910dfbee6520eb09)]
 
