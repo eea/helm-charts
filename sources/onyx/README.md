@@ -118,6 +118,9 @@ imageMapping:
 
 ## Releases
 
+### Version 0.2.9 - 16 September 2025
+- Added missing labels in inference-model-deployment. [Olimpiu Rob - [`0cecaa1c`](https://github.com/eea/helm-charts/commit/0cecaa1c0da1180a6225d79341e3ff8cf5ea4618)]
+
 ### Version 0.2.8 - 16 September 2025
 - Added liveness and readiness probes to api-server. [Olimpiu Rob - [`9ca401bc`](https://github.com/eea/helm-charts/commit/9ca401bcffd6943870518886aea870a9a77b111c)]
 
