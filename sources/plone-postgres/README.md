@@ -4,6 +4,9 @@ Postgres for plone Apps.
 
 ## Releases
 
+### Version 1.0.9 - 17 September 2025
+- Update new versions of postgres [valentinab25 - [`40f3d71b`](https://github.com/eea/helm-charts/commit/40f3d71b1beaefa2072c14e8e973016eb4eed7b5)]
+
 ### Version 1.0.8 - 25 August 2025
 - Mount postgresql-backup to /backup [Alin Voinea - [`b56532d5`](https://github.com/eea/helm-charts/commit/b56532d5f96661a6a96a6d25140dbae692187956)]
 
