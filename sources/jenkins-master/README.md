@@ -1,5 +1,8 @@
 # Releases
 
+### Version 0.2.0 - 19 September 2025
+- Automated release of [eeacms/jenkins-master:2.528](https://github.com/eea/eea.docker.jenkins.master/releases) [EEA Jenkins - [`4a89bdb2`](https://github.com/eea/helm-charts/commit/4a89bdb20ee508b23ef46b662a2c276687a621e2)]
+
 ### Version 0.1.0 - 30 July 2025
 - Automated release of [eeacms/jenkins-master:2.521](https://github.com/eea/eea.docker.jenkins.master/releases) [EEA Jenkins - [`5741e87d`](https://github.com/eea/helm-charts/commit/5741e87dcb6ad15e422ef9c33a20c9fc2e751cc5)]
 
