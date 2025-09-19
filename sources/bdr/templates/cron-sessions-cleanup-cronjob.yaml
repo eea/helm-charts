@@ -21,11 +21,11 @@ spec:
 
           containers:
           - name: {{ include "appl.fullname" . }}
-            image: busybox:stable
+            image: busybox:1.37.0
             imagePullPolicy: {{ .Values.image.pullPolicy }}
             resources:
               {{- toYaml .Values.cronsessionscleanup.resources | nindent 14 }}
-            command: 
+            command:
             - '/bin/sh'
             args: ["-c", "$(SESSIONS_CLEANUP)"]
             env:
