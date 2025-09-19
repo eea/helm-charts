@@ -65,6 +65,9 @@ To customize the network policies, you should modify the `instance.networkPolicy
 
 ## Releases
 
+### Version 0.29.2 - 19 September 2025
+- Fixed cronsessionscleanup cron expression and pinned busybox to 1.37.0 [Olimpiu Rob - [`a543faff`](https://github.com/eea/helm-charts/commit/a543faff34c5042953b72cefd9947e7b33ed3248)]
+
 ### Version 0.29.1 - 01 September 2025
 - Release of dependent chart rn-varnish:0.4.0 [EEA Jenkins - [`d5e96fb8`](https://github.com/eea/helm-charts/commit/d5e96fb8de2394345a8fda6a7ab7053913aa4102)]
 
