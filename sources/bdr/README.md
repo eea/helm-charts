@@ -67,6 +67,9 @@ This can be used to set the rabbitmq host to be used.
 
 ## Releases
 
+### Version 0.26.3 - 19 September 2025
+- Fixed cronsessionscleanup cron expression and pinned busybox to 1.37.0 [Olimpiu Rob - [`28da6a15`](https://github.com/eea/helm-charts/commit/28da6a158ad2bc9b5cf0b7948063f5c8bad94c1c)]
+
 ### Version 0.26.2 - 25 August 2025
 - Release of dependent chart postfix:3.1.0 [EEA Jenkins - [`100170be`](https://github.com/eea/helm-charts/commit/100170be7a15eb6b66088f8799a3133a46240ad5)]
 
