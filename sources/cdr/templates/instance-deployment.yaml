@@ -27,7 +27,7 @@ spec:
       {{- if .Values.instance.env.blobStorageCacheVolumeEnabled }}
       initContainers:
       - name: init-blobstorage
-        image: busybox:stable
+        image: busybox:1.37.0
         command:
           [
             "sh",
