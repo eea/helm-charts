@@ -135,6 +135,8 @@ varnish:
 
 debug:
   serviceType: ClusterIP
+  serviceName: backend-debug
+  port: 8080
   enabled: true
   resources:
     limits:
