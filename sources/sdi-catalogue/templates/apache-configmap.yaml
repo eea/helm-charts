@@ -180,6 +180,10 @@ data:
             ProxyPass http://nextcloud
             ProxyPassReverse http://nextcloud
             ProxyPassReverseCookiePath /datashare /datashare
+            
+            # Send the client IP to Nextcloud
+            RequestHeader set X-Real-IP expr=%{REMOTE_ADDR}
+            RequestHeader set X-Forwarded-Proto "https"
          </Location>
 
 
@@ -211,42 +215,6 @@ data:
            ProxyPreserveHost On
            AllowOverride None
            RequestHeader unset Authorization
-            
-        </Location>
-
-        <Location /samba>
-            ProxyPreserveHost On
-            AllowOverride None
-            Require all denied
-            <RequireAny>
-
-                {{- if .Values.privilegedIPs }}
-                {{- range .Values.privilegedIPs }}
-                Require ip {{ . }}
-                {{- end }}
-                {{- end }}
-
-                ## Allow access for authenticated users
-                AuthType Basic
-                AuthName "LDAP Access to the EEA internal SDI catalogue (EIONET account)"
-                AuthBasicProvider ldap
-                AuthLDAPURL ldaps://{{ .Values.centralLdapUrl }}/o=EIONET,l=Europe?uid
-                {{- if .Values.privilegedGroups }}
-                {{- range .Values.privilegedGroups }}
-                Require ldap-group {{ . }}
-                {{- end }}
-                {{- end }}
-                {{- if .Values.privilegedUsers }}
-                {{- range .Values.privilegedUsers }}
-                Require ldap-user {{ . }}
-                {{- end }}
-                {{- end }}
-
-            </RequireAny>
-            RequestHeader unset Authorization
-
-            ProxyPass http://samba
-
         </Location>
 
         IncludeOptional conf/extra/extra-mime-types.conf

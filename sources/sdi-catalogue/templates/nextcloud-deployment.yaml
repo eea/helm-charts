@@ -61,6 +61,8 @@ spec:
           value: {{ .Values.nextcloud.adminUser }}
         - name: TRUSTED_PROXIES
           value: {{ .Values.nextcloud.trustedProxies }}
+        - name: FORWARDED_FOR_HEADERS
+          value: {{ .Values.nextcloud.forwardedForHeaders }}
         ports:
         - containerPort: 80
         

@@ -15,8 +15,11 @@ Cronjobs have been removed since the update to GN 5/ GN 46 and the new folder st
 
 ## Releases
 
+### Version 0.7.27 - 23 September 2025
+- Trusted proxies and x-forwarded-for headers for Nextcloud.
+
 ### Version 0.7.26 - 23 September 2025
-- Update GN46 to eea-4.9.x-1698c928
+- Update GN46 to eea-4.9.x-1698c928.
   
 ### Version 0.7.25 - 10 September 2025
 - Use GN5 image from eeacms/eea-geonetwork5.
