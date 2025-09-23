@@ -11,6 +11,9 @@ This chart deploys the EEA Main Website frontend app
 
 ## Releases
 
+### Version 1.28.1 - 23 September 2025
+- Add possibility to deploy debug_frontend [Alin Voinea - [`7956f177`](https://github.com/eea/helm-charts/commit/7956f1770d991c035252d0a17a4d234147e84025)]
+
 ### Version 1.28.0 - 22 September 2025
 - Automated release of [eeacms/eea-website-frontend:2.46.0](https://github.com/eea/eea-website-frontend/releases) [EEA Jenkins - [`1e0508c7`](https://github.com/eea/helm-charts/commit/1e0508c7c180f6a494c1abbd53b631a45b3172c0)]
 
