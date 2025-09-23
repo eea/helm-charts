@@ -104,8 +104,9 @@ kibana:
 nextcloud:
   adminUser: ''
   adminPassword: ''
-  trustedProxies: '10.0.0.1'
-# Secret and passwordsalt will be inserted into /var/www/html/config/config.php
+  trustedProxies: "10.0.0.1/8 gethostbyname('apache')"
+  forwardedForHeaders: 'HTTP_X_FORWARDED HTTP_FORWARDED HTTP_X_REAL_IP'
+  # Secret and passwordsalt will be inserted into /var/www/html/config/config.php
   secret: ''
   passwordsalt: ''
   resources: {}
