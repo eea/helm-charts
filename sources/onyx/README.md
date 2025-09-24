@@ -118,6 +118,9 @@ imageMapping:
 
 ## Releases
 
+### Version 0.2.11 - 24 September 2025
+- Updated appVersion to v1.3.1-eea.0.0.77 [Olimpiu Rob - [`8d06f208`](https://github.com/eea/helm-charts/commit/8d06f208cfa345daba49d758c03cef1d4b21db95)]
+
 ### Version 0.2.10 - 16 September 2025
 - Added missing chart specific labels to inference-model deployment's pod. [Olimpiu Rob - [`3ac2e061`](https://github.com/eea/helm-charts/commit/3ac2e06135f6711d3e640ab550c5cfc9c9f7c1fb)]
 
