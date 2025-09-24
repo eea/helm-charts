@@ -427,6 +427,10 @@ Return ClickHouse protocol (http or https)
 - name: LANGFUSE_S3_BATCH_EXPORT_ENDPOINT
   value: {{ . | quote }}
 {{- end }}
+{{- if or .Values.minio.batchExport.externalEndpoint .Values.minio.externalEndpoint }}
+- name: LANGFUSE_S3_BATCH_EXPORT_EXTERNAL_ENDPOINT
+  value: {{ .Values.minio.batchExport.externalEndpoint | default .Values.minio.externalEndpoint | quote }}
+{{- end }}
 {{- with (include "appl.getS3ValueOrSecret" (dict "key" "accessKeyId" "bucket" "batchExport" "values" .Values.minio) ) }}
 - name: LANGFUSE_S3_BATCH_EXPORT_ACCESS_KEY_ID
   {{- . | nindent 2 }}
