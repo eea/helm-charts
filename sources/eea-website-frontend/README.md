@@ -11,6 +11,9 @@ This chart deploys the EEA Main Website frontend app
 
 ## Releases
 
+### Version 1.30.1 - 26 September 2025
+- Fix nginx conf when debug is disabled [Alin Voinea - [`dd2686c6`](https://github.com/eea/helm-charts/commit/dd2686c634e29c0695cd6d69a0414fa1b82a56bb)]
+
 ### Version 1.30.0 - 25 September 2025
 - Automated release of [eeacms/eea-website-frontend:2.47.0](https://github.com/eea/eea-website-frontend/releases) [EEA Jenkins - [`799cac02`](https://github.com/eea/helm-charts/commit/799cac02292dc1d8ad7494bf815d0b103328bb41)]
 
