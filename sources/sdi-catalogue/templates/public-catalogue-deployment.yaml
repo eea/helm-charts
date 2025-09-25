@@ -1,3 +1,4 @@
+{{- if .Values.publicCatalogue.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -91,6 +92,5 @@ spec:
       - name: sdi-public-catalogue-data
         persistentVolumeClaim:
           claimName: sdi-public-catalogue-data
-     
-        
- 
+
+{{- end }}
