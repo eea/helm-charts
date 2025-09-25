@@ -149,6 +149,7 @@ postfix:
 
 
 publicCatalogue:
+  enabled: false
   webapp_context: /catalogue
   geonetwork_dir: /catalogue-data
   catalogue_name: catalogue
@@ -209,9 +210,9 @@ gn5:
   directory:
     data: /catalogue-data/data
     config: /catalogue-data/config
-  gn4Url: http://gn46:8080/geonetwork
-  coreUrl: http://gn46:8080/geonetwork
-  baseUrl: http://gn46:8080/geonetwork
+  gn4Url: http://gn46:8080/catalogue
+  coreUrl: http://gn46:8080/catalogue
+  baseUrl: http://gn46:8080/catalogue
   gn4baseUrl: http://geonetwork
   resources:
     requests:
@@ -220,7 +221,7 @@ gn5:
       memory: 4Gi  
 
 gn46:
-  webapp_context: /geonetwork
+  webapp_context: /catalogue
   geonetwork_dir: /catalogue-data
   geonetwork_data_dir: /var/local/gis_sdi/cataloguestore/metadata_data
   catalogue_name: catalogue
@@ -238,4 +239,5 @@ gn46:
   es_features_proxy: "{{ .Values.gn46.es_protocol }}://{{ .Values.gn46.es_host }}:{{ .Values.gn46.es_port}}/gn5-features/{_}"
   dashboardproxy_targeturi: http://kibana:5601
   security_type: gn5
+  external_host: galliwasp.eea.europa.eu
 
