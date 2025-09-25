@@ -118,7 +118,7 @@ data:
         RewriteEngine On
         RewriteRule ^/catalogue/srv/(.*)/csw-(.*) /catalogue/$2/eng/csw  [L,R]
 
-        <Location /catalogue>
+        <Location {{ .Values.gn46.webapp_context }}>
             AllowOverride None
 
             ## Reverse proxy configuration
@@ -128,20 +128,10 @@ data:
                 RequestHeader unset Authorization
             </IfModule>
             {{- end }}
-            ProxyPass http://public-catalogue:8080/catalogue
-            ProxyPassReverse http://public-catalogue:8080/catalogue
+            ProxyPass http://gn5:8080{{ .Values.gn46.webapp_context }}
+            ProxyPassReverse http://gn5:8080{{ .Values.gn46.webapp_context }}
         </Location>
 
-        {{- if .Values.gn5.enabled }}
-        <Location /geonetwork>
-            AllowOverride None
-
-            ## Reverse proxy configuration
-            ProxyPreserveHost On
-            ProxyPass http://gn5:8080/geonetwork
-            ProxyPassReverse http://gn-5:8080/geonetwork
-        </Location>
-        {{- end }}
 
 
         <Location /validator>
