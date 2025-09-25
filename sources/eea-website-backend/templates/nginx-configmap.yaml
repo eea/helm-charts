@@ -9,9 +9,6 @@ data:
     upstream varnish_backend {
         server {{ .Values.varnish.serviceName }}:{{ .Values.varnish.port }};
     }
-    upstream debug_backend {
-        server {{ .Values.debug.serviceName }}:{{ .Values.debug.port }};
-    }
 
   default.conf: |
 {{ .Values.nginx.conf | indent 4 }}
