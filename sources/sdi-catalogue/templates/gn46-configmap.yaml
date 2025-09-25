@@ -5,7 +5,7 @@ metadata:
 
 data:
   security.properties: |
-    logout.success.url=https://galliwasp.eea.europa.eu/geonetwork/srv/eng/catalog.search
-    loginForm=https://galliwasp.eea.europa.eu/geonetwork/srv/eng/catalog.signin
-    loginErrorForm=https://galliwasp.eea.europa.eu/geonetwork/srv/engcatalog.signin?failure=true
+    logout.success.url=https://{{ .Values.gn46.external_host }}{{ .Values.gn46.webapp_context}}/srv/eng/catalog.search
+    loginForm=https://{{ .Values.gn46.external_host }}{{ .Values.gn46.webapp_context}}/srv/eng/catalog.signin
+    loginErrorForm=https://{{ .Values.gn46.external_host }}{{ .Values.gn46.webapp_context}}/srv/engcatalog.signin?failure=true
  

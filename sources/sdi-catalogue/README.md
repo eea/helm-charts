@@ -15,6 +15,10 @@ Cronjobs have been removed since the update to GN 5/ GN 46 and the new folder st
 
 ## Releases
 
+### Version 0.8.0 - 25 September 2025
+- Remove old GN 4.
+- Update GN46 and GN5 to use /catalogue instead of /geonework.
+
 ### Version 0.7.27 - 23 September 2025
 - Trusted proxies and x-forwarded-for headers for Nextcloud.
 
