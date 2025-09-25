@@ -10,6 +10,9 @@ This chart deployes the EEA Website Plone 6 backend app
 
 ## Releases
 
+### Version 1.19.2 - 26 September 2025
+- Fix nginx conf when debug is disabled [Alin Voinea - [`6866a3eb`](https://github.com/eea/helm-charts/commit/6866a3eb5a2779e9eeaecd28446fb8f47a1f4707)]
+
 ### Version 1.19.1 - 23 September 2025
 - Add possibility to deploy debug_backend [Alin Voinea - [`ecd63a0d`](https://github.com/eea/helm-charts/commit/ecd63a0d202a5487fb87031c7eec8bed5de988d6)]
 
