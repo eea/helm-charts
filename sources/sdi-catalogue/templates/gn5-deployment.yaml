@@ -47,7 +47,7 @@ spec:
         livenessProbe:
           failureThreshold: 6
           httpGet:
-            path: /geonetwork/actuator/health/liveness
+            path: {{ .Values.gn46.webapp_context }}/actuator/health/liveness
             port: {{ .Values.gn5.server.port }}
             scheme: HTTP
           initialDelaySeconds: 90
