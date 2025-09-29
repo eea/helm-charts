@@ -16,6 +16,9 @@ These objects must exist before deployment:
 
 <dl>
 
+  <dt>Version 0.1.2</dt>
+  <dd>Deprecated</dd>
+
   <dt>Version 0.1.1</dt>
   <dd>Health check every 60 seconds.</dd>
 
