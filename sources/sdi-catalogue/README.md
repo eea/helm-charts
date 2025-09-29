@@ -15,6 +15,11 @@ Cronjobs have been removed since the update to GN 5/ GN 46 and the new folder st
 
 ## Releases
 
+### Version 0.8.6 - 29 September 2025
+- Disable `/webdav/datastore/public` redirection and use a `Rewrite` directive instead because `Redirect`
+  takes precedence over `Rewrite`.
+- Disable the direct access to WebDAV access to `/var/lib/gis_sdi/public` folder.
+
 ### Version 0.8.5 - 29 September 2025
 - Fix url parameter encoding.
 
