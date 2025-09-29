@@ -137,11 +137,13 @@ data:
             ProxyPassReverse http://validator:8080/validator
         </Location>
 
-        Redirect permanent /webdav/datastore/public https://galliwasp.eea.europa.eu/datastore/public
-        Redirect permanent /webdav/datastore https://galliwasp.eea.europa.eu/datastore/public
+        Redirect permanent /webdav/datastore/public /datastore/public
+        Redirect permanent /webdav/datastore /datastore/public
 
-    
         RewriteEngine On
+        RewriteCond %{REQUEST_URI} ^/webdav/datastore/public/(.+)$
+        RewriteRule ^webdav/datastore/public/(.+)$ /datastore/public?path=%2F$1 [R=301,L]
+
         RewriteRule ^/data/([^/]+)$ http://gn5:8080{{ .Values.gn46.webapp_context }}/srv/api/records/$1/datastore [P,L]
         ProxyPassReverse ^/data/([^/]+)$ http://gn5:8080{{ .Values.gn46.webapp_context }}/srv/api/records/$1/datastore
 
