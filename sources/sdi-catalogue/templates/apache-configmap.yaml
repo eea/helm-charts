@@ -142,8 +142,8 @@ data:
 
     
         RewriteEngine On
-        RewriteRule ^/data/([^/]+)$ http://gn46:8080/geonetwork/srv/api/records/$1/datastore [P,L]
-        ProxyPassReverse ^/data/([^/]+)$ http://gn46:8080/geonetwork/srv/api/records/$1/datastore
+        RewriteRule ^/data/([^/]+)$ http://gn5:8080{{ .Values.gn46.webapp_context }}/srv/api/records/$1/datastore [P,L]
+        ProxyPassReverse ^/data/([^/]+)$ http://gn5:8080{{ .Values.gn46.webapp_context }}/srv/api/records/$1/datastore
 
 
         <Location /datastore/public>

@@ -15,9 +15,12 @@ Cronjobs have been removed since the update to GN 5/ GN 46 and the new folder st
 
 ## Releases
 
+### Version 0.8.3 - 29 September 2025
+- Fix `/data` proxy pass to use gn46 context path instead of hardcoded `/geonetwork`.
+
 ### Version 0.8.2 - 26 September 2025
-- Fix authentication prompt in GN5 metadata editor
-- Fix liveness probe of GN5 now using the web context from values.yaml
+- Fix authentication prompt in GN5 metadata editor.
+- Fix liveness probe of GN5 now using the web context from `values.yaml`.
   
 ### Version 0.8.1 - 25 September 2025
 - Fix proxypass of /catalogue -> gn5:8080/catalogue
