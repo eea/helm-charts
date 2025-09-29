@@ -15,6 +15,9 @@ Cronjobs have been removed since the update to GN 5/ GN 46 and the new folder st
 
 ## Releases
 
+### Version 0.8.4 - 29 September 2025
+- Redirect `/webdav/datastore/public/<rest_of_path>` to `/datastore/public?path=%2F<rest_of_path>`
+
 ### Version 0.8.3 - 29 September 2025
 - Fix `/data` proxy pass to use gn46 context path instead of hardcoded `/geonetwork`.
 
