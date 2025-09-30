@@ -40,7 +40,7 @@ questions:
     description: "Memcached service for python caching, SERVICE.NAMESPACE"
     type: "string"
     required: true
-    default: "wise-marine-memcached"
+    default: "wise-marine-memcached.wise-marine"
     group: "General"
 
   - variable: "links.zeo"
@@ -48,6 +48,7 @@ questions:
     description: "ZEO server backend, SERVICE.NAMESPACE"
     type: "string"
     required: true
+    default: "wise-marine-zeo.wise-marine"
     group: "General"
 
   - variable: "entrasync.enabled"
