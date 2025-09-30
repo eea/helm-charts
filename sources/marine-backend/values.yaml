@@ -16,8 +16,8 @@ serviceAccount:
 timezone: Europe/Copenhagen
 
 links:
-  database: plone-postgres.namespace
-  memcached: plone-postgres-memcached.namespace
+  zeo: wise-marine-zeo
+  memcached: wise-marine-memcached
 
 ingress:
   annotations:
@@ -42,18 +42,32 @@ plone:
       memory: 2Gi
     requests:
       memory: 2Gi
-  database:
-    POSTGRES_DB: database
-    POSTGRES_USER: databaseuser
-    POSTGRES_PASSWORD: databasepassword
+  zeo:
+    DATA_VOLUME_NAME: marine-data
+    XML_VOLUME_NAME: marine-xml
+    MARINE_CACHE_VOLUME: marine-cache
   environment:
+    ZEO_ADDRESS: "wise-marine-zeo:8080"
+    ZOPE_MODE: "zeo_client"
+    MARINE_PASS: ""
+    MSFDURI: ""
+    MSFD_db_2018: ""
+    MSFD_db_default: ""
+    XMLEXPORTPASS: ""
+    MSFDXML: "/data/xmlfiles"
+    MEMCACHE_SERVER: "wise-marine-memcached:11211"
+    WARMUP_HEALTH_THRESHOLD: "10"
+    BACKEND_VERSION: "5.2.13-31"
     GRAYLOG: "logcentral.eea.europa.eu:12201"
     SENTRY_DSN: ""
     SENTRY_ENVIRONMENT: "01dev"
+    SENTRY_SITE: ""
+    SENTRY_URL: "water.europa.eu/marine"
+    SENTRY_RELEASE: "5.2.13-31"
     CORS_ALLOW_ORIGIN: ""
     DEFAULT_PUBLISHER: ""
     DEFAULT_ORGANISATIONS: ""
-    STATIC_BANNER_ENABLED_marine: ""
+    STATIC_BANNER_ENABLED: ""
     DYNAMIC_BANNER_ENABLED: ""
     PLONE_REGISTRY_YAML_CONTENT: ""
   annotations: {}

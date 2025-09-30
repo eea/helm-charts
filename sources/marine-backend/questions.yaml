@@ -40,11 +40,12 @@ questions:
     description: "Memcached service for python caching, SERVICE.NAMESPACE"
     type: "string"
     required: true
+    default: "wise-marine-memcached"
     group: "General"
 
-  - variable: "links.database"
-    label: "PostgreSQL"
-    description: "PostgreSQL DB backend, SERVICE.NAMESPACE"
+  - variable: "links.zeo"
+    label: "ZEO Server"
+    description: "ZEO server backend, SERVICE.NAMESPACE"
     type: "string"
     required: true
     group: "General"
@@ -121,24 +122,24 @@ questions:
     group: "General"
     show_if: "debug.enabled=true"
 
-  - variable: "plone.database.POSTGRES_DB"
-    label: "PostgreSQL database name"
+  - variable: "plone.zeo.DATA_VOLUME_NAME"
+    label: "ZEO Data Volume Name"
     type: "string"
-    default: "www"
+    default: "marine-data"
     required: true
     group: "Plone configuration"
 
-  - variable: "plone.database.POSTGRES_USER"
-    label: "PostgreSQL user name"
+  - variable: "plone.zeo.XML_VOLUME_NAME"
+    label: "XML Volume Name"
     type: "string"
-    default: "zope"
+    default: "marine-xml"
     required: true
     group: "Plone configuration"
 
-  - variable: "plone.database.POSTGRES_PASSWORD"
-    label: "PostgreSQL password"
+  - variable: "plone.zeo.MARINE_CACHE_VOLUME"
+    label: "Marine Cache Volume Name"
     type: "string"
-    default: "zope"
+    default: "marine-cache"
     required: true
     group: "Plone configuration"
 
@@ -177,7 +178,37 @@ questions:
     default: ""
     group: "Plone configuration"
 
-  - variable: "plone.environment.STATIC_BANNER_ENABLED_marine"
+  - variable: "plone.environment.MARINE_PASS"
+    label: "Marine Password"
+    description: "Marine password for authentication"
+    type: "password"
+    required: true
+    group: "Plone configuration"
+  - variable: "plone.environment.MSFDURI"
+    label: "MSFD URI"
+    description: "MSFD database URI"
+    type: "string"
+    required: true
+    group: "Plone configuration"
+  - variable: "plone.environment.MSFD_db_2018"
+    label: "MSFD 2018 Database"
+    description: "MSFD 2018 database connection"
+    type: "string"
+    required: true
+    group: "Plone configuration"
+  - variable: "plone.environment.MSFD_db_default"
+    label: "MSFD Default Database"
+    description: "MSFD default database connection"
+    type: "string"
+    required: true
+    group: "Plone configuration"
+  - variable: "plone.environment.XMLEXPORTPASS"
+    label: "XML Export Password"
+    description: "Password for XML export functionality"
+    type: "password"
+    required: true
+    group: "Plone configuration"
+  - variable: "plone.environment.STATIC_BANNER_ENABLED"
     label: "Enable Volto Banner"
     description: "A customizable banner to highlight to the user that the website is in demo, dev or staging state. Select 'No' for Production"
     type: "enum"
