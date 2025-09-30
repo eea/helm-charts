@@ -16,8 +16,8 @@ spec:
   - host: {{ .Values.volto.hostname }}
     http:
       paths:
-      - path: /
-        pathType: Prefix
+      - path: {{ .Values.ingress.path | default "/" }}
+        pathType: {{ .Values.ingress.pathType | default "Prefix" }}
         backend:
           service:
             name: {{ .Values.varnish.serviceName }}
