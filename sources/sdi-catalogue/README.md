@@ -15,7 +15,11 @@ Cronjobs have been removed since the update to GN 5/ GN 46 and the new folder st
 
 ## Releases
 
-### Version 0.8.6 - 29 September 2025
+
+### Version 0.8.8 - 30 September 2025
+- Update GN46 to eea-4.9.x-4d2a7043.
+
+### Version 0.8.7 - 29 September 2025
 - Update GN46 and GN5.
 
 ### Version 0.8.6 - 29 September 2025
