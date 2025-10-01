@@ -30,6 +30,10 @@ volumes:
 zeo:
   enabled: true
   replicaCount: 1
+  image:
+    repository: eeacms/marine-backend
+    tag: "5.2.13-1"
+    pullPolicy: Always
   resources:
     limits:
       memory: 4Gi
