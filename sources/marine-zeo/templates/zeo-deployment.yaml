@@ -20,8 +20,8 @@ spec:
     spec:
       containers:
       - name: zeo
-        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        image: "{{ .Values.zeo.image.repository }}:{{ .Values.zeo.image.tag }}"
+        imagePullPolicy: {{ .Values.zeo.image.pullPolicy }}
         command:
         - zeo
         ports:
