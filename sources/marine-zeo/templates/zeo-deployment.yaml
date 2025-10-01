@@ -1,0 +1,71 @@
+{{- if .Values.zeo.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "marine-zeo.fullname" . }}-zeo
+  labels:
+    {{- include "marine-zeo.labels" . | nindent 4 }}
+    component: zeo
+spec:
+  replicas: {{ .Values.zeo.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "marine-zeo.selectorLabels" . | nindent 6 }}
+      component: zeo
+  template:
+    metadata:
+      labels:
+        {{- include "marine-zeo.selectorLabels" . | nindent 8 }}
+        component: zeo
+    spec:
+      containers:
+      - name: zeo
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        command:
+        - zeo
+        ports:
+        - name: zeo
+          containerPort: 8080
+          protocol: TCP
+        env:
+        - name: ZOPE_MODE
+          value: "zeo"
+        - name: TZ
+          value: {{ .Values.timezone }}
+        volumeMounts:
+        - name: data-volume
+          mountPath: /data
+        resources:
+          {{- toYaml .Values.zeo.resources | nindent 10 }}
+        livenessProbe:
+          tcpSocket:
+            port: zeo
+          initialDelaySeconds: 30
+          periodSeconds: 60
+          timeoutSeconds: 15
+          failureThreshold: 5
+        readinessProbe:
+          tcpSocket:
+            port: zeo
+          initialDelaySeconds: 10
+          periodSeconds: 30
+          timeoutSeconds: 10
+          failureThreshold: 3
+      volumes:
+      - name: data-volume
+        persistentVolumeClaim:
+          claimName: {{ include "marine-zeo.fullname" . }}-data
+      {{- with .Values.zeo.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.zeo.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.zeo.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}

@@ -1,0 +1,81 @@
+{{- if .Values.postfix.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "marine-zeo.fullname" . }}-postfix
+  labels:
+    {{- include "marine-zeo.labels" . | nindent 4 }}
+    component: postfix
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "marine-zeo.selectorLabels" . | nindent 6 }}
+      component: postfix
+  template:
+    metadata:
+      labels:
+        {{- include "marine-zeo.selectorLabels" . | nindent 8 }}
+        component: postfix
+    spec:
+      containers:
+      - name: postfix
+        {{- if .Values.postfix.debug }}
+        image: "{{ .Values.postfix.image.repository }}:{{ .Values.postfix.image.tag }}"
+        {{- else }}
+        image: "{{ .Values.postfix.productionImage.repository }}:{{ .Values.postfix.productionImage.tag }}"
+        {{- end }}
+        imagePullPolicy: {{ .Values.postfix.image.pullPolicy }}
+        ports:
+        {{- if .Values.postfix.debug }}
+        - name: http
+          containerPort: 80
+          protocol: TCP
+        {{- end }}
+        - name: smtp
+          containerPort: 25
+          protocol: TCP
+        env:
+        - name: TZ
+          value: {{ .Values.timezone }}
+        - name: MTP_HOST
+          value: "{{ .Values.postfix.environment.MTP_HOST }}"
+        - name: MTP_RELAY
+          value: "{{ .Values.postfix.environment.MTP_RELAY }}"
+        - name: MTP_PORT
+          value: "{{ .Values.postfix.environment.MTP_PORT }}"
+        {{- if .Values.postfix.environment.MTP_USER }}
+        - name: MTP_USER
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "marine-zeo.fullname" . }}-secrets
+              key: postfix-user
+        {{- end }}
+        {{- if .Values.postfix.environment.MTP_PASS }}
+        - name: MTP_PASS
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "marine-zeo.fullname" . }}-secrets
+              key: postfix-pass
+        {{- end }}
+        resources:
+          {{- toYaml .Values.postfix.resources | nindent 10 }}
+        livenessProbe:
+          tcpSocket:
+            port: smtp
+          initialDelaySeconds: 30
+          periodSeconds: 20
+          timeoutSeconds: 3
+          failureThreshold: 3
+        readinessProbe:
+          tcpSocket:
+            port: smtp
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 3
+          failureThreshold: 2
+        {{- if not .Values.postfix.debug }}
+        stdin: true
+        tty: true
+        {{- end }}
+{{- end }}

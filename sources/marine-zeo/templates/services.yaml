@@ -1,0 +1,135 @@
+{{- if .Values.zeo.enabled }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "marine-zeo.fullname" . }}-zeo
+  labels:
+    {{- include "marine-zeo.labels" . | nindent 4 }}
+    component: zeo
+spec:
+  type: ClusterIP
+  ports:
+  - port: 8080
+    targetPort: zeo
+    protocol: TCP
+    name: zeo
+  selector:
+    {{- include "marine-zeo.selectorLabels" . | nindent 4 }}
+    component: zeo
+{{- end }}
+
+{{- if .Values.memcached.enabled }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "marine-zeo.fullname" . }}-memcached
+  labels:
+    {{- include "marine-zeo.labels" . | nindent 4 }}
+    component: memcached
+spec:
+  type: ClusterIP
+  ports:
+  - port: 11211
+    targetPort: memcached
+    protocol: TCP
+    name: memcached
+  selector:
+    {{- include "marine-zeo.selectorLabels" . | nindent 4 }}
+    component: memcached
+{{- end }}
+
+{{- if .Values.plone.enabled }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "marine-zeo.fullname" . }}-plone
+  labels:
+    {{- include "marine-zeo.labels" . | nindent 4 }}
+    component: plone
+spec:
+  type: ClusterIP
+  ports:
+  - port: 8080
+    targetPort: http
+    protocol: TCP
+    name: http
+  selector:
+    {{- include "marine-zeo.selectorLabels" . | nindent 4 }}
+    component: plone
+{{- end }}
+
+{{- if .Values.haproxy.enabled }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "marine-zeo.fullname" . }}-haproxy
+  labels:
+    {{- include "marine-zeo.labels" . | nindent 4 }}
+    component: haproxy
+spec:
+  type: ClusterIP
+  ports:
+  - port: 8080
+    targetPort: http
+    protocol: TCP
+    name: http
+  - port: 1936
+    targetPort: stats
+    protocol: TCP
+    name: stats
+  selector:
+    {{- include "marine-zeo.selectorLabels" . | nindent 4 }}
+    component: haproxy
+{{- end }}
+
+{{- if .Values.varnish.enabled }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "marine-zeo.fullname" . }}-varnish
+  labels:
+    {{- include "marine-zeo.labels" . | nindent 4 }}
+    component: varnish
+spec:
+  type: ClusterIP
+  ports:
+  - port: 8080
+    targetPort: http
+    protocol: TCP
+    name: http
+  selector:
+    {{- include "marine-zeo.selectorLabels" . | nindent 4 }}
+    component: varnish
+{{- end }}
+
+{{- if .Values.postfix.enabled }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "marine-zeo.fullname" . }}-postfix
+  labels:
+    {{- include "marine-zeo.labels" . | nindent 4 }}
+    component: postfix
+spec:
+  type: ClusterIP
+  ports:
+  {{- if .Values.postfix.debug }}
+  - port: 80
+    targetPort: http
+    protocol: TCP
+    name: http
+  {{- end }}
+  - port: 25
+    targetPort: smtp
+    protocol: TCP
+    name: smtp
+  selector:
+    {{- include "marine-zeo.selectorLabels" . | nindent 4 }}
+    component: postfix
+{{- end }}

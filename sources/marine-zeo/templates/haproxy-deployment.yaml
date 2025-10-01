@@ -1,0 +1,73 @@
+{{- if .Values.haproxy.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "marine-zeo.fullname" . }}-haproxy
+  labels:
+    {{- include "marine-zeo.labels" . | nindent 4 }}
+    component: haproxy
+spec:
+  replicas: {{ .Values.haproxy.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "marine-zeo.selectorLabels" . | nindent 6 }}
+      component: haproxy
+  template:
+    metadata:
+      labels:
+        {{- include "marine-zeo.selectorLabels" . | nindent 8 }}
+        component: haproxy
+    spec:
+      containers:
+      - name: haproxy
+        image: "{{ .Values.haproxy.image.repository }}:{{ .Values.haproxy.image.tag }}"
+        imagePullPolicy: {{ .Values.haproxy.image.pullPolicy }}
+        ports:
+        - name: http
+          containerPort: 8080
+          protocol: TCP
+        - name: stats
+          containerPort: 1936
+          protocol: TCP
+        env:
+        - name: TZ
+          value: {{ .Values.timezone }}
+        - name: STATS_AUTH
+          value: "{{ .Values.haproxy.environment.STATS_AUTH }}"
+        - name: FRONTEND_PORT
+          value: "{{ .Values.haproxy.environment.FRONTEND_PORT }}"
+        - name: BACKENDS_PORT
+          value: "{{ .Values.haproxy.environment.BACKENDS_PORT }}"
+        - name: BACKENDS
+          value: "{{ include "marine-zeo.fullname" . }}-plone"
+        - name: DNS_ENABLED
+          value: "{{ .Values.haproxy.environment.DNS_ENABLED }}"
+        - name: INTER
+          value: "{{ .Values.haproxy.environment.INTER }}"
+        - name: DOWN_INTER
+          value: "{{ .Values.haproxy.environment.DOWN_INTER }}"
+        - name: FAST_INTER
+          value: "{{ .Values.haproxy.environment.FAST_INTER }}"
+        - name: TIMEOUT_SERVER
+          value: "{{ .Values.haproxy.environment.TIMEOUT_SERVER }}"
+        - name: TIMEOUT_CLIENT
+          value: "{{ .Values.haproxy.environment.TIMEOUT_CLIENT }}"
+        - name: HTTPCHK
+          value: "{{ .Values.haproxy.environment.HTTPCHK }}"
+        resources:
+          {{- toYaml .Values.haproxy.resources | nindent 10 }}
+        livenessProbe:
+          tcpSocket:
+            port: stats
+          initialDelaySeconds: 30
+          periodSeconds: 20
+          timeoutSeconds: 3
+          failureThreshold: 3
+        readinessProbe:
+          tcpSocket:
+            port: stats
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 3
+          failureThreshold: 2
+{{- end }}

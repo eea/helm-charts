@@ -1,0 +1,62 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "marine-zeo.fullname" . }}-data
+  labels:
+    {{- include "marine-zeo.labels" . | nindent 4 }}
+    volume: data
+spec:
+  accessModes:
+    - ReadWriteOnce
+  {{- if .Values.volumes.data.external }}
+  volumeName: {{ .Values.volumes.data.name }}
+  {{- end }}
+  resources:
+    requests:
+      storage: 10Gi
+  {{- if .Values.volumes.data.driver }}
+  storageClassName: {{ .Values.volumes.data.driver }}
+  {{- end }}
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "marine-zeo.fullname" . }}-xml
+  labels:
+    {{- include "marine-zeo.labels" . | nindent 4 }}
+    volume: xml
+spec:
+  accessModes:
+    - ReadWriteOnce
+  {{- if .Values.volumes.xml.external }}
+  volumeName: {{ .Values.volumes.xml.name }}
+  {{- end }}
+  resources:
+    requests:
+      storage: 5Gi
+  {{- if .Values.volumes.xml.driver }}
+  storageClassName: {{ .Values.volumes.xml.driver }}
+  {{- end }}
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "marine-zeo.fullname" . }}-cache
+  labels:
+    {{- include "marine-zeo.labels" . | nindent 4 }}
+    volume: cache
+spec:
+  accessModes:
+    - ReadWriteOnce
+  {{- if .Values.volumes.cache.external }}
+  volumeName: {{ .Values.volumes.cache.name }}
+  {{- end }}
+  resources:
+    requests:
+      storage: 5Gi
+  {{- if .Values.volumes.cache.driver }}
+  storageClassName: {{ .Values.volumes.cache.driver }}
+  {{- end }}
