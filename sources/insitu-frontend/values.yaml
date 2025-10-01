@@ -29,8 +29,7 @@ ingress:
         'X-XSS-Protection "1; mode=block"'
         "X-Frame-Options 'SAMEORIGIN'"
         "Referrer-Policy origin"
-        'Permissions-Policy accelerometer=(), autoplay=(), camera=(), encrypted-media=(), fullscreen=(self), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), midi=(), payment=(), picture-in-picture=(), sync-xhr=(self), usb=()'
-        "Content-Security-Policy \"default-src 'none'; object-src 'self'; base-uri 'self'; form-action 'self'; manifest-src https://insitu.copernicus.eu/site.webmanifest; media-src https://insitu.copernicus.eu/; connect-src 'self' https://webanalytics.europa.eu https://*.eea.europa.eu http://*.eea.europa.eu https://europa.eu/webtools/ https://geocode.arcgis.com https://api.openaire.eu https://api.zotero.org/; font-src 'self' data: https://cdnjs.cloudflare.com/ https://fonts.gstatic.com/ https://*.eea.europa.eu; frame-src 'self'  https://europa.eu/  https://*.europa.eu/ https://*.eea.europa.eu http://*.eea.europa.eu https://eea.maps.arcgis.com/; img-src http: https: blob: data:; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: data:  https://webanalytics.europa.eu/ppms.js https://matomo.eea.europa.eu https://europa.eu/webtools/ https://www.google.com/jsapi https://www.google.com/uds/ https://www.gstatic.com/ https://spreadsheets.google.com/ https://docs.google.com/ https://*.eea.europa.eu http://*.eea.europa.eu https://d3js.org https://cdnjs.cloudflare.com https://code.jquery.com https://services.arcgis.com https://public.tableau.com; frame-ancestors 'self' *.eea.europa.eu; style-src 'self' 'unsafe-inline' https://www.google.com/uds/ https://europa.eu/webtools/ https://fonts.googleapis.com/css https://ajax.googleapis.com/ https://www.gstatic.com/ https://*.eea.europa.eu https://cdnjs.cloudflare.com https://code.jquery.com; report-uri https://sentry.eea.europa.eu/api/30/security/?sentry_key=323bc0de89df46f8aa3938312cad09e5\"";
+        'Permissions-Policy accelerometer=(), autoplay=(), camera=(), encrypted-media=(), fullscreen=(self), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), midi=(), payment=(), picture-in-picture=(), sync-xhr=(self), usb=()';
     nginx.ingress.kubernetes.io/proxy-body-size: 1024m
     nginx.ingress.kubernetes.io/proxy-read-timeout: '480'
     nginx.ingress.kubernetes.io/proxy-send-timeout: '120'
@@ -58,7 +57,22 @@ volto:
     RAZZLE_SENTRY_RELEASE: ""
     RAZZLE_SENTRY_ENVIRONMENT: 01dev
     SENTRY_AUTH_TOKEN: ""
-    CSP_HEADER:
+    CSP_HEADER: >-
+      default-src 'none';
+      base-uri 'self';
+      form-action 'self';
+      object-src 'none';
+      manifest-src 'self'
+      media-src https://insitu.copernicus.eu/;
+      connect-src 'self' https://webanalytics.europa.eu https://*.eea.europa.eu https://europa.eu https://geocode.arcgis.com https://api.openaire.eu https://api.zotero.org;
+      font-src 'self' data: https://cdnjs.cloudflare.com https://fonts.gstatic.com https://*.eea.europa.eu;
+      frame-src 'self' https://europa.eu https://*.europa.eu https://*.eea.europa.eu https://eea.maps.arcgis.com;
+      img-src https: blob: data:;
+      script-src 'self' {nonce} blob: https://webanalytics.europa.eu https://matomo.eea.europa.eu https://europa.eu https://www.google.com https://www.gstatic.com https://spreadsheets.google.com https://docs.google.com https://*.eea.europa.eu https://d3js.org https://cdnjs.cloudflare.com https://code.jquery.com https://services.arcgis.com https://public.tableau.com;
+      style-src 'self' 'unsafe-inline'  https://www.google.com https://europa.eu https://fonts.googleapis.com https://ajax.googleapis.com https://www.gstatic.com https://*.eea.europa.eu https://cdnjs.cloudflare.com https://code.jquery.com;
+      frame-ancestors 'self' https://*.eea.europa.eu;
+      report-to csp-endpoint;
+      report-uri https://sentry.eea.europa.eu/api/30/security/?sentry_key=323bc0de89df46f8aa3938312cad09e5;
   annotations: {}
   livenessProbe:
     httpGet:
