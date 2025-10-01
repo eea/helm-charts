@@ -1,0 +1,50 @@
+{{- if .Values.memcached.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "marine-zeo.fullname" . }}-memcached
+  labels:
+    {{- include "marine-zeo.labels" . | nindent 4 }}
+    component: memcached
+spec:
+  replicas: {{ .Values.memcached.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "marine-zeo.selectorLabels" . | nindent 6 }}
+      component: memcached
+  template:
+    metadata:
+      labels:
+        {{- include "marine-zeo.selectorLabels" . | nindent 8 }}
+        component: memcached
+    spec:
+      containers:
+      - name: memcached
+        image: "{{ .Values.memcached.image.repository }}:{{ .Values.memcached.image.tag }}"
+        imagePullPolicy: {{ .Values.memcached.image.pullPolicy }}
+        args:
+          {{- toYaml .Values.memcached.args | nindent 10 }}
+        ports:
+        - name: memcached
+          containerPort: 11211
+          protocol: TCP
+        env:
+        - name: TZ
+          value: {{ .Values.timezone }}
+        resources:
+          {{- toYaml .Values.memcached.resources | nindent 10 }}
+        livenessProbe:
+          tcpSocket:
+            port: memcached
+          initialDelaySeconds: 30
+          periodSeconds: 20
+          timeoutSeconds: 3
+          failureThreshold: 3
+        readinessProbe:
+          tcpSocket:
+            port: memcached
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 3
+          failureThreshold: 2
+{{- end }}

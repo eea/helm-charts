@@ -1,0 +1,115 @@
+{{- if .Values.entrasync.enabled }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "marine-zeo.fullname" . }}-entrasync
+  labels:
+    {{- include "marine-zeo.labels" . | nindent 4 }}
+    component: entrasync
+spec:
+  schedule: "{{ .Values.entrasync.schedule }}"
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            {{- include "marine-zeo.selectorLabels" . | nindent 12 }}
+            component: entrasync
+        spec:
+          restartPolicy: OnFailure
+          containers:
+          - name: entrasync
+            image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+            imagePullPolicy: {{ .Values.image.pullPolicy }}
+            command:
+            - /app/bin/sync_eea_entra
+            - --portal
+            - wise
+            - --zope-conf
+            - /app/etc/zope.conf
+            env:
+            - name: ZEO_ADDRESS
+              value: "{{ include "marine-zeo.fullname" . }}-zeo:8080"
+            - name: ZOPE_MODE
+              value: "zeo_client"
+            - name: TZ
+              value: {{ .Values.timezone }}
+            - name: MEMCACHE_SERVER
+              value: "{{ include "marine-zeo.fullname" . }}-memcached:11211"
+            - name: MSFDXML
+              value: "/data/xmlfiles"
+            - name: SENTRY_URL
+              value: "{{ .Values.plone.environment.SENTRY_URL }}"
+            - name: SENTRY_RELEASE
+              value: "{{ .Values.plone.environment.SENTRY_RELEASE }}"
+            - name: BACKEND_VERSION
+              value: "{{ .Values.plone.environment.BACKEND_VERSION }}"
+            {{- if .Values.plone.environment.MARINE_PASS }}
+            - name: MARINE_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "marine-zeo.fullname" . }}-secrets
+                  key: marine-pass
+            {{- end }}
+            {{- if .Values.plone.environment.MSFDURI }}
+            - name: MSFDURI
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "marine-zeo.fullname" . }}-secrets
+                  key: msfd-uri
+            {{- end }}
+            {{- if .Values.plone.environment.MSFD_DB_2018 }}
+            - name: MSFD_db_2018
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "marine-zeo.fullname" . }}-secrets
+                  key: msfd-db-2018
+            {{- end }}
+            {{- if .Values.plone.environment.MSFD_DB_DEFAULT }}
+            - name: MSFD_db_default
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "marine-zeo.fullname" . }}-secrets
+                  key: msfd-db-default
+            {{- end }}
+            {{- if .Values.plone.environment.XMLEXPORTPASS }}
+            - name: XMLEXPORTPASS
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "marine-zeo.fullname" . }}-secrets
+                  key: xml-export-pass
+            {{- end }}
+            {{- if .Values.plone.environment.SENTRY_DSN }}
+            - name: SENTRY_DSN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "marine-zeo.fullname" . }}-secrets
+                  key: sentry-dsn
+            {{- end }}
+            - name: DEFAULT_PUBLISHER
+              value: "{{ .Values.plone.environment.DEFAULT_PUBLISHER }}"
+            - name: DEFAULT_ORGANISATIONS
+              value: "{{ .Values.plone.environment.DEFAULT_ORGANISATIONS }}"
+            - name: STATIC_BANNER_ENABLED
+              value: "{{ .Values.plone.environment.STATIC_BANNER_ENABLED }}"
+            - name: DYNAMIC_BANNER_ENABLED
+              value: "{{ .Values.plone.environment.DYNAMIC_BANNER_ENABLED }}"
+            - name: SENTRY_SITE
+              value: "{{ .Values.plone.environment.SENTRY_SITE }}"
+            - name: PLONE_REGISTRY_YAML_CONTENT
+              value: "{{ .Values.plone.environment.PLONE_REGISTRY_YAML_CONTENT }}"
+            volumeMounts:
+            - name: xml-volume
+              mountPath: /data/xmlfiles
+            - name: cache-volume
+              mountPath: /data
+            resources:
+              {{- toYaml .Values.entrasync.resources | nindent 14 }}
+          volumes:
+          - name: xml-volume
+            persistentVolumeClaim:
+              claimName: {{ include "marine-zeo.fullname" . }}-xml
+          - name: cache-volume
+            persistentVolumeClaim:
+              claimName: {{ include "marine-zeo.fullname" . }}-cache
+{{- end }}
