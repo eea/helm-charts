@@ -1,13 +1,14 @@
 {{- if .Values.zeo.enabled }}
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
-  name: {{ include "marine-zeo.fullname" . }}-zeo
+  name: {{ .Release.Name }}-zeo-ss
   labels:
     {{- include "marine-zeo.labels" . | nindent 4 }}
     component: zeo
 spec:
-  replicas: {{ .Values.zeo.replicaCount }}
+  replicas: 1
+  serviceName: {{ .Release.Name }}-zeo
   selector:
     matchLabels:
       {{- include "marine-zeo.selectorLabels" . | nindent 6 }}
@@ -18,6 +19,11 @@ spec:
         {{- include "marine-zeo.selectorLabels" . | nindent 8 }}
         component: zeo
     spec:
+      terminationGracePeriodSeconds: 10
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
       - name: zeo
         image: "{{ .Values.zeo.image.repository }}:{{ .Values.zeo.image.tag }}"
@@ -25,37 +31,26 @@ spec:
         command:
         - zeo
         ports:
-        - name: zeo
-          containerPort: 8080
+        - containerPort: 8080
           protocol: TCP
         env:
+        - name: TZ
+          value: "{{ .Values.timezone }}"
         - name: ZOPE_MODE
           value: "zeo"
-        - name: TZ
-          value: {{ .Values.timezone }}
         volumeMounts:
-        - name: data-volume
-          mountPath: /data
+        - mountPath: /data
+          name: zeodata
+        {{- if (.Values.zeo.livenessProbe) }}
+        livenessProbe:
+          {{- toYaml .Values.zeo.livenessProbe | nindent 10 }}
+        {{- end }}
+        {{- if (.Values.zeo.startupProbe) }}
+        startupProbe:
+          {{- toYaml .Values.zeo.startupProbe | nindent 10 }}
+        {{- end }}
         resources:
           {{- toYaml .Values.zeo.resources | nindent 10 }}
-        livenessProbe:
-          tcpSocket:
-            port: zeo
-          initialDelaySeconds: 30
-          periodSeconds: 60
-          timeoutSeconds: 15
-          failureThreshold: 5
-        readinessProbe:
-          tcpSocket:
-            port: zeo
-          initialDelaySeconds: 10
-          periodSeconds: 30
-          timeoutSeconds: 10
-          failureThreshold: 3
-      volumes:
-      - name: data-volume
-        persistentVolumeClaim:
-          claimName: {{ include "marine-zeo.fullname" . }}-data
       {{- with .Values.zeo.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -68,4 +63,17 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      restartPolicy: Always
+  volumeClaimTemplates:
+  - metadata:
+      name: zeodata
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      {{- if .Values.datastorage.storageClassName }}
+      storageClassName: "{{ .Values.datastorage.storageClassName }}"
+      {{- end }}
+      resources:
+        requests:
+          storage: "{{ .Values.datastorage.size }}"
 {{- end }}
