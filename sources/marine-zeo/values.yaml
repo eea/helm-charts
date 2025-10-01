@@ -3,27 +3,40 @@ fullnameOverride: ""
 
 timezone: Europe/Copenhagen
 
-# ZEO Configuration
+imagePullSecrets: []
+
+# ZEO Configuration  
 zeo:
   enabled: true
-  replicaCount: 1
   image:
     repository: eeacms/marine-backend
     tag: "5.2.13-1"
     pullPolicy: Always
   resources:
-    limits:
-      memory: 4Gi
     requests:
+      memory: 4Gi
+    limits:
       memory: 4Gi
   nodeSelector: {}
   tolerations: []
   affinity: {}
+  livenessProbe:
+    tcpSocket:
+      port: 8080
+    periodSeconds: 5
+    timeoutSeconds: 2
+    successThreshold: 1
+    failureThreshold: 5
+  startupProbe:
+    tcpSocket:
+      port: 8080
+    failureThreshold: 15
+    periodSeconds: 5
+    initialDelaySeconds: 10
+    timeoutSeconds: 2
+    successThreshold: 1
 
-# Data volume configuration
-volumes:
-  data:
-    name: "wise-marine-backend"
-    driver: "rancher-nfs"
-    external: true
-    driverOpts: ""
+# Data storage configuration
+datastorage:
+  size: 10G
+  storageClassName:
