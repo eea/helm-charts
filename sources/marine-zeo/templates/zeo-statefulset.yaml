@@ -29,6 +29,8 @@ spec:
         image: "{{ .Values.zeo.image.repository }}:{{ .Values.zeo.image.tag }}"
         imagePullPolicy: {{ .Values.zeo.image.pullPolicy }}
         command:
+        - /docker-entrypoint.sh
+        args:
         - zeo
         ports:
         - containerPort: 8080
