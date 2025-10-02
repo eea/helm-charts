@@ -21,7 +21,7 @@ spec:
   - host: {{ .Values.plone.hostname }}
     http:
       paths:
-      - path: /{{ .Values.plone.googleUrl }}(.*)
+      - path: /marine/{{ .Values.plone.googleUrl }}(.*)
         pathType: ImplementationSpecific
         backend:
           service:
