@@ -16,7 +16,7 @@ serviceAccount:
 timezone: Europe/Copenhagen
 
 links:
-  zeo: wise-marine-zeo.wise-marine
+  zeo: marine-zeo-zeo.wise-marine
   memcached: wise-marine-memcached.wise-marine
 
 ingress:
@@ -47,7 +47,7 @@ plone:
     XML_VOLUME_NAME: marine-xml
     MARINE_CACHE_VOLUME: marine-cache
   environment:
-    ZEO_ADDRESS: "wise-marine-zeo:8080"
+    ZEO_ADDRESS: "marine-zeo-zeo:8080"
     ZOPE_MODE: "zeo_client"
     MARINE_PASS: ""
     MSFDURI: ""
