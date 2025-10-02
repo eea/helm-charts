@@ -15,6 +15,9 @@ Cronjobs have been removed since the update to GN 5/ GN 46 and the new folder st
 
 ## Releases
 
+### Version 0.8.11 - 02 October 2025
+- Use a ConfigMap for GN5.
+  
 ### Version 0.8.10 - 01 October 2025
 - Update GN5 to 78febcf2.
   

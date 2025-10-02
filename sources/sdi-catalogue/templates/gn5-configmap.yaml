@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sdi-gn5-config
+
+data:
+  gn5-config.yaml: |
+    server:
+      port: {{ .Values.gn5.server.port }}
+      servlet:
+        context-path: {{ .Values.gn5.webapp_context }}
+
+    geonetwork:
+      url: https://{{ .Values.serverName }}
+      url_with_context: https://{{ .Values.serverName }}/{{ .Values.gn5.webapp_context }}
+      4:
+        url: http://gn46:8080/{{ .Values.gn46.webapp_context }}
+      index:
+        url: {{ .Values.gn5.index.protocol }}://{{ .Values.gn5.index.host }}:{{ .Values.gn5.index.port }}
+        indexRecordName: {{ .Values.gn5.index.indexRecordName }}
+
+      directory:
+        data: {{ .Values.gn5.geonetwork_data_dir }}
+        metadata:
+          layout: UUID
+          privileges: NONE
+
+      openapi:
+        url: https://{{ .Values.serverName }}
+        
+      security:
+        provider: ldap
+        createdUser:
+          group: eea_users
+        # Enabled if provider is ldap
+        ldap:
+          url: ldaps://ldap.eionet.europa.eu
+          # url: # Empty use embedded LDAP
+          base: o=EIONET,l=Europe
+          user-search-dn: ou=Users
+          user-search-filter: (&(|(objectclass=eionetAccount))(|(uid={0})(|(mailPrimaryAddress={0})(mail={0}))))
+          attributes:
+            username: uid
+            email: email
+            name: givenName
+            surname: sn
+
+
+ 
