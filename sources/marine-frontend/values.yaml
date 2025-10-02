@@ -19,7 +19,7 @@ timezone: Europe/Copenhagen
 
 
 ingress:
-  certificate: key-01dev-letsencrypt
+  certificate: dev-wise.01dev.eea.europa.eu-tls
   tls: true
   path: /marine
   pathType: Prefix
@@ -53,7 +53,7 @@ links:
     
 volto:
   serviceType: NodePort
-  hostname: plone.eea.europa.eu
+  hostname: dev-wise.01dev.eea.europa.eu
   autoscaling:
     enabled: false
     minReplicas: 1
@@ -78,9 +78,20 @@ volto:
     RAZZLE_MATOMO_SITE_ID: 
     RAZZLE_MATOMO_SECOND_SITE_ID:
     RAZZLE_MATOMO_SECOND_TRACKER_URL: 
-    RAZZLE_INTERNAL_API_PATH: "http://backend:8080/Plone"
+    RAZZLE_INTERNAL_API_PATH: "http://backend:8080/Plone/marine"
     RAZZLE_API_PATH: "https://dev-wise.01dev.eea.europa.eu/marine"
     RAZZLE_PREFIX_PATH: "/marine"
+    RAZZLE_DEMO_SITE: 
+    RAZZLE_BANNER_HEADER: 
+    RAZZLE_BANNER_MESSAGE: 
+    RAZZLE_FRONTEND_VERSION: 
+    RAZZLE_PROXY_ES_DSN_globalsearch: 
+    RAZZLE_PROXY_QA_DSN_globalsearch: 
+    RAZZLE_PROXY_ES_DSN_marinemeasure: 
+    RAZZLE_PROXY_QA_DSN_marinemeasure: 
+    RAZZLE_ES_INDEX: 
+    RAZZLE_ES_INDEX_NAME: 
+    RAZZLE_PROXY_ES_DSN: ""
     VOLTO_ROBOTSTXT: 
     RAZZLE_DISABLE_DRAFT_WATERMARK: 
     CSP_HEADER: 
