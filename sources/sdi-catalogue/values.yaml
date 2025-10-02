@@ -191,6 +191,8 @@ validator:
 
 gn5:
   enabled: true
+  webapp_context: /catalogue
+  geonetwork_data_dir: /var/local/gis_sdi/cataloguestore
   gnUrl: http://localhost:8080
   server:
     port: 8080
@@ -206,7 +208,7 @@ gn5:
     protocol: http
     url: "{{ .Values.gn5.index.protocol }}://{{ .Values.gn5.index.host }}:{{ .Values.gn5.index.port }}"
     indexPrefix: gn5
-    indexRecordName: gn-records5
+    indexRecordName: gn5-records
   directory:
     data: /catalogue-data/data
     config: /catalogue-data/config
