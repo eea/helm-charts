@@ -72,6 +72,11 @@ spec:
                    
         resources:
           {{- toYaml .Values.plone.resources | nindent 10 }}
+        
+        volumeMounts:
+        - name: shared-data
+          mountPath: /data
+          readOnly: true
 
       {{- with .Values.plone.nodeSelector }}
       nodeSelector:
@@ -85,5 +90,10 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      volumes:
+      - name: shared-data
+        persistentVolumeClaim:
+          claimName: zeodata-marine-zeo-zeo-ss-0
+          readOnly: true
       restartPolicy: Always
 
