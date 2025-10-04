@@ -49,7 +49,8 @@ plone:
   environment:
     ZEO_ADDRESS: "marine-zeo-zeo.wise-marine:8080"
     ZOPE_MODE: "zeo_client"
-    SHARED_BLOB_DIR: "on"
+    SHARED_BLOB_DIR: "off"
+    ZEO_BLOB_CACHE_SIZE: "1000MB"
     SKIP_FIX_PERMISSIONS: "1"
     MARINE_PASS: ""
     MSFDURI: ""
