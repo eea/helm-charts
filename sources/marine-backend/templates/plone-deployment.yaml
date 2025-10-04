@@ -74,9 +74,8 @@ spec:
           {{- toYaml .Values.plone.resources | nindent 10 }}
         
         volumeMounts:
-        - name: shared-data
-          mountPath: /data
-          readOnly: true
+        - name: shared-blobstorage
+          mountPath: /data/blobstorage
 
       {{- with .Values.plone.nodeSelector }}
       nodeSelector:
@@ -91,9 +90,9 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       volumes:
-      - name: shared-data
+      - name: shared-blobstorage
         persistentVolumeClaim:
           claimName: zeodata-marine-zeo-zeo-ss-0
-          readOnly: true
+          subPath: blobstorage
       restartPolicy: Always
 
