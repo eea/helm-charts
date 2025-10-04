@@ -75,7 +75,7 @@ spec:
         
         volumeMounts:
         - name: shared-blobstorage
-          mountPath: /data/blobstorage
+          mountPath: /shared-data
 
       {{- with .Values.plone.nodeSelector }}
       nodeSelector:
@@ -93,6 +93,5 @@ spec:
       - name: shared-blobstorage
         persistentVolumeClaim:
           claimName: zeodata-marine-zeo-zeo-ss-0
-          subPath: blobstorage
       restartPolicy: Always
 
