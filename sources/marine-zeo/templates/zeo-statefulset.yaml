@@ -33,7 +33,7 @@ spec:
           {{- toYaml .Values.zeo.command | nindent 8 }}
         {{- else }}
         command:
-        - zeo
+        - /plone/instance/parts/zeo/bin/runzeo
         {{- end }}
         {{- if .Values.zeo.args }}
         args:
