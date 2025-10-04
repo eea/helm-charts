@@ -75,7 +75,8 @@ spec:
         
         volumeMounts:
         - name: shared-blobstorage
-          mountPath: /shared-data
+          mountPath: /data/blobstorage
+          subPath: blobstorage
 
       {{- with .Values.plone.nodeSelector }}
       nodeSelector:
