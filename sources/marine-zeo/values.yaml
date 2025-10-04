@@ -23,17 +23,17 @@ zeo:
   livenessProbe:
     tcpSocket:
       port: 8080
-    periodSeconds: 5
-    timeoutSeconds: 2
+    periodSeconds: 10
+    timeoutSeconds: 5
     successThreshold: 1
-    failureThreshold: 5
+    failureThreshold: 3
   startupProbe:
     tcpSocket:
       port: 8080
-    failureThreshold: 15
-    periodSeconds: 5
-    initialDelaySeconds: 10
-    timeoutSeconds: 2
+    failureThreshold: 30
+    periodSeconds: 10
+    initialDelaySeconds: 30
+    timeoutSeconds: 5
     successThreshold: 1
   # Skip fix-permissions script (set to "1" to skip, "0" to run)
   skipFixPermissions: "1"
