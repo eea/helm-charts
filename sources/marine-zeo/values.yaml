@@ -35,6 +35,11 @@ zeo:
     initialDelaySeconds: 10
     timeoutSeconds: 2
     successThreshold: 1
+  # Skip fix-permissions script (set to "1" to skip, "0" to run)
+  skipFixPermissions: "1"
+  # Override command and args if needed (useful to skip fix-permissions)
+  # command: ["/plone/instance/parts/zeo/bin/runzeo"]
+  # args: []
 
 # Data storage configuration
 datastorage:

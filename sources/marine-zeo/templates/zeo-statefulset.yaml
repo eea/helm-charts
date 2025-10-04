@@ -28,10 +28,17 @@ spec:
       - name: zeo
         image: "{{ .Values.zeo.image.repository }}:{{ .Values.zeo.image.tag }}"
         imagePullPolicy: {{ .Values.zeo.image.pullPolicy }}
+        {{- if .Values.zeo.command }}
         command:
-        - /docker-entrypoint.sh
-        args:
+          {{- toYaml .Values.zeo.command | nindent 8 }}
+        {{- else }}
+        command:
         - zeo
+        {{- end }}
+        {{- if .Values.zeo.args }}
+        args:
+          {{- toYaml .Values.zeo.args | nindent 8 }}
+        {{- end }}
         ports:
         - name: zeo
           containerPort: 8080
@@ -41,6 +48,8 @@ spec:
           value: "{{ .Values.timezone }}"
         - name: ZOPE_MODE
           value: "zeo"
+        - name: SKIP_FIX_PERMISSIONS
+          value: "{{ .Values.zeo.skipFixPermissions | default "1" }}"
         volumeMounts:
         - mountPath: /data
           name: zeodata
