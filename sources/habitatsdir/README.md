@@ -23,6 +23,9 @@ To set the app up for Article 12 do:
 
 ## Releases
 
+### Version 0.4.12 - 06 October 2025
+- Update habitatsdir art17-values.yaml file [Diana Boiangiu - [`4f266e5f`](https://github.com/eea/helm-charts/commit/4f266e5fc85b80559a86287175663fd121cc151a)]
+
 ### Version 0.4.11 - 06 October 2025
 - Update habitatsdir art12-values.yaml file [Diana Boiangiu - [`a1305c15`](https://github.com/eea/helm-charts/commit/a1305c150621d0fa0ef40ef1becbc334cebbe7b4)]
 
