@@ -15155,14 +15155,15 @@ entries:
   forum:
   - apiVersion: v2
     appVersion: forum-22.09.06
-    created: "2025-10-06T13:43:14.108425+02:00"
+    created: "2025-10-08T11:15:48.778725293+02:00"
     dependencies:
     - condition: postfix.enabled
       name: postfix
       repository: https://eea.github.io/helm-charts
       version: 3.1.0
+    deprecated: true
     description: Forum Interest Groups
-    digest: 93e75f8f200ef964cca0281e9125c39cb70e4807ef81c1b1fcdd82fb5de2f8a2
+    digest: 5855a2410839dac2819cad7b5ece94a67badba3611577cf00c8cd1a835bb9eae
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/forum/logo_eionet.png
     keywords:
     - Eionet
@@ -15213,14 +15214,15 @@ entries:
   forum-test:
   - apiVersion: v2
     appVersion: forum-test-22.09.06
-    created: "2025-10-06T13:43:14.124531+02:00"
+    created: "2025-10-08T11:17:25.751051802+02:00"
     dependencies:
     - condition: postfix.enabled
       name: postfix
       repository: https://eea.github.io/helm-charts
       version: 3.1.0
+    deprecated: true
     description: Forum Interest Groups and projects (test)
-    digest: ba0ba06ca6db769589f4164335fc85e8c68912609a593781d104d78f0377dfd6
+    digest: 656ac3a415ded197b8e093158484eac3861cb9150ee780d64f7c027ab9761424
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/forum-test/logo_eionet.png
     keywords:
     - Eionet
@@ -16403,9 +16405,10 @@ entries:
   groupware:
   - apiVersion: v2
     appVersion: xxxxx-22.09.06
-    created: "2025-10-06T13:43:14.530518+02:00"
+    created: "2025-10-08T11:17:37.326571062+02:00"
+    deprecated: true
     description: Eionet groupware (forum, projects, archives)
-    digest: 4f7c042647ca2243d75f26c1cf93ad13d3a50056b2b0ca116de0bb58e68416ed
+    digest: 3acd3f38a073c97f7fbc11fb209efc61ea08c5a83347198df5b435843e2eb242
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/groupware/logo_eionet.png
     keywords:
     - Eionet
@@ -25629,14 +25632,15 @@ entries:
   projects:
   - apiVersion: v2
     appVersion: projects-23.09.22
-    created: "2025-10-06T13:43:16.895873+02:00"
+    created: "2025-10-08T11:16:59.170460567+02:00"
     dependencies:
     - condition: postfix.enabled
       name: postfix
       repository: https://eea.github.io/helm-charts
       version: 3.1.0
+    deprecated: true
     description: Forum Interest Groups and projects
-    digest: a2195e36b6a038f2367768e4e4f202018198dfa780e6dbcf7a7d08ba812ba078
+    digest: 875ca1f706a9691520c5e06717f2e98d96d96255c3b5f0d10786fab4dca07523
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/projects/logo_eionet.png
     keywords:
     - Eionet
@@ -30779,4 +30783,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2025-10-08T11:10:02.808911482+02:00"
+generated: "2025-10-08T11:17:37.324996438+02:00"
