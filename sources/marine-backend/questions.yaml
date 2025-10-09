@@ -43,12 +43,12 @@ questions:
     default: "wise-marine-memcached.wise-marine"
     group: "General"
 
-  - variable: "links.zeo"
-    label: "ZEO Server"
-    description: "ZEO server backend, SERVICE.NAMESPACE"
+  - variable: "links.database"
+    label: "PostgreSQL"
+    description: "PostgreSQL DB backend, SERVICE.NAMESPACE"
     type: "string"
     required: true
-    default: "wise-marine-zeo.wise-marine"
+    default: "plone-postgres.namespace"
     group: "General"
 
   - variable: "entrasync.enabled"
@@ -123,24 +123,24 @@ questions:
     group: "General"
     show_if: "debug.enabled=true"
 
-  - variable: "plone.zeo.DATA_VOLUME_NAME"
-    label: "ZEO Data Volume Name"
+  - variable: "plone.database.POSTGRES_DB"
+    label: "PostgreSQL database name"
     type: "string"
-    default: "marine-data"
+    default: "marine"
     required: true
     group: "Plone configuration"
 
-  - variable: "plone.zeo.XML_VOLUME_NAME"
-    label: "XML Volume Name"
+  - variable: "plone.database.POSTGRES_USER"
+    label: "PostgreSQL user name"
     type: "string"
-    default: "marine-xml"
+    default: "zope"
     required: true
     group: "Plone configuration"
 
-  - variable: "plone.zeo.MARINE_CACHE_VOLUME"
-    label: "Marine Cache Volume Name"
+  - variable: "plone.database.POSTGRES_PASSWORD"
+    label: "PostgreSQL password"
     type: "string"
-    default: "marine-cache"
+    default: "zope_456"
     required: true
     group: "Plone configuration"
 
