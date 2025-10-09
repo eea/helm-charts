@@ -50,8 +50,8 @@ plone:
     MSFD_db_2018: ''
     MSFD_db_default: ''
     PLONE_REGISTRY_YAML_CONTENT: ''
-    RELSTORAGE_BLOB_DIR: /data/blobstorage
-    RELSTORAGE_SHARED_BLOB_DIR: 'true'
+    RELSTORAGE_BLOB_DIR: /data/blobscache
+    RELSTORAGE_SHARED_BLOB_DIR: 'false'
     SENTRY_DSN: ''
     SENTRY_ENVIRONMENT: 01dev
     SENTRY_RELEASE: 5.2.13-31
@@ -97,9 +97,6 @@ plone:
     periodSeconds: 5
     successThreshold: 1
     timeoutSeconds: 10
-  sharedBlobStorage:
-    enabled: true
-    claimName: zeodata-marine-zeo-zeo-ss-0
 
 varnish:
   serviceType: ClusterIP
