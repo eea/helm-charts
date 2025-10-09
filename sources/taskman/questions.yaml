@@ -182,6 +182,30 @@ questions:
     type: "string"
     required: true
     group: "Database"
+  - variable: "mysql.args"
+    label: "MySQL server arguments"
+    description: "List of MySQL server configuration arguments (e.g., --innodb-buffer-pool-size=10G). Cannot be empty."
+    type: "multiline"
+    default: |
+      - "--innodb-buffer-pool-size=10G"
+      - "--innodb-buffer-pool-instances=4"
+      - "--innodb-lru-scan-depth=8192"
+      - "--innodb-io-capacity=4096"
+      - "--innodb-redo-log-capacity=512M"
+      - "--net-read-timeout=7200"
+      - "--net-write-timeout=7200"
+      - "--max-allowed-packet=128M"
+      - "--tmp-table-size=256M"
+      - "--max-heap-table-size=256M"
+      - "--join-buffer-size=64M"
+      - "--sort-buffer-size=8M"
+      - "--read-buffer-size=2M"
+      - "--read-rnd-buffer-size=4M"
+      - "--character_set_server=utf8mb4"
+      - "--collation-server=utf8mb4_unicode_ci"
+    required: true
+    group: "Database"
+  
   - variable: "mysqlbackup.environment.DB_DUMP_BEGIN"
     label: "Time to start database backup"
     default: "1720"
@@ -203,8 +227,8 @@ questions:
     type: "string"
     required: true
     group: "Database"
- 
- 
+
+
   - variable: "postfix.serviceName"
     label: "Postfix service name"
     description: "Default is application full name ( application-postfix ) "

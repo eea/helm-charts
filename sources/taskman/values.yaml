@@ -169,6 +169,23 @@ mysql:
     MYSQL_USER: redmine
     MYSQL_PASSWORD: redmine
     MYSQL_ROOT_PASSWORD: password
+  args:
+    - "--innodb-buffer-pool-size=10G"
+    - "--innodb-buffer-pool-instances=4"
+    - "--innodb-lru-scan-depth=8192"
+    - "--innodb-io-capacity=4096"
+    - "--innodb-redo-log-capacity=512M"
+    - "--net-read-timeout=7200"
+    - "--net-write-timeout=7200"
+    - "--max-allowed-packet=128M"
+    - "--tmp-table-size=256M"
+    - "--max-heap-table-size=256M"
+    - "--join-buffer-size=64M"
+    - "--sort-buffer-size=8M"
+    - "--read-buffer-size=2M"
+    - "--read-rnd-buffer-size=4M"
+    - "--character-set-server=utf8mb4"
+    - "--collation-server=utf8mb4_unicode_ci"
   datastorage:
     size: 50Gi
     storageClassName: "nfs-client"
