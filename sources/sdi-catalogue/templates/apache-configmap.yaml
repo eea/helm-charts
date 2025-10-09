@@ -148,13 +148,18 @@ data:
 
 
         <Location /datastore/public>
-            ProxyPass http://nextcloud/s/eSX7atQY4BPZEtN
+            ProxyPass http://nextcloud/{{ .Values.nextcloud.shareLinks.public }}
             ProxyPassReverse /datastore/public
         </Location>
 
         <Location /datastore/internal>
-            ProxyPass http://nextcloud/f/52734
+            ProxyPass http://nextcloud/{{ .Values.nextcloud.shareLinks.internal }}
             ProxyPassReverse /datastore/internal
+        </Location>
+
+        <Location /datastore/restricted>
+            ProxyPass http://nextcloud/{{ .Values.nextcloud.shareLinks.restricted }}
+            ProxyPassReverse /datastore/restricted
         </Location>
 
 
@@ -177,14 +182,6 @@ data:
             ProxyPreserveHost On
             AllowOverride None
             Require all denied
-
-            {{- if .Values.privilegedIPs }}
-            <RequireAny>
-                {{- range .Values.privilegedIPs }}
-                 Require ip {{ . }}
-                {{- end }}
-            </RequireAny>
-            {{- end }}
         </Location>
 
     #   Allow CORS for the download endpoint
@@ -204,8 +201,5 @@ data:
         </Location>
 
         IncludeOptional conf/extra/extra-mime-types.conf
-        IncludeOptional conf/extra/nc.conf 
-        IncludeOptional conf/extra/datashare.conf
-        #IncludeOptional conf/extra/webdav.conf
     </VirtualHost>
 
