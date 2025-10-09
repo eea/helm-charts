@@ -70,10 +70,6 @@ spec:
                    
         resources:
           {{- toYaml .Values.plone.resources | nindent 10 }}
-        
-        volumeMounts:
-        - name: marine-blobs
-          mountPath: /data/marine-blobs
 
       {{- with .Values.plone.nodeSelector }}
       nodeSelector:
@@ -87,9 +83,5 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      volumes:
-      - name: marine-blobs
-        persistentVolumeClaim:
-          claimName: {{ .Release.Name }}-marine-blobs
       restartPolicy: Always
 
