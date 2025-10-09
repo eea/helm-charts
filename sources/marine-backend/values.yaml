@@ -16,8 +16,8 @@ serviceAccount:
 timezone: Europe/Copenhagen
 
 links:
-  database: plone-postgres.namespace
-  memcached: wise-marine-memcached.wise-marine
+  database: postgres-postgres.database
+  memcached: postgres-memcached.database
 
 ingress:
   annotations:
@@ -26,76 +26,80 @@ ingress:
   tls: enabled
 
 plone:
-  serviceType: ClusterIP
-  hostname: plone.eea.europa.eu
-  googleUrl: google85dc6cec8f1329e5.html
-  site: Plone
+  annotations: {}
   autoscaling:
     enabled: false
-    minReplicas: 1
     maxReplicas: 6
-    # targetCPUUtilizationPercentage: 80
+    minReplicas: 1
     targetMemoryUtilizationPercentage: 60
+  database:
+    POSTGRES_DB: wisemarine
+    POSTGRES_PASSWORD: zope
+    POSTGRES_USER: zope
+  environment:
+    BACKEND_VERSION: 5.2.13-31
+    CORS_ALLOW_ORIGIN: ''
+    DEFAULT_ORGANISATIONS: ''
+    DEFAULT_PUBLISHER: ''
+    DYNAMIC_BANNER_ENABLED: ''
+    GRAYLOG: logcentral.eea.europa.eu:12201
+    MARINE_PASS: ''
+    MEMCACHE_SERVER: wise-marine-memcached:11211
+    MSFDURI: ''
+    MSFDXML: /data/xmlfiles
+    MSFD_db_2018: ''
+    MSFD_db_default: ''
+    PLONE_REGISTRY_YAML_CONTENT: ''
+    RELSTORAGE_BLOB_DIR: /data/blobstorage
+    RELSTORAGE_SHARED_BLOB_DIR: 'true'
+    SENTRY_DSN: ''
+    SENTRY_ENVIRONMENT: 01dev
+    SENTRY_RELEASE: 5.2.13-31
+    SENTRY_SITE: ''
+    SENTRY_URL: water.europa.eu/marine
+    STATIC_BANNER_ENABLED: ''
+    WARMUP_HEALTH_THRESHOLD: '10'
+    XMLEXPORTPASS: ''
+  googleUrl: google85dc6cec8f1329e5.html
+  hostname: dev-wise.01dev.eea.europa.eu
+  livenessProbe:
+    failureThreshold: 6
+    httpGet:
+      path: /ok
+      port: http
+    initialDelaySeconds: 30
+    periodSeconds: 20
+    successThreshold: 1
+    timeoutSeconds: 10
+  readinessProbe:
+    failureThreshold: 4
+    httpGet:
+      path: /ok
+      port: http
+    initialDelaySeconds: 60
+    periodSeconds: 15
+    successThreshold: 2
+    timeoutSeconds: 10
   replicaCount: 1
   resources:
     limits:
-      memory: 2Gi
+      memory: 4Gi
     requests:
-      memory: 2Gi
-  database:
-    POSTGRES_DB: marine
-    POSTGRES_USER: zope
-    POSTGRES_PASSWORD: zope_456
-  environment:
-    MARINE_PASS: ""
-    MSFDURI: ""
-    MSFD_db_2018: ""
-    MSFD_db_default: ""
-    XMLEXPORTPASS: ""
-    MSFDXML: "/data/xmlfiles"
-    MEMCACHE_SERVER: "wise-marine-memcached:11211"
-    WARMUP_HEALTH_THRESHOLD: "10"
-    BACKEND_VERSION: "5.2.13-31"
-    GRAYLOG: "logcentral.eea.europa.eu:12201"
-    SENTRY_DSN: ""
-    SENTRY_ENVIRONMENT: "01dev"
-    SENTRY_SITE: ""
-    SENTRY_URL: "water.europa.eu/marine"
-    SENTRY_RELEASE: "5.2.13-31"
-    CORS_ALLOW_ORIGIN: ""
-    DEFAULT_PUBLISHER: ""
-    DEFAULT_ORGANISATIONS: ""
-    STATIC_BANNER_ENABLED: ""
-    DYNAMIC_BANNER_ENABLED: ""
-    PLONE_REGISTRY_YAML_CONTENT: ""
-  annotations: {}
-  livenessProbe:
-    httpGet:
-      path: /ok
-      port: http
-    periodSeconds: 20
-    timeoutSeconds: 10
-    initialDelaySeconds: 30
-    failureThreshold: 6
-    successThreshold: 1
+      memory: 4Gi
+  serviceType: ClusterIP
+  site: Plone
   startupProbe:
+    failureThreshold: 24
     httpGet:
       path: /ok
       port: http
+    initialDelaySeconds: 30
     periodSeconds: 5
-    timeoutSeconds: 10
-    initialDelaySeconds: 10
-    failureThreshold: 12
     successThreshold: 1
-  readinessProbe:
-    httpGet:
-      path: /ok
-      port: http
-    periodSeconds: 15
     timeoutSeconds: 10
-    initialDelaySeconds: 60
-    failureThreshold: 4
-    successThreshold: 2
+  sharedBlobStorage:
+    enabled: true
+    claimName: marine-zeo-zeodata-0
 
 varnish:
   serviceType: ClusterIP
