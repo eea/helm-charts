@@ -33,12 +33,6 @@ questions:
     default: "4096Mi"
     group: Matomo
 
-  - variable: matomo.replicaCount
-    label: "Number of Matomo containers"
-    description: "Scale of Matomo containers"
-    type: int
-    default: 1
-    group: Matomo
 
   - variable: matomoAnalytics.token
     label: "Matomo authentication token"
