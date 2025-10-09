@@ -16,7 +16,7 @@ serviceAccount:
 timezone: Europe/Copenhagen
 
 links:
-  zeo: marine-zeo-zeo.wise-marine
+  database: plone-postgres.namespace
   memcached: wise-marine-memcached.wise-marine
 
 ingress:
@@ -42,14 +42,11 @@ plone:
       memory: 2Gi
     requests:
       memory: 2Gi
-  zeo:
-    DATA_VOLUME_NAME: marine-data
-    XML_VOLUME_NAME: marine-xml
-    MARINE_CACHE_VOLUME: marine-cache
+  database:
+    POSTGRES_DB: marine
+    POSTGRES_USER: zope
+    POSTGRES_PASSWORD: zope_456
   environment:
-    ZEO_ADDRESS: "marine-zeo-zeo.wise-marine:8080"
-    ZOPE_MODE: "zeo_client"
-    SHARED_BLOB_DIR: "on"
     MARINE_PASS: ""
     MSFDURI: ""
     MSFD_db_2018: ""
@@ -190,6 +187,10 @@ zodbpack:
   podAnnotations: {}
   podSecurityContext: {}
   securityContext: {}
+
+marineBlobs:
+  size: "50Gi"
+  storageClassName: ""
 
 postfix:
   fullnameOverride: ""

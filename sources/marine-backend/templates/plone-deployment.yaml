@@ -40,10 +40,8 @@ spec:
           value: "{{ .Values.image.tag | default .Chart.AppVersion }}"
         - name: TZ
           value: "{{ .Values.timezone }}"
-        - name: ZEO_ADDRESS
-          value: "{{ .Values.plone.environment.ZEO_ADDRESS }}"
-        - name: ZOPE_MODE
-          value: "{{ .Values.plone.environment.ZOPE_MODE }}"
+        - name: RELSTORAGE_DSN
+          value: "host='postgres' dbname='{{ .Values.plone.database.POSTGRES_DB }}' user='{{ .Values.plone.database.POSTGRES_USER }}' password='{{ .Values.plone.database.POSTGRES_PASSWORD }}'"
         {{- range $key, $value := .Values.plone.environment }}
         {{- if ($value) }}
         - name: {{ $key }}
@@ -74,9 +72,8 @@ spec:
           {{- toYaml .Values.plone.resources | nindent 10 }}
         
         volumeMounts:
-        - name: shared-blobstorage
-          mountPath: /data/blobstorage
-          subPath: blobstorage
+        - name: marine-blobs
+          mountPath: /data/marine-blobs
 
       {{- with .Values.plone.nodeSelector }}
       nodeSelector:
@@ -91,8 +88,8 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       volumes:
-      - name: shared-blobstorage
+      - name: marine-blobs
         persistentVolumeClaim:
-          claimName: zeodata-marine-zeo-zeo-ss-0
+          claimName: {{ .Release.Name }}-marine-blobs
       restartPolicy: Always
 
