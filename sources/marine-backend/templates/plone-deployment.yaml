@@ -71,22 +71,6 @@ spec:
         resources:
           {{- toYaml .Values.plone.resources | nindent 10 }}
 
-        volumeMounts:
-        {{- if .Values.plone.sharedBlobStorage.enabled }}
-        - name: shared-blobs
-          mountPath: /data/blobstorage
-          subPath: blobstorage
-          readOnly: true
-        {{- end }}
-
-      volumes:
-      {{- if .Values.plone.sharedBlobStorage.enabled }}
-      - name: shared-blobs
-        persistentVolumeClaim:
-          claimName: {{ .Values.plone.sharedBlobStorage.claimName }}
-          readOnly: true
-      {{- end }}
-
       {{- with .Values.plone.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
