@@ -347,6 +347,9 @@ You don't need to change anything on this container, it should work by having th
 
 ## Releases
 
+### Version 1.2.1 - 09 October 2025
+- Remove replica count so it keeps on upgrade [valentinab25 - [`2928b79a`](https://github.com/eea/helm-charts/commit/2928b79ae90150c1722f76dcd36edb7da2cecddc)]
+
 ### Version 1.2.0 - 08 October 2025
 - Automated release of [eeacms/matomo:5.4.0-2](https://github.com/eea/eea.docker.matomo/releases) [EEA Jenkins - [`f166cc9d`](https://github.com/eea/helm-charts/commit/f166cc9de2872a0c8f55ca204e7d4768fdfb54be)]
 
