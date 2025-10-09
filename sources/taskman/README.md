@@ -459,6 +459,9 @@ grunt
 
 ## Releases
 
+### Version 0.3.10 - 10 October 2025
+- MySQL configuration update [Silviu - [`2f7f2ed5`](https://github.com/eea/helm-charts/commit/2f7f2ed5ebab4671f8ae88e39682af49100913c4)]
+
 ### Version 0.3.9 - 15 September 2025
 - switch to nginx from apache [Silviu - [`27a7f8b9`](https://github.com/eea/helm-charts/commit/27a7f8b91db8b6baea29d937246b506056927173)]
 
