@@ -1,0 +1,15 @@
+apiVersion: v2
+name: bise-backend
+type: application
+version: 1.0.0
+appVersion: "11.0.2"
+description: BISE backend
+icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/bise-backend/ied.png
+home: https://github.com/eea/bise-backend
+keywords:
+  - CMS
+# Remember to do helm dep up
+dependencies:
+  - name: postfix
+    version: 3.1.0
+    repository: https://eea.github.io/helm-charts
