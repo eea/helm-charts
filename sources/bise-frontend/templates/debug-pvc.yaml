@@ -1,0 +1,15 @@
+{{- if .Values.debug.enabled -}}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: debug-addons-pvc
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: debug-addons
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 10Gi
+{{- end }}
