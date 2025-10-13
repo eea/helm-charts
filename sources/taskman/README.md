@@ -459,6 +459,9 @@ grunt
 
 ## Releases
 
+### Version 0.3.11 - 13 October 2025
+- add nginx static cache [Silviu - [`7ecc7ba3`](https://github.com/eea/helm-charts/commit/7ecc7ba31e812360c1beb47f8d9bbc18321f57d5)]
+
 ### Version 0.3.10 - 10 October 2025
 - MySQL configuration update [Silviu - [`2f7f2ed5`](https://github.com/eea/helm-charts/commit/2f7f2ed5ebab4671f8ae88e39682af49100913c4)]
 
