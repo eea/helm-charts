@@ -170,22 +170,63 @@ mysql:
     MYSQL_PASSWORD: redmine
     MYSQL_ROOT_PASSWORD: password
   args:
-    - "--innodb-buffer-pool-size=10G"
-    - "--innodb-buffer-pool-instances=4"
-    - "--innodb-lru-scan-depth=8192"
-    - "--innodb-io-capacity=4096"
-    - "--innodb-redo-log-capacity=512M"
-    - "--net-read-timeout=7200"
-    - "--net-write-timeout=7200"
-    - "--max-allowed-packet=128M"
-    - "--tmp-table-size=256M"
-    - "--max-heap-table-size=256M"
-    - "--join-buffer-size=64M"
-    - "--sort-buffer-size=8M"
-    - "--read-buffer-size=2M"
-    - "--read-rnd-buffer-size=4M"
-    - "--character-set-server=utf8mb4"
-    - "--collation-server=utf8mb4_unicode_ci"
+    - '--innodb-buffer-pool-size=3200M'
+    - '--innodb-buffer-pool-instances=8'
+    - '--innodb-lru-scan-depth=256'
+    - '--innodb-io-capacity=4000'
+    - '--innodb-io-capacity-max=8000'
+    - '--innodb-redo-log-capacity=512M'
+    - '--innodb-flush-log-at-trx-commit=1'
+    - '--innodb-buffer-pool-dump-at-shutdown=ON'
+    - '--innodb-buffer-pool-load-at-startup=ON'
+    - '--innodb-thread-concurrency=0'
+    - '--innodb-read-io-threads=16'
+    - '--innodb-write-io-threads=16'
+    - '--innodb-purge-threads=4'
+    - '--innodb-page-cleaners=8'
+    - '--innodb-flush-neighbors=0'
+    - '--innodb-adaptive-hash-index=ON'
+    - '--innodb-stats-on-metadata=OFF'
+    - '--innodb-log-buffer-size=64M'
+    - '--table-open-cache=8000'
+    - '--table-open-cache-instances=16'
+    - '--table-definition-cache=8192'
+    - '--open-files-limit=20000'
+    - '--net-read-timeout=120'
+    - '--net-write-timeout=120'
+    - '--max-allowed-packet=64M'
+    - '--tmp-table-size=64M'
+    - '--max-heap-table-size=64M'
+    - '--join-buffer-size=4M'
+    - '--sort-buffer-size=2M'
+    - '--read-buffer-size=256K'
+    - '--read-rnd-buffer-size=512K'
+    - '--thread-cache-size=100'
+    - '--max-connections=100'
+    - '--back-log=200'
+    - '--character-set-server=utf8mb4'
+    - '--collation-server=utf8mb4_unicode_ci'
+    - '--sql-mode=NO_ENGINE_SUBSTITUTION'
+    - >-
+      --optimizer-switch=index_merge=on,index_merge_union=on,index_merge_sort_union=on,index_merge_intersection=on
+    - '--optimizer-switch=mrr=on,mrr_cost_based=off,batched_key_access=on'
+    - '--optimizer-switch=derived_merge=on,subquery_to_derived=on'
+    - >-
+      --optimizer-switch=semijoin=on,loosescan=on,firstmatch=on,materialization=on
+    - '--optimizer-switch=join_cache_level=6'
+    - '--optimizer-switch=condition_fanout_filter=on'
+    - '--optimizer-switch=use_index_extensions=on'
+    - '--optimizer-switch=prefer_ordering_index=on'
+    - '--optimizer-switch=skip_scan=on'
+    - '--optimizer-switch=hash_join=on'
+    - '--optimizer-switch=batched_key_access_join=on'
+    - '--optimizer-switch=engine_condition_pushdown=on'
+    - '--optimizer-switch=derived_condition_pushdown=on'
+    - '--optimizer-switch=use_invisible_indexes=off'
+    - '--optimizer-switch=materialize_different_cost=on'
+    - '--performance-schema=ON'
+    - '--performance-schema-instrument=stage/%=ON'
+    - '--performance-schema-consumer-events-stages-current=ON'
   datastorage:
     size: 50Gi
     storageClassName: "nfs-client"
