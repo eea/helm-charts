@@ -54,7 +54,7 @@ data:
       'mail_domain' => 'eionet.europa.eu',
       'mail_smtphost' => 'postfix',
       'mail_smtpport' => '25',
-      'skeletondirectory' => ''
+      'skeletondirectory' => '',
       'localstorage.allowsymlinks' => {{ .Values.nextcloud.localstorage_allowsymlinks }}
     );
 
