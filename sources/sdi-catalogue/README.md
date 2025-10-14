@@ -14,6 +14,12 @@ Cronjobs have been removed since the update to GN 5/ GN 46 and the new folder st
 | serverUrl | string | <https://sdi.eea.europa.eu:443> | URL of the server. The port is required. |
 
 ## Releases
+### Version 0.8.17 - 14 October 2025
+- Don't use a skeleton directory in Nextcloud.
+
+### Version 0.8.16 - 09 October 2025
+- Unprotect Nextcloud login.
+  
 ### Version 0.8.15 - 09 October 2025
 - Add shared links to values.yaml.
  
