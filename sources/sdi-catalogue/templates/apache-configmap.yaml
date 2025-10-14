@@ -177,13 +177,6 @@ data:
             RequestHeader set X-Forwarded-Proto "https"
          </Location>
 
-
-        <Location /datashare/login>
-            ProxyPreserveHost On
-            AllowOverride None
-            Require all denied
-        </Location>
-
     #   Allow CORS for the download endpoint
     #   https://taskman.eionet.europa.eu/issues/285084
         <LocationMatch "^/datashare/s/.*/download$">
