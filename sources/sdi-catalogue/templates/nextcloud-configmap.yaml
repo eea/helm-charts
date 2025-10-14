@@ -55,5 +55,6 @@ data:
       'mail_smtphost' => 'postfix',
       'mail_smtpport' => '25',
       'skeletondirectory' => ''
+      'localstorage.allowsymlinks' => {{ .Values.nextcloud.localstorage_allowsymlinks }}
     );
 
