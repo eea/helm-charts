@@ -67,6 +67,9 @@ This can be used to set the rabbitmq host to be used.
 
 ## Releases
 
+### Version 0.31.3 - 15 October 2025
+- Use a common curl image for syncjobs and moved it into values [Olimpiu Rob - [`29992dab`](https://github.com/eea/helm-charts/commit/29992dabf89598c0ea2ab8f652554fa8d67ad5a9)]
+
 ### Version 0.31.2 - 15 October 2025
 - Updated rn-bdr-european-registry to 0.1.16 [Diana Boiangiu - [`05c3b0e3`](https://github.com/eea/helm-charts/commit/05c3b0e39bffac4dd67da43ced86f95eeaff1ab0)]
 
