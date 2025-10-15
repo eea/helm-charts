@@ -10,6 +10,9 @@ Network Policy:
 
 ## Releases
 
+### Version 0.1.15 - 15 October 2025
+- Updated appVersion to 2.5.3 [Diana Boiangiu - [`77513423`](https://github.com/eea/helm-charts/commit/77513423d0b3c60d1d6a8bdce593602550c784c5)]
+
 ### Version 0.1.14 - 28 April 2025
 - Updated appVersion to 2.5.2 [Diana Boiangiu - [`df49391`](https://github.com/eea/helm-charts/commit/df493911e97c378e0683e57f9cedc28a78300c94)]
 
