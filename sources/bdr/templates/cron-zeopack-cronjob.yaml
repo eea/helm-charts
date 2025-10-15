@@ -22,7 +22,7 @@ spec:
 
           containers:
           - name: {{ include "appl.fullname" . }}
-            image: curlimages/curl:8.10.1
+            image: {{ .Values.cron.sharedCronJobImage }}
             imagePullPolicy: {{ .Values.image.pullPolicy }}
             resources:
               {{- toYaml .Values.cronzeopack.resources | nindent 14 }}
