@@ -67,6 +67,9 @@ This can be used to set the rabbitmq host to be used.
 
 ## Releases
 
+### Version 0.31.2 - 15 October 2025
+- Updated rn-bdr-european-registry to 0.1.16 [Diana Boiangiu - [`05c3b0e3`](https://github.com/eea/helm-charts/commit/05c3b0e39bffac4dd67da43ced86f95eeaff1ab0)]
+
 ### Version 0.31.1 - 15 October 2025
 - Updated rn-bdr-european-registry to 0.1.15 [Diana Boiangiu - [`edcfc2f1`](https://github.com/eea/helm-charts/commit/edcfc2f19cbddd6b59de77eb4990b548a58b5817)]
 
