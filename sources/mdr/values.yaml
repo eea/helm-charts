@@ -79,6 +79,8 @@ instance:
 cronzeopack:
   enabled: false
   schedule: "0 3 * * *"
+  repository: curlimages/curl
+  tag: 8.16.0
   resources:
     requests:
       memory: 16Mi
