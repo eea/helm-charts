@@ -7,7 +7,7 @@ metadata:
     component: nextcloud
 
 spec:
-  replicas: 1
+  replicas: {{ .Values.nextcloud.replicaCount }}
   strategy:
     type: Recreate
   selector:
@@ -46,9 +46,9 @@ spec:
           value: "{{ .Values.timezone }}"
         
         resources:
-          {{- toYaml .Values.resources | nindent 10 }}
+          {{- toYaml .Values.nextcloud.resources | nindent 10 }}
         securityContext:
-          {{- toYaml .Values.securityContext | nindent 12 }}
+          {{- toYaml .Values.nextcloud.securityContext | nindent 12 }}
         volumeMounts:
         - mountPath: /var/www/html
           name: {{ .Release.Name }}-data

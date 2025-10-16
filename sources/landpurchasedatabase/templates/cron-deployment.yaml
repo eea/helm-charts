@@ -8,7 +8,7 @@ metadata:
     component: cron
 
 spec:
-  replicas: 1
+  replicas: {{ .Values.cron.replicaCount }}
   strategy:
     type: Recreate
 
@@ -44,9 +44,9 @@ spec:
           value: "{{ .Values.timezone }}"
         
         resources:
-          {{- toYaml .Values.resources | nindent 10 }}
+          {{- toYaml .Values.cron.resources | nindent 10 }}
         securityContext:
-          {{- toYaml .Values.securityContext | nindent 12 }}
+          {{- toYaml .Values.cron.securityContext | nindent 12 }}
         volumeMounts:
         - mountPath: /var/www/html
           name: {{ .Release.Name }}-data
