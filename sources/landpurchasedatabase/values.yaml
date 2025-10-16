@@ -91,6 +91,7 @@ tolerations: []
 affinity: {}
 
 nextcloud:
+  replicaCount: 1
   image: eeacms/nextcloud:25.0.6-apache
   adminPassword: replaceme
   adminUser: replaceme
@@ -134,6 +135,7 @@ nextcloud:
           - lpddata.eea.europa.eu
 
 cron:
+  replicaCount: 1
   securityContext: {}
   resources:
     requests:
