@@ -10,6 +10,9 @@ This chart deployes the Climate Advisory Board frontend app
 
 ## Releases
 
+### Version 1.18.0 - 21 October 2025
+- Automated release of [eeacms/marine-frontend:3.16.0.demo.02](https://github.com/eea/marine-frontend/releases) [EEA Jenkins - [`2e4e48e0`](https://github.com/eea/helm-charts/commit/2e4e48e07b046558c5cbe67df16a3d5bead9d7ee)]
+
 ### Version 1.17.0 - 10 October 2025
 - Automated release of [eeacms/marine-frontend:3.16.0.demo.01](https://github.com/eea/marine-frontend/releases) [EEA Jenkins - [`d698b5ec`](https://github.com/eea/helm-charts/commit/d698b5ecd5483c81807f5c0aba19d5b2da363f8f)]
 
