@@ -118,6 +118,9 @@ imageMapping:
 
 ## Releases
 
+### Version 0.2.16 - 22 October 2025
+- Updated appVersion to v1.3.1-eea.0.0.82. [Olimpiu Rob - [`febd1dc0`](https://github.com/eea/helm-charts/commit/febd1dc059e7407ec310faa6afb920c5f7dddc3a)]
+
 ### Version 0.2.15 - 21 October 2025
 - Updated appVersion to v1.3.1-eea.0.0.81. [Olimpiu Rob - [`7fd916cc`](https://github.com/eea/helm-charts/commit/7fd916cca44be895562b40ff1e27769ded61e4c9)]
 
