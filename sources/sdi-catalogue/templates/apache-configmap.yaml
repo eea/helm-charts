@@ -137,29 +137,45 @@ data:
             ProxyPassReverse http://validator:8080/validator
         </Location>
 
+        ProxyPreserveHost On
         RewriteEngine On
+
+        # Manage /webdav redirections
         RewriteRule ^/webdav/datastore/public/?$ /datastore/public [R=301,L,QSD]
         RewriteRule ^/webdav/datastore/?$       /datastore/public [R=301,L,QSD]
+        RewriteRule ^/webdav/datastore/public/(.+)$ /datastore/public/$1 [R=301,L,QSD]
         
-        RewriteRule ^/webdav/datastore/public/(.+)$ /datastore/public?path=/$1 [R=301,L,QSD]
+        # Manage directories (without a dot in the name)
+        RewriteRule ^/datastore/public/(?!.*\..*$)(.*)$ /datastore/public?path=/$1 [R=301,L]
 
-        RewriteRule ^/data/([^/]+)$ http://gn5:8080{{ .Values.gn46.webapp_context }}/srv/api/records/$1/datastore [P,L]
-        ProxyPassReverse ^/data/([^/]+)$ http://gn5:8080{{ .Values.gn46.webapp_context }}/srv/api/records/$1/datastore
+        # Manage files (with a dot in the name)
+        RewriteRule ^/datastore/public/(.*\..*)$ http://nextcloud/public.php/dav/files/{{ .Values.nextcloud.shareLinks.public }}/$1 [P,L]
 
+        # Manage root datastore redirection
+        RewriteRule ^/datastore/public/?$ http://nextcloud/s/{{ .Values.nextcloud.shareLinks.public }} [P,L]
+        
+        # Proxy record datastore to GeoNetwork
+        RewriteRule ^/data/([^/]+)$ http://gn5:8080/catalogue/srv/api/records/$1/datastore [P,L]
+        ProxyPassReverse ^/data/([^/]+)$ http://gn5:8080/catalogue/srv/api/records/$1/datastore
 
-        <Location /datastore/public>
-            ProxyPass http://nextcloud/{{ .Values.nextcloud.shareLinks.public }}
-            ProxyPassReverse /datastore/public
-        </Location>
+        # Add headers for proxied datastore requests
+        <LocationMatch "^/datastore">
+            RequestHeader set X-Real-IP expr=%{REMOTE_ADDR}
+            RequestHeader set X-Forwarded-Proto "https"
+            ProxyPassReverseCookiePath /datashare /datastore
+        </LocationMatch>
+        
 
         <Location /datastore/internal>
             ProxyPass http://nextcloud/{{ .Values.nextcloud.shareLinks.internal }}
             ProxyPassReverse /datastore/internal
+            ProxyPassReverseCookiePath /datashare /datastore
         </Location>
 
         <Location /datastore/restricted>
             ProxyPass http://nextcloud/{{ .Values.nextcloud.shareLinks.restricted }}
             ProxyPassReverse /datastore/restricted
+            ProxyPassReverseCookiePath /datashare /datastore
         </Location>
 
 
