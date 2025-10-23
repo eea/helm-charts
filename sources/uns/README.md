@@ -10,11 +10,11 @@ set the values in the database section.
 
 ## Releases
 
+### Version 0.4.0
+- Ci fixes, HQL fixes, libraries upgrades.
+
 ### Version 0.3.8 - 25 August 2025
 - Release of dependent chart postfix:3.1.0 [EEA Jenkins - [`b305c02c`](https://github.com/eea/helm-charts/commit/b305c02c474c577c079c0e84b4029fdef4194e1f)]
-
-
-
 ### Version 0.3.7
 - Use of bitnamilegacy repository.
 
