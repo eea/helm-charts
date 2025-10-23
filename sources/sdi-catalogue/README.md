@@ -16,6 +16,7 @@ Cronjobs have been removed since the update to GN 5/ GN 46 and the new folder st
 ## Releases
 ### Version 0.8.22 - 23 October 2025
 - Fix Nextcloud /datastore/public links.
+- Update GN 4 to `eea-4.9.x-a028bebf`
 
 ### Version 0.8.21 - 22 October 2025
 - Update GN4 to `eea-4.9.x-78c94feb` and GN5 to `8407f847`.
