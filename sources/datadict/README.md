@@ -4,9 +4,11 @@ This chart is configured for production use.
 
 ## Releases
 
+### Version 1.4.0
+- CI fixes, tests fixes, graylog config, libraries upgrades.
+
 ### Version 1.3.9 - 25 August 2025
 - Release of dependent chart postfix:3.1.0 [EEA Jenkins - [`19b8463c`](https://github.com/eea/helm-charts/commit/19b8463c9b0aeef751a8196da9d82a49ce647459)]
-
 
 ### Version 1.3.8
 - Xalan serializer fix.
