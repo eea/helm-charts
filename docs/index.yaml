@@ -21463,6 +21463,47 @@ entries:
   llm-toolkit:
   - apiVersion: v2
     appVersion: 3.95.2
+    created: "2025-10-28T14:30:54.111223+02:00"
+    dependencies:
+    - condition: postgresql.deploy
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 16.4.9
+    - condition: clickhouse.deploy
+      name: clickhouse
+      repository: https://charts.bitnami.com/bitnami
+      version: 9.0.0
+    - alias: redis
+      condition: redis.deploy
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 20.5.0
+    - condition: minio.deploy
+      name: minio
+      repository: https://charts.bitnami.com/bitnami
+      version: 16.0.0
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 2.30.0
+    description: A comprehensive LLM Toolkit Helm chart for Kubernetes with Langfuse
+      and LiteLLM integration
+    digest: 62036a8288966ab5af0ad08635453d584bbf3f965bcb159397d7f86710d7466a
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/llm-toolkit/langfuse_logo.png
+    keywords:
+    - langfuse
+    - llm
+    - litellm
+    - observability
+    - prompt management
+    - metrics
+    - llm-toolkit
+    name: llm-toolkit
+    type: application
+    urls:
+    - llm-toolkit-0.2.4.tgz
+    version: 0.2.4
+  - apiVersion: v2
+    appVersion: 3.95.2
     created: "2025-10-23T11:29:03.612653+02:00"
     dependencies:
     - condition: postgresql.deploy
@@ -32432,4 +32473,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2025-10-27T12:58:03.3027125+02:00"
+generated: "2025-10-28T14:30:54.097004+02:00"
