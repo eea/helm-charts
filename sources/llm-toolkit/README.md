@@ -264,6 +264,9 @@ helm delete llm-toolkit
 
 ## Releases
 
+### Version 0.2.4 - 28 October 2025
+- Updated litellm to v1.78.5-stable [Olimpiu Rob - [`00822b19`](https://github.com/eea/helm-charts/commit/00822b1976b7182bb252163415aaed1f163eaef4)]
+
 ### Version 0.2.3 - 24 September 2025
 - Added LANGFUSE_S3_BATCH_EXPORT_EXTERNAL_ENDPOINT environment variable [Olimpiu Rob - [`a050d35a`](https://github.com/eea/helm-charts/commit/a050d35a1d3951e2e317d1f621fa245e646613dc)]
 
