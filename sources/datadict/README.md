@@ -4,6 +4,9 @@ This chart is configured for production use.
 
 ## Releases
 
+### Version 1.4.1
+- Jenkinsfile fixes.
+
 ### Version 1.4.0
 - CI fixes, tests fixes, graylog config, libraries upgrades.
 
