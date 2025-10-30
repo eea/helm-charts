@@ -25,6 +25,9 @@ This chart is configured for production use.
 
 <dl>
 
+  <dt>Version 0.2.6/dt>
+  <dd>Hibernate validator upgrade.</dd>
+
   <dt>Version 0.2.5/dt>
   <dd>Obligation history entry bug fix, libraries upgrades.</dd>
 
