@@ -5,6 +5,9 @@ This chart is configured for production use.
 ## Releases
 
 <dl>
+  <dt>Version 0.1.8</dt>
+  <dd>Libraries upgrades.</dd>
+
   <dt>Version 0.1.7</dt>
   <dd>Job not found check.</dd>
 
