@@ -28,6 +28,9 @@ database:
 ## Release notes
 
 <dl>
+  <dt>Version 1.0.9</dt>
+  <dd>Hibernate validator upgrade.</dd>
+
   <dt>Version 1.0.8</dt>
   <dd>Proxy endpoint for file upload deletion, libraries upgrades.</dd>
 
