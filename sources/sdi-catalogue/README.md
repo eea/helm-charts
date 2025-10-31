@@ -14,6 +14,9 @@ Cronjobs have been removed since the update to GN 5/ GN 46 and the new folder st
 | serverUrl | string | <https://sdi.eea.europa.eu:443> | URL of the server. The port is required. |
 
 ## Releases
+### Version 0.8.24 - 31 October 2025
+- Fix /gis_sdi/ from the datastore links.
+
 ### Version 0.8.23 - 31 October 2025
 - Fix /datastore/internal links.
 

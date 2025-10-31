@@ -148,7 +148,7 @@ data:
         RewriteRule ^/webdav/datastore/internal/$ /datastore/internal [R=301,L,QSD]
         RewriteRule ^/webdav/datastore/internal/(.+)$ /datastore/internal/$1 [R=301,L,QSD]
         
-        RewriteRule ^/datastore/internal/?(.*)$ /datashare/apps/files/files?dir=/gis_sdi/datastore/internal/$1 [R=301,L,QSD]
+        RewriteRule ^/datastore/internal/?(.*)$ /datashare/apps/files/files?dir=/datastore/internal/$1 [R=301,L,QSD]
         
         # Manage directories (without a dot in the name)
         RewriteRule ^/datastore/public/(?!.*\..*$)(.*)$ /datastore/public?path=/$1 [R=301,L]
