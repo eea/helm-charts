@@ -14,6 +14,9 @@ Cronjobs have been removed since the update to GN 5/ GN 46 and the new folder st
 | serverUrl | string | <https://sdi.eea.europa.eu:443> | URL of the server. The port is required. |
 
 ## Releases
+### Version 0.8.23 - 31 October 2025
+- Fix /datastore/internal links.
+
 ### Version 0.8.22 - 23 October 2025
 - Fix Nextcloud /datastore/public links.
 - Update GN 4 to `eea-4.9.x-a028bebf`
