@@ -9,6 +9,10 @@ metadata:
     nginx.ingress.kubernetes.io/rewrite-target: /VirtualHostBase/https/{{ .Values.plone.hostname }}:443/{{ .Values.plone.site }}/VirtualHostRoot/_vh_marine/_vh_admin/$1
     nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/proxy-body-size: 100m
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      proxy_set_header X-Forwarded-Host {{ .Values.plone.hostname }};
+      proxy_set_header X-Forwarded-Proto https;
+      proxy_set_header X-Forwarded-Port 443;
   {{- with .Values.ingress.annotations }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
