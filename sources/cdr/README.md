@@ -65,6 +65,9 @@ To customize the network policies, you should modify the `instance.networkPolicy
 
 ## Releases
 
+### Version 0.36.1 - 05 November 2025
+- Added DEPLOYMENT_HOST env to cron-auto-fallin-cronjob [Olimpiu Rob - [`3be4e020`](https://github.com/eea/helm-charts/commit/3be4e020b425b3348556c7d64c05bfb5d352280f)]
+
 ### Version 0.36.0 - 24 October 2025
 - Automated release of [eeacms/reportek-cdr:6.7.3-246](https://github.com/eea/eea.docker.reportek.cdr-instance/releases) [EEA Jenkins - [`94b2aa07`](https://github.com/eea/helm-charts/commit/94b2aa073f150d299892027e80773624ffa8ea90)]
 
