@@ -29,7 +29,6 @@ graylog: ''
 tableauToken: ''
 tableauTokenSnapshot: ''
 
-
 serviceAccount:
   create: false
   annotations: {}
@@ -87,6 +86,9 @@ ingress6:
 
 memcached:
   fullnameOverride: "memcached"
+  image:
+    repository: memcached
+    tag: "1.5.2"
   resources:
     requests:
       memory: 2Gi
