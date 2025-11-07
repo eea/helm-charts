@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: memcached
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: memcached
+
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: memcached
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: memcached
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
+      containers:
+      - name: memcached
+        image: '{{ .Values.memcached.image.repository | default "memcached" }}:{{ .Values.memcached.image.tag | default "latest" }}'
+
+        ports:
+        - containerPort: 11211
+
+        env:
+        - name: TZ
+          value: '{{ .Values.timezone }}'
+
+        args:
+        - "-m"
+        - "2048"
+
+        livenessProbe:
+          tcpSocket:
+            port: 11211
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          timeoutSeconds: 3
+
+        readinessProbe:
+          tcpSocket:
+            port: 11211
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 2
+          successThreshold: 1
+          failureThreshold: 3
+
+        resources:
+          {{- toYaml .Values.memcached.resources | nindent 10 }}
+
+        securityContext:
+          {{- toYaml .Values.memcached.securityContext | nindent 10 }}

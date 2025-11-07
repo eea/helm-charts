@@ -29,6 +29,14 @@ spec:
       containers:
       - name: plone
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        {{- with .Values.command }}
+        command:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        {{- with .Values.args }}
+        args:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
         env:
         - name: GRAYLOG_FACILITY
           value: {{ .Values.proxyBaseUrl }}
@@ -68,6 +76,8 @@ spec:
         volumeMounts:
         - mountPath: /data/downloads
           name: emrt-esd-downloads
+        - mountPath: /data/exportimport
+          name: emrt-esd-exportimport
 
         securityContext:
           {{- toYaml .Values.plone.securityContext | nindent 10 }}
@@ -78,4 +88,7 @@ spec:
       - name: emrt-esd-downloads
         persistentVolumeClaim:
           claimName: emrt-esd-downloads
+      - name: emrt-esd-exportimport
+        persistentVolumeClaim:
+          claimName: emrt-esd-exportimport
 
