@@ -10,6 +10,9 @@ set the values in the database section.
 
 ## Releases
 
+### Version 0.4.1
+- CI/CD fix.
+
 ### Version 0.4.0
 - Ci fixes, HQL fixes, libraries upgrades.
 
