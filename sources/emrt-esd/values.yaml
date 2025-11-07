@@ -60,6 +60,9 @@ ingress:
 
 memcached:
   fullnameOverride: "memcached"
+  image:
+    repository: memcached
+    tag: "1.5.2"
   resources:
     requests:
       memory: 2Gi
@@ -87,6 +90,8 @@ plone:
   probeFailureThreshold: 6
   probePeriodSeconds: 10
   probeInitialDelaySeconds: 5
+  command: []
+  args: []
 
 varnish:
   securityContext: {}

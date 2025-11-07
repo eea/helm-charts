@@ -4,6 +4,10 @@ The EMRT(EEA Emission Review Tool) is a web-based tool hosted by the EEA to faci
 
 ## Releases
 
+### Version 2.0.0 - 06 November 2025
+- Use of memcached image instead of bitnami.
+- Added PVC for /data/exportimport.
+
 ### Version 1.3.6 - 25 August 2025
 - Release of dependent chart postfix:3.1.0 [EEA Jenkins - [`cb697d35`](https://github.com/eea/helm-charts/commit/cb697d358d496ed36e6091021e472c62f9b7aaac)]
 
