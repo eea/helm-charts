@@ -1,0 +1,91 @@
+{{- if and .Values.postgresql.enabled .Values.postgresql.useSimpleStatefulSet }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "onyx.fullname" . }}-postgresql
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: postgresql
+    {{- include "onyx.labels" . | nindent 4 }}
+spec:
+  ports:
+  - port: 5432
+    targetPort: 5432
+    name: postgresql
+  clusterIP: None
+  selector:
+    app: postgresql
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "onyx.fullname" . }}-postgresql
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: postgresql
+    {{- include "onyx.labels" . | nindent 4 }}
+spec:
+  serviceName: {{ include "onyx.fullname" . }}-postgresql
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgresql
+  template:
+    metadata:
+      labels:
+        app: postgresql
+    spec:
+      containers:
+      - name: postgresql
+        image: postgres:{{ .Values.postgresql.simple.tag | default "16" }}
+        imagePullPolicy: {{ .Values.global.pullPolicy }}
+        ports:
+        - containerPort: 5432
+          name: postgresql
+        env:
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.auth.postgresql.secretName }}
+              key: {{ .Values.auth.postgresql.secretKeys.POSTGRES_USER }}
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.auth.postgresql.secretName }}
+              key: {{ .Values.auth.postgresql.secretKeys.POSTGRES_PASSWORD }}
+        - name: POSTGRES_DB
+          value: {{ .Values.postgresql.simple.database | default "onyx" }}
+        - name: PGDATA
+          value: /var/lib/postgresql/data/pgdata
+        volumeMounts:
+        - name: postgresql-data
+          mountPath: /var/lib/postgresql/data
+        {{- if .Values.postgresql.initdb.enabled }}
+        - name: init-scripts
+          mountPath: /docker-entrypoint-initdb.d
+        {{- end }}
+        resources:
+          {{- toYaml .Values.postgresql.simple.resources | nindent 10 }}
+        {{- if .Values.postgresql.simple.securityContext }}
+        securityContext:
+          {{- toYaml .Values.postgresql.simple.securityContext | nindent 10 }}
+        {{- end }}
+      {{- if .Values.postgresql.initdb.enabled }}
+      volumes:
+      - name: init-scripts
+        configMap:
+          name: {{ include "onyx.fullname" . }}-postgresql-init
+          defaultMode: 0755
+      {{- end }}
+  volumeClaimTemplates:
+  - metadata:
+      name: postgresql-data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      {{- if .Values.postgresql.simple.storageClass }}
+      storageClassName: {{ .Values.postgresql.simple.storageClass }}
+      {{- end }}
+      resources:
+        requests:
+          storage: {{ .Values.postgresql.simple.storage | default "10Gi" }}
+{{- end }}
