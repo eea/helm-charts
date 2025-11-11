@@ -1,0 +1,117 @@
+{{- if and .Values.postgresql.enabled .Values.postgresql.useSimpleStatefulSet .Values.postgresql.backup.enabled }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "onyx.fullname" . }}-postgresql-backup
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: postgresql-backup
+    {{- include "onyx.labels" . | nindent 4 }}
+spec:
+  schedule: {{ .Values.postgresql.backup.schedule | quote }}
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: {{ .Values.postgresql.backup.successfulJobsHistoryLimit | default 3 }}
+  failedJobsHistoryLimit: {{ .Values.postgresql.backup.failedJobsHistoryLimit | default 3 }}
+  jobTemplate:
+    metadata:
+      labels:
+        app: postgresql-backup
+        {{- include "onyx.labels" . | nindent 8 }}
+    spec:
+      template:
+        metadata:
+          labels:
+            app: postgresql-backup
+        spec:
+          restartPolicy: OnFailure
+          containers:
+          - name: backup
+            image: postgres:{{ .Values.postgresql.simple.tag | default "16" }}
+            imagePullPolicy: IfNotPresent
+            command:
+            - /bin/bash
+            - -c
+            - |
+              set -e
+              echo "Starting PostgreSQL backup at $(date)"
+
+              # Create timestamp
+              TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+              BACKUP_DIR="/backups"
+
+              # Ensure backup directory exists
+              mkdir -p "$BACKUP_DIR"
+
+              # Get list of databases (excluding templates and postgres)
+              DATABASES=$(PGPASSWORD="$POSTGRES_PASSWORD" psql -h "$POSTGRES_HOST" -U "$POSTGRES_USER" -d postgres -t -c "SELECT datname FROM pg_database WHERE datistemplate = false AND datname NOT IN ('postgres', 'template0', 'template1');")
+
+              echo "Found databases: $DATABASES"
+
+              # Backup each database
+              for DB in $DATABASES; do
+                DB=$(echo $DB | xargs)  # Trim whitespace
+                if [ -n "$DB" ]; then
+                  BACKUP_FILE="${BACKUP_DIR}/${DB}_${TIMESTAMP}.sql.gz"
+                  echo "Backing up database: $DB to $BACKUP_FILE"
+
+                  PGPASSWORD="$POSTGRES_PASSWORD" pg_dump -h "$POSTGRES_HOST" -U "$POSTGRES_USER" -d "$DB" \
+                    --verbose \
+                    --format=plain \
+                    --no-owner \
+                    --no-acl \
+                    | gzip > "$BACKUP_FILE"
+
+                  if [ $? -eq 0 ]; then
+                    BACKUP_SIZE=$(du -h "$BACKUP_FILE" | cut -f1)
+                    echo "✅ Successfully backed up $DB ($BACKUP_SIZE)"
+                  else
+                    echo "❌ Failed to backup $DB"
+                    exit 1
+                  fi
+                fi
+              done
+
+              # Create a full cluster backup (includes roles, tablespaces, etc.)
+              CLUSTER_BACKUP="${BACKUP_DIR}/cluster_globals_${TIMESTAMP}.sql.gz"
+              echo "Backing up cluster globals to $CLUSTER_BACKUP"
+              PGPASSWORD="$POSTGRES_PASSWORD" pg_dumpall -h "$POSTGRES_HOST" -U "$POSTGRES_USER" \
+                --globals-only \
+                | gzip > "$CLUSTER_BACKUP"
+
+              # Cleanup old backups (keep last N days)
+              {{- if .Values.postgresql.backup.retention.enabled }}
+              RETENTION_DAYS={{ .Values.postgresql.backup.retention.days | default 7 }}
+              echo "Cleaning up backups older than $RETENTION_DAYS days"
+              find "$BACKUP_DIR" -name "*.sql.gz" -type f -mtime +$RETENTION_DAYS -delete
+              {{- end }}
+
+              # List all backups
+              echo ""
+              echo "=== Available Backups ==="
+              ls -lh "$BACKUP_DIR"
+
+              echo ""
+              echo "✅ Backup completed successfully at $(date)"
+            env:
+            - name: POSTGRES_HOST
+              value: {{ include "onyx.fullname" . }}-postgresql
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.auth.postgresql.secretName }}
+                  key: {{ .Values.auth.postgresql.secretKeys.POSTGRES_USER }}
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.auth.postgresql.secretName }}
+                  key: {{ .Values.auth.postgresql.secretKeys.POSTGRES_PASSWORD }}
+            volumeMounts:
+            - name: backup-storage
+              mountPath: /backups
+            resources:
+              {{- toYaml .Values.postgresql.backup.resources | nindent 14 }}
+          volumes:
+          - name: backup-storage
+            persistentVolumeClaim:
+              claimName: {{ include "onyx.fullname" . }}-postgresql-backup
+{{- end }}

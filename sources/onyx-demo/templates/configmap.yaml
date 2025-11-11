@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.config.envConfigMapName }}
+  labels:
+    {{- include "onyx.labels" . | nindent 4 }}
+data:
+  INTERNAL_URL: "http://{{ include "onyx.fullname" . }}-api-service:{{ .Values.api.service.port | default 8080 }}"
+  {{- if .Values.postgresql.enabled }}
+  {{- if .Values.postgresql.useSimpleStatefulSet }}
+  POSTGRES_HOST: {{ include "onyx.fullname" . }}-postgresql
+  {{- else }}
+  POSTGRES_HOST: {{ .Release.Name }}-postgresql-rw
+  {{- end }}
+  {{- end }}
+  {{- if .Values.vespa.enabled }}
+  VESPA_HOST: {{ .Values.vespa.name }}.{{ .Values.vespa.service.name }}.{{ .Release.Namespace }}.svc.cluster.local
+  {{- end }}
+  {{- if .Values.redis.enabled }}
+  {{- if .Values.redis.useSimpleDeployment }}
+  REDIS_HOST: {{ include "onyx.fullname" . }}-redis
+  {{- else }}
+  REDIS_HOST: {{ .Release.Name }}-redis-master
+  {{- end }}
+  {{- end }}
+  MODEL_SERVER_HOST: "{{ include "onyx.fullname" . }}-inference-model-service"
+  INDEXING_MODEL_SERVER_HOST: "{{ include "onyx.fullname" . }}-indexing-model-service"
+  {{- if and (hasKey .Values.configMap "LOG_FILE_NAME") .Values.configMap.LOG_FILE_NAME }}
+  LOG_FILE_NAME: "{{ .Values.configMap.LOG_FILE_NAME }}"
+  {{- end }}
+{{- range $key, $value := .Values.configMap }}
+{{- if and (not (empty $value)) (ne $key "LOG_FILE_NAME") }}
+  {{ $key }}: "{{ $value }}"
+{{- end }}
+{{- end }}
+  {{- if .Values.minio.enabled }}
+  S3_ENDPOINT_URL: "http://{{ .Release.Name }}-minio:{{ default 9000 .Values.minio.service.port }}"
+  {{- end }}

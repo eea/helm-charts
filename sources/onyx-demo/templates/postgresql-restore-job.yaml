@@ -1,0 +1,137 @@
+{{- if .Values.postgresql.restore.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "onyx.fullname" . }}-postgresql-restore-{{ .Values.postgresql.restore.timestamp }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: postgresql-restore
+    {{- include "onyx.labels" . | nindent 4 }}
+  annotations:
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "-5"
+    helm.sh/hook-delete-policy: before-hook-creation
+spec:
+  backoffLimit: 3
+  template:
+    metadata:
+      labels:
+        app: postgresql-restore
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: restore
+        image: postgres:{{ .Values.postgresql.simple.tag | default "16" }}
+        imagePullPolicy: IfNotPresent
+        command:
+        - /bin/bash
+        - -c
+        - |
+          set -e
+          echo "Starting PostgreSQL restore at $(date)"
+
+          BACKUP_DIR="/backups"
+
+          {{- if .Values.postgresql.restore.backupFile }}
+          # Restore specific backup file
+          BACKUP_FILE="{{ .Values.postgresql.restore.backupFile }}"
+          {{- else if .Values.postgresql.restore.timestamp }}
+          # Find backup by timestamp
+          TIMESTAMP="{{ .Values.postgresql.restore.timestamp }}"
+          DATABASE="{{ .Values.postgresql.restore.database | default "onyx" }}"
+          BACKUP_FILE="${BACKUP_DIR}/${DATABASE}_${TIMESTAMP}.sql.gz"
+          {{- else }}
+          # Use latest backup
+          DATABASE="{{ .Values.postgresql.restore.database | default "onyx" }}"
+          BACKUP_FILE=$(ls -t ${BACKUP_DIR}/${DATABASE}_*.sql.gz 2>/dev/null | head -1)
+          {{- end }}
+
+          if [ ! -f "$BACKUP_FILE" ]; then
+            echo "❌ Backup file not found: $BACKUP_FILE"
+            echo "Available backups:"
+            ls -lh "$BACKUP_DIR" || echo "No backups found"
+            exit 1
+          fi
+
+          echo "Found backup file: $BACKUP_FILE"
+          BACKUP_SIZE=$(du -h "$BACKUP_FILE" | cut -f1)
+          echo "Backup size: $BACKUP_SIZE"
+
+          # Extract database name from filename or use provided database
+          {{- if .Values.postgresql.restore.database }}
+          TARGET_DB="{{ .Values.postgresql.restore.database }}"
+          {{- else }}
+          TARGET_DB=$(basename "$BACKUP_FILE" | sed 's/_[0-9]*_[0-9]*.sql.gz//')
+          {{- end }}
+
+          echo "Target database: $TARGET_DB"
+
+          {{- if .Values.postgresql.restore.dropDatabase }}
+          # Drop existing database if requested
+          echo "⚠️  Dropping existing database: $TARGET_DB"
+          PGPASSWORD="$POSTGRES_PASSWORD" psql -h "$POSTGRES_HOST" -U "$POSTGRES_USER" -d postgres -c "DROP DATABASE IF EXISTS $TARGET_DB;"
+          {{- end }}
+
+          {{- if .Values.postgresql.restore.createDatabase }}
+          # Create database if it doesn't exist
+          echo "Creating database: $TARGET_DB"
+          PGPASSWORD="$POSTGRES_PASSWORD" psql -h "$POSTGRES_HOST" -U "$POSTGRES_USER" -d postgres -c "CREATE DATABASE $TARGET_DB;" || echo "Database already exists"
+          {{- end }}
+
+          # Restore globals if they exist
+          GLOBALS_BACKUP=$(ls -t ${BACKUP_DIR}/cluster_globals_*.sql.gz 2>/dev/null | head -1)
+          if [ -f "$GLOBALS_BACKUP" ]; then
+            echo "Restoring cluster globals from $GLOBALS_BACKUP"
+            gunzip -c "$GLOBALS_BACKUP" | PGPASSWORD="$POSTGRES_PASSWORD" psql -h "$POSTGRES_HOST" -U "$POSTGRES_USER" -d postgres
+          fi
+
+          # Restore database
+          echo "Restoring database from $BACKUP_FILE..."
+          gunzip -c "$BACKUP_FILE" | PGPASSWORD="$POSTGRES_PASSWORD" psql -h "$POSTGRES_HOST" -U "$POSTGRES_USER" -d "$TARGET_DB" --single-transaction
+
+          if [ $? -eq 0 ]; then
+            echo "✅ Successfully restored $TARGET_DB from $BACKUP_FILE"
+
+            # Show database stats
+            echo ""
+            echo "=== Database Statistics ==="
+            PGPASSWORD="$POSTGRES_PASSWORD" psql -h "$POSTGRES_HOST" -U "$POSTGRES_USER" -d "$TARGET_DB" -c "
+              SELECT
+                schemaname,
+                tablename,
+                pg_size_pretty(pg_total_relation_size(schemaname||'.'||tablename)) AS size
+              FROM pg_tables
+              WHERE schemaname NOT IN ('pg_catalog', 'information_schema')
+              ORDER BY pg_total_relation_size(schemaname||'.'||tablename) DESC
+              LIMIT 10;
+            "
+
+            echo ""
+            echo "✅ Restore completed successfully at $(date)"
+          else
+            echo "❌ Failed to restore database"
+            exit 1
+          fi
+        env:
+        - name: POSTGRES_HOST
+          value: {{ include "onyx.fullname" . }}-postgresql
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.auth.postgresql.secretName }}
+              key: {{ .Values.auth.postgresql.secretKeys.POSTGRES_USER }}
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.auth.postgresql.secretName }}
+              key: {{ .Values.auth.postgresql.secretKeys.POSTGRES_PASSWORD }}
+        volumeMounts:
+        - name: backup-storage
+          mountPath: /backups
+        resources:
+          {{- toYaml .Values.postgresql.restore.resources | nindent 10 }}
+      volumes:
+      - name: backup-storage
+        persistentVolumeClaim:
+          claimName: {{ include "onyx.fullname" . }}-postgresql-backup
+{{- end }}

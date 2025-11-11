@@ -1,0 +1,19 @@
+{{- if and .Values.postgresql.enabled .Values.postgresql.useSimpleStatefulSet .Values.postgresql.backup.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "onyx.fullname" . }}-postgresql-backup
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: postgresql-backup
+    {{- include "onyx.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  {{- if .Values.postgresql.backup.storageClass }}
+  storageClassName: {{ .Values.postgresql.backup.storageClass }}
+  {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.postgresql.backup.storage | default "10Gi" }}
+{{- end }}
