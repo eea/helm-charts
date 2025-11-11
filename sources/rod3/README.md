@@ -24,6 +24,8 @@ This chart is configured for production use.
 ## Releases
 
 <dl>
+  <dt>Version 0.2.7/dt>
+  <dd>jQuery, jQuery UI upgrade.</dd>
 
   <dt>Version 0.2.6/dt>
   <dd>Hibernate validator upgrade.</dd>
