@@ -7,7 +7,7 @@ metadata:
     component: memcached
 
 spec:
-  replicas: 2
+  replicas: {{ .Values.memcached.replicas }}
   strategy:
     type: RollingUpdate
     rollingUpdate:

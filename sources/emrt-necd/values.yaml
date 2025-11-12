@@ -85,6 +85,7 @@ ingress6:
         - emrt-necd-p6.eionet.europa.eu
 
 memcached:
+  replicas: 1
   fullnameOverride: "memcached"
   image:
     repository: memcached
