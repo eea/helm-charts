@@ -4,6 +4,9 @@ The EMRT (EEA Emission Review Tool) is a web-based tool hosted by the EEA to fac
 
 ## Releases
 
+### Version 2.1.1 - 12 November 2025
+- User-scalable memcached
+
 ### Version 2.1.0 - 12 November 2025
 - Replaced the Bitnami memcached subchart
 
