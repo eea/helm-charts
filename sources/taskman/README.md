@@ -459,6 +459,9 @@ grunt
 
 ## Releases
 
+### Version 0.4.0 - 13 November 2025
+- Automated release of [eeacms/redmine:5.1-1.23](https://github.com/eea/eea.docker.redmine/releases) [EEA Jenkins - [`cf16a29c`](https://github.com/eea/helm-charts/commit/cf16a29c972383b7e35d4e13363ebd4c46f1a3e5)]
+
 ### Version 0.3.11 - 13 October 2025
 - add nginx static cache [Silviu - [`7ecc7ba3`](https://github.com/eea/helm-charts/commit/7ecc7ba31e812360c1beb47f8d9bbc18321f57d5)]
 
