@@ -128,12 +128,14 @@ varnish:
 
 debug:
   serviceType: ClusterIP
-  enabled: false
+  serviceName: backend-debug
+  port: 8080
+  enabled: true
   resources:
     limits:
       memory: 4Gi
     requests:
-      memory: 4Gi
+      memory: 1Gi
   nodeSelector: {}
   tolerations: []
   affinity: {}
