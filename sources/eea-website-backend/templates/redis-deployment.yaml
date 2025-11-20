@@ -1,0 +1,78 @@
+{{- if .Values.redis.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-dpl-redis
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: redis
+
+spec:
+  replicas: {{ .Values.redis.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: redis
+
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: redis
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+      - name: redis
+        image: "{{ .Values.redis.image.repository }}:{{ .Values.redis.image.tag }}"
+        imagePullPolicy: {{ .Values.redis.image.pullPolicy }}
+        command:
+          - redis-server
+          - --appendonly
+          - "yes"
+        env:
+        - name: TZ
+          value: "{{ .Values.timezone }}"
+        {{- range $key, $value := .Values.redis.environment }}
+        {{- if ($value) }}
+        - name: {{ $key }}
+          value: {{ $value | quote }}
+        {{- end }}
+        {{- end }}
+
+        ports:
+        - name: redis
+          containerPort: {{ .Values.redis.port }}
+
+        volumeMounts:
+        - name: redis-data
+          mountPath: /data
+
+        resources:
+          {{- toYaml .Values.redis.resources | nindent 10 }}
+
+      volumes:
+      - name: redis-data
+        {{- if .Values.redis.persistence.enabled }}
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-pvc-redis
+        {{- else }}
+        emptyDir: {}
+        {{- end }}
+
+      {{- with .Values.redis.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.redis.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.redis.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+{{- end }}
