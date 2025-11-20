@@ -196,6 +196,32 @@ memcached:
   host: memcached
   port: 11211
 
+# Redis configuration
+redis:
+  enabled: true
+  serviceType: ClusterIP
+  serviceName: backend-redis
+  port: 6379
+  replicaCount: 1
+  image:
+    repository: redis
+    tag: "7.4.7-alpine"
+    pullPolicy: IfNotPresent
+  resources:
+    limits:
+      memory: 1Gi
+    requests:
+      memory: 1Gi
+  persistence:
+    enabled: true
+    storageClass: "efs"
+    accessMode: ReadWriteMany
+    size: 10Gi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  environment: {}
+
 nginx:
   conf: |-
     # Trust only your VPC/ELB subnets (example 10.120.0.0/16). Avoid 0.0.0.0/0 in prod.
