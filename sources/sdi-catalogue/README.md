@@ -14,6 +14,8 @@ Cronjobs have been removed since the update to GN 5/ GN 46 and the new folder st
 | serverUrl | string | <https://sdi.eea.europa.eu:443> | URL of the server. The port is required. |
 
 ## Releases
+### Version 0.8.30 - 20 November 2025
+- Update GN46 (`eea-4.9.x-f4e97fe3`).
 
 ### Version 0.8.29 - 20 November 2025
 - Update GN46 (`eea-4.9.x-7a654b0a`) and GN5 (`646d48e9`).
