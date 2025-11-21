@@ -4,6 +4,9 @@ This chart is configured for production use.
 
 ## Releases
 
+### Version 2.1.0
+- Remove old mariadb service and stateful set, point to new mariadb.
+
 ### Version 2.0.0
 - Mariadb upgrade (new service and stateful set).
 

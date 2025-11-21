@@ -9,7 +9,7 @@ spec:
   podSelector:
     matchLabels:
       {{- include "appl.selectorLabels" . | nindent 6 }}
-      component: database
+      component: mariadb
 
   policyTypes:
   - Egress
