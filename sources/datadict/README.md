@@ -4,6 +4,9 @@ This chart is configured for production use.
 
 ## Releases
 
+### Version 2.0.0
+- Mariadb upgrade (new service and stateful set).
+
 ### Version 1.4.1
 - Jenkinsfile fixes.
 
