@@ -11220,6 +11220,24 @@ entries:
   datadict:
   - apiVersion: v2
     appVersion: 2025-10-27T1402
+    created: "2025-11-21T13:33:05.7922949+02:00"
+    dependencies:
+    - condition: postfix.enabled
+      name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.1.0
+    description: Reportnet Data Dictionary
+    digest: 446eae979f24b751c30a67d504d772ceca8d6a450be5578983cae14ab68a78c6
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/datadict/logo_eionet.png
+    keywords:
+    - Reportnet
+    name: datadict
+    type: application
+    urls:
+    - datadict-2.0.0.tgz
+    version: 2.0.0
+  - apiVersion: v2
+    appVersion: 2025-10-27T1402
     created: "2025-11-20T14:51:38.150969+01:00"
     dependencies:
     - condition: postfix.enabled
@@ -33629,4 +33647,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2025-11-21T00:26:09.99447568Z"
+generated: "2025-11-21T13:33:05.7896028+02:00"
