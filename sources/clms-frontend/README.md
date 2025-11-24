@@ -24,5 +24,8 @@ The chart deploys a three-tier architecture:
 
 ## Releases
 
+### Version 3.493.1 - 24 November 2025
+- Adding nginx configuration [Dobricean Ioan Dorian - [`dc8e63c1`](https://github.com/eea/helm-charts/commit/dc8e63c15d323b60c8bce1423f576348ce24b9cc)]
+
 ### Version 3.493.0
 - Initial CLMS frontend Helm chart release based on insitu-frontend structure 
