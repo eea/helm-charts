@@ -31,6 +31,9 @@ in order to succesfully send emails.
 
 ## Releases
 
+### Version 3.1.2 - 24 November 2025
+- Release eaudeweb/mailtrap:2.6 with Critical FIX [valentinab25 - [`c805a6e4`](https://github.com/eea/helm-charts/commit/c805a6e4a27a507316fb6f3ed0ad4774161ea78a)]
+
 ### Version 3.1.1 - 25 August 2025
 - Add postfix variables from values file [valentinab25 - [`dc293926`](https://github.com/eea/helm-charts/commit/dc2939260f1525d3dd3e69124770a7f007789fc8)]
 
