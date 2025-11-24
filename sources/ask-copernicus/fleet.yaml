@@ -1,0 +1,24 @@
+namespace: ask-copernicus
+
+helm:
+  releaseName: ask-copernicus
+  chart: "ask-copernicus"
+  repo: "https://eea.github.io/helm-charts"
+  version: "1.0.0"
+  force: true
+  timeoutSeconds: 0
+  values:
+    ingress:
+      annotations:
+        cert-manager.io/cluster-issuer: 01dev-eea-letsencrypt
+      certificate: ask.copernicus.01dev.eea.europa.eu-tls
+    volto:
+      hostname: ask.copernicus.01dev.eea.europa.eu
+      environment:
+        RAZZLE_INTERNAL_API_PATH: http://backend:8080/VirtualHostBase/https/ask.copernicus.eu:443/Plone/VirtualHostRoot/ask-copernicus
+        RAZZLE_API_PATH: https://ask.copernicus.eu
+        RAZZLE_PUBLIC_PATH: /
+        RAZZLE_IS_ASK_COPERNICUS: "1"
+        RAZZLE_SENTRY_DSN: ""
+        RAZZLE_SENTRY_RELEASE: ""
+        RAZZLE_SENTRY_ENVIRONMENT: 01dev
