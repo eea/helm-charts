@@ -125,6 +125,27 @@ varnish:
   nodeSelector: {}
   tolerations: []
 
+nginx:
+  enabled: true
+  replicaCount: 1
+  image:
+    repository: nginx
+    tag: "1.23.3"
+    pullPolicy: IfNotPresent
+  serviceType: ClusterIP
+  resources:
+    limits:
+      memory: 1Gi
+    requests:
+      memory: 512Mi
+  staticContent:
+    enabled: true
+    size: 5Gi
+    storageClass: ""
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
 affinity: {}
 
 debug:

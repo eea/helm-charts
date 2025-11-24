@@ -20,9 +20,15 @@ spec:
         pathType: Prefix
         backend:
           service:
+            {{- if .Values.nginx.enabled }}
+            name: {{ include "appl.fullname" . }}-nginx
+            port:
+              number: 80
+            {{- else }}
             name: {{ .Values.varnish.serviceName }}
             port:
               number: {{ .Values.varnish.port }}
+            {{- end }}
   {{- if .Values.ingress.tls }}
   tls:
   - hosts:

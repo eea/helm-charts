@@ -1,0 +1,20 @@
+{{- if .Values.nginx.enabled }}
+{{- if .Values.nginx.staticContent.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "appl.fullname" . }}-staticcontent
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: nginx
+spec:
+  accessModes:
+  - ReadWriteMany
+  {{- if .Values.nginx.staticContent.storageClass }}
+  storageClassName: {{ .Values.nginx.staticContent.storageClass }}
+  {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.nginx.staticContent.size }}
+{{- end }}
+{{- end }}
