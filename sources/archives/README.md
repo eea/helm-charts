@@ -4,6 +4,9 @@ This chart is configured for production. Must run in its own namespace.
 
 ## Releases
 
+### Version 0.2.6 - 25 November 2025
+- Release of dependent chart postfix:3.1.2 [valentinab25 - [`ffedf24c`](https://github.com/eea/helm-charts/commit/ffedf24c01a574c7583c5ea4109d8b47a9e75d42)]
+
 ### Version 0.2.5 - 25 August 2025
 - Release of dependent chart postfix:3.1.0 [EEA Jenkins - [`b479f89f`](https://github.com/eea/helm-charts/commit/b479f89f4cdf1629b9f002c65c757c78530b2826)]
 
