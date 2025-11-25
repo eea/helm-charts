@@ -4,6 +4,9 @@ This chart is configured for production use.
 
 ## Releases
 
+### Version 2.1.1 - 25 November 2025
+- Release of dependent chart postfix:3.1.2 [valentinab25 - [`8a81171e`](https://github.com/eea/helm-charts/commit/8a81171e16577713d8df26ed6aaf5968b8300ad1)]
+
 ### Version 2.1.0
 - Remove old mariadb service and stateful set, point to new mariadb.
 
