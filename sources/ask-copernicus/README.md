@@ -25,6 +25,9 @@ The chart deploys a three-tier architecture:
 
 ## Releases
 
+### Version 1.1.0 - 25 November 2025
+- Automated release of [eeacms/clms-frontend:3.494.0](https://github.com/eea/clms-frontend/releases) [EEA Jenkins - [`374c5830`](https://github.com/eea/helm-charts/commit/374c5830a26d01e27e97f63418c97b7c13d3e65c)]
+
 ### Version 1.0.0
 - Initial Ask Copernicus Helm chart release based on clms-frontend structure
 - Fixed image tag: 3.398.0-chatbot-0.12
