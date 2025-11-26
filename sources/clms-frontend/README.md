@@ -24,6 +24,9 @@ The chart deploys a three-tier architecture:
 
 ## Releases
 
+### Version 3.494.1 - 26 November 2025
+- Remove nginx [Dobricean Ioan Dorian - [`6c53dcc6`](https://github.com/eea/helm-charts/commit/6c53dcc6e944a1aa3fa465aaf7a8e3a727d73c1b)]
+
 ### Version 3.494.0 - 25 November 2025
 - Automated release of [eeacms/clms-frontend:3.494.0](https://github.com/eea/clms-frontend/releases) [EEA Jenkins - [`61f0f799`](https://github.com/eea/helm-charts/commit/61f0f7999851dfd886e99c3f8cb05b409adcf8f2)]
 
