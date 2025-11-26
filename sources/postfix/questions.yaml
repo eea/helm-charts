@@ -64,7 +64,15 @@ questions:
       default: false
       type: "boolean"
       required: true
-  
+    - variable: "mailtrap.mtUser"
+      label: "Mailtrap webui user"
+      default: "mailtrap"
+      type: "string"
+    - variable: "mailtrap.mtPasswd"
+      label: "Mailtrap webui password"
+      default: "mailtrap"
+      type: "string"
+
   - variable: "mailtrap.ingress.hostname"
     label: "Mailtrap URL"
     show_if: "mailtrap.ingress.enabled"
