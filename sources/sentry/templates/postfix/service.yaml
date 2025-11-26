@@ -1,0 +1,20 @@
+{{- if .Values.mail.postfix.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: postfix
+  labels:
+    app.kubernetes.io/name: postfix
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  type: ClusterIP
+  ports:
+    - port: 25
+      targetPort: smtp
+      protocol: TCP
+      name: smtp
+  selector:
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/name: postfix
+{{- end }}

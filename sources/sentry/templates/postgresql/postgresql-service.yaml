@@ -1,0 +1,43 @@
+{{- if .Values.postgresql.enabled }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "sentry.fullname" . }}-postgresql
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ include "sentry.fullname" . }}-postgresql
+    chart: {{ include "sentry.chart" . }}
+    release: {{ .Release.Name }}
+spec:
+  type: ClusterIP
+  ports:
+    - name: postgresql
+      port: 5432
+      targetPort: postgresql
+      protocol: TCP
+  selector:
+    app: {{ include "sentry.fullname" . }}-postgresql
+    release: {{ .Release.Name }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "sentry.fullname" . }}-postgresql-headless
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ include "sentry.fullname" . }}-postgresql
+    chart: {{ include "sentry.chart" . }}
+    release: {{ .Release.Name }}
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+    - name: postgresql
+      port: 5432
+      targetPort: postgresql
+      protocol: TCP
+  selector:
+    app: {{ include "sentry.fullname" . }}-postgresql
+    release: {{ .Release.Name }}
+{{- end }}

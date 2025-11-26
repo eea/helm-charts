@@ -1,0 +1,51 @@
+{{- if .Values.clickhouse.enabled }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "sentry.fullname" . }}-clickhouse
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ include "sentry.fullname" . }}-clickhouse
+    chart: {{ include "sentry.chart" . }}
+    release: {{ .Release.Name }}
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 8123
+      targetPort: http
+      protocol: TCP
+    - name: native
+      port: 9000
+      targetPort: native
+      protocol: TCP
+  selector:
+    app: {{ include "sentry.fullname" . }}-clickhouse
+    release: {{ .Release.Name }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "sentry.fullname" . }}-clickhouse-headless
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ include "sentry.fullname" . }}-clickhouse
+    chart: {{ include "sentry.chart" . }}
+    release: {{ .Release.Name }}
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+    - name: http
+      port: 8123
+      targetPort: http
+      protocol: TCP
+    - name: native
+      port: 9000
+      targetPort: native
+      protocol: TCP
+  selector:
+    app: {{ include "sentry.fullname" . }}-clickhouse
+    release: {{ .Release.Name }}
+{{- end }}

@@ -1,24 +1,39 @@
 apiVersion: v2
-appVersion: 21.7.0
-dependencies:
-- condition: kafka.enabled
-  name: kafka
-  repository: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
-  version: 12.0.0
-- condition: clickhouse.enabled
-  name: clickhouse
-  repository: https://sentry-kubernetes.github.io/charts
-  version: 3.11.0
-- condition: nginx.enabled
-  name: nginx
-  repository: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
-  version: 9.3.3
-- name: sentry-external
-  alias: sentryexternal
-  version: 0.0.8
-  repository: https://eea.github.io/helm-charts
- 
-description: A Helm chart for Kubernetes
 name: sentry
+description: A Helm chart for Kubernetes
 type: application
-version: 11.5.7
+version: 27.7.0
+# renovate image=ghcr.io/getsentry/sentry
+appVersion: 25.9.0
+dependencies:
+  - name: memcached
+    repository: oci://registry-1.docker.io/bitnamicharts
+    version: 7.5.2
+    condition: sourcemaps.enabled
+  - name: redis
+    repository: oci://registry-1.docker.io/bitnamicharts
+    version: 17.11.3
+    condition: redis.enabled
+  - name: kafka
+    repository: oci://registry-1.docker.io/bitnamicharts
+    version: 29.3.14
+    condition: kafka.enabled
+  - name: zookeeper
+    repository: oci://registry-1.docker.io/bitnamicharts
+    version: 11.4.11
+    condition: zookeeper.enabled
+  - name: rabbitmq
+    repository: oci://registry-1.docker.io/bitnamicharts
+    version: 11.16.2
+    alias: rabbitmq
+    condition: rabbitmq.enabled
+  - name: nginx
+    repository: oci://registry-1.docker.io/bitnamicharts
+    version: 18.2.5
+    condition: nginx.enabled
+maintainers:
+  - name: sentry-kubernetes
+icon: https://raw.githubusercontent.com/sentry-kubernetes/charts/refs/heads/develop/docs/logo.png
+home: https://github.com/sentry-kubernetes/charts
+sources:
+  - https://github.com/sentry-kubernetes/charts/tree/develop/charts/sentry

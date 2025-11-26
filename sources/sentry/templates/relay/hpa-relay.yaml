@@ -1,0 +1,46 @@
+{{- if and .Values.relay.enabled .Values.relay.autoscaling.enabled }}
+apiVersion: {{ template "sentry.autoscaling.apiVersion" . }}
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ template "sentry.fullname" . }}-relay
+  annotations:
+    meta.helm.sh/release-name: "{{ .Release.Name }}"
+    meta.helm.sh/release-namespace: "{{ .Release.Namespace }}"
+    "helm.sh/hook": "post-install,post-upgrade"
+    "helm.sh/hook-weight": "25"
+  labels:
+    {{- include "sentry.component.labels" (dict "component" "relay" "ctx" .) | nindent 4 }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ template "sentry.fullname" . }}-relay
+  minReplicas: {{ .Values.relay.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.relay.autoscaling.maxReplicas }}
+  {{- if eq (include "sentry.autoscaling.apiVersion" .) "autoscaling/v1" }}
+  targetCPUUtilizationPercentage: {{ .Values.relay.autoscaling.targetCPUUtilizationPercentage }}
+  {{- else if semverCompare ">=1.27-0" .Capabilities.KubeVersion.GitVersion }}
+  metrics:
+  - type: ContainerResource
+    containerResource:
+      container: {{ .Chart.Name }}-relay
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: {{ .Values.relay.autoscaling.targetCPUUtilizationPercentage }}
+  {{- else }}
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: {{ .Values.relay.autoscaling.targetCPUUtilizationPercentage }}
+  {{- end }}
+  {{- if eq (include "sentry.autoscaling.apiVersion" .) "autoscaling/v2" }}
+  {{- with .Values.relay.autoscaling.behavior }}
+  behavior:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- end }}
+{{- end }}

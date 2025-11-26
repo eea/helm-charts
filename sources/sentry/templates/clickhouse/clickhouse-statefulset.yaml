@@ -1,0 +1,80 @@
+{{- if .Values.clickhouse.enabled }}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "sentry.fullname" . }}-clickhouse
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ include "sentry.fullname" . }}-clickhouse
+    chart: {{ include "sentry.chart" . }}
+    release: {{ .Release.Name }}
+spec:
+  serviceName: {{ include "sentry.fullname" . }}-clickhouse-headless
+  replicas: {{ .Values.clickhouse.clickhouse.replicas | default 1 }}
+  selector:
+    matchLabels:
+      app: {{ include "sentry.fullname" . }}-clickhouse
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "sentry.fullname" . }}-clickhouse
+        chart: {{ include "sentry.chart" . }}
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: clickhouse
+          image: "{{ .Values.clickhouse.clickhouse.image }}:{{ .Values.clickhouse.clickhouse.imageVersion }}"
+          imagePullPolicy: {{ .Values.clickhouse.clickhouse.imagePullPolicy | default "IfNotPresent" }}
+          ports:
+            - name: http
+              containerPort: 8123
+              protocol: TCP
+            - name: native
+              containerPort: 9000
+              protocol: TCP
+            - name: interserver
+              containerPort: 9009
+              protocol: TCP
+          volumeMounts:
+            - name: clickhouse-data
+              mountPath: /var/lib/clickhouse
+            - name: clickhouse-config
+              mountPath: /etc/clickhouse-server/config.d/config.xml
+              subPath: config.xml
+            - name: clickhouse-metrica
+              mountPath: /etc/clickhouse-server/metrica.d/metrica.xml
+              subPath: metrica.xml
+            - name: clickhouse-users
+              mountPath: /etc/clickhouse-server/users.d/users.xml
+              subPath: users.xml
+          livenessProbe:
+            tcpSocket:
+              port: 9000
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 3
+            successThreshold: 1
+          readinessProbe:
+            tcpSocket:
+              port: 9000
+            initialDelaySeconds: 5
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 3
+            successThreshold: 1
+      volumes:
+        - name: clickhouse-data
+          persistentVolumeClaim:
+            claimName: {{ .Values.clickhouse.clickhouse.existingClaim }}
+        - name: clickhouse-config
+          configMap:
+            name: {{ include "sentry.fullname" . }}-clickhouse-config
+        - name: clickhouse-metrica
+          configMap:
+            name: {{ include "sentry.fullname" . }}-clickhouse-metrica
+        - name: clickhouse-users
+          configMap:
+            name: {{ include "sentry.fullname" . }}-clickhouse-users
+{{- end }}

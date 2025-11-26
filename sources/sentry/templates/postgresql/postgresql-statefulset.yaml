@@ -1,0 +1,123 @@
+{{- if .Values.postgresql.enabled }}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "sentry.fullname" . }}-postgresql
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ include "sentry.fullname" . }}-postgresql
+    chart: {{ include "sentry.chart" . }}
+    release: {{ .Release.Name }}
+spec:
+  serviceName: {{ include "sentry.fullname" . }}-postgresql-headless
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ include "sentry.fullname" . }}-postgresql
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "sentry.fullname" . }}-postgresql
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: postgresql
+          image: "{{ .Values.postgresql.image.registry }}/{{ .Values.postgresql.image.repository }}:{{ .Values.postgresql.image.tag }}"
+          imagePullPolicy: IfNotPresent
+          command:
+            - /bin/bash
+            - -c
+            - |
+              # Simple WAL recovery: if database exists and recovery hasn't been attempted, reset WAL once
+              if [ -d "$PGDATA" ] && [ -f "$PGDATA/PG_VERSION" ]; then
+                RECOVERY_FLAG="$PGDATA/.wal_recovery_attempted"
+                if [ ! -f "$RECOVERY_FLAG" ]; then
+                  echo "Attempting WAL recovery for corrupted database..."
+                  # Find pg_resetwal binary (location varies by PostgreSQL version)
+                  PG_RESETWAL=$(which pg_resetwal 2>/dev/null || find /usr -name pg_resetwal 2>/dev/null | head -1)
+                  if [ -n "$PG_RESETWAL" ]; then
+                    # Run pg_resetwal as postgres user (required by PostgreSQL)
+                    if [ "$(id -u)" = "0" ]; then
+                      # If running as root, switch to postgres user using su
+                      su - postgres -c "$PG_RESETWAL -f $PGDATA" 2>&1 && touch "$RECOVERY_FLAG" || echo "WAL recovery attempted"
+                    else
+                      # Already running as postgres user
+                      $PG_RESETWAL -f "$PGDATA" 2>&1 && touch "$RECOVERY_FLAG" || echo "WAL recovery attempted"
+                    fi
+                  else
+                    echo "pg_resetwal not found, skipping WAL recovery"
+                    touch "$RECOVERY_FLAG"
+                  fi
+                fi
+              fi
+              # Start PostgreSQL normally
+              exec docker-entrypoint.sh postgres
+          env:
+            - name: POSTGRES_USER
+              value: {{ .Values.postgresql.auth.username | quote }}
+            - name: POSTGRES_PASSWORD
+              value: {{ .Values.postgresql.auth.password | quote }}
+            - name: POSTGRES_DB
+              value: {{ .Values.postgresql.auth.database | quote }}
+            {{- if .Values.postgresql.primary.extraEnvVars }}
+            {{- range .Values.postgresql.primary.extraEnvVars }}
+            {{- if eq .name "PGDATA" }}
+            - name: PGDATA
+              value: {{ .value | quote }}
+            {{- end }}
+            {{- end }}
+            {{- else }}
+            - name: PGDATA
+              value: "/var/lib/postgresql/data"
+            {{- end }}
+            {{- if .Values.postgresql.primary.extraEnvVars }}
+            {{- range .Values.postgresql.primary.extraEnvVars }}
+            {{- if ne .name "PGDATA" }}
+            - name: {{ .name }}
+              {{- if .value }}
+              value: {{ .value | quote }}
+              {{- else if .valueFrom }}
+              valueFrom:
+                {{- toYaml .valueFrom | nindent 16 }}
+              {{- end }}
+            {{- end }}
+            {{- end }}
+            {{- end }}
+          ports:
+            - name: postgresql
+              containerPort: 5432
+              protocol: TCP
+          volumeMounts:
+            - name: data
+              mountPath: {{ .Values.postgresql.primary.persistence.mountPath | default "/var/lib/postgresql" }}
+              {{- if .Values.postgresql.primary.persistence.subPath }}
+              subPath: {{ .Values.postgresql.primary.persistence.subPath }}
+              {{- end }}
+          livenessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - exec pg_isready -U {{ .Values.postgresql.auth.username | quote }} -h localhost
+            initialDelaySeconds: 15
+            periodSeconds: 5
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 3
+          readinessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - exec pg_isready -U {{ .Values.postgresql.auth.username | quote }} -h localhost
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 3
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ .Values.postgresql.primary.persistence.existingClaim | default (printf "%s-postgresql" (include "sentry.fullname" .)) }}
+{{- end }}

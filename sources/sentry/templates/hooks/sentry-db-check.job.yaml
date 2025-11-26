@@ -1,8 +1,9 @@
-{{- if .Values.hooks.enabled -}}
+{{- if and .Values.hooks.enabled .Values.hooks.dbCheck.enabled -}}
 {{- $clickhouseHost := include "sentry.clickhouse.host" . -}}
 {{- $clickhousePort := include "sentry.clickhouse.port" . -}}
 {{- $kafkaHost := include "sentry.kafka.host" . -}}
 {{- $kafkaPort := include "sentry.kafka.port" . -}}
+{{- $kafkaControllerPort := include "sentry.kafka.controller_port" . -}}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -15,10 +16,13 @@ metadata:
   annotations:
     # This is what defines this resource as a hook. Without this line, the
     # job is considered part of the release.
-    "helm.sh/hook": "post-install,post-upgrade"
+    "helm.sh/hook": "post-install,{{ if .Values.hooks.preUpgrade }}pre-upgrade{{ else }}post-upgrade{{ end }}"
     "helm.sh/hook-delete-policy": "{{ if .Values.hooks.removeOnSuccess }}hook-succeeded,{{ end }}before-hook-creation"
     "helm.sh/hook-weight": "-1"
 spec:
+  {{- if .Values.hooks.activeDeadlineSeconds }}
+  activeDeadlineSeconds: {{ .Values.hooks.activeDeadlineSeconds }}
+  {{- end}}
   template:
     metadata:
       name: {{ template "sentry.fullname" . }}-db-check
@@ -35,6 +39,9 @@ spec:
         {{- if .Values.sentry.worker.podLabels }}
 {{ toYaml .Values.sentry.worker.podLabels | indent 8 }}
         {{- end }}
+        {{- if .Values.hooks.dbCheck.podLabels }}
+{{ toYaml .Values.hooks.dbCheck.podLabels | indent 8 }}
+        {{- end }}
     spec:
       {{- if .Values.hooks.dbCheck.affinity }}
       affinity:
@@ -43,15 +50,30 @@ spec:
       {{- if .Values.hooks.dbCheck.nodeSelector }}
       nodeSelector:
 {{ toYaml .Values.hooks.dbCheck.nodeSelector | indent 8 }}
+      {{- else if .Values.global.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.global.nodeSelector | indent 8 }}
       {{- end }}
       {{- if .Values.hooks.dbCheck.tolerations }}
       tolerations:
 {{ toYaml .Values.hooks.dbCheck.tolerations | indent 8 }}
+      {{- else if .Values.global.tolerations }}
+      tolerations:
+{{ toYaml .Values.global.tolerations | indent 8 }}
       {{- end }}
       restartPolicy: Never
       {{- if .Values.hooks.dbCheck.image.imagePullSecrets }}
       imagePullSecrets:
 {{ toYaml .Values.hooks.dbCheck.image.imagePullSecrets | indent 8 }}
+      {{- end }}
+      {{- if .Values.hooks.dbCheck.securityContext }}
+      securityContext:
+{{ toYaml .Values.hooks.dbCheck.securityContext | indent 8 }}
+      {{- else }}
+      {{- if .Values.hooks.securityContext }}
+      securityContext:
+{{ toYaml .Values.hooks.securityContext | indent 8 }}
+      {{- end }}
       {{- end }}
       containers:
       - name: db-check
@@ -97,23 +119,57 @@ spec:
             while [ $KAFKA_STATUS -eq 0 ]; do
               KAFKA_STATUS=1
               {{- if .Values.kafka.enabled }}
-              KAFKA_REPLICAS={{ .Values.kafka.replicaCount }}
-              i=0; while [ $i -lt $KAFKA_REPLICAS ]; do
-                KAFKA_HOST={{ $kafkaHost }}-$i.{{ $kafkaHost }}-headless
-                if ! nc -z "$KAFKA_HOST" {{ $kafkaPort }}; then
-                  KAFKA_STATUS=0
-                  echo "$KAFKA_HOST is not available yet"
+
+              {{- if .Values.kafka.zookeeper.enabled }}
+              KAFKA_REPLICAS={{ .Values.kafka.broker.replicaCount | default 3 }}
+              echo "Kafka Zookeeper is enabled, checking if kafka brokers are up"
+              KZ_STATUS=0
+              while [ $KZ_STATUS -eq 0 ]; do
+                KZ_STATUS=1
+                i=0; while [ $i -lt $KAFKA_REPLICAS ]; do
+                  KZ_HOST={{ $kafkaHost }}-broker-$i.{{ $kafkaHost }}-broker-headless
+                  if ! nc -z "$KZ_HOST" {{ $kafkaPort }}; then
+                    KZ_STATUS=0
+                    echo "$KZ_HOST is not available yet"
+                  fi
+                  i=$((i+1))
+                done
+                if [ "$KZ_STATUS" -eq 0 ]; then
+                  echo "Kafka not ready. Sleeping for 10s before trying again"
+                  sleep 10;
                 fi
-                i=$((i+1))
               done
-              {{- else if (not (kindIs "slice" .Values.externalKafka)) }}
+              echo "Zookeeper is up"
+              {{- end }}
+              {{- if .Values.kafka.kraft.enabled }}
+              KAFKA_REPLICAS={{ .Values.kafka.controller.replicaCount | default 3 }}
+              echo "Kafka Kraft is enabled, checking if Kraft controllers are up"
+              KRAFT_STATUS=0
+              while [ $KRAFT_STATUS -eq 0 ]; do
+                KRAFT_STATUS=1
+                i=0; while [ $i -lt $KAFKA_REPLICAS ]; do
+                  KRAFT_HOST={{ $kafkaHost }}-controller-$i.{{ $kafkaHost }}-controller-headless
+                  if ! nc -z "$KRAFT_HOST" {{ $kafkaControllerPort }}; then
+                    KRAFT_STATUS=0
+                    echo "$KRAFT_HOST is not available yet"
+                  fi
+                  i=$((i+1))
+                done
+                if [ "$KRAFT_STATUS" -eq 0 ]; then
+                  echo "Kraft controllers not ready. Sleeping for 10s before trying again"
+                  sleep 10;
+                fi
+              done
+              echo "Kraft controllers are up"
+              {{- end }}
+              {{- else if (not (.Values.externalKafka.cluster)) }}
               KAFKA_HOST={{ .Values.externalKafka.host }}
               if ! nc -z "$KAFKA_HOST" {{ $kafkaPort }}; then
                 KAFKA_STATUS=0
                 echo "$KAFKA_HOST is not available yet"
               fi
               {{- else }}
-              {{- range $elem := .Values.externalKafka }}
+              {{- range $elem := .Values.externalKafka.cluster }}
               KAFKA_HOST={{ $elem.host }}
               if ! nc -z "$KAFKA_HOST" {{ $elem.port }}; then
                 KAFKA_STATUS=0
@@ -127,10 +183,36 @@ spec:
               fi
             done
             echo "Kafka is up"
+{{- if .Values.hooks.dbCheck.volumeMounts }}
+        volumeMounts:
+{{ toYaml .Values.hooks.dbCheck.volumeMounts | indent 8 }}
+{{- end }}
         env:
 {{- if .Values.hooks.dbCheck.env }}
 {{ toYaml .Values.hooks.dbCheck.env | indent 8 }}
 {{- end }}
         resources:
 {{ toYaml .Values.hooks.dbCheck.resources | indent 10 }}
+{{- if .Values.hooks.dbCheck.containerSecurityContext }}
+        securityContext:
+{{ toYaml .Values.hooks.dbCheck.containerSecurityContext | indent 10 }}
+{{- end }}
+{{- if .Values.hooks.dbCheck.sidecars }}
+{{ toYaml .Values.hooks.dbCheck.sidecars | indent 6 }}
+{{- end }}
+{{- if .Values.global.sidecars }}
+{{ toYaml .Values.global.sidecars | indent 6 }}
+{{- end }}
+{{- if or .Values.hooks.dbCheck.volumes .Values.global.volumes }}
+      volumes:
+{{- if .Values.hooks.dbCheck.volumes }}
+{{ toYaml .Values.hooks.dbCheck.volumes | indent 6 }}
+{{- end }}
+{{- if .Values.global.volumes }}
+{{ toYaml .Values.global.volumes | indent 6 }}
+{{- end }}
+{{- end }}
+      {{- if .Values.hooks.shareProcessNamespace }}
+      shareProcessNamespace: {{ .Values.hooks.shareProcessNamespace }}
+      {{- end }}
 {{- end }}

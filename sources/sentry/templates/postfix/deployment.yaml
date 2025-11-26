@@ -1,0 +1,75 @@
+{{- if .Values.mail.postfix.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "sentry.fullname" . }}-postfix
+  labels:
+    app.kubernetes.io/name: postfix
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/name: postfix
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/name: postfix
+    spec:
+      containers:
+        - name: postfix
+          image: {{ .Values.mail.postfix.image | default "eeacms/postfix:3.5-1.1" }}
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: TZ
+              value: {{ .Values.mail.postfix.timezone | default "Europe/Copenhagen" }}
+            - name: MTP_HOST
+              value: {{ .Values.mail.postfix.mtpHost | default "sentry.eea.europa.eu" }}
+            - name: MTP_PASS
+              value: {{ .Values.mail.postfix.mtpPass | quote }}
+            - name: MTP_PORT
+              value: {{ .Values.mail.postfix.mtpPort | default "8587" | quote }}
+            - name: MTP_RELAY
+              value: {{ .Values.mail.postfix.mtpRelay | default "ironports.eea.europa.eu" }}
+            - name: MTP_USER
+              value: {{ .Values.mail.postfix.mtpUser | default "senrtyuz" }}
+          ports:
+            - containerPort: 25
+              name: smtp
+              protocol: TCP
+            - containerPort: 80
+              name: http
+              protocol: TCP
+          resources:
+            limits:
+              memory: 128Mi
+            requests:
+              memory: 128Mi
+          livenessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 20
+            periodSeconds: 20
+            successThreshold: 1
+            tcpSocket:
+              port: 25
+            timeoutSeconds: 3
+          startupProbe:
+            failureThreshold: 15
+            initialDelaySeconds: 15
+            periodSeconds: 5
+            successThreshold: 1
+            tcpSocket:
+              port: 25
+            timeoutSeconds: 3
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+{{- end }}

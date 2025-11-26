@@ -1,0 +1,20 @@
+{{- if .Values.pgbouncer.enabled }}
+{{- if .Values.pgbouncer.podDisruptionBudget.enabled }}
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ template "sentry.fullname" . }}-pgbouncer
+  labels:
+    {{- include "sentry.component.labels" (dict "component" "pgbouncer" "ctx" .) | nindent 4 }}
+spec:
+  {{- if and .Values.pgbouncer.podDisruptionBudget.minAvailable (not (hasKey .Values.pgbouncer.podDisruptionBudget "maxUnavailable")) }}
+  minAvailable: {{ .Values.pgbouncer.podDisruptionBudget.minAvailable }}
+  {{- else if .Values.pgbouncer.podDisruptionBudget.maxUnavailable }}
+  maxUnavailable: {{ .Values.pgbouncer.podDisruptionBudget.maxUnavailable }}
+  {{- end }}
+  selector:
+    matchLabels:
+      app: {{ template "sentry.fullname" . }}-pgbouncer
+{{- end }}
+{{- end }}
