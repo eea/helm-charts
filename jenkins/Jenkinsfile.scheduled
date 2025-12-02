@@ -19,10 +19,11 @@ pipeline {
         HELM_UPGRADE_APPVERSION="yes"
         DOCKER_IMAGENAME=sonarqube
         DOCKER_NAME=$IMAGE_NAME-gitflow-sonarqube
+        FLEET_LOCATIONS=""
       }
       steps {
         withCredentials([string(credentialsId: 'eea-jenkins-token', variable: 'GITHUB_TOKEN')]) {
-          sh '''docker run --pull always -i --rm --name="$DOCKER_NAME" -e GIT_TOKEN="$GITHUB_TOKEN" -e GIT_ORG="$GIT_ORG" -e HELM_CHART="$HELM_CHART" -e HELM_UPGRADE_APPVERSION="$HELM_UPGRADE_APPVERSION" -e GITHUB_RELEASES="$GITHUB_RELEASES" -e RELEASE_PREFIX="$RELEASE_PREFIX" -e RELEASE_SUFFIX="$RELEASE_SUFFIX" -e HELM_UPGRADE_APPVERSION="$HELM_UPGRADE_APPVERSION" -e DOCKER_IMAGENAME="$DOCKER_IMAGENAME" eeacms/gitflow /update_helm_charts.sh '''
+          sh '''docker run --pull always -i --rm --name="$DOCKER_NAME" -e GIT_TOKEN="$GITHUB_TOKEN" -e GIT_ORG="$GIT_ORG" -e HELM_CHART="$HELM_CHART" -e HELM_UPGRADE_APPVERSION="$HELM_UPGRADE_APPVERSION" -e GITHUB_RELEASES="$GITHUB_RELEASES" -e RELEASE_PREFIX="$RELEASE_PREFIX" -e RELEASE_SUFFIX="$RELEASE_SUFFIX" -e HELM_UPGRADE_APPVERSION="$HELM_UPGRADE_APPVERSION" -e DOCKER_IMAGENAME="$DOCKER_IMAGENAME" -e FLEET_LOCATIONS="$FLEET_LOCATIONS" eeacms/gitflow /update_helm_charts.sh '''
         }
       }
     }
@@ -36,10 +37,11 @@ pipeline {
         HELM_UPGRADE_APPVERSION="yes"
         DOCKER_IMAGENAME=onyx
         DOCKER_NAME=$IMAGE_NAME-gitflow-onyx
+        FLEET_LOCATIONS="01dev/onyx-demo"
       }
       steps {
         withCredentials([string(credentialsId: 'eea-jenkins-token', variable: 'GITHUB_TOKEN')]) {
-          sh '''docker run --pull always -i --rm --name="$DOCKER_NAME" -e GIT_TOKEN="$GITHUB_TOKEN" -e GIT_ORG="$GIT_ORG" -e HELM_CHART="$HELM_CHART" -e HELM_UPGRADE_APPVERSION="$HELM_UPGRADE_APPVERSION" -e GITHUB_RELEASES="$GITHUB_RELEASES" -e RELEASE_PREFIX="$RELEASE_PREFIX" -e RELEASE_SUFFIX="$RELEASE_SUFFIX" -e HELM_UPGRADE_APPVERSION="$HELM_UPGRADE_APPVERSION" -e DOCKER_IMAGENAME="$DOCKER_IMAGENAME" eeacms/gitflow /update_helm_charts.sh '''
+          sh '''docker run --pull always -i --rm --name="$DOCKER_NAME" -e GIT_TOKEN="$GITHUB_TOKEN" -e GIT_ORG="$GIT_ORG" -e HELM_CHART="$HELM_CHART" -e HELM_UPGRADE_APPVERSION="$HELM_UPGRADE_APPVERSION" -e GITHUB_RELEASES="$GITHUB_RELEASES" -e RELEASE_PREFIX="$RELEASE_PREFIX" -e RELEASE_SUFFIX="$RELEASE_SUFFIX" -e HELM_UPGRADE_APPVERSION="$HELM_UPGRADE_APPVERSION" -e DOCKER_IMAGENAME="$DOCKER_IMAGENAME" -e FLEET_LOCATIONS="$FLEET_LOCATIONS" eeacms/gitflow /update_helm_charts.sh '''
         }
       }
     }
