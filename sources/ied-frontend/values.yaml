@@ -1,22 +1,19 @@
-
-
 image:
   repository: eeacms/ied-frontend
   pullPolicy: Always
-  tag: ""
+  tag: ''
 
 imagePullSecrets: []
 
-nameOverride: ""
-fullnameOverride: ""
+nameOverride: ''
+fullnameOverride: ''
 
 serviceAccount:
   create: false
   annotations: {}
-  name: ""
+  name: ''
 
 timezone: Europe/Copenhagen
-
 
 ingress:
   certificate: demo-industry-tls
@@ -36,20 +33,18 @@ ingress:
     nginx.ingress.kubernetes.io/proxy-body-size: 1024m
     nginx.ingress.kubernetes.io/proxy-read-timeout: '480'
     nginx.ingress.kubernetes.io/proxy-send-timeout: '120'
-   
-ingressredirects:
-- enabled: false
-  tls: true
-  certificate: www.plone.eea.europa.eu-tls
-  annotations:
-    cert-manager.io/cluster-issuer: 01dev-eea-letsencrypt
-  hostname: www.plone.eea.europa.eu    
 
+ingressredirects:
+  - enabled: false
+    tls: true
+    certificate: www.plone.eea.europa.eu-tls
+    annotations:
+      cert-manager.io/cluster-issuer: 01dev-eea-letsencrypt
+    hostname: www.plone.eea.europa.eu
 
 links:
   backend: backend-varnish.ied
 
-    
 volto:
   serviceType: NodePort
   hostname: plone.eea.europa.eu
@@ -66,21 +61,22 @@ volto:
     requests:
       memory: 2Gi
   environment:
-    SENTRY_URL: 
-    SENTRY_AUTH_TOKEN: 
-    SENTRY_ORG: 
-    SENTRY_PROJECT: 
-    RAZZLE_SENTRY_DSN: 
+    SENTRY_URL:
+    SENTRY_AUTH_TOKEN:
+    SENTRY_ORG:
+    SENTRY_PROJECT:
+    RAZZLE_SENTRY_DSN:
     RAZZLE_BACKEND_NAME: 'ied-backend'
-    RAZZLE_ALLOWED_CORS_DESTINATIONS: 
+    RAZZLE_ALLOWED_CORS_DESTINATIONS:
     RAZZLE_MATOMO_URL:
-    RAZZLE_MATOMO_SITE_ID: 
+    RAZZLE_MATOMO_SITE_ID:
     RAZZLE_MATOMO_SECOND_SITE_ID:
-    RAZZLE_MATOMO_SECOND_TRACKER_URL: 
-    RAZZLE_INTERNAL_API_PATH: "http://backend:8080/Plone"
-    VOLTO_ROBOTSTXT: 
-    RAZZLE_DISABLE_DRAFT_WATERMARK: 
-    CSP_HEADER: 
+    RAZZLE_MATOMO_SECOND_TRACKER_URL:
+    RAZZLE_INTERNAL_API_PATH: 'http://backend:8080/Plone'
+    RAZZLE_PUBLIC_URL: 'https://demo-industry.02pre.eea.europa.eu'
+    VOLTO_ROBOTSTXT:
+    RAZZLE_DISABLE_DRAFT_WATERMARK:
+    CSP_HEADER:
   annotations: {}
   livenessProbe:
     httpGet:
@@ -131,7 +127,7 @@ varnish:
   serviceType: NodePort
   serviceName: frontend-varnish
   port: 3000
-  backend: "frontend-volto"
+  backend: 'frontend-volto'
   resources:
     limits:
       memory: 3Gi
@@ -166,5 +162,3 @@ varnish:
     initialDelaySeconds: 10
     failureThreshold: 12
     successThreshold: 1
-
-
