@@ -25,6 +25,23 @@ pipeline {
         }
       }
     }
+
+    stage('Check Onyx Upgrades') {
+      environment {
+        HELM_CHART=onyx-demo
+        GITHUB_RELEASES=https://api.github.com/repos/onyx-dot-app/onyx/releases
+        RELEASE_PREFIX=""
+        RELEASE_SUFFIX=""
+        HELM_UPGRADE_APPVERSION="yes"
+        DOCKER_IMAGENAME=onyx
+      }
+      steps {
+        withCredentials([string(credentialsId: 'eea-jenkins-token', variable: 'GITHUB_TOKEN')]) {
+          sh '''docker run --pull always -i --rm --name="$IMAGE_NAME-gitflow-sonarqube" -e GIT_TOKEN="$GITHUB_TOKEN" -e GIT_ORG="$GIT_ORG" -e HELM_CHART="$HELM_CHART" -e HELM_UPGRADE_APPVERSION="$HELM_UPGRADE_APPVERSION" -e GITHUB_RELEASES="$GITHUB_RELEASES" -e RELEASE_PREFIX="$RELEASE_PREFIX" -e RELEASE_SUFFIX="$RELEASE_SUFFIX" -e HELM_UPGRADE_APPVERSION="$HELM_UPGRADE_APPVERSION" -e DOCKER_IMAGENAME="$DOCKER_IMAGENAME" eeacms/gitflow /update_helm_charts.sh '''
+        }
+      }
+    }
+
   }
 
   post {
