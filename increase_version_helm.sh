@@ -17,6 +17,8 @@ if  [ $(git diff . | wc -l ) -eq 0 ]; then
 	exit 0
 fi
 
+git diff | cat
+
 if [ $# -eq 1 ]; then
 	HELM_VERSION_TYPE=$1
 fi
