@@ -37,7 +37,7 @@ pipeline {
         HELM_UPGRADE_APPVERSION="yes"
         DOCKER_IMAGENAME=onyx
         DOCKER_NAME=$IMAGE_NAME-gitflow-onyx
-        FLEET_LOCATIONS="01dev/onyx-demo"
+        FLEET_LOCATIONS="apps/01dev/onyx-demo"
       }
       steps {
         withCredentials([string(credentialsId: 'eea-jenkins-token', variable: 'GITHUB_TOKEN')]) {
