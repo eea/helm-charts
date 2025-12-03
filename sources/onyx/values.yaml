@@ -1216,3 +1216,29 @@ configMap:
   SKIP_USERFILE_THRESHOLD: ""
   # For multi-tenant: comma-separated list of tenant IDs to skip threshold
   SKIP_USERFILE_THRESHOLD_TENANT_IDS: ""
+
+# Postfix mail relay configuration
+postfix:
+  enabled: false
+  dryrun: false
+  serverName: ""
+  mtpHost: ""
+  mtpPort: 587
+  mtpRelay: ""
+  mtpUser: ""
+  mtpPass: ""
+  resources:
+    limits:
+      memory: 128Mi
+    requests:
+      cpu: 100m
+      memory: 64Mi
+  affinity: {}
+  tolerations: []
+  mailtrap:
+    httpenabled: false
+    ingress:
+      enabled: false
+    mtPasswd: ""
+    mtUser: ""
+    serviceType: ClusterIP
