@@ -3,33 +3,36 @@ name: onyx-stack
 description: An Onyx derived Helm chart for GPTLab
 home: https://www.onyx.app/
 icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/onyx/logo_onyx.png
-type: application
-version: 0.2.16
-appVersion: v1.3.1-eea.0.0.82
+sources:
+  - "https://github.com/onyx-dot-app/onyx"
 keywords:
   - gptlab
   - ai
   - search
   - question-answering
-  - onyx
+  - onyx  
+type: application
+version: 0.4.11
+appVersion: "v2.5.3-eea.0.0.86-dev"
+annotations:
+  category: Productivity
+  licenses: MIT
+  images: |
+    - name: webserver
+      image: eeacms/danswer:web-v2.5.3-eea.0.0.86-dev
+    - name: background
+      image: eeacms/danswer:backend-v2.5.3-eea.0.0.86-dev
+    - name: model-server
+      image: eeacms/danswer:model_server-v2.5.3-eea.0.0.86-dev
+    - name: vespa
+      image: vespaengine/vespa:8.609.39
 dependencies:
-  - name: postgresql
-    version: 14.3.1
-    repository: https://charts.bitnami.com/bitnami
-    condition: postgresql.enabled
   - name: vespa
-    version: 0.2.24
+    version: 0.2.25
     repository: https://onyx-dot-app.github.io/vespa-helm-charts
     condition: vespa.enabled
-  - name: redis
-    version: 20.1.0
-    repository: https://charts.bitnami.com/bitnami
-    condition: redis.enabled
+
   - name: minio
-    version: 17.0.4
-    repository: oci://registry-1.docker.io/bitnamicharts
+    version: 5.4.0
+    repository: https://charts.min.io/
     condition: minio.enabled
-  - name: postfix
-    version: 3.1.0
-    repository: https://eea.github.io/helm-charts
-    condition: postfix.enabled
