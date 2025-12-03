@@ -10,6 +10,9 @@ This chart deployes the European Industrial Emissions Portal backend app
 
 ## Releases
 
+### Version 2.0.1 - 03 December 2025
+- update helm version [Dobricean Ioan Dorian - [`a590f59f`](https://github.com/eea/helm-charts/commit/a590f59f01a3d34e6b6c1731ddfc1305d9a81af3)]
+
 ### Version 1.3.2 - 03 December 2025
 - Update helm version [Dobricean Ioan Dorian - [`8ae37da1`](https://github.com/eea/helm-charts/commit/8ae37da149d03372cc193d2830dfdfa2bf604948)]
 
