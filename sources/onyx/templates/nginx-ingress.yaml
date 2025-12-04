@@ -2,7 +2,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ include "onyx.fullname" . }}-nginx
+  name: {{ default (printf "%s-nginx" (include "onyx.fullname" .)) .Values.nginx.ingress.name }}
   namespace: {{ .Release.Namespace }}
   labels:
     app: nginx
