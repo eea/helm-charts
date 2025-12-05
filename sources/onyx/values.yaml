@@ -1009,9 +1009,13 @@ minio:
   mode: standalone
   replicas: 1
   drivesPerNode: 1
+  rootUser: minioadmin
+  rootPassword: minioadmin
   existingSecret: onyx-objectstorage
   buckets:
     - name: onyx-file-store-bucket
+      policy: none
+      purge: false
   persistence:
     enabled: true
     size: 30Gi
@@ -1022,6 +1026,13 @@ minio:
   consoleService:
     type: ClusterIP
     port: 9001
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
   nodeSelector: {}
   tolerations: []
   affinity: {}
@@ -1204,6 +1215,8 @@ configMap:
   LOG_ALL_MODEL_INTERACTIONS: ""
   LOG_ONYX_MODEL_INTERACTIONS: ""
   LOG_VESPA_TIMING_INFORMATION: ""
+  # NLTK Data Directory (writable location for NLTK downloads)
+  NLTK_DATA: ".cache/nltk_data"
   # Shared or Non-backend Related
   WEB_DOMAIN: "http://localhost:3000"
   # DOMAIN used by nginx
