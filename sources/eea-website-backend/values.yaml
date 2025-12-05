@@ -54,6 +54,7 @@ plone:
     POSTGRES_USER: zope
     POSTGRES_PASSWORD: zope
   environment:
+    REDIS_SERVER: backend-redis
     GRAYLOG: 'logcentral.eea.europa.eu:12201'
     SENTRY_DSN: ''
     SENTRY_ENVIRONMENT: '01dev'
