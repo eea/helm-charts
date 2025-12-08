@@ -24,6 +24,9 @@ The chart deploys a three-tier architecture:
 
 ## Releases
 
+### Version 3.500.1 - 08 December 2025
+- Add razzle public url [Dobricean Ioan Dorian - [`6ad17978`](https://github.com/eea/helm-charts/commit/6ad1797897158e5143cd05dd4a5edd78b5c8769d)]
+
 ### Version 3.500.0 - 08 December 2025
 - Automated release of [eeacms/clms-frontend:3.500.0](https://github.com/eea/clms-frontend/releases) [EEA Jenkins - [`f0bec373`](https://github.com/eea/helm-charts/commit/f0bec373f8e2f116b0d6d948cf59005fe0382bb1)]
 
