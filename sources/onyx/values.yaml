@@ -1242,3 +1242,11 @@ postfix:
     mtPasswd: ""
     mtUser: ""
     serviceType: ClusterIP
+
+# Network Policy configuration
+networkPolicy:
+  # Enable network policies to restrict traffic between pods
+  enabled: false
+  # Optional: specify namespaces that can access ingress
+  # ingressFromNamespaces:
+  #   environment: production
