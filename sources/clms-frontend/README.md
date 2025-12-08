@@ -24,6 +24,9 @@ The chart deploys a three-tier architecture:
 
 ## Releases
 
+### Version 3.500.2 - 08 December 2025
+- Move appache to ingress [Dobricean Ioan Dorian - [`578e1570`](https://github.com/eea/helm-charts/commit/578e15704b4ab5364f80a3605400b95f5e34151e)]
+
 ### Version 3.500.1 - 08 December 2025
 - Add razzle public url [Dobricean Ioan Dorian - [`6ad17978`](https://github.com/eea/helm-charts/commit/6ad1797897158e5143cd05dd4a5edd78b5c8769d)]
 
