@@ -1,0 +1,9 @@
+{{- if .Values.globalProxy.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: cgls-vito-external
+spec:
+  type: ExternalName
+  externalName: cgls.vito.be
+{{- end }}

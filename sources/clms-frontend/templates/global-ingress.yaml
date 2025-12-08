@@ -1,17 +1,19 @@
+{{- if .Values.globalProxy.enabled }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: clms
+  name: clms-global
   labels:
     {{- include "appl.labels" . | nindent 4 }}
-    component: clms-frontend
+    component: clms-global
   annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    nginx.ingress.kubernetes.io/upstream-vhost: "cgls.vito.be"
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/proxy-ssl-server-name: "on"
   {{- with .Values.ingress.annotations }}
     {{- toYaml . | nindent 4 }}
-  {{- end }}
-  {{- if .Values.ingress.serverSnippet }}
-    nginx.ingress.kubernetes.io/server-snippet: |
-      {{- .Values.ingress.serverSnippet | nindent 6 }}
   {{- end }}
 
 spec:
@@ -20,18 +22,19 @@ spec:
   - host: {{ .Values.volto.hostname }}
     http:
       paths:
-      - path: /
-        pathType: Prefix
+      - path: /global/(.*)
+        pathType: ImplementationSpecific
         backend:
           service:
-            name: {{ .Values.varnish.serviceName }}
+            name: cgls-vito-external
             port:
-              number: {{ .Values.varnish.port }}
+              number: 443
   {{- if .Values.ingress.tls }}
   tls:
   - hosts:
     - {{ .Values.volto.hostname }}
     {{- if .Values.ingress.certificate }}
     secretName: {{ .Values.ingress.certificate }}
-    {{- end  }}
-  {{- end  }}
+    {{- end }}
+  {{- end }}
+{{- end }}

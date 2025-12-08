@@ -1,0 +1,44 @@
+{{- if .Values.cdseProxy.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: clms-cdse-proxy
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: clms-frontend
+  annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    nginx.ingress.kubernetes.io/upstream-vhost: "sh.dataspace.copernicus.eu"
+    nginx.ingress.kubernetes.io/proxy-ssl-server-name: "on"
+    nginx.ingress.kubernetes.io/proxy-ssl-name: "sh.dataspace.copernicus.eu"
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: "50m"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "300"
+    nginx.ingress.kubernetes.io/server-snippet: |
+{{ .Files.Get "files/cdse-locations.conf" | indent 6 }}
+  {{- with .Values.ingress.annotations }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: {{ .Values.volto.hostname }}
+    http:
+      paths:
+      - path: /cdse/
+        pathType: Prefix
+        backend:
+          service:
+            name: cdse-dataspace-external
+            port:
+              number: 443
+  {{- if .Values.ingress.tls }}
+  tls:
+  - hosts:
+    - {{ .Values.volto.hostname }}
+    {{- if .Values.ingress.certificate }}
+    secretName: {{ .Values.ingress.certificate }}
+    {{- end }}
+  {{- end }}
+{{- end }}

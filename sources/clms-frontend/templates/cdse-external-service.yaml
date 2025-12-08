@@ -1,0 +1,16 @@
+{{- if .Values.cdseProxy.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: cdse-dataspace-external
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: clms-frontend
+spec:
+  type: ExternalName
+  externalName: sh.dataspace.copernicus.eu
+  ports:
+    - port: 443
+      targetPort: 443
+      protocol: TCP
+{{- end }}

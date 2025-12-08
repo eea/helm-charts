@@ -86,6 +86,14 @@ questions:
     group: "General"
     show_if: "debug.enabled=true"
 
+  - variable: "globalProxy.enabled"
+    label: "Enable /global proxy"
+    description: "Enable proxy for /global path to cgls.vito.be"
+    default: true
+    type: "boolean"
+    required: true
+    group: "General"
+
   - variable: "volto.environment.RAZZLE_INTERNAL_API_PATH"
     label: "RAZZLE_INTERNAL_API_PATH"
     description: "Location of Plone site accessible from container"

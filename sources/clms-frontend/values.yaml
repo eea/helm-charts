@@ -35,6 +35,157 @@ ingress:
     nginx.ingress.kubernetes.io/proxy-send-timeout: '120'
   certificate: dev-clms.copernicus.01dev.eea.europa.eu-tls
   tls: enabled
+  # Server snippet for nginx redirects (converted from Apache RewriteRules)
+  serverSnippet: |
+    # SEO Redirects
+    rewrite ^/@@search(.*)$ /en/global-search permanent;
+    rewrite ^/about$ /en/about-us permanent;
+    rewrite ^/contact$ /en/contact-service-helpdesk permanent;
+    rewrite ^/contact-form$ /en/contact-service-helpdesk permanent;
+    rewrite ^/copernicus-the-european-earth-observation-programme$ /en/about-us permanent;
+    rewrite ^/dashboards/(.*)$ /en permanent;
+    rewrite ^/eagle$ /en/eagle permanent;
+    rewrite ^/eagle(.*)$ /en/eagle permanent;
+    rewrite ^/faq$ /en/faq permanent;
+    rewrite ^/faq(.*)$ /en/faq permanent;
+    rewrite ^/imagery-in-situ$ /en/products?tab=explore permanent;
+    rewrite ^/imagery-in-situ/$ /en/products?tab=explore permanent;
+    rewrite ^/imagery-in-situ/eu-hydro(.*)$ /en/products/eu-hydro permanent;
+    rewrite ^/imagery-in-situ/european-image-mosaics(.*)$ /en/products/european-image-mosaic permanent;
+    rewrite ^/imagery-in-situ/eu-dem(.*)$ /en/products/products-that-are-no-longer-disseminated-on-the-clms-website permanent;
+    rewrite ^/imagery-in-situ/global-image-mosaics(.*)$ /en/products/global-image-mosaic permanent;
+    rewrite ^/local$ /en/products?tab=explore permanent;
+    rewrite ^/local/$ /en/products?tab=explore permanent;
+    rewrite ^/local/coastal-zones(.*)$ /en/products/coastal-zones permanent;
+    rewrite ^/local/natura(.*)$ /en/products/n2k permanent;
+    rewrite ^/local/riparian-zones(.*)$ /en/products/riparian-zones permanent;
+    rewrite ^/local/urban-atlas$ /en/products/urban-atlas permanent;
+    rewrite ^/local/urban-atlas/$ /en/products/urban-atlas permanent;
+    rewrite ^/local/urban-atlas/building-height-2012(.*)$ /en/products/urban-atlas/building-height-2012 permanent;
+    rewrite ^/local/urban-atlas/street-tree-layer-stl-2018(.*)$ /en/products/urban-atlas/street-tree-layer-stl-2018 permanent;
+    rewrite ^/local/urban-atlas/street-tree-layer-stl(.*)$ /en/products/urban-atlas/street-tree-layer-stl-2012 permanent;
+    rewrite ^/local/urban-atlas/urban-atlas-2006(.*)$ /en/products/urban-atlas/urban-atlas-2006 permanent;
+    rewrite ^/local/urban-atlas/urban-atlas-2012(.*)$ /en/products/urban-atlas/urban-atlas-2012 permanent;
+    rewrite ^/local/urban-atlas/urban-atlas-2018(.*)$ /en/products/urban-atlas/urban-atlas-2018 permanent;
+    rewrite ^/local/urban-atlas/urban-atlas-change-2012-2018(.*)$ /en/products/urban-atlas/urban-atlas-change-2012-2018 permanent;
+    rewrite ^/local/urban-atlas/change-2006-2009(.*)$ /en/products/urban-atlas/urban-atlas-change-2006-2012 permanent;
+    rewrite ^/local/urban-atlas/view$ /en/map-viewer?product=aefa4d1bc3ad425e97e93715af6551ac permanent;
+    rewrite ^/looking-for-national-products$ /en/products?tab=explore permanent;
+    rewrite ^/news(.*)$ /en/news permanent;
+    rewrite ^/pan$ /en/products?tab=explore permanent;
+    rewrite ^/pan-european$ /en/products?tab=explore permanent;
+    rewrite ^/pan-european/$ /en/products?tab=explore permanent;
+    rewrite ^/pan-european/biophysical-parameters(.*)$ /en/products?tab=explore permanent;
+    rewrite ^/pan-european/biophysical-parameters/high-resolution-snow-and-ice-monitoring(.*)$ /en/products/snow permanent;
+    rewrite ^/pan-european/biophysical-parameters/high-resolution-vegetation-phenology-and-productivity(.*)$ /en/products/vegetation permanent;
+    rewrite ^/pan-european/clc-plus(.*)$ /en/products/clc-backbone permanent;
+    rewrite ^/pan-european/corine-land-cover$ /en/products/corine-land-cover permanent;
+    rewrite ^/pan-european/corine-land-cover/$ /en/products/corine-land-cover permanent;
+    rewrite ^/pan-european/corine-land-cover/clc-1990(.*)$ /en/products/corine-land-cover/clc-1990 permanent;
+    rewrite ^/pan-european/corine-land-cover/clc-2000(.*)$ /en/products/corine-land-cover/clc-2000 permanent;
+    rewrite ^/pan-european/corine-land-cover/clc-2006(.*)$ /en/products/corine-land-cover/clc-2006 permanent;
+    rewrite ^/pan-european/corine-land-cover/clc-2012(.*)$ /en/products/corine-land-cover/clc-2012 permanent;
+    rewrite ^/pan-european/corine-land-cover/clc2018(.*)$ /en/products/corine-land-cover/clc2018 permanent;
+    rewrite ^/pan-european/corine-land-cover/clc2012(.*)$ /en/products/corine-land-cover/clc-2012 permanent;
+    rewrite ^/pan-european/corine-land-cover/lcc-1990-2000(.*)$ /en/products/corine-land-cover/cha-1990-2000 permanent;
+    rewrite ^/pan-european/corine-land-cover/lcc-2000-2006(.*)$ /en/products/corine-land-cover/cha-2000-2006 permanent;
+    rewrite ^/pan-european/corine-land-cover/lcc-2006-2012(.*)$ /en/products/corine-land-cover/cha-2006-2012 permanent;
+    rewrite ^/pan-european/corine-land-cover/lcc-2012-2018(.*)$ /en/products/corine-land-cover/lcc-2012-2018 permanent;
+    rewrite ^/pan-european/corine-land-cover/view$ /en/map-viewer?product=130299ac96e54c30a12edd575eff80f7 permanent;
+    rewrite ^/pan-european/corine-land-cover(.*)$ /en/products/corine-land-cover permanent;
+    rewrite ^/pan-european/corineland-cover(.*)$ /en/products/corine-land-cover permanent;
+    rewrite ^/pan-european/corine-landcover(.*)$ /en/products/corine-land-cover permanent;
+    rewrite ^/pan-european/european-ground-motion-service(.*)$ /en/products/european-ground-motion-service permanent;
+    rewrite ^/pan-european/GHSL(.*)$ /en/products/products-that-are-no-longer-disseminated-on-the-clms-website permanent;
+    rewrite ^/pan-european/high-resolution-layers$ /en/products?tab=explore permanent;
+    rewrite ^/pan-european/high-resolution-layers/$ /en/products?tab=explore permanent;
+    rewrite ^/pan-european/high-resolution-layers/forests/dominant-leaf-type(.*)$ /en/products/high-resolution-layer-dominant-leaf-type permanent;
+    rewrite ^/pan-european/high-resolution-layers/forests/forest-type(.*)$ /en/products/high-resolution-layer-forest-type permanent;
+    rewrite ^/pan-european/high-resolution-layers/forests/tree-cover-density(.*)$ /en/products/high-resolution-layer-tree-cover-density permanent;
+    rewrite ^/pan-european/high-resolution-layers/forests(.*)$ /en/products/high-resolution-layer-forest-type permanent;
+    rewrite ^/pan-european/high-resolution-layers/grassland(.*)$ /en/products/high-resolution-layer-grassland permanent;
+    rewrite ^/pan-european/high-resolution-layers/imperviousness(.*)$ /en/products/high-resolution-layer-imperviousness permanent;
+    rewrite ^/pan-european/high-resolution-layers/small-woody-features(.*)$ /en/products/high-resolution-layer-small-woody-features permanent;
+    rewrite ^/pan-european/high-resolution-layers/water-wetness(.*)$ /en/products/high-resolution-layer-water-and-wetness permanent;
+    rewrite ^/pan-european/high-resolution-layers/permanent-water-bodies(.*)$ /en/products/high-resolution-layer-water-and-wetness permanent;
+    rewrite ^/pan-european/high-resolution-layers/wetlands(.*)$ /en/products/high-resolution-layer-water-and-wetness permanent;
+    rewrite ^/pan-european/high-resolution-layers/view$ /en/products?tab=explore permanent;
+    rewrite ^/pan-european/high-resolution-layers(.*)$ /en/products?tab=explore permanent;
+    rewrite ^/pan-european/high-resolution-image-mosaic(.*)$ /en/products/european-image-mosaic permanent;
+    rewrite ^/pan-european/satellite-derived-products/eu-hydro(.*)$ /en/products/eu-hydro permanent;
+    rewrite ^/pan-european/satellite-derived-products(.*)$ /en/products?tab=explore permanent;
+    rewrite ^/paneuropean/corine-land-cover$ /en/products/corine-land-cover permanent;
+    rewrite ^/paneuropean/corine-land-cover/clc2018$ /en/products/corine-land-cover/clc2018 permanent;
+    rewrite ^/paneuropean/corine-land-cover2012$ /en/products/corine-land-cover/clc-2012 permanent;
+    # Small woody features redirects (ticket 292235)
+    rewrite ^/en/products/high-resolution-layer-small-woody-features$ /en/products/high-resolution-layer-small-landscape-features permanent;
+    rewrite ^/en/products/high-resolution-layer-small-woody-features/small-woody-features-2018$ /en/products/high-resolution-layer-small-landscape-features/small-woody-features-2018 permanent;
+    rewrite ^/en/products/high-resolution-layer-small-woody-features/small-woody-features-2015$ /en/products/high-resolution-layer-small-landscape-features/small-woody-features-2015 permanent;
+    # Impervious built-up redirects
+    rewrite ^/en/products/high-resolution-layer-impervious-built-up$ /en/products/high-resolution-layer-imperviousness permanent;
+    rewrite ^/en/products/high-resolution-layer-impervious-built-up/(.*)$ /en/products/high-resolution-layer-imperviousness permanent;
+    # Product portfolio and misc
+    rewrite ^/product-portfolio(.*)$ /en/products permanent;
+    rewrite ^/sitemap$ /en/portal-sitemap permanent;
+    rewrite ^/terms-of-use$ /en/faq#data_use_terms_and_conditions permanent;
+    # User corner redirects
+    rewrite ^/user-corner/contract-opportunities$ /en/work-opportunities permanent;
+    rewrite ^/user-corner/events(.*)$ /en/events permanent;
+    rewrite ^/user-corner/how-to-access-our-data$ /en/how-to-guides permanent;
+    rewrite ^/user-corner/land-use-cases$ /en/use-cases permanent;
+    rewrite ^/user-corner/partners$ /en/about-us?tab=who_we_are permanent;
+    rewrite ^/user-corner/publications(.*)$ /en/news permanent;
+    rewrite ^/user-corner/technical-library(.*)$ /en/technical-library permanent;
+    rewrite ^/user-corner(.*)$ /en/technical-library permanent;
+    # EU-DEM redirects (no longer disseminated)
+    rewrite ^/en/products/eu-dem(.*)$ /en/products/products-that-are-no-longer-disseminated-on-the-clms-website permanent;
+    # Forest and tree cover redirects
+    rewrite ^/en/products/high-resolution-layer-tree-cover-density$ /en/products/high-resolution-layer-forests-and-tree-cover permanent;
+    rewrite ^/en/products/high-resolution-layer-forest-type$ /en/products/high-resolution-layer-forests-and-tree-cover permanent;
+    rewrite ^/en/products/high-resolution-layer-dominant-leaf-type$ /en/products/high-resolution-layer-forests-and-tree-cover permanent;
+    rewrite ^/en/products/high-resolution-layer-tree-cover-density/(.*)$ /en/products/high-resolution-layer-forests-and-tree-cover permanent;
+    rewrite ^/en/products/high-resolution-layer-forest-type/(.*)$ /en/products/high-resolution-layer-forests-and-tree-cover permanent;
+    rewrite ^/en/products/high-resolution-layer-dominant-leaf-type/(.*)$ /en/products/high-resolution-layer-forests-and-tree-cover permanent;
+    # Grassland redirects
+    rewrite ^/en/products/high-resolution-layer-grassland$ /en/products/high-resolution-layer-grasslands permanent;
+    rewrite ^/en/products/high-resolution-layer-grassland/grassland-2018$ /en/products/high-resolution-layer-grasslands/grassland-2018-raster-10-m-100-m-europe-yearly permanent;
+    rewrite ^/en/products/high-resolution-layer-grassland/grassland-2015$ /en/products/high-resolution-layer-grasslands/grassland-2015 permanent;
+    rewrite ^/en/products/high-resolution-layer-grassland/grassland-change-2015-2018$ /en/products/high-resolution-layer-grasslands/grassland-change-2015-2018 permanent;
+    # Global products redirects
+    rewrite ^/global/products/lc(.*)$ /en/products/global-dynamic-land-cover permanent;
+    rewrite ^/global/products/ndvi(.*)$ /en/products/vegetation permanent;
+    rewrite ^/global/products/lai(.*)$ /en/products/vegetation permanent;
+    rewrite ^/global/products/fapar(.*)$ /en/products/vegetation permanent;
+    rewrite ^/global/products/fcover(.*)$ /en/products/vegetation permanent;
+    rewrite ^/global/products/dmp(.*)$ /en/products/vegetation permanent;
+    rewrite ^/global/products/gdmp(.*)$ /en/products/vegetation permanent;
+    rewrite ^/global/products/npp(.*)$ /en/products/vegetation permanent;
+    rewrite ^/global/products/gpp(.*)$ /en/products/vegetation permanent;
+    rewrite ^/global/products/ba(.*)$ /en/products/vegetation permanent;
+    rewrite ^/global/products/ssm(.*)$ /en/products/soil-moisture permanent;
+    rewrite ^/global/products/swi(.*)$ /en/products/soil-moisture permanent;
+    rewrite ^/global/products/lst(.*)$ /en/products/temperature-and-reflectance permanent;
+    rewrite ^/global/products/lswt(.*)$ /en/products/temperature-and-reflectance permanent;
+    rewrite ^/global/products/sa(.*)$ /en/products/temperature-and-reflectance permanent;
+    rewrite ^/global/products/tocr(.*)$ /en/products/temperature-and-reflectance permanent;
+    rewrite ^/global/products/sce(.*)$ /en/products/snow permanent;
+    rewrite ^/global/products/swe(.*)$ /en/products/snow permanent;
+    rewrite ^/global/products/lie(.*)$ /en/products/water-bodies permanent;
+    rewrite ^/global/products/lwq(.*)$ /en/products/water-bodies permanent;
+    rewrite ^/global/products/wb(.*)$ /en/products/water-bodies permanent;
+    rewrite ^/global/products/wl(.*)$ /en/products/water-bodies permanent;
+    rewrite ^/global/use-cases(.*)$ /en/use-cases permanent;
+    rewrite ^/global/gbov(.*)$ https://gbov.land.copernicus.eu/ permanent;
+    rewrite ^/global/hsm(.*)$ https://hsm.land.copernicus.eu$1 permanent;
+    rewrite ^/global$ /en/global permanent;
+    rewrite ^/global/(.*)$ /en/global permanent;
+    # Static content rewrites
+    location = /content {
+        return 301 /content/;
+    }
+    location ~ ^/content(.*)$ {
+        rewrite ^/content(.*)$ /staticcontent$1 last;
+    }
 
 volto:
   serviceType: ClusterIP
@@ -161,7 +312,281 @@ varnish:
     failureThreshold: 12
     successThreshold: 1
 
-affinity: {}
+globalProxy:
+  enabled: true
+
+cdseProxy:
+  enabled: true
+  # CDSE proxy to sh.dataspace.copernicus.eu
+  # Maps /cdse/service_name to /ogc/wmts/{uuid}/ or /ogc/wfs/{uuid}/
+  serverSnippet: |
+    # CDSE Service Mappings - proxy to sh.dataspace.copernicus.eu
+    location ~ ^/cdse/_NEW__CLMS_Bio_geophysical_Parameters_Soil_Moisture(/.*)?$ {
+      proxy_pass https://sh.dataspace.copernicus.eu/ogc/wmts/f85fd735-2c55-4c81-99cd-ccce26be48e6$1;
+      proxy_ssl_server_name on;
+      proxy_set_header Host sh.dataspace.copernicus.eu;
+    }
+    location ~ ^/cdse/wfs/_NEW__CLMS_Bio_geophysical_Parameters_Soil_Moisture(/.*)?$ {
+      proxy_pass https://sh.dataspace.copernicus.eu/ogc/wfs/f85fd735-2c55-4c81-99cd-ccce26be48e6$1;
+      proxy_ssl_server_name on;
+      proxy_set_header Host sh.dataspace.copernicus.eu;
+    }
+    location ~ ^/cdse/lst_daily_cycle_global_5km_10daily_v1(/.*)?$ {
+      proxy_pass https://sh.dataspace.copernicus.eu/ogc/wmts/1879cecb-5c24-4137-b40f-960a442dfe9c$1;
+      proxy_ssl_server_name on;
+      proxy_set_header Host sh.dataspace.copernicus.eu;
+    }
+    location ~ ^/cdse/lst_daily_cycle_global_5km_10daily_v2(/.*)?$ {
+      proxy_pass https://sh.dataspace.copernicus.eu/ogc/wmts/ce7727e5-6cd5-4cd4-96c4-0643664c89b0$1;
+      proxy_ssl_server_name on;
+      proxy_set_header Host sh.dataspace.copernicus.eu;
+    }
+    location ~ ^/cdse/lie_northernhemisphere_500m_daily_v1(/.*)?$ {
+      proxy_pass https://sh.dataspace.copernicus.eu/ogc/wmts/5c505ce9-4992-40b3-a46d-a1a3decf315b$1;
+      proxy_ssl_server_name on;
+      proxy_set_header Host sh.dataspace.copernicus.eu;
+    }
+    location ~ ^/cdse/sce_northernhemisphere_1km_daily_v1(/.*)?$ {
+      proxy_pass https://sh.dataspace.copernicus.eu/ogc/wmts/b7321307-ee72-42f5-ac9d-51aa752d4421$1;
+      proxy_ssl_server_name on;
+      proxy_set_header Host sh.dataspace.copernicus.eu;
+    }
+    location ~ ^/cdse/swe_northernhemisphere_5km_daily_v2(/.*)?$ {
+      proxy_pass https://sh.dataspace.copernicus.eu/ogc/wmts/d8141481-b451-4b0c-b159-0992c57278e3$1;
+      proxy_ssl_server_name on;
+      proxy_set_header Host sh.dataspace.copernicus.eu;
+    }
+    location ~ ^/cdse/swe_northernhemisphere_5km_daily_v1(/.*)?$ {
+      proxy_pass https://sh.dataspace.copernicus.eu/ogc/wmts/ddf5aaab-cd32-4ac3-9d77-dbc63c46576e$1;
+      proxy_ssl_server_name on;
+      proxy_set_header Host sh.dataspace.copernicus.eu;
+    }
+    location ~ ^/cdse/ndvi_global_300m_10daily_v1(/.*)?$ {
+      proxy_pass https://sh.dataspace.copernicus.eu/ogc/wmts/9574d050-4f60-4a47-8c15-4b538cbd532d$1;
+      proxy_ssl_server_name on;
+      proxy_set_header Host sh.dataspace.copernicus.eu;
+    }
+    location ~ ^/cdse/ndvi_global_300m_10daily_v2(/.*)?$ {
+      proxy_pass https://sh.dataspace.copernicus.eu/ogc/wmts/e939be2f-2cc2-4a29-bb7c-cc54ed274442$1;
+      proxy_ssl_server_name on;
+      proxy_set_header Host sh.dataspace.copernicus.eu;
+    }
+    location ~ ^/cdse/ndvi_global_1km_10daily_v2(/.*)?$ {
+      proxy_pass https://sh.dataspace.copernicus.eu/ogc/wmts/3e42387f-3b06-4313-bec0-96c69b9f376d$1;
+      proxy_ssl_server_name on;
+      proxy_set_header Host sh.dataspace.copernicus.eu;
+    }
+    location ~ ^/cdse/ndvi_global_1km_10daily_v3(/.*)?$ {
+      proxy_pass https://sh.dataspace.copernicus.eu/ogc/wmts/393e2294-ef74-44f3-b84e-570d55682cad$1;
+      proxy_ssl_server_name on;
+      proxy_set_header Host sh.dataspace.copernicus.eu;
+    }
+    location ~ ^/cdse/lc_global_100m_yearly_v3(/.*)?$ {
+      proxy_pass https://sh.dataspace.copernicus.eu/ogc/wmts/1008fca5-f76a-4cd5-b8d5-c06517cd3aab$1;
+      proxy_ssl_server_name on;
+      proxy_set_header Host sh.dataspace.copernicus.eu;
+    }
+    location ~ ^/cdse/wb_global_300m_10daily_v1(/.*)?$ {
+      proxy_pass https://sh.dataspace.copernicus.eu/ogc/wmts/10151d64-b743-4738-af9e-d335eb5da80f$1;
+      proxy_ssl_server_name on;
+      proxy_set_header Host sh.dataspace.copernicus.eu;
+    }
+    location ~ ^/cdse/wb_global_100m_monthly_v1(/.*)?$ {
+      proxy_pass https://sh.dataspace.copernicus.eu/ogc/wmts/646f254e-b65c-4900-bac8-69bca148b95b$1;
+      proxy_ssl_server_name on;
+      proxy_set_header Host sh.dataspace.copernicus.eu;
+    }
+    location ~ ^/cdse/wb_global_300m_monthly_v2(/.*)?$ {
+      proxy_pass https://sh.dataspace.copernicus.eu/ogc/wmts/e8bdf97b-d278-4756-9ce5-49d3fe63113c$1;
+      proxy_ssl_server_name on;
+      proxy_set_header Host sh.dataspace.copernicus.eu;
+    }
+    location ~ ^/cdse/wb_global_1km_10daily_v2(/.*)?$ {
+      proxy_pass https://sh.dataspace.copernicus.eu/ogc/wmts/5199c09a-7db7-4e5b-add6-3c2e57f5fde3$1;
+      proxy_ssl_server_name on;
+      proxy_set_header Host sh.dataspace.copernicus.eu;
+    }
+    location ~ ^/cdse/lai_global_300m_10daily_v1(/.*)?$ {
+      proxy_pass https://sh.dataspace.copernicus.eu/ogc/wmts/ea32f4fe-1ee2-4027-8088-17b8617f9994$1;
+      proxy_ssl_server_name on;
+      proxy_set_header Host sh.dataspace.copernicus.eu;
+    }
+    location ~ ^/cdse/lai_global_1km_10daily_v2(/.*)?$ {
+      proxy_pass https://sh.dataspace.copernicus.eu/ogc/wmts/4cac84a5-9b26-48f7-b431-83a5e518f934$1;
+      proxy_ssl_server_name on;
+      proxy_set_header Host sh.dataspace.copernicus.eu;
+    }
+    location ~ ^/cdse/fapar_global_300m_10daily_v1(/.*)?$ {
+      proxy_pass https://sh.dataspace.copernicus.eu/ogc/wmts/92dff917-c9c1-4dd2-b50f-2344d7156aaa$1;
+      proxy_ssl_server_name on;
+      proxy_set_header Host sh.dataspace.copernicus.eu;
+    }
+    location ~ ^/cdse/fapar_global_1km_10daily_v2(/.*)?$ {
+      proxy_pass https://sh.dataspace.copernicus.eu/ogc/wmts/4b9dc104-1c24-46d4-9038-019865944fb3$1;
+      proxy_ssl_server_name on;
+      proxy_set_header Host sh.dataspace.copernicus.eu;
+    }
+    location ~ ^/cdse/fcover_global_300m_10daily_v1(/.*)?$ {
+      proxy_pass https://sh.dataspace.copernicus.eu/ogc/wmts/0f11cb83-ffa4-4b6e-9673-25be9ea5298f$1;
+      proxy_ssl_server_name on;
+      proxy_set_header Host sh.dataspace.copernicus.eu;
+    }
+    location ~ ^/cdse/fcover_global_1km_10daily_v2(/.*)?$ {
+      proxy_pass https://sh.dataspace.copernicus.eu/ogc/wmts/67ce0d90-dc5a-4354-97da-39311c06ff73$1;
+      proxy_ssl_server_name on;
+      proxy_set_header Host sh.dataspace.copernicus.eu;
+    }
+    location ~ ^/cdse/dmp_global_1km_10daily_v2(/.*)?$ {
+      proxy_pass https://sh.dataspace.copernicus.eu/ogc/wmts/fc51a096-9e4a-47b8-bbdf-4db9f50146f4$1;
+      proxy_ssl_server_name on;
+      proxy_set_header Host sh.dataspace.copernicus.eu;
+    }
+    location ~ ^/cdse/gdmp_global_1km_10daily_v2(/.*)?$ {
+      proxy_pass https://sh.dataspace.copernicus.eu/ogc/wmts/179f5259-62cf-4b8f-b591-8fff0148fb58$1;
+      proxy_ssl_server_name on;
+      proxy_set_header Host sh.dataspace.copernicus.eu;
+    }
+    location ~ ^/cdse/swi_global_12_5km_daily_v3(/.*)?$ {
+      proxy_pass https://sh.dataspace.copernicus.eu/ogc/wmts/d429c4ae-f2fe-4d6e-8af2-798d2abfbff5$1;
+      proxy_ssl_server_name on;
+      proxy_set_header Host sh.dataspace.copernicus.eu;
+    }
+    location ~ ^/cdse/swi_global_12_5km_daily_v4(/.*)?$ {
+      proxy_pass https://sh.dataspace.copernicus.eu/ogc/wmts/fed5c7a7-40b2-4b99-b9f6-23866122e6a7$1;
+      proxy_ssl_server_name on;
+      proxy_set_header Host sh.dataspace.copernicus.eu;
+    }
+    location ~ ^/cdse/swi_global_12_5km_10daily_v3(/.*)?$ {
+      proxy_pass https://sh.dataspace.copernicus.eu/ogc/wmts/f4ffba1d-e54e-40c5-b521-364072045f23$1;
+      proxy_ssl_server_name on;
+      proxy_set_header Host sh.dataspace.copernicus.eu;
+    }
+    location ~ ^/cdse/swi_global_12_5km_10daily_v4(/.*)?$ {
+      proxy_pass https://sh.dataspace.copernicus.eu/ogc/wmts/831e8bea-9211-4ac2-ac2a-701034fea62e$1;
+      proxy_ssl_server_name on;
+      proxy_set_header Host sh.dataspace.copernicus.eu;
+    }
+    location ~ ^/cdse/lst_global_5km_hourly_v1(/.*)?$ {
+      proxy_pass https://sh.dataspace.copernicus.eu/ogc/wmts/ab91e1a3-7502-4e34-a388-5bc10083492f$1;
+      proxy_ssl_server_name on;
+      proxy_set_header Host sh.dataspace.copernicus.eu;
+    }
+    location ~ ^/cdse/lst_global_5km_hourly_v2(/.*)?$ {
+      proxy_pass https://sh.dataspace.copernicus.eu/ogc/wmts/50b1e43b-c274-42c1-a76e-3c5b1a14f5fc$1;
+      proxy_ssl_server_name on;
+      proxy_set_header Host sh.dataspace.copernicus.eu;
+    }
+    location ~ ^/cdse/lst_tci_global_5km_10daily_v1(/.*)?$ {
+      proxy_pass https://sh.dataspace.copernicus.eu/ogc/wmts/c33bd457-70ad-48ff-9a3c-b0fe8dbd765e$1;
+      proxy_ssl_server_name on;
+      proxy_set_header Host sh.dataspace.copernicus.eu;
+    }
+    location ~ ^/cdse/lst_tci_global_5km_10daily_v2(/.*)?$ {
+      proxy_pass https://sh.dataspace.copernicus.eu/ogc/wmts/52511efe-1966-4702-83a8-3865531ef955$1;
+      proxy_ssl_server_name on;
+      proxy_set_header Host sh.dataspace.copernicus.eu;
+    }
+    location ~ ^/cdse/ba_global_300m_daily_v3(/.*)?$ {
+      proxy_pass https://sh.dataspace.copernicus.eu/ogc/wmts/0de31cd1-9919-4912-90dd-bcea6d53b18f$1;
+      proxy_ssl_server_name on;
+      proxy_set_header Host sh.dataspace.copernicus.eu;
+    }
+    location ~ ^/cdse/ba_global_300m_daily_v4(/.*)?$ {
+      proxy_pass https://sh.dataspace.copernicus.eu/ogc/wmts/355b4b21-72f1-4727-aed6-9b3ef990afb3$1;
+      proxy_ssl_server_name on;
+      proxy_set_header Host sh.dataspace.copernicus.eu;
+    }
+    location ~ ^/cdse/ba_global_300m_monthly_v3(/.*)?$ {
+      proxy_pass https://sh.dataspace.copernicus.eu/ogc/wmts/b80832bf-0a51-4645-a8ce-10381edae234$1;
+      proxy_ssl_server_name on;
+      proxy_set_header Host sh.dataspace.copernicus.eu;
+    }
+    location ~ ^/cdse/ba_global_300m_monthly_v4(/.*)?$ {
+      proxy_pass https://sh.dataspace.copernicus.eu/ogc/wmts/e9ccfda2-0874-4b7a-9c00-6e53e0ac7a24$1;
+      proxy_ssl_server_name on;
+      proxy_set_header Host sh.dataspace.copernicus.eu;
+    }
+    location ~ ^/cdse/sce_europe_500m_daily_v1(/.*)?$ {
+      proxy_pass https://sh.dataspace.copernicus.eu/ogc/wmts/a9d11669-9888-41cf-8e79-0dcfba22f4ad$1;
+      proxy_ssl_server_name on;
+      proxy_set_header Host sh.dataspace.copernicus.eu;
+    }
+    location ~ ^/cdse/lie_europe_250m_daily_v2(/.*)?$ {
+      proxy_pass https://sh.dataspace.copernicus.eu/ogc/wmts/308bab50-d1e1-463f-ab78-76774f0a96ce$1;
+      proxy_ssl_server_name on;
+      proxy_set_header Host sh.dataspace.copernicus.eu;
+    }
+    location ~ ^/cdse/lie_baltic_250m_daily_v1(/.*)?$ {
+      proxy_pass https://sh.dataspace.copernicus.eu/ogc/wmts/41a754d2-07e2-423e-b2f6-31737899158e$1;
+      proxy_ssl_server_name on;
+      proxy_set_header Host sh.dataspace.copernicus.eu;
+    }
+    location ~ ^/cdse/lie_global_500m_daily_v2(/.*)?$ {
+      proxy_pass https://sh.dataspace.copernicus.eu/ogc/wmts/ce40bf29-ae15-42bc-89af-26834b3356b5$1;
+      proxy_ssl_server_name on;
+      proxy_set_header Host sh.dataspace.copernicus.eu;
+    }
+    location ~ ^/cdse/ssm_europe_1km_daily_v1(/.*)?$ {
+      proxy_pass https://sh.dataspace.copernicus.eu/ogc/wmts/2106c340-6197-46ba-a334-0d5feee7c83d$1;
+      proxy_ssl_server_name on;
+      proxy_set_header Host sh.dataspace.copernicus.eu;
+    }
+    location ~ ^/cdse/swi_europe_1km_daily_v1(/.*)?$ {
+      proxy_pass https://sh.dataspace.copernicus.eu/ogc/wmts/b7e88381-4cb0-4a09-9862-f7ff5e3ee2cb$1;
+      proxy_ssl_server_name on;
+      proxy_set_header Host sh.dataspace.copernicus.eu;
+    }
+    location ~ ^/cdse/swi_europe_1km_daily_v2(/.*)?$ {
+      proxy_pass https://sh.dataspace.copernicus.eu/ogc/wmts/d9882cd5-6318-4a38-986b-627efa3a6bdb$1;
+      proxy_ssl_server_name on;
+      proxy_set_header Host sh.dataspace.copernicus.eu;
+    }
+    location ~ ^/cdse/lwq_nrt_global_100m_10daily_v1(/.*)?$ {
+      proxy_pass https://sh.dataspace.copernicus.eu/ogc/wmts/9d54678c-0a6a-4ac7-814c-bb6c45255a25$1;
+      proxy_ssl_server_name on;
+      proxy_set_header Host sh.dataspace.copernicus.eu;
+    }
+    location ~ ^/cdse/lwq_nrt_global_300m_10daily_v1(/.*)?$ {
+      proxy_pass https://sh.dataspace.copernicus.eu/ogc/wmts/4fa8791d-95ed-4b8a-be12-84d830f1b440$1;
+      proxy_ssl_server_name on;
+      proxy_set_header Host sh.dataspace.copernicus.eu;
+    }
+    location ~ ^/cdse/lwq_nrt_global_300m_10daily_v2(/.*)?$ {
+      proxy_pass https://sh.dataspace.copernicus.eu/ogc/wmts/394057f7-cae9-4d49-9ecb-8c07fb397869$1;
+      proxy_ssl_server_name on;
+      proxy_set_header Host sh.dataspace.copernicus.eu;
+    }
+    location ~ ^/cdse/lwq_reproc_global_300m_10daily_v1(/.*)?$ {
+      proxy_pass https://sh.dataspace.copernicus.eu/ogc/wmts/a59e02a4-27b1-49d3-846b-b72557ccd74c$1;
+      proxy_ssl_server_name on;
+      proxy_set_header Host sh.dataspace.copernicus.eu;
+    }
+    location ~ ^/cdse/lcm_global_10m_yearly_v1(/.*)?$ {
+      proxy_pass https://sh.dataspace.copernicus.eu/ogc/wmts/b5ada187-d076-459a-a0fd-2218f68f419e$1;
+      proxy_ssl_server_name on;
+      proxy_set_header Host sh.dataspace.copernicus.eu;
+    }
+    location ~ ^/cdse/lsp_global_300m_yearly_v1(/.*)?$ {
+      proxy_pass https://sh.dataspace.copernicus.eu/ogc/wmts/4cc14f65-4bca-4d9e-b277-7d3b7d73b44c$1;
+      proxy_ssl_server_name on;
+      proxy_set_header Host sh.dataspace.copernicus.eu;
+    }
+    location ~ ^/cdse/tcd_pantropical_10m_yearly_v1(/.*)?$ {
+      proxy_pass https://sh.dataspace.copernicus.eu/ogc/wmts/61ead91e-cf1f-40ce-bb32-f445d2646be3$1;
+      proxy_ssl_server_name on;
+      proxy_set_header Host sh.dataspace.copernicus.eu;
+    }
+    location ~ ^/cdse/ndvi_lts_global_1km_10daily_v2(/.*)?$ {
+      proxy_pass https://sh.dataspace.copernicus.eu/ogc/wmts/e739868a-8f1a-41b6-a86e-ebadabe48c07$1;
+      proxy_ssl_server_name on;
+      proxy_set_header Host sh.dataspace.copernicus.eu;
+    }
+    location ~ ^/cdse/ndvi_lts_global_1km_10daily_v3(/.*)?$ {
+      proxy_pass https://sh.dataspace.copernicus.eu/ogc/wmts/52d86666-2d08-417b-aefb-4db542927d4d$1;
+      proxy_ssl_server_name on;
+      proxy_set_header Host sh.dataspace.copernicus.eu;
+    }
+    # Add more CDSE service mappings as needed from Apache config
 
 debug:
   serviceType: ClusterIP
