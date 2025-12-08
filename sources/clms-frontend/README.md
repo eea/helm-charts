@@ -24,6 +24,9 @@ The chart deploys a three-tier architecture:
 
 ## Releases
 
+### Version 3.500.3 - 08 December 2025
+- remove cdse ingress [Dobricean Ioan Dorian - [`04dceae8`](https://github.com/eea/helm-charts/commit/04dceae837ed7e3b9d40651d21b4845926e99aa0)]
+
 ### Version 3.500.2 - 08 December 2025
 - Move appache to ingress [Dobricean Ioan Dorian - [`578e1570`](https://github.com/eea/helm-charts/commit/578e15704b4ab5364f80a3605400b95f5e34151e)]
 
