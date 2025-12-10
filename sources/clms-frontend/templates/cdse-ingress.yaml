@@ -15,8 +15,10 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-body-size: "50m"
     nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
     nginx.ingress.kubernetes.io/proxy-send-timeout: "300"
+    {{- if .Values.cdseProxy.serverSnippet }}
     nginx.ingress.kubernetes.io/server-snippet: |
-{{ .Files.Get "files/cdse-locations.conf" | indent 6 }}
+{{ .Values.cdseProxy.serverSnippet | indent 6 }}
+    {{- end }}
   {{- with .Values.ingress.annotations }}
     {{- toYaml . | nindent 4 }}
   {{- end }}

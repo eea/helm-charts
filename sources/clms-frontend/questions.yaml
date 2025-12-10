@@ -94,6 +94,22 @@ questions:
     required: true
     group: "General"
 
+  - variable: "cdseProxy.enabled"
+    label: "Enable CDSE proxy"
+    description: "Enable proxy for /cdse path to sh.dataspace.copernicus.eu"
+    default: true
+    type: "boolean"
+    required: true
+    group: "General"
+
+  - variable: "cdseProxy.serverSnippet"
+    label: "CDSE Nginx Server Snippet"
+    description: "Nginx location blocks for CDSE service mappings (proxy configurations with service UUIDs)"
+    type: "multiline"
+    required: false
+    group: "General"
+    show_if: "cdseProxy.enabled=true"
+
   - variable: "volto.environment.RAZZLE_INTERNAL_API_PATH"
     label: "RAZZLE_INTERNAL_API_PATH"
     description: "Location of Plone site accessible from container"

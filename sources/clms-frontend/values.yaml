@@ -317,8 +317,9 @@ globalProxy:
 
 cdseProxy:
   enabled: true
-  # CDSE proxy mappings are in files/cdse-locations.conf
-  # Included via .Files.Get in templates/cdse-ingress.yaml
+  # CDSE proxy server snippet - contains nginx location blocks for CDSE service mappings
+  # This can be configured in Rancher UI to keep sensitive service IDs out of the repo
+  serverSnippet: ""
 
 debug:
   serviceType: ClusterIP
