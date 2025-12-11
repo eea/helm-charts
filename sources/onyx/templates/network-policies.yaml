@@ -262,6 +262,26 @@ spec:
         - protocol: TCP
           port: 5432
   egress:
+    # Allow Vespa intra-cluster traffic (config, file distribution, messaging)
+    - to:
+        - podSelector:
+            matchLabels:
+              app: vespa
+      ports:
+        - protocol: TCP
+          port: 19070  # config server RPC
+        - protocol: TCP
+          port: 19071  # admin/REST
+        - protocol: TCP
+          port: 19100  # file distribution
+        - protocol: TCP
+          port: 19101
+        - protocol: TCP
+          port: 19102
+        - protocol: TCP
+          port: 19103
+        - protocol: TCP
+          port: 19104
     # DNS
     - to:
         - namespaceSelector: {}
