@@ -7,6 +7,9 @@ metadata:
   name: {{ include "onyx.fullname" . }}-default-deny
   labels:
     {{- include "onyx.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "-5"
 spec:
   podSelector: {}
   policyTypes:
@@ -29,7 +32,10 @@ spec:
   ingress:
     # Allow ingress from anywhere (external traffic)
     - from:
-        - podSelector: {}
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .Release.Namespace }}
+          podSelector: {}
         {{- if .Values.networkPolicy.ingressFromNamespaces }}
         - namespaceSelector:
             matchLabels:
@@ -83,7 +89,10 @@ spec:
     - Egress
   ingress:
     - from:
-        - podSelector:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .Release.Namespace }}
+          podSelector:
             matchLabels:
               app: nginx
       ports:
@@ -124,16 +133,28 @@ spec:
     - Egress
   ingress:
     - from:
-        - podSelector:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .Release.Namespace }}
+          podSelector:
             matchLabels:
               app: nginx
-        - podSelector:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .Release.Namespace }}
+          podSelector:
             matchLabels:
               app: web-server
-        - podSelector:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .Release.Namespace }}
+          podSelector:
             matchLabels:
               scope: onyx-backend-celery
-        - podSelector:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .Release.Namespace }}
+          podSelector:
             matchLabels:
               app: slack-bot
       ports:
@@ -144,7 +165,7 @@ spec:
     - to:
         - podSelector:
             matchLabels:
-              app.kubernetes.io/name: postgresql
+              app: postgresql
       ports:
         - protocol: TCP
           port: 5432
@@ -164,6 +185,8 @@ spec:
       ports:
         - protocol: TCP
           port: 8080
+        - protocol: TCP
+          port: 8081
         - protocol: TCP
           port: 19071
     # Allow egress to MinIO
@@ -206,12 +229,6 @@ spec:
       ports:
         - protocol: UDP
           port: 53
-    # Allow HTTPS egress for external APIs
-    - to:
-        - namespaceSelector: {}
-      ports:
-        - protocol: TCP
-          port: 443
 ---
 # PostgreSQL network policy
 apiVersion: networking.k8s.io/v1
@@ -223,16 +240,22 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      app.kubernetes.io/name: postgresql
+      app: postgresql
   policyTypes:
     - Ingress
     - Egress
   ingress:
     - from:
-        - podSelector:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .Release.Namespace }}
+          podSelector:
             matchLabels:
               scope: onyx-backend
-        - podSelector:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .Release.Namespace }}
+          podSelector:
             matchLabels:
               scope: onyx-backend-celery
       ports:
@@ -265,10 +288,16 @@ spec:
     - Egress
   ingress:
     - from:
-        - podSelector:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .Release.Namespace }}
+          podSelector:
             matchLabels:
               scope: onyx-backend
-        - podSelector:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .Release.Namespace }}
+          podSelector:
             matchLabels:
               scope: onyx-backend-celery
       ports:
@@ -301,15 +330,23 @@ spec:
     - Egress
   ingress:
     - from:
-        - podSelector:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .Release.Namespace }}
+          podSelector:
             matchLabels:
               scope: onyx-backend
-        - podSelector:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .Release.Namespace }}
+          podSelector:
             matchLabels:
               scope: onyx-backend-celery
       ports:
         - protocol: TCP
           port: 8080
+        - protocol: TCP
+          port: 8081
         - protocol: TCP
           port: 19071
   egress:
@@ -339,12 +376,24 @@ spec:
     - Egress
   ingress:
     - from:
-        - podSelector:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .Release.Namespace }}
+          podSelector:
             matchLabels:
               scope: onyx-backend
-        - podSelector:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .Release.Namespace }}
+          podSelector:
             matchLabels:
               scope: onyx-backend-celery
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .Release.Namespace }}
+          podSelector:
+            matchLabels:
+              app: minio-job
       ports:
         - protocol: TCP
           port: 9000
@@ -381,7 +430,7 @@ spec:
     - to:
         - podSelector:
             matchLabels:
-              app.kubernetes.io/name: postgresql
+              app: postgresql
       ports:
         - protocol: TCP
           port: 5432
@@ -401,6 +450,8 @@ spec:
       ports:
         - protocol: TCP
           port: 8080
+        - protocol: TCP
+          port: 8081
         - protocol: TCP
           port: 19071
     # Allow egress to MinIO
@@ -451,14 +502,6 @@ spec:
       ports:
         - protocol: UDP
           port: 53
-    # Allow HTTPS egress for external APIs and connectors
-    - to:
-        - namespaceSelector: {}
-      ports:
-        - protocol: TCP
-          port: 443
-        - protocol: TCP
-          port: 80
 ---
 # Model Servers network policy
 apiVersion: networking.k8s.io/v1
@@ -480,10 +523,16 @@ spec:
     - Egress
   ingress:
     - from:
-        - podSelector:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .Release.Namespace }}
+          podSelector:
             matchLabels:
               scope: onyx-backend
-        - podSelector:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .Release.Namespace }}
+          podSelector:
             matchLabels:
               scope: onyx-backend-celery
       ports:
@@ -499,12 +548,6 @@ spec:
       ports:
         - protocol: UDP
           port: 53
-    # Allow HTTPS egress for model downloads
-    - to:
-        - namespaceSelector: {}
-      ports:
-        - protocol: TCP
-          port: 443
 ---
 # Postfix network policy
 apiVersion: networking.k8s.io/v1
@@ -522,10 +565,16 @@ spec:
     - Egress
   ingress:
     - from:
-        - podSelector:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .Release.Namespace }}
+          podSelector:
             matchLabels:
               scope: onyx-backend
-        - podSelector:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .Release.Namespace }}
+          podSelector:
             matchLabels:
               scope: onyx-backend-celery
       ports:
@@ -543,16 +592,6 @@ spec:
       ports:
         - protocol: UDP
           port: 53
-    # Allow SMTP egress to external mail servers
-    - to:
-        - namespaceSelector: {}
-      ports:
-        - protocol: TCP
-          port: 25
-        - protocol: TCP
-          port: 587
-        - protocol: TCP
-          port: 465
 ---
 # Slackbot network policy
 {{- if .Values.slackbot.enabled }}
@@ -588,11 +627,5 @@ spec:
       ports:
         - protocol: UDP
           port: 53
-    # Allow HTTPS egress to Slack API
-    - to:
-        - namespaceSelector: {}
-      ports:
-        - protocol: TCP
-          port: 443
 {{- end }}
 {{- end }}
