@@ -15,7 +15,6 @@ This chart deployes the PloneSaaS app together with several frontends as Ingress
 | debug.enabled | bool | false | Activate the Plone debug instance |
 | epanet.enabled | bool | false | Activate the epanet Ingress |
 | ias.enabled | bool | false | Activate the ias Ingress |
-| industry.enabled | bool | false | Activate the industry Ingress |
 
 ## Releases
 
@@ -32,12 +31,10 @@ This chart deployes the PloneSaaS app together with several frontends as Ingress
 - Fixed redirect on circularity [valentinab25 - [`89378da`](https://github.com/eea/helm-charts/commit/89378da922adbea1e5dbaa729bb729510308274f)]
 
 ### Version 2.4.6 - 11 April 2025
-- Fix industry rewrite on api ingress [valentinab25 - [`b3c2605`](https://github.com/eea/helm-charts/commit/b3c2605fb1aca5e91d8ab58ca83ac2549963830b)]
 
 
 ### Version 2.4.5 - 29 August 2024
-- Updated industry deployment image from eeacms/industry-frontend:3.25.0 to eeacms/industry-frontend:3.29.0
-- Added `nginx.ingress.kubernetes.io/proxy-body-size: 100m` to `climate-energy-api-ingress.yaml` and `industry-api.ingress.yaml`, refs #279315
+- Added `nginx.ingress.kubernetes.io/proxy-body-size: 100m` to `climate-energy-api-ingress.yaml`, refs #279315
 
 ### Version 2.4.4 - 29 August 2024
 - Added "forests" redirection. Activated with forest.enabled.
