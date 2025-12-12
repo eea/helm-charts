@@ -18,6 +18,9 @@ This chart deployes the PloneSaaS app together with several frontends as Ingress
 
 ## Releases
 
+### Version 2.6.2 - 12 December 2025
+- Remove industry from plonesaas [Dobricean Ioan Dorian - [`939e48ef`](https://github.com/eea/helm-charts/commit/939e48efb8aebe4f1d3f7f5a97d3cc23620602b8)]
+
 ### Version 2.6.1 - 25 August 2025
 - Release of dependent chart postfix:3.1.0 [EEA Jenkins - [`aaeed463`](https://github.com/eea/helm-charts/commit/aaeed4631223442f3d8e28377cdfc3d81b639b8c)]
 
