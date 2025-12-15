@@ -9,6 +9,7 @@ metadata:
     component: landing
   annotations:
     cert-manager.io/cluster-issuer: 01dev-eea-letsencrypt
+    nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/configuration-snippet: |-
       more_set_headers 'Server HTTPS'
         'Strict-Transport-Security max-age=31536000; includeSubDomains; preload'
@@ -22,8 +23,8 @@ spec:
   - host: {{ .Values.volto.hostname }}
     http:
       paths:
-      - path: /
-        pathType: Exact
+      - path: /$
+        pathType: ImplementationSpecific
         backend:
           service:
             name: wise-landing
