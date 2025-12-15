@@ -10,6 +10,9 @@ This chart deployes the Climate Advisory Board frontend app
 
 ## Releases
 
+### Version 1.31.1 - 15 December 2025
+- Add homapge ingress [Dobricean Ioan Dorian - [`5efb0a66`](https://github.com/eea/helm-charts/commit/5efb0a66dc528e706e8382ece1b9677ef4ef1df8)]
+
 ### Version 1.31.0 - 12 December 2025
 - Automated release of [eeacms/marine-frontend:3.20.0-demo.01](https://github.com/eea/marine-frontend/releases) [EEA Jenkins - [`e59395c6`](https://github.com/eea/helm-charts/commit/e59395c6d6ea8a38e3bb89d1ec5913a49dc13f06)]
 
