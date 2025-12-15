@@ -36,7 +36,23 @@ spec:
           mountPath: /usr/share/nginx/html/static/script.js
           subPath: script.js
         - name: svg
-          mountPath: /usr/share/nginx/html/static/svg
+          mountPath: /usr/share/nginx/html/static/EEA-logo.svg
+          subPath: EEA-logo.svg
+        - name: svg
+          mountPath: /usr/share/nginx/html/static/WISE_Freshwater_0079CF.svg
+          subPath: WISE_Freshwater_0079CF.svg
+        - name: svg
+          mountPath: /usr/share/nginx/html/static/WISE_Freshwater_FFFFFF.svg
+          subPath: WISE_Freshwater_FFFFFF.svg
+        - name: svg
+          mountPath: /usr/share/nginx/html/static/WISE_Marine_004B7F.svg
+          subPath: WISE_Marine_004B7F.svg
+        - name: svg
+          mountPath: /usr/share/nginx/html/static/WISE_Marine_FFFFFF.svg
+          subPath: WISE_Marine_FFFFFF.svg
+        - name: svg
+          mountPath: /usr/share/nginx/html/static/ec_logo.svg
+          subPath: ec_logo.svg
         - name: images
           mountPath: /usr/share/nginx/html/static/images
         - name: nginx-conf
