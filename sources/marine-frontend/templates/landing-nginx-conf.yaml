@@ -1,0 +1,36 @@
+{{- if .Values.landing }}
+{{- if .Values.landing.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: wise-landing-nginx-conf
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: landing
+data:
+  default.conf: |
+    server {
+        listen 80;
+        server_name _;
+        root /usr/share/nginx/html;
+        index index.html;
+
+        location / {
+            try_files $uri $uri/ /index.html;
+        }
+
+        location /static/ {
+            alias /usr/share/nginx/html/static/;
+
+            location ~* \.(svg)$ {
+                try_files $uri /static/svg/$uri;
+            }
+        }
+
+        location ~* \.(jpg|jpeg|png|gif|ico|svg|css|js)$ {
+            expires 1d;
+            add_header Cache-Control "public, immutable";
+        }
+    }
+{{- end }}
+{{- end }}

@@ -1,0 +1,82 @@
+{{- if .Values.landing }}
+{{- if .Values.landing.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wise-landing
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: landing
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: landing
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: landing
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:alpine
+        ports:
+        - containerPort: 80
+          name: http
+        volumeMounts:
+        - name: html
+          mountPath: /usr/share/nginx/html/index.html
+          subPath: index.html
+        - name: css
+          mountPath: /usr/share/nginx/html/static/style.css
+          subPath: style.css
+        - name: js
+          mountPath: /usr/share/nginx/html/static/script.js
+          subPath: script.js
+        - name: svg
+          mountPath: /usr/share/nginx/html/static/svg
+        - name: images
+          mountPath: /usr/share/nginx/html/static/images
+        - name: nginx-conf
+          mountPath: /etc/nginx/conf.d/default.conf
+          subPath: default.conf
+        resources:
+          limits:
+            memory: 128Mi
+          requests:
+            memory: 64Mi
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          periodSeconds: 10
+          timeoutSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          periodSeconds: 5
+          timeoutSeconds: 3
+      volumes:
+      - name: html
+        configMap:
+          name: wise-landing-html
+      - name: css
+        configMap:
+          name: wise-landing-css
+      - name: js
+        configMap:
+          name: wise-landing-js
+      - name: svg
+        configMap:
+          name: wise-landing-svg
+      - name: images
+        configMap:
+          name: wise-landing-images
+      - name: nginx-conf
+        configMap:
+          name: wise-landing-nginx-conf
+{{- end }}
+{{- end }}

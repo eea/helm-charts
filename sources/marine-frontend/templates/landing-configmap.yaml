@@ -1,0 +1,56 @@
+{{- if .Values.landing }}
+{{- if .Values.landing.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: wise-landing-html
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: landing
+data:
+  index.html: |
+{{ .Files.Get "index.html" | indent 4 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: wise-landing-css
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: landing
+data:
+  style.css: |
+{{ .Files.Get "static/style.css" | indent 4 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: wise-landing-js
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: landing
+data:
+  script.js: |
+{{ .Files.Get "static/script.js" | indent 4 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: wise-landing-svg
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: landing
+data:
+{{ (.Files.Glob "static/*.svg").AsConfig | indent 2 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: wise-landing-images
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: landing
+binaryData:
+{{ (.Files.Glob "static/images/*").AsSecrets | indent 2 }}
+{{- end }}
+{{- end }}
