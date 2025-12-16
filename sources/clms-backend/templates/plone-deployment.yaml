@@ -42,6 +42,16 @@ spec:
           value: "{{ .Values.timezone }}"
         - name: RELSTORAGE_DSN
           value: "host='postgres' dbname='{{ .Values.plone.database.POSTGRES_DB }}' user='{{ .Values.plone.database.POSTGRES_USER }}' password='{{ .Values.plone.database.POSTGRES_PASSWORD }}'"
+        {{- if .Values.redis.enabled }}
+        - name: REDIS_HOST
+          value: "redis"
+        - name: REDIS_PORT
+          value: "6379"
+        {{- end }}
+        {{- if .Values.ploneAuthToken }}
+        - name: PLONE_AUTH_TOKEN
+          value: {{ .Values.ploneAuthToken | quote }}
+        {{- end }}
         {{- range $key, $value := .Values.plone.environment }}
         {{- if ($value) }}
         - name: {{ $key }}

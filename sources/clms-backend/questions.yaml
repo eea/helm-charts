@@ -111,13 +111,12 @@ questions:
     group: "General"
     show_if: "asyncjobs.enabled=true"
 
-  - variable: "asyncjobs.environment.PLONE_AUTH_TOKEN"
-    label: "Plone Auth Token for Async Jobs"
-    description: "Authentication token for Plone API"
+  - variable: "ploneAuthToken"
+    label: "Plone Auth Token"
+    description: "Authentication token for Plone API (used by asyncjobs and plone)"
     type: "password"
     required: false
     group: "General"
-    show_if: "asyncjobs.enabled=true"
 
   - variable: "cdsemonitor.enabled"
     label: "Enable CDSE Monitor cron job"
@@ -313,27 +312,6 @@ questions:
   - variable: "plone.environment.CRON_JOBS"
     label: "CRON_JOBS"
     description: "Cron jobs configuration"
-    type: "string"
-    required: false
-    default: ""
-    group: "Plone configuration"
-  - variable: "plone.environment.PLONE_AUTH_TOKEN"
-    label: "PLONE_AUTH_TOKEN"
-    description: "Plone authentication token"
-    type: "password"
-    required: false
-    default: ""
-    group: "Plone configuration"
-  - variable: "plone.environment.REDIS_HOST"
-    label: "REDIS_HOST"
-    description: "Redis host"
-    type: "string"
-    required: false
-    default: ""
-    group: "Plone configuration"
-  - variable: "plone.environment.REDIS_PORT"
-    label: "REDIS_PORT"
-    description: "Redis port"
     type: "string"
     required: false
     default: ""

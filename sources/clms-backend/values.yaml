@@ -15,6 +15,8 @@ serviceAccount:
 
 timezone: Europe/Copenhagen
 
+ploneAuthToken: ""
+
 links:
   database: plone-postgres.namespace
   memcached: plone-postgres-memcached.namespace
@@ -62,9 +64,6 @@ plone:
     CDSE_USAGE_VIEW_TOKEN: ""
     CDSE_USAGE_LIMITS_EMAIL_TO: ""
     CRON_JOBS: ""
-    PLONE_AUTH_TOKEN: ""
-    REDIS_HOST: ""
-    REDIS_PORT: ""
   annotations: {}
   livenessProbe:
     httpGet:
@@ -216,8 +215,6 @@ asyncjobs:
   nodeSelector: {}
   tolerations: []
   affinity: {}
-  environment:
-    PLONE_AUTH_TOKEN: ""
 
 cdsemonitor:
   enabled: false
