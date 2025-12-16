@@ -202,6 +202,8 @@ volto:
     requests:
       memory: 2Gi
   environment:
+    RAZZLE_API_PATH: ""
+    RAZZLE_DEV_PROXY_API_PATH: ""
     RAZZLE_INTERNAL_API_PATH: http://backend:8080/Plone
     RAZZLE_BACKEND_NAME: 'eea.docker.plone.clms'
     RAZZLE_SENTRY_DSN: ""
