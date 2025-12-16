@@ -10,6 +10,9 @@ This chart deployes the CLMS backend app
 
 ## Releases
 
+### Version 1.14.3 - 16 December 2025
+- fix redis servoce [Dobricean Ioan Dorian - [`1df30213`](https://github.com/eea/helm-charts/commit/1df30213df2d1c723fa6c5ac7d60cb9f16549c37)]
+
 ### Version 1.14.2 - 16 December 2025
 - add all the services [Dobricean Ioan Dorian - [`d54f5b65`](https://github.com/eea/helm-charts/commit/d54f5b657759d0023a1dba2161c3145a9fc1436c)]
 
