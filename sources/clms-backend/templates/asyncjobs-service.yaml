@@ -1,0 +1,22 @@
+{{- if .Values.asyncjobs.enabled }}
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: asyncjobs
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: asyncjobs
+
+spec:
+  type: {{ .Values.asyncjobs.serviceType }}
+  ports:
+    - port: 3100
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "appl.selectorLabels" . | nindent 4 }}
+    component: asyncjobs
+
+{{- end }}

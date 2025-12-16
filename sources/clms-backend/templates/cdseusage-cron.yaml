@@ -1,0 +1,49 @@
+{{- if .Values.cdseusage.enabled }}
+
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ .Release.Name }}-cdseusage-cron
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: cdseusage
+
+spec:
+  schedule: "{{ .Values.cdseusage.schedule }}"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: {{ .Values.cdseusage.keepSuccessfulPods }}
+  failedJobsHistoryLimit: {{ .Values.cdseusage.keepFailedPods }}
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          {{- with .Values.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          serviceAccountName: {{ include "appl.serviceAccountName" . }}
+          containers:
+          - name: cdseusage
+            image: "{{ .Values.cdseusage.image.repository }}:{{ .Values.cdseusage.image.tag }}"
+            command:
+            - /bin/sh
+            - -c
+            - 'curl -v "{{ .Values.plone.environment.CDSE_USAGE_URL }}?token={{ .Values.plone.environment.CDSE_USAGE_VIEW_TOKEN }}"'
+            resources:
+              {{- toYaml .Values.cdseusage.resources | nindent 14 }}
+
+          {{- with .Values.cdseusage.nodeSelector }}
+          nodeSelector:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.cdseusage.affinity }}
+          affinity:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.cdseusage.tolerations }}
+          tolerations:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          restartPolicy: Never
+
+{{- end }}

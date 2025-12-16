@@ -79,6 +79,78 @@ questions:
     group: "General"
     show_if: "zodbpack.enabled=true"
 
+  - variable: "redis.enabled"
+    label: "Enable Redis"
+    description: "Enable Redis service for async jobs"
+    default: false
+    type: "boolean"
+    required: true
+    group: "General"
+
+  - variable: "redis.image.tag"
+    label: "Redis image tag"
+    type: "string"
+    default: "7.4.7"
+    required: true
+    group: "General"
+    show_if: "redis.enabled=true"
+
+  - variable: "asyncjobs.enabled"
+    label: "Enable Async Jobs"
+    description: "Enable async jobs service"
+    default: false
+    type: "boolean"
+    required: true
+    group: "General"
+
+  - variable: "asyncjobs.image.tag"
+    label: "Async Jobs image tag"
+    type: "string"
+    default: "1.0.1"
+    required: true
+    group: "General"
+    show_if: "asyncjobs.enabled=true"
+
+  - variable: "asyncjobs.environment.PLONE_AUTH_TOKEN"
+    label: "Plone Auth Token for Async Jobs"
+    description: "Authentication token for Plone API"
+    type: "password"
+    required: false
+    group: "General"
+    show_if: "asyncjobs.enabled=true"
+
+  - variable: "cdsemonitor.enabled"
+    label: "Enable CDSE Monitor cron job"
+    description: "Enable CDSE status monitor cron job"
+    default: false
+    type: "boolean"
+    required: true
+    group: "General"
+
+  - variable: "cdsemonitor.schedule"
+    label: "CDSE Monitor cron schedule"
+    type: "string"
+    default: "0 * * * *"
+    required: true
+    group: "General"
+    show_if: "cdsemonitor.enabled=true"
+
+  - variable: "cdseusage.enabled"
+    label: "Enable CDSE Usage cron job"
+    description: "Enable CDSE usage limits monitor cron job"
+    default: false
+    type: "boolean"
+    required: true
+    group: "General"
+
+  - variable: "cdseusage.schedule"
+    label: "CDSE Usage cron schedule"
+    type: "string"
+    default: "30 8 * * *"
+    required: true
+    group: "General"
+    show_if: "cdseusage.enabled=true"
+
   - variable: "varnish.serviceType"
     label: "Expose varnish"
     description: "Select NodePort to expose varnish"
@@ -411,6 +483,38 @@ questions:
     required: true
     default: "2Gi"
     group: "Memory"
+
+  - variable: "redis.resources.requests.memory"
+    label: "Redis memory reservation"
+    type: "string"
+    required: true
+    default: "128Mi"
+    group: "Memory"
+    show_if: "redis.enabled=true"
+  - variable: "redis.resources.limits.memory"
+    label: "Redis memory limit"
+    description: ">= memory reservation"
+    type: "string"
+    required: true
+    default: "256Mi"
+    group: "Memory"
+    show_if: "redis.enabled=true"
+
+  - variable: "asyncjobs.resources.requests.memory"
+    label: "Async Jobs memory reservation"
+    type: "string"
+    required: true
+    default: "256Mi"
+    group: "Memory"
+    show_if: "asyncjobs.enabled=true"
+  - variable: "asyncjobs.resources.limits.memory"
+    label: "Async Jobs memory limit"
+    description: ">= memory reservation"
+    type: "string"
+    required: true
+    default: "512Mi"
+    group: "Memory"
+    show_if: "asyncjobs.enabled=true"
 
   - variable: "postfix.serviceName"
     label: "Postfix service name"

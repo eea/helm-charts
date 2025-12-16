@@ -1,0 +1,22 @@
+{{- if .Values.redis.enabled }}
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: redis
+
+spec:
+  type: {{ .Values.redis.serviceType }}
+  ports:
+    - port: 6379
+      targetPort: redis
+      protocol: TCP
+      name: redis
+  selector:
+    {{- include "appl.selectorLabels" . | nindent 4 }}
+    component: redis
+
+{{- end }}

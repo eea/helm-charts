@@ -187,6 +187,72 @@ zodbpack:
   podSecurityContext: {}
   securityContext: {}
 
+redis:
+  enabled: false
+  serviceType: ClusterIP
+  image:
+    repository: redis
+    tag: "7.4.7"
+  resources:
+    limits:
+      memory: 256Mi
+    requests:
+      memory: 128Mi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+asyncjobs:
+  enabled: false
+  serviceType: ClusterIP
+  image:
+    repository: eeacms/clms-async-jobs
+    tag: "1.0.1"
+  resources:
+    limits:
+      memory: 512Mi
+    requests:
+      memory: 256Mi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  environment:
+    PLONE_AUTH_TOKEN: ""
+
+cdsemonitor:
+  enabled: false
+  schedule: "0 * * * *"
+  keepSuccessfulPods: 3
+  keepFailedPods: 5
+  image:
+    repository: curlimages/curl
+    tag: "8.8.0"
+  resources:
+    limits:
+      memory: 64Mi
+    requests:
+      memory: 32Mi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+cdseusage:
+  enabled: false
+  schedule: "30 8 * * *"
+  keepSuccessfulPods: 3
+  keepFailedPods: 5
+  image:
+    repository: curlimages/curl
+    tag: "8.8.0"
+  resources:
+    limits:
+      memory: 64Mi
+    requests:
+      memory: 32Mi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
 postfix:
   fullnameOverride: ""
   dryrun: false
