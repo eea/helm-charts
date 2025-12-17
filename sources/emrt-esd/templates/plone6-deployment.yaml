@@ -28,7 +28,7 @@ spec:
 
       containers:
       - name: plone6
-        image: "plone/plone-backend:6.1"
+        image: {{ .Values.plone6.image }}
         env:
         - name: TZ
           value: {{ .Values.timezone }}
