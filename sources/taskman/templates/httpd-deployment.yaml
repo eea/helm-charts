@@ -39,10 +39,6 @@ spec:
           {{- toYaml .Values.httpd.resources | nindent 10 }}
         securityContext:
           {{- toYaml .Values.httpd.securityContext | nindent 12 }}
-      volumes:
-      - name: nginx-config
-        configMap:
-          name: {{ .Release.Name }}-nginx-config-cm
 
         {{- if (.Values.httpd.livenessProbe) }}
         livenessProbe:
@@ -58,6 +54,11 @@ spec:
         readinessProbe:
           {{- toYaml .Values.httpd.readinessProbe | nindent 10 }}
         {{- end }}
+
+      volumes:
+      - name: nginx-config
+        configMap:
+          name: {{ .Release.Name }}-nginx-config-cm
 
       {{- with .Values.httpd.nodeSelector }}
       nodeSelector:
