@@ -1,0 +1,90 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: plone6
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: plone6
+
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: plone6
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: plone6
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
+      containers:
+      - name: plone6
+        image: "plone/plone-backend:6.1"
+        env:
+        - name: TZ
+          value: {{ .Values.timezone }}
+        - name: WARMUP_HEALTH_THRESHOLD
+          value: "10"
+        - name: ZEO_ADDRESS
+          value: zeo6:8100
+        - name: EDW_LOGGER_PUBLISHER
+          value: '{{ .Values.edwLoggerPublisher }}'
+        - name: EDW_LOGGER_USER_ID
+          value: '{{ .Values.edwLoggerUserID }}'
+        - name: GRAYLOG
+          value: '{{ .Values.graylog }}'
+        - name: GRAYLOG_FACILITY
+          value: {{ .Values.proxyBaseUrl }}
+        - name: MEMCACHE_SERVER
+          value: memcached:11211
+        - name: COLLECTIVE_EXPORTIMPORT_CENTRAL_DIRECTORY
+          value: "/plone4data"
+        - name: DEVELOP
+          value: {{ .Values.plone6develop }}
+
+        ports:
+        - containerPort: 8080
+          name: plone68080
+
+        # Wait for up to 600 seconds
+        startupProbe:
+          httpGet:
+            path: {{ .Values.plone6.probePath }}
+            port: plone68080
+          failureThreshold: 60
+          periodSeconds: 10
+          timeoutSeconds: {{ .Values.plone6.probeTimeoutSeconds }}
+
+        livenessProbe:
+          httpGet:
+            path: {{ .Values.plone6.probePath }}
+            port: plone68080
+          periodSeconds: 15
+          timeoutSeconds: {{ .Values.plone6.probeTimeoutSeconds }}
+
+        resources:
+          {{- toYaml .Values.plone6.resources | nindent 10 }}
+
+        volumeMounts:
+        - mountPath: /plone4data
+          name: emrt-esd-exportimport
+
+        securityContext:
+          {{- toYaml .Values.plone6.securityContext | nindent 10 }}
+
+      restartPolicy: Always
+
+      volumes:
+      - name: emrt-esd-exportimport
+        persistentVolumeClaim:
+          claimName: emrt-esd-exportimport
+

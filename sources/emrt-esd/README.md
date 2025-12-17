@@ -4,6 +4,9 @@ The EMRT(EEA Emission Review Tool) is a web-based tool hosted by the EEA to faci
 
 ## Releases
 
+### Version 3.0.0 - 17 December 2025
+- Added plone6 service.
+
 ### Version 2.0.0 - 06 November 2025
 - Use of memcached image instead of bitnami.
 - Added PVC for /data/exportimport.
