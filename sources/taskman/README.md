@@ -459,6 +459,9 @@ grunt
 
 ## Releases
 
+### Version 0.6.1 - 17 December 2025
+- Fix webserver healthchecks [EEA Jenkins - [`a92c24a1`](https://github.com/eea/helm-charts/commit/a92c24a1c70d14801fd42dac5e4f2a0e37a77e81)]
+
 ### Version 0.6.0 - 16 December 2025
 - Automated release of [eeacms/redmine:5.1-1.25](https://github.com/eea/eea.docker.redmine/releases) [EEA Jenkins - [`dae02d42`](https://github.com/eea/helm-charts/commit/dae02d42a839563c15a9ffff656da4958e971004)]
 
