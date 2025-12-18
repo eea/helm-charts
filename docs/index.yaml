@@ -16901,6 +16901,27 @@ entries:
   emrt-necd:
   - apiVersion: v2
     appVersion: plone-2.6.3
+    created: "2025-12-18T20:49:39.452110354Z"
+    dependencies:
+    - name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.2.0
+    - name: zeoserver
+      repository: https://eea.github.io/helm-charts
+      version: 0.1.0
+    description: Emission Review Tool for NEC Directive
+    digest: 00cde24a0dc5dcc2f2c7d21fc182758f9e602723ffa4caba43e41af503bc35c9
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/emrt-necd/logo_eionet.png
+    keywords:
+    - Reportnet
+    - Emmission
+    name: emrt-necd
+    type: application
+    urls:
+    - emrt-necd-2.1.2.tgz
+    version: 2.1.2
+  - apiVersion: v2
+    appVersion: plone-2.6.3
     created: "2025-12-05T15:32:47.128841+01:00"
     dependencies:
     - name: postfix
@@ -36600,4 +36621,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2025-12-18T20:49:36.049226041Z"
+generated: "2025-12-18T20:49:39.450335107Z"

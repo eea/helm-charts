@@ -4,6 +4,9 @@ The EMRT (EEA Emission Review Tool) is a web-based tool hosted by the EEA to fac
 
 ## Releases
 
+### Version 2.1.2 - 18 December 2025
+- Release of dependent chart postfix:3.2.0 [EEA Jenkins - [`20a86bb4`](https://github.com/eea/helm-charts/commit/20a86bb48335b810a2bbc8122d58e5634840ae28)]
+
 ### Version 2.1.1 - 12 November 2025
 - User-scalable memcached
 
