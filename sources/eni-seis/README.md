@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 1.0.5 - 18 December 2025
+- Release of dependent chart postfix:3.2.0 [EEA Jenkins - [`b15ab51e`](https://github.com/eea/helm-charts/commit/b15ab51ecef03d0afbaa5ab7eb6832eb235346c7)]
+
 ### Version 1.0.4 - 25 August 2025
 - Release of dependent chart postfix:3.1.0 [EEA Jenkins - [`c775ddb1`](https://github.com/eea/helm-charts/commit/c775ddb12127674de76257eae9fabb54ed0d02a6)]
 
