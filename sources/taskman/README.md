@@ -459,6 +459,9 @@ grunt
 
 ## Releases
 
+### Version 0.7.0 - 18 December 2025
+- Automated release of [eeacms/redmine:5.1-1.26](https://github.com/eea/eea.docker.redmine/releases) [EEA Jenkins - [`a7c0cb07`](https://github.com/eea/helm-charts/commit/a7c0cb074b1ecfcf7b0825e939c8fa99310fcefa)]
+
 ### Version 0.6.2 - 18 December 2025
 - Remove % from nginx config map [EEA Jenkins - [`7824dda6`](https://github.com/eea/helm-charts/commit/7824dda6bf3bf85f74b142a3e60092848068e824)]
 
