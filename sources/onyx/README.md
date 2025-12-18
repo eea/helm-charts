@@ -68,3 +68,6 @@ If you would like to use KEDA ScaledObjects instead:
 2. Set `autoscaling.engine: keda` in your `values.yaml` and enable autoscaling for the components you want to scale.
 
 When `autoscaling.engine` is set to `keda`, the chart will render the existing ScaledObject templates; otherwise HPAs will be rendered.
+
+
+## Releases
