@@ -17,12 +17,16 @@ spec:
       # After 24 hours, Kubernetes automatically deletes the Job and its pods
       ttlSecondsAfterFinished: {{ .Values.vespa.backup.ttlSecondsAfterFinished | default 86400 }}
       template:
+        metadata:
+          labels:
+            app: vespa-backup
+            scope: onyx-backend-celery
         spec:
           restartPolicy: OnFailure
           containers:
             - name: vespa-backup
               image: vespaengine/vespa:{{ .Values.vespa.image.tag | default "8.609.39" }}
-              args:
+              command:
                 - /bin/bash
                 - -c
                 - |
@@ -37,7 +41,7 @@ spec:
                   RETENTION_DAYS={{ .Values.vespa.backup.retention.days | default 7 }}
                   {{- end }}
 
-                  VESPA_HOST="{{ include "onyx.fullname" . }}-vespa-service"
+                  VESPA_HOST="{{ .Values.vespa.service.name | default "vespa-service" }}"
                   VESPA_PORT="19071"
                   mkdir -p /backups
                   TS=$(date +%Y%m%d_%H%M%S)
