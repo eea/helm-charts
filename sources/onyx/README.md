@@ -71,3 +71,6 @@ When `autoscaling.engine` is set to `keda`, the chart will render the existing S
 
 
 ## Releases
+
+### Version 0.4.12 - 18 December 2025
+- Release of dependent chart postfix:3.2.0 [EEA Jenkins - [`db97375f`](https://github.com/eea/helm-charts/commit/db97375fccb5b7460fb4809d77e3092727ff2848)]
