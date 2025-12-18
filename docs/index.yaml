@@ -1060,6 +1060,25 @@ entries:
   archiva:
   - apiVersion: v2
     appVersion: v2.2.7
+    created: "2025-12-18T20:48:56.661207476Z"
+    dependencies:
+    - name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.2.0
+    deprecated: true
+    description: Java package repository
+    digest: 29e599a5c029c0c0f191f6efd1d469923e3ffb4dbf2277fa0577f3501836d331
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/archiva/arrows.svg
+    keywords:
+    - Development
+    - Java
+    name: archiva
+    type: application
+    urls:
+    - archiva-0.3.4.tgz
+    version: 0.3.4
+  - apiVersion: v2
+    appVersion: v2.2.7
     created: "2025-12-05T15:32:43.650219+01:00"
     dependencies:
     - name: postfix
@@ -36372,4 +36391,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2025-12-18T20:48:53.859803146Z"
+generated: "2025-12-18T20:48:56.660284222Z"
