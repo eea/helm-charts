@@ -152,6 +152,9 @@ helm upgrade gptlab eea/gptlab
 
 ## Releases
 
+### Version 0.1.13 - 18 December 2025
+- Release of dependent chart postfix:3.2.0 [EEA Jenkins - [`0a00c734`](https://github.com/eea/helm-charts/commit/0a00c7346f0d432de865029f1ad568352867ed5d)]
+
 ### Version 0.1.12 - 25 August 2025
 - Release of dependent chart postfix:3.1.0 [EEA Jenkins - [`cb30e02b`](https://github.com/eea/helm-charts/commit/cb30e02b52ee260ccf4bff7260320e71cd10c401)]
 
