@@ -10,6 +10,9 @@ set the values in the database section.
 
 ## Releases
 
+### Version 0.4.2 - 18 December 2025
+- Release of dependent chart postfix:3.2.0 [EEA Jenkins - [`1c2f92ca`](https://github.com/eea/helm-charts/commit/1c2f92cacef9055b1a5fb7061faa595f4f5f1f33)]
+
 ### Version 0.4.1
 - CI/CD fix.
 
