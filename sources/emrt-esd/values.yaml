@@ -122,6 +122,8 @@ plone:
 plone6:
   image: "plone/plone-backend:6.1.1"
   securityContext: {}
+  environment:
+    ZOPE_FORM_MEMORY_LIMIT: 50MB
   resources:
     requests:
       memory: 1536Mi

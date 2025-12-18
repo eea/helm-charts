@@ -50,6 +50,12 @@ spec:
           value: "/plone4data"
         - name: DEVELOP
           value: {{ .Values.plone6develop }}
+        {{- range $key, $value := .Values.plone6.environment }}
+        {{- if ($value) }}
+        - name: {{ $key }}
+          value: {{ $value | quote }}
+        {{- end }}
+        {{- end }}
 
         ports:
         - containerPort: 8080
