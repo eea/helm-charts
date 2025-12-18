@@ -18813,6 +18813,26 @@ entries:
   forum-test:
   - apiVersion: v2
     appVersion: forum-test-22.09.06
+    created: "2025-12-18T20:49:56.445726631Z"
+    dependencies:
+    - condition: postfix.enabled
+      name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.2.0
+    deprecated: true
+    description: Forum Interest Groups and projects (test)
+    digest: e14f7c82aaba17a55ea4b9bf4706c0ebeca516d66f25b2dfd1ff3f227f3044be
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/forum-test/logo_eionet.png
+    keywords:
+    - Eionet
+    - Groupware
+    name: forum-test
+    type: application
+    urls:
+    - forum-test-1.0.3.tgz
+    version: 1.0.3
+  - apiVersion: v2
+    appVersion: forum-test-22.09.06
     created: "2025-12-05T15:32:47.382395+01:00"
     dependencies:
     - condition: postfix.enabled
@@ -36658,4 +36678,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2025-12-18T20:49:53.477491317Z"
+generated: "2025-12-18T20:49:56.44358716Z"
