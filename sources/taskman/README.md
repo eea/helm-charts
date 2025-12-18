@@ -459,6 +459,9 @@ grunt
 
 ## Releases
 
+### Version 0.6.2 - 18 December 2025
+- Remove % from nginx config map [EEA Jenkins - [`7824dda6`](https://github.com/eea/helm-charts/commit/7824dda6bf3bf85f74b142a3e60092848068e824)]
+
 ### Version 0.6.1 - 17 December 2025
 - Fix webserver healthchecks [EEA Jenkins - [`a92c24a1`](https://github.com/eea/helm-charts/commit/a92c24a1c70d14801fd42dac5e4f2a0e37a77e81)]
 
