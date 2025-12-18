@@ -69,6 +69,9 @@ We have the following services that should be exposed in ingress:
 
 # Releases
 
+### Version 0.0.22 - 18 December 2025
+- Automated release of [eeacms/postfix:3.5-1.2](https://github.com/eea/eea.docker.postfix/releases) [EEA Jenkins - [`34223aa2`](https://github.com/eea/helm-charts/commit/34223aa21a0f266be35a68d65dadec14bf7c7e80)]
+
 ### Version 0.0.21 - 25 August 2025
 - Automated release of [eeacms/postfix:3.5-1.1](https://github.com/eea/eea.docker.postfix/releases) [EEA Jenkins - [`6e9ab737`](https://github.com/eea/helm-charts/commit/6e9ab73764fea21f704243240a247fdf1f932684)]
 
