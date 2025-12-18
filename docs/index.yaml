@@ -7455,6 +7455,24 @@ entries:
   bise-backend:
   - apiVersion: v2
     appVersion: 6.1.3-34
+    created: "2025-12-18T20:49:18.272619602Z"
+    dependencies:
+    - name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.2.0
+    description: BISE backend
+    digest: f80a8533f8521adea8953fc7ae0fe876c02186e278abb6a71d04270db6a5d010
+    home: https://github.com/eea/bise-backend
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/bise-backend/ied.png
+    keywords:
+    - CMS
+    name: bise-backend
+    type: application
+    urls:
+    - bise-backend-1.37.1.tgz
+    version: 1.37.1
+  - apiVersion: v2
+    appVersion: 6.1.3-34
     created: "2025-12-18T00:24:47.009854718Z"
     dependencies:
     - name: postfix
@@ -36472,4 +36490,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2025-12-18T20:49:15.172366246Z"
+generated: "2025-12-18T20:49:18.271059135Z"
