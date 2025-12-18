@@ -673,14 +673,14 @@ spec:
       ports:
         - protocol: UDP
           port: 53
-    # Allow HTTPS egress for model downloads (COMMENTED OUT - TOO PERMISSIVE)
+    # Allow HTTPS egress for model downloads, and page fetching (COMMENTED OUT - TOO PERMISSIVE)
     # Required for:
     # - HuggingFace model downloads (nomic-ai/nomic-embed-text-v1) from huggingface.co
     # Note: NetworkPolicies do not support domain-based filtering.
     # Uncomment if external HTTPS access is required:
-    # - ports:
-    #     - protocol: TCP
-    #       port: 443
+    - ports:
+        - protocol: TCP
+          port: 443
 ---
 # Postfix network policy
 apiVersion: networking.k8s.io/v1
