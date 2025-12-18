@@ -4,6 +4,9 @@ A Nextcloud instance for sharing files.
 
 ## Releases
 
+### Version 0.1.8 - 18 December 2025
+- Release of dependent chart postfix:3.2.0 [EEA Jenkins - [`503f99c6`](https://github.com/eea/helm-charts/commit/503f99c640ea017ddf693abd257563e6271c6aae)]
+
 ### Version 0.1.7 - 25 November 2025
 - Release of dependent chart postfix:3.1.2 [valentinab25 - [`56731dff`](https://github.com/eea/helm-charts/commit/56731dff9ae4718ebfc1648cbbac256954ef8321)]
 
