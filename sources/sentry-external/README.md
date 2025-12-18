@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 0.0.13 - 18 December 2025
+- Release of dependent chart postfix:3.2.0 [EEA Jenkins - [`ad975b7f`](https://github.com/eea/helm-charts/commit/ad975b7fd51dd37595b5c10babef67d74a945cc5)]
+
 ### Version 0.0.12 - 01 September 2025
 - add memcached [valentinab25 - [`2da45378`](https://github.com/eea/helm-charts/commit/2da45378c0d419baa2a5696c1f2652f54a217036)]
 
