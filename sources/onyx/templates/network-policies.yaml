@@ -678,6 +678,28 @@ spec:
     # - HuggingFace model downloads (nomic-ai/nomic-embed-text-v1) from huggingface.co
     # Note: NetworkPolicies do not support domain-based filtering.
     # Uncomment if external HTTPS access is required:
+    # - ports:
+    #     - protocol: TCP
+    #       port: 443
+---
+# Document Fetching Worker HTTPS egress policy
+# Allows HTTPS egress specifically for the docfetching worker to fetch external documents
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "onyx.fullname" . }}-celery-docfetching-https
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "onyx.labels" . | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      app: celery-worker-docfetching
+  policyTypes:
+    - Egress
+  egress:
+    # Allow HTTPS egress for document fetching
+    # Required for fetching external documents from sources like eur-lex.europa.eu
     - ports:
         - protocol: TCP
           port: 443
