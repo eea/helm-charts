@@ -20121,6 +20121,25 @@ entries:
     version: 0.1.1
   habitatsdir:
   - apiVersion: v2
+    created: "2025-12-18T20:50:22.134185141Z"
+    dependencies:
+    - condition: postfix.enabled
+      name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.2.0
+    description: Expert review tool for Nature Directives reporting
+    digest: 8269313ff6eec774f49b95a9af91af310ba035b9b4a07e097fa3068333df99dd
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/habitatsdir/logo.png
+    keywords:
+    - Reportnet
+    - Biodiversity
+    - Nature directives
+    name: habitatsdir
+    type: application
+    urls:
+    - habitatsdir-0.4.13.tgz
+    version: 0.4.13
+  - apiVersion: v2
     created: "2025-12-05T15:32:47.843728+01:00"
     dependencies:
     - condition: postfix.enabled
@@ -36731,4 +36750,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2025-12-18T20:50:19.082778119Z"
+generated: "2025-12-18T20:50:22.132600998Z"

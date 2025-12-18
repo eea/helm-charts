@@ -23,6 +23,9 @@ To set the app up for Article 12 do:
 
 ## Releases
 
+### Version 0.4.13 - 18 December 2025
+- Release of dependent chart postfix:3.2.0 [EEA Jenkins - [`231ba58c`](https://github.com/eea/helm-charts/commit/231ba58c2cc9e2b3e1e8619d8943f1bfb82e5d93)]
+
 ### Version 0.4.12 - 06 October 2025
 - Update habitatsdir art17-values.yaml file [Diana Boiangiu - [`4f266e5f`](https://github.com/eea/helm-charts/commit/4f266e5fc85b80559a86287175663fd121cc151a)]
 
