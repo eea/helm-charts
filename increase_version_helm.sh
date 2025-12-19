@@ -119,11 +119,12 @@ line=$(grep -nE "^#+ Releases" README.md | awk -F: '{print $1}')
 
 if [ -z "$line" ]; then
 
-	echo "ERROR Could not find section with Releases in README.md file"
-	exit 1
- 
-fi
+	echo "WARNING Could not find section with Releases in README.md file"
+	echo "Adding it an the end of the README file"
+    echo -e "## Releases\n" >>  README.md
+	line=$(grep -nE "^#+ Releases" README.md | awk -F: '{print $1}')
 
+fi
 
 sed "1,${line}d" README.md > part2
 
