@@ -704,6 +704,37 @@ spec:
         - protocol: TCP
           port: 443
 ---
+# Vespa Backup HTTPS egress policy
+# Allows HTTPS egress specifically for the vespa backup job to download Vespa CLI from GitHub
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "onyx.fullname" . }}-vespa-backup-https
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "onyx.labels" . | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      app: vespa-backup
+  policyTypes:
+    - Egress
+  egress:
+    # DNS - required to resolve github.com
+    - to:
+        - namespaceSelector: {}
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+      ports:
+        - protocol: UDP
+          port: 53
+    # Allow HTTPS egress for downloading Vespa CLI
+    # Required for downloading Vespa CLI from github.com during backup job initialization
+    - ports:
+        - protocol: TCP
+          port: 443
+---
 # Postfix network policy
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
