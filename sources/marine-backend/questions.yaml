@@ -237,6 +237,38 @@ questions:
     default: ""
     group: "Plone configuration"
 
+  - variable: "plone.environment.CRESTEDDUCK_HOST"
+    label: "Crested Duck Host"
+    description: "Crested Duck server hostname"
+    type: "string"
+    required: false
+    default: "crestedduck.eea.dmz1"
+    group: "Plone configuration"
+
+  - variable: "plone.environment.CRESTEDDUCK_DOMAIN"
+    label: "Crested Duck Domain"
+    description: "Crested Duck domain"
+    type: "string"
+    required: false
+    default: "eea.dmz1"
+    group: "Plone configuration"
+
+  - variable: "plone.environment.CRESTEDDUCK_USER"
+    label: "Crested Duck User"
+    description: "Crested Duck service account username"
+    type: "string"
+    required: false
+    default: "svc.msfd2018_pubserv"
+    group: "Plone configuration"
+
+  - variable: "plone.environment.CRESTEDDUCK_PASSWORD"
+    label: "Crested Duck Password"
+    description: "Crested Duck service account password"
+    type: "password"
+    required: false
+    default: ""
+    group: "Plone configuration"
+
   - variable: "varnish.port"
     label: "Varnish backend/exposed port"
     description: "To simplify, we use the same port as the web application"
