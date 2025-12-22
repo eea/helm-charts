@@ -31,7 +31,7 @@ spec:
         image: "{{ (.Values.zeoserver.image).repository | default "eeacms/marine-backend" }}:{{ (.Values.zeoserver.image).tag | default "6.0.15-20" }}"
         imagePullPolicy: IfNotPresent
         ports:
-        - containerPort: 8100
+        - containerPort: 8080
           protocol: TCP
         env:
         - name: TZ
@@ -40,21 +40,6 @@ spec:
           value: zeo
         resources:
           {{- toYaml .Values.zeoserver.resources | nindent 10 }}
-
-        livenessProbe:
-          tcpSocket:
-            port: 8100
-          initialDelaySeconds: 10
-          periodSeconds: 10
-          failureThreshold: 3
-          timeoutSeconds: 6
-
-        startupProbe:
-          tcpSocket:
-            port: 8100
-          timeoutSeconds: 6
-          failureThreshold: 60
-          periodSeconds: 10
 
         volumeMounts:
         - mountPath: /data

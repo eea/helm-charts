@@ -10,8 +10,8 @@ spec:
   type: ClusterIP
   ports:
   - name: zeo
-    port: 8100
-    targetPort: 8100
+    port: 8080
+    targetPort: 8080
   selector:
     {{- include "appl.selectorLabels" . | nindent 4 }}
     component: zeoserver
