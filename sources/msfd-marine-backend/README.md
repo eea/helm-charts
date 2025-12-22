@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 0.1.4 - 22 December 2025
+- fix [Dobricean Ioan Dorian - [`a65aacbd`](https://github.com/eea/helm-charts/commit/a65aacbdc417a8c460ef5f90da2144b80b17f85d)]
+
 ### Version 0.1.3 - 22 December 2025
 - change zeo mode in zeoserver [Dobricean Ioan Dorian - [`b5c70c0e`](https://github.com/eea/helm-charts/commit/b5c70c0ee4c6661c02fcfe0a9df8419a0988eec3)]
 
