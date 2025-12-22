@@ -28,8 +28,8 @@ spec:
 
       containers:
       - name: zeoserver
-        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        image: "{{ .Values.zeoserver.image.repository }}:{{ .Values.zeoserver.image.tag }}"
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8100
           protocol: TCP
@@ -37,7 +37,7 @@ spec:
         - name: TZ
           value: {{ .Values.timezone }}
         - name: ZOPE_MODE
-          value: zeoserver
+          value: zeo
         resources:
           {{- toYaml .Values.zeoserver.resources | nindent 10 }}
 

@@ -144,6 +144,9 @@ debug:
   environment: {}
 
 zeoserver:
+  image:
+    repository: eeacms/marine-backend
+    tag: "6.2.4-6.38"
   storage: 30Gi
   resources:
     requests:
