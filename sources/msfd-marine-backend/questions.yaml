@@ -1,0 +1,178 @@
+questions:
+  - variable: "plone.hostname"
+    label: "Server name"
+    description: "DNS name for this deployment"
+    default: ""
+    type: "string"
+    required: true
+    group: "General"
+
+  - variable: "plone.site"
+    label: "Site name"
+    default: "Plone"
+    type: "string"
+    required: true
+    group: "General"
+
+  - variable: "ingress.basePath"
+    label: "Base path for ingress"
+    description: "The URL path where the application will be served"
+    default: "/marine/assessment-module"
+    type: "string"
+    required: true
+    group: "General"
+
+  - variable: "ingress.tls"
+    label: "Enable https"
+    default: true
+    type: "boolean"
+    required: true
+    group: "General"
+
+  - variable: "ingress.certificate"
+    label: "Certificate name"
+    description: "Certificate secret name"
+    default: ""
+    type: "string"
+    group: "General"
+
+  - variable: "links.memcached"
+    label: "Memcached service"
+    description: "Memcached service, SERVICE.NAMESPACE"
+    type: "string"
+    required: true
+    default: ""
+    group: "General"
+
+  - variable: "varnish.serviceType"
+    label: "Expose varnish"
+    type: "enum"
+    options:
+      - "NodePort"
+      - "ClusterIP"
+    default: "ClusterIP"
+    required: true
+    group: "General"
+
+  - variable: "plone.serviceType"
+    label: "Expose plone"
+    type: "enum"
+    options:
+      - "NodePort"
+      - "ClusterIP"
+    default: "ClusterIP"
+    required: true
+    group: "General"
+
+  - variable: "debug.enabled"
+    label: "Debug"
+    default: false
+    type: "boolean"
+    required: true
+    group: "General"
+
+  - variable: "plone.environment.MARINE_PASS"
+    label: "Marine Password"
+    type: "password"
+    required: true
+    group: "Plone configuration"
+
+  - variable: "plone.environment.MSFDURI"
+    label: "MSFD URI"
+    type: "string"
+    required: true
+    group: "Plone configuration"
+
+  - variable: "plone.environment.MSFD_db_2018"
+    label: "MSFD 2018 Database"
+    type: "string"
+    required: true
+    group: "Plone configuration"
+
+  - variable: "plone.environment.MSFD_db_default"
+    label: "MSFD Default Database"
+    type: "string"
+    required: true
+    group: "Plone configuration"
+
+  - variable: "plone.environment.XMLEXPORTPASS"
+    label: "XML Export Password"
+    type: "password"
+    required: true
+    group: "Plone configuration"
+
+  - variable: "plone.environment.TRANSLATE_KEY"
+    label: "Translate Key"
+    type: "password"
+    required: false
+    group: "Plone configuration"
+
+  - variable: "plone.environment.SENTRY_DSN"
+    label: "Sentry DSN"
+    type: "string"
+    required: false
+    group: "Plone configuration"
+
+  - variable: "plone.environment.SENTRY_ENVIRONMENT"
+    label: "Sentry Environment"
+    type: "string"
+    required: false
+    group: "Plone configuration"
+
+  - variable: "plone.environment.CRESTEDDUCK_HOST"
+    label: "Crested Duck Host"
+    type: "string"
+    required: false
+    group: "Plone configuration"
+
+  - variable: "plone.environment.CRESTEDDUCK_DOMAIN"
+    label: "Crested Duck Domain"
+    type: "string"
+    required: false
+    group: "Plone configuration"
+
+  - variable: "plone.environment.CRESTEDDUCK_USER"
+    label: "Crested Duck User"
+    type: "string"
+    required: false
+    group: "Plone configuration"
+
+  - variable: "plone.environment.CRESTEDDUCK_PASSWORD"
+    label: "Crested Duck Password"
+    type: "password"
+    required: false
+    group: "Plone configuration"
+
+  - variable: "varnish.environment.VARNISH_SIZE"
+    label: "Varnish cache size"
+    type: "string"
+    default: "2G"
+    group: "Varnish configuration"
+
+  - variable: "plone.resources.requests.memory"
+    label: "Plone memory reservation"
+    type: "string"
+    required: true
+    default: "4Gi"
+    group: "Memory"
+
+  - variable: "plone.resources.limits.memory"
+    label: "Plone memory limit"
+    type: "string"
+    required: true
+    default: "4Gi"
+    group: "Memory"
+
+  - variable: "varnish.resources.requests.memory"
+    label: "Varnish memory reservation"
+    type: "string"
+    required: true
+    default: "2Gi"
+    group: "Memory"
+
+  - variable: "varnish.resources.limits.memory"
+    label: "Varnish memory limit"
+    type: "string"
+    required: true
+    default: "2Gi"
+    group: "Memory"

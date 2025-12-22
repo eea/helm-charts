@@ -1,0 +1,147 @@
+image:
+  repository: eeacms/msfd-backend
+  pullPolicy: Always
+  tag: "5.2.13-3"
+
+imagePullSecrets: []
+
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: false
+  annotations: {}
+  name: ""
+
+timezone: Europe/Copenhagen
+
+links:
+  memcached: postgres-memcached.database
+
+ingress:
+  annotations:
+    cert-manager.io/cluster-issuer: 01dev-eea-letsencrypt
+  certificate: ""
+  tls: enabled
+  basePath: /marine/assessment-module
+
+plone:
+  annotations: {}
+  autoscaling:
+    enabled: false
+    maxReplicas: 6
+    minReplicas: 1
+    targetMemoryUtilizationPercentage: 60
+  environment:
+    MARINE_PASS: ''
+    MSFDURI: ''
+    MSFD_db_2018: ''
+    MSFD_db_default: ''
+    WARMUP_HEALTH_THRESHOLD: '10'
+    ZOPE_MODE: 'zeo_client'
+    XMLEXPORTPASS: ''
+    MEMCACHE_SERVER: 'memcached:11211'
+    MSFDXML: '/data/xmlfiles'
+    SENTRY_DSN: ''
+    SENTRY_SITE: ''
+    SENTRY_URL: ''
+    SENTRY_ENVIRONMENT: ''
+    TRANSLATE_KEY: ''
+    CRESTEDDUCK_HOST: ''
+    CRESTEDDUCK_DOMAIN: ''
+    CRESTEDDUCK_USER: ''
+    CRESTEDDUCK_PASSWORD: ''
+    GRAYLOG: 'logcentral.eea.europa.eu:12201'
+  hostname: ""
+  site: Plone
+  livenessProbe:
+    failureThreshold: 6
+    httpGet:
+      path: /ok
+      port: http
+    initialDelaySeconds: 30
+    periodSeconds: 20
+    successThreshold: 1
+    timeoutSeconds: 10
+  readinessProbe:
+    failureThreshold: 4
+    httpGet:
+      path: /ok
+      port: http
+    initialDelaySeconds: 60
+    periodSeconds: 15
+    successThreshold: 2
+    timeoutSeconds: 10
+  replicaCount: 1
+  resources:
+    limits:
+      memory: 4Gi
+    requests:
+      memory: 4Gi
+  serviceType: ClusterIP
+  startupProbe:
+    failureThreshold: 24
+    httpGet:
+      path: /ok
+      port: http
+    initialDelaySeconds: 30
+    periodSeconds: 5
+    successThreshold: 1
+    timeoutSeconds: 10
+
+varnish:
+  serviceType: ClusterIP
+  serviceName: msfd-marine-backend-varnish
+  backend: "msfd-marine-backend-plone"
+  port: 8080
+  resources:
+    limits:
+      memory: 2Gi
+    requests:
+      memory: 2Gi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  environment:
+    VARNISH_SIZE: 2G
+    VARNISH_DNS_TTL: "20s"
+    VARNISH_BERESP_TTL: "60s"
+    VARNISH_BERESP_GRACE: "120s"
+    VARNISH_BERESP_KEEP: "120s"
+    VARNISH_GZIP_ENABLED: "false"
+    VARNISH_GZIP_JSON_ENABLED: "false"
+    AUTOKILL_CRON: ""
+  livenessProbe:
+    httpGet:
+      path: /ok
+      port: http
+    periodSeconds: 10
+    timeoutSeconds: 10
+    initialDelaySeconds: 30
+    failureThreshold: 5
+    successThreshold: 1
+  startupProbe:
+    httpGet:
+      path: /ok
+      port: http
+    periodSeconds: 5
+    timeoutSeconds: 10
+    initialDelaySeconds: 10
+    failureThreshold: 12
+    successThreshold: 1
+
+debug:
+  serviceType: ClusterIP
+  enabled: false
+  resources:
+    limits:
+      memory: 4Gi
+    requests:
+      memory: 4Gi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  podAnnotations: {}
+  podSecurityContext: {}
+  securityContext: {}
+  environment: {}
