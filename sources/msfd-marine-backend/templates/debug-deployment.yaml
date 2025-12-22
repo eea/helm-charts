@@ -36,7 +36,7 @@ spec:
         - name: TZ
           value: "{{ .Values.timezone }}"
         - name: ZEO_ADDRESS
-          value: "{{ .Release.Name }}-zeoserver:8080"
+          value: "zeo:8080"
         - name: MEMCACHE_SERVER
           value: "{{ .Release.Name }}-memcached:11211"
         {{- range $key, $value := .Values.plone.environment }}
