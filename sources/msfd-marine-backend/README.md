@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 0.1.10 - 22 December 2025
+- fix service name [Dobricean Ioan Dorian - [`6ae338f4`](https://github.com/eea/helm-charts/commit/6ae338f42b2b39051c811048ce16496861727619)]
+
 ### Version 0.1.9 - 22 December 2025
 - fix backend msfd [Dobricean Ioan Dorian - [`eb552570`](https://github.com/eea/helm-charts/commit/eb5525702191d620f30e5941e039ed2e8de36399)]
 
