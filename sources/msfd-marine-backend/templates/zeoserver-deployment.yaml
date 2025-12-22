@@ -28,7 +28,7 @@ spec:
 
       containers:
       - name: zeoserver
-        image: "{{ (.Values.zeoserver.image).repository | default "eeacms/marine-backend" }}:{{ (.Values.zeoserver.image).tag | default "6.2.4-6.38" }}"
+        image: "{{ (.Values.zeoserver.image).repository | default "eeacms/marine-backend" }}:{{ (.Values.zeoserver.image).tag | default "6.0.15-20" }}"
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8100
