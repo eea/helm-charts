@@ -28,11 +28,13 @@ spec:
 
       containers:
       - name: zeoserver
-        image: "{{ .Values.zeoserver.image.repository }}:{{ .Values.zeoserver.image.tag }}"
+        image: "{{ (.Values.zeoserver.image).repository | default "eeacms/marine-backend" }}:{{ (.Values.zeoserver.image).tag | default "6.2.4-6.38" }}"
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8100
           protocol: TCP
+        command:
+        - zeo
         env:
         - name: TZ
           value: {{ .Values.timezone }}

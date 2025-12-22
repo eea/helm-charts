@@ -158,9 +158,13 @@ zeoserver:
   affinity: {}
 
 memcached:
-  fullnameOverride: "memcached"
+  image:
+    repository: memcached
+    tag: "1.4.35"
+  maxMemory: "2048"
+  maxItemSize: "30m"
   resources:
     requests:
-      memory: 1Gi
+      memory: 512Mi
     limits:
-      memory: 1Gi
+      memory: 512Mi
