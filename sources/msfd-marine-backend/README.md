@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 0.1.5 - 22 December 2025
+- fix marine zeo [Dobricean Ioan Dorian - [`a2f27804`](https://github.com/eea/helm-charts/commit/a2f27804e67e277a3b05fe57dda4576cc549ee35)]
+
 ### Version 0.1.4 - 22 December 2025
 - fix [Dobricean Ioan Dorian - [`a65aacbd`](https://github.com/eea/helm-charts/commit/a65aacbdc417a8c460ef5f90da2144b80b17f85d)]
 
