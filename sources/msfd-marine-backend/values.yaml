@@ -15,9 +15,6 @@ serviceAccount:
 
 timezone: Europe/Copenhagen
 
-links:
-  memcached: postgres-memcached.database
-
 ingress:
   annotations:
     cert-manager.io/cluster-issuer: 01dev-eea-letsencrypt
@@ -40,7 +37,7 @@ plone:
     WARMUP_HEALTH_THRESHOLD: '10'
     ZOPE_MODE: 'zeo_client'
     XMLEXPORTPASS: ''
-    MEMCACHE_SERVER: 'memcached:11211'
+    MEMCACHE_SERVER: ''
     MSFDXML: '/data/xmlfiles'
     SENTRY_DSN: ''
     SENTRY_SITE: ''
@@ -156,3 +153,11 @@ zeoserver:
   nodeSelector: {}
   tolerations: []
   affinity: {}
+
+memcached:
+  fullnameOverride: "memcached"
+  resources:
+    requests:
+      memory: 1Gi
+    limits:
+      memory: 1Gi
