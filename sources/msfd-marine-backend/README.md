@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 0.1.6 - 22 December 2025
+- remove zeo command [Dobricean Ioan Dorian - [`7c238c75`](https://github.com/eea/helm-charts/commit/7c238c7544c86c40c37b461bd4f74cc901c01f60)]
+
 ### Version 0.1.5 - 22 December 2025
 - fix marine zeo [Dobricean Ioan Dorian - [`a2f27804`](https://github.com/eea/helm-charts/commit/a2f27804e67e277a3b05fe57dda4576cc549ee35)]
 
