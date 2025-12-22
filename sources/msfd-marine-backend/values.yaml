@@ -145,3 +145,14 @@ debug:
   podSecurityContext: {}
   securityContext: {}
   environment: {}
+
+zeoserver:
+  storage: 30Gi
+  resources:
+    requests:
+      memory: 1Gi
+    limits:
+      memory: 2Gi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}

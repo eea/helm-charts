@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-zeoserver
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: zeoserver
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: zeoserver
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: zeoserver
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
+      containers:
+      - name: zeoserver
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - containerPort: 8100
+          protocol: TCP
+        env:
+        - name: TZ
+          value: {{ .Values.timezone }}
+        - name: ZOPE_MODE
+          value: zeoserver
+        resources:
+          {{- toYaml .Values.zeoserver.resources | nindent 10 }}
+
+        livenessProbe:
+          tcpSocket:
+            port: 8100
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          failureThreshold: 3
+          timeoutSeconds: 6
+
+        startupProbe:
+          tcpSocket:
+            port: 8100
+          timeoutSeconds: 6
+          failureThreshold: 60
+          periodSeconds: 10
+
+        volumeMounts:
+        - mountPath: /data
+          name: {{ .Release.Name }}-storage
+
+      {{- with .Values.zeoserver.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.zeoserver.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.zeoserver.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+
+      volumes:
+      - name: {{ .Release.Name }}-storage
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-storage
