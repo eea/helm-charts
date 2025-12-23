@@ -33,7 +33,7 @@ spec:
         ports:
         - containerPort: 8080
           protocol: TCP
-        command:
+        args:
         - zeo
         env:
         - name: TZ
