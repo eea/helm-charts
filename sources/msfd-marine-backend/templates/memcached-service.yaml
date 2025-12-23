@@ -15,3 +15,11 @@ spec:
   selector:
     {{- include "appl.selectorLabels" . | nindent 4 }}
     component: memcached
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: memcached
+spec:
+  type: ExternalName
+  externalName: "{{ .Release.Name }}-memcached.{{ .Release.Namespace }}.svc.cluster.local"
