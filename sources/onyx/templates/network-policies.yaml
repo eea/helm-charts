@@ -519,6 +519,11 @@ spec:
       ports:
         - protocol: UDP
           port: 53
+    # Allow HTTPS egress for Vespa CLI downloads (used by backup jobs)
+    # Required for downloading Vespa CLI from github.com during backup operations
+    - ports:
+        - protocol: TCP
+          port: 443
 ---
 # MinIO network policy
 apiVersion: networking.k8s.io/v1
@@ -769,14 +774,12 @@ spec:
       ports:
         - protocol: UDP
           port: 53
-    # Allow HTTPS egress for model downloads, and page fetching (COMMENTED OUT - TOO PERMISSIVE)
-    # Required for:
-    # - HuggingFace model downloads (nomic-ai/nomic-embed-text-v1) from huggingface.co
-    # Note: NetworkPolicies do not support domain-based filtering.
-    # Uncomment if external HTTPS access is required:
-    # - ports:
-    #     - protocol: TCP
-    #       port: 443
+    # Allow HTTPS egress for model downloads
+    # Required for HuggingFace model downloads (nomic-ai/nomic-embed-text-v1) from huggingface.co
+    # Note: NetworkPolicies do not support domain-based filtering, this allows HTTPS to any destination
+    - ports:
+        - protocol: TCP
+          port: 443
 ---
 # Document Fetching Worker HTTPS egress policy
 # Allows HTTPS egress specifically for the docfetching worker to fetch external documents
