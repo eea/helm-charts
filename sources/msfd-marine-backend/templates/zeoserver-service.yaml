@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: zeo
+  name: {{ .Release.Name }}-zeoserver
   labels:
     {{- include "appl.labels" . | nindent 4 }}
     component: zeoserver
@@ -15,3 +15,11 @@ spec:
   selector:
     {{- include "appl.selectorLabels" . | nindent 4 }}
     component: zeoserver
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: zeo
+spec:
+  type: ExternalName
+  externalName: "{{ .Release.Name }}-zeoserver.{{ .Release.Namespace }}.svc.cluster.local"
