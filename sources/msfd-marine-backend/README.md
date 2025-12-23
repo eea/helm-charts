@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 0.1.13 - 23 December 2025
+- fix zeo command [Dobricean Ioan Dorian - [`c4ce68dc`](https://github.com/eea/helm-charts/commit/c4ce68dc80fffbec43268d3b7cb39bea5e23c93d)]
+
 ### Version 0.1.12 - 23 December 2025
 - fix zeo image [Dobricean Ioan Dorian - [`ce92b508`](https://github.com/eea/helm-charts/commit/ce92b5088e1e50254000020e9668782c5d8012d1)]
 
