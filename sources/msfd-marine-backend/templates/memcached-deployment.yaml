@@ -21,8 +21,7 @@ spec:
       containers:
       - name: memcached
         image: "{{ .Values.memcached.image.repository }}:{{ .Values.memcached.image.tag }}"
-        command:
-        - memcached
+        args:
         - -m
         - "{{ .Values.memcached.maxMemory }}"
         - -I
