@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 0.1.15 - 23 December 2025
+- fix [Dobricean Ioan Dorian - [`a64a1b68`](https://github.com/eea/helm-charts/commit/a64a1b68e7622ae8378b9741cfef5d2e96efe83a)]
+
 ### Version 0.1.14 - 23 December 2025
 - fix command [Dobricean Ioan Dorian - [`4145f9a6`](https://github.com/eea/helm-charts/commit/4145f9a64057466df4aa79a393ee31fe20538fba)]
 
