@@ -667,15 +667,12 @@ spec:
       ports:
         - protocol: UDP
           port: 53
-    # Allow HTTPS/HTTP egress for external APIs and connectors (COMMENTED OUT - TOO PERMISSIVE)
-    # Required for accessing external data sources and APIs
-    # Note: NetworkPolicies do not support domain-based filtering.
-    # Uncomment if external HTTPS access is required:
-    # - ports:
-    #     - protocol: TCP
-    #       port: 443
-    #     - protocol: TCP
-    #       port: 80
+    # Allow HTTPS egress for external APIs and connectors
+    # Required for accessing external data sources and APIs (web scraping, API calls, etc.)
+    # Note: NetworkPolicies do not support domain-based filtering
+    - ports:
+        - protocol: TCP
+          port: 443
 ---
 # Model Servers network policy
 apiVersion: networking.k8s.io/v1
@@ -802,6 +799,15 @@ spec:
     - ports:
         - protocol: TCP
           port: 443
+    # DNS - required to resolve external domain names
+    - to:
+        - namespaceSelector: {}
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+      ports:
+        - protocol: UDP
+          port: 53
 ---
 # Vespa Backup HTTPS egress policy
 # Allows HTTPS egress specifically for the vespa backup job to download Vespa CLI from GitHub
@@ -916,6 +922,14 @@ spec:
       ports:
         - protocol: TCP
           port: 8080
+    # Allow egress to PostgreSQL
+    - to:
+        - podSelector:
+            matchLabels:
+              app: postgresql
+      ports:
+        - protocol: TCP
+          port: 5432
     # DNS
     - to:
         - namespaceSelector: {}
