@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 0.1.11 - 23 December 2025
+- exterlname [Dobricean Ioan Dorian - [`8811a5db`](https://github.com/eea/helm-charts/commit/8811a5dbed8563300428d72dc555837e4a970392)]
+
 ### Version 0.1.10 - 22 December 2025
 - fix service name [Dobricean Ioan Dorian - [`6ae338f4`](https://github.com/eea/helm-charts/commit/6ae338f42b2b39051c811048ce16496861727619)]
 
