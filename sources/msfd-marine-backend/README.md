@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 0.1.17 - 24 December 2025
+- fix [Dobricean Ioan Dorian - [`0c6fc14c`](https://github.com/eea/helm-charts/commit/0c6fc14c53ce41bff05ac93d7bcd615f62b01222)]
+
 ### Version 0.1.16 - 23 December 2025
 - fix memcached [Dobricean Ioan Dorian - [`2616a7af`](https://github.com/eea/helm-charts/commit/2616a7af6a0140c5b6268a94321da73dbc169f44)]
 
