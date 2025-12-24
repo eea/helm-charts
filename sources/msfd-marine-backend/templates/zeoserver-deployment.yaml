@@ -44,8 +44,9 @@ spec:
           {{- toYaml .Values.zeoserver.resources | nindent 10 }}
 
         volumeMounts:
-        - mountPath: /data/data
+        - mountPath: /data
           name: {{ .Release.Name }}-storage
+          subPath: data
 
       {{- with .Values.zeoserver.nodeSelector }}
       nodeSelector:
