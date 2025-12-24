@@ -10,6 +10,9 @@ This chart deployes the Climate Advisory Board frontend app
 
 ## Releases
 
+### Version 1.31.4 - 24 December 2025
+- fix ingress [Dobricean Ioan Dorian - [`0baa76e5`](https://github.com/eea/helm-charts/commit/0baa76e54cf5bb38c5016b064802b4bb53ea8b8d)]
+
 ### Version 1.31.3 - 15 December 2025
 - fix logo [Dobricean Ioan Dorian - [`728aab3b`](https://github.com/eea/helm-charts/commit/728aab3bfb02cb7c16f6bc56d996cd1b6373cf42)]
 
