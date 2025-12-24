@@ -5,8 +5,9 @@ metadata:
   labels:
     {{- include "appl.labels" . | nindent 4 }}
     component: marine-frontend
-  {{- with .Values.ingress.annotations }}
   annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"
+  {{- with .Values.ingress.annotations }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
 
@@ -16,8 +17,8 @@ spec:
   - host: {{ .Values.volto.hostname }}
     http:
       paths:
-      - path: {{ .Values.ingress.path | default "/" }}
-        pathType: {{ .Values.ingress.pathType | default "Prefix" }}
+      - path: {{ .Values.ingress.path | default "/" }}(?!/assessment-module)(.*)
+        pathType: ImplementationSpecific
         backend:
           service:
             name: {{ .Values.varnish.serviceName }}
