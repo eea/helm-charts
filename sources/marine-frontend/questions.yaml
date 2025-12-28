@@ -196,6 +196,20 @@ questions:
     required: false
     group: "Volto configuration"
 
+  - variable: "volto.environment.RAZZLE_ES_INDEX"
+    label: "RAZZLE_ES_INDEX"
+    description: "Elasticsearch index path"
+    type: "string"
+    required: false
+    group: "Volto configuration"
+
+  - variable: "volto.environment.RAZZLE_ES_INDEX_NAME"
+    label: "RAZZLE_ES_INDEX_NAME"
+    description: "Elasticsearch index name"
+    type: "string"
+    required: false
+    group: "Volto configuration"
+
   - variable: "varnish.port"
     label: "Varnish backend/exposed port"
     description: "To simplify, we use the same port as the web application"
