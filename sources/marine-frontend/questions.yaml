@@ -168,6 +168,34 @@ questions:
     required: false
     group: "Volto configuration"
 
+  - variable: "volto.environment.RAZZLE_PROXY_ES_DSN_globalsearch"
+    label: "RAZZLE_PROXY_ES_DSN_globalsearch"
+    description: "Elasticsearch DSN for global search"
+    type: "string"
+    required: false
+    group: "Volto configuration"
+
+  - variable: "volto.environment.RAZZLE_PROXY_ES_DSN_marinemeasure"
+    label: "RAZZLE_PROXY_ES_DSN_marinemeasure"
+    description: "Elasticsearch DSN for marine measure"
+    type: "string"
+    required: false
+    group: "Volto configuration"
+
+  - variable: "volto.environment.RAZZLE_PROXY_QA_DSN_globalsearch"
+    label: "RAZZLE_PROXY_QA_DSN_globalsearch"
+    description: "QA DSN for global search"
+    type: "string"
+    required: false
+    group: "Volto configuration"
+
+  - variable: "volto.environment.RAZZLE_PROXY_QA_DSN_marinemeasure"
+    label: "RAZZLE_PROXY_QA_DSN_marinemeasure"
+    description: "QA DSN for marine measure"
+    type: "string"
+    required: false
+    group: "Volto configuration"
+
   - variable: "varnish.port"
     label: "Varnish backend/exposed port"
     description: "To simplify, we use the same port as the web application"
