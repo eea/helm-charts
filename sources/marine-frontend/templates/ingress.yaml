@@ -17,7 +17,7 @@ spec:
   - host: {{ .Values.volto.hostname }}
     http:
       paths:
-      - path: {{ .Values.ingress.path | default "/" }}(?!/assessment-module)(.*)
+      - path: {{ .Values.ingress.path | default "/" }}(?!/assessment-module|/\+\+theme\+\+)(.*)
         pathType: ImplementationSpecific
         backend:
           service:
