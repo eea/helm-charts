@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 0.1.22 - 28 December 2025
+- fix ingress [Dobricean Ioan Dorian - [`8996367e`](https://github.com/eea/helm-charts/commit/8996367eaeb97ad21e000fb6418b2eb894621e84)]
+
 ### Version 0.1.20 - 28 December 2025
 - fix theme ingress [Dobricean Ioan Dorian - [`852b2234`](https://github.com/eea/helm-charts/commit/852b2234f0364cc0ce26e0812f914c66a7a4a677)]
 
