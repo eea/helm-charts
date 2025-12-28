@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 1.25.6 - 28 December 2025
+- fix ingress [Dobricean Ioan Dorian - [`f0431ca3`](https://github.com/eea/helm-charts/commit/f0431ca340af932b1d0d05328ffc8d77c001133f)]
+
 ### Version 1.25.4 - 19 December 2025
 - add missing vars" [Dobricean Ioan Dorian - [`b4c790f4`](https://github.com/eea/helm-charts/commit/b4c790f411d30f17db64b8bc9574fa37309d8da1)]
 
