@@ -14,6 +14,22 @@ questions:
     required: true
     group: "General"
 
+  - variable: "volto.environment.RAZZLE_PROXY_ES_DSN_globalsearch"
+    label: "RAZZLE_PROXY_ES_DSN_globalsearch"
+    description: "Elastic Search DSN"
+    default: ""
+    required: false
+    type: "string"
+    group: "Volto configuration"
+
+  - variable: "volto.environment.RAZZLE_PROXY_QA_DSN_globalsearch"
+    label: "RAZZLE_PROXY_QA_DSN_globalsearch"
+    description: "NLP Service DSN"
+    default: ""
+    required: false
+    type: "string"
+    group: "Volto configuration"
+
   - variable: "ingress.tls"
     label: "Enable https"
     default: true
@@ -127,6 +143,13 @@ questions:
     required: false
     group: "Volto configuration"
 
+  - variable: "volto.environment.VOLTO_ROBOTSTXT"
+    label: "robots.txt"
+    description: "Setup robots.txt content."
+    type: "multiline"
+    required: false
+    group: "Volto configuration"
+
   - variable: "volto.environment.RAZZLE_MATOMO_SITE_ID"
     label: "Matomo site id"
     description: "Matomo site id"
@@ -152,35 +175,16 @@ questions:
     default: "https://webanalytics.europa.eu/ppms.php"
     group: "Volto configuration"
 
-  - variable: "volto.environment.DANSWER_URL"
-    label: "Danswer URL"
-    description: "Danswer service URL for chatbot"
-    type: "string"
-    default: ""
-    required: false
-    group: "Volto configuration"
-
-  - variable: "volto.environment.DANSWER_API_KEY"
-    label: "Danswer API KEY"
-    description: "Danswer API KEY"
-    type: "string"
-    required: false
-    group: "Volto configuration"
-
-  - variable: "volto.environment.DANSWER_USERNAME"
-    label: "Danswer username"
-    description: "Danswer username"
-    type: "string"
-    default: ""
-    required: false
-    group: "Volto configuration"
-
-  - variable: "volto.environment.DANSWER_PASSWORD"
-    label: "Danswer password"
-    description: "Danswer password"
-    type: "password"
-    default: ""
-    required: false
+  - variable: "volto.environment.RAZZLE_DISABLE_DRAFT_WATERMARK"
+    label: "Draft watermark"
+    description: "EEA theme: draft watermark setup"
+    type: "enum"
+    options:
+      - "Default"
+      - "Hide-No-Workflow"
+      - "Hide-All"
+    default: "Default"
+    required: true
     group: "Volto configuration"
 
   - variable: "volto.environment.CSP_HEADER"

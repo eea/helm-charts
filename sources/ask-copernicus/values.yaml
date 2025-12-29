@@ -1,7 +1,7 @@
 image:
-  repository: eeacms/clms-frontend
+  repository: eeacms/ask-copernicus-frontend
   pullPolicy: Always
-  tag: "3.398.0-chatbot-0.12"
+  tag: "3.404.0"
 
 imagePullSecrets: []
 
@@ -35,6 +35,17 @@ ingress:
     nginx.ingress.kubernetes.io/proxy-send-timeout: '120'
   certificate: ask.copernicus.01dev.eea.europa.eu-tls
   tls: enabled
+
+ingressredirects:
+  - enabled: false
+    tls: true
+    certificate: www.plone.eea.europa.eu-tls
+    annotations:
+      cert-manager.io/cluster-issuer: 01dev-eea-letsencrypt
+    hostname: www.plone.eea.europa.eu
+
+links:
+  backend: backend-varnish.ied
 
 volto:
   serviceType: ClusterIP
