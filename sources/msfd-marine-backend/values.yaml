@@ -108,6 +108,7 @@ varnish:
     VARNISH_GZIP_ENABLED: "false"
     VARNISH_GZIP_JSON_ENABLED: "false"
     AUTOKILL_CRON: ""
+    AUTHTOKENS: "__ac,__ac_assessment_module"
   livenessProbe:
     httpGet:
       path: /ok

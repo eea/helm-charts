@@ -149,6 +149,13 @@ questions:
     default: "2G"
     group: "Varnish configuration"
 
+  - variable: "varnish.environment.AUTHTOKENS"
+    label: "Authentication cookies"
+    description: "Comma-separated list of cookie names that bypass varnish cache"
+    type: "string"
+    default: "__ac,__ac_assessment_module"
+    group: "Varnish configuration"
+
   - variable: "plone.resources.requests.memory"
     label: "Plone memory reservation"
     type: "string"
