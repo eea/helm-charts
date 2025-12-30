@@ -2,27 +2,6 @@
 
 ## Releases
 
-### Version 0.1.36 - 30 December 2025
-- fix [Dobricean Ioan Dorian - [`88773ae5`](https://github.com/eea/helm-charts/commit/88773ae5528991c9998c30905f8d459ae502d056)]
-
-### Version 0.1.34 - 30 December 2025
-- fix varnish [Dobricean Ioan Dorian - [`f66df5eb`](https://github.com/eea/helm-charts/commit/f66df5ebf140fa4a7939dd15a8424ae81759d4b9)]
-
-### Version 0.1.32 - 30 December 2025
-- test varnish cache [Dobricean Ioan Dorian - [`257d0fdc`](https://github.com/eea/helm-charts/commit/257d0fdca1273ae84fdd6ea0674c897cc5ae9b34)]
-
-### Version 0.1.30 - 30 December 2025
-- fix login [Dobricean Ioan Dorian - [`4bf9cbc1`](https://github.com/eea/helm-charts/commit/4bf9cbc1b476c3d61f0ac850aa0da34b0aa1a0f2)]
-
-### Version 0.1.28 - 30 December 2025
-- fix login [Dobricean Ioan Dorian - [`56362ee2`](https://github.com/eea/helm-charts/commit/56362ee23f14aa5b7d737c89d145f0d81f3d030d)]
-
-### Version 0.1.26 - 30 December 2025
-- fix login [Dobricean Ioan Dorian - [`f0ddbfcc`](https://github.com/eea/helm-charts/commit/f0ddbfcc120d5683fc8c029df9ade5a946d7c055)]
-
-### Version 0.1.24 - 30 December 2025
-- fix ingress [Dobricean Ioan Dorian - [`e8222a46`](https://github.com/eea/helm-charts/commit/e8222a4675b50611bb48108650f0439f7f122f43)]
-
 ### Version 0.1.22 - 28 December 2025
 - fix ingress [Dobricean Ioan Dorian - [`8996367e`](https://github.com/eea/helm-charts/commit/8996367eaeb97ad21e000fb6418b2eb894621e84)]
 

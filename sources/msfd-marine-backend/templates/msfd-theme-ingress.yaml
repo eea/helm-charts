@@ -9,16 +9,10 @@ metadata:
     nginx.ingress.kubernetes.io/rewrite-target: /VirtualHostBase/https/{{ .Values.plone.hostname }}:443/{{ .Values.plone.site }}/marine/assessment-module/VirtualHostRoot/_vh_marine/$1
     nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/proxy-body-size: 100m
-    nginx.ingress.kubernetes.io/proxy-connect-timeout: "10"
-    nginx.ingress.kubernetes.io/proxy-read-timeout: "1200"
-    nginx.ingress.kubernetes.io/proxy-send-timeout: "1200"
     nginx.ingress.kubernetes.io/configuration-snippet: |
       proxy_set_header X-Forwarded-Host {{ .Values.plone.hostname }};
       proxy_set_header X-Forwarded-Proto https;
       proxy_set_header X-Forwarded-Port 443;
-      proxy_cookie_path / /;
-      more_set_headers "Access-Control-Allow-Origin: https://{{ .Values.plone.hostname }}";
-      more_set_headers "Access-Control-Allow-Credentials: true";
   {{- with .Values.ingress.annotations }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
