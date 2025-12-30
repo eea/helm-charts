@@ -13,6 +13,7 @@ metadata:
       proxy_set_header X-Forwarded-Host {{ .Values.plone.hostname }};
       proxy_set_header X-Forwarded-Proto https;
       proxy_set_header X-Forwarded-Port 443;
+      proxy_cookie_path / /;
   {{- with .Values.ingress.annotations }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
