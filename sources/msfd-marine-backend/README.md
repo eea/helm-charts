@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 0.1.32 - 30 December 2025
+- test varnish cache [Dobricean Ioan Dorian - [`257d0fdc`](https://github.com/eea/helm-charts/commit/257d0fdca1273ae84fdd6ea0674c897cc5ae9b34)]
+
 ### Version 0.1.30 - 30 December 2025
 - fix login [Dobricean Ioan Dorian - [`4bf9cbc1`](https://github.com/eea/helm-charts/commit/4bf9cbc1b476c3d61f0ac850aa0da34b0aa1a0f2)]
 
