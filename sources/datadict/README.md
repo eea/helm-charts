@@ -4,6 +4,9 @@ This chart is configured for production use.
 
 ## Releases
 
+### Version 2.1.3
+- Security/bug fixes.
+
 ### Version 2.1.2 - 18 December 2025
 - Release of dependent chart postfix:3.2.0 [EEA Jenkins - [`1848a85b`](https://github.com/eea/helm-charts/commit/1848a85b7c2ad013654d03a9482b407259174935)]
 
