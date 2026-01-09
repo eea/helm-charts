@@ -1719,6 +1719,25 @@ entries:
   ask-copernicus-backend:
   - apiVersion: v2
     appVersion: 6.0.15-117
+    created: "2026-01-09T17:26:11.589248+02:00"
+    dependencies:
+    - name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.2.0
+    description: Ask Copernicus backend - Plone CMS
+    digest: f211ea7e77ef2e8dfbfffeea23740d2970e83d1f44068a7a3656cb1902fd1c6d
+    home: https://github.com/eea/clms-backend
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/ied-backend/ied.png
+    keywords:
+    - CMS
+    - Plone
+    name: ask-copernicus-backend
+    type: application
+    urls:
+    - ask-copernicus-backend-1.0.3.tgz
+    version: 1.0.3
+  - apiVersion: v2
+    appVersion: 6.0.15-117
     created: "2026-01-09T17:01:37.195874+02:00"
     dependencies:
     - name: postfix
@@ -38480,4 +38499,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2026-01-09T17:01:37.194846+02:00"
+generated: "2026-01-09T17:26:11.587752+02:00"
