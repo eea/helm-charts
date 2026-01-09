@@ -1,0 +1,37 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "appl.fullname" . }}-api
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: ask-copernicus-api
+  annotations:
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      rewrite ^/(\+\+api\+\+)(.*)$ /VirtualHostBase/https/{{ .Values.volto.hostname }}:443/Plone/VirtualHostRoot/ask-copernicus/$1$2 break;
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: 100m
+  {{- with .Values.ingress.annotations }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: {{ .Values.volto.hostname }}
+    http:
+      paths:
+      - path: /\+\+api\+\+(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: backend
+            port:
+              number: 8080
+  {{- if .Values.ingress.tls }}
+  tls:
+  - hosts:
+    - {{ .Values.volto.hostname }}
+    {{- if .Values.ingress.certificate }}
+    secretName: {{ .Values.ingress.certificate }}
+    {{- end  }}
+  {{- end  }}
