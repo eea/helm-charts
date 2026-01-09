@@ -25,21 +25,6 @@ The chart deploys a three-tier architecture:
 
 ## Releases
 
-### Version 1.38.8 - 09 January 2026
-- fixing [Dobricean Ioan Dorian - [`2e40ce06`](https://github.com/eea/helm-charts/commit/2e40ce06b5c2f36234866630fb103bb003871e49)]
-
-### Version 1.38.6 - 09 January 2026
-- fix api [Dobricean Ioan Dorian - [`e0fc6c0a`](https://github.com/eea/helm-charts/commit/e0fc6c0a83b6e97aad46d680dd2739387be8861b)]
-
-### Version 1.38.4 - 09 January 2026
-- fix api [Dobricean Ioan Dorian - [`6b157ba7`](https://github.com/eea/helm-charts/commit/6b157ba7826ddbe6d4757cb3645607911ca6edf8)]
-
-### Version 1.38.3 - 09 January 2026
-- fix ingres [Dobricean Ioan Dorian - [`07b8f057`](https://github.com/eea/helm-charts/commit/07b8f057cb167f05da64a18bf698cee1af75f817)]
-
-### Version 1.38.1 - 09 January 2026
-- fixing api [Dobricean Ioan Dorian - [`24fda4aa`](https://github.com/eea/helm-charts/commit/24fda4aa76dbde955289beff2a5a56e44238e547)]
-
 ### Version 1.12.0 - 16 December 2025
 - Automated release of [eeacms/clms-frontend:3.505.0](https://github.com/eea/clms-frontend/releases) [EEA Jenkins - [`ab44ceae`](https://github.com/eea/helm-charts/commit/ab44ceae37bec7435430342b0a7399b4824285a5)]
 
