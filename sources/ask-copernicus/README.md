@@ -25,6 +25,9 @@ The chart deploys a three-tier architecture:
 
 ## Releases
 
+### Version 1.38.6 - 09 January 2026
+- fix api [Dobricean Ioan Dorian - [`e0fc6c0a`](https://github.com/eea/helm-charts/commit/e0fc6c0a83b6e97aad46d680dd2739387be8861b)]
+
 ### Version 1.38.4 - 09 January 2026
 - fix api [Dobricean Ioan Dorian - [`6b157ba7`](https://github.com/eea/helm-charts/commit/6b157ba7826ddbe6d4757cb3645607911ca6edf8)]
 
