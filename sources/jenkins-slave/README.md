@@ -1,5 +1,8 @@
 # Releases
 
+### Version 0.2.1 - 12 January 2026
+- Run jenkins worker as root [EEA Jenkins - [`2d931833`](https://github.com/eea/helm-charts/commit/2d93183366ae667843b86b23ff0b5a88fed36f63)]
+
 ### Version 0.2.0 - 09 January 2026
 - Automated release of [eeacms/jenkins-slave-dind:28.1-3.51-1](https://github.com/eea/eea.docker.jenkins.slave-dind/releases) [EEA Jenkins - [`70107162`](https://github.com/eea/helm-charts/commit/70107162799c9701d58b9bd8b743c8eb0a0274f4)]
 
