@@ -15,8 +15,13 @@ Cronjobs have been removed since the update to GN 5/ GN 46 and the new folder st
 
 ## Releases
 
+### Version 0.8.35 - 13 January 2026
+- Update GN46 (`eea-4.9.x-62171636`).
+
 ### Version 0.8.34 - 18 December 2025
 - Release of dependent chart postfix:3.2.0 [EEA Jenkins - [`3e16bd0e`](https://github.com/eea/helm-charts/commit/3e16bd0e1b7cc3010d7804e4b54516a2e9f85558)]
+
+
 ### Version 0.8.33 - 05 December 2025
 - Update GN46 (`eea-4.9.x-9f5c9e31`).
 
