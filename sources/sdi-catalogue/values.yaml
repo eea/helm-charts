@@ -92,9 +92,11 @@ geonetworkdb:
   password: ''
   resources:
     requests:
-      memory: 1600Mi
+      memory: 2Gi
+      cpu: "1"
     limits:
-      memory: 1600Mi
+      memory: 4Gi
+      cpu: "2"
   storage: 4Gi
 
 kibana:
