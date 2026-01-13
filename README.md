@@ -88,12 +88,22 @@ The script does:
     git push
 
 
+
+## Release script ( with Changelog update )
+
+After updating the helm chart, from inside the helm chart source directory, run:
+
+    ../../release.sh
+
+This script will run all the necessary steps to do a release, including increasing the version and adding the CHANGELOG and COMMIT message you provide it.
+
+Please use this script so all the helm charts changes will have a changelog and a commit in order to have a easy way to follow the upgrades.
+
 ## Subcharts update after release
 
 If you manually released a chart that is also used as a subchart in another chart, you can use this script to update all helm charts from sources directory that contain it:
 
     ./release_subchart.sh sources/YOUR_NEWLY_RELEASED_CHART
-
 
 
 ## Deploying Helm charts
