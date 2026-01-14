@@ -45,16 +45,16 @@ spec:
               subPath: global.cnf
           {{- if (.Values.mariadb.livenessProbe) }}
           livenessProbe:
-            {{- toYaml .Values.mariadb.livenessProbe | nindent 10 }}
+            {{- toYaml .Values.mariadb.livenessProbe | nindent 12 }}
           {{- end }}
 
           {{- if (.Values.mariadb.startupProbe) }}
           startupProbe:
-            {{- toYaml .Values.mariadb.startupProbe | nindent 10 }}
+            {{- toYaml .Values.mariadb.startupProbe | nindent 12 }}
           {{- end }}
           {{- if (.Values.mariadb.readinessProbe) }}
           readinessProbe:
-            {{- toYaml .Values.mariadb.readinessProbe | nindent 10 }}
+            {{- toYaml .Values.mariadb.readinessProbe | nindent 12 }}
           {{- end }}
 
       volumes:
