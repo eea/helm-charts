@@ -32,7 +32,6 @@ spec:
           {{- end }}
             - name: TZ
               value: {{ .Values.timezone }}
-          args: {{ .Values.mariadb.commands }}
           resources:
             requests:
               memory: {{ .Values.mariadb.resources.requests.memory }}
@@ -41,18 +40,28 @@ spec:
           volumeMounts:
             - name: {{ .Release.Name }}-mariadb-data
               mountPath: /var/lib/mysql
+            - name: config
+              mountPath: /etc/mysql/conf.d/global.cnf
+              subPath: global.cnf
+          {{- if (.Values.mariadb.livenessProbe) }}
           livenessProbe:
-            tcpSocket:
-              port: 3306
-            initialDelaySeconds: 15
-            periodSeconds: 20
+            {{- toYaml .Values.mariadb.livenessProbe | nindent 10 }}
+          {{- end }}
+
+          {{- if (.Values.mariadb.startupProbe) }}
+          startupProbe:
+            {{- toYaml .Values.mariadb.startupProbe | nindent 10 }}
+          {{- end }}
+          {{- if (.Values.mariadb.readinessProbe) }}
           readinessProbe:
-            tcpSocket:
-              port: 3306
-            initialDelaySeconds: 5
-            periodSeconds: 10
+            {{- toYaml .Values.mariadb.readinessProbe | nindent 10 }}
+          {{- end }}
+
       volumes:
         - name: {{ .Release.Name }}-mariadb-data
+        - name: config
+          configMap:
+            name: {{ .Release.Name }}-mariadb-global.cnf
   volumeClaimTemplates:
     - metadata:
         name: {{ .Release.Name }}-mariadb-data

@@ -227,21 +227,21 @@ questions:
     label: "Rancher LB body size"
     description: "Example 100m"
     type: "string"
-    default: "100m"
+    default: "256m"
     group: Ingress
 
   - variable: "ingress.configuration.proxy-read-timeout"
     label: "Rancher LB read timeout"
     description: "Maximum response time from upstream server, in seconds, example 60s"
     type: "string"
-    default: "120s"
+    default: "1200"
     group: Ingress
 
   - variable: "ingress.configuration.proxy-send-timeout"
     label: "Rancher LB send timeout"
     description: "Timeout before closing the connection"
     type: "string"
-    default: "60s"
+    default: "1200"
     group: Ingress
 
   - variable: "ingress.certificate"
