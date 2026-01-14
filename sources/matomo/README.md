@@ -347,6 +347,9 @@ You don't need to change anything on this container, it should work by having th
 
 ## Releases
 
+### Version 1.4.1 - 14 January 2026
+- fix proxy timeout, mariadb move config to file [EEA Jenkins - [`6750f1df`](https://github.com/eea/helm-charts/commit/6750f1dfbac81595c05ec1c2264a23ae0eed200d)]
+
 ### Version 1.4.0 - 14 January 2026
 - Automated release of [eeacms/matomo:5.6.2-1](https://github.com/eea/eea.docker.matomo/releases) [EEA Jenkins - [`8b2d688f`](https://github.com/eea/helm-charts/commit/8b2d688fe52cbb48684cc5bea7cab1768aaf4b28)]
 
