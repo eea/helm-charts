@@ -1,5 +1,8 @@
 ## Releases
 
+### Version 0.4.0 - 14 January 2026
+- Automated release of [eeacms/redmine-wikiman:2.1.11](https://github.com/eea/eea.docker.redmine-wikiman/releases) [EEA Jenkins - [`123559c5`](https://github.com/eea/helm-charts/commit/123559c594e252a2093215300050540aefcb97d0)]
+
 ### Version 0.3.0 - 14 January 2026
 - Automated release of [eeacms/redmine-wikiman:2.1.10](https://github.com/eea/eea.docker.redmine-wikiman/releases) [EEA Jenkins - [`31076656`](https://github.com/eea/helm-charts/commit/3107665658832c4f18fc58577973e01d550adac2)]
 
