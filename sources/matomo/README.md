@@ -347,6 +347,9 @@ You don't need to change anything on this container, it should work by having th
 
 ## Releases
 
+### Version 1.4.2 - 15 January 2026
+- fix spacing [EEA Jenkins - [`02728872`](https://github.com/eea/helm-charts/commit/0272887207a8ac89092d0e835810126c5e256528)]
+
 ### Version 1.4.1 - 14 January 2026
 - fix proxy timeout, mariadb move config to file [EEA Jenkins - [`6750f1df`](https://github.com/eea/helm-charts/commit/6750f1dfbac81595c05ec1c2264a23ae0eed200d)]
 
