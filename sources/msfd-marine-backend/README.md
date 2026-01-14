@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 0.1.40 - 14 January 2026
+- fix ingress [Dobricean Ioan Dorian - [`cc3fcbee`](https://github.com/eea/helm-charts/commit/cc3fcbee46ff344a12e599f170c5d1478a06cc9b)]
+
 ### Version 0.1.38 - 30 December 2025
 - change varnish image [Dobricean Ioan Dorian - [`7e9c99e0`](https://github.com/eea/helm-charts/commit/7e9c99e04b50859d6a0441ab29cdb2ce365b053f)]
 
