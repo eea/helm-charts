@@ -14,9 +14,12 @@ Cronjobs have been removed since the update to GN 5/ GN 46 and the new folder st
 | serverUrl | string | <https://sdi.eea.europa.eu:443> | URL of the server. The port is required. |
 
 ## Releases
+
+### Version 0.8.35 - 13 January 2026
+- Update GN46 (`eea-4.9.x-2d350753`).
  
 ### Version 0.8.36 - 13 January 2026
-- Increase `geonetworkdb` memory and CPU defaults; bump chart to 0.8.36.
+- Increase `geonetworkdb` memory and CPU defaults.
 
 ### Version 0.8.35 - 13 January 2026
 - Update GN46 (`eea-4.9.x-62171636`).
