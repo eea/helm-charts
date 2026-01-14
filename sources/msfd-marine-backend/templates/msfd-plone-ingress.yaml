@@ -1,0 +1,47 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: msfd-plone
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: msfd-plone
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /VirtualHostBase/https/{{ .Values.plone.hostname }}:443/{{ .Values.plone.site }}/marine/assessment-module/VirtualHostRoot/_vh_marine/$1
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: 100m
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      proxy_set_header X-Forwarded-Host {{ .Values.plone.hostname }};
+      proxy_set_header X-Forwarded-Proto https;
+      proxy_set_header X-Forwarded-Port 443;
+  {{- with .Values.ingress.annotations }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: {{ .Values.plone.hostname }}
+    http:
+      paths:
+      - path: /marine/(\+\+plone\+\+.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: {{ .Values.varnish.serviceName }}
+            port:
+              number: {{ .Values.varnish.port }}
+      - path: /marine/(\+\+resource\+\+.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: {{ .Values.varnish.serviceName }}
+            port:
+              number: {{ .Values.varnish.port }}
+  {{- if .Values.ingress.tls }}
+  tls:
+  - hosts:
+    - {{ .Values.plone.hostname }}
+    {{- if .Values.ingress.certificate }}
+    secretName: {{ .Values.ingress.certificate }}
+    {{- end  }}
+  {{- end  }}
