@@ -74,9 +74,9 @@ spec:
           {{- toYaml .Values.plone.resources | nindent 10 }}
 
         volumeMounts:
-        - mountPath: /data
+        - mountPath: /data/xmlfiles
           name: {{ .Release.Name }}-storage
-          subPath: data
+          subPath: data/xmlfiles
 
       {{- with .Values.plone.nodeSelector }}
       nodeSelector:
