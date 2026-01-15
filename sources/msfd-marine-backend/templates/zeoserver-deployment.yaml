@@ -65,4 +65,4 @@ spec:
       volumes:
       - name: {{ .Release.Name }}-storage
         persistentVolumeClaim:
-          claimName: {{ .Release.Name }}-storage
+          claimName: {{ .Release.Name }}-storage-v2
