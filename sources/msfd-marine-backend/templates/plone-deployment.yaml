@@ -73,6 +73,11 @@ spec:
         resources:
           {{- toYaml .Values.plone.resources | nindent 10 }}
 
+        volumeMounts:
+        - mountPath: /data
+          name: {{ .Release.Name }}-storage
+          subPath: data
+
       {{- with .Values.plone.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -86,3 +91,8 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       restartPolicy: Always
+
+      volumes:
+      - name: {{ .Release.Name }}-storage
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-storage
