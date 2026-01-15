@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 0.1.44 - 15 January 2026
+- fix pvc [Dobricean Ioan Dorian - [`c3332461`](https://github.com/eea/helm-charts/commit/c333246137162c6b44764f518149812dcafa4d6c)]
+
 ### Version 0.1.42 - 15 January 2026
 - fix pvc claims [Dobricean Ioan Dorian - [`d9b7f71c`](https://github.com/eea/helm-charts/commit/d9b7f71c5e01e85bcf375b405d78d733900f8a14)]
 
