@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 0.1.46 - 15 January 2026
+- fix plone cache [Dobricean Ioan Dorian - [`6c2593c0`](https://github.com/eea/helm-charts/commit/6c2593c019c9fadbc85671cc8eb7c95159a58b66)]
+
 ### Version 0.1.44 - 15 January 2026
 - fix pvc [Dobricean Ioan Dorian - [`c3332461`](https://github.com/eea/helm-charts/commit/c333246137162c6b44764f518149812dcafa4d6c)]
 
