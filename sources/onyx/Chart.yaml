@@ -12,24 +12,24 @@ keywords:
   - question-answering
   - onyx
 type: application
-version: 0.4.12
-appVersion: "v2.5.3-eea.0.91-dev"
+version: 0.4.13
+appVersion: "v2.5.3.eea.0.0.92-dev"
 annotations:
   category: Productivity
   licenses: MIT
   images: |
     - name: webserver
-      image: eeacms/danswer:web-v2.5.3-eea.0.0.86-dev
+      image: eeacms/danswer:web-v2.5.3.eea.0.0.92-dev
     - name: background
-      image: eeacms/danswer:backend-v2.5.3-eea.0.0.86-dev
+      image: eeacms/danswer:backend-v2.5.3.eea.0.0.92-dev
     - name: model-server
-      image: eeacms/danswer:model_server-v2.5.3-eea.0.0.86-dev
+      image: eeacms/danswer:model_server-v2.5.3.eea.0.0.92-dev
     - name: vespa
       image: vespaengine/vespa:8.609.39
 dependencies:
   - name: vespa
-    version: 0.2.25
-    repository: https://onyx-dot-app.github.io/vespa-helm-charts
+    version: 0.2.26
+    repository: https://eea.github.io/helm-charts
     condition: vespa.enabled
   - name: minio
     version: 5.4.0
