@@ -1,0 +1,216 @@
+# Default values for vespa.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  registry: vespaengine
+  repository: vespa
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  # Update this also in Chart.yaml/appVersion
+  tag: "8.609.39"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: false
+  # Automatically mount a ServiceAccount's API credentials?
+  automount: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+podLabels:
+  app: vespa
+
+statefulSet:
+  ports:
+    - containerPort: 19071  # Config server / tenant port
+    - containerPort: 8081   # Query/feed API port
+
+  # Rolling update strategy: Controls how StatefulSet updates pods
+  # Type: RollingUpdate means pods are updated one at a time in reverse ordinal order
+  # This ensures "first down, then up" behavior - old pod terminates before new one starts
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      # partition: 0 means all pods will be updated (no staged rollout)
+      # If set to N, only pods with ordinal >= N will be updated
+      partition: 0
+
+  # podManagementPolicy: OrderedReady ensures pods are created/deleted sequentially
+  # - Pods are created in order (0, 1, 2, ...) and each must be Ready before next starts
+  # - Pods are deleted in reverse order (..., 2, 1, 0)
+  # - Critical for Vespa to ensure config server is available before other services
+  podManagementPolicy: OrderedReady
+
+podSecurityContext:
+  # fsGroup: 2000
+
+# Readiness probe: Determines when the pod is ready to accept traffic
+# Vespa needs time to initialize all services, load indexes, and warm up caches
+readinessProbe:
+  httpGet:
+    path: /state/v1/health  # Vespa's health endpoint
+    port: 19071             # Config server port
+    scheme: HTTP
+  initialDelaySeconds: 120  # Wait 2 minutes before first check (Vespa startup is slow)
+  periodSeconds: 10         # Check every 10 seconds
+  timeoutSeconds: 5         # Wait 5 seconds for response
+  successThreshold: 1       # One successful check marks pod ready
+  failureThreshold: 3       # Three failures mark pod not ready (30 seconds total)
+
+# Liveness probe: Determines when to restart the pod if unhealthy
+# More conservative than readiness to avoid unnecessary restarts
+livenessProbe:
+  httpGet:
+    path: /state/v1/health  # Same health endpoint
+    port: 19071
+    scheme: HTTP
+  initialDelaySeconds: 180  # Wait 3 minutes before first check (longer than readiness)
+  periodSeconds: 30         # Check every 30 seconds (less frequent)
+  timeoutSeconds: 10        # Wait 10 seconds for response (more tolerant)
+  successThreshold: 1       # One success indicates healthy
+  failureThreshold: 3       # Three failures trigger restart (90 seconds total)
+
+securityContext:
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  runAsUser: 1000
+
+labels:
+  app: vespa
+
+service:
+  name: vespa-service
+  type: ClusterIP  # temporarily unused
+  ports:
+    - name: vespa-tenant-port
+      port: 19071
+      targetPort: 19071
+    - name: vespa-port
+      port: 8081
+      targetPort: 8081
+
+  tenantPort: 19071
+  
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resources:
+  requests:
+    memory: "8Gi"
+    cpu: "4000m"
+  limits:
+    memory: "8Gi"
+    cpu: "4000m"
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+# Additional volumes on the output Deployment definition.
+volumes: []
+# - name: foo
+#   secret:
+#     secretName: mysecret
+#     optional: false
+
+# Additional volumeMounts on the output Deployment definition.
+volumeMounts:
+  - name: vespa-storage
+    mountPath: /opt/vespa/var/
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+env:
+  - name: VESPA_CONFIGSERVERS
+    value: vespa-0.vespa.default.svc.cluster.local
+
+# Additional configuration for single-node optimization
+vespaConfig:
+  # Enable single node mode optimizations - reduces redundancy and resource usage
+  # for deployments that don't require high availability or horizontal scaling
+  singleNodeMode: true
+
+  # JVM settings for different Vespa services
+  # These settings are optimized for single-node deployments with 4GB memory allocation
+  # and provide better garbage collection performance for typical workloads
+  # Reference: https://docs.vespa.ai/en/performance/container-tuning.html
+  jvmArgs:
+    # Config Server: Manages Vespa configuration and application packages
+    # -Xms1g: Initial heap size of 1GB (prevents heap resizing overhead)
+    # -Xmx1g: Maximum heap size of 1GB (matches initial size for predictable memory usage)
+    # -XX:+UseG1GC: G1 garbage collector (low-latency, good for server applications)
+    # -XX:MaxGCPauseMillis=200: Target max GC pause time of 200ms (reduces latency spikes)
+    # -XX:+ExitOnOutOfMemoryError: Restart pod on OOM instead of hanging
+    # -XX:+HeapDumpOnOutOfMemoryError: Create heap dump for debugging OOM issues
+    # -XX:HeapDumpPath=/opt/vespa/var/crash: Store heap dumps in persistent volume
+    configserver: "-Xms1g -Xmx1g -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+ExitOnOutOfMemoryError -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/opt/vespa/var/crash"
+
+    # Config Proxy: Local config proxy on each node (caches config server responses)
+    # -Xms256m/-Xmx256m: Small heap since it's just a caching proxy
+    # Separate setting as it requires VESPA_CONFIGPROXY_JVMARGS environment variable
+    configproxy: "-Xms256m -Xmx256m -XX:+UseG1GC -XX:+ExitOnOutOfMemoryError"
+
+    # Container: Handles query processing, document processing, and custom components
+    # -Xms2g/-Xmx2g: 2GB heap (larger since this handles most application logic)
+    # -XX:ParallelGCThreads=2: Limit parallel GC threads to reduce CPU spikes
+    # -XX:ConcGCThreads=1: Single concurrent GC thread for background work
+    # Same GC settings as config server for consistent latency characteristics
+    # Monitor jvm.gc.overhead - if exceeds 8-10%, increase heap size
+    container: "-Xms2g -Xmx2g -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:ParallelGCThreads=2 -XX:ConcGCThreads=1 -XX:+ExitOnOutOfMemoryError -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/opt/vespa/var/crash"
+
+    # Distributor: Routes documents to content nodes and manages data distribution
+    # -Xms512m/-Xmx512m: 512MB heap (lighter workload, mostly metadata handling)
+    # -XX:+UseG1GC: G1 GC for low latency (no pause target since workload is lighter)
+    distributor: "-Xms512m -Xmx512m -XX:+UseG1GC -XX:+ExitOnOutOfMemoryError"
+
+    # Proton: Search and storage engine (indexes, stores, and searches documents)
+    # -Xms2g/-Xmx2g: 2GB heap (important for query execution and document processing)
+    # -XX:ParallelGCThreads=2: Limit parallel GC threads for predictable performance
+    # Same GC settings as container since it handles user-facing query operations
+    proton: "-Xms2g -Xmx2g -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:ParallelGCThreads=2 -XX:+ExitOnOutOfMemoryError -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/opt/vespa/var/crash"
+
+
+volumeClaimTemplates:
+  - metadata:
+      name: vespa-storage
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      storageClassName: ""
+      resources:
+        requests:
+          storage: 8Gi

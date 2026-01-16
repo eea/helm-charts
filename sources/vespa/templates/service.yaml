@@ -1,0 +1,18 @@
+# a headless service that allows individual access to each pod in the StatefulSet
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.service.name }}  # This should match statefulset.yaml/spec/serviceName
+  labels:
+    {{- toYaml .Values.labels | nindent 4 }}
+spec:
+  clusterIP: None
+  ports:
+    {{- range .Values.service.ports }}
+    - port: {{ .port }}
+      targetPort: {{ .targetPort }}
+      protocol: TCP
+      name: {{ .name }}
+    {{- end }}
+  selector:
+    {{- toYaml .Values.podLabels | nindent 4 }}
