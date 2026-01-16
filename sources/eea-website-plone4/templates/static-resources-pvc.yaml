@@ -1,0 +1,18 @@
+{{- if and .Values.persistence.staticResources.enabled (not .Values.persistence.staticResources.existingClaim) }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "appl.fullname" . }}-static-resources
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: static-resources
+spec:
+  accessModes:
+    - {{ .Values.persistence.staticResources.accessMode }}
+  {{- if .Values.persistence.staticResources.storageClass }}
+  storageClassName: {{ .Values.persistence.staticResources.storageClass }}
+  {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.staticResources.size }}
+{{- end }}

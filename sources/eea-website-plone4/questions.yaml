@@ -1,0 +1,309 @@
+questions:
+  # General settings
+  - variable: "plone.hostname"
+    label: "Server name"
+    description: "DNS name for this deployment"
+    type: "string"
+    required: true
+    default: "plone4-internal.eea.europa.eu"
+    group: "General"
+
+  - variable: "timezone"
+    label: "Time zone"
+    description: "Time zone for all containers"
+    type: "string"
+    default: "Europe/Copenhagen"
+    required: true
+    group: "General"
+
+  - variable: "ingress.enabled"
+    label: "Enable Ingress"
+    description: "Create an ingress resource for external access"
+    type: "boolean"
+    default: true
+    group: "General"
+
+  - variable: "ingress.tls"
+    label: "Enable HTTPS"
+    type: "boolean"
+    default: true
+    show_if: "ingress.enabled=true"
+    group: "General"
+
+  - variable: "ingress.letsencrypt"
+    label: "Let's Encrypt cluster-issuer"
+    description: "Leave empty when not using Let's Encrypt"
+    type: "string"
+    default: ""
+    show_if: "ingress.enabled=true"
+    group: "General"
+
+  - variable: "ingress.certificate"
+    label: "TLS Certificate name"
+    description: "Name of the TLS secret"
+    type: "string"
+    default: ""
+    show_if: "ingress.tls=true"
+    group: "General"
+
+  # Plone configuration
+  - variable: "plone.replicaCount"
+    label: "Number of Plone instances"
+    type: "int"
+    default: 1
+    min: 1
+    max: 10
+    group: "Plone Configuration"
+
+  - variable: "plone.environment.ZOPE_THREADS"
+    label: "Zope Threads"
+    description: "Number of Zope threads per instance"
+    type: "string"
+    default: "2"
+    group: "Plone Configuration"
+
+  - variable: "plone.environment.WARMUP_HEALTH_THRESHOLD"
+    label: "Warmup Health Threshold"
+    type: "string"
+    default: "50000"
+    group: "Plone Configuration"
+
+  - variable: "plone.environment.SENTRY_DSN"
+    label: "Sentry DSN"
+    description: "Sentry Data Source Name for error tracking"
+    type: "string"
+    group: "Plone Configuration"
+
+  - variable: "plone.environment.GRAYLOG"
+    label: "Graylog Server"
+    description: "Graylog server address (host:port)"
+    type: "string"
+    default: "logcentral.eea.europa.eu:12201"
+    group: "Plone Configuration"
+
+  - variable: "plone.environment.CORS_ALLOW_ORIGIN"
+    label: "CORS Allow Origin"
+    description: "Origins allowed for CORS, comma separated"
+    type: "string"
+    group: "Plone Configuration"
+
+  - variable: "plone.environment.STATIC_BANNER_ENABLED"
+    label: "Enable Static Banner"
+    description: "Show banner indicating dev/staging environment"
+    type: "enum"
+    options:
+      - "Yes"
+      - "No"
+    default: "Yes"
+    group: "Plone Configuration"
+
+  # RabbitMQ (optional)
+  - variable: "plone.environment.RABBITMQ_HOST"
+    label: "RabbitMQ Host"
+    description: "Leave empty to disable RabbitMQ"
+    type: "string"
+    group: "RabbitMQ"
+
+  - variable: "plone.environment.RABBITMQ_USER"
+    label: "RabbitMQ User"
+    type: "string"
+    show_if: "plone.environment.RABBITMQ_HOST"
+    group: "RabbitMQ"
+
+  - variable: "plone.environment.RABBITMQ_PASS"
+    label: "RabbitMQ Password"
+    type: "password"
+    show_if: "plone.environment.RABBITMQ_HOST"
+    group: "RabbitMQ"
+
+  # Debug instance
+  - variable: "debug.enabled"
+    label: "Enable Debug Instance"
+    description: "Deploy a debug instance for troubleshooting"
+    type: "boolean"
+    default: false
+    group: "Debug"
+
+  - variable: "debug.serviceType"
+    label: "Debug Service Type"
+    type: "enum"
+    options:
+      - "ClusterIP"
+      - "NodePort"
+    default: "ClusterIP"
+    show_if: "debug.enabled=true"
+    group: "Debug"
+
+  # PostgreSQL configuration (plone-postgres subchart)
+  - variable: "postgres.postgres.env.Database.Name"
+    label: "PostgreSQL Databases"
+    description: "Space-separated list of databases to create"
+    type: "string"
+    default: "datafs zasync"
+    required: true
+    group: "PostgreSQL"
+
+  - variable: "postgres.postgres.env.Database.UserName"
+    label: "PostgreSQL Username"
+    type: "string"
+    default: "zope"
+    required: true
+    group: "PostgreSQL"
+
+  - variable: "postgres.postgres.env.Database.Password"
+    label: "PostgreSQL Password"
+    type: "password"
+    default: "zope"
+    required: true
+    group: "PostgreSQL"
+
+  - variable: "postgres.postgres.env.SuperUser.Password"
+    label: "PostgreSQL Admin Password"
+    type: "password"
+    default: "postgres"
+    required: true
+    group: "PostgreSQL"
+
+  - variable: "postgres.datastorage.size"
+    label: "PostgreSQL Storage Size"
+    type: "string"
+    default: "150Gi"
+    group: "PostgreSQL"
+
+  - variable: "postgres.datastorage.storageClassName"
+    label: "PostgreSQL Storage Class"
+    description: "Leave empty for default"
+    type: "string"
+    group: "PostgreSQL"
+
+  - variable: "postgres.postgres.resources.requests.memory"
+    label: "PostgreSQL Memory"
+    type: "string"
+    default: "6Gi"
+    group: "PostgreSQL"
+
+  # Memcached configuration (included in plone-postgres)
+  - variable: "postgres.memcached.enabled"
+    label: "Enable Memcached"
+    type: "boolean"
+    default: true
+    group: "Memcached"
+
+  - variable: "postgres.memcached.cache_size_m"
+    label: "Memcached Cache Size (MB)"
+    type: "int"
+    default: 1024
+    show_if: "postgres.memcached.enabled=true"
+    group: "Memcached"
+
+  # Persistent storage
+  - variable: "persistence.blobstorage.enabled"
+    label: "Enable Blobstorage Persistence"
+    type: "boolean"
+    default: true
+    group: "Storage"
+
+  - variable: "persistence.blobstorage.size"
+    label: "Blobstorage Size"
+    type: "string"
+    default: "100Gi"
+    show_if: "persistence.blobstorage.enabled=true"
+    group: "Storage"
+
+  - variable: "persistence.blobstorage.storageClass"
+    label: "Blobstorage Storage Class"
+    type: "string"
+    show_if: "persistence.blobstorage.enabled=true"
+    group: "Storage"
+
+  - variable: "persistence.downloads.enabled"
+    label: "Enable Downloads Persistence"
+    type: "boolean"
+    default: true
+    group: "Storage"
+
+  - variable: "persistence.downloads.size"
+    label: "Downloads Size"
+    type: "string"
+    default: "50Gi"
+    show_if: "persistence.downloads.enabled=true"
+    group: "Storage"
+
+  - variable: "persistence.suggestions.enabled"
+    label: "Enable Suggestions Persistence"
+    type: "boolean"
+    default: true
+    group: "Storage"
+
+  - variable: "persistence.suggestions.size"
+    label: "Suggestions Size"
+    type: "string"
+    default: "10Gi"
+    show_if: "persistence.suggestions.enabled=true"
+    group: "Storage"
+
+  - variable: "persistence.staticResources.enabled"
+    label: "Enable Static Resources Persistence"
+    type: "boolean"
+    default: true
+    group: "Storage"
+
+  - variable: "persistence.staticResources.size"
+    label: "Static Resources Size"
+    type: "string"
+    default: "10Gi"
+    show_if: "persistence.staticResources.enabled=true"
+    group: "Storage"
+
+  # Memory resources
+  - variable: "plone.resources.requests.memory"
+    label: "Plone Memory Request"
+    type: "string"
+    default: "2Gi"
+    group: "Resources"
+
+  - variable: "plone.resources.limits.memory"
+    label: "Plone Memory Limit"
+    type: "string"
+    default: "10Gi"
+    group: "Resources"
+
+  - variable: "postgres.memcached.resources.requests.memory"
+    label: "Memcached Memory Request"
+    type: "string"
+    default: "1024Mi"
+    show_if: "postgres.memcached.enabled=true"
+    group: "Resources"
+
+  # Postfix
+  - variable: "postfix.enabled"
+    label: "Enable Postfix"
+    type: "boolean"
+    default: true
+    group: "Mail"
+
+  - variable: "postfix.dryrun"
+    label: "Dry Run Mode (use mailtrap)"
+    type: "boolean"
+    default: true
+    show_if: "postfix.enabled=true"
+    group: "Mail"
+
+  - variable: "postfix.mtpRelay"
+    label: "SMTP Relay"
+    type: "string"
+    default: "ironport1.eea.europa.eu"
+    show_if: "postfix.dryrun=false"
+    group: "Mail"
+
+  - variable: "postfix.mtpUser"
+    label: "SMTP User"
+    type: "string"
+    show_if: "postfix.dryrun=false"
+    group: "Mail"
+
+  - variable: "postfix.mtpPass"
+    label: "SMTP Password"
+    type: "password"
+    show_if: "postfix.dryrun=false"
+    group: "Mail"

@@ -1,0 +1,18 @@
+{{- if and .Values.persistence.suggestions.enabled (not .Values.persistence.suggestions.existingClaim) }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "appl.fullname" . }}-suggestions
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: suggestions
+spec:
+  accessModes:
+    - {{ .Values.persistence.suggestions.accessMode }}
+  {{- if .Values.persistence.suggestions.storageClass }}
+  storageClassName: {{ .Values.persistence.suggestions.storageClass }}
+  {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.suggestions.size }}
+{{- end }}

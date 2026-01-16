@@ -1,0 +1,211 @@
+# EEA Website Plone 4 Helm Chart Values
+# Simplified deployment for internal use
+
+# Image configuration
+image:
+  repository: eeacms/www
+  pullPolicy: IfNotPresent
+  tag: ""  # Uses appVersion from Chart.yaml if empty
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: false
+  annotations: {}
+  name: ""
+
+timezone: Europe/Copenhagen
+
+# Ingress configuration
+ingress:
+  enabled: true
+  annotations: {}
+  letsencrypt: ""
+  ingressClassName: "nginx"
+  configuration:
+    proxy-body-size: "100m"
+    proxy-read-timeout: "480s"
+    proxy-send-timeout: "120s"
+  tls: true
+  certificate: ""
+
+# Plone instance configuration
+plone:
+  hostname: plone4-internal.eea.europa.eu
+  serviceType: ClusterIP
+  replicaCount: 1
+  port: 8080
+
+  # Resource limits
+  resources:
+    limits:
+      memory: 10Gi
+    requests:
+      memory: 2Gi
+
+  # Environment variables
+  environment:
+    ZOPE_MODE: "rel_client"
+    ZOPE_THREADS: "2"
+    RELSTORAGE_KEEP_HISTORY: "false"
+    WARMUP_HEALTH_THRESHOLD: "50000"
+    GRAYLOG: "logcentral.eea.europa.eu:12201"
+    SENTRY_DSN: ""
+    RABBITMQ_HOST: ""
+    RABBITMQ_USER: ""
+    RABBITMQ_PASS: ""
+    STATIC_BANNER_ENABLED: "Yes"
+    CORS_ALLOW_ORIGIN: ""
+
+  # Probes
+  livenessProbe:
+    httpGet:
+      path: /health.check
+      port: http
+    periodSeconds: 60
+    timeoutSeconds: 15
+    initialDelaySeconds: 120
+    failureThreshold: 5
+    successThreshold: 1
+
+  startupProbe:
+    httpGet:
+      path: /health.check
+      port: http
+    periodSeconds: 10
+    timeoutSeconds: 15
+    initialDelaySeconds: 30
+    failureThreshold: 30
+    successThreshold: 1
+
+  readinessProbe:
+    httpGet:
+      path: /health.check
+      port: http
+    periodSeconds: 30
+    timeoutSeconds: 15
+    initialDelaySeconds: 60
+    failureThreshold: 3
+    successThreshold: 1
+
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  annotations: {}
+
+# Debug instance (optional)
+debug:
+  enabled: false
+  serviceType: ClusterIP
+  port: 8080
+  resources:
+    limits:
+      memory: 14Gi
+    requests:
+      memory: 2Gi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+# Persistent storage
+persistence:
+  blobstorage:
+    enabled: true
+    storageClass: ""
+    accessMode: ReadWriteMany
+    size: 100Gi
+    existingClaim: ""
+  downloads:
+    enabled: true
+    storageClass: ""
+    accessMode: ReadWriteMany
+    size: 50Gi
+    existingClaim: ""
+  suggestions:
+    enabled: true
+    storageClass: ""
+    accessMode: ReadWriteMany
+    size: 10Gi
+    existingClaim: ""
+  staticResources:
+    enabled: true
+    storageClass: ""
+    accessMode: ReadWriteMany
+    size: 10Gi
+    existingClaim: ""
+
+# PostgreSQL + Memcached configuration (plone-postgres subchart)
+# Using alias "postgres" in Chart.yaml
+postgres:
+  # PostgreSQL settings
+  postgres:
+    enabled: true
+    env:
+      SuperUser:
+        Name: "postgres"
+        Password: "postgres"
+      Database:
+        Name: "datafs zasync"
+        UserName: "zope"
+        Password: "zope"
+      Configuration: |-
+        max_connections = 200
+      Crons: ""
+      ReplicationNetwork: ""
+    resources:
+      requests:
+        memory: 6Gi
+      limits:
+        memory: 6Gi
+
+  # Data storage for PostgreSQL
+  datastorage:
+    size: 150Gi
+    storageClassName: ""
+
+  # Archive storage (WAL logs)
+  archivestorage:
+    enabled: false
+    size: 10Gi
+    storageClassName: ""
+
+  # Backup storage
+  backupstorage:
+    enabled: false
+    size: 10Gi
+    storageClassName: ""
+
+  # Memcached settings (included in plone-postgres)
+  memcached:
+    enabled: true
+    cache_size_m: 1024
+    slab_page_size: 50m
+    resources:
+      requests:
+        memory: 1024Mi
+      limits:
+        memory: 1024Mi
+
+  # Memcached flush cronjob
+  memcachedflush:
+    schedule: "0 3 * * *"
+
+# Postfix configuration
+postfix:
+  enabled: true
+  fullnameOverride: "plone4-postfix"
+  dryrun: true
+  serverName: ""
+  mtpPass: ""
+  mtpPort: "8587"
+  mtpRelay: "ironport1.eea.europa.eu"
+  mtpUser: ""
+  mailtrap:
+    httpenabled: true
+    serviceType: ClusterIP
+    ingress:
+      enabled: false
+      hostname: ""
+      certificate: ""
