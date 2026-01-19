@@ -75,7 +75,7 @@ spec:
         - name: MEMCACHE_SERVER
           value: "{{ include "appl.memcachedHost" . }}:11211"
         {{- end }}
-        - name: POSTGRES_HOST
+        - name: RELSTORAGE_HOST
           value: "{{ include "appl.postgresHost" . }}"
         ports:
         - name: http
