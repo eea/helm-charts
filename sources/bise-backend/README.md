@@ -10,6 +10,9 @@ This chart deployes the BISE backend app
 
 ## Releases
 
+### Version 1.42.1 - 19 January 2026
+- Automated release of [eeacms/plone-varnish:7.7-1.2](https://github.com/eea/plone-varnish/releases) [EEA Jenkins - [`bd55c256`](https://github.com/eea/helm-charts/commit/bd55c256ca1d7b7838de0f9b9afa59024df1e23b)]
+
 ### Version 1.42.0 - 19 January 2026
 - Automated release of [eeacms/bise-backend:6.1.3-40](https://github.com/eea/bise-backend/releases) [EEA Jenkins - [`129ba5af`](https://github.com/eea/helm-charts/commit/129ba5af7de5d65c5ffc64819867c2aa123b3bad)]
 
