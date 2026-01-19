@@ -1,0 +1,18 @@
+{{- if and .Values.persistence.downloads.enabled (not .Values.persistence.downloads.existingClaim) }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "appl.fullname" . }}-downloads
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: downloads
+spec:
+  accessModes:
+    - {{ .Values.persistence.downloads.accessMode }}
+  {{- if .Values.persistence.downloads.storageClass }}
+  storageClassName: {{ .Values.persistence.downloads.storageClass }}
+  {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.downloads.size }}
+{{- end }}

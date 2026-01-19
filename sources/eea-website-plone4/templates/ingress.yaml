@@ -1,0 +1,43 @@
+{{- if .Values.ingress.enabled }}
+{{- $className := .Values.ingress.ingressClassName | default "nginx" -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "appl.fullname" . }}-ingress
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: ingress
+  annotations:
+  {{- if .Values.ingress.letsencrypt }}
+    cert-manager.io/cluster-issuer: "{{ .Values.ingress.letsencrypt }}"
+  {{- end }}
+  {{- range $key, $value := .Values.ingress.configuration }}
+  {{- if $value }}
+    {{ $className }}.ingress.kubernetes.io/{{ $key }}: {{ $value | quote }}
+  {{- end }}
+  {{- end }}
+  {{- with .Values.ingress.annotations }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  ingressClassName: {{ $className }}
+  rules:
+  - host: {{ .Values.plone.hostname }}
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ include "appl.fullname" . }}-plone
+            port:
+              number: {{ .Values.plone.port }}
+  {{- if .Values.ingress.tls }}
+  tls:
+  - hosts:
+    - {{ .Values.plone.hostname }}
+    {{- if .Values.ingress.certificate }}
+    secretName: {{ .Values.ingress.certificate }}
+    {{- end }}
+  {{- end }}
+{{- end }}

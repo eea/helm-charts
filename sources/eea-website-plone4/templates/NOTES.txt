@@ -1,0 +1,45 @@
+EEA Website Plone 4 has been deployed!
+
+== Services ==
+
+Plone:     {{ include "appl.fullname" . }}-plone:{{ .Values.plone.port }}
+{{- if .Values.postgres.memcached.enabled }}
+Memcached: {{ include "appl.memcachedHost" . }}:11211
+{{- end }}
+PostgreSQL: {{ include "appl.postgresHost" . }}:5432
+
+{{- if .Values.ingress.enabled }}
+
+== Ingress ==
+
+Access Plone at: http{{ if .Values.ingress.tls }}s{{ end }}://{{ .Values.plone.hostname }}
+
+{{- else }}
+
+== Access ==
+
+To access Plone, forward the port:
+
+  kubectl port-forward svc/{{ include "appl.fullname" . }}-plone {{ .Values.plone.port }}:{{ .Values.plone.port }}
+
+Then access: http://localhost:{{ .Values.plone.port }}
+
+{{- end }}
+
+{{- if .Values.debug.enabled }}
+
+== Debug Instance ==
+
+A debug instance is running. Connect to it:
+
+  kubectl exec -it deployment/{{ include "appl.fullname" . }}-debug -- /bin/bash
+
+{{- end }}
+
+== Health Check ==
+
+Plone health check endpoint: /health.check
+
+Verify deployment:
+
+  kubectl get pods -l app.kubernetes.io/instance={{ .Release.Name }}

@@ -1,0 +1,137 @@
+{{- if .Values.debug.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "appl.fullname" . }}-debug
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: debug
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: debug
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: debug
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      containers:
+      - name: debug
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        stdin: true
+        tty: true
+        command:
+          - cat
+        env:
+        - name: TZ
+          value: "{{ .Values.timezone }}"
+        - name: ZOPE_MODE
+          value: "rel_client"
+        - name: ZOPE_THREADS
+          value: "4"
+        - name: RELSTORAGE_USER
+          value: "{{ .Values.postgres.postgres.env.Database.UserName }}"
+        - name: RELSTORAGE_PASS
+          value: "{{ .Values.postgres.postgres.env.Database.Password }}"
+        - name: RELSTORAGE_KEEP_HISTORY
+          value: "false"
+        - name: SERVER_NAME
+          value: "{{ .Values.plone.hostname }}"
+        - name: GRAYLOG
+          value: "{{ .Values.plone.environment.GRAYLOG }}"
+        - name: GRAYLOG_FACILITY
+          value: "{{ .Values.plone.hostname }}"
+        - name: WARMUP_HEALTH_THRESHOLD
+          value: "1"
+        {{- if .Values.postgres.memcached.enabled }}
+        - name: MEMCACHE_SERVER
+          value: "{{ include "appl.memcachedHost" . }}:11211"
+        {{- end }}
+        - name: POSTGRES_HOST
+          value: "{{ include "appl.postgresHost" . }}"
+        ports:
+        - name: http
+          containerPort: {{ .Values.debug.port }}
+        volumeMounts:
+        {{- if or .Values.persistence.blobstorage.enabled .Values.persistence.blobstorage.existingClaim }}
+        - name: blobstorage
+          mountPath: /data/blobstorage
+        {{- end }}
+        {{- if or .Values.persistence.downloads.enabled .Values.persistence.downloads.existingClaim }}
+        - name: downloads
+          mountPath: /data/downloads
+        {{- end }}
+        {{- if or .Values.persistence.suggestions.enabled .Values.persistence.suggestions.existingClaim }}
+        - name: suggestions
+          mountPath: /data/suggestions
+        {{- end }}
+        {{- if or .Values.persistence.staticResources.enabled .Values.persistence.staticResources.existingClaim }}
+        - name: static-resources
+          mountPath: /data/www-static-resources
+        {{- end }}
+        resources:
+          {{- toYaml .Values.debug.resources | nindent 10 }}
+      volumes:
+      {{- if or .Values.persistence.blobstorage.enabled .Values.persistence.blobstorage.existingClaim }}
+      - name: blobstorage
+        {{- if .Values.persistence.blobstorage.existingClaim }}
+        persistentVolumeClaim:
+          claimName: {{ .Values.persistence.blobstorage.existingClaim }}
+        {{- else }}
+        persistentVolumeClaim:
+          claimName: {{ include "appl.fullname" . }}-blobstorage
+        {{- end }}
+      {{- end }}
+      {{- if or .Values.persistence.downloads.enabled .Values.persistence.downloads.existingClaim }}
+      - name: downloads
+        {{- if .Values.persistence.downloads.existingClaim }}
+        persistentVolumeClaim:
+          claimName: {{ .Values.persistence.downloads.existingClaim }}
+        {{- else }}
+        persistentVolumeClaim:
+          claimName: {{ include "appl.fullname" . }}-downloads
+        {{- end }}
+      {{- end }}
+      {{- if or .Values.persistence.suggestions.enabled .Values.persistence.suggestions.existingClaim }}
+      - name: suggestions
+        {{- if .Values.persistence.suggestions.existingClaim }}
+        persistentVolumeClaim:
+          claimName: {{ .Values.persistence.suggestions.existingClaim }}
+        {{- else }}
+        persistentVolumeClaim:
+          claimName: {{ include "appl.fullname" . }}-suggestions
+        {{- end }}
+      {{- end }}
+      {{- if or .Values.persistence.staticResources.enabled .Values.persistence.staticResources.existingClaim }}
+      - name: static-resources
+        {{- if .Values.persistence.staticResources.existingClaim }}
+        persistentVolumeClaim:
+          claimName: {{ .Values.persistence.staticResources.existingClaim }}
+        {{- else }}
+        persistentVolumeClaim:
+          claimName: {{ include "appl.fullname" . }}-static-resources
+        {{- end }}
+      {{- end }}
+      {{- with .Values.debug.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.debug.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.debug.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+{{- end }}
