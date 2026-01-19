@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 0.1.47 - 19 January 2026
+- Automated release of [eeacms/plone-varnish:7.7-1.2](https://github.com/eea/plone-varnish/releases) [EEA Jenkins - [`5ce7488a`](https://github.com/eea/helm-charts/commit/5ce7488a023979ad9929f5b0d4a4e2beb85130b8)]
+
 ### Version 0.1.46 - 15 January 2026
 - fix plone cache [Dobricean Ioan Dorian - [`6c2593c0`](https://github.com/eea/helm-charts/commit/6c2593c019c9fadbc85671cc8eb7c95159a58b66)]
 
