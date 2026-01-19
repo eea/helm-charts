@@ -10,6 +10,9 @@ This chart deployes the COPERNICUS IN-SITU COMPONENT website backend app
 
 ## Releases
 
+### Version 6.31.1 - 19 January 2026
+- Automated release of [eeacms/plone-varnish:7.7-1.2](https://github.com/eea/plone-varnish/releases) [EEA Jenkins - [`e1f4203e`](https://github.com/eea/helm-charts/commit/e1f4203e23e536bdf752bd5b916d46a0900db5b1)]
+
 ### Version 6.31.0 - 23 December 2025
 - Automated release of [eeacms/insitu-backend:6.1.3-4](https://github.com/eea/insitu-backend/releases) [EEA Jenkins - [`35e86034`](https://github.com/eea/helm-charts/commit/35e86034d01ed99f77c47d0cdb85329babfe81f7)]
 
