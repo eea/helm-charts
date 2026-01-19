@@ -16905,6 +16905,27 @@ entries:
   emrt-esd:
   - apiVersion: v2
     appVersion: 18.1.23-1-1.77.4
+    created: "2026-01-19T18:13:09.069991+02:00"
+    dependencies:
+    - name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.2.0
+    - name: zeoserver
+      repository: https://eea.github.io/helm-charts
+      version: 0.1.0
+    description: Emission Review Tool - Effort Sharing Decision
+    digest: d9a88b7de8b47ad65b84274d8e36e5edfda4235204d1e4aa7916b4d2349cdc99
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/emrt-esd/logo_eionet.png
+    keywords:
+    - Reportnet
+    - Emmission
+    name: emrt-esd
+    type: application
+    urls:
+    - emrt-esd-3.0.4.tgz
+    version: 3.0.4
+  - apiVersion: v2
+    appVersion: 18.1.23-1-1.77.4
     created: "2026-01-14T13:04:41.139654+01:00"
     dependencies:
     - name: postfix
@@ -39303,4 +39324,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2026-01-19T15:34:08.949880573Z"
+generated: "2026-01-19T18:13:09.068937+02:00"
