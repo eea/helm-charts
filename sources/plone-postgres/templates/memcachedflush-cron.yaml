@@ -1,4 +1,4 @@
-{{- if and .Values.memcached.enabled (.Values.memcachedflush.schedule) -}}
+{{- if .Values.memcached.enabled -}}
 apiVersion: batch/v1
 kind: CronJob
 metadata:
@@ -8,18 +8,25 @@ metadata:
     component: memcachedflush
 
 spec:
-  schedule: "{{ .Values.memcachedflush.schedule }}"
+  schedule: {{ .Values.memcachedflush.schedule | quote }}
   concurrencyPolicy: Forbid
   jobTemplate:
     spec:
       template:
         spec:
-          {{- with .Values.imagePullSecrets }}
-          imagePullSecrets:
-            {{- toYaml . | nindent 8 }}
-          {{- end }}
           serviceAccountName: {{ include "appl.serviceAccountName" . }}
-
+          {{- with .Values.memcachedflush.nodeSelector }}
+          nodeSelector:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.memcachedflush.affinity }}
+          affinity:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.memcachedflush.tolerations }}
+          tolerations:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           containers:
           - name: memcachedflush
             image: alpine:3.20
@@ -28,25 +35,11 @@ spec:
             command:
             - sh
             - -c
-            - echo 'flush_all' | nc {{ .Release.Name }}-memcached 11211
+            - echo 'flush_all' | nc {{ .Values.memcached.serviceName | default "memcached" }} 11211
 
             resources:
               {{- toYaml .Values.memcachedflush.resources | nindent 14 }}
             securityContext:
               {{- toYaml .Values.memcachedflush.securityContext | nindent 16 }}
-
-          {{- with .Values.memcachedflush.nodeSelector }}
-          nodeSelector:
-            {{- toYaml . | nindent 8 }}
-          {{- end }}
-          {{- with .Values.memcachedflush.affinity }}
-          affinity:
-            {{- toYaml . | nindent 8 }}
-          {{- end }}
-          {{- with .Values.memcachedflush.tolerations }}
-          tolerations:
-            {{- toYaml . | nindent 8 }}
-          {{- end }}
           restartPolicy: Never
-
 {{- end }}

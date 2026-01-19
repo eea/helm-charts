@@ -134,7 +134,7 @@ memcached:
     successThreshold: 1
 
 memcachedflush:
-  schedule: "0 0 3 * *"
+  schedule: "0 3 * * *"
   securityContext: {}
   nodeSelector: {}
   tolerations: []
