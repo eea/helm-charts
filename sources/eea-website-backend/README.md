@@ -10,6 +10,9 @@ This chart deployes the EEA Website Plone 6 backend app
 
 ## Releases
 
+### Version 1.35.1 - 19 January 2026
+- Automated release of [eeacms/plone-varnish:7.7-1.2](https://github.com/eea/plone-varnish/releases) [EEA Jenkins - [`35510151`](https://github.com/eea/helm-charts/commit/35510151e8e6f94134e3ed843ac06931e0aaceac)]
+
 ### Version 1.35.0 - 24 December 2025
 - Automated release of [eeacms/eea-website-backend:6.1.3-15](https://github.com/eea/eea-website-backend/releases) [EEA Jenkins - [`13735afc`](https://github.com/eea/helm-charts/commit/13735afc73986aa885cad3175375dc6b5b7933d4)]
 
