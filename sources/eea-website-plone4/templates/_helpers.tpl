@@ -63,16 +63,16 @@ Create the name of the service account to use
 
 {{/*
 PostgreSQL hostname (from plone-postgres subchart with alias "postgres")
-Service name is {{ .Release.Name }}-postgres
+Uses simple service name "postgres" by default to match buildout expectations
 */}}
 {{- define "appl.postgresHost" -}}
-{{- printf "%s-postgres" .Release.Name }}
+{{- .Values.postgres.postgres.serviceName | default "postgres" }}
 {{- end }}
 
 {{/*
 Memcached hostname (from plone-postgres subchart with alias "postgres")
-Service name is {{ .Release.Name }}-memcached
+Uses simple service name "memcached" by default to match buildout expectations
 */}}
 {{- define "appl.memcachedHost" -}}
-{{- printf "%s-memcached" .Release.Name }}
+{{- .Values.postgres.memcached.serviceName | default "memcached" }}
 {{- end }}
