@@ -98,7 +98,7 @@ spec:
       accessModes:
       - ReadWriteOnce
       {{- if .Values.datastorage.storageClassName }}
-      storageClass: "{{ .Values.datastorage.storageClassName }}"
+      storageClassName: "{{ .Values.datastorage.storageClassName }}"
       {{- end }}
       resources:
         requests:
@@ -111,7 +111,7 @@ spec:
       accessModes:
       - ReadWriteOnce
       {{- if .Values.backupstorage.storageClassName }}
-      storageClass: "{{ .Values.backupstorage.storageClassName }}"
+      storageClassName: "{{ .Values.backupstorage.storageClassName }}"
       {{- end }}
       resources:
         requests:
@@ -125,7 +125,7 @@ spec:
       accessModes:
       - ReadWriteOnce
       {{- if .Values.archivestorage.storageClassName }}
-      storageClass: "{{ .Values.archivestorage.storageClassName }}"
+      storageClassName: "{{ .Values.archivestorage.storageClassName }}"
       {{- end }}
       resources:
         requests:
