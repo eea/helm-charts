@@ -16152,6 +16152,33 @@ entries:
   eea-website-plone4:
   - apiVersion: v2
     appVersion: 23.9.14
+    created: "2026-01-19T21:44:15.738125+02:00"
+    dependencies:
+    - alias: postgres
+      name: plone-postgres
+      repository: https://eea.github.io/helm-charts
+      version: 1.0.11
+    - condition: postfix.enabled
+      name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.2.0
+    description: EEA Main Website Plone 4 Backend (Internal Use)
+    digest: 3341e14e07e9bd848f642ac601e95935aaac50eef6c865616a3d81d68b3083d0
+    home: https://github.com/eea/eea.plonebuildout.www
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/eea-website-backend/eea-website-backend.svg
+    keywords:
+    - CMS
+    - Plone
+    - Plone4
+    - EEA
+    - WWW
+    name: eea-website-plone4
+    type: application
+    urls:
+    - eea-website-plone4-1.0.2.tgz
+    version: 1.0.2
+  - apiVersion: v2
+    appVersion: 23.9.14
     created: "2026-01-19T21:18:52.060734+02:00"
     dependencies:
     - alias: postgres
@@ -39392,4 +39419,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2026-01-19T21:18:52.05938+02:00"
+generated: "2026-01-19T21:44:15.737073+02:00"
