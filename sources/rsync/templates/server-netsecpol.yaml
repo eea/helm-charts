@@ -1,0 +1,23 @@
+{{- if and (.Values.server.enabled) (.Values.server.allowNetworkAccess) -}}
+
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ .Release.Name }}-server-allow-ssh
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+
+
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: server
+
+  policyTypes:
+  - Ingress
+  ingress:
+    - ports:
+        - port: 22
+          protocol: TCP
+{{- end }}
