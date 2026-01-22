@@ -192,7 +192,7 @@ postfix:
     serviceType: NodePort
     ingress:
       enabled: false
-      hostname: mailtrap.01dev.eea.europa.eu
+      hostname: mailtrap-bise.eea.europa.eu
       annotations:
         cert-manager.io/cluster-issuer: 01dev-eea-letsencrypt
-      certificate: mailtrap.01dev.eea.europa.eu-tls
+      certificate: mailtrap-bise.eea.europa.eu-tls
