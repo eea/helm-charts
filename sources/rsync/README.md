@@ -25,6 +25,9 @@ Enable client, add crontab with rsync jobs, if needed
 
 ## Releases
 
+### Version 1.3.1 - 22 January 2026
+- Allow Network Access to server port 22 [EEA Jenkins - [`da8e09d1`](https://github.com/eea/helm-charts/commit/da8e09d1ac9f63c1d2cdd53c0a7b8c7a9895ffb0)]
+
 ### Version 1.3.0 - 26 September 2025
 - Automated release of [eeacms/rsync:3.0](https://github.com/eea/eea.docker.rsync/releases) [EEA Jenkins - [`80a842c8`](https://github.com/eea/helm-charts/commit/80a842c881b52cae58c039f382d5ff45d13be950)]
 
