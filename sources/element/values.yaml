@@ -134,6 +134,9 @@ element:
       memory: 64Mi
     requests:
       memory: 64Mi
+  ingress:
+    annotations: {}
+    certificateName: ''
   podAnnotations: {}
   podLabels: {}
   podSecurityContext: {}
@@ -184,6 +187,9 @@ identity:
       memory: 1024Mi
     requests:
       memory: 512Mi
+  ingress:
+    annotations: {}
+    certificateName: ''
   javaOpts: ""
   podAnnotations: {}
   podLabels: {}
@@ -216,6 +222,9 @@ matrix:
       memory: 2Gi
     requests:
       memory: 2Gi
+  ingress:
+    annotations: {}
+    certificateName: ''
   emailFromName: ""
   emailFromAddress: ""
   serverName: "matrix.eea.europa.eu"

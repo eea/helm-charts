@@ -14,7 +14,7 @@ spec:
   tls:
     - hosts:
         - "{{ .Values.elementServerName }}"
-      secretName: '{{ .Values.certificateName }}'
+      secretName: '{{ .Values.element.ingress.certificateName }}'
   rules:
     - host: "{{ .Values.elementServerName }}"
       http:
@@ -42,7 +42,7 @@ spec:
   tls:
     - hosts:
         - "{{ .Values.matrixIdentityName }}"
-      secretName: '{{ .Values.certificateName }}'
+      secretName: '{{ .Values.identity.ingress.certificateName }}'
   rules:
     - host: "{{ .Values.matrixIdentityName }}"
       http:
@@ -70,7 +70,7 @@ spec:
   tls:
     - hosts:
         - "{{ .Values.matrixServerName }}"
-      secretName: '{{ .Values.certificateName }}'
+      secretName: '{{ .Values.matrix.ingress.certificateName }}'
   rules:
     - host: "{{ .Values.matrixServerName }}"
       http:
@@ -114,7 +114,7 @@ spec:
   tls:
     - hosts:
         - "{{ .Values.matrixServerName }}"
-      secretName: '{{ .Values.certificateName }}'
+      secretName: '{{ .Values.matrix.ingress.certificateName }}'
   rules:
     - host: "{{ .Values.matrixServerName }}"
       http:
