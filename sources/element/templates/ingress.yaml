@@ -1,0 +1,136 @@
+{{- if .Values.ingress.enabled -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: element
+  labels:
+    {{- include "element.labels" . | nindent 4 }}
+    component: element
+  {{- with .Values.element.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  tls:
+    - hosts:
+        - "{{ .Values.elementServerName }}"
+      secretName: '{{ .Values.certificateName }}'
+  rules:
+    - host: "{{ .Values.elementServerName }}"
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: element
+                port:
+                  number: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: matrix-identity
+  labels:
+    {{- include "element.labels" . | nindent 4 }}
+    component: element
+  {{- with .Values.identity.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  tls:
+    - hosts:
+        - "{{ .Values.matrixIdentityName }}"
+      secretName: '{{ .Values.certificateName }}'
+  rules:
+    - host: "{{ .Values.matrixIdentityName }}"
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: identity
+                port:
+                  number: 8090
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: matrix
+  labels:
+    {{- include "element.labels" . | nindent 4 }}
+    component: matrix
+  {{- with .Values.matrix.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  tls:
+    - hosts:
+        - "{{ .Values.matrixServerName }}"
+      secretName: '{{ .Values.certificateName }}'
+  rules:
+    - host: "{{ .Values.matrixServerName }}"
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: matrix
+                port:
+                  number: 8008
+          - path: /_matrix/client/v3/user_directory/
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: identity
+                port:
+                  number: 8090
+          - path: /_matrix/identity
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: identity
+                port:
+                  number: 8090
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: federation
+  labels:
+    {{- include "element.labels" . | nindent 4 }}
+    component: federation
+  {{- with .Values.matrix.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+    nginx.ingress.kubernetes.io/configuration-snippet: |-
+      more_set_headers 'Content-Type application/json';
+spec:
+  tls:
+    - hosts:
+        - "{{ .Values.matrixServerName }}"
+      secretName: '{{ .Values.certificateName }}'
+  rules:
+    - host: "{{ .Values.matrixServerName }}"
+      http:
+        paths:
+          - path: /.well-known/matrix/client
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: federation
+                port:
+                  number: 80
+          - path: /.well-known/matrix/server
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: federation
+                port:
+                  number: 80
+{{- end }}

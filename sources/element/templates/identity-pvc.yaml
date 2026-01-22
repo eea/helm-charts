@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: identity-volume
+  labels:
+    {{- include "element.labels" . | nindent 4 }}
+    component: identity
+# annotations:
+#   "helm.sh/resource-policy": keep
+
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: {{ .Values.identity.data.storage }}

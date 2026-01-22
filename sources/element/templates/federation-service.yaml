@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: federation
+  labels:
+    {{- include "element.labels" . | nindent 4 }}
+    component: federation
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+  selector:
+    {{- include "element.selectorLabels" . | nindent 4 }}
+    component: federation
+

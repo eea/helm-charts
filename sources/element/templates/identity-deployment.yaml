@@ -1,0 +1,112 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: identity
+  labels:
+    {{- include "element.labels" . | nindent 4 }}
+    component: identity
+spec:
+  selector:
+    matchLabels:
+      {{- include "element.selectorLabels" . | nindent 6 }}
+      component: identity
+  template:
+    metadata:
+      {{- with .Values.identity.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "element.labels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        component: identity
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "element.serviceAccountName" . }}
+      {{- with .Values.identity.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+      containers:
+        - name: identity
+          {{- with .Values.identity.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          image: "eeacms/matrix-identity:2.5.0-1"
+          imagePullPolicy: {{ .Values.identity.image.pullPolicy }}
+          env:
+            - name: HOMESERVER_MXISD_TOKEN
+              value: "{{ .Values.synapseMxisdHStoken }}"
+            - name: HOMESERVER_MXISD_AS_TOKEN
+              value: "{{ .Values.synapseMxisdAStoken }}"
+            - name: IDENTITY_EMAIL_FROM
+              value: "{{ .Values.matrix.emailFromAddress }}"
+            - name: IDENTITY_EMAIL_NAME
+              value: "{{ .Values.matrix.emailFromName }}"
+            - name: JAVA_OPTS
+              value: "{{ .Values.identity.javaOpts }}"
+            - name: LDAP_BASEDN
+              value: "{{ .Values.ldap.basedn }}"
+            - name: LDAP_BINDDN
+              value: "{{ .Values.ldap.binddn }}"
+            - name: LDAP_BINDDN_PASS
+              value: "{{ .Values.ldap.binddnPass }}"
+            - name: LDAP_FILTER
+              value: "{{ .Values.ldap.filter }}"
+            - name: LDAP_HOST
+              value: "{{ .Values.ldap.host }}"
+            - name: LDAP_PORT
+              value: "{{ .Values.ldap.port }}"
+            - name: LDAP_TLS
+              value: "{{ .Values.ldap.tls }}"
+            - name: MATRIX_DOMAIN
+              value: "{{ .Values.matrixServerName }}"
+            - name: MXISD_RIOT_URL
+              value: "https://{{ .Values.elementServerName }}"
+            - name: POSTGRES_DBNAME
+              value: "{{ .Values.db.name }}"
+            - name: POSTGRES_DBPASS
+              value: "{{ .Values.db.pass }}"
+            - name: POSTGRES_DBUSER
+              value: "{{ .Values.db.user }}"
+            - name: SMTP_HOST
+              value: postfix
+            - name: SMTP_PORT
+              value: "25"
+
+          ports:
+            - containerPort: 80
+              protocol: TCP
+
+          {{- with .Values.identity.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+            - mountPath: /var/ma1sd
+              name: identity-volume
+
+      {{- with .Values.identity.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.identity.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.identity.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+      volumes:
+      - name: identity-volume
+        persistentVolumeClaim:
+          claimName: identity-volume

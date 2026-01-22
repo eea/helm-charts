@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: matrix
+  labels:
+    {{- include "element.labels" . | nindent 4 }}
+    component: matrix
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8008
+      targetPort: 8008
+      protocol: TCP
+  selector:
+    {{- include "element.selectorLabels" . | nindent 4 }}
+    component: matrix
+

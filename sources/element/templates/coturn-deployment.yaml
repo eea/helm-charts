@@ -1,0 +1,97 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: coturn
+  labels:
+    {{- include "element.labels" . | nindent 4 }}
+    component: coturn
+spec:
+  selector:
+    matchLabels:
+      {{- include "element.selectorLabels" . | nindent 6 }}
+      component: coturn
+  template:
+    metadata:
+      {{- with .Values.coturn.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "element.labels" . | nindent 8 }}
+        {{- with .Values.coturn.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        component: coturn
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "element.serviceAccountName" . }}
+      {{- with .Values.coturn.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+      initContainers:
+        - name: sysctl
+          image: rawmind/alpine-sysctl:0.1
+          #restartPolicy: Always
+          env:
+            - name: KEEP_ALIVE
+              value: "0"
+            - name: SYSCTL_KEY
+              value: vm.max_map_count
+            - name: SYSCTL_VALUE
+              value: "262144"
+          stdin: true
+          tty: true
+          securityContext:
+            privileged: true
+
+      containers:
+        - name: coturn
+          {{- with .Values.coturn.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          image: "coturn/coturn:4.6.2"
+          imagePullPolicy: {{ .Values.coturn.image.pullPolicy }}
+          args:
+            - -n
+            - --use-auth-secret
+            - --allowed-peer-ip=10.0.0.1
+            - --no-tcp-relay
+            - --user-quota=12
+            - --total-quota=1200
+            - --log-file=stdout
+            - --static-auth-secret="{{ .Values.turnkey }}"
+            - --realm="{{ .Values.turnRealm }}"
+
+          ports:
+            - containerPort: 3478
+              protocol: TCP
+            - containerPort: 5349
+              protocol: TCP
+            - containerPort: 3478
+              protocol: UDP
+            - containerPort: 5349
+              protocol: UDP
+
+          {{- with .Values.coturn.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+
+      {{- with .Values.coturn.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.coturn.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.coturn.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

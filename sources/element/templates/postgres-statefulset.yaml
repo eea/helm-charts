@@ -1,0 +1,98 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: db
+  labels:
+    {{- include "element.labels" . | nindent 4 }}
+    component: postgres
+spec:
+  replicas: 1
+  serviceName: db
+  selector:
+    matchLabels:
+      {{- include "element.selectorLabels" . | nindent 6 }}
+      component: postgres
+  template:
+    metadata:
+      labels:
+        {{- include "element.selectorLabels" . | nindent 8 }}
+        component: postgres
+    spec:
+      terminationGracePeriodSeconds: 10
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "element.serviceAccountName" . }}
+      containers:
+      - name: {{ .Release.Name }}-psql
+        image: eeacms/postgres:14.7-1.0
+        ports:
+        - containerPort: 5432
+          protocol: TCP
+        env:
+        - name: POSTGRES_USER
+          value: postgres
+        - name: POSTGRES_PASSWORD
+          value: "{{ .Values.db.psqlpw }}"
+        - name: POSTGRES_DBUSER
+          value: "{{ .Values.db.user }}"
+        - name: POSTGRES_DBPASS
+          value: "{{ .Values.db.pass }}"
+        - name: POSTGRES_DBNAME
+          value: "{{ .Values.db.name }}"
+        - name: POSTGRES_DBPARAMS
+          value: "--lc-collate=C --template=template0 --lc-ctype=C"
+        - name: POSTGRES_CONFIG_SHARED_BUFFERS
+          value: "1GB"
+        - name: TZ
+          value: "{{ .Values.timezone }}"
+        securityContext:
+          {{- toYaml .Values.db.securityContext | nindent 10 }}
+        volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          name: {{ .Release.Name }}-dbdata
+
+#       livenessProbe:
+#         tcpSocket:
+#           port: 5432
+#         initialDelaySeconds: 15
+#         periodSeconds: 20
+#       readinessProbe:
+#         tcpSocket:
+#           port: 5432
+#         initialDelaySeconds: 5
+#         periodSeconds: 20
+
+        {{- with .Values.db.command }}
+        command:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        resources:
+          {{- toYaml .Values.db.resources | nindent 10 }}
+      {{- with .Values.db.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.db.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.db.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+
+  volumeClaimTemplates:
+  - metadata:
+      name: {{ .Release.Name }}-dbdata
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      {{- if .Values.db.storageClassName }}
+      storageClass: "{{ .Values.db.storageClassName }}"
+      {{- end }}
+      resources:
+        requests:
+          storage: "{{ .Values.db.storage }}"

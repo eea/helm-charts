@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: element
+  labels:
+    {{- include "element.labels" . | nindent 4 }}
+    component: element
+spec:
+  selector:
+    matchLabels:
+      {{- include "element.selectorLabels" . | nindent 6 }}
+      component: element
+  template:
+    metadata:
+      {{- with .Values.element.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "element.labels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        component: element
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "element.serviceAccountName" . }}
+      {{- with .Values.element.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+      containers:
+        - name: element
+          {{- with .Values.element.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          image: eeacms/matrix-element:1.11.55-1
+          imagePullPolicy: {{ .Values.element.image.pullPolicy }}
+          env:
+            - name: CSP_EXTRA_SOURCE
+              value: "{{ .Values.cspExtraSource }}"
+            - name: DOMAIN
+              value: "{{ .Values.matrixServerName }}"
+            - name: HOME_SERVER_URL
+              value: "https://{{ .Values.matrixServerName }}/"
+            - name: IDENTITY_SERVER_URL
+              value: "https://{{ .Values.matrixIdentityName }}/"
+            - name: TZ
+              value: "{{ .Values.timezone }}"
+
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+
+          {{- with .Values.element.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+
+      {{- with .Values.element.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.element.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.element.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

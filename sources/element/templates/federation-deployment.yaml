@@ -1,0 +1,81 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: federation
+  labels:
+    {{- include "element.labels" . | nindent 4 }}
+    component: federation
+spec:
+  selector:
+    matchLabels:
+      {{- include "element.selectorLabels" . | nindent 6 }}
+      component: federation
+  template:
+    metadata:
+      {{- with .Values.federation.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "element.labels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        component: federation
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "element.serviceAccountName" . }}
+      {{- with .Values.federation.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+      containers:
+        - name: federation
+          {{- with .Values.federation.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          image: eeacms/matrix-federation:latest
+          imagePullPolicy: {{ .Values.federation.image.pullPolicy }}
+          env:
+            - name: TZ
+              value: "{{ .Values.timezone }}"
+            - name: MATRIX_IDENTITY_URL
+              value: "https://{{ .Values.matrixIdentityName }}/"
+            - name: MATRIX_URL
+              value: "https://{{ .Values.matrixServerName }}/"
+
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+
+          livenessProbe:
+            httpGet:
+              path: /.well-known/matrix/server
+              port: 80
+            initialDelaySeconds: 60
+            periodSeconds: 2
+            timeoutSeconds: 2
+
+          {{- with .Values.federation.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+
+      {{- with .Values.federation.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.federation.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.federation.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

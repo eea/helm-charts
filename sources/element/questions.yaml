@@ -1,0 +1,240 @@
+questions:
+- variable: "matrixServerName"
+  label: "Matrix homeserver public FQDN"
+  description: "The public url of matrix, used in federation and under which every user is saved"
+  type: "string"
+  default: "matrix.eea.europa.eu"
+  required: true
+- variable: "frontendHostLabels"
+  label: "Schedule frontend services on hosts with following host labels"
+  description: "Comma separated list of host labels (e.g. key1=value1,key2=value2) to be used for scheduling the services."
+  type: "string"
+  required: true
+  default: "frontend=yes"
+- variable: "backendHostLabels"
+  label: "Schedule backends on hosts with following host labels"
+  description: "Comma separated list of host labels (e.g. key1=value1,key2=value2) to be used for scheduling the services."
+  type: "string"
+  required: true
+  default: "backend=yes"
+- variable: "turnHostLabels"
+  label: "Schedule turn container on hosts with following host labels"
+  description: "Comma separated list of host labels (e.g. key1=value1,key2=value2) to be used for scheduling the services."
+  type: "string"
+  required: true
+  default: "turn=yes"
+
+
+- variable: "db.user"
+  label: "Matrix database user"
+  default: "matrix"
+  description: "Matrix postgres database user"
+  type: "string"
+- variable: "db.pass"
+  label: "Matrix database password"
+  default: "matrix"
+  description: "Matrix postgres database password"
+  type: "password"
+- variable: "db.psqlpw"
+  label: "Admin user database password"
+  default: "password"
+  description: "postgres user password"
+  type: "password"
+- variable: "db.name"
+  label: "Matrix database name"
+  default: "matrix"
+  description: "Matrix postgres database name"
+  type: "string"
+
+
+- variable: "matrixEmailFromAddress"
+  label: "Matrix-Riot email sender address"
+  default: "noreply@eea.europa.eu"
+  description: "Email used to send notifications from Matrix-riot"
+  type: "string"
+- variable: "matrixEmailFromName"
+  label: "Matrix-Riot email sender name"
+  default: "EEA Riot Chat"
+  description: "Email name used to send notifications from Matrix-riot"
+  type: "string"
+- variable: "matrixURL"
+  label: "Matrix https URL"
+  default: "https://matrix.eea.europa.eu/"
+  description: "Matrix https URL"
+  type: "string"
+  required: true
+- variable: "riotURL"
+  label: "Riot https URL"
+  default: "https://riot.eea.europa.eu"
+  description: "Riot https URL"
+  type: "string"
+  required: true
+- variable: "matrixIdentityURL"
+  label: "Matrix identity service https URL"
+  default: "https://matrix-identity.eea.europa.eu/"
+  description: "Matrix identity service https URL"
+  type: "string"
+  required: true
+
+
+- variable: "ldapHost"
+  label: "LDAP host"
+  default: "ldap3.eionet.europa.eu"
+  description: "LDAP EIONET host/ip"
+  type: "string"
+  required: true
+- variable: "ldapBinddn"
+  label: "LDAP binddn"
+  default: "uid=user,ou=Users,o=EIONET,l=Europe"
+  description: "The DN for the user to read from LDAP"
+  type: "string"
+  required: true
+- variable: "ldapBinddnPass"
+  label: "LDAP binddn password"
+  description: "The password for the user to read from LDAP"
+  type: "password"
+  required: true
+- variable: "ldapBasedn"
+  label: "LDAP base DN"
+  default: "ou=Users,o=EIONET,l=Europe"
+  description: "LDAP BASE DN to give access to users"
+  type: "string"
+  required: true
+- variable: "ldapPort"
+  label: "LDAP port"
+  default: "636"
+  description: "Access port for LDAP"
+  type: "int"
+- variable: "ldapTLS"
+  label: "LDAP TLS enabled"
+  default: "true"
+  description: "LDAP TLS enabled (true/false)"
+  type: "enum"
+  options:
+  - "true"
+  - "false"
+  required: true
+- variable: "ldapFilter"
+  label: "LDAP filter users"
+  description: "Used to filter the users from LDAP with access "
+  type: "string"
+
+
+- variable: "javaOpts"
+  label: "Identity server JAVA options"
+  description: "Identity server JAVA extra options"
+  type: "string"
+- variable: "synapseMxisdHStoken"
+  label: "Synapse appservice-mxisd app HS token"
+  description: "Used to integrate the identity service"
+  type: "string"
+- variable: "synapseMxisdAStoken"
+  label: "Synapse appservice-mxisd app AS token"
+  description: "Used to integrate the identity service"
+  type: "string"
+- variable: "turnRealm"
+  label: "Coturn hostname"
+  type: "string"
+  default: "turn.eea.europa.eu"
+- variable: "turnkey"
+  label: "Coturn secret key, pwgen -s 64 1"
+  type: "password"
+  default: "LLbic1m5iqizxmuyFw0r5wHw1ChFeQK3QWHgwe9jo6iFYlltBzv7eSbdWdPIIlK3"   
+
+- variable: "timezone"
+  label: "Time zone"
+  description: "Time zone"
+  default: "Europe/Copenhagen"
+  required: true
+  type: "string"
+
+
+- variable: "postfixRelay"
+  label: "Postfix relay"
+  description: "Postfix SMTP relay"
+  type: "string"
+  default: "ironports.eea.europa.eu"
+- variable: "postfixPort"
+  label: "Postfix relay port"
+  description: "Postfix SMTP relay port"
+  type: "int"
+  default: 8587
+- variable: "postfixUser"
+  label: "Postfix user"
+  description: "User used to send email"
+  type: "string"
+- variable: "postfixPass"
+  label: "Postfix password"
+  description: "Password used for MTPUSER"
+  type: "password"
+
+
+- variable: "matrix.db.storageClassName"
+  label: "Matrix database data storage class"
+  description: "Volume storage class"
+  default: ""
+  type: "string"
+  required: false
+- variable: "synapseVolumeExternal"
+  label: "Matrix data volume environment scoped (external)"
+  description: "Matrix data is environment scoped (externally created in Storage)"
+  default: "yes"
+  type: "enum"
+  required: true
+  options:
+  - "yes"
+  - "no"
+- variable: "synapseVolumeDriverOpts"
+  label: "Matrix data volume driver options"
+  description: |
+      Specify "driver opts" key/value pair in the format "optionName: optionValue".
+      E.g. for the `rancher-ebs` driver you should specify the required 'size' option like this: "size: 1".
+  type: "multiline"
+
+
+- variable: "mxisdVolume"
+  default: "matrix-mxisd"
+  label: "Identity server data volume name"
+  type: "string"
+  required: true
+- variable: "mxisdVolumeDriver"
+  label: "Identity server data volume driver"
+  description: "Volume driver"
+  default: ""
+  type: "string"
+  required: true
+- variable: "mxisdVolumeExternal"
+  label: "Identity server data volume environment scoped (external)"
+  description: "Identity server data is environment scoped (externally created by other stack)"
+  default: "yes"
+  type: "enum"
+  required: true
+  options:
+  - "yes"
+  - "no"
+- variable: "mxisdVolumeDriverOpts"
+  label: "Identity server data volume driver options"
+  description: |
+      Specify "driver opts" key/value pair in the format "optionName: optionValue".
+      E.g. for the `rancher-ebs` driver you should specify the required 'size' option like this: "size: 1".
+  type: "multiline"
+
+
+- variable: "db.storage"
+  label: "Matrix database data storage size"
+  description: "Size as 10Gi"
+  type: "string"
+  required: true
+  default: "10Gi"
+- variable: "db.storageClassName"
+  label: "Matrix database data storage class"
+  description: "Volume storage class"
+  default: ""
+  type: "string"
+  required: false
+- variable: "db.storageOpts"
+  label: "Matrix database data volume driver options"
+  description: |
+      Specify "driver opts" key/value pair in the format "optionName: optionValue".
+      E.g. for the `rancher-ebs` driver you should specify the required 'size' option like this: "size: 1".
+  type: "multiline"

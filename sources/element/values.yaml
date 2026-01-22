@@ -1,0 +1,269 @@
+
+imagePullSecrets: []
+
+timezone: Europe/Copenhagen
+turnkey: ""
+turnRealm: "matrix-turn"
+cspExtraSource: ""
+
+matrixServerName: matrix
+matrixIdentityName: matrix-identity
+elementServerName: element
+certificateName: ''
+
+serviceAccount:
+  create: true
+  automount: true
+  annotations: {}
+  name: ""
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+  className: "nginx"
+
+httpRoute:
+  # HTTPRoute enabled.
+  enabled: false
+  # HTTPRoute annotations.
+  annotations: {}
+  # Which Gateways this Route is attached to.
+  parentRefs:
+  - name: gateway
+    sectionName: http
+    # namespace: default
+  # Hostnames matching HTTP header.
+  hostnames:
+  - chart-example.local
+  # List of rules and filters applied.
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /headers
+  #   filters:
+  #   - type: RequestHeaderModifier
+  #     requestHeaderModifier:
+  #       set:
+  #       - name: My-Overwrite-Header
+  #         value: this-is-the-only-value
+  #       remove:
+  #       - User-Agent
+  # - matches:
+  #   - path:
+  #       type: PathPrefix
+  #       value: /echo
+  #     headers:
+  #     - name: version
+  #       value: v2
+
+ldap:
+  host: "ldaphost"
+  binddn: ""
+  binddnPass: ""
+  filter: ""
+  basedn: ""
+  port: "636"
+  tls: "true"
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+synapseMxisdHStoken: ""
+synapseMxisdAStoken: ""
+
+coturn:
+  image:
+    pullPolicy: IfNotPresent
+    repository: coturn/coturn
+    tag: "4.6.2"
+  resources: {}
+  podAnnotations: {}
+  podLabels: {}
+  podSecurityContext: {}
+  securityContext:
+    privileged: true
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  livenessProbe: {}
+  readinessProbe: {}
+
+db:
+  image:
+    pullPolicy: IfNotPresent
+    repository: eeacms/postgres
+    tag: "14.7-1.0"
+  resources:
+    limits:
+      memory: 3Gi
+    requests:
+      memory: 2Gi
+  podAnnotations: {}
+  podLabels: {}
+  podSecurityContext: {}
+  securityContext: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  livenessProbe: {}
+  readinessProbe: {}
+  storageClassName: ""
+  storage: "15Gi"
+  storageOpts: {}
+  user: matrix
+  pass: matrix
+  name: matrix
+  psqlpw: REPLACEME
+  command: []
+
+element:
+  image:
+    pullPolicy: IfNotPresent
+    repository: eeacms/matrix-element
+    tag: ""
+  resources:
+    limits:
+      memory: 64Mi
+    requests:
+      memory: 64Mi
+  podAnnotations: {}
+  podLabels: {}
+  podSecurityContext: {}
+  securityContext: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  livenessProbe:
+    httpGet:
+      path: /
+      port: http
+      initialDelaySeconds: 90
+      periodSeconds: 20
+      timeoutSeconds: 3
+  readinessProbe:
+    httpGet:
+      path: /
+      port: http
+
+
+federation:
+  image:
+    pullPolicy: IfNotPresent
+    repository: eeacms/matrix-federation
+    tag: "latest"
+  nameOverride: ""
+  fullnameOverride: ""
+  resources:
+    limits:
+      memory: 64Mi
+    requests:
+      memory: 64Mi
+  podAnnotations: {}
+  podLabels: {}
+  podSecurityContext: {}
+  securityContext: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+identity:
+  image:
+    pullPolicy: IfNotPresent
+    repository: eeacms/matrix-identity
+    tag: "2.5.0-1"
+  resources:
+    limits:
+      memory: 1024Mi
+    requests:
+      memory: 512Mi
+  javaOpts: ""
+  podAnnotations: {}
+  podLabels: {}
+  podSecurityContext: {}
+  securityContext: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  livenessProbe:
+    tcpSocket:
+      port: 8090
+      initialDelaySeconds: 90
+      periodSeconds: 20
+      timeoutSeconds: 3
+  readinessProbe:
+    tcpSocket:
+      port: 8090
+  data:
+    storageClassName: ""
+    storage: "1Gi"
+    storageOpts: {}
+
+matrix:
+  image:
+    pullPolicy: IfNotPresent
+    repository: eeacms/matrix-synapse
+    tag: "1.98.0-1"
+  resources:
+    limits:
+      memory: 2Gi
+    requests:
+      memory: 2Gi
+  emailFromName: ""
+  emailFromAddress: ""
+  serverName: "matrix.eea.europa.eu"
+  podAnnotations: {}
+  podLabels: {}
+  podSecurityContext: {}
+  securityContext: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  livenessProbe:
+    tcpSocket:
+      port: http
+      initialDelaySeconds: 90
+      periodSeconds: 20
+      timeoutSeconds: 3
+  readinessProbe:
+    tcpSocket:
+      port: http
+  data:
+    storageClassName: ""
+    storage: "20Gi"
+    storageOpts: {}
+
+# Postfix mail relay configuration
+postfix:
+  enabled: true
+  dryrun: false
+  fullnameOverride: "postfix"
+  serverName: ""
+  mtpPort: 8587
+  mtpRelay: ""
+  mtpUser: ""
+  mtpPass: ""
+  resources:
+    limits:
+      memory: 128Mi
+    requests:
+      cpu: 100m
+      memory: 64Mi
+  affinity: {}
+  tolerations: []
+  mailtrap:
+    httpenabled: false
+    ingress:
+      enabled: false
+    mtPasswd: ""
+    mtUser: ""
+    serviceType: ClusterIP
+
+
