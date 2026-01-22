@@ -17423,6 +17423,22 @@ entries:
     urls:
     - elastic8-search-0.1.0.tgz
     version: 0.1.0
+  element:
+  - apiVersion: v2
+    appVersion: 1.11.55-1
+    created: "2026-01-22T15:39:26.822161426+01:00"
+    dependencies:
+    - condition: postfix.enabled
+      name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.2.0
+    description: Matrix and Element stack
+    digest: bed90fac6245e3e2ca1d037b7e83bcc3dc832e9aeff67b7a4e43e8e8ac76d265
+    name: element
+    type: application
+    urls:
+    - element-0.1.0.tgz
+    version: 0.1.0
   emrt-esd:
   - apiVersion: v2
     appVersion: 18.1.23-1-1.77.4
@@ -40103,4 +40119,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2026-01-22T13:44:01.343061889Z"
+generated: "2026-01-22T15:39:26.818447102+01:00"
