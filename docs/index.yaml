@@ -17480,6 +17480,21 @@ entries:
   element:
   - apiVersion: v2
     appVersion: 1.11.55-1
+    created: "2026-01-23T14:26:43.917341624+01:00"
+    dependencies:
+    - condition: postfix.enabled
+      name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.2.0
+    description: Matrix and Element stack
+    digest: b0d53ae7d1bf1b9c49550f702ada65891cd3b6a0ac6f60286f1f762d5f71ba26
+    name: element
+    type: application
+    urls:
+    - element-0.2.0.tgz
+    version: 0.2.0
+  - apiVersion: v2
+    appVersion: 1.11.55-1
     created: "2026-01-22T15:56:20.665642082+01:00"
     dependencies:
     - condition: postfix.enabled
@@ -40203,4 +40218,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2026-01-23T12:50:37.818834703Z"
+generated: "2026-01-23T14:26:43.91532801+01:00"
