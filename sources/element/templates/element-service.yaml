@@ -5,10 +5,11 @@ metadata:
   labels:
     {{- include "element.labels" . | nindent 4 }}
     component: element
+
 spec:
-  type: ClusterIP
+  type: {{ .Values.element.service.type }}
   ports:
-    - port: 80
+    - port: {{ .Values.element.service.port }}
       targetPort: 80
       protocol: TCP
   selector:

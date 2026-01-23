@@ -7,24 +7,18 @@ This stack needs 3 public url, open on specified port and a valid certificate, s
 
 1. There are 3 new entries in the DNS - element, matrix and matrix-identity that point to the LoadBalancer(element and matrix-identity) and server ( matrix )  you will be using to install the stack
 2. For each of the 3 urls, because they will be accessed on https you will need a valid and TRUSTED certificate ( letsencrypt can be used).
-3. The matrix server must be installed on the same host as the load balancer
 3. If you are using letsencrypt for a certificate, you need to ask for a DNS exception for the IPs you are using
-3. This firewall accesses must be opened:
+4. This firewall accesses must be opened:
    1. element url - TCP 443 and TCP 80 ( if you are using letsencrypt)
    2. matrix-identity  url - TCP 443 and TCP 80 ( if you are using letsencrypt)
    3. matrix -  TCP 443 and TCP 80 ( if you are using letsencrypt) and 3478 ( UDP ) for VOIP and 8448 (HTTPS) for federation with synapse servers older than v1.0
-   
-   
 
-## Letsencrypt certificate generation
 
-1. Add Let's Encrypt Stack - community catalog.
-2. Important mandatory parameters :
-   1. Domain Names - set all 3 urls used in matrix stack, separated by comma
-   2. Let's Encrypt API Version - to test the stack - use Sandbox. For a valid, trusted certificate - use Production.
-   3. Domain Validation Method - HTTP
+## Let's encrypt certificate generation
 
-Add a load balancer in stack, and for each url, redirect HTTP 80 with Path = /.well-known/acme-challenge to letsencrypt service, port 80
+1. Add Cert-manager from Jetstack Helm repository, and set up an Issuer or ClusterIssuer.
+2. Add the issuer name as an annotation for the ingresses for element, identity and matrix.
+3. Declare names for the certificates for element, identity and matrix in the ingresses. The names must differ to avoid conflicts.
 
 ## Matrix Stack
 
@@ -43,7 +37,6 @@ Add a load balancer in stack, and for each url, redirect HTTP 80 with Path = /.w
 
 #### Element web site related parameters
 10. Matrix identity service https URL - Matrix identity service https URL
-
 
 #### Identity server/LDAP parameters
 11. LDAP host - LDAP EIONET host/ip

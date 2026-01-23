@@ -39,7 +39,7 @@ spec:
           securityContext:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          image: "eeacms/matrix-synapse:1.98.0-1"
+          image: "{{ .Values.matrix.image.repository }}:{{ .Values.matrix.image.tag }}"
           imagePullPolicy: {{ .Values.matrix.image.pullPolicy }}
           env:
             - name: DATABASE
@@ -59,15 +59,15 @@ spec:
             - name: POSTGRES_HOST
               value: db
             - name: PUBLIC_BASE_URL
-              value: "https://{{ .Values.matrixServerName }}/"
+              value: "https://{{ .Values.matrix.serverName }}/"
             - name: REGISTRATION_ENABLED
               value: "no"
             - name: REPORT_STATS
               value: "no"
             - name: RIOT_BASE_URL
-              value: "https://{{ .Values.elementServerName }}"
+              value: "https://{{ .Values.element.serverName }}"
             - name: SERVER_NAME
-              value: "{{ .Values.matrixServerName }}"
+              value: "{{ .Values.matrix.serverName }}"
             - name: SMTP_HOST
               value: postfix
             - name: SMTP_PORT
@@ -81,6 +81,15 @@ spec:
             - name: http
               containerPort: 8008
               protocol: TCP
+
+          {{- with .Values.matrix.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.matrix.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
 
           {{- with .Values.matrix.resources }}
           resources:

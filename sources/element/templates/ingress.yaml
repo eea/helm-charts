@@ -13,10 +13,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - "{{ .Values.elementServerName }}"
+        - "{{ .Values.element.serverName }}"
       secretName: '{{ .Values.element.ingress.certificateName }}'
   rules:
-    - host: "{{ .Values.elementServerName }}"
+    - host: "{{ .Values.element.serverName }}"
       http:
         paths:
           - path: /
@@ -41,10 +41,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - "{{ .Values.matrixIdentityName }}"
+        - "{{ .Values.identity.serverName }}"
       secretName: '{{ .Values.identity.ingress.certificateName }}'
   rules:
-    - host: "{{ .Values.matrixIdentityName }}"
+    - host: "{{ .Values.identity.serverName }}"
       http:
         paths:
           - path: /
@@ -69,10 +69,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - "{{ .Values.matrixServerName }}"
+        - "{{ .Values.matrix.serverName }}"
       secretName: '{{ .Values.matrix.ingress.certificateName }}'
   rules:
-    - host: "{{ .Values.matrixServerName }}"
+    - host: "{{ .Values.matrix.serverName }}"
       http:
         paths:
           - path: /
@@ -113,10 +113,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - "{{ .Values.matrixServerName }}"
+        - "{{ .Values.matrix.serverName }}"
       secretName: '{{ .Values.matrix.ingress.certificateName }}'
   rules:
-    - host: "{{ .Values.matrixServerName }}"
+    - host: "{{ .Values.matrix.serverName }}"
       http:
         paths:
           - path: /.well-known/matrix/client

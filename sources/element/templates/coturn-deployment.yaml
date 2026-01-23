@@ -55,7 +55,7 @@ spec:
           securityContext:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          image: "coturn/coturn:4.6.2"
+          image: "{{ .Values.coturn.image.repository }}:{{ .Values.coturn.image.tag }}"
           imagePullPolicy: {{ .Values.coturn.image.pullPolicy }}
           args:
             - -n
@@ -77,6 +77,15 @@ spec:
               protocol: UDP
             - containerPort: 5349
               protocol: UDP
+
+          {{- with .Values.coturn.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.coturn.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
 
           {{- with .Values.coturn.resources }}
           resources:

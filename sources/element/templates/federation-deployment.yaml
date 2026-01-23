@@ -39,28 +39,29 @@ spec:
           securityContext:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          image: eeacms/matrix-federation:latest
+          image: "{{ .Values.federation.image.repository }}:{{ .Values.federation.image.tag }}"
           imagePullPolicy: {{ .Values.federation.image.pullPolicy }}
           env:
             - name: TZ
               value: "{{ .Values.timezone }}"
             - name: MATRIX_IDENTITY_URL
-              value: "https://{{ .Values.matrixIdentityName }}/"
+              value: "https://{{ .Values.identity.serverName }}/"
             - name: MATRIX_URL
-              value: "https://{{ .Values.matrixServerName }}/"
+              value: "https://{{ .Values.matrix.serverName }}/"
 
           ports:
             - name: http
               containerPort: 80
               protocol: TCP
 
+          {{- with .Values.federation.livenessProbe }}
           livenessProbe:
-            httpGet:
-              path: /.well-known/matrix/server
-              port: 80
-            initialDelaySeconds: 60
-            periodSeconds: 2
-            timeoutSeconds: 2
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.federation.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
 
           {{- with .Values.federation.resources }}
           resources:

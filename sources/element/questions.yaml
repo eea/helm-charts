@@ -1,111 +1,92 @@
 questions:
-- variable: "matrixServerName"
+- variable: "matrix.serverName"
   label: "Matrix homeserver public FQDN"
   description: "The public url of matrix, used in federation and under which every user is saved"
   type: "string"
   default: "matrix.eea.europa.eu"
   required: true
-- variable: "frontendHostLabels"
-  label: "Schedule frontend services on hosts with following host labels"
-  description: "Comma separated list of host labels (e.g. key1=value1,key2=value2) to be used for scheduling the services."
-  type: "string"
-  required: true
-  default: "frontend=yes"
-- variable: "backendHostLabels"
-  label: "Schedule backends on hosts with following host labels"
-  description: "Comma separated list of host labels (e.g. key1=value1,key2=value2) to be used for scheduling the services."
-  type: "string"
-  required: true
-  default: "backend=yes"
-- variable: "turnHostLabels"
-  label: "Schedule turn container on hosts with following host labels"
-  description: "Comma separated list of host labels (e.g. key1=value1,key2=value2) to be used for scheduling the services."
-  type: "string"
-  required: true
-  default: "turn=yes"
 
+- variable: "element.serverName"
+  label: "Element server name"
+  default: "element.eea.europa.eu"
+  description: "Server name will be used for URL with https in front"
+  type: "string"
+  required: true
+
+- variable: "identity.serverName"
+  label: "Matrix identity server name"
+  default: "matrix-identity.eea.europa.eu"
+  description: "Server name will be used for URL with https in front"
+  type: "string"
+  required: true
 
 - variable: "db.user"
   label: "Matrix database user"
   default: "matrix"
   description: "Matrix postgres database user"
   type: "string"
+  group: "Database"
 - variable: "db.pass"
   label: "Matrix database password"
   default: "matrix"
   description: "Matrix postgres database password"
   type: "password"
+  group: "Database"
 - variable: "db.psqlpw"
   label: "Admin user database password"
   default: "password"
   description: "postgres user password"
   type: "password"
+  group: "Database"
 - variable: "db.name"
   label: "Matrix database name"
   default: "matrix"
   description: "Matrix postgres database name"
   type: "string"
+  group: "Database"
 
 
-- variable: "matrixEmailFromAddress"
+- variable: "matrix.emailFromAddress"
   label: "Matrix-Riot email sender address"
   default: "noreply@eea.europa.eu"
   description: "Email used to send notifications from Matrix-riot"
   type: "string"
-- variable: "matrixEmailFromName"
+
+- variable: "matrix.emailFromName"
   label: "Matrix-Riot email sender name"
   default: "EEA Riot Chat"
   description: "Email name used to send notifications from Matrix-riot"
   type: "string"
-- variable: "matrixURL"
-  label: "Matrix https URL"
-  default: "https://matrix.eea.europa.eu/"
-  description: "Matrix https URL"
-  type: "string"
-  required: true
-- variable: "riotURL"
-  label: "Riot https URL"
-  default: "https://riot.eea.europa.eu"
-  description: "Riot https URL"
-  type: "string"
-  required: true
-- variable: "matrixIdentityURL"
-  label: "Matrix identity service https URL"
-  default: "https://matrix-identity.eea.europa.eu/"
-  description: "Matrix identity service https URL"
-  type: "string"
-  required: true
 
-
-- variable: "ldapHost"
+- variable: "ldap.host"
   label: "LDAP host"
   default: "ldap3.eionet.europa.eu"
   description: "LDAP EIONET host/ip"
   type: "string"
   required: true
-- variable: "ldapBinddn"
+- variable: "ldap.binddn"
   label: "LDAP binddn"
   default: "uid=user,ou=Users,o=EIONET,l=Europe"
   description: "The DN for the user to read from LDAP"
   type: "string"
   required: true
-- variable: "ldapBinddnPass"
+- variable: "ldap.binddnPass"
   label: "LDAP binddn password"
   description: "The password for the user to read from LDAP"
   type: "password"
   required: true
-- variable: "ldapBasedn"
+- variable: "ldap.basedn"
   label: "LDAP base DN"
   default: "ou=Users,o=EIONET,l=Europe"
   description: "LDAP BASE DN to give access to users"
   type: "string"
   required: true
-- variable: "ldapPort"
+- variable: "ldap.port"
   label: "LDAP port"
   default: "636"
   description: "Access port for LDAP"
   type: "int"
-- variable: "ldapTLS"
+- variable: "ldap.tls"
   label: "LDAP TLS enabled"
   default: "true"
   description: "LDAP TLS enabled (true/false)"
@@ -114,13 +95,13 @@ questions:
   - "true"
   - "false"
   required: true
-- variable: "ldapFilter"
+- variable: "ldap.filter"
   label: "LDAP filter users"
   description: "Used to filter the users from LDAP with access "
   type: "string"
 
 
-- variable: "javaOpts"
+- variable: "identity.javaOpts"
   label: "Identity server JAVA options"
   description: "Identity server JAVA extra options"
   type: "string"
@@ -149,70 +130,62 @@ questions:
   type: "string"
 
 
-- variable: "postfixRelay"
+- variable: "postfix.mtpRelay"
   label: "Postfix relay"
   description: "Postfix SMTP relay"
   type: "string"
   default: "ironports.eea.europa.eu"
-- variable: "postfixPort"
+- variable: "postfix.mtpPort"
   label: "Postfix relay port"
   description: "Postfix SMTP relay port"
   type: "int"
   default: 8587
-- variable: "postfixUser"
+- variable: "postfix.mtpUser"
   label: "Postfix user"
   description: "User used to send email"
   type: "string"
-- variable: "postfixPass"
+- variable: "postfix.mtpPass"
   label: "Postfix password"
   description: "Password used for MTPUSER"
   type: "password"
 
 
-- variable: "matrix.db.storageClassName"
+- variable: "db.storage"
+  label: "Matrix database data storage size"
+  description: "Size of storage needed"
+  default: "15Gi"
+  type: "string"
+  required: true
+  group: "Database"
+- variable: "db.storageClassName"
   label: "Matrix database data storage class"
   description: "Volume storage class"
   default: ""
   type: "string"
   required: false
-- variable: "synapseVolumeExternal"
-  label: "Matrix data volume environment scoped (external)"
-  description: "Matrix data is environment scoped (externally created in Storage)"
-  default: "yes"
-  type: "enum"
-  required: true
-  options:
-  - "yes"
-  - "no"
-- variable: "synapseVolumeDriverOpts"
+  group: "Database"
+- variable: "db.storageOpts"
   label: "Matrix data volume driver options"
   description: |
       Specify "driver opts" key/value pair in the format "optionName: optionValue".
       E.g. for the `rancher-ebs` driver you should specify the required 'size' option like this: "size: 1".
   type: "multiline"
+  group: "Database"
 
 
-- variable: "mxisdVolume"
-  default: "matrix-mxisd"
-  label: "Identity server data volume name"
+- variable: "identity.data.storage"
+  default: "1Gi"
+  label: "Identity server data volume size"
+  description: "Size of storage needed"
   type: "string"
   required: true
-- variable: "mxisdVolumeDriver"
-  label: "Identity server data volume driver"
-  description: "Volume driver"
+- variable: "identity.data.storageClassName"
+  label: "Identity server data storage class"
+  description: "Volume storage class"
   default: ""
   type: "string"
-  required: true
-- variable: "mxisdVolumeExternal"
-  label: "Identity server data volume environment scoped (external)"
-  description: "Identity server data is environment scoped (externally created by other stack)"
-  default: "yes"
-  type: "enum"
-  required: true
-  options:
-  - "yes"
-  - "no"
-- variable: "mxisdVolumeDriverOpts"
+  required: false
+- variable: "identify.data.storageOpts"
   label: "Identity server data volume driver options"
   description: |
       Specify "driver opts" key/value pair in the format "optionName: optionValue".
@@ -220,19 +193,19 @@ questions:
   type: "multiline"
 
 
-- variable: "db.storage"
+- variable: "matrix.data.storage"
   label: "Matrix database data storage size"
   description: "Size as 10Gi"
   type: "string"
   required: true
-  default: "10Gi"
-- variable: "db.storageClassName"
+  default: "20Gi"
+- variable: "matrix.data.storageClassName"
   label: "Matrix database data storage class"
   description: "Volume storage class"
   default: ""
   type: "string"
   required: false
-- variable: "db.storageOpts"
+- variable: "matrix.data.storageOpts"
   label: "Matrix database data volume driver options"
   description: |
       Specify "driver opts" key/value pair in the format "optionName: optionValue".

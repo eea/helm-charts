@@ -39,17 +39,17 @@ spec:
           securityContext:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          image: eeacms/matrix-element:1.11.55-1
+          image: "{{ .Values.element.image.repository }}:{{ .Values.element.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.element.image.pullPolicy }}
           env:
             - name: CSP_EXTRA_SOURCE
               value: "{{ .Values.cspExtraSource }}"
             - name: DOMAIN
-              value: "{{ .Values.matrixServerName }}"
+              value: "{{ .Values.matrix.serverName }}"
             - name: HOME_SERVER_URL
-              value: "https://{{ .Values.matrixServerName }}/"
+              value: "https://{{ .Values.matrix.serverName }}/"
             - name: IDENTITY_SERVER_URL
-              value: "https://{{ .Values.matrixIdentityName }}/"
+              value: "https://{{ .Values.identity.serverName }}/"
             - name: TZ
               value: "{{ .Values.timezone }}"
 
@@ -57,6 +57,15 @@ spec:
             - name: http
               containerPort: 80
               protocol: TCP
+
+          {{- with .Values.element.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.element.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
 
           {{- with .Values.element.resources }}
           resources:

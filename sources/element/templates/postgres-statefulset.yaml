@@ -25,51 +25,64 @@ spec:
       {{- end }}
       serviceAccountName: {{ include "element.serviceAccountName" . }}
       containers:
-      - name: {{ .Release.Name }}-psql
-        image: eeacms/postgres:14.7-1.0
-        ports:
-        - containerPort: 5432
-          protocol: TCP
-        env:
-        - name: POSTGRES_USER
-          value: postgres
-        - name: POSTGRES_PASSWORD
-          value: "{{ .Values.db.psqlpw }}"
-        - name: POSTGRES_DBUSER
-          value: "{{ .Values.db.user }}"
-        - name: POSTGRES_DBPASS
-          value: "{{ .Values.db.pass }}"
-        - name: POSTGRES_DBNAME
-          value: "{{ .Values.db.name }}"
-        - name: POSTGRES_DBPARAMS
-          value: "--lc-collate=C --template=template0 --lc-ctype=C"
-        - name: POSTGRES_CONFIG_SHARED_BUFFERS
-          value: "1GB"
-        - name: TZ
-          value: "{{ .Values.timezone }}"
-        securityContext:
-          {{- toYaml .Values.db.securityContext | nindent 10 }}
-        volumeMounts:
-        - mountPath: /var/lib/postgresql/data
-          name: {{ .Release.Name }}-dbdata
+        - name: {{ .Release.Name }}-psql
+          image: "{{ .Values.db.image.repository }}:{{ .Values.db.image.tag }}"
+          env:
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              value: "{{ .Values.db.psqlpw }}"
+            - name: POSTGRES_DBUSER
+              value: "{{ .Values.db.user }}"
+            - name: POSTGRES_DBPASS
+              value: "{{ .Values.db.pass }}"
+            - name: POSTGRES_DBNAME
+              value: "{{ .Values.db.name }}"
+            - name: POSTGRES_DBPARAMS
+              value: "--lc-collate=C --template=template0 --lc-ctype=C"
+            - name: POSTGRES_CONFIG_SHARED_BUFFERS
+              value: "1GB"
+            - name: TZ
+              value: "{{ .Values.timezone }}"
 
-#       livenessProbe:
-#         tcpSocket:
-#           port: 5432
-#         initialDelaySeconds: 15
-#         periodSeconds: 20
-#       readinessProbe:
-#         tcpSocket:
-#           port: 5432
-#         initialDelaySeconds: 5
-#         periodSeconds: 20
+          securityContext:
+            {{- toYaml .Values.db.securityContext | nindent 12 }}
 
-        {{- with .Values.db.command }}
-        command:
-          {{- toYaml . | nindent 10 }}
-        {{- end }}
-        resources:
-          {{- toYaml .Values.db.resources | nindent 10 }}
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: {{ .Release.Name }}-dbdata
+
+          ports:
+            - containerPort: 5432
+              protocol: TCP
+
+#         livenessProbe:
+#           tcpSocket:
+#             port: 5432
+#           initialDelaySeconds: 15
+#           periodSeconds: 20
+#         readinessProbe:
+#           tcpSocket:
+#             port: 5432
+#           initialDelaySeconds: 5
+#           periodSeconds: 20
+
+          {{- with .Values.db.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.db.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+
+          {{- with .Values.db.command }}
+          command:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.db.resources | nindent 12 }}
+
       {{- with .Values.db.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -85,14 +98,14 @@ spec:
       restartPolicy: Always
 
   volumeClaimTemplates:
-  - metadata:
-      name: {{ .Release.Name }}-dbdata
-    spec:
-      accessModes:
-      - ReadWriteOnce
-      {{- if .Values.db.storageClassName }}
-      storageClass: "{{ .Values.db.storageClassName }}"
-      {{- end }}
-      resources:
-        requests:
-          storage: "{{ .Values.db.storage }}"
+    - metadata:
+        name: {{ .Release.Name }}-dbdata
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        {{- if .Values.db.storageClassName }}
+        storageClass: "{{ .Values.db.storageClassName }}"
+        {{- end }}
+        resources:
+          requests:
+            storage: "{{ .Values.db.storage }}"
