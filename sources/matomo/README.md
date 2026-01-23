@@ -347,6 +347,9 @@ You don't need to change anything on this container, it should work by having th
 
 ## Releases
 
+### Version 2.0.0 - 23 January 2026
+- Remove analytics, disable delete data, add multiple archivers [EEA Jenkins - [`80e33ba8`](https://github.com/eea/helm-charts/commit/80e33ba8959ee0c87a2d1785cac284e687447003)]
+
 ### Version 1.4.2 - 15 January 2026
 - fix spacing [EEA Jenkins - [`02728872`](https://github.com/eea/helm-charts/commit/0272887207a8ac89092d0e835810126c5e256528)]
 
