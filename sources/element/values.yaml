@@ -6,8 +6,6 @@ turnkey: ""
 turnRealm: "matrix-turn"
 cspExtraSource: ""
 
-certificateName: ''
-
 serviceAccount:
   create: true
   automount: false
@@ -81,13 +79,13 @@ coturn:
   podAnnotations: {}
   podLabels: {}
   podSecurityContext: {}
-  securityContext:
-    privileged: true
+  securityContext: {}
   nodeSelector: {}
   tolerations: []
   affinity: {}
   livenessProbe: {}
   readinessProbe: {}
+  startupProbe: {}
 
 db:
   image:
@@ -108,6 +106,7 @@ db:
   affinity: {}
   livenessProbe: {}
   readinessProbe: {}
+  startupProbe: {}
   storageClassName: ""
   storage: "15Gi"
   storageOpts: {}
@@ -142,6 +141,7 @@ element:
   affinity: {}
   livenessProbe: {}
   readinessProbe: {}
+  startupProbe: {}
   serverName: "element.eea.europa.eu"
 
 federation:
@@ -171,6 +171,7 @@ federation:
     periodSeconds: 30
     timeoutSeconds: 2
   readinessProbe: {}
+  startupProbe: {}
 
 identity:
   image:
@@ -197,10 +198,11 @@ identity:
   livenessProbe:
     tcpSocket:
       port: 8090
-      initialDelaySeconds: 90
-      periodSeconds: 20
-      timeoutSeconds: 3
+    initialDelaySeconds: 90
+    periodSeconds: 20
+    timeoutSeconds: 3
   readinessProbe: {}
+  startupProbe: {}
   data:
     storageClassName: ""
     storage: "1Gi"
@@ -234,6 +236,7 @@ matrix:
   affinity: {}
   livenessProbe: {}
   readinessProbe: {}
+  startupProbe: {}
   data:
     storageClassName: ""
     storage: "20Gi"
