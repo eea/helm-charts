@@ -153,38 +153,22 @@ questions:
     required: true
     group: "Scheduled Jobs"
 
-  - variable: matomocronArchive.cronSchedule
-    label: "Matomo archiving cron"
+  - variable: matomocronArchive.enabled
+    label: "Matomo archiving"
+    description: "Matomo archiving is configured directly from values.yaml"
     type: string
-    default: "5 * * * *"
+    default: "Matomo archiving is configured directly from values.yaml"
+    group: "Scheduled Jobs"
+
+
+
+
+  - variable: matomocronDeleteData.enabled
+    label: "Delete raw data for sites process enabled"
+    type: boolean
+    default: false
     required: true
     group: "Scheduled Jobs"
-
-
-
-  - variable: rsyncAnalytics.cronSchedule
-    label: "Rsync logs cron"
-    type: string
-    default: "5 * * * *"
-    required: true
-    group: "Scheduled Jobs"
-
-  - variable: rsyncAnalytics.rsyncCommands
-    label: "Rsync commands"
-    description: "Rsync command(s) to fetch logs. Example: `rsync -avz user@source:/logs/ /analytics/logs/1`. Ensure correct SITE_ID and SSH options."
-    type: string
-    default: "rsync -e 'ssh -p 2222 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no' -avz --delete root@<IP>:<LOG_LOCATION_REMOTE> /analytics/logs/<SITE_ID>"
-    group: "Scheduled Jobs"
-
-
-
-  - variable: matomoAnalytics.cronSchedule
-    label: "Import logs cron"
-    type: string
-    default: "30 0 * * *"
-    required: true
-    group: "Scheduled Jobs"
-
 
 
   - variable: matomocronDeleteData.cronSchedule
@@ -193,6 +177,8 @@ questions:
     default: "0 23 * * *"
     required: true
     group: "Scheduled Jobs"
+    show_if: "matomocronDeleteData.enabled=true"
+    
 
   - variable: matomocronDeleteData.environment.siteToDelete
     label: "Delete log data belonging to this site ID"
@@ -200,6 +186,7 @@ questions:
     default: "22"
     required: true
     group: "Scheduled Jobs"
+    show_if: "matomocronDeleteData.enabled=true"
 
   - variable: matomocronDeleteData.environment.daysToKeep
     label: "Number of days to keep the data"
@@ -207,6 +194,7 @@ questions:
     default: 90
     required: true
     group: "Scheduled Jobs"
+    show_if: "matomocronDeleteData.enabled=true"
 
 
 
@@ -317,6 +305,7 @@ questions:
     default: "512Mi"
     required: true
     group: Memory
+    show_if: "matomocronDeleteData.enabled=true"
 
   - variable: matomocronDeleteData.resources.limits.memory
     label: "Matomo delete data container memory limit"
@@ -325,23 +314,7 @@ questions:
     default: "512Mi"
     required: true
     group: Memory
-
-  - variable: matomocronArchive.resources.requests.memory
-    label: "Matomo archive container memory requests"
-    description: "At least 4Gi"
-    type: string
-    default: "4Gi"
-    required: true
-    group: Memory
-
-  - variable: matomocronArchive.resources.limits.memory
-    label: "Matomo archive memory limit"
-    description: "Must be more than the PHP memory_limit"
-    type: string
-    default: "6Gi"
-    required: true
-    group: Memory
-
+    show_if: "matomocronDeleteData.enabled=true"
 
 
   - variable: "postfix.serviceName"

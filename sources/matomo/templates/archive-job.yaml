@@ -1,20 +1,26 @@
+{{- $labels := ( include "appl.labels" . ) -}}
+{{- $values := .Values -}}
+{{- $appversion := .Chart.AppVersion }}
+{{- $release := .Release.Name }}
+{{- range $index, $archiver := .Values.matomocronArchive }}
+
 ---
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: {{ .Release.Name }}-archive
+  name: {{ $release }}-archive-{{ $index }}
 spec:
-  schedule: "{{ .Values.matomocronArchive.cronSchedule }}"
+  schedule: "{{ $archiver.cronSchedule }}"
   concurrencyPolicy: Forbid
   successfulJobsHistoryLimit: 1
   failedJobsHistoryLimit: 1
   jobTemplate:
     spec:
-      ttlSecondsAfterFinished: {{ .Values.jobs.ttlSecondsAfterFinished }}
+      ttlSecondsAfterFinished: {{ $values.jobs.ttlSecondsAfterFinished }}
       template:
         metadata:
           labels:
-            app.kubernetes.io/name: {{ .Release.Name }}-archive
+            app.kubernetes.io/name: {{ $release }}-archive
         spec:
           securityContext:
             runAsUser: 0
@@ -30,31 +36,33 @@ spec:
                 until nc -z mariadb 3306;
                 do echo waiting for mariadb; sleep 2; done;
           containers:
-            - name: matomocron-archive
-              image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+            - name: matomocron-archive-{{ $index }}
+              image: "{{ $values.image.repository }}:{{ $values.image.tag | default $appversion }}"
               env:
                 - name: MATOMO_DATABASE_HOST
                   value: mariadb
                 - name: MATOMO_DATABASE_PORT_NUMBER
                   value: "3306"
                 - name: MATOMO_DATABASE_USER
-                  value: {{ .Values.mariadb.environment.MARIADB_USER | quote }}
+                  value: {{ $values.mariadb.environment.MARIADB_USER | quote }}
                 - name: MATOMO_DATABASE_NAME
-                  value: {{ .Values.mariadb.environment.MARIADB_DATABASE | quote }}
+                  value: {{ $values.mariadb.environment.MARIADB_DATABASE | quote }}
                 - name: MATOMO_DATABASE_PASSWORD
-                  value: {{ .Values.mariadb.environment.MARIADB_PASSWORD | quote }}
+                  value: {{ $values.mariadb.environment.MARIADB_PASSWORD | quote }}
                 - name: ALLOW_EMPTY_PASSWORD
                   value: "no"
                 - name: TZ
-                  value: "{{ .Values.timezone }}"
-                - name: PHP_MEMORY_LIMIT
-                  value: "{{ .Values.matomocronArchive.environment.PHP_MEMORY_LIMIT }}"
-                - name: PHP_MAX_EXECUTION_TIME
-                  value: "{{ .Values.matomocronArchive.environment.PHP_MAX_EXECUTION_TIME }}"
-                - name: PHP_MAX_INPUT_TIME
-                  value: "{{ .Values.matomocronArchive.environment.PHP_MAX_INPUT_TIME }}"
+                  value: "{{ $values.timezone }}"
                 - name: MATOMO_URL
-                  value: "matomo:{{ .Values.matomo.environment.APACHE_HTTP_PORT_NUMBER }}"
+                  value: "matomo:{{ $values.matomo.environment.APACHE_HTTP_PORT_NUMBER }}"
+
+                {{- range $key, $value := $archiver.environment }}
+                {{- if ($value) }}
+                - name: {{ $key }}
+                  value: {{ $value | quote }}
+                {{- end }}
+                {{- end }}
+
               command:
                 - bash
                 - -c
@@ -71,9 +79,9 @@ spec:
                   /usr/bin/run_archiving.sh
               resources:
                 requests:
-                  memory: "{{ .Values.matomocronArchive.resources.requests.memory }}"
+                  memory: "{{ $archiver.resources.requests.memory }}"
                 limits:
-                  memory: "{{ .Values.matomocronArchive.resources.limits.memory }}"
+                  memory: "{{ $archiver.resources.limits.memory }}"
               volumeMounts:
                 - name: matomo-pv
                   mountPath: /bitnami
@@ -83,7 +91,10 @@ spec:
           volumes:
             - name: matomo-pv
               persistentVolumeClaim:
-                claimName: {{ .Release.Name }}-matomo-pvc
+                claimName: {{ $release }}-matomo-pvc
             - name: matomo-tmp
               persistentVolumeClaim:
-                claimName: {{ .Release.Name }}-archive-tmp-pvc
+                claimName: {{ $release }}-archive-tmp-pvc
+
+{{- end }}
+
