@@ -31,6 +31,9 @@ in order to succesfully send emails.
 
 ## Releases
 
+### Version 3.2.2 - 26 January 2026
+- Separate mailtrap http service from postfix service [EEA Jenkins - [`5e00ced7`](https://github.com/eea/helm-charts/commit/5e00ced7e71105690d5299c84b1fb773520da4d6)]
+
 ### Version 3.2.1 - 26 January 2026
 - Rewrite dryrun netsecpol [EEA Jenkins - [`d375ed41`](https://github.com/eea/helm-charts/commit/d375ed418ea5c46eeccba8c54c5159553f3a5a2d)]
 
