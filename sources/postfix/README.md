@@ -31,6 +31,9 @@ in order to succesfully send emails.
 
 ## Releases
 
+### Version 3.2.1 - 26 January 2026
+- Rewrite dryrun netsecpol [EEA Jenkins - [`d375ed41`](https://github.com/eea/helm-charts/commit/d375ed418ea5c46eeccba8c54c5159553f3a5a2d)]
+
 ### Version 3.2.0 - 18 December 2025
 - Automated release of [eeacms/postfix:3.5-1.2](https://github.com/eea/eea.docker.postfix/releases) [EEA Jenkins - [`f60a307c`](https://github.com/eea/helm-charts/commit/f60a307c367598450be342fa8680e5af73c82c5e)]
 
