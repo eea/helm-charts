@@ -1,0 +1,24 @@
+{{- if ( default .Values.securityEnabled true) -}}
+
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ .Release.Name }}-http-allow
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+
+
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: sonarqube
+
+
+  policyTypes:
+  - Ingress
+  ingress:
+    - ports:
+        - port: 9000
+          protocol: TCP
+{{- end }}
