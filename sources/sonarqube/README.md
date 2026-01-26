@@ -52,6 +52,9 @@ Because we are using docker, we only need to access <http://yourSonarQubeServerU
 
 ## Releases
 
+### Version 1.4.1 - 26 January 2026
+- Fix postgres policy, add postfix policy for mailtrap http [EEA Jenkins - [`338bf9c7`](https://github.com/eea/helm-charts/commit/338bf9c7d4ccc78592a16ce8fb727be91eff399e)]
+
 ### Version 1.4.0 - 26 January 2026
 - Upgrade sonarqube, add security [EEA Jenkins - [`d91b3fcf`](https://github.com/eea/helm-charts/commit/d91b3fcf7378bbc2f5f466e213c4e3b04ec93ce6)]
 
