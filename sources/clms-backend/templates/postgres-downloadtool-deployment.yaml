@@ -1,0 +1,67 @@
+{{- if .Values.postgresDownloadtool.enabled }}
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-dpl-postgres-downloadtool
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: postgres-downloadtool
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: postgres-downloadtool
+
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: postgres-downloadtool
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      containers:
+      - name: postgres-downloadtool
+        image: "{{ .Values.postgresDownloadtool.image.repository }}:{{ .Values.postgresDownloadtool.image.tag }}"
+        env:
+        - name: TZ
+          value: "{{ .Values.timezone }}"
+        - name: POSTGRES_USER
+          value: "{{ .Values.postgresDownloadtool.postgresUser }}"
+        - name: POSTGRES_PASSWORD
+          value: "{{ .Values.postgresDownloadtool.postgresPassword }}"
+        - name: POSTGRES_DBNAME
+          value: "{{ .Values.postgresDownloadtool.dbName }}"
+        - name: POSTGRES_DBUSER
+          value: "{{ .Values.postgresDownloadtool.dbUser }}"
+        - name: POSTGRES_DBPASS
+          value: "{{ .Values.postgresDownloadtool.dbPassword }}"
+
+        ports:
+        - name: postgres
+          containerPort: 5432
+
+        resources:
+          {{- toYaml .Values.postgresDownloadtool.resources | nindent 10 }}
+
+      {{- with .Values.postgresDownloadtool.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.postgresDownloadtool.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.postgresDownloadtool.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+
+{{- end }}

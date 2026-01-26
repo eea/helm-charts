@@ -48,6 +48,10 @@ spec:
         - name: REDIS_PORT
           value: "6379"
         {{- end }}
+        {{- if .Values.postgresDownloadtool.enabled }}
+        - name: DOWNLOADTOOL_DB_DSN
+          value: "dbname={{ .Values.postgresDownloadtool.dbName }} user={{ .Values.postgresDownloadtool.dbUser }} password={{ .Values.postgresDownloadtool.dbPassword }} host=postgres-downloadtool"
+        {{- end }}
         {{- if .Values.ploneAuthToken }}
         - name: PLONE_AUTH_TOKEN
           value: {{ .Values.ploneAuthToken | quote }}

@@ -111,6 +111,62 @@ questions:
     group: "General"
     show_if: "asyncjobs.enabled=true"
 
+  - variable: "postgresDownloadtool.enabled"
+    label: "Enable PostgreSQL for DownloadTool"
+    description: "Enable PostgreSQL database for DownloadTool storage"
+    default: false
+    type: "boolean"
+    required: true
+    group: "General"
+
+  - variable: "postgresDownloadtool.image.tag"
+    label: "PostgreSQL DownloadTool image tag"
+    type: "string"
+    default: "16s"
+    required: true
+    group: "General"
+    show_if: "postgresDownloadtool.enabled=true"
+
+  - variable: "postgresDownloadtool.postgresUser"
+    label: "PostgreSQL admin user"
+    type: "string"
+    default: "postgres"
+    required: true
+    group: "General"
+    show_if: "postgresDownloadtool.enabled=true"
+
+  - variable: "postgresDownloadtool.postgresPassword"
+    label: "PostgreSQL admin password"
+    type: "password"
+    default: "postgres"
+    required: true
+    group: "General"
+    show_if: "postgresDownloadtool.enabled=true"
+
+  - variable: "postgresDownloadtool.dbName"
+    label: "DownloadTool database name"
+    type: "string"
+    default: "downloadtool"
+    required: true
+    group: "General"
+    show_if: "postgresDownloadtool.enabled=true"
+
+  - variable: "postgresDownloadtool.dbUser"
+    label: "DownloadTool database user"
+    type: "string"
+    default: "zope"
+    required: true
+    group: "General"
+    show_if: "postgresDownloadtool.enabled=true"
+
+  - variable: "postgresDownloadtool.dbPassword"
+    label: "DownloadTool database password"
+    type: "password"
+    default: "zope"
+    required: true
+    group: "General"
+    show_if: "postgresDownloadtool.enabled=true"
+
   - variable: "ploneAuthToken"
     label: "Plone Auth Token"
     description: "Authentication token for Plone API (used by asyncjobs and plone)"
@@ -493,6 +549,23 @@ questions:
     default: "512Mi"
     group: "Memory"
     show_if: "asyncjobs.enabled=true"
+
+  - variable: "postgresDownloadtool.resources.requests.memory"
+    label: "PostgreSQL DownloadTool memory reservation"
+    type: "string"
+    required: true
+    default: "512Mi"
+    group: "Memory"
+    show_if: "postgresDownloadtool.enabled=true"
+
+  - variable: "postgresDownloadtool.resources.limits.memory"
+    label: "PostgreSQL DownloadTool memory limit"
+    description: ">= memory reservation"
+    type: "string"
+    required: true
+    default: "1Gi"
+    group: "Memory"
+    show_if: "postgresDownloadtool.enabled=true"
 
   - variable: "postfix.serviceName"
     label: "Postfix service name"

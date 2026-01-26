@@ -46,6 +46,10 @@ spec:
           value: "{{ .Values.timezone }}"
         - name: RELSTORAGE_DSN
           value: "host='postgres' dbname='{{ .Values.plone.database.POSTGRES_DB }}' user='{{ .Values.plone.database.POSTGRES_USER }}' password='{{ .Values.plone.database.POSTGRES_PASSWORD }}'"
+        {{- if .Values.postgresDownloadtool.enabled }}
+        - name: DOWNLOADTOOL_DB_DSN
+          value: "dbname={{ .Values.postgresDownloadtool.dbName }} user={{ .Values.postgresDownloadtool.dbUser }} password={{ .Values.postgresDownloadtool.dbPassword }} host=postgres-downloadtool"
+        {{- end }}
         {{- range $key, $value := .Values.plone.environment }}
         {{- if ($value) }}
         - name: {{ $key }}

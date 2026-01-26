@@ -1,0 +1,22 @@
+{{- if .Values.postgresDownloadtool.enabled }}
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-downloadtool
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: postgres-downloadtool
+
+spec:
+  type: {{ .Values.postgresDownloadtool.serviceType }}
+  ports:
+    - port: 5432
+      targetPort: postgres
+      protocol: TCP
+      name: postgres
+  selector:
+    {{- include "appl.selectorLabels" . | nindent 4 }}
+    component: postgres-downloadtool
+
+{{- end }}
