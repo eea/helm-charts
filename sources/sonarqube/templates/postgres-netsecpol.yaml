@@ -19,11 +19,10 @@ spec:
   - Ingress
   ingress:
     - from:
-        - podSelector:
-          {{- include "appl.selectorLabels" . | nindent 10 }}
-          component: sonarqube
-
-    - ports:
+      - podSelector:
+        {{- include "appl.selectorLabels" . | nindent 10 }}
+        component: sonarqube
+      - ports:
         - port: 5432
           protocol: TCP
 {{- end }}
