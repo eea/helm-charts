@@ -6,23 +6,12 @@ metadata:
     {{- include "postfix.labels" . | nindent 4 }}
 
 spec:
-  {{- if and .Values.mailtrap.httpenabled }}
-  type: {{ .Values.mailtrap.serviceType }}
-  {{- else }}
   type: {{ .Values.service.type }}
-  {{- end }}
   ports:
     - port: {{ .Values.service.port }}
       targetPort: 25
       protocol: TCP
       name: smtp
-
-    {{- if and .Values.mailtrap.httpenabled }}
-    - port: 80
-      targetPort: 80
-      protocol: TCP
-      name: http
-    {{- end }}
 
   selector:
     {{- include "postfix.selectorLabels" . | nindent 4 }}

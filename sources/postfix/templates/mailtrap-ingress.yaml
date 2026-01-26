@@ -2,7 +2,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ include "postfix.fullname" . }}-mailtrap
+  name: {{ include "postfix.fullname" . }}-mailtrap-ingress
   labels:
     {{- include "postfix.labels" . | nindent 4 }}
   {{- with .Values.mailtrap.ingress.annotations }}
@@ -20,7 +20,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: {{ .Values.serviceName | default (include "postfix.fullname" .) }}
+            name: {{ .Values.serviceName | default (include "postfix.fullname" .) }}-mailtrap
             port:
               number: 80
   {{- if (.Values.mailtrap.ingress.certificate) }}
@@ -28,6 +28,6 @@ spec:
   - hosts:
     - {{ .Values.mailtrap.ingress.hostname }}
     secretName: {{ .Values.mailtrap.ingress.certificate }}
-  {{- end  }}    
+  {{- end  }}
 {{- end }}
 

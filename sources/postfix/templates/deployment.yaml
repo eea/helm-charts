@@ -45,10 +45,11 @@ spec:
         - containerPort: 25
           protocol: TCP
           name: smtp
+        {{- if .Values.dryrun }}
         - containerPort: 80
           protocol: TCP
           name: http
-
+        {{- end }}
         env:
         - name: TZ
           value: "{{ .Values.timezone }}"

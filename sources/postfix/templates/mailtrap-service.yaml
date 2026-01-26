@@ -1,0 +1,24 @@
+{{- if .Values.mailtrap.httpenabled }}
+
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.serviceName | default (include "postfix.fullname" .) }}-mailtrap
+  labels:
+    {{- include "postfix.labels" . | nindent 4 }}
+
+spec:
+  type: {{ .Values.mailtrap.serviceType }}
+  
+  ports:
+
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+      name: http
+
+  selector:
+    {{- include "postfix.selectorLabels" . | nindent 4 }}
+
+{{- end }}    
