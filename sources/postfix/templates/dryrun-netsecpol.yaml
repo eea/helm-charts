@@ -1,6 +1,13 @@
 # Allow NGINX to contact the mailtrap service.
 #
-{{- if and .Values.mailtrap.httpenabled .Values.mailtrap.ingress.enabled }}
+
+{{/*
+  Allow postfix:25 to be used from same namespace.
+  If http is enabled, allow access to the port from any IP
+*/}}
+
+
+{{- if .Values.dryrun }}
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -16,11 +23,20 @@ spec:
   - Ingress
 
   ingress:
+
+  {{- if ( .Values.mailtrap.httpenabled) }}    
+  - ports:
+    - port: 80
+      protocol: TCP
+  {{- end }}
+
   - from:
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: kube-system
-      podSelector:
-        matchLabels:
-          app.kubernetes.io/name: rke2-ingress-nginx
+    - podSelector: {}
+
+    ports:
+    - protocol: TCP
+      port: 25
+
+
 {{- end }}
+
