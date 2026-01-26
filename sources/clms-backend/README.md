@@ -10,6 +10,9 @@ This chart deployes the CLMS backend app
 
 ## Releases
 
+### Version 1.24.1 - 26 January 2026
+- Fix ingress [Dobricean Ioan Dorian - [`32454998`](https://github.com/eea/helm-charts/commit/32454998aa91e9f16548e66e3ee52985c0d9d091)]
+
 ### Version 1.23.1 - 26 January 2026
 - downloadtool [Dobricean Ioan Dorian - [`8f1781e3`](https://github.com/eea/helm-charts/commit/8f1781e3eaf6aed3de853659d65f4bcb495f4b65)]
 
