@@ -52,6 +52,9 @@ Because we are using docker, we only need to access <http://yourSonarQubeServerU
 
 ## Releases
 
+### Version 1.4.7 - 27 January 2026
+- Add postfix exception [EEA Jenkins - [`1e55e157`](https://github.com/eea/helm-charts/commit/1e55e15794a4bf548c9d8fbd1a826eeb8af32c97)]
+
 ### Version 1.4.6 - 27 January 2026
 - Fix egress security [EEA Jenkins - [`c57e457d`](https://github.com/eea/helm-charts/commit/c57e457d377a894f617d8b06ca8740cbb085d4d0)]
 

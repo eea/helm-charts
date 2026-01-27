@@ -38819,6 +38819,25 @@ entries:
   sonarqube:
   - apiVersion: v2
     appVersion: 26.1.0.118079-community
+    created: "2026-01-27T13:23:06.739824863+02:00"
+    dependencies:
+    - name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.2.2
+    description: A Helm chart for SonarQube deployment on Kubernetes
+    digest: aaea2c2490930681170489eeafddc6be4b2d50dfc908b48c48126cd9668870c4
+    home: https://github.com/eea/eea.docker.sonarqube
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/sonarqube/sonarqube.png
+    keywords:
+    - Code quality
+    - Sonarqube
+    name: sonarqube
+    type: application
+    urls:
+    - sonarqube-1.4.7.tgz
+    version: 1.4.7
+  - apiVersion: v2
+    appVersion: 26.1.0.118079-community
     created: "2026-01-27T12:59:19.681700003+02:00"
     dependencies:
     - name: postfix
@@ -40710,4 +40729,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2026-01-27T12:03:30.608823+01:00"
+generated: "2026-01-27T13:23:06.737544579+02:00"
