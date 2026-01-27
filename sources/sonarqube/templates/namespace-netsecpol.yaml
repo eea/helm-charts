@@ -16,26 +16,41 @@ metadata:
 spec:
   podSelector:
     matchExpressions:
+      {{/*
+        Add any pods that need extra Ingress security
+      */}}
+
       - key: component
         operator: NotIn
         values:
-          {{/*
-             Add any components that need extra Ingress security
-          */}}
           - postgres
+      - key: name
+        operator: NotIn
+        values:
+          - postfix
+            
   policyTypes:
   - Ingress
   ingress:
     - from:
         - podSelector:
             matchExpressions:
+                {{/*
+                   Add any pods that need extra Eggress security
+                */}}
+
               - key: component
                 operator: NotIn
                 values:
                   - postgres
-                {{/*
-                   Add any components that need extra Eggress security
-                */}}
-            
+              - key: name
+                operator: NotIn
+                values:
+                  - postfix
+
             
 {{- end }}
+
+
+
+
