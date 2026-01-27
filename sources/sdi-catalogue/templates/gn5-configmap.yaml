@@ -29,11 +29,7 @@ data:
         url: https://{{ .Values.serverName }}
         
       security:
-        {{- if .Values.gn5.oauth2.enabled }}
-        provider: oauth2
-        {{- else }}
         provider: ldap
-        {{- end }}
         createdUser:
           group: eea_users
         # Enabled if provider is ldap
@@ -48,6 +44,7 @@ data:
             email: email
             name: givenName
             surname: sn
+
     {{- if .Values.gn5.oauth2.enabled }}
 
     spring:
@@ -69,6 +66,7 @@ data:
             provider:
               eea:
                 issuer-uri: {{ .Values.gn5.oauth2.issuerUri }}
+                user-name-attribute: {{ .Values.gn5.oauth2.userNameAttribute }}
     {{- end }}
 
 

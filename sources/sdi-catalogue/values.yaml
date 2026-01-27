@@ -235,6 +235,7 @@ gn5:
     issuerUri: ''
     redirectUri: ''  # Defaults to {geonetwork.url_with_context}/login/oauth2/code/eea if empty
     scopes: 'openid,profile,email'
+    userNameAttribute: email
   resources:
     requests:
       memory: 2Gi
