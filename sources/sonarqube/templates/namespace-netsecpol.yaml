@@ -1,5 +1,10 @@
 {{- if ( default .Values.securityEnabled true) -}}
 
+{{/*
+  By default, allow only access from pods in the same namespace
+*/}}
+
+
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -9,7 +14,15 @@ metadata:
 
 
 spec:
-  podSelector: {}
+  podSelector:
+    matchExpressions:
+      - key: component
+        operator: NotIn
+        values:
+          {{/*
+             Add any components that need extra security
+          */}}
+          - postgres
   policyTypes:
   - Ingress
   ingress:

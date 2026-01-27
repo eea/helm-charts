@@ -1,5 +1,11 @@
 {{- if ( default .Values.securityEnabled true) -}}
 
+{{/*
+  By default, allow only access from pods in the same namespace to port 5432
+  No egress
+*/}}
+
+
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -17,12 +23,15 @@ spec:
 
   policyTypes:
   - Ingress
-  ingress:
+  - Egress
+
+  egress: []
+
+  ingress:  
   - from:
     - podSelector:
         matchLabels:
           {{- include "appl.selectorLabels" . | nindent 10 }}
-          component: sonarqube
     ports:
     - protocol: TCP
       port: 5432
