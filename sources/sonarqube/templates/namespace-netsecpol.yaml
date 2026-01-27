@@ -20,14 +20,22 @@ spec:
         operator: NotIn
         values:
           {{/*
-             Add any components that need extra security
+             Add any components that need extra Ingress security
           */}}
           - postgres
   policyTypes:
   - Ingress
   ingress:
     - from:
-      - podSelector: {}
+        - podSelector:
+            matchExpressions:
+              - key: component
+                operator: NotIn
+                values:
+                  - postgres
+                {{/*
+                   Add any components that need extra Eggress security
+                */}}
             
             
 {{- end }}
