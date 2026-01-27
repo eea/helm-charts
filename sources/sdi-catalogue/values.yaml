@@ -223,6 +223,18 @@ gn5:
   coreUrl: http://gn46:8080/catalogue
   baseUrl: http://gn46:8080/catalogue
   gn4baseUrl: http://geonetwork
+  oauth2:
+    enabled: false
+    clientId: ''
+    # clientSecret should be provided via --set-string flag or external secret management
+    # DO NOT commit the clientSecret to values.yaml
+    clientSecret: ''
+    # Alternatively, use existingSecret to reference a pre-created Kubernetes secret
+    existingSecret: ''
+    existingSecretKey: 'client-secret'
+    issuerUri: ''
+    redirectUri: ''  # Defaults to {geonetwork.url_with_context}/login/oauth2/code/eea if empty
+    scopes: 'openid,profile,email'
   resources:
     requests:
       memory: 2Gi

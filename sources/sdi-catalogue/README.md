@@ -12,10 +12,60 @@ Cronjobs have been removed since the update to GN 5/ GN 46 and the new folder st
 |-----|------|---------|-------------|
 | serverName | string | sdi.eea.europa.eu | Name of the server |
 | serverUrl | string | <https://sdi.eea.europa.eu:443> | URL of the server. The port is required. |
+| gn5.oauth2.enabled | boolean | false | Enable OAuth2 authentication for GN5 |
+| gn5.oauth2.clientId | string | '' | OAuth2 client ID |
+| gn5.oauth2.clientSecret | string | '' | OAuth2 client secret (only for helm install via --set-string flag, NOT for values.yaml) |
+| gn5.oauth2.existingSecret | string | '' | Name of existing Kubernetes secret containing the client secret |
+| gn5.oauth2.existingSecretKey | string | 'client-secret' | Key in the existing secret containing the client secret |
+| gn5.oauth2.issuerUri | string | '' | OAuth2 issuer URI (e.g., MS Entra ID tenant) |
+| gn5.oauth2.redirectUri | string | '' | OAuth2 redirect URI (defaults to {geonetwork.url_with_context}/login/oauth2/code/eea if empty) |
+| gn5.oauth2.scopes | string | 'openid,profile,email' | OAuth2 scopes |
+
+## OAuth2 Configuration
+
+To enable OAuth2 authentication with MS Entra ID for GN5, you have two options for managing the client secret:
+
+### Option 1: Use an existing Kubernetes secret (Recommended)
+
+First, create the secret manually:
+```bash
+kubectl create secret generic gn5-oauth2-credentials \
+  --from-literal=client-secret='your-client-secret' \
+  -n your-namespace
+```
+
+Then configure the chart:
+```yaml
+gn5:
+  oauth2:
+    enabled: true
+    clientId: "your-client-id"
+    existingSecret: "gn5-oauth2-credentials"
+    existingSecretKey: "client-secret"
+    issuerUri: "https://login.microsoftonline.com/YOUR_TENANT_ID/v2.0"
+    scopes: "openid,profile,email"
+```
+
+### Option 2: Provide secret via command line
+
+```bash
+helm install sdi-catalogue eea-charts/sdi-catalogue \
+  --set gn5.oauth2.enabled=true \
+  --set gn5.oauth2.clientId="your-client-id" \
+  --set-string gn5.oauth2.clientSecret="your-client-secret" \
+  --set gn5.oauth2.issuerUri="https://login.microsoftonline.com/YOUR_TENANT_ID/v2.0"
+```
+
+**Important**: Never commit the `clientSecret` value to your values.yaml file or version control.
+
+The OAuth2 client registration is named `eea` in the Spring Security configuration.
 
 ## Releases
 
-### Version 0.8.35 - 13 January 2026
+### Version 0.8.38 - 27 January 2026
+- Update GN46 (`eea-4.9.x-1a3bd804`) and GN5 (`e9f56fb0`).
+
+### Version 0.8.37 - 13 January 2026
 - Update GN46 (`eea-4.9.x-2d350753`).
  
 ### Version 0.8.36 - 13 January 2026

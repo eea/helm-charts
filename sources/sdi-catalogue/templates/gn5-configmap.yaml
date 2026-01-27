@@ -29,7 +29,11 @@ data:
         url: https://{{ .Values.serverName }}
         
       security:
+        {{- if .Values.gn5.oauth2.enabled }}
+        provider: oauth2
+        {{- else }}
         provider: ldap
+        {{- end }}
         createdUser:
           group: eea_users
         # Enabled if provider is ldap
@@ -44,6 +48,28 @@ data:
             email: email
             name: givenName
             surname: sn
+    {{- if .Values.gn5.oauth2.enabled }}
+
+    spring:
+      security:
+        oauth2:
+          client:
+            registration:
+              eea:
+                client-id: {{ .Values.gn5.oauth2.clientId }}
+                client-secret: ${OAUTH2_CLIENT_SECRET}
+                scope: {{ .Values.gn5.oauth2.scopes }}
+                {{- if .Values.gn5.oauth2.redirectUri }}
+                redirect-uri: {{ .Values.gn5.oauth2.redirectUri }}
+                {{- else }}
+                redirect-uri: https://{{ .Values.serverName }}{{ .Values.gn5.webapp_context }}/login/oauth2/code/eea
+                {{- end }}
+                authorization-grant-type: authorization_code
+                client-name: EEA MS Entra ID
+            provider:
+              eea:
+                issuer-uri: {{ .Values.gn5.oauth2.issuerUri }}
+    {{- end }}
 
 
  
