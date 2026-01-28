@@ -77,7 +77,8 @@ spec:
               volumeMounts:
                 - name: postgresql-backup
                   mountPath: /backups
-              {{- toYaml .Values.postgresql.backup.resources | nindent 14 }}
+              resources:
+                {{- toYaml .Values.postgresql.backup.resources | nindent 16 }}
           volumes:
             - name: postgresql-backup
               persistentVolumeClaim:
