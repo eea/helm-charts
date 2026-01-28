@@ -10,6 +10,9 @@ This chart deployes the Forest Information System of Europe website backend app
 
 ## Releases
 
+### Version 1.35.0 - 28 January 2026
+- Automated release of [eeacms/fise-backend:6.1.3-11](https://github.com/eea/fise-backend/releases) [EEA Jenkins - [`fb03d2de`](https://github.com/eea/helm-charts/commit/fb03d2de7f286c0341567d4e607aa13a197bd742)]
+
 ### Version 1.34.0 - 28 January 2026
 - Automated release of [eeacms/fise-backend:6.1.3-10](https://github.com/eea/fise-backend/releases) [EEA Jenkins - [`15ccd788`](https://github.com/eea/helm-charts/commit/15ccd7888302eb87245978406c3f85cc0534d887)]
 
