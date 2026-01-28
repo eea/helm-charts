@@ -26,4 +26,4 @@ fi
 ../../increase_version_helm.sh
 
 
-../../update_docs.sh
+CI=true ../../update_docs.sh
