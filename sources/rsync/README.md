@@ -25,6 +25,9 @@ Enable client, add crontab with rsync jobs, if needed
 
 ## Releases
 
+### Version 1.3.2 - 28 January 2026
+- chore: remove unused code [EEA Jenkins - [`8c1b15f8`](https://github.com/eea/helm-charts/commit/8c1b15f8eb2141c44a67e3f33799efc4d9d2f01c)]
+
 ### Version 1.3.1 - 22 January 2026
 - Allow Network Access to server port 22 [EEA Jenkins - [`da8e09d1`](https://github.com/eea/helm-charts/commit/da8e09d1ac9f63c1d2cdd53c0a7b8c7a9895ffb0)]
 
