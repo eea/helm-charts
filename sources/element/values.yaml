@@ -109,7 +109,6 @@ db:
   startupProbe: {}
   storageClassName: ""
   storage: "15Gi"
-  storageOpts: {}
   user: matrix
   pass: matrix
   name: matrix
@@ -206,7 +205,6 @@ identity:
   data:
     storageClassName: ""
     storage: "1Gi"
-    storageOpts: {}
 
 matrix:
   image:
@@ -240,7 +238,6 @@ matrix:
   data:
     storageClassName: ""
     storage: "20Gi"
-    storageOpts: {}
 
 # Postfix mail relay configuration
 postfix:

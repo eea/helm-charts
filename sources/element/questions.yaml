@@ -44,6 +44,22 @@ questions:
   description: "Matrix postgres database name"
   type: "string"
   group: "Database"
+- variable: "db.storage"
+  label: "Database data storage size"
+  description: "Size of storage needed"
+  default: "15Gi"
+  type: "string"
+  required: true
+  group: "Database"
+- variable: "db.storageClassName"
+  label: "Database data storage class"
+  description: "Volume storage class"
+  default: ""
+  type: "string"
+  required: false
+  group: "Database"
+
+
 
 
 - variable: "matrix.emailFromAddress"
@@ -64,28 +80,33 @@ questions:
   description: "LDAP EIONET host/ip"
   type: "string"
   required: true
+  group: "LDAP"
 - variable: "ldap.binddn"
   label: "LDAP binddn"
   default: "uid=user,ou=Users,o=EIONET,l=Europe"
   description: "The DN for the user to read from LDAP"
   type: "string"
   required: true
+  group: "LDAP"
 - variable: "ldap.binddnPass"
   label: "LDAP binddn password"
   description: "The password for the user to read from LDAP"
   type: "password"
   required: true
+  group: "LDAP"
 - variable: "ldap.basedn"
   label: "LDAP base DN"
   default: "ou=Users,o=EIONET,l=Europe"
   description: "LDAP BASE DN to give access to users"
   type: "string"
   required: true
+  group: "LDAP"
 - variable: "ldap.port"
   label: "LDAP port"
   default: "636"
   description: "Access port for LDAP"
   type: "int"
+  group: "LDAP"
 - variable: "ldap.tls"
   label: "LDAP TLS enabled"
   default: "true"
@@ -95,10 +116,12 @@ questions:
   - "true"
   - "false"
   required: true
+  group: "LDAP"
 - variable: "ldap.filter"
   label: "LDAP filter users"
   description: "Used to filter the users from LDAP with access "
   type: "string"
+  group: "LDAP"
 
 
 - variable: "identity.javaOpts"
@@ -150,29 +173,6 @@ questions:
   type: "password"
 
 
-- variable: "db.storage"
-  label: "Matrix database data storage size"
-  description: "Size of storage needed"
-  default: "15Gi"
-  type: "string"
-  required: true
-  group: "Database"
-- variable: "db.storageClassName"
-  label: "Matrix database data storage class"
-  description: "Volume storage class"
-  default: ""
-  type: "string"
-  required: false
-  group: "Database"
-- variable: "db.storageOpts"
-  label: "Matrix data volume driver options"
-  description: |
-      Specify "driver opts" key/value pair in the format "optionName: optionValue".
-      E.g. for the `rancher-ebs` driver you should specify the required 'size' option like this: "size: 1".
-  type: "multiline"
-  group: "Database"
-
-
 - variable: "identity.data.storage"
   default: "1Gi"
   label: "Identity server data volume size"
@@ -185,29 +185,18 @@ questions:
   default: ""
   type: "string"
   required: false
-- variable: "identify.data.storageOpts"
-  label: "Identity server data volume driver options"
-  description: |
-      Specify "driver opts" key/value pair in the format "optionName: optionValue".
-      E.g. for the `rancher-ebs` driver you should specify the required 'size' option like this: "size: 1".
-  type: "multiline"
 
 
 - variable: "matrix.data.storage"
-  label: "Matrix database data storage size"
+  label: "Matrix data storage size"
   description: "Size as 10Gi"
   type: "string"
   required: true
   default: "20Gi"
 - variable: "matrix.data.storageClassName"
-  label: "Matrix database data storage class"
+  label: "Matrix data storage class"
   description: "Volume storage class"
   default: ""
   type: "string"
   required: false
-- variable: "matrix.data.storageOpts"
-  label: "Matrix database data volume driver options"
-  description: |
-      Specify "driver opts" key/value pair in the format "optionName: optionValue".
-      E.g. for the `rancher-ebs` driver you should specify the required 'size' option like this: "size: 1".
-  type: "multiline"
+

@@ -11,6 +11,7 @@ metadata:
 spec:
   accessModes:
   - ReadWriteMany
+  storageClassName: {{ .Values.matrix.data.storageClassName }}
   resources:
     requests:
       storage: {{ .Values.matrix.data.storage }}
