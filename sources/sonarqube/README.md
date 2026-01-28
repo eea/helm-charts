@@ -52,6 +52,9 @@ Because we are using docker, we only need to access <http://yourSonarQubeServerU
 
 ## Releases
 
+### Version 1.4.8 - 28 January 2026
+- Upgrade eeacms/postgres:16.9-1 [EEA Jenkins - [`fa84737e`](https://github.com/eea/helm-charts/commit/fa84737e02b1a71731e649efe3d72c0c913f7c96)]
+
 ### Version 1.4.7 - 27 January 2026
 - Add postfix exception [EEA Jenkins - [`1e55e157`](https://github.com/eea/helm-charts/commit/1e55e15794a4bf548c9d8fbd1a826eeb8af32c97)]
 
