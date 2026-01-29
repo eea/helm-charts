@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 0.2.0 - 29 January 2026
+- Automated release of [eeacms/msfd-backend:5.2.13-4](https://github.com/eea/msfd-backend/releases) [EEA Jenkins - [`26db93d1`](https://github.com/eea/helm-charts/commit/26db93d12c5d8a6d77e8736b29e44a735f7c5f92)]
+
 ### Version 0.1.47 - 19 January 2026
 - Automated release of [eeacms/plone-varnish:7.7-1.2](https://github.com/eea/plone-varnish/releases) [EEA Jenkins - [`5ce7488a`](https://github.com/eea/helm-charts/commit/5ce7488a023979ad9929f5b0d4a4e2beb85130b8)]
 
