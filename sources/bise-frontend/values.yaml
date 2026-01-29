@@ -24,6 +24,10 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: 01dev-eea-letsencrypt
     nginx.ingress.kubernetes.io/configuration-snippet: |-
+      rewrite ^/habitats/annex(.*)$ /habitats/ANNEX$1 redirect;
+      rewrite ^/habitats_eunis_revised/eunisrev(.*)$ /habitats_eunis_revised/EUNISrev$1 redirect;
+      rewrite ^/habitats_res4/eunis2012(.*)$ /habitats_res4/EUNIS2012$1 redirect;
+      rewrite ^/habitats_rl/redlist(.*)$ /habitats_rl/REDLIST$1 redirect;
       more_set_headers 'Server HTTPS'
         'Strict-Transport-Security max-age=31536000; includeSubDomains; preload'
         "Expect-CT max-age=604800, report-uri='https://sentry.eea.europa.eu/api/45/security/?sentry_key=0343e20fc4e0469790b6016561f032e3'"
