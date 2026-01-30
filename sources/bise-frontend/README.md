@@ -10,6 +10,9 @@ This chart deployes the BISE frontend app
 
 ## Releases
 
+### Version 2.0.1 - 30 January 2026
+- Automated release of [eeacms/bise-frontend:3.29.3-beta.1](https://github.com/eea/bise-frontend/releases) [EEA Jenkins - [`cfdf613b`](https://github.com/eea/helm-charts/commit/cfdf613bfc85fb2de6085d8764a71d73a352f41d)]
+
 ### Version 2.0.0 - 29 January 2026
 - Rewrite nginx to redirect anex habitats from lowercase to uppercase [Dobricean Ioan Dorian - [`62b3ab88`](https://github.com/eea/helm-charts/commit/62b3ab889fb314c2e2a10cec8a01824555cc11ec)]
 
