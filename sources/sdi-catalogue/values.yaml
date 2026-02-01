@@ -140,6 +140,15 @@ nextcloudCron:
     limits:
       memory: 2Gi
 
+nextcloudRedis:
+  enabled: true
+  image: redis:7-alpine
+  resources:
+    requests:
+      memory: 128Mi
+    limits:
+      memory: 512Mi
+
 ogcapi:
   enabled: true
   resources: {}

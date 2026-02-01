@@ -1,3 +1,4 @@
+{{- if .Values.nextcloudRedis.enabled }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -5,11 +6,11 @@ metadata:
   labels:
     {{- include "appl.labels" . | nindent 4 }}
     component: sdi-nextcloud-redis
-
 spec:
   accessModes:
   - ReadWriteOnce
   resources:
     requests:
-      storage: 100Mi
+      storage: {{ .Values.nextcloudRedis.storage | default "100Mi" }}
+{{- end }}
 

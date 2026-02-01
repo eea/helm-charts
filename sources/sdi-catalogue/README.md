@@ -20,6 +20,11 @@ Cronjobs have been removed since the update to GN 5/ GN 46 and the new folder st
 | gn5.oauth2.issuerUri | string | '' | OAuth2 issuer URI (e.g., MS Entra ID tenant) |
 | gn5.oauth2.redirectUri | string | '' | OAuth2 redirect URI (defaults to {geonetwork.url_with_context}/login/oauth2/code/eea if empty) |
 | gn5.oauth2.scopes | string | 'openid,profile,email' | OAuth2 scopes |
+| nextcloudRedis.enabled | boolean | true | Enable Redis for Nextcloud distributed caching and file locking |
+| nextcloudRedis.image | string | 'redis:7-alpine' | Redis Docker image |
+| nextcloudRedis.resources.requests.memory | string | '128Mi' | Redis memory request |
+| nextcloudRedis.resources.limits.memory | string | '512Mi' | Redis memory limit |
+| nextcloudRedis.storage | string | '100Mi' | Redis PVC storage size |
 
 ## OAuth2 Configuration
 
@@ -61,6 +66,12 @@ helm install sdi-catalogue eea-charts/sdi-catalogue \
 The OAuth2 client registration is named `eea` in the Spring Security configuration.
 
 ## Releases
+
+### Version 0.8.40 - 01 February 2026
+- Add Redis integration for Nextcloud distributed caching and file locking.
+- New deployment and service for Redis (`nextcloud-redis`).
+- Configure Nextcloud to use Redis for `memcache.distributed` and `memcache.locking`.
+- Redis can be disabled via `nextcloudRedis.enabled: false`.
 
 ### Version 0.8.39 - 27 January 2026
 - Remove Github provider and fix security config [Juan Luis Rodriguez Ponce - [`022b1f75`](https://github.com/eea/helm-charts/commit/022b1f7500ffbde03c0ff522f24e41d882f7f3fa)]

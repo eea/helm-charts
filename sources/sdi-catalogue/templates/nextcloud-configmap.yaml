@@ -57,6 +57,14 @@ data:
       'skeletondirectory' => '',
       'localstorage.allowsymlinks' => {{ .Values.nextcloud.localstorage_allowsymlinks }},
       'maintenance_window_start' => 3,
-      'memcache.local' => '\\OC\\Memcache\\APCu'
+      'memcache.local' => '\\OC\\Memcache\\APCu',
+{{- if .Values.nextcloudRedis.enabled }}
+      'memcache.distributed' => '\\OC\\Memcache\\Redis',
+      'memcache.locking' => '\\OC\\Memcache\\Redis',
+      'redis' => array(
+        'host' => 'nextcloud-redis',
+        'port' => 6379,
+      ),
+{{- end }}
     );
 
