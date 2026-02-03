@@ -10,6 +10,9 @@ This chart deployes the BISE frontend app
 
 ## Releases
 
+### Version 2.0.3 - 03 February 2026
+- fix tabluea [Dobricean Ioan Dorian - [`154d2816`](https://github.com/eea/helm-charts/commit/154d281643470c58be507a969642270d0b84afdf)]
+
 ### Version 2.0.2 - 03 February 2026
 - Fix tableau csp [Dobricean Ioan Dorian - [`4be7d09a`](https://github.com/eea/helm-charts/commit/4be7d09ac5fc9196cb719350adbba138adf6c230)]
 
