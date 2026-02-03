@@ -1,0 +1,104 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: "1"
+    field.cattle.io/publicEndpoints: '[{"addresses":["10.50.7.43"],"port":443,"protocol":"HTTPS","serviceName":"gptlab2:onyx-onyx-stack-nginx","ingressName":"gptlab2:onyx-onyx-stack-nginx","hostname":"gptlab-latest.01dev.eea.europa.eu","path":"/","allNodes":false}]'
+    meta.helm.sh/release-name: onyx
+    meta.helm.sh/release-namespace: gptlab2
+  creationTimestamp: "2025-12-19T20:05:40Z"
+  generation: 2
+  labels:
+    app: nginx
+    app.kubernetes.io/instance: onyx
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: onyx-stack
+    app.kubernetes.io/version: v2.5.3-eea.0.91-dev
+    helm.sh/chart: onyx-stack-0.4.12
+  name: onyx-onyx-stack-nginx
+  namespace: gptlab2
+  resourceVersion: "667266460"
+  uid: 5050834a-81c5-4a45-a955-d91407f2d3dc
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: nginx
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - image: nginx:alpine
+        imagePullPolicy: IfNotPresent
+        name: nginx
+        ports:
+        - containerPort: 80
+          name: http
+          protocol: TCP
+        resources:
+          limits:
+            cpu: 500m
+            memory: 512Mi
+          requests:
+            cpu: 100m
+            memory: 128Mi
+        securityContext:
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 101
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /etc/nginx/nginx.conf
+          name: nginx-config
+          subPath: nginx.conf
+        - mountPath: /var/cache/nginx
+          name: nginx-cache
+        - mountPath: /var/run
+          name: nginx-run
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - configMap:
+          defaultMode: 420
+          name: onyx-onyx-stack-nginx-simple-config
+        name: nginx-config
+      - emptyDir: {}
+        name: nginx-cache
+      - emptyDir: {}
+        name: nginx-run
+status:
+  availableReplicas: 1
+  conditions:
+  - lastTransitionTime: "2025-12-19T20:05:42Z"
+    lastUpdateTime: "2025-12-19T20:05:42Z"
+    message: Deployment has minimum availability.
+    reason: MinimumReplicasAvailable
+    status: "True"
+    type: Available
+  - lastTransitionTime: "2025-12-19T20:05:40Z"
+    lastUpdateTime: "2025-12-19T20:05:42Z"
+    message: ReplicaSet "onyx-onyx-stack-nginx-bbccfc6d4" has successfully progressed.
+    reason: NewReplicaSetAvailable
+    status: "True"
+    type: Progressing
+  observedGeneration: 2
+  readyReplicas: 1
+  replicas: 1
+  updatedReplicas: 1

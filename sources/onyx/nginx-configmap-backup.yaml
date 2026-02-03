@@ -1,0 +1,57 @@
+apiVersion: v1
+data:
+  nginx.conf: |
+    events {
+        worker_connections 1024;
+    }
+
+    http {
+        upstream web_server {
+            server onyx-onyx-stack-webserver:3000;
+        }
+
+        upstream api_server {
+            server onyx-onyx-stack-api-service:8080;
+        }
+
+        proxy_connect_timeout 300s;
+        proxy_send_timeout 300s;
+        proxy_read_timeout 300s;
+
+        server {
+            listen 80;
+            server_name dev-gptlab.01dev.eea.europa.eu;
+
+            client_max_body_size 100M;
+
+            location /api/ {
+                proxy_pass http://api_server/;
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header X-Forwarded-Proto $scheme;
+            }
+
+            location / {
+                proxy_pass http://web_server;
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header X-Forwarded-Proto $scheme;
+                proxy_set_header Upgrade $http_upgrade;
+                proxy_set_header Connection "upgrade";
+            }
+        }
+    }
+kind: ConfigMap
+metadata:
+  annotations:
+    meta.helm.sh/release-name: onyx
+    meta.helm.sh/release-namespace: gptlab2
+  creationTimestamp: "2025-12-19T20:05:39Z"
+  labels:
+    app.kubernetes.io/managed-by: Helm
+  name: onyx-onyx-stack-nginx-simple-config
+  namespace: gptlab2
+  resourceVersion: "667265329"
+  uid: 774985a6-bc8d-4644-b3e3-33af9fce1a56
