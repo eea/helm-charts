@@ -294,9 +294,114 @@ nginx:
     connect: 300  # Time to establish connection with upstream server
     send: 300     # Time to send request to upstream server
     read: 300     # Time to read response from upstream server
+
+  # ============================================================================
+  # RATE LIMITING CONFIGURATION (OpenResty)
+  # ============================================================================
+  # Separate rate limiting for API (/api/) and Web (/) endpoints.
+  #
+  # API rate limiting:
+  # - Uses API keys (Authorization: Bearer or X-API-Key header)
+  # - Falls back to client IP if no API key provided
+  # - Each API key or IP gets its own bucket
+  #
+  # Web rate limiting:
+  # - IP-based only (for browser requests)
+  # - Each client IP gets its own bucket
+  #
+  # Logs format: [RATELIMIT:API] or [RATELIMIT:WEB] prefix
+  # ============================================================================
+  rateLimiting:
+    # Master switch - enables rate limiting infrastructure
+    enabled: false
+
+    # --- Shared Memory Zone ---
+    # Size of shared memory for all rate limiting state (e.g., "10m" = 10MB)
+    # Shared between API and Web rate limiting
+    sharedDictSize: "10m"
+
+    # --- Response Configuration ---
+    # HTTP status code returned when rate limit exceeded
+    limitExceededStatus: 429
+
+    # Custom message for API 429 responses (JSON)
+    limitExceededMessage: "Rate limit exceeded. Please slow down your requests."
+
+    # --- API Rate Limiting (/api/ endpoints) ---
+    api:
+      # Enable/disable request-based API rate limiting
+      enabled: true
+
+      # Requests per second per API key (or IP if no key)
+      requestsPerSecond: 10
+
+      # Burst capacity - allows brief spikes
+      # Example: rps=10, burst=20 means 10/s sustained, can burst to 30/s briefly
+      burstCapacity: 20
+
+      # --- Token-Based Rate Limiting (LLM tokens estimated from body size) ---
+      # Estimates tokens from request body: ~4 characters = 1 token
+      # Only applies to specific chat endpoints (not all API endpoints)
+      # This is separate from request-based limiting (both can be enabled)
+      tokenBased:
+        # Enable token-based rate limiting
+        enabled: false
+
+        # Tokens per second allowed per API key (or IP if no key)
+        # Example: 100 TPS = ~400 chars/sec input
+        tokensPerSecond: 100
+
+        # Burst capacity in tokens
+        # Example: 2000 tokens = ~8000 characters burst
+        burstCapacity: 2000
+
+        # Characters per token (for estimation)
+        # Default: 4 (common for GPT/Claude tokenizers)
+        charsPerToken: 4
+
+        # Paths where token-based limiting is applied (prefix match)
+        # Only these endpoints will have token-based rate limiting
+        paths:
+          - "/api/chat/send-message"
+          - "/api/chat/send-chat-message"
+
+    # --- Web Rate Limiting (/ frontend) ---
+    web:
+      # Enable/disable web rate limiting (requires rateLimiting.enabled=true)
+      # Default: false (web frontend usually doesn't need rate limiting)
+      enabled: false
+
+      # Requests per second per client IP
+      requestsPerSecond: 30
+
+      # Burst capacity for web requests (higher for page loads with many assets)
+      burstCapacity: 60
+
+    # --- Legacy/fallback values (used if api/web specific values not set) ---
+    requestsPerSecond: 10
+    burstCapacity: 20
+
+    # --- Whitelist Configuration ---
+    # API keys exempt from rate limiting (e.g., internal services)
+    # WARNING: Keep this list small for performance
+    whitelistedKeys: []
+    # Example:
+    # whitelistedKeys:
+    #   - "internal-service-key-abc123"
+    #   - "admin-key-xyz789"
+
+    # --- Logging ---
+    # Log rate limit events (useful for debugging, disable in production)
+    # Logs show: [RATELIMIT:API] or [RATELIMIT:WEB] prefix
+    enableLogging: false
+
   # Simple Deployment configuration (when useSimpleDeployment: true)
   simple:
-    tag: "alpine"
+    # CHANGED: Using OpenResty instead of nginx for Lua-based rate limiting
+    # OpenResty is nginx + LuaJIT, fully nginx-compatible
+    # Use the fat image which includes LuaRocks and additional modules
+    image: "openresty/openresty"
+    tag: "1.27.1.2-5-alpine-fat"
     replicas: 1
     serviceType: "ClusterIP"
     resources:
