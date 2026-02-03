@@ -10,6 +10,9 @@ This chart deployes the BISE frontend app
 
 ## Releases
 
+### Version 2.0.2 - 03 February 2026
+- Fix tableau csp [Dobricean Ioan Dorian - [`4be7d09a`](https://github.com/eea/helm-charts/commit/4be7d09ac5fc9196cb719350adbba138adf6c230)]
+
 ### Version 2.0.1 - 30 January 2026
 - Automated release of [eeacms/bise-frontend:3.29.3-beta.1](https://github.com/eea/bise-frontend/releases) [EEA Jenkins - [`cfdf613b`](https://github.com/eea/helm-charts/commit/cfdf613bfc85fb2de6085d8764a71d73a352f41d)]
 
