@@ -93,6 +93,13 @@ questions:
     required: true
     type: "string"
     group: "Volto configuration"
+  - variable: "volto.environment.RAZZLE_PUBLIC_URL"
+    label: "Public URL"
+    description: "RAZZLE_PUBLIC_URL used by config.settings.publicURL"
+    default: "https://dev-insitu.copernicus.01dev.eea.europa.eu"
+    required: true
+    type: "string"
+    group: "Volto configuration"
   - variable: "volto.environment.ALLOWED_CORS_DESTINATIONS"
     label: "ALLOWED_CORS_DESTINATIONS"
     description: "Allowed CORS Proxy destinations, e.g.: staging.eea.europa.eu, ims.dev.eea.europa.eu"
