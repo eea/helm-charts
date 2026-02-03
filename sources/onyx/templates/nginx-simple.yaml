@@ -9,8 +9,9 @@
 # - API keys (Authorization: Bearer or X-API-Key) - each key has own bucket
 # - Falls back to IP if no API key
 # - Two modes (can be enabled together):
-#   1. Request-based: rateLimiting.api.enabled (requests per second)
+#   1. Request-based: rateLimiting.api.enabled (requests per second) - ALL /api/ endpoints
 #   2. Token-based:   rateLimiting.api.tokenBased.enabled (estimated LLM tokens)
+#      - Only on chat endpoints: /api/chat/send-message, /api/chat/send-chat-message
 #      - Estimates tokens from request body size (~4 chars = 1 token)
 #
 # WEB (/):
@@ -52,22 +53,45 @@ data:
 
     {{- if .Values.nginx.rateLimiting.enabled }}
     # ==========================================================================
-    # RATE LIMITING - {{ .Values.nginx.rateLimiting.requestsPerSecond }} req/s, burst {{ .Values.nginx.rateLimiting.burstCapacity }}
+    # RATE LIMITING - API: {{ .Values.nginx.rateLimiting.api.requestsPerSecond | default 10 }} req/s
     # ==========================================================================
     lua_shared_dict rate_limit_store {{ .Values.nginx.rateLimiting.sharedDictSize }};
 
     init_by_lua_block {
         -- API rate limiting (for /api/ - uses API keys or falls back to IP)
-        API_RATE_LIMIT_RPS = {{ .Values.nginx.rateLimiting.api.requestsPerSecond | default .Values.nginx.rateLimiting.requestsPerSecond }}
-        API_RATE_LIMIT_BURST = {{ .Values.nginx.rateLimiting.api.burstCapacity | default .Values.nginx.rateLimiting.burstCapacity }}
+        API_RATE_LIMIT_RPS = {{ .Values.nginx.rateLimiting.api.requestsPerSecond | default 10 }}
+        API_RATE_LIMIT_BURST = {{ .Values.nginx.rateLimiting.api.burstCapacity | default 20 }}
         API_RATE_LIMIT_ENABLED = {{ .Values.nginx.rateLimiting.api.enabled | default true }}
 
         -- Token-based rate limiting (estimated from request body size)
         -- ~4 characters = 1 token (approximation for most LLMs)
+        -- Only applied to specific chat endpoints
         TOKEN_RATE_LIMIT_ENABLED = {{ .Values.nginx.rateLimiting.api.tokenBased.enabled | default false }}
         TOKEN_RATE_LIMIT_TPS = {{ .Values.nginx.rateLimiting.api.tokenBased.tokensPerSecond | default 100 }}
         TOKEN_RATE_LIMIT_BURST = {{ .Values.nginx.rateLimiting.api.tokenBased.burstCapacity | default 2000 }}
         TOKEN_CHARS_PER_TOKEN = {{ .Values.nginx.rateLimiting.api.tokenBased.charsPerToken | default 4 }}
+
+        -- Paths where token-based limiting is applied (prefix match)
+        TOKEN_RATE_LIMIT_PATHS = {
+            {{- if .Values.nginx.rateLimiting.api.tokenBased.paths }}
+            {{- range .Values.nginx.rateLimiting.api.tokenBased.paths }}
+            "{{ . }}",
+            {{- end }}
+            {{- else }}
+            "/api/chat/send-message",
+            "/api/chat/send-chat-message",
+            {{- end }}
+        }
+
+        -- Check if path should use token-based limiting
+        function is_token_limited_path(uri)
+            for _, path in ipairs(TOKEN_RATE_LIMIT_PATHS) do
+                if uri == path or string.sub(uri, 1, #path) == path then
+                    return true
+                end
+            end
+            return false
+        end
 
         -- Web rate limiting (for / - IP-based only)
         WEB_RATE_LIMIT_RPS = {{ .Values.nginx.rateLimiting.web.requestsPerSecond | default 30 }}
@@ -92,11 +116,23 @@ data:
             "^127%.",
         }
 
+        -- Whitelisted API keys (exempt from API rate limiting)
         WHITELISTED_KEYS = {
-            {{- range .Values.nginx.rateLimiting.whitelistedKeys }}
+            {{- range .Values.nginx.rateLimiting.api.whitelistedKeys }}
             ["{{ . }}"] = true,
             {{- end }}
         }
+
+        -- Whitelisted IPs (exempt from ALL rate limiting)
+        WHITELISTED_IPS = {
+            {{- range .Values.nginx.rateLimiting.whitelistedIPs }}
+            ["{{ . }}"] = true,
+            {{- end }}
+        }
+
+        function is_whitelisted_ip(ip)
+            return ip and WHITELISTED_IPS[ip]
+        end
 
         function is_internal_ip(ip)
             if not ip then return false end
@@ -168,6 +204,15 @@ data:
                 end
 
                 local client_ip = get_client_ip()
+
+                -- Skip whitelisted IPs (exempt from ALL rate limiting)
+                if is_whitelisted_ip(client_ip) then
+                    if RATE_LIMIT_LOGGING then
+                        ngx.log(ngx.NOTICE, "[RATELIMIT:API] SKIP whitelisted_ip=", client_ip)
+                    end
+                    return
+                end
+
                 local rate_key, key_type, raw_key = get_rate_key()
 
                 -- Skip internal IPs (only for IP-based limiting)
@@ -225,8 +270,8 @@ data:
                     end
                 end
 
-                -- ========== TOKEN-BASED RATE LIMITING (estimated) ==========
-                if TOKEN_RATE_LIMIT_ENABLED then
+                -- ========== TOKEN-BASED RATE LIMITING (chat endpoints only) ==========
+                if TOKEN_RATE_LIMIT_ENABLED and is_token_limited_path(ngx.var.uri) then
                     -- Get request body size from Content-Length header
                     -- For chunked/streaming requests without Content-Length, use minimum estimate
                     local body_size = tonumber(ngx.var.content_length)
@@ -297,6 +342,14 @@ data:
                 end
 
                 local client_ip = get_client_ip()
+
+                -- Skip whitelisted IPs (exempt from ALL rate limiting)
+                if is_whitelisted_ip(client_ip) then
+                    if RATE_LIMIT_LOGGING then
+                        ngx.log(ngx.NOTICE, "[RATELIMIT:WEB] SKIP whitelisted_ip=", client_ip)
+                    end
+                    return
+                end
 
                 -- Skip internal IPs
                 if is_internal_ip(client_ip) then
