@@ -35,7 +35,7 @@ spec:
       {{- if and .Values.inferenceCapability.image .Values.inferenceCapability.image.repository }}
         {{- $modelRepo = .Values.inferenceCapability.image.repository }}
       {{- end }}
-      {{- $modelTag := default .Values.global.image.tags.modelServer (printf "model_server-%s" .Values.global.version) }}
+      {{- $modelTag := default .Values.global.image.tags.modelServer (printf "model_server-%s" (include "onyx.version" .)) }}
       {{- if and .Values.inferenceCapability.image .Values.inferenceCapability.image.tag }}
         {{- $modelTag = .Values.inferenceCapability.image.tag }}
       {{- end }}

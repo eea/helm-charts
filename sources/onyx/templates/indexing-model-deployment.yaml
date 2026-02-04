@@ -44,7 +44,7 @@ spec:
       {{- if and .Values.indexCapability.image .Values.indexCapability.image.repository }}
         {{- $modelRepo = .Values.indexCapability.image.repository }}
       {{- end }}
-      {{- $modelTag := default .Values.global.image.tags.modelServer (printf "model_server-%s" .Values.global.version) }}
+      {{- $modelTag := default .Values.global.image.tags.modelServer (printf "model_server-%s" (include "onyx.version" .)) }}
       {{- if and .Values.indexCapability.image .Values.indexCapability.image.tag }}
         {{- $modelTag = .Values.indexCapability.image.tag }}
       {{- end }}

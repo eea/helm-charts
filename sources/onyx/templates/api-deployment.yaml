@@ -49,7 +49,7 @@ spec:
       {{- if and .Values.api.image .Values.api.image.repository }}
         {{- $backendRepo = .Values.api.image.repository }}
       {{- end }}
-      {{- $backendTag := default .Values.global.image.tags.backend (printf "backend-%s" .Values.global.version) }}
+      {{- $backendTag := default .Values.global.image.tags.backend (printf "backend-%s" (include "onyx.version" .)) }}
       {{- if and .Values.api.image .Values.api.image.tag }}
         {{- $backendTag = .Values.api.image.tag }}
       {{- end }}

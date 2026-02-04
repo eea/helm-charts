@@ -92,3 +92,10 @@ Return the configured autoscaling engine; defaults to HPA when unset.
 {{- $engine := default "hpa" .Values.autoscaling.engine -}}
 {{- $engine | lower -}}
 {{- end }}
+
+{{/*
+Return the version to use (global.version with fallback to Chart.AppVersion)
+*/}}
+{{- define "onyx.version" -}}
+{{- default .Chart.AppVersion .Values.global.version -}}
+{{- end }}

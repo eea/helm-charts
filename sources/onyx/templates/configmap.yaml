@@ -5,7 +5,7 @@ metadata:
   labels:
     {{- include "onyx.labels" . | nindent 4 }}
 data:
-  ONYX_VERSION: "{{ .Values.global.version }}"
+  ONYX_VERSION: "{{ include "onyx.version" . }}"
   INTERNAL_URL: "http://{{ include "onyx.fullname" . }}-api-service:{{ .Values.api.service.port | default 8080 }}"
   {{- if .Values.postgresql.enabled }}
   POSTGRES_HOST: {{ include "onyx.fullname" . }}-postgresql
