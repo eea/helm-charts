@@ -179,6 +179,8 @@ inferenceCapability:
     targetPort: 9000
   name: inference-model-server
   replicaCount: 1
+  # HuggingFace cache directory location
+  huggingfaceCacheDir: "/app/.cache/huggingface"
   labels:
     - key: app
       value: inference-model-server
@@ -234,6 +236,8 @@ indexCapability:
   podLabels:
     app: indexing-model-server
   indexingOnly: "True"
+  # HuggingFace cache directory location
+  huggingfaceCacheDir: "/app/.cache/huggingface"
   podAnnotations: {}
   containerPorts:
     server: 9000

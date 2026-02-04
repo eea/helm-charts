@@ -71,6 +71,10 @@ spec:
         env:
           - name: INDEXING_ONLY
             value: "{{ default "True" .Values.indexCapability.indexingOnly }}"
+          {{- if .Values.indexCapability.huggingfaceCacheDir }}
+          - name: HF_HOME
+            value: "{{ .Values.indexCapability.huggingfaceCacheDir }}"
+          {{- end }}
           {{- include "onyx.envSecrets" . | nindent 10}}
         {{- if .Values.indexCapability.securityContext }}
         securityContext:

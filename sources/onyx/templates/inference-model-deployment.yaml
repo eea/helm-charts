@@ -60,7 +60,11 @@ spec:
         - configMapRef:
             name: {{ .Values.config.envConfigMapName }}
         env:
-          {{- include "onyx.envSecrets" . | nindent 12}}
+          {{- if .Values.inferenceCapability.huggingfaceCacheDir }}
+          - name: HF_HOME
+            value: "{{ .Values.inferenceCapability.huggingfaceCacheDir }}"
+          {{- end }}
+          {{- include "onyx.envSecrets" . | nindent 10 }}
         {{- if .Values.inferenceCapability.securityContext }}
         securityContext:
           {{- toYaml .Values.inferenceCapability.securityContext | nindent 10 }}
