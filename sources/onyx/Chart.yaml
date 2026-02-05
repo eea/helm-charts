@@ -12,18 +12,18 @@ keywords:
   - question-answering
   - onyx
 type: application
-version: 0.4.15
-appVersion: "v2.5.3-eea.0.0.94-dev"
+version: 0.4.16
+appVersion: "v2.5.3-eea.0.0.95-dev"
 annotations:
   category: Productivity
   licenses: MIT
   images: |
     - name: webserver
-      image: eeacms/danswer:web-v2.5.3.eea.0.0.94-dev
+      image: eeacms/danswer:web-v2.5.3.eea.0.0.95-dev
     - name: background
-      image: eeacms/danswer:backend-v2.5.3.eea.0.0.94-dev
+      image: eeacms/danswer:backend-v2.5.3.eea.0.0.95-dev
     - name: model-server
-      image: eeacms/danswer:model_server-v2.5.3.eea.0.0.94-dev
+      image: eeacms/danswer:model_server-v2.5.3.eea.0.0.95-dev
     - name: vespa
       image: vespaengine/vespa:8.609.39
 dependencies:
