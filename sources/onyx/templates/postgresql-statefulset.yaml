@@ -39,9 +39,9 @@ spec:
         app.kubernetes.io/managed-by: {{ .Release.Service }}
         app.kubernetes.io/name: {{ include "onyx.name" . }}
     spec:
-      {{- with .Values.postgresql.simple.securityContext }}
+      {{- if .Values.postgresql.simple.podSecurityContext }}
       securityContext:
-        {{- toYaml . | nindent 8 }}
+        {{- toYaml .Values.postgresql.simple.podSecurityContext | nindent 8 }}
       {{- end }}
       containers:
         - name: postgresql

@@ -43,9 +43,12 @@ postgresql:
       limits:
         cpu: 2000m
         memory: 4Gi
+    podSecurityContext:
+      fsGroup: 999
     securityContext:
       runAsNonRoot: false
       runAsUser: 999
+      allowPrivilegeEscalation: false
   # Database initialization configuration
   # Creates additional databases and users on PostgreSQL startup
   initdb:
@@ -196,12 +199,15 @@ inferenceCapability:
     limits:
       cpu: 4000m
       memory: 10Gi
-  podSecurityContext: {}
+  podSecurityContext:
+    runAsNonRoot: true
+    fsGroup: 1000
   securityContext:
     privileged: false
     runAsNonRoot: true
     runAsUser: 1000
     readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
     capabilities:
       drop:
       - ALL
@@ -249,12 +255,15 @@ indexCapability:
     limits:
       cpu: 6000m
       memory: 6Gi
-  podSecurityContext: {}
+  podSecurityContext:
+    runAsNonRoot: true
+    fsGroup: 1000
   securityContext:
     privileged: false
     runAsNonRoot: true
     runAsUser: 1000
     readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
     capabilities:
       drop:
       - ALL
@@ -387,10 +396,14 @@ nginx:
       limits:
         cpu: 500m
         memory: 512Mi
+    podSecurityContext:
+      runAsNonRoot: true
+      fsGroup: 101
     securityContext:
       runAsNonRoot: true
       runAsUser: 101
       readOnlyRootFilesystem: true
+      allowPrivilegeEscalation: false
       capabilities:
         drop:
         - ALL
@@ -595,12 +608,15 @@ celery_shared:
     periodSeconds: 60
     failureThreshold: 5
     timeoutSeconds: 3
-  podSecurityContext: {}
+  podSecurityContext:
+    runAsNonRoot: true
+    fsGroup: 1000
   securityContext:
     privileged: false
     runAsNonRoot: true
     runAsUser: 1000
     readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
     capabilities:
       drop:
       - ALL
