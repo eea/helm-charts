@@ -37,7 +37,7 @@ ingress:
         'X-XSS-Protection "1; mode=block"'
         "X-Frame-Options 'SAMEORIGIN'"
         "Referrer-Policy origin"
-        "Content-Security-Policy default-src 'self'; object-src 'self'; base-uri 'self'; form-action 'self'; connect-src 'self' https://*.arcgisonline.com/ https://*.ec.europa.eu https://api.openaire.com https://api.zotero.org/ https://*.discomap.eea.europa.eu/ https://*.arcgis.com https://*.eionet.europa.eu http://*.eea.europa.eu; font-src 'self' data: https://cdnjs.cloudflare.com/ https://fonts.gstatic.com/ https://*.arcgis.com/ https://*.eea.europa.eu https://*.eionet.europa.eu; frame-src 'self' https://europa.eu/ https://*.discomap.eea.europa.eu/ https://*.europa.eu/ https://*.eea.europa.eu https://*.eionet.europa.eu http://*.eea.europa.eu https://*.arcgis.com/; img-src http: https: blob: data:; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: data: https://matomo.eea.europa.eu https://api.openaire.eu https://api.openaire.com https://api.zotero.org/ https://*.google.com https://*.arcgis.com https://*.discomap.eea.europa.eu/ https://www.gstatic.com/ https://public.tableau.com https://*.eea.europa.eu https://*.eionet.europa.eu http://*.eea.europa.eu https://d3js.org https://cdnjs.cloudflare.com https://code.jquery.com; frame-ancestors 'self' *.eionet.europa.eu *.eea.europa.eu; style-src 'self' 'unsafe-inline' https://www.google.com/uds/ https://api.openaire.eu https://api.openaire.com https://api.zotero.org/ https://*.googleapis.com https://*.discomap.eea.europa.eu/ https://*.arcgis.com/ https://www.gstatic.com/ https://*.eionet.europa.eu https://*.eea.europa.eu https://cdnjs.cloudflare.com https://code.jquery.com; report-uri https://sentry.eea.europa.eu/api/62/security/?sentry_key=524cdf94d5f24d2da6f89cd25a07bf9a"
+        "Content-Security-Policy default-src 'none'; manifest-src 'self'; object-src 'self'; base-uri 'self'; form-action 'self'; connect-src 'self' https://*.ec.europa.eu https://*.arcgis.com/ https://*.arcgisonline.com/ https://api.openaire.eu https://api.openaire.com https://api.zotero.org/ https://*.eea.europa.eu/ https://*.eionet.europa.eu; font-src 'self' data: https://cdnjs.cloudflare.com/ https://fonts.gstatic.com/ https://*.eea.europa.eu https://*.eionet.europa.eu https://*.arcgis.com/; frame-src 'self' https://flo.uri.sh/ https://europa.eu/ https://*.europa.eu/ https://*.eionet.europa.eu https://*.arcgis.com/; img-src https: blob: data:; script-src 'self' 'unsafe-inline' https://public.tableau.com https://api.openaire.eu https://api.openaire.com https://api.zotero.org/ https://matomo.eea.europa.eu https://*.eea.europa.eu/ https://*.arcgis.com https://www.google.com/jsapi https://www.google.com/uds/ https://www.gstatic.com/ https://spreadsheets.google.com/ https://docs.google.com/ https://*.eionet.europa.eu https://d3js.org https://cdnjs.cloudflare.com https://code.jquery.com; frame-ancestors 'self' *.eionet.europa.eu *.eea.europa.eu; style-src 'self' 'unsafe-inline' https://www.google.com/uds/ https://api.openaire.eu https://api.openaire.com https://api.zotero.org/ https://*.googleapis.com/css https://*.eea.europa.eu/ https://*.arcgis.com/ https://www.gstatic.com/ https://*.eionet.europa.eu https://*.eea.europa.eu https://cdnjs.cloudflare.com https://code.jquery.com; report-uri https://sentry.eea.europa.eu/api/45/security/?sentry_key=0343e20fc4e0469790b6016561f032e3"
         "Permissions-Policy accelerometer=(), autoplay=(), camera=(), encrypted-media=(), fullscreen=(self), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), midi=(), payment=(), picture-in-picture=(), sync-xhr=(self 'https://js.arcgis.com' 'https://maps.eea.europa.eu'), usb=()";
     nginx.ingress.kubernetes.io/proxy-body-size: 1024m
     nginx.ingress.kubernetes.io/proxy-read-timeout: '480'
@@ -86,6 +86,7 @@ volto:
     RAZZLE_INTERNAL_API_PATH: "http://backend:8080/Plone/freshwater"
     RAZZLE_API_PATH: "https://dev-wise.01dev.eea.europa.eu/freshwater"
     RAZZLE_PREFIX_PATH: "/freshwater"
+    RAZZLE_PUBLIC_URL: ''
     RAZZLE_DEMO_SITE:
     RAZZLE_BANNER_HEADER:
     RAZZLE_BANNER_MESSAGE:
@@ -99,6 +100,10 @@ volto:
     RAZZLE_PROXY_ES_DSN: ""
     VOLTO_ROBOTSTXT:
     RAZZLE_DISABLE_DRAFT_WATERMARK:
+    DANSWER_URL: ''
+    DANSWER_API_KEY: ''
+    LLMGW_TOKEN: ''
+    LLMGW_URL: ''
     CSP_HEADER:
   annotations: {}
   livenessProbe:
@@ -162,11 +167,11 @@ varnish:
   environment:
     VARNISH_SIZE: '2G'
     VARNISH_DNS_TTL: '20s'
-    VARNISH_DNS_TTL: '20s'
     VARNISH_BERESP_TTL: '60s'
     VARNISH_BERESP_GRACE: '120s'
     VARNISH_BERESP_KEEP: '120s'
     VARNISH_GZIP_ENABLED: 'false'
+    VARNISH_GZIP_JSON_ENABLED: 'false'
     AUTOKILL_CRON: ''
   livenessProbe:
     httpGet:
