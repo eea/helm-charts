@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 3.0.1 - 09 February 2026
+- fix version image [Dobricean Ioan Dorian - [`a1df35dd`](https://github.com/eea/helm-charts/commit/a1df35dda2754faa1eb9067d3a94aa156afefb5a)]
+
 ### Version 3.0.0 - 09 February 2026
 - fix freshwater backend [Dobricean Ioan Dorian - [`2cf9f47c`](https://github.com/eea/helm-charts/commit/2cf9f47c70f1da444cb24193f06c6b11269b4673)]
 
