@@ -1,0 +1,15 @@
+apiVersion: v2
+name: freshwater-backend
+type: application
+version: 1.0.0
+appVersion: '6.0.15-22'
+description: Freshwater backend
+icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/freshwater-backend/volto.png
+home: https://github.com/eea/freshwater-backend
+keywords:
+  - CMS
+# Remember to do helm dep up
+dependencies:
+  - name: postfix
+    version: 3.2.0
+    repository: https://eea.github.io/helm-charts
