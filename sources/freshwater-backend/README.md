@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 3.0.3 - 09 February 2026
+- fix ingress [Dobricean Ioan Dorian - [`4ff47e7f`](https://github.com/eea/helm-charts/commit/4ff47e7f416effc96607f6ca095face1afc09367)]
+
 ### Version 3.0.1 - 09 February 2026
 - fix version image [Dobricean Ioan Dorian - [`a1df35dd`](https://github.com/eea/helm-charts/commit/a1df35dda2754faa1eb9067d3a94aa156afefb5a)]
 
