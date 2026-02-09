@@ -11,4 +11,4 @@ data:
     }
 
   default.conf: |
-{{ .Values.nginx.conf | indent 4 }}
+{{ tpl .Values.nginx.conf . | indent 4 }}

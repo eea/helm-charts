@@ -367,3 +367,17 @@
     type: "multiline"
     required: true
     group: "Nginx"
+  
+  - variable: "nginx.basicAuth.username"
+    label: "Username for /admin"
+    description: "Set username for /admin endpoint"
+    type: "string"
+    required: true
+    group: "Nginx"
+  
+  - variable: "nginx.basicAuth.password"
+    label: "Password for /admin"
+    description: "Set password for /admin endpoint"
+    type: "string"
+    required: true
+    group: "Nginx"

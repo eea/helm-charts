@@ -26,7 +26,18 @@ spec:
           volumeMounts:
             - name: nginx-config
               mountPath: /etc/nginx/conf.d
+{{- if and .Values.nginx.basicAuth.username .Values.nginx.basicAuth.password }}
+            - name: nginx-auth
+              mountPath: /etc/nginx/auth
+              readOnly: true
+{{- end }}
       volumes:
         - name: nginx-config
           configMap:
             name: {{ include "appl.fullname" . }}-nginx-config
+{{- if and .Values.nginx.basicAuth.username .Values.nginx.basicAuth.password }}
+        - name: nginx-auth
+          secret:
+            secretName: {{ include "appl.fullname" . }}-basic-auth
+{{- end }}
+
