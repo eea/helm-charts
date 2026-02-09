@@ -40,7 +40,6 @@ questions:
     description: "Memcached service for python caching, SERVICE.NAMESPACE"
     type: "string"
     required: true
-    default: "wise-freshwater-memcached.wise-freshwater"
     group: "General"
 
   - variable: "links.database"
@@ -48,7 +47,6 @@ questions:
     description: "PostgreSQL DB backend, SERVICE.NAMESPACE"
     type: "string"
     required: true
-    default: "plone-postgres.namespace"
     group: "General"
 
   - variable: "entrasync.enabled"
@@ -59,7 +57,7 @@ questions:
     group: "General"
 
   - variable: "entrasync.schedule"
-    label: "Scheduled Endra ID synchronization time"
+    label: "Scheduled Entra ID synchronization time"
     type: "string"
     default: "0 0 0 * *"
     required: true
@@ -140,7 +138,7 @@ questions:
   - variable: "plone.database.POSTGRES_PASSWORD"
     label: "PostgreSQL password"
     type: "string"
-    default: "zope_456"
+    default: "zope"
     required: true
     group: "Plone configuration"
 
@@ -340,7 +338,7 @@ questions:
     show_if: "entrasync.enabled=true"
 
   - variable: "entrasync.resources.limits.memory"
-    label: "Entrasynci cron job memory limit"
+    label: "Entrasync cron job memory limit"
     description: ">= memory reservation"
     type: "string"
     required: true

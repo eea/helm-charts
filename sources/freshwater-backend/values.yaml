@@ -16,14 +16,14 @@ serviceAccount:
 timezone: Europe/Copenhagen
 
 links:
-  database: postgres-postgres.database
-  memcached: postgres-memcached.database
+  database: plone-postgres.namespace
+  memcached: plone-postgres-memcached.namespace
 
 ingress:
   annotations:
     cert-manager.io/cluster-issuer: 01dev-eea-letsencrypt
   certificate: plone.eea.europa.eu-tls
-  tls: enabled
+  tls: true
 
 plone:
   annotations: {}
@@ -37,7 +37,6 @@ plone:
     POSTGRES_PASSWORD: zope
     POSTGRES_USER: zope
   environment:
-    BACKEND_VERSION: 5.2.13-31
     CORS_ALLOW_ORIGIN: ''
     DANSWER_API_KEY: ''
     DEFAULT_ORGANISATIONS: ''
@@ -46,13 +45,12 @@ plone:
     GRAYLOG: logcentral.eea.europa.eu:12201
     LLMGW_TOKEN: ''
     LLMGW_URL: ''
-    MEMCACHE_SERVER: backend-memcached:11211
+    MEMCACHE_SERVER: memcached:11211
     PLONE_REGISTRY_YAML_CONTENT: ''
     RAZZLE_PROXY_ES_DSN_globalsearch: ''
     RELSTORAGE_SHARED_BLOB_DIR: 'false'
     SENTRY_DSN: ''
     SENTRY_ENVIRONMENT: 01dev
-    SENTRY_RELEASE: 5.2.13-31
     SENTRY_SITE: ''
     SENTRY_URL: water.europa.eu/freshwater
     STATIC_BANNER_ENABLED: ''
@@ -84,7 +82,7 @@ plone:
     requests:
       memory: 4Gi
   serviceType: ClusterIP
-  site: Plone
+  site: freshwater
   startupProbe:
     failureThreshold: 24
     httpGet:
