@@ -4,6 +4,9 @@ A Helm chart for deploying the WISE Freshwater frontend application.
 
 ## Releases
 
+### Version 2.0.2 - 09 February 2026
+- fix ingress [Dobricean Ioan Dorian - [`05f36f69`](https://github.com/eea/helm-charts/commit/05f36f692384b52c7e4d8ebb1830710a0f065b7e)]
+
 ### Version 2.0.0 - 09 February 2026
 - release frontend [Dobricean Ioan Dorian - [`831f4730`](https://github.com/eea/helm-charts/commit/831f473037ec33ddcc6c35b718237744da35656f)]
 
