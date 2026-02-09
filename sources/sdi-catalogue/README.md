@@ -67,6 +67,9 @@ The OAuth2 client registration is named `eea` in the Spring Security configurati
 
 ## Releases
 
+### Version 0.8.41 - 09 February 2026
+- Annotations for loadbalancers.
+
 ### Version 0.8.40 - 01 February 2026
 - Add Redis integration for Nextcloud distributed caching and file locking.
 - New deployment and service for Redis (`nextcloud-redis`).

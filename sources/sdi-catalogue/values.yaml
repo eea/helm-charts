@@ -71,7 +71,11 @@ apache:
   service:
     type: ClusterIP
     annotations: {}
-#     metallb.universe.tf/allow-shared-ip: "sdi-catalogue"
+      # metallb.universe.tf/allow-shared-ip: "sdi-catalogue"
+
+postgres: 
+  service:
+    annotations: {}
 
 
 elasticsearch:
