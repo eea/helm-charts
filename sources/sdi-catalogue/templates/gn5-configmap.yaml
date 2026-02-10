@@ -67,6 +67,16 @@ data:
               eea:
                 issuer-uri: {{ .Values.gn5.oauth2.issuerUri }}
                 user-name-attribute: {{ .Values.gn5.oauth2.userNameAttribute }}
+
+    {{- else }}
+
+    spring:
+      security:
+        oauth2:
+          client:
+            registration: {}
+            provider: {}
+            
     {{- end }}
 
 
