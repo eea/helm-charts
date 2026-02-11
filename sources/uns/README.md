@@ -10,6 +10,9 @@ set the values in the database section.
 
 ## Releases
 
+### Version 0.4.4
+- Libraries upgrades, fix hibernate deprecation warnings.
+
 ### Version 0.4.3
 - Tomcat upgrade.
 
