@@ -24,6 +24,9 @@ This chart is configured for production use.
 ## Releases
 
 <dl>
+  <dt>Version 0.2.8</dt>
+  <dd>Tomcat, libraries upgrades.</dd>
+
   <dt>Version 0.2.7/dt>
   <dd>jQuery, jQuery UI upgrade.</dd>
 
