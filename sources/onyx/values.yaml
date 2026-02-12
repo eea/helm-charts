@@ -49,6 +49,10 @@ postgresql:
       runAsNonRoot: false
       runAsUser: 999
       allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
+      capabilities:
+        drop:
+          - ALL
   # Database initialization configuration
   # Creates additional databases and users on PostgreSQL startup
   initdb:
