@@ -5,6 +5,9 @@ This chart is configured for production use.
 ## Releases
 
 <dl>
+  <dt>Version 0.1.9</dt>
+  <dd>Libraries and tomcat upgrades.</dd>
+
   <dt>Version 0.1.8</dt>
   <dd>Libraries upgrades.</dd>
 
