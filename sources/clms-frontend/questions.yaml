@@ -88,25 +88,23 @@ questions:
 
   - variable: "globalProxy.enabled"
     label: "Enable /global proxy"
-    description: "Enable proxy for /global path to cgls.vito.be (not needed when Apache is enabled)"
+    description: "Enable proxy for /global path to cgls.vito.be"
     default: true
     type: "boolean"
     required: true
     group: "General"
-    show_if: "apache.enabled=false"
 
   - variable: "cdseProxy.enabled"
     label: "Enable CDSE proxy"
-    description: "Enable proxy for /cdse path to sh.dataspace.copernicus.eu (not needed when Apache is enabled)"
+    description: "Enable proxy for /cdse path to sh.dataspace.copernicus.eu"
     default: true
     type: "boolean"
     required: true
     group: "General"
-    show_if: "apache.enabled=false"
 
   - variable: "cdseProxy.serverSnippet"
     label: "CDSE Nginx Server Snippet"
-    description: "Nginx location blocks for CDSE service mappings (proxy configurations with service UUIDs)"
+    description: "Nginx location blocks for CDSE service mappings (only used when Apache is disabled)"
     type: "multiline"
     required: false
     group: "General"
@@ -114,7 +112,7 @@ questions:
 
   - variable: "apache.enabled"
     label: "Enable Apache"
-    description: "Add Apache reverse proxy in front of Varnish (handles redirects, CDSE proxy, global proxy)"
+    description: "Add Apache reverse proxy for CDSE paths (handles Substitute directives for response rewriting)"
     default: true
     type: "boolean"
     required: true
@@ -123,7 +121,7 @@ questions:
   - variable: "apache.modules"
     label: "Apache modules"
     description: "Extra Apache modules to load, space separated"
-    default: "proxy_html_module xml2enc_module expires_module"
+    default: "proxy_html_module xml2enc_module expires_module substitute_module"
     type: "string"
     required: false
     group: "General"

@@ -1,4 +1,4 @@
-{{- if and .Values.cdseProxy.enabled (not (and .Values.apache .Values.apache.enabled)) }}
+{{- if .Values.cdseProxy.enabled }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -7,6 +7,7 @@ metadata:
     {{- include "appl.labels" . | nindent 4 }}
     component: clms-frontend
   annotations:
+    {{- if not (and .Values.apache .Values.apache.enabled) }}
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
     nginx.ingress.kubernetes.io/upstream-vhost: "sh.dataspace.copernicus.eu"
     nginx.ingress.kubernetes.io/proxy-ssl-server-name: "on"
@@ -18,6 +19,7 @@ metadata:
     {{- if .Values.cdseProxy.serverSnippet }}
     nginx.ingress.kubernetes.io/server-snippet: |
 {{ .Values.cdseProxy.serverSnippet | indent 6 }}
+    {{- end }}
     {{- end }}
   {{- with .Values.ingress.annotations }}
     {{- toYaml . | nindent 4 }}
@@ -32,9 +34,15 @@ spec:
         pathType: Prefix
         backend:
           service:
+            {{- if and .Values.apache .Values.apache.enabled }}
+            name: {{ .Values.apache.serviceName }}
+            port:
+              number: 80
+            {{- else }}
             name: cdse-dataspace-external
             port:
               number: 443
+            {{- end }}
   {{- if .Values.ingress.tls }}
   tls:
   - hosts:

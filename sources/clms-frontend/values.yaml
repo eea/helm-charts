@@ -330,7 +330,7 @@ apache:
   image:
     repository: eeacms/apache
     tag: "2.4-3.3"
-  modules: "proxy_html_module xml2enc_module expires_module"
+  modules: "proxy_html_module xml2enc_module expires_module substitute_module"
   config: ""
   staticContent:
     enabled: false
