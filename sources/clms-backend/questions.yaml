@@ -49,21 +49,6 @@ questions:
     required: true
     group: "General"
 
-  - variable: "entrasync.enabled"
-    label: "Enable Entra Id synchronization"
-    default: true
-    type: "boolean"
-    required: true
-    group: "General"
-
-  - variable: "entrasync.schedule"
-    label: "Scheduled Entra ID synchronization time"
-    type: "string"
-    default: "0 0 3 * *"
-    required: true
-    group: "General"
-    show_if: "entrasync.enabled=true"
-
   - variable: "zodbpack.enabled"
     label: "Enable Zodbpack cleanup"
     default: false
@@ -469,23 +454,6 @@ questions:
     required: true
     default: "4Gi"
     group: "Memory"
-
-  - variable: "entrasync.resources.requests.memory"
-    label: "Entrasync cron job memory reservation"
-    type: "string"
-    required: true
-    default: "1Gi"
-    group: "Memory"
-    show_if: "entrasync.enabled=true"
-
-  - variable: "entrasync.resources.limits.memory"
-    label: "Entrasync memory limit"
-    description: ">= memory reservation"
-    type: "string"
-    required: true
-    default: "1Gi"
-    group: "Memory"
-    show_if: "entrasync.enabled=true"
 
   - variable: "zodbpack.resources.requests.memory"
     label: "Zodbpack cron job memory reservation"
