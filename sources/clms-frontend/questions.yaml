@@ -88,19 +88,21 @@ questions:
 
   - variable: "globalProxy.enabled"
     label: "Enable /global proxy"
-    description: "Enable proxy for /global path to cgls.vito.be"
+    description: "Enable proxy for /global path to cgls.vito.be (not needed when Apache is enabled)"
     default: true
     type: "boolean"
     required: true
     group: "General"
+    show_if: "apache.enabled=false"
 
   - variable: "cdseProxy.enabled"
     label: "Enable CDSE proxy"
-    description: "Enable proxy for /cdse path to sh.dataspace.copernicus.eu"
+    description: "Enable proxy for /cdse path to sh.dataspace.copernicus.eu (not needed when Apache is enabled)"
     default: true
     type: "boolean"
     required: true
     group: "General"
+    show_if: "apache.enabled=false"
 
   - variable: "cdseProxy.serverSnippet"
     label: "CDSE Nginx Server Snippet"
@@ -108,7 +110,66 @@ questions:
     type: "multiline"
     required: false
     group: "General"
-    show_if: "cdseProxy.enabled=true"
+    show_if: "apache.enabled=false&&cdseProxy.enabled=true"
+
+  - variable: "apache.enabled"
+    label: "Enable Apache"
+    description: "Add Apache reverse proxy in front of Varnish (handles redirects, CDSE proxy, global proxy)"
+    default: true
+    type: "boolean"
+    required: true
+    group: "General"
+
+  - variable: "apache.modules"
+    label: "Apache modules"
+    description: "Extra Apache modules to load, space separated"
+    default: "proxy_html_module xml2enc_module expires_module"
+    type: "string"
+    required: false
+    group: "General"
+    show_if: "apache.enabled=true"
+
+  - variable: "apache.config"
+    label: "Apache VirtualHost config"
+    description: "Full Apache VirtualHost configuration (same format as Rancher 1)"
+    type: "multiline"
+    required: false
+    group: "General"
+    show_if: "apache.enabled=true"
+
+  - variable: "apache.staticContent.enabled"
+    label: "Enable static content volume"
+    description: "Mount a PVC at /staticcontent for serving static files"
+    default: false
+    type: "boolean"
+    required: false
+    group: "General"
+    show_if: "apache.enabled=true"
+
+  - variable: "apache.staticContent.existingClaim"
+    label: "Existing PVC name for static content"
+    description: "Name of an existing PersistentVolumeClaim to use"
+    type: "string"
+    required: false
+    group: "General"
+    show_if: "apache.enabled=true&&apache.staticContent.enabled=true"
+
+  - variable: "apache.resources.requests.memory"
+    label: "Apache memory reservation"
+    type: "string"
+    required: true
+    default: "1Gi"
+    group: "Memory"
+    show_if: "apache.enabled=true"
+
+  - variable: "apache.resources.limits.memory"
+    label: "Apache memory limit"
+    description: ">= memory reservation"
+    type: "string"
+    required: true
+    default: "1Gi"
+    group: "Memory"
+    show_if: "apache.enabled=true"
 
   - variable: "volto.environment.RAZZLE_API_PATH"
     label: "RAZZLE_API_PATH"

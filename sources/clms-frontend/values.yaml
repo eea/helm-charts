@@ -323,6 +323,43 @@ cdseProxy:
   # This can be configured in Rancher UI to keep sensitive service IDs out of the repo
   serverSnippet: ""
 
+apache:
+  enabled: true
+  serviceType: ClusterIP
+  serviceName: frontend-apache
+  image:
+    repository: eeacms/apache
+    tag: "2.4-3.3"
+  modules: "proxy_html_module xml2enc_module expires_module"
+  config: ""
+  staticContent:
+    enabled: false
+    existingClaim: ""
+  resources:
+    limits:
+      memory: 1Gi
+    requests:
+      memory: 1Gi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  livenessProbe:
+    tcpSocket:
+      port: http
+    periodSeconds: 10
+    timeoutSeconds: 10
+    initialDelaySeconds: 30
+    failureThreshold: 5
+    successThreshold: 1
+  startupProbe:
+    tcpSocket:
+      port: http
+    periodSeconds: 5
+    timeoutSeconds: 10
+    initialDelaySeconds: 10
+    failureThreshold: 12
+    successThreshold: 1
+
 debug:
   serviceType: ClusterIP
   enabled: false
