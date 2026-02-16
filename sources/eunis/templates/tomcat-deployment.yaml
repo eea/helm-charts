@@ -53,30 +53,17 @@ spec:
 
         {{- if .Values.healthchecks.liveness.enabled }}
         livenessProbe:
-          periodSeconds: 20
-          httpGet:
-            path: /systemcheck.jsp
-            port: tomcat
+          {{- toYaml .Values.healthchecks.liveness.probe | nindent 10 }}
         {{- end }}
 
         {{- if .Values.healthchecks.readiness.enabled }}
         readinessProbe:
-          periodSeconds: 60
-          timeoutSeconds: 3
-          httpGet:
-            path: /systemcheck.jsp
-            port: tomcat
+          {{- toYaml .Values.healthchecks.readiness.probe | nindent 10 }}
         {{- end }}
 
         {{- if .Values.healthchecks.startup.enabled }}
         startupProbe:
-          initialDelaySeconds: 15
-          periodSeconds: 10
-          timeoutSeconds: 1
-          failureThreshold: 6
-          httpGet:
-            path: /systemcheck.jsp
-            port: tomcat
+          {{- toYaml .Values.healthchecks.startup.probe | nindent 10 }}
         {{- end }}
 
       {{- with .Values.nodeSelector }}

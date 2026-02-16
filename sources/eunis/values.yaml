@@ -37,10 +37,32 @@ service:
 healthchecks:
   startup:
     enabled: true
+    probe:
+      initialDelaySeconds: 15
+      periodSeconds: 10
+      timeoutSeconds: 1
+      failureThreshold: 6
+      httpGet:
+        path: /systemcheck.jsp
+        port: tomcat
+
   readiness:
     enabled: true
+    probe:
+      periodSeconds: 10
+      timeoutSeconds: 1
+      httpGet:
+        path: /systemcheck.jsp
+        port: tomcat
+
   liveness:
     enabled: true
+    probe:
+      periodSeconds: 20
+      timeoutSeconds: 2
+      httpGet:
+        path: /systemcheck.jsp
+        port: tomcat
 
 #Unused
 ldap:

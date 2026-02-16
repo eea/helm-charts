@@ -20,6 +20,7 @@ You can run `helm test eunis` to verify the system is working correctly.
 
 | Version | Comment |
 | ------- | ------- |
+| Version 1.3.0 - 16 Feb. 2026 | Made the tomcat probes configurable |
 | Version 1.2.0 - 18 Mar. 2025 | More lax network security policy for Tomcat |
 | Version 1.1.1 - 8 Nov. 2024 | Removed old mariadb 5 |
 | Version 1.1.0 - 7 Nov. 2024 | Added mariadb service to upgrade database |
