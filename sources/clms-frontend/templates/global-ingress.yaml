@@ -1,4 +1,4 @@
-{{- if .Values.globalProxy.enabled }}
+{{- if and .Values.globalProxy.enabled (not (and .Values.apache .Values.apache.enabled)) }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:

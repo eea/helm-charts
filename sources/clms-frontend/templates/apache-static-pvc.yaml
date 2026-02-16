@@ -1,0 +1,15 @@
+{{- if and (and .Values.apache .Values.apache.enabled) .Values.apache.staticContent.enabled (not .Values.apache.staticContent.existingClaim) }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Release.Name }}-apache-static
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: apache-static
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 10Gi
+{{- end }}

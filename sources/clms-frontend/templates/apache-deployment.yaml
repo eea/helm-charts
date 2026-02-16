@@ -34,7 +34,7 @@ spec:
           value: "{{ .Values.apache.modules }}"
         - name: APACHE_CONFIG
           value: |
-{{ .Values.apache.config | indent 12 }}
+{{ .Values.apache.config | replace "\t" "    " | indent 12 }}
 
         ports:
         - name: http

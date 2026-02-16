@@ -88,19 +88,21 @@ questions:
 
   - variable: "globalProxy.enabled"
     label: "Enable /global proxy"
-    description: "Enable proxy for /global path to cgls.vito.be"
+    description: "Enable proxy for /global path to cgls.vito.be (not needed when Apache is enabled)"
     default: true
     type: "boolean"
     required: true
     group: "General"
+    show_if: "apache.enabled=false"
 
   - variable: "cdseProxy.enabled"
     label: "Enable CDSE proxy"
-    description: "Enable proxy for /cdse path to sh.dataspace.copernicus.eu"
+    description: "Enable proxy for /cdse path to sh.dataspace.copernicus.eu (not needed when Apache is enabled)"
     default: true
     type: "boolean"
     required: true
     group: "General"
+    show_if: "apache.enabled=false"
 
   - variable: "cdseProxy.serverSnippet"
     label: "CDSE Nginx Server Snippet"
@@ -112,7 +114,7 @@ questions:
 
   - variable: "apache.enabled"
     label: "Enable Apache"
-    description: "Add Apache reverse proxy for CDSE paths (handles Substitute directives for response rewriting)"
+    description: "Add Apache reverse proxy in front of Varnish (handles redirects, CDSE proxy, static content)"
     default: true
     type: "boolean"
     required: true
