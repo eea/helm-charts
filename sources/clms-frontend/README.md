@@ -24,6 +24,9 @@ The chart deploys a three-tier architecture:
 
 ## Releases
 
+### Version 7.0.0 - 16 February 2026
+- add apache and static content [Dobricean Ioan Dorian - [`d4738ee5`](https://github.com/eea/helm-charts/commit/d4738ee51a7812490973c6fb09198466e698b0a0)]
+
 ### Version 6.0.0 - 15 February 2026
 - fix ingresses and apache [Dobricean Ioan Dorian - [`fb31f9eb`](https://github.com/eea/helm-charts/commit/fb31f9eb2a26bbd3c5872eea1a80689711ef6757)]
 
