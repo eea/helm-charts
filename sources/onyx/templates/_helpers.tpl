@@ -99,3 +99,12 @@ Return the version to use (global.version with fallback to Chart.AppVersion)
 {{- define "onyx.version" -}}
 {{- default .Chart.AppVersion .Values.global.version -}}
 {{- end }}
+
+{{/*
+Override postfix subchart selector labels to include app: postfix
+*/}}
+{{- define "postfix.selectorLabels" -}}
+app: postfix
+app.kubernetes.io/name: postfix
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
