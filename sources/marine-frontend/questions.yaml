@@ -161,6 +161,48 @@ questions:
     required: true
     group: "Volto configuration"
 
+  - variable: "volto.environment.DANSWER_URL"
+    label: "Danswer URL"
+    description: "Danswer service URL"
+    type: "string"
+    required: false
+    group: "Volto configuration"
+
+  - variable: "volto.environment.DANSWER_API_KEY"
+    label: "Danswer API Key"
+    description: "API key for Danswer service"
+    type: "password"
+    required: false
+    group: "Volto configuration"
+
+  - variable: "volto.environment.ONYX_URL"
+    label: "Onyx URL"
+    description: "Onyx service URL"
+    type: "string"
+    required: false
+    group: "Volto configuration"
+
+  - variable: "volto.environment.ONYX_API_KEY"
+    label: "Onyx API Key"
+    description: "API key for Onyx service"
+    type: "password"
+    required: false
+    group: "Volto configuration"
+
+  - variable: "volto.environment.LLMGW_URL"
+    label: "LLM Gateway URL"
+    description: "LLM Gateway service URL"
+    type: "string"
+    required: false
+    group: "Volto configuration"
+
+  - variable: "volto.environment.LLMGW_TOKEN"
+    label: "LLM Gateway Token"
+    description: "Authentication token for LLM Gateway"
+    type: "password"
+    required: false
+    group: "Volto configuration"
+
   - variable: "volto.environment.CSP_HEADER"
     label: "CSP Header"
     description: "Content Security Policy header value"

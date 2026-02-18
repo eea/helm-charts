@@ -182,6 +182,20 @@ questions:
     required: false
     group: "Volto configuration"
 
+  - variable: "volto.environment.ONYX_URL"
+    label: "Onyx URL"
+    description: "Onyx service URL"
+    type: "string"
+    required: false
+    group: "Volto configuration"
+
+  - variable: "volto.environment.ONYX_API_KEY"
+    label: "Onyx API Key"
+    description: "API key for Onyx service"
+    type: "password"
+    required: false
+    group: "Volto configuration"
+
   - variable: "volto.environment.LLMGW_URL"
     label: "LLM Gateway URL"
     description: "LLM Gateway service URL"
