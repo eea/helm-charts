@@ -6,7 +6,9 @@ metadata:
     {{- include "appl.labels" . | nindent 4 }}
     component: frontend
 spec:
+  {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
+  {{- end }}
   selector:
     matchLabels:
       {{- include "appl.selectorLabels" . | nindent 6 }}

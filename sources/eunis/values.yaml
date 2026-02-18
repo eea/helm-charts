@@ -1,5 +1,12 @@
 # Default values for eunis.
 
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 8
+  targetCPUUtilizationPercentage: 50
+  # targetMemoryUtilizationPercentage: 80
+
 replicaCount: 1
 
 image:
