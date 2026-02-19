@@ -38,6 +38,7 @@ spec:
           containers:
             - name: matomocron-archive-{{ $index }}
               image: "{{ $values.image.repository }}:{{ $values.image.tag | default $appversion }}"
+              imagePullPolicy: "{{ $values.image.pullPolicy }}"
               env:
                 - name: MATOMO_DATABASE_HOST
                   value: mariadb

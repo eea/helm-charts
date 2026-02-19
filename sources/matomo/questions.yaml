@@ -8,6 +8,13 @@ questions:
     required: true
     group: General
 
+  - variable: "securityEnabled"
+    label: "Enable Security"
+    default: true
+    type: "boolean"
+    required: true
+    group: "General"
+
   - variable: pvc.resourcePolicyKeep
     label: "Keep data"
     type: bool

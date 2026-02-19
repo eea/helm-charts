@@ -1,0 +1,29 @@
+{{- if ( default .Values.securityEnabled true) -}}
+
+{{/*
+  Any http port needs access to if from ingress or if you want to test it with a Node Port
+*/}}
+
+
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ .Release.Name }}-http-allow
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+
+
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: matomo
+
+
+  policyTypes:
+  - Ingress
+  ingress:
+    - ports:
+        - port: 80
+          protocol: TCP
+{{- end }}
