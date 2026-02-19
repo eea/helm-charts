@@ -16,9 +16,14 @@ metadata:
 
 spec:
   podSelector:
+    matchExpressions:
+      - key: component
+        operator: In
+        values:
+          - mariadb
     matchLabels:
-      {{- include "appl.selectorLabels" . | nindent 6 }}
       component: mariadb
+
 
 
   policyTypes:
