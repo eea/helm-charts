@@ -347,6 +347,9 @@ You don't need to change anything on this container, it should work by having th
 
 ## Releases
 
+### Version 2.2.2 - 19 February 2026
+- Fix netsecpol selectors [EEA Jenkins - [`38ce9c93`](https://github.com/eea/helm-charts/commit/38ce9c93c22a8057b73e68a2b07ed56cbad4392b)]
+
 ### Version 2.2.1 - 19 February 2026
 - Add security, fix pull variable [EEA Jenkins - [`9dc572fd`](https://github.com/eea/helm-charts/commit/9dc572fd94a2b10ff9a84cac119a2c06675d3853)]
 
