@@ -225,22 +225,7 @@ volto:
     LLMGW_URL: ""
     VOLTO_ROBOTSTXT: ""
     RAZZLE_PUBLIC_URL: "https://dev-clms.copernicus.01dev.eea.europa.eu"
-    CSP_HEADER: >-
-      default-src 'none';
-      base-uri 'self';
-      form-action 'self';
-      object-src 'none';
-      manifest-src 'self'
-      media-src https://land.copernicus.eu/;
-      connect-src 'self' https://webanalytics.europa.eu https://*.eea.europa.eu https://europa.eu https://geocode.arcgis.com https://api.openaire.eu https://api.zotero.org https://cgls.vito.be;
-      font-src 'self' data: https://cdnjs.cloudflare.com https://fonts.gstatic.com https://*.eea.europa.eu;
-      frame-src 'self' https://europa.eu https://*.europa.eu https://*.eea.europa.eu https://eea.maps.arcgis.com https://cgls.vito.be;
-      img-src https: blob: data:;
-      script-src 'self' {nonce} blob: https://webanalytics.europa.eu https://matomo.eea.europa.eu https://europa.eu https://www.google.com https://www.gstatic.com https://spreadsheets.google.com https://docs.google.com https://*.eea.europa.eu https://d3js.org https://cdnjs.cloudflare.com https://code.jquery.com https://services.arcgis.com https://public.tableau.com;
-      style-src 'self' 'unsafe-inline'  https://www.google.com https://europa.eu https://fonts.googleapis.com https://ajax.googleapis.com https://www.gstatic.com https://*.eea.europa.eu https://cdnjs.cloudflare.com https://code.jquery.com;
-      frame-ancestors 'self' https://*.eea.europa.eu;
-      report-to csp-endpoint;
-      report-uri https://sentry.eea.europa.eu/api/45/security/?sentry_key=0343e20fc4e0469790b6016561f032e3;
+    CSP_HEADER: ""
   annotations: {}
   livenessProbe:
     httpGet:
