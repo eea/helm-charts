@@ -35,6 +35,14 @@ questions:
     type: "string"
     group: "General"
 
+  - variable: "links.createServices"
+    label: "Create postgres and memcached ExternalName services"
+    description: "Set to false if the services already exist in the namespace (e.g. from a database release)"
+    default: true
+    type: "boolean"
+    required: true
+    group: "General"
+
   - variable: "links.memcached"
     label: "Memcached service"
     description: "Memcached service for python caching, SERVICE.NAMESPACE"
