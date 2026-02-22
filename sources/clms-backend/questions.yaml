@@ -35,6 +35,20 @@ questions:
     type: "string"
     group: "General"
 
+  - variable: "links.memcached"
+    label: "Memcached service"
+    description: "Memcached service for python caching, SERVICE.NAMESPACE"
+    type: "string"
+    required: true
+    group: "General"
+
+  - variable: "links.database"
+    label: "PostgreSQL"
+    description: "PostgreSQL DB backend, SERVICE.NAMESPACE"
+    type: "string"
+    required: true
+    group: "General"
+
   - variable: "zodbpack.enabled"
     label: "Enable Zodbpack cleanup"
     default: false
