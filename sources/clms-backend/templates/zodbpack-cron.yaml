@@ -11,17 +11,17 @@ metadata:
 spec:
   schedule: "{{ .Values.zodbpack.schedule }}"
   concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: {{ .Values.zodbpack.keepSuccessfulPods }}
+  failedJobsHistoryLimit: {{ .Values.zodbpack.keepFailedPods }}
   jobTemplate:
     spec:
       template:
         spec:
           {{- with .Values.imagePullSecrets }}
           imagePullSecrets:
-            {{- toYaml . | nindent 8 }}
+            {{- toYaml . | nindent 12 }}
           {{- end }}
           serviceAccountName: {{ include "appl.serviceAccountName" . }}
-          successfulJobsHistoryLimit: {{ .Values.zodbpack.keepSuccessfulPods }}
-          failedJobsHistoryLimit: {{ .Values.zodbpack.keepFailedPods }}
           containers:
           - name: zodbpack
             image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -50,22 +50,22 @@ spec:
             {{- end }}
             {{- end }}
             resources:
-              {{- toYaml .Values.zodbpack.resources | nindent 10 }}
+              {{- toYaml .Values.zodbpack.resources | nindent 14 }}
 
             securityContext:
-              {{- toYaml .Values.zodbpack.securityContext | nindent 16 }}
+              {{- toYaml .Values.zodbpack.securityContext | nindent 14 }}
             
           {{- with .Values.zodbpack.nodeSelector }}
           nodeSelector:
-            {{- toYaml . | nindent 8 }}
+            {{- toYaml . | nindent 12 }}
           {{- end }}
           {{- with .Values.zodbpack.affinity }}
           affinity:
-            {{- toYaml . | nindent 8 }}
+            {{- toYaml . | nindent 12 }}
           {{- end }}
           {{- with .Values.zodbpack.tolerations }}
           tolerations:
-            {{- toYaml . | nindent 8 }}
+            {{- toYaml . | nindent 12 }}
           {{- end }}
           restartPolicy: Never
 
