@@ -13930,6 +13930,24 @@ entries:
   clms-backend:
   - apiVersion: v2
     appVersion: 6.0.15-128
+    created: "2026-02-22T09:47:35.063646+02:00"
+    dependencies:
+    - name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.2.0
+    description: CLMS backend
+    digest: f04f1f12a541f11dc889301cff72813e93d542abda7ad94349acbefb65295cf4
+    home: https://github.com/eea/clms-backend
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/clms-backend/ied.png
+    keywords:
+    - CMS
+    name: clms-backend
+    type: application
+    urls:
+    - clms-backend-2.3.0.tgz
+    version: 2.3.0
+  - apiVersion: v2
+    appVersion: 6.0.15-128
     created: "2026-02-22T09:23:42.811522+02:00"
     dependencies:
     - name: postfix
@@ -44336,4 +44354,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2026-02-22T09:23:42.810237+02:00"
+generated: "2026-02-22T09:47:35.062017+02:00"
