@@ -69,6 +69,9 @@ We have the following services that should be exposed in ingress:
 
 # Releases
 
+### Version 0.0.23 - 23 February 2026
+- Upgrade to garie-sonarqube:1.3.1 [EEA Jenkins - [`e62435a1`](https://github.com/eea/helm-charts/commit/e62435a10b9adfaab418d8e0d6713a466d871255)]
+
 ### Version 0.0.22 - 18 December 2025
 - Automated release of [eeacms/postfix:3.5-1.2](https://github.com/eea/eea.docker.postfix/releases) [EEA Jenkins - [`34223aa2`](https://github.com/eea/helm-charts/commit/34223aa21a0f266be35a68d65dadec14bf7c7e80)]
 
