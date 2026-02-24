@@ -1,0 +1,69 @@
+# Default values for Sonarqube
+
+
+securityEnabled: true
+
+image:
+  repository: eeacms/esbootstrap-configs
+  pullPolicy: Always
+  tag: ""
+
+imagePullSecrets: []
+
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: false
+  annotations: {}
+  name: ""
+
+url: esapp.eea.europa.eu
+
+timezone: Europe/Copenhagen
+
+
+
+esapp:
+  serviceType: ClusterIP
+  resources:
+    requests:
+      memory: "4Gi"
+    limits:
+      memory: "4Gi"
+  livenessProbe:
+    httpGet:
+      path: /
+      port: 9000
+    periodSeconds: 10
+    timeoutSeconds: 10
+    initialDelaySeconds: 0
+    failureThreshold: 5
+    successThreshold: 1
+  startupProbe:
+    httpGet:
+      path: /
+      port: 9000
+    periodSeconds: 5
+    timeoutSeconds: 5
+    initialDelaySeconds: 15
+    failureThreshold: 20
+    successThreshold: 1
+
+ingress:
+  enabled: true
+  className: ""
+  annotations: {}
+  letsencrypt: "01dev-eea-letsencrypt"
+  configuration:
+    proxy-body-size: "256m"
+    proxy-read-timeout: "180s"
+    proxy-send-timeout: "120s"
+  tls: true
+  certificate: ""
+
+storage:
+  extensionsSize: 1Gi
+  logsSize: 10Gi
+  dataSize: 5Gi
+  className: "nfs-client"
