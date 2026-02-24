@@ -150,6 +150,21 @@ questions:
     required: false
     group: "Volto configuration"
 
+  - variable: "volto.environment.ONYX_URL"
+    label: "ONYX_URL for chatbot"
+    description: ""
+    default: ""
+    required: false
+    type: "string"
+    group: "Volto configuration"
+  - variable: "volto.environment.ONYX_API_KEY"
+    label: "ONYX_API_KEY for chatbot"
+    description: ""
+    default: ""
+    required: false
+    type: "string"
+    group: "Volto configuration"
+
   - variable: "volto.environment.RAZZLE_MATOMO_SITE_ID"
     label: "Matomo site id"
     description: "Matomo site id"
