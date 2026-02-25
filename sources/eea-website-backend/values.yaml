@@ -260,6 +260,14 @@ nginx:
         return 301 https://$host/admin/authomatic-handler/microsoft;
       }
 
+      location = /++api++/@email-send {
+        return 403;
+      }
+
+      location = /++api++/@email-notification {
+        return 403;
+      }
+
       location /admin {
         {{- if and .Values.nginx.basicAuth.username .Values.nginx.basicAuth.password }}
         auth_basic "Restricted Area";
