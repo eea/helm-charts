@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "traefik.fullname" . }}
+  labels:
+{{ include "traefik.labels" . | indent 4 }}
+spec:
+  type: {{ .Values.traefik.service.type }}
+  ports:
+    - name: web
+      port: {{ .Values.traefik.service.port }}
+      targetPort: web
+      protocol: TCP
+    - name: metrics
+      port: {{ .Values.traefik.service.metricsPort }}
+      targetPort: metrics
+      protocol: TCP
+  selector:
+{{ include "traefik.selectorLabels" . | indent 4 }}

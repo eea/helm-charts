@@ -1,0 +1,72 @@
+questions:
+- variable: domain
+  default: "app.example.com"
+  type: hostname
+  label: Platform domain
+  description: Hostname served by the NGINX ingress in front of Traefik.
+  required: true
+
+- variable: routes
+  type: multiline
+  label: Traefik routes (YAML)
+  description: YAML list of routes; each item needs name, match, service, and port.
+  default: |
+    - name: api
+      match: "PathPrefix(`/api`)"
+      service: api
+      port: 80
+    - name: web
+      match: "PathPrefix(`/`)"
+      service: web
+      port: 80
+  required: true
+
+- variable: grafana.adminUser
+  default: "admin"
+  type: string
+  label: Grafana admin username
+  description: Fixed administrator username for Grafana.
+  required: true
+
+- variable: grafana.adminPassword
+  default: "admin"
+  type: password
+  label: Grafana admin password
+  description: Password for the Grafana admin user.
+  required: true
+
+- variable: prometheus.persistence.enabled
+  default: true
+  type: boolean
+  label: Enable Prometheus persistence
+  description: Store Prometheus TSDB data on a PersistentVolumeClaim.
+
+- variable: prometheus.persistence.storageClass
+  default: ""
+  type: string
+  label: Prometheus storage class
+  description: StorageClass for the Prometheus PVC (leave empty for cluster default).
+
+- variable: prometheus.persistence.size
+  default: "10Gi"
+  type: string
+  label: Prometheus volume size
+  description: PVC size for Prometheus data.
+
+- variable: grafana.persistence.enabled
+  default: true
+  type: boolean
+  label: Enable Grafana persistence
+  description: Store Grafana data (dashboards, state) on a PersistentVolumeClaim.
+
+- variable: grafana.persistence.storageClass
+  default: ""
+  type: string
+  label: Grafana storage class
+  description: StorageClass for the Grafana PVC (leave empty for cluster default).
+
+- variable: grafana.persistence.size
+  default: "5Gi"
+  type: string
+  label: Grafana volume size
+  description: PVC size for Grafana data.

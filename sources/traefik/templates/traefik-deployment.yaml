@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "traefik.fullname" . }}
+  labels:
+{{ include "traefik.labels" . | indent 4 }}
+spec:
+  replicas: {{ .Values.traefik.replicaCount }}
+  selector:
+    matchLabels:
+{{ include "traefik.selectorLabels" . | indent 6 }}
+  template:
+    metadata:
+      labels:
+{{ include "traefik.selectorLabels" . | indent 8 }}
+{{- with .Values.traefik.podAnnotations }}
+      annotations:
+{{ toYaml . | indent 8 }}
+{{- end }}
+    spec:
+      containers:
+        - name: traefik
+          image: {{ .Values.traefik.image }}
+          args:
+            - "--entrypoints.web.address=:{{ .Values.traefik.service.port }}"
+            - "--entrypoints.metrics.address=:{{ .Values.traefik.service.metricsPort }}"
+            - "--providers.file.directory=/etc/traefik/dynamic"
+            - "--providers.file.watch=true"
+            - "--providers.kubernetescrd=false"
+            - "--providers.kubernetesingress=false"
+            - "--accesslog=true"
+            - "--log.level=INFO"
+            - "--metrics.prometheus=true"
+            - "--metrics.prometheus.entrypoint=metrics"
+          ports:
+            - name: web
+              containerPort: {{ .Values.traefik.service.port }}
+              protocol: TCP
+            - name: metrics
+              containerPort: {{ .Values.traefik.service.metricsPort }}
+              protocol: TCP
+          volumeMounts:
+            - name: dynamic-config
+              mountPath: /etc/traefik/dynamic
+              readOnly: true
+          resources:
+{{ toYaml .Values.traefik.resources | indent 12 }}
+      volumes:
+        - name: dynamic-config
+          configMap:
+            name: {{ include "traefik.fullname" . }}-dynamic
+            items:
+              - key: routes.yaml
+                path: routes.yaml
+{{- with .Values.traefik.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+{{- end }}
+{{- with .Values.traefik.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+{{- end }}
+{{- with .Values.traefik.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+{{- end }}
