@@ -5,15 +5,19 @@ metadata:
 data:
   routes.yaml: |
     http:
+{{- $routes := .Values.routes | default list }}
+{{- if kindIs "string" $routes }}
+{{- $routes = fromYaml $routes }}
+{{- end }}
       routers:
-{{- range .Values.routes }}
+{{- range $routes }}
         {{ .name }}:
           rule: "{{ .match }}"
           service: {{ .name }}-svc
 {{- end }}
 
       services:
-{{- range .Values.routes }}
+{{- range $routes }}
         {{ .name }}-svc:
           loadBalancer:
             servers:

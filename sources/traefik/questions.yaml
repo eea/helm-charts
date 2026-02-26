@@ -11,13 +11,13 @@ questions:
   label: Traefik routes (YAML)
   description: YAML list of routes; each item needs name, match, service, and port.
   default: |
-    - name: api
-      match: "PathPrefix(`/api`)"
-      service: api
-      port: 80
-    - name: web
+    - name: frontend
       match: "PathPrefix(`/`)"
-      service: web
+      service: nginx-1
+      port: 80
+    - name: api
+      match: "PathPrefix(`/++api++`)"
+      service: nginx-2
       port: 80
   required: true
 
