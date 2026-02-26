@@ -25,6 +25,9 @@ The chart deploys a three-tier architecture:
 
 ## Releases
 
+### Version 1.41.1 - 26 February 2026
+- remove image [Dobricean Ioan Dorian - [`eca93917`](https://github.com/eea/helm-charts/commit/eca93917d0a25f2fe7fa15b724ce7e51c5c193db)]
+
 ### Version 1.41.0 - 25 February 2026
 - Automated release of [eeacms/ask-copernicus-frontend:3.405.0](https://github.com/eea/ask-copernicus-frontend/releases) [EEA Jenkins - [`48d53ae7`](https://github.com/eea/helm-charts/commit/48d53ae7f652371459cb1aaadc851fe153390cc7)]
 
