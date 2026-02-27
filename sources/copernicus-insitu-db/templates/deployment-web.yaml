@@ -37,6 +37,10 @@ spec:
               value: {{ include "appl.databaseServiceName" . | quote }}
             - name: EMAIL_HOST
               value: {{ include "appl.mailserverServiceName" . | quote }}
+            {{- range $key, $value := .Values.commonEnv }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
             {{- range $key, $value := .Values.web.env }}
             - name: {{ $key }}
               value: {{ $value | quote }}

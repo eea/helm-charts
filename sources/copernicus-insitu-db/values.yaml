@@ -10,6 +10,30 @@ serviceAccount:
 
 timezone: Europe/Copenhagen
 
+commonEnv:
+  ALLOWED_HOSTS: ""
+  DEFAULT_FROM_EMAIL: ""
+  DJANGO_COLLECT_STATIC: ""
+  DJANGO_INDEX_CONTENT: ""
+  DJANGO_MIGRATE: ""
+  ELASTICSEARCH_HOST: ""
+  EMAIL_BACKEND: ""
+  EMAIL_PORT: ""
+  MATOMO: ""
+  POSTGRES_DB: ""
+  POSTGRES_USER: ""
+  SENTRY_API_URL: ""
+  SENTRY_TAG_ENVIRONMENT: ""
+  SENTRY_TAG_RELEASE: ""
+  SENTRY_TAG_SITE: ""
+  SITE_URL: ""
+  SUPPORT_EMAIL: ""
+  TIMEOUT: ""
+  UWSGI_PORT: ""
+  POSTGRES_EXPLORER_USER: ""
+  EXCLUDE_REPORTS_IDS: ""
+  PUBLIC_REPORTS_IDS: ""
+
 app:
   image:
     repository: ""
@@ -71,30 +95,8 @@ web:
     limits:
       memory: 2Gi
   env:
-    ALLOWED_HOSTS: ""
-    DEFAULT_FROM_EMAIL: ""
-    DJANGO_COLLECT_STATIC: ""
-    DJANGO_INDEX_CONTENT: ""
-    DJANGO_MIGRATE: ""
-    ELASTICSEARCH_HOST: ""
-    EMAIL_BACKEND: ""
-    EMAIL_PORT: ""
     LOGSPOUT: ""
-    MATOMO: ""
-    POSTGRES_DB: ""
-    POSTGRES_USER: ""
-    SENTRY_API_URL: ""
-    SENTRY_TAG_ENVIRONMENT: ""
-    SENTRY_TAG_RELEASE: ""
-    SENTRY_TAG_SITE: ""
-    SITE_URL: ""
-    SUPPORT_EMAIL: ""
-    TIMEOUT: ""
-    UWSGI_PORT: ""
     API_PREFIX: ""
-    POSTGRES_EXPLORER_USER: ""
-    EXCLUDE_REPORTS_IDS: ""
-    PUBLIC_REPORTS_IDS: ""
     dianaboiangiu: ""
   nodeSelector: {}
   tolerations: []
@@ -114,31 +116,9 @@ cron:
     limits:
       memory: 1Gi
   env:
-    ALLOWED_HOSTS: ""
     DEBUG: ""
-    DEFAULT_FROM_EMAIL: ""
-    DJANGO_COLLECT_STATIC: ""
-    DJANGO_INDEX_CONTENT: ""
-    DJANGO_MIGRATE: ""
-    ELASTICSEARCH_HOST: ""
     ELASTICSEARCH_TIMEOUT: ""
-    EMAIL_BACKEND: ""
-    EMAIL_PORT: ""
-    MATOMO: ""
-    POSTGRES_DB: ""
-    POSTGRES_USER: ""
-    SENTRY_API_URL: ""
-    SENTRY_TAG_ENVIRONMENT: ""
-    SENTRY_TAG_RELEASE: ""
-    SENTRY_TAG_SITE: ""
-    SITE_URL: ""
-    SUPPORT_EMAIL: ""
-    TIMEOUT: ""
-    UWSGI_PORT: ""
     API_TOKEN: ""
-    POSTGRES_EXPLORER_USER: ""
-    EXCLUDE_REPORTS_IDS: ""
-    PUBLIC_REPORTS_IDS: ""
   nodeSelector: {}
   tolerations: []
   affinity: {}
