@@ -6,12 +6,5 @@ metadata:
     {{- include "appl.labels" . | nindent 4 }}
     component: database
 spec:
-  type: {{ .Values.database.service.type }}
-  ports:
-    - name: postgres
-      port: {{ .Values.database.service.port }}
-      targetPort: postgres
-      protocol: TCP
-  selector:
-    {{- include "appl.selectorLabels" . | nindent 4 }}
-    component: database
+  type: ExternalName
+  externalName: "{{ .Values.links.database }}.svc.cluster.local"

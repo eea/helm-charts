@@ -6,42 +6,36 @@ questions:
     required: true
     group: "General"
 
-  - variable: "serviceAccount.create"
-    label: "Create service account"
-    type: "boolean"
-    default: false
+  - variable: "image.repository"
+    label: "Image repository"
+    type: "string"
+    default: "eeacms/copernicus-insitu-db"
+    group: "General"
+
+  - variable: "image.tag"
+    label: "Image tag"
+    type: "string"
+    default: "3.0.6"
+    group: "General"
+
+  - variable: "image.pullPolicy"
+    label: "Image pull policy"
+    type: "enum"
+    options:
+      - "IfNotPresent"
+      - "Always"
+      - "Never"
+    default: "IfNotPresent"
     required: true
     group: "General"
 
-  - variable: "serviceAccount.name"
-    label: "Service account name"
+  - variable: "links.database"
+    label: "PostgreSQL service"
+    description: "External PostgreSQL service, format SERVICE.NAMESPACE"
     type: "string"
-    default: ""
+    default: "plone-postgres.namespace"
+    required: true
     group: "General"
-
-  - variable: "nameOverride"
-    label: "Name override"
-    type: "string"
-    default: ""
-    group: "General"
-
-  - variable: "fullnameOverride"
-    label: "Fullname override"
-    type: "string"
-    default: ""
-    group: "General"
-
-  - variable: "app.image.repository"
-    label: "App image repository (web+cron override)"
-    type: "string"
-    default: "eeacms/copernicus-insitu-db"
-    group: "Image override"
-
-  - variable: "app.image.tag"
-    label: "App image tag (web+cron override)"
-    type: "string"
-    default: "3.0.6"
-    group: "Image override"
 
   - variable: "ingress.enabled"
     label: "Enable ingress"
@@ -81,85 +75,73 @@ questions:
     type: "boolean"
     default: false
     required: true
-    group: "Secrets"
+    group: "General"
 
   - variable: "secrets.existingSecret"
     label: "Existing secret name"
     type: "string"
     default: ""
-    group: "Secrets"
+    group: "General"
 
   - variable: "secrets.data.ELASTICSEARCH_AUTH"
     label: "Secret: ELASTICSEARCH_AUTH"
     type: "string"
     default: ""
-    group: "Secrets"
+    group: "General"
 
   - variable: "secrets.data.POSTGRES_PASSWORD"
     label: "Secret: POSTGRES_PASSWORD"
     type: "string"
     default: ""
-    group: "Secrets"
+    group: "General"
 
   - variable: "secrets.data.PGPASSWORD"
     label: "Secret: PGPASSWORD"
     type: "string"
     default: ""
-    group: "Secrets"
+    group: "General"
 
   - variable: "secrets.data.SECRET_KEY"
     label: "Secret: SECRET_KEY"
     type: "string"
     default: ""
-    group: "Secrets"
+    group: "General"
 
   - variable: "secrets.data.SENTRY_AUTH_TOKEN"
     label: "Secret: SENTRY_AUTH_TOKEN"
     type: "string"
     default: ""
-    group: "Secrets"
+    group: "General"
 
   - variable: "secrets.data.SENTRY_DSN"
     label: "Secret: SENTRY_DSN"
     type: "string"
     default: ""
-    group: "Secrets"
+    group: "General"
 
   - variable: "secrets.data.POSTGRES_EXPLORER_PASSWORD"
     label: "Secret: POSTGRES_EXPLORER_PASSWORD"
     type: "string"
     default: ""
-    group: "Secrets"
-
-  - variable: "secrets.data.MTP_PASS"
-    label: "Secret: MTP_PASS"
-    type: "string"
-    default: ""
-    group: "Secrets"
-
-  - variable: "secrets.data.MTP_USER"
-    label: "Secret: MTP_USER"
-    type: "string"
-    default: ""
-    group: "Secrets"
+    group: "General"
 
   - variable: "secrets.data.dianaboiangiu"
     label: "Secret: dianaboiangiu"
     type: "string"
     default: ""
-    group: "Secrets"
+    group: "General"
 
   - variable: "secrets.data.API_PREFIX"
     label: "Secret: API_PREFIX"
     type: "string"
     default: ""
-    group: "Secrets"
+    group: "General"
 
   - variable: "secrets.data.API_TOKEN"
     label: "Secret: API_TOKEN"
     type: "string"
     default: ""
-    group: "Secrets"
+    group: "General"
 
   - variable: "persistence.staticfiles.enabled"
     label: "Enable staticfiles PVC"
@@ -218,31 +200,6 @@ questions:
     required: true
     group: "Web"
 
-  - variable: "web.image.repository"
-    label: "Web image repository"
-    type: "string"
-    default: "eeacms/copernicus-insitu-db"
-    required: true
-    group: "Web"
-
-  - variable: "web.image.tag"
-    label: "Web image tag"
-    type: "string"
-    default: "3.0.6"
-    required: true
-    group: "Web"
-
-  - variable: "web.image.pullPolicy"
-    label: "Web pull policy"
-    type: "enum"
-    options:
-      - "IfNotPresent"
-      - "Always"
-      - "Never"
-    default: "IfNotPresent"
-    required: true
-    group: "Web"
-
   - variable: "web.service.type"
     label: "Web service type"
     type: "enum"
@@ -277,181 +234,156 @@ questions:
     label: "Common env: ALLOWED_HOSTS"
     type: "string"
     default: ""
-    group: "Common env"
+    group: "General"
 
   - variable: "commonEnv.DEFAULT_FROM_EMAIL"
     label: "Common env: DEFAULT_FROM_EMAIL"
     type: "string"
     default: ""
-    group: "Common env"
+    group: "General"
 
   - variable: "commonEnv.DJANGO_COLLECT_STATIC"
     label: "Common env: DJANGO_COLLECT_STATIC"
     type: "string"
     default: ""
-    group: "Common env"
+    group: "General"
 
   - variable: "commonEnv.DJANGO_INDEX_CONTENT"
     label: "Common env: DJANGO_INDEX_CONTENT"
     type: "string"
     default: ""
-    group: "Common env"
+    group: "General"
 
   - variable: "commonEnv.DJANGO_MIGRATE"
     label: "Common env: DJANGO_MIGRATE"
     type: "string"
     default: ""
-    group: "Common env"
+    group: "General"
 
   - variable: "commonEnv.ELASTICSEARCH_HOST"
     label: "Common env: ELASTICSEARCH_HOST"
     type: "string"
     default: ""
-    group: "Common env"
+    group: "General"
 
   - variable: "commonEnv.EMAIL_BACKEND"
     label: "Common env: EMAIL_BACKEND"
     type: "string"
     default: ""
-    group: "Common env"
+    group: "General"
 
   - variable: "commonEnv.EMAIL_PORT"
     label: "Common env: EMAIL_PORT"
     type: "string"
     default: ""
-    group: "Common env"
+    group: "General"
 
   - variable: "commonEnv.MATOMO"
     label: "Common env: MATOMO"
     type: "string"
     default: ""
-    group: "Common env"
+    group: "General"
 
   - variable: "commonEnv.POSTGRES_DB"
     label: "Common env: POSTGRES_DB"
     type: "string"
     default: ""
-    group: "Common env"
+    group: "General"
 
   - variable: "commonEnv.POSTGRES_USER"
     label: "Common env: POSTGRES_USER"
     type: "string"
     default: ""
-    group: "Common env"
+    group: "General"
 
   - variable: "commonEnv.SENTRY_API_URL"
     label: "Common env: SENTRY_API_URL"
     type: "string"
     default: ""
-    group: "Common env"
+    group: "General"
 
   - variable: "commonEnv.SENTRY_TAG_ENVIRONMENT"
     label: "Common env: SENTRY_TAG_ENVIRONMENT"
     type: "string"
     default: ""
-    group: "Common env"
+    group: "General"
 
   - variable: "commonEnv.SENTRY_TAG_RELEASE"
     label: "Common env: SENTRY_TAG_RELEASE"
     type: "string"
     default: ""
-    group: "Common env"
+    group: "General"
 
   - variable: "commonEnv.SENTRY_TAG_SITE"
     label: "Common env: SENTRY_TAG_SITE"
     type: "string"
     default: ""
-    group: "Common env"
+    group: "General"
 
   - variable: "commonEnv.SITE_URL"
     label: "Common env: SITE_URL"
     type: "string"
     default: ""
-    group: "Common env"
+    group: "General"
 
   - variable: "commonEnv.SUPPORT_EMAIL"
     label: "Common env: SUPPORT_EMAIL"
     type: "string"
     default: ""
-    group: "Common env"
+    group: "General"
 
   - variable: "commonEnv.TIMEOUT"
     label: "Common env: TIMEOUT"
     type: "string"
     default: ""
-    group: "Common env"
+    group: "General"
 
   - variable: "commonEnv.UWSGI_PORT"
     label: "Common env: UWSGI_PORT"
     type: "string"
     default: ""
-    group: "Common env"
+    group: "General"
 
   - variable: "commonEnv.POSTGRES_EXPLORER_USER"
     label: "Common env: POSTGRES_EXPLORER_USER"
     type: "string"
     default: ""
-    group: "Common env"
+    group: "General"
 
   - variable: "commonEnv.EXCLUDE_REPORTS_IDS"
     label: "Common env: EXCLUDE_REPORTS_IDS"
     type: "string"
     default: ""
-    group: "Common env"
+    group: "General"
 
   - variable: "commonEnv.PUBLIC_REPORTS_IDS"
     label: "Common env: PUBLIC_REPORTS_IDS"
     type: "string"
     default: ""
-    group: "Common env"
+    group: "General"
 
   - variable: "web.env.LOGSPOUT"
     label: "Web env: LOGSPOUT"
     type: "string"
     default: ""
-    group: "Web env"
+    group: "Web"
 
   - variable: "web.env.API_PREFIX"
     label: "Web env: API_PREFIX"
     type: "string"
     default: ""
-    group: "Web env"
+    group: "Web"
 
   - variable: "web.env.dianaboiangiu"
     label: "Web env: dianaboiangiu"
     type: "string"
     default: ""
-    group: "Web env"
+    group: "Web"
 
   - variable: "cron.replicaCount"
     label: "Cron replicas"
     type: "int"
     default: 1
-    required: true
-    group: "Cron"
-
-  - variable: "cron.image.repository"
-    label: "Cron image repository"
-    type: "string"
-    default: "eeacms/copernicus-insitu-db"
-    required: true
-    group: "Cron"
-
-  - variable: "cron.image.tag"
-    label: "Cron image tag"
-    type: "string"
-    default: "3.0.6"
-    required: true
-    group: "Cron"
-
-  - variable: "cron.image.pullPolicy"
-    label: "Cron pull policy"
-    type: "enum"
-    options:
-      - "IfNotPresent"
-      - "Always"
-      - "Never"
-    default: "IfNotPresent"
     required: true
     group: "Cron"
 
@@ -471,105 +403,19 @@ questions:
     label: "Cron env: DEBUG"
     type: "string"
     default: ""
-    group: "Cron env"
+    group: "Cron"
 
   - variable: "cron.env.ELASTICSEARCH_TIMEOUT"
     label: "Cron env: ELASTICSEARCH_TIMEOUT"
     type: "string"
     default: ""
-    group: "Cron env"
+    group: "Cron"
 
   - variable: "cron.env.API_TOKEN"
     label: "Cron env: API_TOKEN"
     type: "string"
     default: ""
-    group: "Cron env"
-
-  - variable: "database.image.repository"
-    label: "Database image repository"
-    type: "string"
-    default: "postgres"
-    required: true
-    group: "Database"
-
-  - variable: "database.image.tag"
-    label: "Database image tag"
-    type: "string"
-    default: "13-buster"
-    required: true
-    group: "Database"
-
-  - variable: "database.image.pullPolicy"
-    label: "Database pull policy"
-    type: "enum"
-    options:
-      - "IfNotPresent"
-      - "Always"
-      - "Never"
-    default: "IfNotPresent"
-    required: true
-    group: "Database"
-
-  - variable: "database.service.type"
-    label: "Database service type"
-    type: "enum"
-    options:
-      - "ClusterIP"
-      - "NodePort"
-      - "LoadBalancer"
-    default: "ClusterIP"
-    required: true
-    group: "Database"
-
-  - variable: "database.service.port"
-    label: "Database service port"
-    type: "int"
-    default: 5432
-    required: true
-    group: "Database"
-
-  - variable: "database.resources.requests.memory"
-    label: "Database memory request"
-    type: "string"
-    default: "2Gi"
-    group: "Database"
-
-  - variable: "database.resources.limits.memory"
-    label: "Database memory limit"
-    type: "string"
-    default: "2Gi"
-    group: "Database"
-
-  - variable: "database.persistence.enabled"
-    label: "Enable database persistence"
-    type: "boolean"
-    default: true
-    required: true
-    group: "Database"
-
-  - variable: "database.persistence.storageClassName"
-    label: "Database storage class"
-    type: "string"
-    default: ""
-    group: "Database"
-
-  - variable: "database.persistence.size"
-    label: "Database volume size"
-    type: "string"
-    default: "20Gi"
-    group: "Database"
-
-  - variable: "database.env.POSTGRES_DB"
-    label: "Database env: POSTGRES_DB"
-    type: "string"
-    default: ""
-    group: "Database env"
-
-  - variable: "database.env.POSTGRES_USER"
-    label: "Database env: POSTGRES_USER"
-    type: "string"
-    default: ""
-    group: "Database env"
+    group: "Cron"
 
   - variable: "backupdb.enabled"
     label: "Enable database backup CronJob"
@@ -645,93 +491,104 @@ questions:
     label: "Backup env: POSTGRES_DB"
     type: "string"
     default: ""
-    group: "Backup env"
+    group: "Backup"
 
   - variable: "backupdb.env.POSTGRES_USER"
     label: "Backup env: POSTGRES_USER"
     type: "string"
     default: ""
-    group: "Backup env"
+    group: "Backup"
 
-  - variable: "mailserver.replicaCount"
-    label: "Mailserver replicas"
-    type: "int"
-    default: 1
-    required: true
-    group: "Mailserver"
-
-  - variable: "mailserver.image.repository"
-    label: "Mailserver image repository"
-    type: "string"
-    default: "eeacms/postfix"
-    required: true
-    group: "Mailserver"
-
-  - variable: "mailserver.image.tag"
-    label: "Mailserver image tag"
-    type: "string"
-    default: "3.5-1.0"
-    required: true
-    group: "Mailserver"
-
-  - variable: "mailserver.image.pullPolicy"
-    label: "Mailserver pull policy"
-    type: "enum"
-    options:
-      - "IfNotPresent"
-      - "Always"
-      - "Never"
-    default: "IfNotPresent"
-    required: true
-    group: "Mailserver"
-
-  - variable: "mailserver.service.type"
-    label: "Mailserver service type"
-    type: "enum"
-    options:
-      - "ClusterIP"
-      - "NodePort"
-      - "LoadBalancer"
-    default: "ClusterIP"
-    required: true
-    group: "Mailserver"
-
-  - variable: "mailserver.service.port"
-    label: "Mailserver service port"
-    type: "int"
-    default: 25
-    required: true
-    group: "Mailserver"
-
-  - variable: "mailserver.resources.requests.memory"
-    label: "Mailserver memory request"
-    type: "string"
-    default: "64Mi"
-    group: "Mailserver"
-
-  - variable: "mailserver.resources.limits.memory"
-    label: "Mailserver memory limit"
-    type: "string"
-    default: "64Mi"
-    group: "Mailserver"
-
-  - variable: "mailserver.env.MTP_HOST"
-    label: "Mailserver env: MTP_HOST"
-    type: "string"
+  - variable: "postfix.serviceName"
+    label: "Postfix service name"
+    description: "Default is application full name ( application-postfix ) "
     default: ""
-    group: "Mailserver env"
-
-  - variable: "mailserver.env.MTP_RELAY"
-    label: "Mailserver env: MTP_RELAY"
     type: "string"
-    default: ""
-    group: "Mailserver env"
+    group: "Mail"
 
-  - variable: "mailserver.env.MTP_PORT"
-    label: "Mailserver env: MTP_PORT"
+  - variable: "postfix.dryrun"
+    label: "Run in development mode"
+    description: "If checked, will not send emails, but use mailtrap to catch them"
+    default: false
+    type: "boolean"
+    required: true
+    show_subquestion_if: false
+    group: "Mail"
+    subquestions:
+      - variable: "postfix.mtpRelay"
+        label: "Postfix relay"
+        required: true
+        description: "Postfix SMTP relay"
+        type: "string"
+        default: "ironports.eea.europa.eu"
+      - variable: "postfix.mtpPort"
+        label: "Postfix relay port"
+        description: "Postfix SMTP relay port"
+        type: "int"
+        required: true
+        default: 8587
+      - variable: "postfix.mtpUser"
+        label: "Postfix user"
+        description: "Without authentication, emails will not be sent"
+        type: "string"
+        required: true
+      - variable: "postfix.mtpPass"
+        label: "Postfix password"
+        description: "Without authentication, emails will not be sent"
+        type: "string"
+        required: true
+      - variable: "postfix.serverName"
+        label: "Application url"
+        type: "string"
+        required: true
+
+  - variable: "postfix.mailtrap.httpenabled"
+    label: "Create mailtrap service for port 80"
+    description: "Keep unchecked if you don't want to view the emails in a webinterface"
+    type: "boolean"
+    default: false
+    required: true
+    show_if: "postfix.dryrun"
+    show_subquestion_if: true
+    group: "Mail"
+    subquestions:
+      - variable: "postfix.mailtrap.serviceType"
+        label: "Mailtrap service type"
+        description: "Select NodePort to expose mailtrap on port"
+        type: "enum"
+        options:
+          - "NodePort"
+          - "ClusterIP"
+        default: "ClusterIP"
+        required: true
+      - variable: "postfix.mailtrap.ingress.enabled"
+        label: "Add mailtrap url in ingress"
+        default: false
+        type: "boolean"
+        required: true
+      - variable: "postfix.mailtrap.mtUser"
+        label: "Mailtrap webui user"
+        default: "mailtrap"
+        type: "string"
+      - variable: "postfix.mailtrap.mtPasswd"
+        label: "Mailtrap webui password"
+        default: "mailtrap"
+        type: "string"
+
+  - variable: "postfix.mailtrap.ingress.hostname"
+    label: "Mailtrap URL"
+    show_if: "postfix.mailtrap.ingress.enabled"
+    required: true
     type: "string"
-    default: ""
-    group: "Mailserver env"
+    default: "mailtrap.01dev.eea.europa.eu"
+    group: "Mail"
+
+  - variable: "postfix.mailtrap.ingress.certificate"
+    label: "Mailtrap certificate name"
+    show_if: "postfix.mailtrap.ingress.enabled"
+    description: "If empty, https will not be enabled"
+    default: "mailtrap.01dev.eea.europa.eu-tls"
+    group: "Mail"
 
   - variable: "webserver.replicaCount"
     label: "Webserver replicas"

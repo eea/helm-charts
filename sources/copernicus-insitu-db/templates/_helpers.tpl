@@ -66,7 +66,13 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{- define "appl.mailserverServiceName" -}}
-{{- printf "%s-mailserver" (include "appl.fullname" .) }}
+{{- if .Values.postfix.serviceName }}
+{{- .Values.postfix.serviceName }}
+{{- else if .Values.postfix.fullnameOverride }}
+{{- .Values.postfix.fullnameOverride | trunc 63 | trimSuffix "-" }}
+{{- else }}
+{{- printf "%s-postfix" .Release.Name | trunc 63 | trimSuffix "-" }}
+{{- end }}
 {{- end }}
 
 {{- define "appl.webserverServiceName" -}}
@@ -88,10 +94,6 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 
 {{- define "appl.backupName" -}}
 {{- printf "%s-backupdb" (include "appl.fullname" .) }}
-{{- end }}
-
-{{- define "appl.mailserverName" -}}
-{{- printf "%s-mailserver" (include "appl.fullname" .) }}
 {{- end }}
 
 {{- define "appl.webserverName" -}}

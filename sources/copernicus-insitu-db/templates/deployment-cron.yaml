@@ -24,8 +24,8 @@ spec:
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
       containers:
         - name: cron
-          image: "{{ coalesce .Values.app.image.repository .Values.cron.image.repository }}:{{ coalesce .Values.app.image.tag .Values.cron.image.tag }}"
-          imagePullPolicy: {{ .Values.cron.image.pullPolicy }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
           {{- if .Values.cron.command }}
           command:
             {{- toYaml .Values.cron.command | nindent 12 }}

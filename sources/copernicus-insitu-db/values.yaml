@@ -10,6 +10,9 @@ serviceAccount:
 
 timezone: Europe/Copenhagen
 
+links:
+  database: plone-postgres.namespace
+
 commonEnv:
   ALLOWED_HOSTS: ""
   DEFAULT_FROM_EMAIL: ""
@@ -34,10 +37,10 @@ commonEnv:
   EXCLUDE_REPORTS_IDS: ""
   PUBLIC_REPORTS_IDS: ""
 
-app:
-  image:
-    repository: ""
-    tag: ""
+image:
+  repository: eeacms/copernicus-insitu-db
+  tag: "3.0.6"
+  pullPolicy: IfNotPresent
 
 secrets:
   create: false
@@ -50,8 +53,6 @@ secrets:
     SENTRY_AUTH_TOKEN: ""
     SENTRY_DSN: ""
     POSTGRES_EXPLORER_PASSWORD: ""
-    MTP_PASS: ""
-    MTP_USER: ""
     dianaboiangiu: ""
     API_PREFIX: ""
     API_TOKEN: ""
@@ -82,10 +83,6 @@ persistence:
 
 web:
   replicaCount: 2
-  image:
-    repository: eeacms/copernicus-insitu-db
-    tag: "3.0.6"
-    pullPolicy: IfNotPresent
   service:
     type: ClusterIP
     port: 8000
@@ -104,10 +101,6 @@ web:
 
 cron:
   replicaCount: 1
-  image:
-    repository: eeacms/copernicus-insitu-db
-    tag: "3.0.6"
-    pullPolicy: IfNotPresent
   command:
     - ./docker-entrypoint.cron.sh
   resources:
@@ -119,32 +112,6 @@ cron:
     DEBUG: ""
     ELASTICSEARCH_TIMEOUT: ""
     API_TOKEN: ""
-  nodeSelector: {}
-  tolerations: []
-  affinity: {}
-
-database:
-  image:
-    repository: postgres
-    tag: "13-buster"
-    pullPolicy: IfNotPresent
-  service:
-    type: ClusterIP
-    port: 5432
-  resources:
-    requests:
-      memory: 2Gi
-    limits:
-      memory: 2Gi
-  env:
-    POSTGRES_DB: ""
-    POSTGRES_USER: ""
-  persistence:
-    enabled: true
-    storageClassName: ""
-    accessModes:
-      - ReadWriteOnce
-    size: 20Gi
   nodeSelector: {}
   tolerations: []
   affinity: {}
@@ -172,27 +139,33 @@ backupdb:
   tolerations: []
   affinity: {}
 
-mailserver:
-  replicaCount: 1
+postfix:
+  fullnameOverride: ""
+  dryrun: false
+  serverName: ""
+  mtpPass: ""
+  mtpPort: ""
+  mtpRelay: ""
+  mtpUser: ""
+  serviceName: "postfix"
+  mailtrap:
+    httpenabled: false
+    serviceType: NodePort
+    ingress:
+      enabled: false
+      hostname: mailtrap.01dev.eea.europa.eu
+      annotations:
+        cert-manager.io/cluster-issuer: 01dev-eea-letsencrypt
+      certificate: mailtrap.01dev.eea.europa.eu-tls
   image:
     repository: eeacms/postfix
     tag: "3.5-1.0"
-    pullPolicy: IfNotPresent
-  service:
-    type: ClusterIP
-    port: 25
   resources:
     requests:
       memory: 64Mi
     limits:
       memory: 64Mi
-  env:
-    MTP_HOST: ""
-    MTP_RELAY: ""
-    MTP_PORT: ""
-  nodeSelector: {}
-  tolerations: []
-  affinity: {}
+  timezone: Europe/Copenhagen
 
 webserver:
   replicaCount: 1
