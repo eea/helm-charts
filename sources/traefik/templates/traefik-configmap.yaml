@@ -7,8 +7,14 @@ metadata:
 data:
   routes.yaml: |
     http:
+{{- /* Parse the string block into a native Helm list */ -}}
+{{- $routes := .Values.routes }}
+{{- if kindIs "string" $routes }}
+{{- $routes = fromYamlArray $routes }}
+{{- end }}
+
       routers:
-{{- range .Values.routes }}
+{{- range $routes }}
         {{ .name }}:
           rule: "{{ .match }}"
           service: {{ .name }}-svc
@@ -20,11 +26,11 @@ data:
 
 {{- /* Check if ANY route requires a stripPrefix middleware */ -}}
 {{- $hasStrip := false }}
-{{- range .Values.routes }}{{ if .stripPrefix }}{{ $hasStrip = true }}{{ end }}{{ end }}
+{{- range $routes }}{{ if .stripPrefix }}{{ $hasStrip = true }}{{ end }}{{ end }}
 
 {{- if $hasStrip }}
       middlewares:
-{{- range .Values.routes }}
+{{- range $routes }}
   {{- if .stripPrefix }}
         {{ .name }}-strip:
           stripPrefix:
@@ -35,7 +41,7 @@ data:
 {{- end }}
 
       services:
-{{- range .Values.routes }}
+{{- range $routes }}
         {{ .name }}-svc:
           loadBalancer:
             servers:
