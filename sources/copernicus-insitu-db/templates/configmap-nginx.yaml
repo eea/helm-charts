@@ -52,8 +52,6 @@ data:
         uwsgi_max_temp_file_size 0;
         uwsgi_ignore_client_abort on;
         uwsgi_buffering off;
-        resolver {{ .Values.webserver.resolver }};
-        set $backend "http://{{ include "appl.webServiceName" . }}:{{ .Values.web.service.port }}";
-        proxy_pass $backend;
+        proxy_pass http://{{ include "appl.webServiceName" . }}:{{ .Values.web.service.port }};
       }
     }
