@@ -19,12 +19,18 @@ commonEnv:
   DJANGO_COLLECT_STATIC: ""
   DJANGO_INDEX_CONTENT: ""
   DJANGO_MIGRATE: ""
+  ELASTICSEARCH_AUTH: ""
   ELASTICSEARCH_HOST: ""
   EMAIL_BACKEND: ""
   EMAIL_PORT: ""
   MATOMO: ""
   POSTGRES_DB: ""
+  POSTGRES_PASSWORD: ""
+  PGPASSWORD: ""
   POSTGRES_USER: ""
+  SECRET_KEY: ""
+  SENTRY_AUTH_TOKEN: ""
+  SENTRY_DSN: ""
   SENTRY_API_URL: ""
   SENTRY_TAG_ENVIRONMENT: ""
   SENTRY_TAG_RELEASE: ""
@@ -33,6 +39,7 @@ commonEnv:
   SUPPORT_EMAIL: ""
   TIMEOUT: ""
   UWSGI_PORT: ""
+  POSTGRES_EXPLORER_PASSWORD: ""
   POSTGRES_EXPLORER_USER: ""
   EXCLUDE_REPORTS_IDS: ""
   PUBLIC_REPORTS_IDS: ""
@@ -41,21 +48,6 @@ image:
   repository: eeacms/copernicus-insitu-db
   tag: "3.0.6"
   pullPolicy: IfNotPresent
-
-secrets:
-  create: false
-  existingSecret: ""
-  data:
-    ELASTICSEARCH_AUTH: ""
-    POSTGRES_PASSWORD: ""
-    PGPASSWORD: ""
-    SECRET_KEY: ""
-    SENTRY_AUTH_TOKEN: ""
-    SENTRY_DSN: ""
-    POSTGRES_EXPLORER_PASSWORD: ""
-    dianaboiangiu: ""
-    API_PREFIX: ""
-    API_TOKEN: ""
 
 ingress:
   enabled: true
@@ -132,6 +124,7 @@ backupdb:
       memory: 512Mi
   env:
     POSTGRES_DB: ""
+    PGPASSWORD: ""
     POSTGRES_USER: ""
   command: >-
     mkdir -p /var/local/static/protected && pg_dump --no-owner --exclude-table=public.explorer_* --inserts -h $POSTGRES_HOST -U $POSTGRES_USER $POSTGRES_DB | gzip > /var/local/static/protected/database.sql.gz

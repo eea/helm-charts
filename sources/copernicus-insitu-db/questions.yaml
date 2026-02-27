@@ -70,79 +70,6 @@ questions:
     default: ""
     group: "Ingress"
 
-  - variable: "secrets.create"
-    label: "Create secret from values"
-    type: "boolean"
-    default: false
-    required: true
-    group: "General"
-
-  - variable: "secrets.existingSecret"
-    label: "Existing secret name"
-    type: "string"
-    default: ""
-    group: "General"
-
-  - variable: "secrets.data.ELASTICSEARCH_AUTH"
-    label: "Secret: ELASTICSEARCH_AUTH"
-    type: "string"
-    default: ""
-    group: "General"
-
-  - variable: "secrets.data.POSTGRES_PASSWORD"
-    label: "Secret: POSTGRES_PASSWORD"
-    type: "string"
-    default: ""
-    group: "General"
-
-  - variable: "secrets.data.PGPASSWORD"
-    label: "Secret: PGPASSWORD"
-    type: "string"
-    default: ""
-    group: "General"
-
-  - variable: "secrets.data.SECRET_KEY"
-    label: "Secret: SECRET_KEY"
-    type: "string"
-    default: ""
-    group: "General"
-
-  - variable: "secrets.data.SENTRY_AUTH_TOKEN"
-    label: "Secret: SENTRY_AUTH_TOKEN"
-    type: "string"
-    default: ""
-    group: "General"
-
-  - variable: "secrets.data.SENTRY_DSN"
-    label: "Secret: SENTRY_DSN"
-    type: "string"
-    default: ""
-    group: "General"
-
-  - variable: "secrets.data.POSTGRES_EXPLORER_PASSWORD"
-    label: "Secret: POSTGRES_EXPLORER_PASSWORD"
-    type: "string"
-    default: ""
-    group: "General"
-
-  - variable: "secrets.data.dianaboiangiu"
-    label: "Secret: dianaboiangiu"
-    type: "string"
-    default: ""
-    group: "General"
-
-  - variable: "secrets.data.API_PREFIX"
-    label: "Secret: API_PREFIX"
-    type: "string"
-    default: ""
-    group: "General"
-
-  - variable: "secrets.data.API_TOKEN"
-    label: "Secret: API_TOKEN"
-    type: "string"
-    default: ""
-    group: "General"
-
   - variable: "persistence.staticfiles.enabled"
     label: "Enable staticfiles PVC"
     type: "boolean"
@@ -260,6 +187,12 @@ questions:
     default: ""
     group: "General"
 
+  - variable: "commonEnv.ELASTICSEARCH_AUTH"
+    label: "Common env: ELASTICSEARCH_AUTH"
+    type: "string"
+    default: ""
+    group: "General"
+
   - variable: "commonEnv.ELASTICSEARCH_HOST"
     label: "Common env: ELASTICSEARCH_HOST"
     type: "string"
@@ -290,8 +223,38 @@ questions:
     default: ""
     group: "General"
 
+  - variable: "commonEnv.POSTGRES_PASSWORD"
+    label: "Common env: POSTGRES_PASSWORD"
+    type: "string"
+    default: ""
+    group: "General"
+
+  - variable: "commonEnv.PGPASSWORD"
+    label: "Common env: PGPASSWORD"
+    type: "string"
+    default: ""
+    group: "General"
+
   - variable: "commonEnv.POSTGRES_USER"
     label: "Common env: POSTGRES_USER"
+    type: "string"
+    default: ""
+    group: "General"
+
+  - variable: "commonEnv.SECRET_KEY"
+    label: "Common env: SECRET_KEY"
+    type: "string"
+    default: ""
+    group: "General"
+
+  - variable: "commonEnv.SENTRY_AUTH_TOKEN"
+    label: "Common env: SENTRY_AUTH_TOKEN"
+    type: "string"
+    default: ""
+    group: "General"
+
+  - variable: "commonEnv.SENTRY_DSN"
+    label: "Common env: SENTRY_DSN"
     type: "string"
     default: ""
     group: "General"
@@ -340,6 +303,12 @@ questions:
 
   - variable: "commonEnv.UWSGI_PORT"
     label: "Common env: UWSGI_PORT"
+    type: "string"
+    default: ""
+    group: "General"
+
+  - variable: "commonEnv.POSTGRES_EXPLORER_PASSWORD"
+    label: "Common env: POSTGRES_EXPLORER_PASSWORD"
     type: "string"
     default: ""
     group: "General"
@@ -489,6 +458,12 @@ questions:
 
   - variable: "backupdb.env.POSTGRES_DB"
     label: "Backup env: POSTGRES_DB"
+    type: "string"
+    default: ""
+    group: "Backup"
+
+  - variable: "backupdb.env.PGPASSWORD"
+    label: "Backup env: PGPASSWORD"
     type: "string"
     default: ""
     group: "Backup"

@@ -47,15 +47,6 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 {{- end }}
 
-{{/* Secret name */}}
-{{- define "appl.secretName" -}}
-{{- if .Values.secrets.create }}
-{{- printf "%s-secret" (include "appl.fullname" .) }}
-{{- else }}
-{{- .Values.secrets.existingSecret }}
-{{- end }}
-{{- end }}
-
 {{/* Service names */}}
 {{- define "appl.webServiceName" -}}
 {{- printf "%s-web" (include "appl.fullname" .) }}

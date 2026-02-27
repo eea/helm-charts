@@ -43,11 +43,6 @@ spec:
                 - name: {{ $key }}
                   value: {{ $value | quote }}
                 {{- end }}
-              {{- if or .Values.secrets.create .Values.secrets.existingSecret }}
-              envFrom:
-                - secretRef:
-                    name: {{ include "appl.secretName" . }}
-              {{- end }}
               resources:
                 {{- toYaml .Values.backupdb.resources | nindent 16 }}
               volumeMounts:
