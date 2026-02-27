@@ -3,55 +3,39 @@ kind: ConfigMap
 metadata:
   name: {{ include "traefik.fullname" . }}-dynamic
   labels:
-{{ include "traefik.labels" . | indent 4 }}
+    {{- include "traefik.labels" . | nindent 4 }}
 data:
   routes.yaml: |
     http:
-{{- $routesRaw := .Values.routes | default "" }}
-{{- $routes := list }}
-{{- if kindIs "string" $routesRaw }}
-{{- $items := splitList ";" $routesRaw }}
-{{- range $items }}
-{{- $item := trim . }}
-{{- if $item }}
-{{- $parts := splitList "," $item }}
-{{- $route := dict "name" (trim (index $parts 0)) "match" (trim (index $parts 1)) "service" (trim (index $parts 2)) "port" (trim (index $parts 3)) }}
-{{- if ge (len $parts) 5 }}
-{{- $_ := set $route "stripPrefixPrefixes" (list (trim (index $parts 4))) }}
-{{- end }}
-{{- $routes = append $routes $route }}
-{{- end }}
-{{- end }}
-{{- else }}
-{{- $routes = $routesRaw | default list }}
-{{- end }}
-{{- $strip := dict "has" false }}
       routers:
-{{- range $routes }}
+{{- range .Values.routes }}
         {{ .name }}:
           rule: "{{ .match }}"
           service: {{ .name }}-svc
-{{- if .stripPrefixPrefixes }}
-{{- $_ := set $strip "has" true }}
+  {{- if .stripPrefix }}
           middlewares:
-            - {{ printf "%s-strip" .name }}
-{{- end }}
+            - {{ .name }}-strip
+  {{- end }}
 {{- end }}
 
-{{- if $strip.has }}
+{{- /* Check if ANY route requires a stripPrefix middleware */ -}}
+{{- $hasStrip := false }}
+{{- range .Values.routes }}{{ if .stripPrefix }}{{ $hasStrip = true }}{{ end }}{{ end }}
+
+{{- if $hasStrip }}
       middlewares:
-{{- range $routes }}
-{{- if .stripPrefixPrefixes }}
-        {{ printf "%s-strip" .name }}:
+{{- range .Values.routes }}
+  {{- if .stripPrefix }}
+        {{ .name }}-strip:
           stripPrefix:
             prefixes:
-{{ toYaml .stripPrefixPrefixes | indent 14 }}
-{{- end }}
+              - "{{ .stripPrefix }}"
+  {{- end }}
 {{- end }}
 {{- end }}
 
       services:
-{{- range $routes }}
+{{- range .Values.routes }}
         {{ .name }}-svc:
           loadBalancer:
             servers:
