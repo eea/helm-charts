@@ -1,6 +1,15 @@
 domain: ""
 
-routes: []
+routes: |-
+  - name: frontend
+    match: PathPrefix(`/`)
+    service: frontend
+    port: 80
+  - name: api
+    match: PathPrefix(`/++api++`)
+    service: backend
+    port: 80
+    stripPrefix: /++api++
 
 traefik:
   image: traefik:v2.11.2
