@@ -2,18 +2,52 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ include "traefik.fullname" . }}-dynamic
+  labels:
+{{ include "traefik.labels" . | indent 4 }}
 data:
   routes.yaml: |
     http:
-{{- $routes := .Values.routes | default list }}
-{{- if kindIs "string" $routes }}
-{{- $routes = fromYaml $routes }}
+{{- $routesRaw := .Values.routes | default "" }}
+{{- $routes := list }}
+{{- if kindIs "string" $routesRaw }}
+{{- $items := splitList ";" $routesRaw }}
+{{- range $items }}
+{{- $item := trim . }}
+{{- if $item }}
+{{- $parts := splitList "," $item }}
+{{- $route := dict "name" (trim (index $parts 0)) "match" (trim (index $parts 1)) "service" (trim (index $parts 2)) "port" (trim (index $parts 3)) }}
+{{- if ge (len $parts) 5 }}
+{{- $_ := set $route "stripPrefixPrefixes" (list (trim (index $parts 4))) }}
 {{- end }}
+{{- $routes = append $routes $route }}
+{{- end }}
+{{- end }}
+{{- else }}
+{{- $routes = $routesRaw | default list }}
+{{- end }}
+{{- $strip := dict "has" false }}
       routers:
 {{- range $routes }}
         {{ .name }}:
           rule: "{{ .match }}"
           service: {{ .name }}-svc
+{{- if .stripPrefixPrefixes }}
+{{- $_ := set $strip "has" true }}
+          middlewares:
+            - {{ printf "%s-strip" .name }}
+{{- end }}
+{{- end }}
+
+{{- if $strip.has }}
+      middlewares:
+{{- range $routes }}
+{{- if .stripPrefixPrefixes }}
+        {{ printf "%s-strip" .name }}:
+          stripPrefix:
+            prefixes:
+{{ toYaml .stripPrefixPrefixes | indent 14 }}
+{{- end }}
+{{- end }}
 {{- end }}
 
       services:

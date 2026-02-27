@@ -7,18 +7,10 @@ questions:
   required: true
 
 - variable: routes
-  type: multiline
-  label: Traefik routes (YAML)
-  description: YAML list of routes; each item needs name, match, service, and port.
-  default: |
-    - name: frontend
-      match: "PathPrefix(`/`)"
-      service: nginx-1
-      port: 80
-    - name: api
-      match: "PathPrefix(`/++api++`)"
-      service: nginx-2
-      port: 80
+  type: string
+  label: Traefik routes (comma/semicolon list)
+  description: "Format: name,match,service,port[,stripPrefix] ; repeat with ';'. Example: frontend,PathPrefix(`/`),frontend,80; api,PathPrefix(`/++api++`),backend,80,/++api++"
+  default: "frontend,PathPrefix(`/`),frontend,80; api,PathPrefix(`/++api++`),backend,80,/++api++"
   required: true
 
 - variable: grafana.adminUser
