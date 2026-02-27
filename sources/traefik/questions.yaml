@@ -6,6 +6,26 @@ questions:
   description: Hostname served by the NGINX ingress in front of Traefik.
   required: true
 
+- variable: ingress.tls.enabled
+  default: true
+  type: boolean
+  label: Enable ingress TLS
+  description: Toggle TLS for the ingress; when enabled the secret defaults to <domain>-tls.
+
+- variable: ingress.tls.secretName
+  default: ""
+  type: string
+  label: Ingress TLS secret name
+  description: Optional override for the TLS secret; leave empty to use <domain>-tls.
+  required: false
+
+- variable: ingress.annotations[cert-manager.io/cluster-issuer]
+  default: ""
+  type: string
+  label: cert-manager cluster issuer
+  description: Set the cert-manager cluster issuer annotation on the ingress (leave empty to skip).
+  required: false
+
 - variable: routes
   type: multiline
   label: Traefik Routes (YAML)

@@ -10,6 +10,15 @@ metadata:
 {{- end }}
 spec:
   ingressClassName: {{ .Values.ingress.className }}
+{{- $host := .Values.domain }}
+{{- $tlsEnabled := .Values.ingress.tls.enabled | default true }}
+{{- $tlsSecret := default (printf "%s-tls" $host) .Values.ingress.tls.secretName }}
+{{- if and $tlsEnabled $host }}
+  tls:
+    - hosts:
+        - {{ $host }}
+      secretName: {{ $tlsSecret }}
+{{- end }}
   rules:
     - host: {{ .Values.domain }}
       http:

@@ -35,6 +35,9 @@ traefik:
 ingress:
   className: nginx
   annotations: {}
+  tls:
+    enabled: true
+    secretName: ""
 
 prometheus:
   enabled: true
