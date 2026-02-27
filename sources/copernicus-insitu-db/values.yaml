@@ -1,0 +1,234 @@
+imagePullSecrets: []
+
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: false
+  annotations: {}
+  name: ""
+
+timezone: Europe/Copenhagen
+
+app:
+  image:
+    repository: ""
+    tag: ""
+
+secrets:
+  create: false
+  existingSecret: ""
+  data:
+    ELASTICSEARCH_AUTH: ""
+    POSTGRES_PASSWORD: ""
+    PGPASSWORD: ""
+    SECRET_KEY: ""
+    SENTRY_AUTH_TOKEN: ""
+    SENTRY_DSN: ""
+    POSTGRES_EXPLORER_PASSWORD: ""
+    MTP_PASS: ""
+    MTP_USER: ""
+    dianaboiangiu: ""
+    API_PREFIX: ""
+    API_TOKEN: ""
+
+ingress:
+  enabled: true
+  className: appsec-nginx
+  annotations: {}
+  host: cis2.eea.europa.eu
+  tls: false
+  certificate: ""
+
+persistence:
+  staticfiles:
+    enabled: true
+    existingClaim: ""
+    storageClassName: ""
+    accessModes:
+      - ReadWriteMany
+    size: 10Gi
+  logging:
+    enabled: true
+    existingClaim: ""
+    storageClassName: ""
+    accessModes:
+      - ReadWriteMany
+    size: 5Gi
+
+web:
+  replicaCount: 2
+  image:
+    repository: eeacms/copernicus-insitu-db
+    tag: "3.0.6"
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 8000
+  resources:
+    requests:
+      memory: 1Gi
+    limits:
+      memory: 2Gi
+  env:
+    ALLOWED_HOSTS: ""
+    DEFAULT_FROM_EMAIL: ""
+    DJANGO_COLLECT_STATIC: ""
+    DJANGO_INDEX_CONTENT: ""
+    DJANGO_MIGRATE: ""
+    ELASTICSEARCH_HOST: ""
+    EMAIL_BACKEND: ""
+    EMAIL_PORT: ""
+    LOGSPOUT: ""
+    MATOMO: ""
+    POSTGRES_DB: ""
+    POSTGRES_USER: ""
+    SENTRY_API_URL: ""
+    SENTRY_TAG_ENVIRONMENT: ""
+    SENTRY_TAG_RELEASE: ""
+    SENTRY_TAG_SITE: ""
+    SITE_URL: ""
+    SUPPORT_EMAIL: ""
+    TIMEOUT: ""
+    UWSGI_PORT: ""
+    API_PREFIX: ""
+    POSTGRES_EXPLORER_USER: ""
+    EXCLUDE_REPORTS_IDS: ""
+    PUBLIC_REPORTS_IDS: ""
+    dianaboiangiu: ""
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+cron:
+  replicaCount: 1
+  image:
+    repository: eeacms/copernicus-insitu-db
+    tag: "3.0.6"
+    pullPolicy: IfNotPresent
+  command:
+    - ./docker-entrypoint.cron.sh
+  resources:
+    requests:
+      memory: 512Mi
+    limits:
+      memory: 1Gi
+  env:
+    ALLOWED_HOSTS: ""
+    DEBUG: ""
+    DEFAULT_FROM_EMAIL: ""
+    DJANGO_COLLECT_STATIC: ""
+    DJANGO_INDEX_CONTENT: ""
+    DJANGO_MIGRATE: ""
+    ELASTICSEARCH_HOST: ""
+    ELASTICSEARCH_TIMEOUT: ""
+    EMAIL_BACKEND: ""
+    EMAIL_PORT: ""
+    MATOMO: ""
+    POSTGRES_DB: ""
+    POSTGRES_USER: ""
+    SENTRY_API_URL: ""
+    SENTRY_TAG_ENVIRONMENT: ""
+    SENTRY_TAG_RELEASE: ""
+    SENTRY_TAG_SITE: ""
+    SITE_URL: ""
+    SUPPORT_EMAIL: ""
+    TIMEOUT: ""
+    UWSGI_PORT: ""
+    API_TOKEN: ""
+    POSTGRES_EXPLORER_USER: ""
+    EXCLUDE_REPORTS_IDS: ""
+    PUBLIC_REPORTS_IDS: ""
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+database:
+  image:
+    repository: postgres
+    tag: "13-buster"
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 5432
+  resources:
+    requests:
+      memory: 2Gi
+    limits:
+      memory: 2Gi
+  env:
+    POSTGRES_DB: ""
+    POSTGRES_USER: ""
+  persistence:
+    enabled: true
+    storageClassName: ""
+    accessModes:
+      - ReadWriteOnce
+    size: 20Gi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+backupdb:
+  enabled: true
+  image:
+    repository: postgres
+    tag: "13-buster"
+    pullPolicy: IfNotPresent
+  schedule: "0 0 * * 0"
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  resources:
+    requests:
+      memory: 64Mi
+    limits:
+      memory: 512Mi
+  env:
+    POSTGRES_DB: ""
+    POSTGRES_USER: ""
+  command: >-
+    mkdir -p /var/local/static/protected && pg_dump --no-owner --exclude-table=public.explorer_* --inserts -h $POSTGRES_HOST -U $POSTGRES_USER $POSTGRES_DB | gzip > /var/local/static/protected/database.sql.gz
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+mailserver:
+  replicaCount: 1
+  image:
+    repository: eeacms/postfix
+    tag: "3.5-1.0"
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 25
+  resources:
+    requests:
+      memory: 64Mi
+    limits:
+      memory: 64Mi
+  env:
+    MTP_HOST: ""
+    MTP_RELAY: ""
+    MTP_PORT: ""
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+webserver:
+  replicaCount: 1
+  image:
+    repository: nginx
+    tag: "alpine"
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 80
+  resources:
+    requests:
+      memory: 64Mi
+    limits:
+      memory: 128Mi
+  resolver: "169.254.169.250 ipv6=off valid=15s"
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}

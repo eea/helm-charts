@@ -1,0 +1,18 @@
+{{- if and .Values.persistence.staticfiles.enabled (not .Values.persistence.staticfiles.existingClaim) }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "appl.staticClaimName" . }}
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: staticfiles
+spec:
+  accessModes:
+    {{- toYaml .Values.persistence.staticfiles.accessModes | nindent 4 }}
+  {{- if .Values.persistence.staticfiles.storageClassName }}
+  storageClassName: {{ .Values.persistence.staticfiles.storageClassName | quote }}
+  {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.staticfiles.size | quote }}
+{{- end }}

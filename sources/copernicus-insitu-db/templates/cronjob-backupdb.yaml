@@ -1,0 +1,76 @@
+{{- if .Values.backupdb.enabled }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "appl.backupName" . }}
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: backupdb
+spec:
+  schedule: {{ .Values.backupdb.schedule | quote }}
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: {{ .Values.backupdb.successfulJobsHistoryLimit }}
+  failedJobsHistoryLimit: {{ .Values.backupdb.failedJobsHistoryLimit }}
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            {{- include "appl.selectorLabels" . | nindent 12 }}
+            component: backupdb
+        spec:
+          restartPolicy: OnFailure
+          {{- with .Values.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          serviceAccountName: {{ include "appl.serviceAccountName" . }}
+          containers:
+            - name: backupdb
+              image: "{{ .Values.backupdb.image.repository }}:{{ .Values.backupdb.image.tag }}"
+              imagePullPolicy: {{ .Values.backupdb.image.pullPolicy }}
+              command:
+                - /bin/sh
+                - -c
+              args:
+                - {{ .Values.backupdb.command | quote }}
+              env:
+                - name: TZ
+                  value: {{ .Values.timezone | quote }}
+                - name: POSTGRES_HOST
+                  value: {{ include "appl.databaseServiceName" . | quote }}
+                {{- range $key, $value := .Values.backupdb.env }}
+                - name: {{ $key }}
+                  value: {{ $value | quote }}
+                {{- end }}
+              {{- if or .Values.secrets.create .Values.secrets.existingSecret }}
+              envFrom:
+                - secretRef:
+                    name: {{ include "appl.secretName" . }}
+              {{- end }}
+              resources:
+                {{- toYaml .Values.backupdb.resources | nindent 16 }}
+              volumeMounts:
+                - name: staticfiles
+                  mountPath: /var/local/static
+          volumes:
+            - name: staticfiles
+              {{- if or .Values.persistence.staticfiles.enabled .Values.persistence.staticfiles.existingClaim }}
+              persistentVolumeClaim:
+                claimName: {{ include "appl.staticClaimName" . }}
+              {{- else }}
+              emptyDir: {}
+              {{- end }}
+          {{- with .Values.backupdb.nodeSelector }}
+          nodeSelector:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.backupdb.affinity }}
+          affinity:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.backupdb.tolerations }}
+          tolerations:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+{{- end }}

@@ -1,0 +1,82 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "appl.webName" . }}
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: web
+spec:
+  replicas: {{ .Values.web.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: web
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: web
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      containers:
+        - name: web
+          image: "{{ coalesce .Values.app.image.repository .Values.web.image.repository }}:{{ coalesce .Values.app.image.tag .Values.web.image.tag }}"
+          imagePullPolicy: {{ .Values.web.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.web.service.port }}
+              protocol: TCP
+          env:
+            - name: TZ
+              value: {{ .Values.timezone | quote }}
+            - name: POSTGRES_HOST
+              value: {{ include "appl.databaseServiceName" . | quote }}
+            - name: EMAIL_HOST
+              value: {{ include "appl.mailserverServiceName" . | quote }}
+            {{- range $key, $value := .Values.web.env }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+          {{- if or .Values.secrets.create .Values.secrets.existingSecret }}
+          envFrom:
+            - secretRef:
+                name: {{ include "appl.secretName" . }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.web.resources | nindent 12 }}
+          volumeMounts:
+            - name: staticfiles
+              mountPath: /var/local/static
+            - name: logging
+              mountPath: /var/local/copernicus/logging
+      volumes:
+        - name: staticfiles
+          {{- if or .Values.persistence.staticfiles.enabled .Values.persistence.staticfiles.existingClaim }}
+          persistentVolumeClaim:
+            claimName: {{ include "appl.staticClaimName" . }}
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
+        - name: logging
+          {{- if or .Values.persistence.logging.enabled .Values.persistence.logging.existingClaim }}
+          persistentVolumeClaim:
+            claimName: {{ include "appl.loggingClaimName" . }}
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
+      {{- with .Values.web.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.web.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.web.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

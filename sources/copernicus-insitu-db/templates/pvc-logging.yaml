@@ -1,0 +1,18 @@
+{{- if and .Values.persistence.logging.enabled (not .Values.persistence.logging.existingClaim) }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "appl.loggingClaimName" . }}
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: logging
+spec:
+  accessModes:
+    {{- toYaml .Values.persistence.logging.accessModes | nindent 4 }}
+  {{- if .Values.persistence.logging.storageClassName }}
+  storageClassName: {{ .Values.persistence.logging.storageClassName | quote }}
+  {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.logging.size | quote }}
+{{- end }}

@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "appl.cronName" . }}
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: cron
+spec:
+  replicas: {{ .Values.cron.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: cron
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: cron
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      containers:
+        - name: cron
+          image: "{{ coalesce .Values.app.image.repository .Values.cron.image.repository }}:{{ coalesce .Values.app.image.tag .Values.cron.image.tag }}"
+          imagePullPolicy: {{ .Values.cron.image.pullPolicy }}
+          {{- if .Values.cron.command }}
+          command:
+            {{- toYaml .Values.cron.command | nindent 12 }}
+          {{- end }}
+          env:
+            - name: TZ
+              value: {{ .Values.timezone | quote }}
+            - name: POSTGRES_HOST
+              value: {{ include "appl.databaseServiceName" . | quote }}
+            - name: EMAIL_HOST
+              value: {{ include "appl.mailserverServiceName" . | quote }}
+            {{- range $key, $value := .Values.cron.env }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+          {{- if or .Values.secrets.create .Values.secrets.existingSecret }}
+          envFrom:
+            - secretRef:
+                name: {{ include "appl.secretName" . }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.cron.resources | nindent 12 }}
+          volumeMounts:
+            - name: staticfiles
+              mountPath: /var/local/static
+      volumes:
+        - name: staticfiles
+          {{- if or .Values.persistence.staticfiles.enabled .Values.persistence.staticfiles.existingClaim }}
+          persistentVolumeClaim:
+            claimName: {{ include "appl.staticClaimName" . }}
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
+      {{- with .Values.cron.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.cron.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.cron.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

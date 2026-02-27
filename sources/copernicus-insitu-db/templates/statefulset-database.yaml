@@ -1,0 +1,81 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "appl.databaseName" . }}
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: database
+spec:
+  serviceName: {{ include "appl.databaseServiceName" . }}
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: database
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: database
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      containers:
+        - name: database
+          image: "{{ .Values.database.image.repository }}:{{ .Values.database.image.tag }}"
+          imagePullPolicy: {{ .Values.database.image.pullPolicy }}
+          ports:
+            - name: postgres
+              containerPort: {{ .Values.database.service.port }}
+              protocol: TCP
+          env:
+            - name: TZ
+              value: {{ .Values.timezone | quote }}
+            {{- range $key, $value := .Values.database.env }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+          {{- if or .Values.secrets.create .Values.secrets.existingSecret }}
+          envFrom:
+            - secretRef:
+                name: {{ include "appl.secretName" . }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.database.resources | nindent 12 }}
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/postgresql/data
+      {{- if not .Values.database.persistence.enabled }}
+      volumes:
+        - name: data
+          emptyDir: {}
+      {{- end }}
+      {{- with .Values.database.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.database.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.database.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+  {{- if .Values.database.persistence.enabled }}
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes:
+          {{- toYaml .Values.database.persistence.accessModes | nindent 10 }}
+        {{- if .Values.database.persistence.storageClassName }}
+        storageClassName: {{ .Values.database.persistence.storageClassName | quote }}
+        {{- end }}
+        resources:
+          requests:
+            storage: {{ .Values.database.persistence.size | quote }}
+  {{- end }}
