@@ -6,9 +6,14 @@ metadata:
   labels:
     {{- include "appl.labels" . | nindent 4 }}
     component: webserver
-  {{- with .Values.ingress.annotations }}
+  {{- if or .Values.ingress.letsencrypt .Values.ingress.annotations }}
   annotations:
+    {{- if .Values.ingress.letsencrypt }}
+    cert-manager.io/cluster-issuer: {{ .Values.ingress.letsencrypt | quote }}
+    {{- end }}
+    {{- with .Values.ingress.annotations }}
     {{- toYaml . | nindent 4 }}
+    {{- end }}
   {{- end }}
 spec:
   {{- if .Values.ingress.className }}

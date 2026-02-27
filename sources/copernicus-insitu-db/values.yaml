@@ -52,10 +52,11 @@ image:
 ingress:
   enabled: true
   className: appsec-nginx
+  letsencrypt: 01dev-eea-letsencrypt
   annotations: {}
   host: cis2.eea.europa.eu
-  tls: false
-  certificate: ""
+  tls: true
+  certificate: cis2.eea.europa.eu-tls
 
 persistence:
   staticfiles:

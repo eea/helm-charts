@@ -51,24 +51,35 @@ questions:
     group: "Ingress"
 
   - variable: "ingress.host"
-    label: "Ingress host"
+    label: "Server name"
+    description: "DNS name for this deployment"
     type: "string"
     default: "cis2.eea.europa.eu"
     required: true
-    group: "Ingress"
+    group: "General"
 
   - variable: "ingress.tls"
-    label: "Enable TLS"
+    label: "Enable https"
     type: "boolean"
-    default: false
+    default: true
     required: true
-    group: "Ingress"
+    group: "General"
+
+  - variable: "ingress.letsencrypt"
+    label: "Ingress letsencrypt cluster-issuer"
+    description: "Leave empty when not using letsencrypt"
+    type: "string"
+    default: "01dev-eea-letsencrypt"
+    group: "General"
+    show_if: "ingress.tls=true"
 
   - variable: "ingress.certificate"
-    label: "TLS certificate secret"
+    label: "Certificate name"
+    description: "Use a new name for letsencrypt certificates, for existing certificate write the correct name for the domain, leave blank for kube default"
     type: "string"
-    default: ""
-    group: "Ingress"
+    default: "cis2.eea.europa.eu-tls"
+    group: "General"
+    show_if: "ingress.tls=true"
 
   - variable: "persistence.staticfiles.enabled"
     label: "Enable staticfiles PVC"
