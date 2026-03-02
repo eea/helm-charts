@@ -30,6 +30,8 @@ spec:
             - name: http
               containerPort: {{ .Values.webserver.service.port }}
               protocol: TCP
+          securityContext:
+            {{- toYaml .Values.webserver.securityContext | nindent 12 }}
           resources:
             {{- toYaml .Values.webserver.resources | nindent 12 }}
           volumeMounts:

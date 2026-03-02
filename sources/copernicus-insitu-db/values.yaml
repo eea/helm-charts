@@ -163,6 +163,8 @@ postfix:
 
 webserver:
   replicaCount: 1
+  securityContext:
+    readOnlyRootFilesystem: false
   image:
     repository: nginx
     tag: "alpine"
