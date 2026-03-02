@@ -9,6 +9,7 @@ data:
   default.conf: |-
     server {
       listen 80;
+      listen [::]:80;
       access_log /var/log/nginx/access.log main;
 
       root /var/local;
