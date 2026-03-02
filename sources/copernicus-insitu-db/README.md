@@ -3,6 +3,9 @@
 Helm chart for the Copernicus In-Situ DB stack.
 ## Releases
 
+### Version 1.1.3 - 02 March 2026
+- fix nginx [Dobricean Ioan Dorian - [`39912aa1`](https://github.com/eea/helm-charts/commit/39912aa13f63334c3f514d4ca88a93db0a8abb21)]
+
 ### Version 1.1.2 - 02 March 2026
 - fix nginx [Dobricean Ioan Dorian - [`2e7c3418`](https://github.com/eea/helm-charts/commit/2e7c341861274556d65977c205eb0d6315d67a07)]
 
