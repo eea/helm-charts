@@ -13,6 +13,13 @@ data:
 {{- $routes = fromYamlArray $routes }}
 {{- end }}
 
+{{- /* Auto-add Grafana route when metricsPath is set */}}
+{{- $metricsPath := trimSuffix "/" (trimPrefix "/" (default "" .Values.metricsPath)) }}
+{{- if and .Values.grafana.enabled $metricsPath }}
+{{- $grafanaRoute := dict "name" "grafana-metrics" "match" (printf "PathPrefix(`/%s`)" $metricsPath) "service" (include "traefik.grafanaName" .) "port" .Values.grafana.service.port }}
+{{- $routes = append $routes $grafanaRoute }}
+{{- end }}
+
       routers:
 {{- range $routes }}
         {{ .name }}:

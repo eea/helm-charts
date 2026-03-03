@@ -71,6 +71,13 @@ spec:
         - name: grafana
           image: {{ .Values.grafana.image }}
           env:
+            {{- $metricsPath := trimSuffix "/" (trimPrefix "/" (default "" .Values.metricsPath)) }}
+            - name: GF_SERVER_DOMAIN
+              value: {{ .Values.domain | quote }}
+            - name: GF_SERVER_ROOT_URL
+              value: {{ printf "%%(protocol)s://%%(domain)s:%%(http_port)s/%s/" $metricsPath | quote }}
+            - name: GF_SERVER_SERVE_FROM_SUB_PATH
+              value: {{ ternary "true" "false" (ne $metricsPath "") | quote }}
             - name: GF_SECURITY_ADMIN_USER
               value: {{ .Values.grafana.adminUser | quote }}
             - name: GF_SECURITY_ADMIN_PASSWORD

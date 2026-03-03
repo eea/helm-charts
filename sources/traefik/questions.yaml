@@ -6,6 +6,13 @@ questions:
   description: Hostname served by the NGINX ingress in front of Traefik.
   required: true
 
+- variable: metricsPath
+  default: "metrics"
+  type: string
+  label: Metrics endpoint path
+  description: Sub-path that exposes Grafana through Traefik (served at /<metricsPath>).
+  required: true
+
 - variable: ingress.tls.enabled
   default: true
   type: boolean
