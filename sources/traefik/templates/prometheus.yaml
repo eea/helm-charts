@@ -18,6 +18,14 @@ data:
         static_configs:
           - targets:
               - "{{ include "traefik.fullname" . }}:{{ .Values.traefik.service.metricsPort }}"
+{{- /* Drop Grafana sub-path traffic from Traefik metrics to keep Prometheus focused on routing */}}
+{{- $metricsPath := trimSuffix "/" (trimPrefix "/" (default "" .Values.metricsPath)) }}
+{{- if and .Values.grafana.enabled $metricsPath }}
+        metric_relabel_configs:
+          - source_labels: [service]
+            regex: "grafana-metrics-svc(@.*)?"
+            action: drop
+{{- end }}
 ---
 apiVersion: apps/v1
 kind: Deployment
