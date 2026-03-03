@@ -109,30 +109,6 @@ cron:
   tolerations: []
   affinity: {}
 
-backupdb:
-  enabled: true
-  image:
-    repository: postgres
-    tag: "13-buster"
-    pullPolicy: IfNotPresent
-  schedule: "0 0 * * 0"
-  successfulJobsHistoryLimit: 3
-  failedJobsHistoryLimit: 3
-  resources:
-    requests:
-      memory: 64Mi
-    limits:
-      memory: 512Mi
-  env:
-    POSTGRES_DB: ""
-    PGPASSWORD: ""
-    POSTGRES_USER: ""
-  command: >-
-    mkdir -p /var/local/static/protected && pg_dump --no-owner --exclude-table=public.explorer_* --inserts -h $POSTGRES_HOST -U $POSTGRES_USER $POSTGRES_DB | gzip > /var/local/static/protected/database.sql.gz
-  nodeSelector: {}
-  tolerations: []
-  affinity: {}
-
 postfix:
   fullnameOverride: ""
   dryrun: false

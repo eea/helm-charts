@@ -83,10 +83,6 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- printf "%s-database" (include "appl.fullname" .) }}
 {{- end }}
 
-{{- define "appl.backupName" -}}
-{{- printf "%s-backupdb" (include "appl.fullname" .) }}
-{{- end }}
-
 {{- define "appl.webserverName" -}}
 {{- printf "%s-webserver" (include "appl.fullname" .) }}
 {{- end }}
