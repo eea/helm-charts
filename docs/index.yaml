@@ -16118,6 +16118,25 @@ entries:
   copernicus-insitu-db:
   - apiVersion: v2
     appVersion: 3.0.6
+    created: "2026-03-03T14:44:11.46314+02:00"
+    dependencies:
+    - name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.2.0
+    description: Helm chart for Copernicus In-Situ DB stack
+    digest: dac3a5aa4acc40fc127e3053fc4fdcd566ac90dfa198f421e0c8602487740a7d
+    home: https://github.com/eea/helm-charts
+    keywords:
+    - copernicus
+    - django
+    - postgres
+    name: copernicus-insitu-db
+    type: application
+    urls:
+    - copernicus-insitu-db-1.2.0.tgz
+    version: 1.2.0
+  - apiVersion: v2
+    appVersion: 3.0.6
     created: "2026-03-02T09:22:18.685281+02:00"
     dependencies:
     - name: postfix
@@ -45179,4 +45198,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2026-03-03T12:28:58.334995704Z"
+generated: "2026-03-03T14:44:11.462174+02:00"
