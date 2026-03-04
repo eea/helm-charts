@@ -1,0 +1,31 @@
+{{- if .Values.podDisruptionBudget.enabled }}
+{{/* Pod Disruption Budget for Elasticsearch Master nodes */}}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ .Release.Name }}-master-pdb
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: master
+spec:
+  minAvailable: {{ if gt (int .Values.esmaster.replicaCount) 1 }}1{{ else }}0{{ end }}
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: master
+---
+{{/* Pod Disruption Budget for Elasticsearch Data nodes */}}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ .Release.Name }}-data-pdb
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: data
+spec:
+  minAvailable: {{ if gt (int .Values.esworker.replicaCount) 1 }}{{ sub (int .Values.esworker.replicaCount) 1 }}{{ else }}0{{ end }}
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: data
+{{- end }}

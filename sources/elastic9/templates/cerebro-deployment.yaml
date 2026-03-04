@@ -1,0 +1,94 @@
+{{-  if .Values.cerebro.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-cerebro
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: cerebro
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: cerebro
+
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: cerebro
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
+      containers:
+      - name: cerebro
+        image: eeacms/cerebro:0.9.4-1
+        env:
+        - name: ELASTIC_URL
+          value: http://{{ .Release.Name }}-master:9200
+        - name: BASIC_AUTH_USER
+          value: "{{ .Values.cerebro.user }}"
+        - name: BASIC_AUTH_PWD
+          value: "{{ .Values.cerebro.password }}"
+        - name: CEREBRO_PORT
+          value: "9000"
+        - name: CEREBRO_SECRET
+          value: "{{ .Values.cerebro.secret }}"
+        - name: TZ
+          value: "{{ .Values.timezone }}"
+        {{- if .Values.esmaster.password }}
+        - name: ELASTIC_USER
+          value: "elastic"
+        - name: ELASTIC_PASSWORD
+          value: "{{ .Values.esmaster.password }}"
+        {{- end }}
+
+        ports:
+        - containerPort: 9000
+
+        # Startup probe - check if Cerebro is starting up
+        startupProbe:
+          httpGet:
+            path: /
+            port: 9000
+          initialDelaySeconds: {{ .Values.cerebro.healthChecks.startup.initialDelaySeconds }}
+          periodSeconds: {{ .Values.cerebro.healthChecks.startup.periodSeconds }}
+          timeoutSeconds: {{ .Values.cerebro.healthChecks.startup.timeoutSeconds }}
+          failureThreshold: {{ .Values.cerebro.healthChecks.startup.failureThreshold }}
+          successThreshold: {{ .Values.cerebro.healthChecks.startup.successThreshold }}
+
+        # Readiness probe - check if Cerebro is ready to serve requests
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 9000
+          initialDelaySeconds: {{ .Values.cerebro.healthChecks.readiness.initialDelaySeconds }}
+          periodSeconds: {{ .Values.cerebro.healthChecks.readiness.periodSeconds }}
+          timeoutSeconds: {{ .Values.cerebro.healthChecks.readiness.timeoutSeconds }}
+          failureThreshold: {{ .Values.cerebro.healthChecks.readiness.failureThreshold }}
+          successThreshold: {{ .Values.cerebro.healthChecks.readiness.successThreshold }}
+
+        # Liveness probe - check if Cerebro is responsive
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 9000
+          initialDelaySeconds: {{ .Values.cerebro.healthChecks.liveness.initialDelaySeconds }}
+          periodSeconds: {{ .Values.cerebro.healthChecks.liveness.periodSeconds }}
+          timeoutSeconds: {{ .Values.cerebro.healthChecks.liveness.timeoutSeconds }}
+          failureThreshold: {{ .Values.cerebro.healthChecks.liveness.failureThreshold }}
+          successThreshold: {{ .Values.cerebro.healthChecks.liveness.successThreshold }}
+
+        resources:
+          requests:
+            memory: {{ .Values.cerebro.memReservation }}
+          limits:
+            memory: {{ .Values.cerebro.memLimit }}
+
+      restartPolicy: Always
+{{- end }}

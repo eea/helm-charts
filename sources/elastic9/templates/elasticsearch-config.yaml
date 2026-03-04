@@ -1,0 +1,256 @@
+{{- if .Values.esmaster.password }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-elasticsearch-config
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+data:
+  jvm.options: |
+    ## JVM configuration
+    ################################################################
+    ## IMPORTANT: JVM heap size
+    ################################################################
+    -Xms{{ .Values.masterHeapSize }}
+    -Xmx{{ .Values.masterHeapSize }}
+
+    ################################################################
+    ## Expert settings
+    ################################################################
+    ## All settings below this are considered expert settings. Don't
+    ## tamper with them unless you understand what you are doing
+    ################################################################
+
+    ## GC configuration for Java 8-11
+    8-11:-XX:+UseConcMarkSweepGC
+    8-11:-XX:CMSInitiatingOccupancyFraction=75
+    8-11:-XX:+UseCMSInitiatingOccupancyOnly
+
+    ## G1GC Configuration for Java 14+
+    14-:-XX:+UseG1GC
+    14-:-XX:G1HeapRegionSize=4m
+    14-:-XX:InitiatingHeapOccupancyPercent=30
+    14-:-XX:G1MixedGCCountTarget=4
+
+    ## optimizations
+
+    # pre-touch memory pages used by the JVM during initialization
+    -XX:+AlwaysPreTouch
+
+    ## basic
+
+    # explicitly set the stack size
+    -Xss1m
+
+    # set to headless, just in case
+    -Djava.awt.headless=true
+
+    # ensure UTF-8 encoding by default (e.g. filenames)
+    -Dfile.encoding=UTF-8
+
+    # use our provided JNA always versus the system one
+    -Djna.nosys=true
+
+    # turn off a JDK optimization that throws away stack traces for common
+    # exceptions because stack traces are important for debugging
+    -XX:-OmitStackTraceInFastThrow
+
+    # flags to configure Netty
+    -Dio.netty.noUnsafe=true
+    -Dio.netty.noKeySetOptimization=true
+    -Dio.netty.recycler.maxCapacityPerThread=0
+
+    # log4j 2
+    -Dlog4j.shutdownHookEnabled=false
+    -Dlog4j2.disable.jmx=true
+
+    # temp directory
+    -Djava.io.tmpdir=${ES_TMPDIR}
+
+    ## heap dumps
+
+    # generate a heap dump when an allocation cannot be satisfied
+    -XX:+HeapDumpOnOutOfMemoryError
+
+    # specify an alternative path for heap dumps; ensure the directory exists and
+    # has sufficient space
+    -XX:HeapDumpPath=data
+
+    # specify an alternative path for JVM fatal error logs
+    -XX:ErrorFile=logs/hs_err_pid%p.log
+
+    ## JDK 8 GC logging
+    8:-XX:+PrintGCDetails
+    8:-XX:+PrintGCTimeStamps
+    8:-XX:+PrintGCDateStamps
+    8:-XX:+PrintClassHistogram
+    8:-XX:+PrintTenuringDistribution
+    8:-XX:+PrintGCApplicationStoppedTime
+    8:-Xloggc:logs/gc.log
+    8:-XX:+UseGCLogFileRotation
+    8:-XX:NumberOfGCLogFiles=32
+    8:-XX:GCLogFileSize=64m
+
+    # JDK 9+ GC logging
+    9-:-Xlog:gc*,gc+age=trace,safepoint:logs/gc.log:utctime,pid,tags:filecount=32,filesize=64m
+
+  log4j2.properties: |
+    status = error
+
+    # log action execution errors for easier debugging
+    logger.action.name = org.elasticsearch.action
+    logger.action.level = debug
+
+    appender.console.type = Console
+    appender.console.name = console
+    appender.console.layout.type = PatternLayout
+    appender.console.layout.pattern = [%d{ISO8601}][%-5p][%-25c{1.}] [%node_name]%marker %m%n
+
+    appender.rolling.type = RollingFile
+    appender.rolling.name = rolling
+    appender.rolling.fileName = ${sys:es.logs.base_path}${sys:file.separator}${sys:es.logs.cluster_name}.log
+    appender.rolling.layout.type = PatternLayout
+    appender.rolling.layout.pattern = [%d{ISO8601}][%-5p][%-25c{1.}] [%node_name]%marker %m%n
+    appender.rolling.filePattern = ${sys:es.logs.base_path}${sys:file.separator}${sys:es.logs.cluster_name}-%d{yyyy-MM-dd}-%i.log.gz
+    appender.rolling.policies.type = Policies
+    appender.rolling.policies.time.type = TimeBasedTriggeringPolicy
+    appender.rolling.policies.time.interval = 1
+    appender.rolling.policies.time.modulate = true
+    appender.rolling.policies.size.type = SizeBasedTriggeringPolicy
+    appender.rolling.policies.size.size = 128MB
+    appender.rolling.strategy.type = DefaultRolloverStrategy
+    appender.rolling.strategy.fileIndex = nomax
+    appender.rolling.strategy.action.type = Delete
+    appender.rolling.strategy.action.basepath = ${sys:es.logs.base_path}
+    appender.rolling.strategy.action.condition.type = IfFileName
+    appender.rolling.strategy.action.condition.glob = ${sys:es.logs.cluster_name}-*
+    appender.rolling.strategy.action.condition.nested_condition.type = IfAccumulatedFileSize
+    appender.rolling.strategy.action.condition.nested_condition.exceeds = 2GB
+
+    rootLogger.level = info
+    rootLogger.appenderRef.console.ref = console
+    rootLogger.appenderRef.rolling.ref = rolling
+
+    # deprecation logging, turn to DEBUG to see them
+    logger.deprecation.name = org.elasticsearch.deprecation
+    logger.deprecation.level = warn
+    logger.deprecation.appenderRef.deprecation_rolling.ref = deprecation_rolling
+    logger.deprecation.additivity = false
+
+    appender.deprecation_rolling.type = RollingFile
+    appender.deprecation_rolling.name = deprecation_rolling
+    appender.deprecation_rolling.fileName = ${sys:es.logs.base_path}${sys:file.separator}${sys:es.logs.cluster_name}_deprecation.log
+    appender.deprecation_rolling.layout.type = PatternLayout
+    appender.deprecation_rolling.layout.pattern = [%d{ISO8601}][%-5p][%-25c{1.}] [%node_name]%marker %m%n
+    appender.deprecation_rolling.filePattern = ${sys:es.logs.base_path}${sys:file.separator}${sys:es.logs.cluster_name}_deprecation-%d{yyyy-MM-dd}-%i.log.gz
+    appender.deprecation_rolling.policies.type = Policies
+    appender.deprecation_rolling.policies.time.type = TimeBasedTriggeringPolicy
+    appender.deprecation_rolling.policies.time.interval = 1
+    appender.deprecation_rolling.policies.time.modulate = true
+    appender.deprecation_rolling.policies.size.type = SizeBasedTriggeringPolicy
+    appender.deprecation_rolling.policies.size.size = 1GB
+    appender.deprecation_rolling.strategy.type = DefaultRolloverStrategy
+    appender.deprecation_rolling.strategy.fileIndex = nomax
+    appender.deprecation_rolling.strategy.action.type = Delete
+    appender.deprecation_rolling.strategy.action.basepath = ${sys:es.logs.base_path}
+    appender.deprecation_rolling.strategy.action.condition.type = IfFileName
+    appender.deprecation_rolling.strategy.action.condition.glob = ${sys:es.logs.cluster_name}_deprecation-*
+    appender.deprecation_rolling.strategy.action.condition.nested_condition.type = IfAccumulatedFileSize
+    appender.deprecation_rolling.strategy.action.condition.nested_condition.exceeds = 2GB
+
+    # index slowlog
+    logger.index_search_slowlog_rolling.name = index.search.slowlog
+    logger.index_search_slowlog_rolling.level = trace
+    logger.index_search_slowlog_rolling.appenderRef.index_search_slowlog_rolling.ref = index_search_slowlog_rolling
+    logger.index_search_slowlog_rolling.additivity = false
+
+    appender.index_search_slowlog_rolling.type = RollingFile
+    appender.index_search_slowlog_rolling.name = index_search_slowlog_rolling
+    appender.index_search_slowlog_rolling.fileName = ${sys:es.logs.base_path}${sys:file.separator}${sys:es.logs.cluster_name}_index_search_slowlog.log
+    appender.index_search_slowlog_rolling.layout.type = PatternLayout
+    appender.index_search_slowlog_rolling.layout.pattern = [%d{ISO8601}][%-5p][%-25c] [%node_name]%marker %m%n
+    appender.index_search_slowlog_rolling.filePattern = ${sys:es.logs.base_path}${sys:file.separator}${sys:es.logs.cluster_name}_index_search_slowlog-%d{yyyy-MM-dd}-%i.log.gz
+    appender.index_search_slowlog_rolling.policies.type = Policies
+    appender.index_search_slowlog_rolling.policies.time.type = TimeBasedTriggeringPolicy
+    appender.index_search_slowlog_rolling.policies.time.interval = 1
+    appender.index_search_slowlog_rolling.policies.time.modulate = true
+    appender.index_search_slowlog_rolling.policies.size.type = SizeBasedTriggeringPolicy
+    appender.index_search_slowlog_rolling.policies.size.size = 1GB
+    appender.index_search_slowlog_rolling.strategy.type = DefaultRolloverStrategy
+    appender.index_search_slowlog_rolling.strategy.fileIndex = nomax
+    appender.index_search_slowlog_rolling.strategy.action.type = Delete
+    appender.index_search_slowlog_rolling.strategy.action.basepath = ${sys:es.logs.base_path}
+    appender.index_search_slowlog_rolling.strategy.action.condition.type = IfFileName
+    appender.index_search_slowlog_rolling.strategy.action.condition.glob = ${sys:es.logs.cluster_name}_index_search_slowlog-*
+    appender.index_search_slowlog_rolling.strategy.action.condition.nested_condition.type = IfAccumulatedFileSize
+    appender.index_search_slowlog_rolling.strategy.action.condition.nested_condition.exceeds = 2GB
+
+    logger.index_indexing_slowlog.name = index.indexing.slowlog.index
+    logger.index_indexing_slowlog.level = trace
+    logger.index_indexing_slowlog.appenderRef.index_indexing_slowlog_rolling.ref = index_indexing_slowlog_rolling
+    logger.index_indexing_slowlog.additivity = false
+
+    appender.index_indexing_slowlog_rolling.type = RollingFile
+    appender.index_indexing_slowlog_rolling.name = index_indexing_slowlog_rolling
+    appender.index_indexing_slowlog_rolling.fileName = ${sys:es.logs.base_path}${sys:file.separator}${sys:es.logs.cluster_name}_index_indexing_slowlog.log
+    appender.index_indexing_slowlog_rolling.layout.type = PatternLayout
+    appender.index_indexing_slowlog_rolling.layout.pattern = [%d{ISO8601}][%-5p][%-25c] [%node_name]%marker %m%n
+    appender.index_indexing_slowlog_rolling.filePattern = ${sys:es.logs.base_path}${sys:file.separator}${sys:es.logs.cluster_name}_index_indexing_slowlog-%d{yyyy-MM-dd}-%i.log.gz
+    appender.index_indexing_slowlog_rolling.policies.type = Policies
+    appender.index_indexing_slowlog_rolling.policies.time.type = TimeBasedTriggeringPolicy
+    appender.index_indexing_slowlog_rolling.policies.time.interval = 1
+    appender.index_indexing_slowlog_rolling.policies.time.modulate = true
+    appender.index_indexing_slowlog_rolling.policies.size.type = SizeBasedTriggeringPolicy
+    appender.index_indexing_slowlog_rolling.policies.size.size = 1GB
+    appender.index_indexing_slowlog_rolling.strategy.type = DefaultRolloverStrategy
+    appender.index_indexing_slowlog_rolling.strategy.fileIndex = nomax
+    appender.index_indexing_slowlog_rolling.strategy.action.type = Delete
+    appender.index_indexing_slowlog_rolling.strategy.action.basepath = ${sys:es.logs.base_path}
+    appender.index_indexing_slowlog_rolling.strategy.action.condition.type = IfFileName
+    appender.index_indexing_slowlog_rolling.strategy.action.condition.glob = ${sys:es.logs.cluster_name}_index_indexing_slowlog-*
+    appender.index_indexing_slowlog_rolling.strategy.action.condition.nested_condition.type = IfAccumulatedFileSize
+    appender.index_indexing_slowlog_rolling.strategy.action.condition.nested_condition.exceeds = 2GB
+
+  elasticsearch.yml: |
+    cluster.name: {{ .Values.clusterName }}
+    node.name: ${HOSTNAME}
+    
+    {{- if .Values.esmaster.password }}
+    # Enable security features
+    xpack.security.enabled: true
+    xpack.security.transport.ssl.enabled: true
+    xpack.security.transport.ssl.verification_mode: certificate
+    xpack.security.transport.ssl.client_authentication: required
+    xpack.security.transport.ssl.keystore.path: elastic-certificates.p12
+    xpack.security.transport.ssl.truststore.path: elastic-certificates.p12
+    {{- else }}
+    xpack.security.enabled: false
+    {{- end }}
+    
+    # Network settings
+    network.host: 0.0.0.0
+    
+    # Discovery settings (these will be overridden by environment variables for dynamic generation)
+    discovery.seed_hosts: ["{{ .Release.Name }}-master", "{{ .Release.Name }}-data"]
+    cluster.initial_master_nodes: ["{{ .Release.Name }}-master-0"]
+    
+    # Path settings
+    path.data: /usr/share/elasticsearch/data
+    path.logs: /usr/share/elasticsearch/logs
+    
+    {{- if .Values.esmaster.backup.enabled }}
+    path.repo: ["/backup"]
+    {{- end }}
+    
+    # Memory settings
+    {{- if .Values.bootstrapMemoryLock }}
+    bootstrap.memory_lock: true
+    {{- else }}
+    bootstrap.memory_lock: false
+    {{- end }}
+    
+    # Cluster settings
+    cluster.routing.allocation.disk.watermark.low: 85%
+    cluster.routing.allocation.disk.watermark.high: 90%
+    cluster.routing.allocation.disk.watermark.flood_stage: 95%
+{{- end }}

@@ -1,0 +1,220 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Release.Name }}-master
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: master
+spec:
+  replicas: {{ .Values.esmaster.replicaCount }}
+  serviceName: {{ .Release.Name }}-master
+
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: master
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: master
+    spec:
+      terminationGracePeriodSeconds: 120
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      
+      {{- if .Values.esmaster.password }}
+      initContainers:
+      - name: config-init
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        command: ['sh', '-c']
+        args:
+          - |
+            echo "Initializing Elasticsearch configuration..."
+            # Copy config files from ConfigMap to shared volume
+            cp /tmp/config/* /usr/share/elasticsearch/config/
+            
+            # Generate certificates if they don't exist (only on master-0)
+            if [ ! -f /usr/share/elasticsearch/config/elastic-certificates.p12 ]; then
+              echo "Generating SSL certificates..."
+              cd /usr/share/elasticsearch
+              echo "Generating PKCS12 certificates..."
+              
+              # Build DNS list for all master and data nodes
+              DNS_LIST="{{ .Release.Name }}-master,{{ .Release.Name }}-data,localhost"
+              {{- range $i := until (int .Values.esmaster.replicaCount) }}
+              DNS_LIST="$DNS_LIST,{{ $.Release.Name }}-master-{{ $i }}"
+              {{- end }}
+              {{- range $i := until (int .Values.esworker.replicaCount) }}
+              DNS_LIST="$DNS_LIST,{{ $.Release.Name }}-data-{{ $i }}"
+              {{- end }}
+              
+              bin/elasticsearch-certutil cert --silent --out config/elastic-certificates.p12 \
+                --dns "$DNS_LIST" \
+                --ip 127.0.0.1,::1 --pass "" || echo "Certificate generation failed, but continuing..."
+              echo "Certificates generated successfully with DNS names: $DNS_LIST"
+            else
+              echo "SSL certificates already exist, skipping generation"
+            fi
+            
+            # Set proper permissions
+            chown -R elasticsearch:elasticsearch /usr/share/elasticsearch/config/
+            echo "Configuration initialization completed"
+        volumeMounts:
+        - mountPath: /usr/share/elasticsearch/config
+          name: elasticconfig
+        - mountPath: /tmp/config
+          name: elasticsearch-config
+        securityContext:
+          runAsUser: 0
+      {{- end }}
+      
+      containers:
+      - name: {{ .Release.Name }}-master
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+
+        env:
+        - name: cluster.name
+          value: "{{ .Values.clusterName }}"
+        - name: node.name
+          value: "${HOSTNAME}"
+        - name: cluster.initial_master_nodes
+          value: "{{- range $i := until (int .Values.esmaster.replicaCount) }}{{ $.Release.Name }}-master-{{ $i }}{{ if lt $i (sub (int $.Values.esmaster.replicaCount) 1) }},{{ end }}{{- end }}"
+        - name: discovery.seed_hosts
+          value: "{{- $masterList := list -}}{{- range $i := until (int .Values.esmaster.replicaCount) -}}{{- $masterList = append $masterList (printf "%s-master-%d.%s-master.%s.svc.cluster.local" $.Release.Name $i $.Release.Name $.Release.Namespace) -}}{{- end -}}{{- $workerList := list -}}{{- range $i := until (int .Values.esworker.replicaCount) -}}{{- $workerList = append $workerList (printf "%s-data-%d.%s-data.%s.svc.cluster.local" $.Release.Name $i $.Release.Name $.Release.Namespace) -}}{{- end -}}{{- $allNodes := concat $masterList $workerList -}}{{ join "," $allNodes }}"
+        - name: bootstrap.memory_lock
+          value: "{{ .Values.bootstrapMemoryLock }}"
+        - name: ES_JAVA_OPTS
+          value: "-Xms{{ .Values.masterHeapSize }} -Xmx{{ .Values.masterHeapSize }}"
+        {{- if .Values.useMonitoring }}
+        - name: xpack.monitoring.collection.enabled
+          value: "true"
+        {{- end }}
+        - name: node.roles
+          {{- if and .Values.useMonitoring .Values.esmaster.enableDataRole }}
+          value: "master,data,ingest"
+          {{- else if and (not .Values.useMonitoring) .Values.esmaster.enableDataRole }}
+          value: "master,data"
+          {{- else if and .Values.useMonitoring (not .Values.esmaster.enableDataRole) }}
+          value: "master,ingest"
+          {{- else }}
+          value: "master"
+          {{- end }}
+        {{- if .Values.esmaster.password }}
+        - name: xpack.security.enabled
+          value: "true"
+        - name: xpack.security.transport.ssl.enabled
+          value: "true"
+        - name: xpack.security.transport.ssl.verification_mode
+          value: "certificate"
+        - name: xpack.security.transport.ssl.keystore.path
+          value: "elastic-certificates.p12"
+        - name: xpack.security.transport.ssl.truststore.path
+          value: "elastic-certificates.p12"
+        - name: elastic_password
+          value: "{{ .Values.esmaster.password }}"
+        - name: kibana_system_password
+          value: "{{ .Values.kibana.password }}"
+        {{- else }}
+        - name: xpack.security.enabled
+          value: "false"
+        - name: xpack.security.transport.ssl.enabled
+          value: "false"
+        {{- end }}
+        {{- if .Values.esmaster.backup.enabled }}
+        - name: path.repo
+          value: "/backup"
+        {{- end }}
+        - name: cluster.routing.allocation.disk.watermark.high
+          value: "95%"
+        - name: cluster.routing.allocation.disk.watermark.low
+          value: "93%"
+        - name: TZ
+          value: "{{ .Values.timezone }}"
+
+        ports:
+        - containerPort: 9200
+        - containerPort: 9300
+
+        startupProbe:
+          tcpSocket:
+            port: 9200
+          initialDelaySeconds: {{ .Values.esmaster.healthChecks.startup.initialDelaySeconds }}
+          periodSeconds: {{ .Values.esmaster.healthChecks.startup.periodSeconds }}
+          timeoutSeconds: {{ .Values.esmaster.healthChecks.startup.timeoutSeconds }}
+          failureThreshold: {{ .Values.esmaster.healthChecks.startup.failureThreshold }}
+          successThreshold: {{ .Values.esmaster.healthChecks.startup.successThreshold }}
+
+        livenessProbe:
+          tcpSocket:
+            port: 9200
+          initialDelaySeconds: {{ .Values.esmaster.healthChecks.liveness.initialDelaySeconds }}
+          periodSeconds: {{ .Values.esmaster.healthChecks.liveness.periodSeconds }}
+          timeoutSeconds: {{ .Values.esmaster.healthChecks.liveness.timeoutSeconds }}
+          failureThreshold: {{ .Values.esmaster.healthChecks.liveness.failureThreshold }}
+          successThreshold: {{ .Values.esmaster.healthChecks.liveness.successThreshold }}
+
+        resources:
+          requests:
+            memory: {{ .Values.masterMemReservation }}
+          limits:
+            memory: {{ .Values.masterMemLimit }}
+            # Equivalent to ulimits nofile 65536
+            ephemeral-storage: 1Gi
+
+        securityContext:
+          {{- if .Values.bootstrapMemoryLock }}
+          capabilities:
+            add:
+            - IPC_LOCK
+          {{- end }}
+
+        volumeMounts:
+        - mountPath: /usr/share/elasticsearch/data
+          name: esworkdata
+        {{- if .Values.esmaster.backup.enabled }}
+        - mountPath: /backup
+          name: esbackup
+        {{- end }}
+        {{- if .Values.esmaster.password }}
+        - mountPath: /usr/share/elasticsearch/config
+          name: elasticconfig
+        {{- end }}
+
+      restartPolicy: Always
+
+      volumes:
+      {{- if not .Values.esmaster.persistence.enabled }}
+      - name: esworkdata
+        emptyDir:
+          sizeLimit: {{ .Values.esmaster.persistence.size }}
+      {{- end }}
+      {{- if .Values.esmaster.backup.enabled }}
+      - name: esbackup
+        persistentVolumeClaim:
+          claimName: {{ .Values.backupVolumeName }}
+      {{- end }}
+      {{- if .Values.esmaster.password }}
+      - name: elasticconfig
+        persistentVolumeClaim:
+          claimName: elasticconfig
+      - name: elasticsearch-config
+        configMap:
+          name: {{ .Release.Name }}-elasticsearch-config
+      {{- end }}
+  {{- if .Values.esmaster.persistence.enabled }}
+  volumeClaimTemplates:
+  - metadata:
+      name: esworkdata
+    spec:
+      storageClassName: {{ .Values.esmaster.persistence.storageClassName }}
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: {{ .Values.esmaster.persistence.size }}
+  {{- end }}

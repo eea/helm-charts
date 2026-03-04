@@ -1,0 +1,109 @@
+{{-  if .Values.addKibana -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-kibana
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: kibana
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: kibana
+
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: kibana
+    spec:
+      terminationGracePeriodSeconds: 60
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
+      containers:
+      - name: kibana
+        image: {{ .Values.kibana.image }}
+        env:
+        - name: ELASTICSEARCH_URL
+          value: http://{{ .Release.Name }}-data:9200
+        {{- if .Values.esmaster.password }}
+        - name: ELASTICSEARCH_PASSWORD
+          value: "{{ .Values.kibana.password }}"
+        {{- if .Values.kibana.allowAnonRo }}
+        - name: ALLOW_ANON_RO
+          value: "true"
+        - name: ANON_PASSWORD
+          value: "{{ .Values.kibana.anonPassword }}"
+        - name: READ_ONLY_ROLE_JSON
+          value: "{{ .Values.kibana.readOnlyRoleJson }}"
+        - name: elastic_password
+          value: "{{ .Values.esmaster.password }}"
+        {{- end }}
+        {{- end }}
+        - name: NODE_OPTIONS
+          value: "--max-old-space-size={{ .Values.kibana.spaceSize }}"
+        - name: ELASTICSEARCH_REQUESTTIMEOUT
+          value: "{{ .Values.kibana.requestTimeout }}"
+        - name: TELEMETRY_ENABLED
+          value: "false"
+        - name: KIBANA_AUTOCOMPLETETIMEOUT
+          value: "{{ .Values.kibana.autocompleteTimeout }}"
+        - name: KIBANA_AUTOCOMPLETETERMINATEAFTER
+          value: "{{ .Values.kibana.autocompleteTerminateAfter }}"
+        - name: SERVER_PUBLICBASEURL
+          value: "{{- if $.Values.kibana.ingress.tls -}}https://{{ $.Values.kibana.ingress.hostname }}{{- else -}}http://{{ $.Values.kibana.ingress.hostname }}{{- end -}}"
+        - name: TZ
+          value: "{{ .Values.timezone }}"
+
+        ports:
+         - containerPort: 5601
+
+        # Startup probe - check if Kibana is starting up
+        # Kibana takes time to initialize, especially with security enabled
+        startupProbe:
+          httpGet:
+            path: /login
+            port: 5601
+          initialDelaySeconds: {{ .Values.kibana.healthChecks.startup.initialDelaySeconds }}
+          periodSeconds: {{ .Values.kibana.healthChecks.startup.periodSeconds }}
+          timeoutSeconds: {{ .Values.kibana.healthChecks.startup.timeoutSeconds }}
+          failureThreshold: {{ .Values.kibana.healthChecks.startup.failureThreshold }}
+          successThreshold: {{ .Values.kibana.healthChecks.startup.successThreshold }}
+
+        # Readiness probe - check if Kibana is ready to serve requests
+        readinessProbe:
+          httpGet:
+            path: /login
+            port: 5601
+          initialDelaySeconds: {{ .Values.kibana.healthChecks.readiness.initialDelaySeconds }}
+          periodSeconds: {{ .Values.kibana.healthChecks.readiness.periodSeconds }}
+          timeoutSeconds: {{ .Values.kibana.healthChecks.readiness.timeoutSeconds }}
+          failureThreshold: {{ .Values.kibana.healthChecks.readiness.failureThreshold }}
+          successThreshold: {{ .Values.kibana.healthChecks.readiness.successThreshold }}
+
+        # Liveness probe - check if Kibana is responsive
+        # More permissive than readiness to avoid unnecessary restarts
+        livenessProbe:
+          httpGet:
+            path: /login
+            port: 5601
+          initialDelaySeconds: {{ .Values.kibana.healthChecks.liveness.initialDelaySeconds }}
+          periodSeconds: {{ .Values.kibana.healthChecks.liveness.periodSeconds }}
+          timeoutSeconds: {{ .Values.kibana.healthChecks.liveness.timeoutSeconds }}
+          failureThreshold: {{ .Values.kibana.healthChecks.liveness.failureThreshold }}
+          successThreshold: {{ .Values.kibana.healthChecks.liveness.successThreshold }}
+
+        resources:
+          requests:
+            memory: {{ .Values.kibana.memReservation }}
+          limits:
+            memory: {{ .Values.kibana.memLimit }}
+
+{{- end }}

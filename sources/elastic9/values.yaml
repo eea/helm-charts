@@ -1,0 +1,328 @@
+image:
+  repository: eeacms/elastic
+  pullPolicy: IfNotPresent
+  tag: "9"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+securityContext:
+  {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+# Cluster name
+clusterName: "es-cluster"
+
+# Pod Disruption Budget settings for production safety
+podDisruptionBudget:
+  # Enable PodDisruptionBudgets to prevent too many pods being unavailable during maintenance
+  enabled: true
+  # For master nodes: ensure at least 1 master is always available (if >1 replica)
+  # For data nodes: ensure at least N-1 data nodes are available (if >1 replica)
+
+# Enable ElasticSearch monitoring
+useMonitoring: false
+# Update host sysctl
+updateSysctl: false
+# Enable bootstrap memory lock (set to false for most Kubernetes environments)
+bootstrapMemoryLock: false
+# Add Kibana container
+addKibana: true
+# Enable ES port exposure
+esPort: false
+# Enable Cerebro port exposure
+cerebroPort: false
+# Enable Kibana port exposure
+kibanaPort: false
+
+# Heap size for master nodes
+masterHeapSize: "512m"
+# Memory reservation for master nodes
+masterMemReservation: "1536Mi"
+# Memory limit for master nodes
+masterMemLimit: "1536Mi"
+# Heap size for data nodes
+dataHeapSize: "512m"
+# Memory reservation for data nodes
+dataMemReservation: "1536Mi"
+# Memory limit for data nodes
+dataMemLimit: "1536Mi"
+
+sysctlVmMaxMapCount: 262144
+timezone: "Europe/Copenhagen"
+
+storageClassName: "nfs-client"
+
+# Host labels for scheduling
+hostLabels: ""
+
+cerebro:
+  enabled: true
+  user: "admin"
+  password: "secret"
+  # Used in cookies, generate it with `pwgen  -y 64  | head -n 1` or `openssl rand -base64 32`
+  secret: ""
+  # Memory limit for cerebro container
+  memLimit: "512Mi"
+  # Memory reservation for cerebro container
+  memReservation: "512Mi"
+  # Use ClusterIP if you don't want the Cerebro web interface exposed on the server
+  service:
+    type: ClusterIP
+    port: 9000
+  resources:
+    requests:
+      memory: 512Mi
+    limits:
+      memory: 512Mi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  podAnnotations: {}
+  # Health check configuration for Cerebro
+  healthChecks:
+    # Startup probe configuration for Cerebro
+    startup:
+      initialDelaySeconds: 45
+      periodSeconds: 15
+      timeoutSeconds: 10
+      failureThreshold: 40 # Allow up to 10 minutes for startup
+      successThreshold: 1
+    # Readiness probe configuration for Cerebro
+    readiness:
+      initialDelaySeconds: 30
+      periodSeconds: 45
+      timeoutSeconds: 10
+      failureThreshold: 5
+      successThreshold: 1
+    # Liveness probe configuration for Cerebro
+    liveness:
+      initialDelaySeconds: 90
+      periodSeconds: 90
+      timeoutSeconds: 10
+      failureThreshold: 5
+      successThreshold: 1
+
+esmaster:
+  replicaCount: 2
+  # Enable data role on master nodes (needed if you have only 1 master node)
+  enableDataRole: false
+  # Note: minimumMasterNodes is deprecated in favor of dynamic discovery.seed_hosts configuration
+  # The discovery.seed_hosts is now automatically generated based on replicaCount
+  minimumMasterNodes: 1
+  resources:
+    requests:
+      memory: 1536Mi
+    limits:
+      memory: 1536Mi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  podAnnotations: {}
+  podSecurityContext: {}
+  persistence:
+    enabled: true
+    size: 1Gi
+    storageClassName: "nfs-client"
+  # Elasticsearch superuser password (elastic user) - empty for no authentication, minimum 6 characters
+  password: ""
+  backup:
+    enabled: false
+  # Health check configuration for Elasticsearch master nodes
+  healthChecks:
+    # Startup probe configuration
+    startup:
+      # Initial delay before starting startup probes
+      initialDelaySeconds: 60
+      # How often to perform the probe
+      periodSeconds: 15
+      # Timeout for each probe
+      timeoutSeconds: 10
+      # Number of failures before marking container as failed to start (allows 15+ minutes)
+      failureThreshold: 60
+      # Number of successes before marking container as started
+      successThreshold: 1
+    # Readiness probe configuration
+    readiness:
+      # Initial delay before starting readiness probes
+      initialDelaySeconds: 120
+      # How often to perform the probe
+      periodSeconds: 45
+      # Timeout for each probe
+      timeoutSeconds: 15
+      # Number of failures before marking container as not ready (allows 3+ minutes)
+      failureThreshold: 5
+      # Number of successes before marking container as ready
+      successThreshold: 1
+    # Liveness probe configuration
+    liveness:
+      # Initial delay before starting liveness probes
+      initialDelaySeconds: 300
+      # How often to perform the probe
+      periodSeconds: 90
+      # Timeout for each probe
+      timeoutSeconds: 15
+      # Number of failures before restarting container (allows 15+ minutes red state)
+      failureThreshold: 10
+      # Number of successes before marking container as alive
+      successThreshold: 1
+
+esworker:
+  replicaCount: 3 # Number of data nodes in the cluster
+  # This represents es-data from docker-compose
+  name: "data"
+  resources:
+    requests:
+      memory: 1536Mi
+    limits:
+      memory: 1536Mi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  podAnnotations: {}
+  podSecurityContext: {}
+  persistence:
+    enabled: true
+    size: 1Gi
+    storageClassName: "nfs-client"
+  # Health check configuration for Elasticsearch data nodes (same as master)
+  healthChecks:
+    # Startup probe configuration
+    startup:
+      # Initial delay before starting startup probes
+      initialDelaySeconds: 60
+      # How often to perform the probe
+      periodSeconds: 15
+      # Timeout for each probe
+      timeoutSeconds: 10
+      # Number of failures before marking container as failed to start (allows 15+ minutes)
+      failureThreshold: 60
+      # Number of successes before marking container as started
+      successThreshold: 1
+    # Readiness probe configuration
+    readiness:
+      # Initial delay before starting readiness probes
+      initialDelaySeconds: 120
+      # How often to perform the probe
+      periodSeconds: 45
+      # Timeout for each probe
+      timeoutSeconds: 15
+      # Number of failures before marking container as not ready (allows 3+ minutes)
+      failureThreshold: 5
+      # Number of successes before marking container as ready
+      successThreshold: 1
+    # Liveness probe configuration
+    liveness:
+      # Initial delay before starting liveness probes
+      initialDelaySeconds: 300
+      # How often to perform the probe
+      periodSeconds: 90
+      # Timeout for each probe
+      timeoutSeconds: 15
+      # Number of failures before restarting container (allows 15+ minutes red state)
+      failureThreshold: 10
+      # Number of successes before marking container as alive
+      successThreshold: 1
+  # Service configuration for Elasticsearch data nodes
+  service:
+    type: ClusterIP
+    port: 9200
+  # Ingress configuration for Elasticsearch data nodes
+  ingress:
+    enabled: true
+    className: ""
+    annotations: {}
+    hostname: elasticsearch.example.com
+    tls: []
+    # Example TLS configuration:
+    #  - secretName: elasticsearch-tls
+    #    hosts:
+    #      - elasticsearch.example.com
+
+kibana:
+  enabled: true
+  image: "eeacms/elk-kibana:9"
+  # kibana_system user password - minimum 6 characters, needs superuser password to not be empty
+  password: ""
+  # Kibana URL - public facing URL, without / at the end. Leave empty to auto-generate from ingress configuration.
+  url: ""
+  # Allow anonymous readonly access to kibana
+  allowAnonRo: true
+  # Anonymous user password (used in background) - minimum 6 characters
+  anonPassword: "RandomPassword1"
+  # Kibana guest user permission configuration
+  readOnlyRoleJson: ""
+  # Kibana autocomplete timeout
+  autocompleteTimeout: ""
+  # Kibana autocomplete terminate after
+  autocompleteTerminateAfter: ""
+  # Kibana elasticsearch timeout
+  requestTimeout: "300000"
+  # Heap size kibana - used for NodeJs --max-old-space-size setting
+  spaceSize: "1024"
+  # Memory reservation for kibana container
+  memReservation: "1024Mi"
+  # Memory limit for kibana container
+  memLimit: "2048Mi"
+  # Use ClusterIP if you don't want the Kibana web interface exposed on the server
+  service:
+    type: ClusterIP
+    port: 5601
+  ingress:
+    enabled: true
+    className: ""
+    annotations: {}
+    hostname: kibana.example.com
+    tls: []
+    # Example TLS configuration:
+    #  - secretName: kibana-tls
+    #    hosts:
+    #      - kibana.example.com
+  resources:
+    requests:
+      memory: 1Gi
+    limits:
+      memory: 2Gi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  podAnnotations: {}
+  podSecurityContext: {}
+  # Health check configuration for Kibana
+  healthChecks:
+    # Startup probe configuration for Kibana
+    startup:
+      initialDelaySeconds: 90
+      periodSeconds: 15
+      timeoutSeconds: 10
+      failureThreshold: 80 # Allow up to 20 minutes for startup
+      successThreshold: 1
+    # Readiness probe configuration for Kibana
+    readiness:
+      initialDelaySeconds: 60
+      periodSeconds: 45
+      timeoutSeconds: 15
+      failureThreshold: 5
+      successThreshold: 1
+    # Liveness probe configuration for Kibana
+    liveness:
+      initialDelaySeconds: 180
+      periodSeconds: 90
+      timeoutSeconds: 15
+      failureThreshold: 5
+      successThreshold: 1
