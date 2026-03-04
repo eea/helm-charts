@@ -30,6 +30,13 @@ questions:
     type: "string"
     group: "Volto configuration"
 
+  - variable: "traefik.enabled"
+    label: "Is traefik enabled?"
+    default: false
+    type: "boolean"
+    required: true
+    group: "General"
+
   - variable: "ingress.tls"
     label: "Enable https"
     default: true

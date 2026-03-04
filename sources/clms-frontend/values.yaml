@@ -158,6 +158,10 @@ cdseProxy:
   # This can be configured in Rancher UI to keep sensitive service IDs out of the repo
   serverSnippet: ""
 
+traefik:
+  enabled: false
+  serviceName: clms-traefik
+
 apache:
   enabled: true
   serviceType: ClusterIP

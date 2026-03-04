@@ -24,7 +24,11 @@ spec:
         pathType: Prefix
         backend:
           service:
-            {{- if and .Values.apache .Values.apache.enabled }}
+            {{- if and .Values.traefik .Values.traefik.enabled }}
+            name: {{ .Values.traefik.serviceName }}
+            port:
+              number: 80
+            {{- else if and .Values.apache .Values.apache.enabled }}
             name: {{ .Values.apache.serviceName }}
             port:
               number: 80
