@@ -186,6 +186,7 @@ inferenceCapability:
     targetPort: 9000
   name: inference-model-server
   replicaCount: 1
+  runtimeClassName: ""
   # HuggingFace cache directory location
   huggingfaceCacheDir: "/app/.cache/huggingface"
   labels:
@@ -241,6 +242,7 @@ indexCapability:
     targetPort: 9000
   replicaCount: 1
   name: indexing-model-server
+  runtimeClassName: ""
   deploymentLabels:
     app: indexing-model-server
   podLabels:

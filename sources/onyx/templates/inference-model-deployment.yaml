@@ -23,6 +23,9 @@ spec:
         {{ .key }}: {{ .value }}
         {{- end }}
     spec:
+      {{- if .Values.inferenceCapability.runtimeClassName }}
+      runtimeClassName: {{ .Values.inferenceCapability.runtimeClassName }}
+      {{- end }}
       {{- if .Values.inferenceCapability.podSecurityContext }}
       securityContext:
         {{- toYaml .Values.inferenceCapability.podSecurityContext | nindent 8 }}
