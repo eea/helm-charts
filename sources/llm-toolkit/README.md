@@ -146,6 +146,8 @@ postgresql:
   deploy: true  # Set to false to use external PostgreSQL
   port: 5432
   host: ""  # External host (when deploy is false)
+  maxConnections: 200  # Raises PostgreSQL max_connections for the bundled database
+  args: "?connection_limit=20&pool_timeout=20"  # Optional client-side pool tuning
   auth:
     username: postgres
     password: "secure-password"
@@ -203,6 +205,8 @@ postgresql:
 clickhouse:
   resourcesPreset: 2xlarge  # Adjust based on expected load
 ```
+
+If you are seeing PostgreSQL saturation, set both the server-side limit and the application-side pool size deliberately. `connection refused` can also indicate the PostgreSQL pod is restarting or not yet ready, so check pod health alongside any connection-limit changes.
 
 ## Persistence
 

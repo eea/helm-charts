@@ -557,6 +557,14 @@ questions:
     group: "PostgreSQL"
     show_if: "postgresql.deploy=false"
 
+  - variable: "postgresql.maxConnections"
+    default: ""
+    description: "Override PostgreSQL max_connections for the bundled database"
+    type: "int"
+    label: "PostgreSQL Max Connections"
+    group: "PostgreSQL"
+    show_if: "postgresql.deploy=true"
+
   - variable: "postgresql.auth.username"
     default: "postgres"
     description: "PostgreSQL username"

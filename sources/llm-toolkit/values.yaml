@@ -277,6 +277,8 @@ langfuse:
 postgresql:
   # -- Enable PostgreSQL deployment (via Bitnami Helm Chart). If you want to use an external Postgres server (or a managed one), set this to false
   deploy: true
+  # -- Override PostgreSQL max_connections for the bundled Bitnami PostgreSQL chart. Leave empty to keep the upstream default.
+  maxConnections: ""
 
   image:
     repository: bitnamilegacy/postgresql
@@ -317,6 +319,10 @@ postgresql:
   # Subchart specific settings
   architecture: standalone
   primary:
+    extendedConfiguration: |
+      {{- if .Values.maxConnections }}
+      max_connections = {{ .Values.maxConnections }}
+      {{- end }}
     persistence:
       size: 11Gi
     resources:
@@ -584,7 +590,7 @@ litellm:
     # -- The pull policy to use for the LiteLLM pods
     pullPolicy: IfNotPresent
     # -- The image tag to use for the LiteLLM pods
-    tag: "v1.79.0-stable"
+    tag: "v1.81.12-stable.2"
 
   llmGuardPlugin:
     enabled: false
