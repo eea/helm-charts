@@ -32,6 +32,7 @@ spec:
             - "--log.level=INFO"
             - "--metrics.prometheus=true"
             - "--metrics.prometheus.entrypoint=metrics"
+            - "--metrics.prometheus.addRoutersLabels=true"
           ports:
             - name: web
               containerPort: {{ .Values.traefik.service.port }}
