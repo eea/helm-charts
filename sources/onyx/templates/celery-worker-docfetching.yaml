@@ -68,7 +68,8 @@ spec:
           image: "{{ $backendRepo }}:{{ $backendTag }}"
           imagePullPolicy: {{ .Values.global.pullPolicy }}
           command:
-            [
+            [ 
+              "/usr/bin/tini", "--",
               "celery",
               "-A",
               "onyx.background.celery.versioned_apps.docfetching",
