@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 1.28.3 - 05 March 2026
+- fix [Dobricean Ioan Dorian - [`fa9f280d`](https://github.com/eea/helm-charts/commit/fa9f280d91a96f46983ac937d82f3b77fed0313a)]
+
 ### Version 1.28.1 - 05 March 2026
 - devel image [Dobricean Ioan Dorian - [`a8b9795f`](https://github.com/eea/helm-charts/commit/a8b9795ffaf202d58e323211cac6b0fdeeb0c343)]
 
