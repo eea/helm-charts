@@ -36593,17 +36593,17 @@ entries:
       category: Productivity
       images: |
         - name: webserver
-          image: eeacms/danswer:web-v2.5.3.eea.0.0.101-dev
+          image: eeacms/danswer:web-v2.5.3.eea.0.0.102-dev
         - name: background
-          image: eeacms/danswer:backend-v2.5.3.eea.0.0.101-dev
+          image: eeacms/danswer:backend-v2.5.3.eea.0.0.102-dev
         - name: model-server
-          image: eeacms/danswer:model_server-v2.5.3.eea.0.0.101-dev
+          image: eeacms/danswer:model_server-v2.5.3.eea.0.0.102-dev
         - name: vespa
           image: vespaengine/vespa:8.609.39
       licenses: MIT
     apiVersion: v2
-    appVersion: v2.5.3-eea.0.0.101-dev
-    created: "2026-03-04T20:06:28.502502+02:00"
+    appVersion: v2.5.3-eea.0.0.102-dev
+    created: "2026-03-05T11:43:23.80004+02:00"
     dependencies:
     - condition: vespa.enabled
       name: vespa
@@ -36618,7 +36618,7 @@ entries:
       repository: https://eea.github.io/helm-charts
       version: 3.2.0
     description: An Onyx derived Helm chart for GPTLab
-    digest: 8b9507c795b35450c18f1a01f566e7f2a1d6ef5f2385461624262d6072d888ed
+    digest: 09e61dd84e76ddc89b068abf780ac325f9b21239d434c05a3a8286428a1e974b
     home: https://www.onyx.app/
     icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/onyx/logo_onyx.png
     keywords:
@@ -45493,4 +45493,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2026-03-05T01:39:21.437826481Z"
+generated: "2026-03-05T11:43:23.796422+02:00"
