@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 1.28.0 - 05 March 2026
+- modify database connection [Dobricean Ioan Dorian - [`7dc66b7d`](https://github.com/eea/helm-charts/commit/7dc66b7dbb97042acca41e94cc5a308be78603f6)]
+
 ### Version 1.27.0 - 25 February 2026
 - Automated release of [eeacms/marine-backend:6.1.3-demo](https://github.com/eea/marine-backend/releases) [EEA Jenkins - [`5ff2fa67`](https://github.com/eea/helm-charts/commit/5ff2fa6754db4f16d10ef326b25a8d9f41bb4f66)]
 
