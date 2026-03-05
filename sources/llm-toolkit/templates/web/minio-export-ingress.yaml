@@ -1,15 +1,16 @@
-{{- if and .Values.minio.deploy .Values.minio.ingress.enabled -}}
+{{- $minioHosts := .Values.minio.ingress.hosts -}}
+{{- $langfuseHosts := .Values.langfuse.ingress.hosts -}}
+{{- $hasLangfuseHost := and $langfuseHosts (gt (len $langfuseHosts) 0) -}}
+{{- $hasMinioHost := and $minioHosts (gt (len $minioHosts) 0) -}}
+{{- if and .Values.minio.deploy .Values.langfuse.ingress.enabled (or $hasMinioHost $hasLangfuseHost) -}}
 {{- $className := .Values.minio.ingress.className | default .Values.langfuse.ingress.className -}}
 {{- $annotations := .Values.minio.ingress.annotations | default .Values.langfuse.ingress.annotations -}}
 {{- $tls := .Values.minio.ingress.tls | default .Values.langfuse.ingress.tls -}}
-{{- $hosts := .Values.minio.ingress.hosts -}}
+{{- $hosts := $minioHosts -}}
 {{- if not $hosts -}}
-  {{- if and .Values.langfuse.ingress.hosts (gt (len .Values.langfuse.ingress.hosts) 0) -}}
-    {{- $hosts = list (dict "host" ((index .Values.langfuse.ingress.hosts 0).host)) -}}
+  {{- if $hasLangfuseHost -}}
+    {{- $hosts = list (dict "host" ((index $langfuseHosts 0).host)) -}}
   {{- end -}}
-{{- end -}}
-{{- if not $hosts -}}
-  {{- fail "minio.ingress.enabled=true requires minio.ingress.hosts or langfuse.ingress.hosts" -}}
 {{- end -}}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
