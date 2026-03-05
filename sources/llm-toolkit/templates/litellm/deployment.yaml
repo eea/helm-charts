@@ -93,7 +93,7 @@ spec:
             - --port
             - "4000"
             - --num_workers
-            - "8"
+            - {{ .Values.litellm.numWorkers | default 6 | quote }}
             - --config
             - /app/litellm/llmguard-plugin/plugin/plugin/llmguard_config.yaml
           env:

@@ -268,8 +268,11 @@ helm delete llm-toolkit
 
 ## Releases
 
+### Version 0.3.0 - 05 March 2026
+- Updated LiteLLM to v1.81.14-stable; made `--num_workers` configurable (default 6); added MinIO export ingress for `/langfuse/exports/`.
+
 ### Version 0.2.5 - 07 November 2025
-- Updated appVersion to 3.127.0 and litellm to v1.79.0-stable [Olimpiu Rob - [`ba49371d`](https://github.com/eea/helm-charts/commit/ba49371d6456e07205a6381576da682d64a84a58)]
+- Updated appVersion to 3.127.0 and litellm to v1.79.0-stable [Olimpiu Rob - [`ba49371d`](https://github.com/eea/helm-charts/commit/ba49371d6456e07205a6381576da682d64a84a58)] 
 
 ### Version 0.2.4 - 28 October 2025
 - Updated litellm to v1.78.5-stable [Olimpiu Rob - [`00822b19`](https://github.com/eea/helm-charts/commit/00822b1976b7182bb252163415aaed1f163eaef4)]

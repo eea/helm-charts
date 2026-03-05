@@ -287,7 +287,7 @@ questions:
     group: "LiteLLM Deployment"
 
   - variable: "litellm.image.tag"
-    default: "v1.61.13-stable"
+    default: "v1.81.14-stable"
     description: "Image tag to use for LiteLLM"
     type: "string"
     label: "LiteLLM Image Tag"
@@ -363,6 +363,16 @@ questions:
     label: "LiteLLM Replicas"
     group: "LiteLLM Scaling"
     show_if: "litellm.enabled=true && litellm.autoscaling.enabled=false"
+
+  - variable: "litellm.numWorkers"
+    default: 6
+    description: "Number of worker processes for LiteLLM"
+    type: "int"
+    min: 1
+    max: 32
+    label: "LiteLLM Num Workers"
+    group: "LiteLLM Scaling"
+    show_if: "litellm.enabled=true"
 
   - variable: "litellm.autoscaling.enabled"
     default: false
@@ -721,6 +731,51 @@ questions:
     type: "boolean"
     label: "Deploy MinIO"
     group: "MinIO / S3"
+
+  - variable: "minio.ingress.enabled"
+    default: false
+    description: "Enable ingress for the MinIO API service"
+    type: "boolean"
+    label: "Enable MinIO Ingress"
+    group: "MinIO / S3"
+    show_if: "minio.deploy=true"
+
+  - variable: "minio.ingress.className"
+    default: "nginx"
+    description: "Ingress class name for MinIO"
+    type: "string"
+    label: "MinIO Ingress Class"
+    group: "MinIO / S3"
+    show_if: "minio.deploy=true && minio.ingress.enabled=true"
+
+  - variable: "minio.ingress.hosts.0.host"
+    default: "minio.example.com"
+    description: "Hostname for MinIO ingress"
+    type: "string"
+    label: "MinIO Hostname"
+    group: "MinIO / S3"
+    required: true
+    show_if: "minio.deploy=true && minio.ingress.enabled=true"
+
+  - variable: "minio.ingress.hosts.0.path"
+    default: "/"
+    description: "Path for MinIO ingress"
+    type: "string"
+    label: "MinIO Ingress Path"
+    group: "MinIO / S3"
+    show_if: "minio.deploy=true && minio.ingress.enabled=true"
+
+  - variable: "minio.ingress.hosts.0.pathType"
+    default: "Prefix"
+    description: "Path type for MinIO ingress"
+    type: "enum"
+    options:
+      - "ImplementationSpecific"
+      - "Prefix"
+      - "Exact"
+    label: "MinIO Path Type"
+    group: "MinIO / S3"
+    show_if: "minio.deploy=true && minio.ingress.enabled=true"
 
   - variable: "minio.bucket"
     default: "langfuse"
