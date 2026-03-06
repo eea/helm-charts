@@ -161,6 +161,13 @@ questions:
     required: true
     group: "Volto configuration"
 
+  - variable: "volto.environment.RAZZLE_PUBLIC_URL"
+    label: "RAZZLE_PUBLIC_URL"
+    description: "Public URL of the marine frontend"
+    type: "string"
+    required: false
+    group: "Volto configuration"
+
   - variable: "volto.environment.DANSWER_URL"
     label: "Danswer URL"
     description: "Danswer service URL"
