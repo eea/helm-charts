@@ -10,6 +10,9 @@ This chart deployes the Climate Advisory Board frontend app
 
 ## Releases
 
+### Version 1.38.2 - 06 March 2026
+- add razzle_public_url [Dobricean Ioan Dorian - [`a2c17184`](https://github.com/eea/helm-charts/commit/a2c17184635c8c315404e7cf7e3ea72d9e28f796)]
+
 ### Version 1.38.1 - 23 February 2026
 - Automated release of [eeacms/marine-frontend:3.21.1-beta.01](https://github.com/eea/marine-frontend/releases) [EEA Jenkins - [`7247af18`](https://github.com/eea/helm-charts/commit/7247af18674c2e6419a61aac6e24acd0bf7a8ff6)]
 
