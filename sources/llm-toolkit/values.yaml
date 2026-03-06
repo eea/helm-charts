@@ -440,19 +440,6 @@ minio:
   # -- Enable MinIO deployment (via Bitnami Helm Chart). If you want to use a custom BlobStorage, e.g. S3, set to false.
   deploy: true
 
-  ingress:
-    # -- Set to `true` to enable an ingress for the MinIO API service
-    enabled: false
-    # -- The class name for the ingress resource
-    className: ""
-    # -- Annotations for the ingress resource
-    annotations: {}
-    # -- The hosts for the ingress resource
-    # Each host entry supports: host, path, pathType
-    hosts: []
-    # -- TLS configuration for the ingress
-    tls: []
-
   image:
     repository: bitnamilegacy/minio
 
