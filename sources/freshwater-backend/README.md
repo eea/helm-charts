@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 3.3.1 - 07 March 2026
+- add postgres services [Dobricean Ioan Dorian - [`9e066d11`](https://github.com/eea/helm-charts/commit/9e066d1120c14b4d2ec7fbbd35f24385ea053463)]
+
 ### Version 3.3.0 - 07 March 2026
 - Automated release of [eeacms/freshwater-backend:6.1.3-16](https://github.com/eea/freshwater-backend/releases) [EEA Jenkins - [`8e49fbf3`](https://github.com/eea/helm-charts/commit/8e49fbf3a80abcbd14a41bed2b8e7ef814a1f5ec)]
 
