@@ -35,19 +35,39 @@ questions:
     type: "string"
     group: "General"
 
+  - variable: "links.createDatabaseService"
+    label: "Create postgres ExternalName service"
+    description: "Set to false if the service already exists in the namespace (e.g. from a database release)"
+    default: true
+    type: "boolean"
+    required: true
+    group: "General"
+
+  - variable: "links.createMemcachedService"
+    label: "Create memcached ExternalName service"
+    description: "Set to false if the service already exists in the namespace (e.g. from a database release)"
+    default: true
+    type: "boolean"
+    required: true
+    group: "General"
+
   - variable: "links.memcached"
     label: "Memcached service"
     description: "Memcached service for python caching, SERVICE.NAMESPACE"
     type: "string"
     required: true
+    default: "plone-postgres-memcached.namespace"
     group: "General"
+    show_if: "links.createMemcachedService=true"
 
   - variable: "links.database"
     label: "PostgreSQL"
     description: "PostgreSQL DB backend, SERVICE.NAMESPACE"
     type: "string"
     required: true
+    default: "plone-postgres.namespace"
     group: "General"
+    show_if: "links.createDatabaseService=true"
 
   - variable: "entrasync.enabled"
     label: "Enable Entra Id synchronization"
