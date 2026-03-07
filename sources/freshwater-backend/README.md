@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 3.3.2 - 07 March 2026
+- add missing variables [Dobricean Ioan Dorian - [`e84a36e4`](https://github.com/eea/helm-charts/commit/e84a36e4616471dc2d259c05053262e821a725df)]
+
 ### Version 3.3.1 - 07 March 2026
 - add postgres services [Dobricean Ioan Dorian - [`9e066d11`](https://github.com/eea/helm-charts/commit/9e066d1120c14b4d2ec7fbbd35f24385ea053463)]
 
