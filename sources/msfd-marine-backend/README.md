@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 0.9.1 - 08 March 2026
+- choose storage [Dobricean Ioan Dorian - [`935ca6fb`](https://github.com/eea/helm-charts/commit/935ca6fbd759bf485da414d97dc346ad6c245100)]
+
 ### Version 0.9.0 - 02 March 2026
 - Automated release of [eeacms/msfd-backend:5.2.13-14](https://github.com/eea/msfd-backend/releases) [EEA Jenkins - [`5e0748c8`](https://github.com/eea/helm-charts/commit/5e0748c8b92c128dec6a7484bfd9de8ad130d4c0)]
 
