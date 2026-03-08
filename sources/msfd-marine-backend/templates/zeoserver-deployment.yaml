@@ -65,4 +65,4 @@ spec:
       volumes:
       - name: {{ .Release.Name }}-storage
         persistentVolumeClaim:
-          claimName: {{ .Release.Name }}-storage-v2
+          claimName: {{ .Values.zeoserver.storageName | default (printf "%s-storage-v2" .Release.Name) }}
