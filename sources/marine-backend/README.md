@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 1.28.6 - 09 March 2026
+- fix error [Dobricean Ioan Dorian - [`898b83fe`](https://github.com/eea/helm-charts/commit/898b83fe1a393cf78049cc3ccec03fdff5c425c2)]
+
 ### Version 1.28.4 - 06 March 2026
 - fix ingress marine [Dobricean Ioan Dorian - [`d225ca6e`](https://github.com/eea/helm-charts/commit/d225ca6e18da1bfae4c74b9ab978510222922a44)]
 
