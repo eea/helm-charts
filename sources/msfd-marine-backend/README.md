@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 0.10.0 - 09 March 2026
+- update  msfd image [Dobricean Ioan Dorian - [`75bf6490`](https://github.com/eea/helm-charts/commit/75bf6490c0461042378e31aefec97996e7860a3a)]
+
 ### Version 0.9.1 - 08 March 2026
 - choose storage [Dobricean Ioan Dorian - [`935ca6fb`](https://github.com/eea/helm-charts/commit/935ca6fbd759bf485da414d97dc346ad6c245100)]
 
