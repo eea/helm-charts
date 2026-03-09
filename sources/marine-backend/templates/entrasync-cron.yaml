@@ -11,6 +11,8 @@ metadata:
 spec:
   schedule: "{{ .Values.entrasync.schedule }}"
   concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: {{ .Values.entrasync.keepSuccessfulPods }}
+  failedJobsHistoryLimit: {{ .Values.entrasync.keepFailedPods }}
   jobTemplate:
     spec:
       template:
@@ -20,8 +22,6 @@ spec:
             {{- toYaml . | nindent 8 }}
           {{- end }}
           serviceAccountName: {{ include "appl.serviceAccountName" . }}
-          successfulJobsHistoryLimit: {{ .Values.entrasync.keepSuccessfulPods }}
-          failedJobsHistoryLimit: {{ .Values.entrasync.keepFailedPods }}
           containers:
           - name: entrasync
             image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -34,8 +34,6 @@ spec:
             env:
             - name: SERVER_NAME
               value: "{{ .Values.plone.hostname }}"
-            - name: SENTRY_SITE
-              value: "{{ .Values.plone.hostname }}"
             - name: GRAYLOG_FACILITY
               value: "{{ .Values.plone.hostname }}"
             - name: BACKEND_VERSION
@@ -47,7 +45,7 @@ spec:
             - name: RELSTORAGE_DSN
               value: "host='postgres' dbname='{{ .Values.plone.database.POSTGRES_DB }}' user='{{ .Values.plone.database.POSTGRES_USER }}' password='{{ .Values.plone.database.POSTGRES_PASSWORD }}'"
             {{- range $key, $value := .Values.plone.environment }}
-            {{- if ($value) }}
+            {{- if and ($value) (not (has $key (list "SERVER_NAME" "GRAYLOG_FACILITY" "BACKEND_VERSION" "SENTRY_RELEASE" "TZ" "RELSTORAGE_DSN"))) }}
             - name: {{ $key }}
               value: {{ $value | quote }}
             {{- end }}
