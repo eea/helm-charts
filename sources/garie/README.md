@@ -69,6 +69,9 @@ We have the following services that should be exposed in ingress:
 
 # Releases
 
+### Version 0.0.24 - 10 March 2026
+- Refactor helm chart using postfix chart [valentinab25 - [`eab713e4`](https://github.com/eea/helm-charts/commit/eab713e4887c8044c41fd079148a8358746ee702)]
+
 ### Version 0.0.23 - 23 February 2026
 - Upgrade to garie-sonarqube:1.3.1 [EEA Jenkins - [`e62435a1`](https://github.com/eea/helm-charts/commit/e62435a10b9adfaab418d8e0d6713a466d871255)]
 
