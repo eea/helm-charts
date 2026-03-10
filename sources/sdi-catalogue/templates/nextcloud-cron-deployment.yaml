@@ -62,6 +62,12 @@ spec:
           value: {{ .Values.nextcloud.adminUser }}
         - name: TZ
           value: Europe/Copenhagen
+        - name: PHP_UPLOAD_LIMIT
+          value: {{ .Values.nextcloud.maxUploadSize | quote }}
+        - name: PHP_MEMORY_LIMIT
+          value: {{ .Values.nextcloud.phpMemoryLimit | quote }}
+        - name: APACHE_BODY_LIMIT
+          value: "17179869184" # 16 GiB in bytes
         resources:
           {{- toYaml .Values.nextcloudCron.resources | nindent 10 }}
         tty: true

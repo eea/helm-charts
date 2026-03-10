@@ -63,6 +63,12 @@ spec:
           value: {{ .Values.nextcloud.trustedProxies }}
         - name: FORWARDED_FOR_HEADERS
           value: {{ .Values.nextcloud.forwardedForHeaders }}
+        - name: PHP_UPLOAD_LIMIT
+          value: {{ .Values.nextcloud.maxUploadSize | quote }}
+        - name: PHP_MEMORY_LIMIT
+          value: {{ .Values.nextcloud.phpMemoryLimit | quote }}
+        - name: APACHE_BODY_LIMIT
+          value: "17179869184" # 16 GiB in bytes
         ports:
         - containerPort: 80
         

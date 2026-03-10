@@ -25,6 +25,8 @@ Cronjobs have been removed since the update to GN 5/ GN 46 and the new folder st
 | nextcloudRedis.resources.requests.memory | string | '128Mi' | Redis memory request |
 | nextcloudRedis.resources.limits.memory | string | '512Mi' | Redis memory limit |
 | nextcloudRedis.storage | string | '100Mi' | Redis PVC storage size |
+| nextcloud.maxUploadSize | string | '16G' | Nextcloud PHP upload limit (upload_max_filesize and post_max_size) |
+| nextcloud.phpMemoryLimit | string | '512M' | Nextcloud PHP memory limit |
 
 ## OAuth2 Configuration
 
@@ -66,6 +68,9 @@ helm install sdi-catalogue eea-charts/sdi-catalogue \
 The OAuth2 client registration is named `eea` in the Spring Security configuration.
 
 ## Releases
+
+### Version 0.8.43 - 10 March 2026
+- Configure Nextcloud max upload size to 16 GiB via `PHP_UPLOAD_LIMIT`, `PHP_MEMORY_LIMIT`, and `APACHE_BODY_LIMIT` env vars.
 
 ### Version 0.8.42 - 10 February 2026
 - Update GN46 and GN5 [Juan Luis Rodriguez Ponce - [`966f2961`](https://github.com/eea/helm-charts/commit/966f2961026f3837798ef0633d0faa1382ad88c4)]
