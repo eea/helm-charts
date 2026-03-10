@@ -53,7 +53,10 @@ ingress:
   enabled: true
   className: nginx
   letsencrypt: 01dev-eea-letsencrypt
-  annotations: {}
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-read-timeout: '1800'
+    nginx.ingress.kubernetes.io/proxy-send-timeout: '1800'
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: '60'
   host: cis2.eea.europa.eu
   tls: true
   certificate: cis2.eea.europa.eu-tls
