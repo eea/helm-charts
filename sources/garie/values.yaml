@@ -1,3 +1,24 @@
+
+postfix:
+  fullnameOverride: ''
+  dryrun: false
+  serverName: webscore.eea.europa.eu
+  mtpPass: ''
+  mtpPort: ''
+  mtpRelay: ''
+  mtpUser: ''
+  serviceName: 'postfix'
+  mailtrap:
+    httpenabled: false
+    serviceType: NodePort
+    ingress:
+      enabled: false
+      hostname: mailtrapweb.01dev.eea.europa.eu
+      annotations:
+        cert-manager.io/cluster-issuer: 01dev-eea-letsencrypt
+      certificate: mailtrap.01dev.eea.europa.eu-tls
+
+
 chronograf:
   resources:
     limits:

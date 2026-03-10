@@ -16,3 +16,10 @@ version: 0.0.23
 
 # Version for the main container
 appVersion: "1.0.0"
+
+# Remember to do helm dep up
+dependencies:
+  - name: postfix
+    version: 3.2.0
+    repository: https://eea.github.io/helm-charts
+
