@@ -36,7 +36,7 @@ spec:
             fieldRef:
               fieldPath: metadata.name
         - name: node.roles
-          value: ""
+          value: "ingest"
         - name: discovery.seed_hosts
           value: "{{ .Release.Name }}-master"
         - name: cluster.initial_master_nodes
