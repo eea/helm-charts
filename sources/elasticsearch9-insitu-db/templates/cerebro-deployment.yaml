@@ -1,0 +1,76 @@
+{{- if .Values.cerebro.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-cerebro
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: cerebro
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: cerebro
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: cerebro
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      containers:
+      - name: cerebro
+        image: {{ .Values.cerebro.image }}
+        env:
+        - name: ELASTIC_URL
+          value: "http://{{ .Release.Name }}-client:9200"
+        - name: BASIC_AUTH_USER
+          value: "{{ .Values.cerebro.user }}"
+        - name: BASIC_AUTH_PWD
+          value: "{{ .Values.cerebro.password }}"
+        - name: ELASTIC_USER
+          value: "{{ .Values.cerebro.elasticUser }}"
+        - name: ELASTIC_PASSWORD
+          value: "{{ .Values.cerebro.elasticPassword }}"
+        - name: TZ
+          value: "{{ .Values.timezone }}"
+        ports:
+        - containerPort: 9000
+        startupProbe:
+          httpGet:
+            path: /
+            port: 9000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          failureThreshold: 30
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 9000
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          failureThreshold: 5
+        resources:
+          requests:
+            memory: {{ .Values.cerebro.memReservation }}
+          limits:
+            memory: {{ .Values.cerebro.memLimit }}
+      {{- with .Values.cerebro.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.cerebro.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.cerebro.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+{{- end }}

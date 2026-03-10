@@ -1,0 +1,74 @@
+image:
+  repository: docker.elastic.co/elasticsearch/elasticsearch
+  tag: "9.3.1"
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+clusterName: "escluster"
+timezone: "Europe/Copenhagen"
+
+storageClassName: "nfs-client"
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+# --- ES MASTER ---
+esmaster:
+  replicaCount: 1
+  heapSize: "512m"
+  memLimit: "1536Mi"
+  memReservation: "1536Mi"
+  persistence:
+    enabled: true
+    size: 1Gi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+# --- ES CLIENT (coordinating node) ---
+esclient:
+  replicaCount: 1
+  heapSize: "512m"
+  memLimit: "1536Mi"
+  memReservation: "1536Mi"
+  persistence:
+    enabled: true
+    size: 1Gi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+# --- ES WORKER (data node) ---
+esworker:
+  replicaCount: 1
+  heapSize: "512m"
+  memLimit: "1536Mi"
+  memReservation: "1536Mi"
+  persistence:
+    enabled: true
+    size: 1Gi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+# --- CEREBRO ---
+cerebro:
+  enabled: true
+  image: eeacms/cerebro:0.9.0
+  user: ""
+  password: ""
+  elasticUser: ""
+  elasticPassword: ""
+  memLimit: "512Mi"
+  memReservation: "350Mi"
+  service:
+    type: ClusterIP
+    port: 9000
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}

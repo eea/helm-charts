@@ -1,0 +1,113 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Release.Name }}-client
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: client
+spec:
+  replicas: {{ .Values.esclient.replicaCount }}
+  serviceName: {{ .Release.Name }}-client
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: client
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: client
+    spec:
+      terminationGracePeriodSeconds: 120
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      containers:
+      - name: es-client
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        env:
+        - name: cluster.name
+          value: "{{ .Values.clusterName }}"
+        - name: node.name
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: node.roles
+          value: "coordinating_only"
+        - name: discovery.seed_hosts
+          value: "{{ .Release.Name }}-master"
+        - name: cluster.initial_master_nodes
+          value: "{{- range $i := until (int .Values.esmaster.replicaCount) }}{{ $.Release.Name }}-master-{{ $i }}{{ if lt $i (sub (int $.Values.esmaster.replicaCount) 1) }},{{ end }}{{- end }}"
+        - name: bootstrap.memory_lock
+          value: "false"
+        - name: ES_JAVA_OPTS
+          value: "-Xms{{ .Values.esclient.heapSize }} -Xmx{{ .Values.esclient.heapSize }}"
+        - name: xpack.security.enabled
+          value: "false"
+        - name: xpack.ml.enabled
+          value: "false"
+        - name: TZ
+          value: "{{ .Values.timezone }}"
+        ports:
+        - containerPort: 9200
+          name: http
+        - containerPort: 9300
+          name: transport
+        startupProbe:
+          tcpSocket:
+            port: 9200
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          failureThreshold: 30
+        readinessProbe:
+          httpGet:
+            path: /_cluster/health
+            port: 9200
+          initialDelaySeconds: 30
+          periodSeconds: 15
+          failureThreshold: 5
+        livenessProbe:
+          tcpSocket:
+            port: 9200
+          initialDelaySeconds: 90
+          periodSeconds: 30
+          failureThreshold: 5
+        resources:
+          requests:
+            memory: {{ .Values.esclient.memReservation }}
+          limits:
+            memory: {{ .Values.esclient.memLimit }}
+        volumeMounts:
+        - name: data
+          mountPath: /usr/share/elasticsearch/data
+      {{- with .Values.esclient.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.esclient.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.esclient.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+  {{- if .Values.esclient.persistence.enabled }}
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      storageClassName: {{ .Values.storageClassName }}
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: {{ .Values.esclient.persistence.size }}
+  {{- else }}
+      volumes:
+      - name: data
+        emptyDir: {}
+  {{- end }}
