@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 0.13.1 - 11 March 2026
+- fix command and port [Dobricean Ioan Dorian - [`7d7e2890`](https://github.com/eea/helm-charts/commit/7d7e289063d2f1922fa1b58a7e5f002bafc968be)]
+
 ### Version 0.13.0 - 11 March 2026
 - Automated release of [eeacms/msfd-backend:6.1.3-5](https://github.com/eea/msfd-backend/releases) [EEA Jenkins - [`357e76b2`](https://github.com/eea/helm-charts/commit/357e76b254c0a2ffde280698214e1fe9b91ea5f0)]
 
