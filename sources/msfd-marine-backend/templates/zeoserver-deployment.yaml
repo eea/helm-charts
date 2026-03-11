@@ -31,10 +31,8 @@ spec:
         image: "{{ (.Values.zeoserver.image).repository | default "plone/plone-zeo" }}:{{ (.Values.zeoserver.image).tag | default "6.0.0" }}"
         imagePullPolicy: IfNotPresent
         ports:
-        - containerPort: 8080
+        - containerPort: 8100
           protocol: TCP
-        args:
-        - zeo
         env:
         - name: TZ
           value: {{ .Values.timezone }}
