@@ -1,0 +1,49 @@
+{{- if .Values.techlibimporter.enabled }}
+
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ .Release.Name }}-techlibimporter-cron
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: techlibimporter
+
+spec:
+  schedule: "{{ .Values.techlibimporter.schedule }}"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: {{ .Values.techlibimporter.keepSuccessfulPods }}
+  failedJobsHistoryLimit: {{ .Values.techlibimporter.keepFailedPods }}
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          {{- with .Values.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          serviceAccountName: {{ include "appl.serviceAccountName" . }}
+          containers:
+          - name: techlibimporter
+            image: "{{ .Values.techlibimporter.image.repository }}:{{ .Values.techlibimporter.image.tag }}"
+            command:
+            - /bin/sh
+            - -c
+            - 'curl -v "{{ .Values.plone.environment.TECH_LIB_IMPORT_URL }}?token={{ .Values.plone.environment.CDSE_MONITOR_VIEW_TOKEN }}"'
+            resources:
+              {{- toYaml .Values.techlibimporter.resources | nindent 14 }}
+
+          {{- with .Values.techlibimporter.nodeSelector }}
+          nodeSelector:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.techlibimporter.affinity }}
+          affinity:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.techlibimporter.tolerations }}
+          tolerations:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          restartPolicy: Never
+
+{{- end }}

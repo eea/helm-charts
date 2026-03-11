@@ -167,6 +167,22 @@ questions:
     required: false
     group: "General"
 
+  - variable: "techlibimporter.enabled"
+    label: "Enable Technical Library Importer cron job"
+    description: "Enable Technical Library Importer cron job"
+    default: false
+    type: "boolean"
+    required: true
+    group: "General"
+
+  - variable: "techlibimporter.schedule"
+    label: "Technical Library Importer cron schedule"
+    type: "string"
+    default: "30 5 * * *"
+    required: true
+    group: "General"
+    show_if: "techlibimporter.enabled=true"
+
   - variable: "cdsemonitor.enabled"
     label: "Enable CDSE Monitor cron job"
     description: "Enable CDSE status monitor cron job"
@@ -322,6 +338,13 @@ questions:
     type: "string"
     required: false
     default: "logcentral.eea.europa.eu:12201"
+    group: "Plone configuration"
+  - variable: "plone.environment.TECH_LIB_IMPORT_URL"
+    label: "TECH_LIB_IMPORT_URL"
+    description: "Technical Library Import URL (without token)"
+    type: "string"
+    required: false
+    default: ""
     group: "Plone configuration"
   - variable: "plone.environment.CDSE_MONITOR_URL"
     label: "CDSE_MONITOR_URL"

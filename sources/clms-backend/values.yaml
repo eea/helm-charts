@@ -59,6 +59,7 @@ plone:
     STATIC_BANNER_ENABLED_clms: ""
     DYNAMIC_BANNER_ENABLED: ""
     PLONE_REGISTRY_YAML_CONTENT: ""
+    TECH_LIB_IMPORT_URL: ""
     CDSE_MONITOR_URL: ""
     CDSE_MONITOR_VIEW_TOKEN: ""
     CDSE_USAGE_URL: ""
@@ -216,6 +217,23 @@ postgresDownloadtool:
       memory: 1Gi
     requests:
       memory: 512Mi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+techlibimporter:
+  enabled: false
+  schedule: "30 5 * * *"
+  keepSuccessfulPods: 3
+  keepFailedPods: 5
+  image:
+    repository: curlimages/curl
+    tag: "8.8.0"
+  resources:
+    limits:
+      memory: 64Mi
+    requests:
+      memory: 32Mi
   nodeSelector: {}
   tolerations: []
   affinity: {}
