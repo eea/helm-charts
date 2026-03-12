@@ -7,6 +7,11 @@ If you need to modify, then create a new .yaml file with the modifications.
 For the database password, use the default values, or if you already have an existing database,
 set the values in the database section.
 
+## URL redirects
+
+You can enable ingress-level redirects for selected EUNIS URLs with `redirects.enabled=true`.
+The default rule redirects `/species/<id>` to `https://biodiversity.europa.eu/species/<id>`.
+
 ## Namespace-awareness
 
 Since this app expects to find the database at the name `dbservice`, you can not
@@ -20,6 +25,7 @@ You can run `helm test eunis` to verify the system is working correctly.
 
 | Version | Comment |
 | ------- | ------- |
+| Version 2.1.0 - 12 Mar. 2026 | Added configurable ingress redirects, including EUNIS species to BISE redirects |
 | Version 2.0.0 - 18 Feb. 2026 | Added optional autoscaling |
 | Version 1.3.0 - 16 Feb. 2026 | Made the tomcat probes configurable |
 | Version 1.2.0 - 18 Mar. 2025 | More lax network security policy for Tomcat |
@@ -33,4 +39,3 @@ You can run `helm test eunis` to verify the system is working correctly.
 | Version 0.2.0 | Added network security policies. |
 | Version 0.1.3 | First version to be used in production. |
 | Version 0.1.0 | Initial version. |
-

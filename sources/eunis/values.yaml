@@ -94,6 +94,14 @@ ingress:
   #    hosts:
   #      - eunis.eea.europa.eu
 
+redirects:
+  enabled: false
+  annotations: {}
+  rules:
+    - path: /species/([0-9]+)
+      pathType: ImplementationSpecific
+      target: https://biodiversity.europa.eu/species/$1
+
 resources:
   requests:
     memory: 256Mi
