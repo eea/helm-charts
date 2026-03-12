@@ -23,6 +23,9 @@ You can run `helm test eunis` to verify the system is working correctly.
 
 ## Releases
 
+### Version 2.1.1 - 12 March 2026
+- eunis redirect to bise [Dobricean Ioan Dorian - [`482a698d`](https://github.com/eea/helm-charts/commit/482a698dfec01416d3f6c737b7b8865e9b283213)]
+
 | Version | Comment |
 | ------- | ------- |
 | Version 2.1.0 - 12 Mar. 2026 | Added configurable ingress redirects, including EUNIS species to BISE redirects |
