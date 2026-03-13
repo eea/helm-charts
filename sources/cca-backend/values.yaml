@@ -19,6 +19,7 @@ releaseVersion: "v10.0.1-plone6.1"
 links:
   createPostgresService: false
   database: postgres.database
+  memcached: memcached.database
 
 ingress:
   enabled: true
@@ -273,39 +274,6 @@ varnish:
     initialDelaySeconds: 10
     failureThreshold: 12
     successThreshold: 1
-
-memcached:
-  enabled: true
-  serviceName: memcached
-  image:
-    repository: memcached
-    tag: "1.6.20-alpine"
-    pullPolicy: IfNotPresent
-  cacheSizeMi: 1024
-  slabPageSize: 50m
-  resources:
-    limits:
-      memory: 1Gi
-    requests:
-      memory: 1Gi
-  livenessProbe:
-    tcpSocket:
-      port: memcache
-    periodSeconds: 10
-    timeoutSeconds: 3
-    successThreshold: 1
-    failureThreshold: 5
-  startupProbe:
-    tcpSocket:
-      port: memcache
-    periodSeconds: 10
-    timeoutSeconds: 3
-    initialDelaySeconds: 10
-    successThreshold: 1
-    failureThreshold: 9
-  nodeSelector: {}
-  tolerations: []
-  affinity: {}
 
 memcachedflush:
   enabled: true

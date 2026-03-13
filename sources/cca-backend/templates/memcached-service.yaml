@@ -1,17 +1,12 @@
-{{- if .Values.memcached.enabled }}
+{{- if .Values.links.createPostgresService }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Values.memcached.serviceName }}
-  labels:
-    {{- include "appl.labels" . | nindent 4 }}
-    component: memcached
+  name: "memcached"
 spec:
+  type: ExternalName
   ports:
     - name: memcache
       port: 11211
-      targetPort: memcache
-  selector:
-    {{- include "appl.selectorLabels" . | nindent 4 }}
-    component: memcached
+  externalName: "{{ .Values.links.memcached }}.svc.cluster.local"
 {{- end }}

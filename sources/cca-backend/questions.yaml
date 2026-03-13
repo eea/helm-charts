@@ -29,8 +29,8 @@ questions:
     group: "General"
 
   - variable: "links.createPostgresService"
-    label: "Create postgres ExternalName service"
-    description: "Set to false if a service named postgres already exists in the namespace"
+    label: "Create postgres and memcached ExternalName services"
+    description: "Set to false if the services already exist in the namespace (e.g. from a database release)"
     default: false
     type: "boolean"
     required: true
@@ -41,6 +41,12 @@ questions:
         label: "PostgreSQL external service"
         description: "External PostgreSQL service, format SERVICE.NAMESPACE"
         default: "postgres.database"
+        type: "string"
+        required: true
+      - variable: "links.memcached"
+        label: "Memcached external service"
+        description: "External memcached service, format SERVICE.NAMESPACE"
+        default: "memcached.database"
         type: "string"
         required: true
 
