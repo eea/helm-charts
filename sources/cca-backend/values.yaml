@@ -21,7 +21,7 @@ links:
   database: postgres.database
 
 ingress:
-  enabled: false
+  enabled: true
   annotations:
     cert-manager.io/cluster-issuer: 01dev-eea-letsencrypt
     nginx.ingress.kubernetes.io/proxy-body-size: 100m
@@ -490,12 +490,16 @@ postfix:
   dryrun: false
   serverName: climate-adapt.eea.europa.eu
   mtpPass: ""
-  mtpPort: "8587"
-  mtpRelay: ironports.eea.europa.eu
-  mtpUser: climate-adapt-usr
+  mtpPort: ""
+  mtpRelay: ""
+  mtpUser: ""
   serviceName: "postfix"
   mailtrap:
     httpenabled: false
-    serviceType: ClusterIP
+    serviceType: NodePort
     ingress:
       enabled: false
+      hostname: mailtrap-climate-adapt.eea.europa.eu
+      annotations:
+        cert-manager.io/cluster-issuer: 01dev-eea-letsencrypt
+      certificate: mailtrap-climate-adapt.eea.europa.eu-tls
