@@ -1,0 +1,86 @@
+questions:
+  - variable: "volto.hostname"
+    label: "Server name"
+    description: "DNS name for this deployment"
+    default: "climate-adapt.eea.europa.eu"
+    type: "string"
+    required: true
+    group: "General"
+
+  - variable: "links.backend"
+    label: "Backend service"
+    description: "Varnish backend service, format SERVICE.NAMESPACE"
+    type: "string"
+    required: true
+    default: "backend-varnish.cca"
+    group: "General"
+
+  - variable: "links.backendAdmin"
+    label: "Admin backend service"
+    description: "Admin backend service, format SERVICE.NAMESPACE"
+    type: "string"
+    required: true
+    default: "plone-admin.cca"
+    group: "General"
+
+  - variable: "links.backendTranslate"
+    label: "Translate backend"
+    description: "Translation backend service, format SERVICE.NAMESPACE"
+    type: "string"
+    required: true
+    default: "plone-translate.cca"
+    group: "General"
+
+  - variable: "ingress.tls"
+    label: "Enable https"
+    default: true
+    type: "boolean"
+    required: true
+    group: "General"
+
+  - variable: "ingress.certificate"
+    label: "Certificate name"
+    description: "TLS certificate secret name"
+    default: "climate-adapt.eea.europa.eu-tls"
+    type: "string"
+    group: "General"
+
+  - variable: "volto.environment.RAZZLE_PROXY_ES_DSN"
+    label: "RAZZLE_PROXY_ES_DSN"
+    description: "Default Elasticsearch DSN"
+    default: ""
+    required: false
+    type: "string"
+    group: "Volto configuration"
+
+  - variable: "volto.environment.RAZZLE_PROXY_ES_DSN_globalsearch"
+    label: "RAZZLE_PROXY_ES_DSN_globalsearch"
+    description: "Global Search Elasticsearch DSN"
+    default: ""
+    required: false
+    type: "string"
+    group: "Volto configuration"
+
+  - variable: "volto.environment.RAZZLE_PROXY_ES_DSN_missionAll"
+    label: "RAZZLE_PROXY_ES_DSN_missionAll"
+    description: "Mission All Elasticsearch DSN"
+    default: ""
+    required: false
+    type: "string"
+    group: "Volto configuration"
+
+  - variable: "volto.environment.RAZZLE_PROXY_QA_DSN_globalsearch"
+    label: "RAZZLE_PROXY_QA_DSN_globalsearch"
+    description: "Global Search QA/NLP DSN"
+    default: ""
+    required: false
+    type: "string"
+    group: "Volto configuration"
+
+  - variable: "volto.environment.RAZZLE_PROXY_QA_DSN_missionAll"
+    label: "RAZZLE_PROXY_QA_DSN_missionAll"
+    description: "Mission All QA/NLP DSN"
+    default: ""
+    required: false
+    type: "string"
+    group: "Volto configuration"

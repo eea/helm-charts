@@ -1,0 +1,297 @@
+image:
+  repository: eeacms/cca-frontend
+  pullPolicy: Always
+  tag: "3.34.0"
+
+imagePullSecrets: []
+
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: false
+  annotations: {}
+  name: ""
+
+timezone: Europe/Copenhagen
+releaseVersion: "1.113.0"
+
+links:
+  backend: backend-varnish.cca
+  backendAdmin: plone-admin.cca
+  backendTranslate: plone-translate.cca
+
+ingress:
+  certificate: climate-adapt.eea.europa.eu-tls
+  tls: true
+  annotations:
+    cert-manager.io/cluster-issuer: 01dev-eea-letsencrypt
+    nginx.ingress.kubernetes.io/proxy-body-size: 1024m
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "480"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "120"
+
+ingressredirects: []
+
+volto:
+  serviceType: ClusterIP
+  hostname: climate-adapt.eea.europa.eu
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 6
+    targetMemoryUtilizationPercentage: 60
+  replicaCount: 1
+  resources:
+    limits:
+      memory: 2Gi
+    requests:
+      memory: 2Gi
+  environment:
+    DANSWER_URL: https://gptlab.eea.europa.eu
+    DANSWER_API_KEY: ""
+    DEBUG: volto-chatbot
+    LLMGW_TOKEN: ""
+    LLMGW_URL: https://llmgw.eea.europa.eu
+    ONYX_API_KEY: ""
+    ONYX_URL: https://aihub.eea.europa.eu/
+    RAZZLE_ALLOWED_CORS_DESTINATIONS: ""
+    RAZZLE_BACKEND_NAME: cca-backend
+    RAZZLE_DEMO_SITE: "false"
+    RAZZLE_INTERNAL_API_PATH: http://backend:8080/Plone
+    RAZZLE_MATOMO_SITE_ID: "13"
+    RAZZLE_MATOMO_URL: https://matomo.eea.europa.eu/
+    RAZZLE_PROXY_ES_DSN: ""
+    RAZZLE_PROXY_ES_DSN_globalsearch: ""
+    RAZZLE_PROXY_ES_DSN_missionAll: ""
+    RAZZLE_PROXY_QA_DSN_globalsearch: ""
+    RAZZLE_PROXY_QA_DSN_missionAll: ""
+    RAZZLE_PUBLIC_URL: https://climate-adapt.eea.europa.eu
+    SENTRY_AUTH_TOKEN: ""
+    SENTRY_ORG: eea
+    SENTRY_PROJECT: climate-adapt-eea-europa.eu
+    SENTRY_URL: https://sentry.eea.europa.eu
+    VOLTO_ROBOTSTXT: |-
+      Sitemap: https://climate-adapt.eea.europa.eu/sitemap-index.xml
+      User-agent: *
+      Disallow: /sandbox
+      Disallow: /en/sandbox
+      Disallow: /admin
+      Disallow: /_admin
+      Disallow: /contact-footer
+      Disallow: /en/observatory/metadata/
+      Disallow: /de/observatory/metadata/
+      Disallow: /fr/observatory/metadata/
+      Disallow: /es/observatory/metadata/
+      Disallow: /it/observatory/metadata/
+      Disallow: /pl/observatory/metadata/
+      Disallow: /@@multilingual-selector
+      Disallow: /*/observatory/metadata/
+      Disallow: /*/sandbox
+    CSP_HEADER: >-
+      default-src 'none'; connect-src 'self' https://*.arcgis.com
+      https://services.arcgisonline.com https://*.openstreetmap.org
+      https://cds.climate.copernicus.eu https://*.eea.europa.eu
+      https://*.eionet.europa.eu; font-src 'self' data: https://js.arcgis.com
+      https://cds.climate.copernicus.eu https://cdnjs.cloudflare.com/
+      https://*.eea.europa.eu https://*.eionet.europa.eu; frame-src 'self'
+      https://mission-climate-adapt-map.agiledrop.com
+      https://apps.copernicus-climate.eu https://charts.ecmwf.int
+      https://eucra.climate.ifca.es/ https://apps.ecmwf.int https://ec.europa.eu/
+      https://geoportal.ecdc.europa.eu https://flo.uri.sh https://*.eea.europa.eu
+      https://*.eionet.europa.eu https://eea.maps.arcgis.com; img-src http:
+      https: blob: data: https://js.arcgis.com; script-src 'self' {nonce} blob:
+      https://matomo.devel4cph.eea.europa.eumatomo.js
+      https://fonts.googleapis.com https://matomo.eea.europa.eu
+      https://cds.climate.copernicus.eu/ https://openlayers.org/
+      https://www.google.com/jsapi https://js.arcgis.com/
+      https://public.flourish.studio/ https://*.eea.europa.eu
+      https://*.eionet.europa.eu; frame-ancestors 'self'
+      https://geoportal.ecdc.europa.eu https://*.eea.europa.eu
+      https://*.europa.eu; style-src 'self' 'unsafe-inline'
+      https://js.arcgis.com https://openlayers.org/
+      https://cds.climate.copernicus.eu/ https://*.eionet.europa.eu
+      https://*.eea.europa.eu https://cdnjs.cloudflare.com
+      https://charts.ecmwf.int https://eucra.climate.ifca.es/
+      https://code.jquery.com; media-src 'self' data:
+      https://*.eea.europa.eu https://*.eionet.europa.eu
+      https://cmshare.eea.europa.eu; manifest-src 'self'; report-uri
+      https://sentry.eea.europa.eu/api/25/security/?sentry_key=36e966c526304fb38680f19ac1927bb5
+  annotations: {}
+  livenessProbe:
+    httpGet:
+      path: /ok
+      port: http
+    periodSeconds: 20
+    timeoutSeconds: 10
+    initialDelaySeconds: 30
+    failureThreshold: 6
+    successThreshold: 1
+  startupProbe:
+    httpGet:
+      path: /ok
+      port: http
+    periodSeconds: 5
+    timeoutSeconds: 10
+    initialDelaySeconds: 10
+    failureThreshold: 12
+    successThreshold: 1
+  readinessProbe:
+    httpGet:
+      path: /ok
+      port: http
+    periodSeconds: 15
+    timeoutSeconds: 10
+    initialDelaySeconds: 60
+    failureThreshold: 4
+    successThreshold: 2
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+varnish:
+  serviceType: ClusterIP
+  serviceName: frontend-varnish
+  image:
+    repository: eeacms/plone-varnish
+    tag: latest
+    pullPolicy: Always
+  port: 3000
+  backend: frontend-volto
+  resources:
+    limits:
+      memory: 3Gi
+    requests:
+      memory: 2Gi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  environment:
+    VARNISH_SIZE: "2G"
+    VARNISH_DNS_TTL: "20s"
+    VARNISH_BERESP_TTL: "15s"
+    VARNISH_BERESP_GRACE: "100s"
+    VARNISH_BERESP_KEEP: "120s"
+    VARNISH_GZIP_ENABLED: "true"
+    VARNISH_GZIP_JSON_ENABLED: "true"
+    VARNISH_CLEAR_OTHER_COOKIES: "true"
+    AUTOKILL_CRON: ""
+  livenessProbe:
+    httpGet:
+      path: /ok
+      port: http
+    periodSeconds: 10
+    timeoutSeconds: 10
+    initialDelaySeconds: 30
+    failureThreshold: 5
+    successThreshold: 1
+  startupProbe:
+    httpGet:
+      path: /ok
+      port: http
+    periodSeconds: 5
+    timeoutSeconds: 10
+    initialDelaySeconds: 10
+    failureThreshold: 12
+    successThreshold: 1
+
+apache:
+  enabled: true
+  serviceType: ClusterIP
+  serviceName: frontend-apache
+  image:
+    repository: eeacms/apache
+    tag: "2.4-3.4"
+  modules: "proxy_html_module xml2enc_module expires_module rewrite_module headers_module proxy_module proxy_http_module"
+  config: |
+    <VirtualHost *:80>
+        ServerAdmin helpdesk@eea.europa.eu
+        ServerName climate-adapt.eea.europa.eu
+
+        ErrorLog /var/log/apache.log
+        RewriteEngine On
+        ProxyTimeout 600
+
+        RewriteRule ^/@@translate-callback(.*) http://backend-translate:8080/VirtualHostBase/https/climate-adapt.eea.europa.eu:443/cca/VirtualHostRoot/@@translate-callback$1 [P,L]
+        RewriteRule ^/@@save-etranslation(.*) http://backend-translate:8080/VirtualHostBase/https/climate-adapt.eea.europa.eu:443/cca/VirtualHostRoot/@@save-etranslation$1 [P,L]
+        RewriteRule ^/@@call-etranslation(.*) http://backend-translate:8080/VirtualHostBase/https/climate-adapt.eea.europa.eu:443/cca/VirtualHostRoot/@@call-etranslation$1 [P,L]
+        RewriteRule ^/@@sync-translated-paths(.*) http://backend-translate:8080/VirtualHostBase/https/climate-adapt.eea.europa.eu:443/cca/VirtualHostRoot/@@sync-translated-paths$1 [P,L]
+
+        RewriteRule ^/metadata(.*)$ /en/metadata$1 [R=301,L]
+        RewriteRule ^/observatory(.*)$ /en/observatory$1 [R=301,L]
+        RewriteRule ^/mission(.*)$ /en/mission$1 [R=301,L]
+        RewriteRule ^/eu-adaptation-policy(.*)$ /en/eu-adaptation-policy$1 [R=301,L]
+
+        RewriteRule ^/\+\+api\+\+(.*) http://backend:8080/VirtualHostBase/https/climate-adapt.eea.europa.eu:443/cca/VirtualHostRoot/++api++$1 [P,L]
+        RewriteRule ^/_admin(.*) http://backend-admin:8080/VirtualHostBase/https/climate-adapt.eea.europa.eu:443/cca/VirtualHostRoot/_vh__admin$1 [P,L]
+        RewriteRule ^@@vibriomap-view-simple http://backend:8080/VirtualHostBase/https/climate-adapt.eea.europa.eu:443/cca/VirtualHostRoot/@@vibriomap-view-simple [P,L]
+        RewriteRule ^/(.*)/@@images(.*) http://backend:8080/VirtualHostBase/https/climate-adapt.eea.europa.eu:443/cca/VirtualHostRoot/$1/@@images$2 [P,L]
+        RewriteRule ^/(.*) http://frontend-varnish:3000/$1 [P,L]
+
+        SetEnvIf Request_URI "^/.*embed-chart" EMBED_PATH
+        Header set X-Frame-Options "SAMEORIGIN" env=!EMBED_PATH
+
+        ProxyPreserveHost On
+
+        <LocationMatch "/decodeFolderFilter$">
+            Require all denied
+        </LocationMatch>
+
+        Header always set Strict-Transport-Security "max-age=15768000;"
+        Header always set X-Content-Type-Options "nosniff"
+        Header always set Referrer-Policy "strict-origin-when-cross-origin"
+        Header always set Expect-CT "max-age=604800, report-uri='https://sentry.eea.europa.eu/api/25/security/?sentry_key=36e966c526304fb38680f19ac1927bb5'"
+        Header always set Server "HTTPS"
+        Header always set X-Xss-Protection "1"
+
+       <IfModule mod_deflate.c>
+            AddOutputFilterByType DEFLATE application/octet-stream
+            AddOutputFilterByType DEFLATE application/x-font-ttf
+            AddOutputFilterByType DEFLATE application/x-font-woff
+            AddOutputFilterByType DEFLATE font/opentype
+            AddOutputFilterByType DEFLATE font/woff
+            AddOutputFilterByType DEFLATE font/woff2
+            AddOutputFilterByType DEFLATE image/x-icon
+            AddOutputFilterByType DEFLATE application/manifest+json
+       </IfModule>
+    </VirtualHost>
+  resources:
+    limits:
+      memory: 1Gi
+    requests:
+      memory: 512Mi
+  livenessProbe:
+    tcpSocket:
+      port: http
+    periodSeconds: 10
+    timeoutSeconds: 10
+    initialDelaySeconds: 30
+    failureThreshold: 5
+    successThreshold: 1
+  startupProbe:
+    tcpSocket:
+      port: http
+    periodSeconds: 5
+    timeoutSeconds: 10
+    initialDelaySeconds: 10
+    failureThreshold: 12
+    successThreshold: 1
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+debug:
+  addonsPath: /app/src/addons
+  affinity: {}
+  enabled: false
+  environment: {}
+  nodeSelector: {}
+  podAnnotations: {}
+  podSecurityContext: {}
+  resources:
+    limits:
+      memory: 3Gi
+    requests:
+      memory: 3Gi
+  securityContext: {}
+  serviceType: ClusterIP
+  tolerations: []
