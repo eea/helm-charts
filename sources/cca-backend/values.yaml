@@ -1,0 +1,549 @@
+image:
+  repository: eeacms/eea.docker.plone-climateadapt
+  pullPolicy: Always
+  tag: "v11.0.4-plone6.1"
+
+imagePullSecrets: []
+
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: false
+  annotations: {}
+  name: ""
+
+timezone: Europe/Copenhagen
+releaseVersion: "v10.0.1-plone6.1"
+
+links:
+  createPostgresService: false
+  database: postgres.database
+
+ingress:
+  enabled: false
+  annotations:
+    cert-manager.io/cluster-issuer: 01dev-eea-letsencrypt
+    nginx.ingress.kubernetes.io/proxy-body-size: 100m
+  certificate: climate-adapt.eea.europa.eu-tls
+  tls: true
+
+commonEnv:
+  CORS_ALLOW_ORIGIN: ""
+  DEFAULT_ORGANISATIONS_cca: "EEA"
+  DEFAULT_PUBLISHER_cca: "EEA"
+  DYNAMIC_BANNER_ENABLED: "No"
+  GRAYLOG: "logcentral.eea.europa.eu:12201"
+  MARINE_PASS: ""
+  PLONE_REGISTRY_YAML_CONTENT: ""
+  PORTAL_URL: "https://climate-adapt.eea.europa.eu"
+  SENTRY_DSN: ""
+  SENTRY_ENVIRONMENT: "production"
+  STATIC_BANNER_ENABLED: "No"
+  TRANSLATE_ON_CHANGE: "1"
+  TRANSLATION_AUTH_TOKEN: ""
+
+persistence:
+  data:
+    enabled: false
+    existingClaim: ""
+    storageClassName: ""
+    accessMode: ReadWriteMany
+    size: 20Gi
+    mountPath: /data
+  import:
+    enabled: false
+    existingClaim: ""
+    storageClassName: ""
+    accessMode: ReadWriteMany
+    size: 5Gi
+    mountPath: /app/import
+  legacyImport:
+    enabled: false
+    existingClaim: ""
+    storageClassName: ""
+    accessMode: ReadWriteMany
+    size: 5Gi
+    mountPath: /cca-import
+  sources:
+    enabled: false
+    existingClaim: ""
+    storageClassName: ""
+    accessMode: ReadWriteMany
+    size: 5Gi
+    mountPath: /app/sources
+
+plone:
+  serviceType: ClusterIP
+  hostname: climate-adapt.eea.europa.eu
+  site: cca
+  googleUrl: ""
+  autoscaling:
+    enabled: false
+    minReplicas: 2
+    maxReplicas: 6
+    targetMemoryUtilizationPercentage: 60
+  replicaCount: 6
+  resources:
+    limits:
+      memory: 6Gi
+    requests:
+      memory: 6Gi
+  database:
+    POSTGRES_DB: datafs
+    POSTGRES_USER: zope
+    POSTGRES_PASSWORD: ""
+  environment: {}
+  annotations: {}
+  command:
+    - sh
+    - -c
+    - mkdir -p /tmp/plone_mail_queue/cur /tmp/plone_mail_queue/new /tmp/plone_mail_queue/tmp && chown -R plone /tmp/plone_mail_queue && ./docker-entrypoint.sh start
+  livenessProbe:
+    httpGet:
+      path: /ok
+      port: http
+    periodSeconds: 20
+    timeoutSeconds: 10
+    initialDelaySeconds: 30
+    failureThreshold: 6
+    successThreshold: 1
+  startupProbe:
+    httpGet:
+      path: /ok
+      port: http
+    periodSeconds: 5
+    timeoutSeconds: 10
+    initialDelaySeconds: 30
+    failureThreshold: 24
+    successThreshold: 1
+  readinessProbe:
+    httpGet:
+      path: /ok
+      port: http
+    periodSeconds: 15
+    timeoutSeconds: 10
+    initialDelaySeconds: 60
+    failureThreshold: 4
+    successThreshold: 2
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+ploneAdmin:
+  enabled: true
+  serviceName: plone-admin
+  serviceType: ClusterIP
+  image:
+    repository: eeacms/eea.docker.plone-climateadapt
+    tag: "v11.0.3-plone6.1"
+    pullPolicy: Always
+  releaseVersion: ""
+  resources:
+    limits:
+      memory: 16Gi
+    requests:
+      memory: 8Gi
+  environment:
+    IS_JOB_EXECUTOR: "true"
+  command:
+    - sh
+    - -c
+    - mkdir -p /tmp/plone_mail_queue/cur /tmp/plone_mail_queue/new /tmp/plone_mail_queue/tmp && ./docker-entrypoint.sh start
+  livenessProbe:
+    httpGet:
+      path: /ok
+      port: http
+    periodSeconds: 20
+    timeoutSeconds: 10
+    initialDelaySeconds: 30
+    failureThreshold: 6
+    successThreshold: 1
+  startupProbe:
+    httpGet:
+      path: /ok
+      port: http
+    periodSeconds: 5
+    timeoutSeconds: 10
+    initialDelaySeconds: 20
+    failureThreshold: 18
+    successThreshold: 1
+  readinessProbe:
+    httpGet:
+      path: /ok
+      port: http
+    periodSeconds: 15
+    timeoutSeconds: 10
+    initialDelaySeconds: 60
+    failureThreshold: 4
+    successThreshold: 2
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+ploneTranslate:
+  enabled: true
+  serviceName: plone-translate
+  serviceType: ClusterIP
+  image:
+    repository: eeacms/eea.docker.plone-climateadapt
+    tag: "v11.0.3-plone6.1"
+    pullPolicy: Always
+  releaseVersion: ""
+  resources:
+    limits:
+      memory: 8Gi
+    requests:
+      memory: 8Gi
+  environment:
+    IS_JOB_EXECUTOR: "true"
+  livenessProbe:
+    httpGet:
+      path: /ok
+      port: http
+    periodSeconds: 20
+    timeoutSeconds: 10
+    initialDelaySeconds: 30
+    failureThreshold: 6
+    successThreshold: 1
+  startupProbe:
+    httpGet:
+      path: /ok
+      port: http
+    periodSeconds: 5
+    timeoutSeconds: 10
+    initialDelaySeconds: 20
+    failureThreshold: 18
+    successThreshold: 1
+  readinessProbe:
+    httpGet:
+      path: /ok
+      port: http
+    periodSeconds: 15
+    timeoutSeconds: 10
+    initialDelaySeconds: 60
+    failureThreshold: 4
+    successThreshold: 2
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+varnish:
+  serviceType: ClusterIP
+  serviceName: backend-varnish
+  image:
+    repository: tiberiuichim/plone-varnish
+    tag: "7.7-1.4"
+    pullPolicy: Always
+  backend: backend-haproxy
+  port: 8080
+  resources:
+    limits:
+      memory: 3Gi
+    requests:
+      memory: 2Gi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  environment:
+    VARNISH_SIZE: 2G
+    VARNISH_DNS_TTL: "20s"
+    VARNISH_BERESP_TTL: "3600s"
+    VARNISH_BERESP_GRACE: "300s"
+    VARNISH_BERESP_KEEP: "120s"
+    VARNISH_GZIP_ENABLED: "true"
+    VARNISH_GZIP_JSON_ENABLED: "true"
+    VARNISH_CLEAR_OTHER_COOKIES: "true"
+    AUTOKILL_CRON: ""
+  livenessProbe:
+    httpGet:
+      path: /ok
+      port: http
+    periodSeconds: 10
+    timeoutSeconds: 10
+    initialDelaySeconds: 30
+    failureThreshold: 5
+    successThreshold: 1
+  startupProbe:
+    httpGet:
+      path: /ok
+      port: http
+    periodSeconds: 5
+    timeoutSeconds: 10
+    initialDelaySeconds: 10
+    failureThreshold: 12
+    successThreshold: 1
+
+haproxy:
+  enabled: true
+  serviceName: backend-haproxy
+  serviceType: ClusterIP
+  image:
+    repository: eeacms/haproxy
+    tag: "1.8-1.7"
+    pullPolicy: Always
+  port: 8080
+  statsPort: 1936
+  environment:
+    BACKENDS: backend-plone
+    BACKENDS_PORT: "8080"
+    DNS_ENABLED: "true"
+    DOWN_INTER: "5s"
+    FAST_INTER: "15s"
+    FRONTEND_PORT: "8080"
+    HTTPCHK: "HEAD /"
+    INTER: "20s"
+    STATS_AUTH: ""
+    TIMEOUT_CLIENT: "120s"
+    TIMEOUT_SERVER: "120s"
+    BALANCE: leastconn
+  resources:
+    limits:
+      memory: 128Mi
+    requests:
+      memory: 128Mi
+  livenessProbe:
+    tcpSocket:
+      port: http
+    periodSeconds: 20
+    timeoutSeconds: 3
+    initialDelaySeconds: 20
+    failureThreshold: 3
+    successThreshold: 1
+  startupProbe:
+    tcpSocket:
+      port: http
+    periodSeconds: 5
+    timeoutSeconds: 3
+    initialDelaySeconds: 10
+    failureThreshold: 12
+    successThreshold: 1
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+memcached:
+  enabled: true
+  serviceName: memcached
+  image:
+    repository: memcached
+    tag: "1.6.20-alpine"
+    pullPolicy: IfNotPresent
+  cacheSizeMi: 1024
+  slabPageSize: 50m
+  resources:
+    limits:
+      memory: 1Gi
+    requests:
+      memory: 1Gi
+  livenessProbe:
+    tcpSocket:
+      port: memcache
+    periodSeconds: 10
+    timeoutSeconds: 3
+    successThreshold: 1
+    failureThreshold: 5
+  startupProbe:
+    tcpSocket:
+      port: memcache
+    periodSeconds: 10
+    timeoutSeconds: 3
+    initialDelaySeconds: 10
+    successThreshold: 1
+    failureThreshold: 9
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+memcachedflush:
+  enabled: true
+  schedule: "0 3 * * *"
+  keepSuccessfulPods: 3
+  keepFailedPods: 5
+  image:
+    repository: alpine
+    tag: "3.11"
+  resources:
+    limits:
+      memory: 64Mi
+    requests:
+      memory: 32Mi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+redis:
+  enabled: true
+  serviceType: ClusterIP
+  image:
+    repository: redis
+    tag: "7-alpine"
+    pullPolicy: IfNotPresent
+  resources:
+    limits:
+      memory: 512Mi
+    requests:
+      memory: 256Mi
+  persistence:
+    enabled: true
+    existingClaim: ""
+    storageClassName: ""
+    accessMode: ReadWriteOnce
+    size: 2Gi
+    mountPath: /data
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+async:
+  enabled: true
+  serviceName: async
+  serviceType: ClusterIP
+  image:
+    repository: eeacms/climateadapt-async-translate
+    tag: "v1.1.1"
+    pullPolicy: Always
+  port: 3000
+  resources:
+    limits:
+      memory: 1Gi
+    requests:
+      memory: 512Mi
+  environment:
+    PORTAL_URL: "https://climate-adapt.eea.europa.eu"
+    TRANSLATION_AUTH_TOKEN: ""
+    BULL_QUEUE_NAMES_CSV: etranslation,save_etranslation,sync_paths,delete_translation
+    ENABLED_JOBS: save_translated_html,call_etranslation,etranslation,sync_translated_paths,delete_translation
+  livenessProbe:
+    tcpSocket:
+      port: http
+    periodSeconds: 20
+    timeoutSeconds: 3
+    initialDelaySeconds: 20
+    failureThreshold: 5
+    successThreshold: 1
+  startupProbe:
+    tcpSocket:
+      port: http
+    periodSeconds: 5
+    timeoutSeconds: 3
+    initialDelaySeconds: 10
+    failureThreshold: 12
+    successThreshold: 1
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+converter:
+  enabled: true
+  image:
+    repository: eeacms/eea-volto-blocks-converter
+    tag: "v1.0.7"
+    pullPolicy: Always
+  resources:
+    limits:
+      memory: 256Mi
+    requests:
+      memory: 128Mi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+rsync:
+  enabled: false
+  image:
+    repository: eeacms/rsync
+    tag: ""
+    pullPolicy: Always
+  command:
+    - server
+  resources:
+    limits:
+      memory: 1Gi
+    requests:
+      memory: 512Mi
+  environment:
+    SSH_AUTH_KEY_1: ""
+  mounts: []
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+zodbpack:
+  enabled: true
+  schedule: "0 1 * * *"
+  keepSuccessfulPods: 3
+  keepFailedPods: 5
+  image:
+    repository: eeacms/eea.docker.plone-climateadapt
+    tag: "v10.0.0-plone6.1"
+    pullPolicy: Always
+  releaseVersion: ""
+  command:
+    - /app/bin/zodbpack
+    - /app/sources/zodbpack.conf
+  resources:
+    limits:
+      memory: 8Gi
+    requests:
+      memory: 8Gi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  podSecurityContext: {}
+  securityContext: {}
+
+detectBrokenLinks:
+  enabled: true
+  schedule: "0 3 * * *"
+  keepSuccessfulPods: 3
+  keepFailedPods: 5
+  image:
+    repository: curlimages/curl
+    tag: "8.8.0"
+  authHeaderName: Authentication
+  authToken: ""
+  resources:
+    limits:
+      memory: 64Mi
+    requests:
+      memory: 32Mi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+debug:
+  serviceType: ClusterIP
+  serviceName: backend-debug
+  enabled: false
+  image:
+    repository: eeacms/eea.docker.plone-climateadapt
+    tag: "v11.0.4-plone6.1"
+    pullPolicy: Always
+  resources:
+    limits:
+      memory: 4Gi
+    requests:
+      memory: 1Gi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  podAnnotations: {}
+  podSecurityContext: {}
+  securityContext: {}
+  environment: {}
+
+postfix:
+  fullnameOverride: ""
+  dryrun: false
+  serverName: climate-adapt.eea.europa.eu
+  mtpPass: ""
+  mtpPort: "8587"
+  mtpRelay: ironports.eea.europa.eu
+  mtpUser: climate-adapt-usr
+  serviceName: "postfix"
+  mailtrap:
+    httpenabled: false
+    serviceType: ClusterIP
+    ingress:
+      enabled: false

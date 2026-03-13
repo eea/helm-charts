@@ -10797,6 +10797,25 @@ entries:
     urls:
     - casservice-1.0.0.tgz
     version: 1.0.0
+  cca-backend:
+  - apiVersion: v2
+    appVersion: v10.0.1-plone6.1
+    created: "2026-03-13T12:44:51.017739+02:00"
+    dependencies:
+    - name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.2.0
+    description: Climate-ADAPT backend
+    digest: 61b9cb5c9b7a401b81520263de51ad84865993b9612adb9aa117e4a8b23badaa
+    home: https://climate-adapt.eea.europa.eu
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/cca-backend/logo.svg
+    keywords:
+    - CMS
+    name: cca-backend
+    type: application
+    urls:
+    - cca-backend-0.1.0.tgz
+    version: 0.1.0
   cca-frontend:
   - apiVersion: v2
     appVersion: 1.113.0
@@ -46297,4 +46316,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2026-03-13T12:44:34.287491+02:00"
+generated: "2026-03-13T12:44:51.016165+02:00"

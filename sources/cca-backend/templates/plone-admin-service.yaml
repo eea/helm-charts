@@ -1,0 +1,18 @@
+{{- if .Values.ploneAdmin.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.ploneAdmin.serviceName }}
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: plone-admin
+spec:
+  type: {{ .Values.ploneAdmin.serviceType }}
+  ports:
+    - name: http
+      port: 8080
+      targetPort: http
+  selector:
+    {{- include "appl.selectorLabels" . | nindent 4 }}
+    component: plone-admin
+{{- end }}

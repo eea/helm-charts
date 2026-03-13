@@ -1,0 +1,64 @@
+{{- if .Values.async.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: async
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: async
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: async
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: async
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      containers:
+        - name: async
+          image: "{{ .Values.async.image.repository }}:{{ .Values.async.image.tag }}"
+          imagePullPolicy: {{ .Values.async.image.pullPolicy }}
+          env:
+            - name: TZ
+              value: "{{ .Values.timezone }}"
+            {{- range $key, $value := .Values.async.environment }}
+            {{- if $value }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+            {{- end }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.async.port }}
+          {{- if .Values.async.livenessProbe }}
+          livenessProbe:
+            {{- toYaml .Values.async.livenessProbe | nindent 12 }}
+          {{- end }}
+          {{- if .Values.async.startupProbe }}
+          startupProbe:
+            {{- toYaml .Values.async.startupProbe | nindent 12 }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.async.resources | nindent 12 }}
+      {{- with .Values.async.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.async.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.async.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}

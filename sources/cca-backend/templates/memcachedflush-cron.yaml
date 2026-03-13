@@ -1,0 +1,45 @@
+{{- if .Values.memcachedflush.enabled }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: memcachedflush
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: memcachedflush
+spec:
+  schedule: "{{ .Values.memcachedflush.schedule }}"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: {{ .Values.memcachedflush.keepSuccessfulPods }}
+  failedJobsHistoryLimit: {{ .Values.memcachedflush.keepFailedPods }}
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          {{- with .Values.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          serviceAccountName: {{ include "appl.serviceAccountName" . }}
+          containers:
+            - name: memcachedflush
+              image: "{{ .Values.memcachedflush.image.repository }}:{{ .Values.memcachedflush.image.tag }}"
+              command:
+                - /bin/sh
+                - -c
+                - echo 'flush_all' | nc memcached 11211
+              resources:
+                {{- toYaml .Values.memcachedflush.resources | nindent 16 }}
+          {{- with .Values.memcachedflush.nodeSelector }}
+          nodeSelector:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.memcachedflush.affinity }}
+          affinity:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.memcachedflush.tolerations }}
+          tolerations:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          restartPolicy: Never
+{{- end }}

@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: plone
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: plone
+spec:
+  replicas: {{ .Values.plone.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: plone
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: plone
+      {{- with .Values.plone.annotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      containers:
+        - name: plone
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+{{ include "cca-backend.backendEnv" (dict "root" . "component" .Values.plone) | nindent 12 }}
+          ports:
+            - name: http
+              containerPort: 8080
+          {{- if .Values.plone.command }}
+          command:
+            {{- toYaml .Values.plone.command | nindent 12 }}
+          {{- end }}
+          {{- if .Values.plone.livenessProbe }}
+          livenessProbe:
+            {{- toYaml .Values.plone.livenessProbe | nindent 12 }}
+          {{- end }}
+          {{- if .Values.plone.startupProbe }}
+          startupProbe:
+            {{- toYaml .Values.plone.startupProbe | nindent 12 }}
+          {{- end }}
+          {{- if .Values.plone.readinessProbe }}
+          readinessProbe:
+            {{- toYaml .Values.plone.readinessProbe | nindent 12 }}
+          {{- end }}
+          {{- $mounts := include "cca-backend.sharedVolumeMounts" . | trim }}
+          {{- if $mounts }}
+          volumeMounts:
+{{ $mounts | nindent 12 }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.plone.resources | nindent 12 }}
+      {{- $volumes := include "cca-backend.sharedVolumes" . | trim }}
+      {{- if $volumes }}
+      volumes:
+{{ $volumes | nindent 8 }}
+      {{- end }}
+      {{- with .Values.plone.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.plone.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.plone.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

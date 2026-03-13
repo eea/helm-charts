@@ -1,0 +1,60 @@
+{{- if .Values.zodbpack.enabled }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: zodbpack
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: zodbpack
+spec:
+  schedule: "{{ .Values.zodbpack.schedule }}"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: {{ .Values.zodbpack.keepSuccessfulPods }}
+  failedJobsHistoryLimit: {{ .Values.zodbpack.keepFailedPods }}
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          {{- with .Values.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          serviceAccountName: {{ include "appl.serviceAccountName" . }}
+          containers:
+            - name: zodbpack
+              image: "{{ .Values.zodbpack.image.repository }}:{{ .Values.zodbpack.image.tag }}"
+              imagePullPolicy: {{ .Values.zodbpack.image.pullPolicy }}
+              {{- if .Values.zodbpack.command }}
+              command:
+                {{- toYaml .Values.zodbpack.command | nindent 16 }}
+              {{- end }}
+              env:
+{{ include "cca-backend.backendEnv" (dict "root" . "component" .Values.zodbpack) | nindent 16 }}
+              {{- $mounts := include "cca-backend.sharedVolumeMounts" . | trim }}
+              {{- if $mounts }}
+              volumeMounts:
+{{ $mounts | nindent 16 }}
+              {{- end }}
+              resources:
+                {{- toYaml .Values.zodbpack.resources | nindent 16 }}
+              securityContext:
+                {{- toYaml .Values.zodbpack.securityContext | nindent 16 }}
+          {{- $volumes := include "cca-backend.sharedVolumes" . | trim }}
+          {{- if $volumes }}
+          volumes:
+{{ $volumes | nindent 12 }}
+          {{- end }}
+          {{- with .Values.zodbpack.nodeSelector }}
+          nodeSelector:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.zodbpack.affinity }}
+          affinity:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.zodbpack.tolerations }}
+          tolerations:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          restartPolicy: Never
+{{- end }}

@@ -1,0 +1,18 @@
+{{- if .Values.async.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.async.serviceName }}
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: async
+spec:
+  type: {{ .Values.async.serviceType }}
+  ports:
+    - name: http
+      port: {{ .Values.async.port }}
+      targetPort: http
+  selector:
+    {{- include "appl.selectorLabels" . | nindent 4 }}
+    component: async
+{{- end }}

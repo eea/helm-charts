@@ -1,0 +1,9 @@
+{{- if .Values.links.createPostgresService }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: "postgres"
+spec:
+  type: ExternalName
+  externalName: "{{ .Values.links.database }}.svc.cluster.local"
+{{- end }}

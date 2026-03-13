@@ -1,0 +1,36 @@
+{{- if .Values.plone.autoscaling.enabled }}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: plone
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: plone
+
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: plone
+
+  minReplicas: {{ .Values.plone.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.plone.autoscaling.maxReplicas }}
+
+  metrics:
+    {{- if .Values.plone.autoscaling.targetCPUUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.plone.autoscaling.targetCPUUtilizationPercentage }}
+    {{- end }}
+    {{- if .Values.plone.autoscaling.targetMemoryUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.plone.autoscaling.targetMemoryUtilizationPercentage }}
+    {{- end }}
+{{- end }}

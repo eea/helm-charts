@@ -1,0 +1,48 @@
+{{- if and .Values.detectBrokenLinks.enabled .Values.detectBrokenLinks.authToken }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: detect-broken-links
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: detect-broken-links
+spec:
+  schedule: "{{ .Values.detectBrokenLinks.schedule }}"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: {{ .Values.detectBrokenLinks.keepSuccessfulPods }}
+  failedJobsHistoryLimit: {{ .Values.detectBrokenLinks.keepFailedPods }}
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          {{- with .Values.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          serviceAccountName: {{ include "appl.serviceAccountName" . }}
+          containers:
+            - name: detect-broken-links
+              image: "{{ .Values.detectBrokenLinks.image.repository }}:{{ .Values.detectBrokenLinks.image.tag }}"
+              command:
+                - /bin/sh
+                - -c
+                - >
+                  curl -v
+                  -H "{{ .Values.detectBrokenLinks.authHeaderName }}:{{ .Values.detectBrokenLinks.authToken }}"
+                  "http://{{ .Values.ploneAdmin.serviceName }}:8080/VirtualHostBase/https/{{ .Values.plone.hostname }}:443/{{ .Values.plone.site }}/VirtualHostRoot/_vh__admin/@@compute-broken-links-trigger"
+              resources:
+                {{- toYaml .Values.detectBrokenLinks.resources | nindent 16 }}
+          {{- with .Values.detectBrokenLinks.nodeSelector }}
+          nodeSelector:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.detectBrokenLinks.affinity }}
+          affinity:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.detectBrokenLinks.tolerations }}
+          tolerations:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          restartPolicy: Never
+{{- end }}

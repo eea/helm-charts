@@ -1,0 +1,94 @@
+{{- if and .Values.persistence.data.enabled (not .Values.persistence.data.existingClaim) }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ printf "%s-shared-data" .Release.Name }}
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: shared-data
+spec:
+  accessModes:
+    - {{ .Values.persistence.data.accessMode }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.data.size }}
+  {{- if .Values.persistence.data.storageClassName }}
+  storageClassName: {{ .Values.persistence.data.storageClassName }}
+  {{- end }}
+---
+{{- end }}
+{{- if and .Values.persistence.import.enabled (not .Values.persistence.import.existingClaim) }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ printf "%s-import" .Release.Name }}
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: import-data
+spec:
+  accessModes:
+    - {{ .Values.persistence.import.accessMode }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.import.size }}
+  {{- if .Values.persistence.import.storageClassName }}
+  storageClassName: {{ .Values.persistence.import.storageClassName }}
+  {{- end }}
+---
+{{- end }}
+{{- if and .Values.persistence.legacyImport.enabled (not .Values.persistence.legacyImport.existingClaim) }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ printf "%s-legacy-import" .Release.Name }}
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: legacy-import-data
+spec:
+  accessModes:
+    - {{ .Values.persistence.legacyImport.accessMode }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.legacyImport.size }}
+  {{- if .Values.persistence.legacyImport.storageClassName }}
+  storageClassName: {{ .Values.persistence.legacyImport.storageClassName }}
+  {{- end }}
+---
+{{- end }}
+{{- if and .Values.persistence.sources.enabled (not .Values.persistence.sources.existingClaim) }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ printf "%s-sources" .Release.Name }}
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: sources-data
+spec:
+  accessModes:
+    - {{ .Values.persistence.sources.accessMode }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.sources.size }}
+  {{- if .Values.persistence.sources.storageClassName }}
+  storageClassName: {{ .Values.persistence.sources.storageClassName }}
+  {{- end }}
+---
+{{- end }}
+{{- if and .Values.redis.enabled .Values.redis.persistence.enabled (not .Values.redis.persistence.existingClaim) }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ printf "%s-redis" .Release.Name }}
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: redis-data
+spec:
+  accessModes:
+    - {{ .Values.redis.persistence.accessMode }}
+  resources:
+    requests:
+      storage: {{ .Values.redis.persistence.size }}
+  {{- if .Values.redis.persistence.storageClassName }}
+  storageClassName: {{ .Values.redis.persistence.storageClassName }}
+  {{- end }}
+{{- end }}
