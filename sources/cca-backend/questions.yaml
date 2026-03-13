@@ -39,20 +39,20 @@ questions:
     show_if: "ingress.enabled=true"
 
   - variable: "links.createPostgresService"
-    label: "Create postgres alias"
-    description: "Create an ExternalName service called postgres"
+    label: "Create postgres ExternalName service"
+    description: "Set to false if a service named postgres already exists in the namespace"
     default: false
     type: "boolean"
     required: true
     group: "General"
-
-  - variable: "links.database"
-    label: "PostgreSQL service"
-    description: "External PostgreSQL service, format SERVICE.NAMESPACE"
-    default: "postgres.database"
-    type: "string"
-    required: true
-    group: "General"
+    show_subquestion_if: true
+    subquestions:
+      - variable: "links.database"
+        label: "PostgreSQL external service"
+        description: "External PostgreSQL service, format SERVICE.NAMESPACE"
+        default: "postgres.database"
+        type: "string"
+        required: true
 
   - variable: "plone.serviceType"
     label: "Expose plone"
@@ -174,93 +174,49 @@ questions:
     type: "int"
     default: 6
     required: true
-    group: "Services"
+    group: "General"
 
   - variable: "ploneAdmin.enabled"
     label: "Enable plone-admin"
     default: true
     type: "boolean"
     required: true
-    group: "Services"
+    group: "General"
 
   - variable: "ploneTranslate.enabled"
     label: "Enable plone-translate"
     default: true
     type: "boolean"
     required: true
-    group: "Services"
-
-  - variable: "haproxy.enabled"
-    label: "Enable haproxy"
-    default: true
-    type: "boolean"
-    required: true
-    group: "Services"
+    group: "General"
 
   - variable: "memcached.enabled"
     label: "Enable memcached"
     default: true
     type: "boolean"
     required: true
-    group: "Services"
-
-  - variable: "redis.enabled"
-    label: "Enable redis"
-    default: true
-    type: "boolean"
-    required: true
-    group: "Services"
-
-  - variable: "redis.image.tag"
-    label: "Redis image tag"
-    type: "string"
-    default: "7-alpine"
-    required: true
-    group: "Services"
-    show_if: "redis.enabled=true"
-
-  - variable: "async.enabled"
-    label: "Enable async translate"
-    default: true
-    type: "boolean"
-    required: true
-    group: "Services"
-
-  - variable: "async.image.tag"
-    label: "Async image tag"
-    type: "string"
-    default: "v1.1.1"
-    required: true
-    group: "Services"
-    show_if: "async.enabled=true"
-
-  - variable: "converter.enabled"
-    label: "Enable converter"
-    default: true
-    type: "boolean"
-    required: true
-    group: "Services"
+    group: "General"
 
   - variable: "rsync.enabled"
     label: "Enable rsync"
     default: false
     type: "boolean"
     required: true
-    group: "Services"
+    group: "General"
 
   - variable: "zodbpack.enabled"
     label: "Enable zodbpack"
     default: true
     type: "boolean"
     required: true
-    group: "Services"
+    group: "General"
 
   - variable: "zodbpack.schedule"
     label: "Zodbpack schedule"
     type: "string"
     default: "0 1 * * *"
     required: true
-    group: "Services"
+    group: "General"
     show_if: "zodbpack.enabled=true"
 
   - variable: "detectBrokenLinks.enabled"
@@ -268,14 +224,14 @@ questions:
     default: true
     type: "boolean"
     required: true
-    group: "Services"
+    group: "General"
 
   - variable: "detectBrokenLinks.schedule"
     label: "Broken links schedule"
     type: "string"
     default: "0 3 * * *"
     required: true
-    group: "Services"
+    group: "General"
     show_if: "detectBrokenLinks.enabled=true"
 
   - variable: "detectBrokenLinks.authToken"
@@ -283,7 +239,7 @@ questions:
     type: "password"
     default: ""
     required: false
-    group: "Services"
+    group: "General"
     show_if: "detectBrokenLinks.enabled=true"
 
   - variable: "varnish.port"

@@ -235,7 +235,7 @@ varnish:
     repository: tiberiuichim/plone-varnish
     tag: "7.7-1.4"
     pullPolicy: Always
-  backend: backend-haproxy
+  backend: backend-plone
   port: 8080
   resources:
     limits:
@@ -273,54 +273,6 @@ varnish:
     initialDelaySeconds: 10
     failureThreshold: 12
     successThreshold: 1
-
-haproxy:
-  enabled: true
-  serviceName: backend-haproxy
-  serviceType: ClusterIP
-  image:
-    repository: eeacms/haproxy
-    tag: "1.8-1.7"
-    pullPolicy: Always
-  port: 8080
-  statsPort: 1936
-  environment:
-    BACKENDS: backend-plone
-    BACKENDS_PORT: "8080"
-    DNS_ENABLED: "true"
-    DOWN_INTER: "5s"
-    FAST_INTER: "15s"
-    FRONTEND_PORT: "8080"
-    HTTPCHK: "HEAD /"
-    INTER: "20s"
-    STATS_AUTH: ""
-    TIMEOUT_CLIENT: "120s"
-    TIMEOUT_SERVER: "120s"
-    BALANCE: leastconn
-  resources:
-    limits:
-      memory: 128Mi
-    requests:
-      memory: 128Mi
-  livenessProbe:
-    tcpSocket:
-      port: http
-    periodSeconds: 20
-    timeoutSeconds: 3
-    initialDelaySeconds: 20
-    failureThreshold: 3
-    successThreshold: 1
-  startupProbe:
-    tcpSocket:
-      port: http
-    periodSeconds: 5
-    timeoutSeconds: 3
-    initialDelaySeconds: 10
-    failureThreshold: 12
-    successThreshold: 1
-  nodeSelector: {}
-  tolerations: []
-  affinity: {}
 
 memcached:
   enabled: true
