@@ -91,13 +91,13 @@ The script does:
 
 ## Release script ( with Changelog update )
 
-After updating the helm chart, from inside the helm chart source directory, run:
+After updating the helm chart, before commiting the changes, from inside the helm chart source directory, run:
 
     ../../release.sh
 
 This script will run all the necessary steps to do a release, including increasing the version and adding the CHANGELOG and COMMIT message you provide it.
 
-Please use this script so all the helm charts changes will have a changelog and a commit in order to have a easy way to follow the upgrades.
+Please use this script so all the helm charts changes will have a easy to follow changelog with commit links in order to have a easy way to follow the upgrades.
 
 ## Subcharts update after release
 
