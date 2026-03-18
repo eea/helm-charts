@@ -40,15 +40,19 @@ storage:
   filesDir:
     storageClassName: "nfs-client"
     size: 200Gi
+    existingClaim: ""
   tmpDir:
     storageClassName: "nfs-client"
     size: 10Gi
+    existingClaim: ""
   github:
     storageClassName: "nfs-client"
     size: 1Gi
+    existingClaim: ""
   plugins:
     storageClassName: "nfs-client"
     size: 1Gi
+    existingClaim: ""
   assets:
     storageClassName: "nfs-client"
     size: 2Gi
@@ -86,6 +90,8 @@ redmine:
       REDMINE_DB_ENCODING: utf8mb4
       REDMINE_DB_MYSQL: mysql
       REDMINE_DB_POOL: '10'
+      WEB_CONCURRENCY: "2"
+      RAILS_MAX_THREADS: "5"
       REDMINE_HOST: redmine:3000
       REDMINE_SMTP_DOMAIN: eionet.europa.eu
       REDMINE_SMTP_STARTTLSAUTO: 'true'
@@ -410,6 +416,7 @@ memcached:
     successThreshold: 1
        
 httpd:
+  replicas: 1
   serviceType: ClusterIP
   securityContext: {}
   resources:

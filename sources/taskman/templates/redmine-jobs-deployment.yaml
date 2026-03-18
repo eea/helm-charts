@@ -1,5 +1,9 @@
 {{- $recurring := .Values.redmineJobs.recurring | default dict }}
 {{- $recurringEnabled := $recurring.enabled | default true }}
+{{- $filesClaim := .Values.storage.filesDir.existingClaim | default (printf "redmine-files-%s-redmine-ss-0" .Release.Name) }}
+{{- $tmpClaim := .Values.storage.tmpDir.existingClaim | default (printf "redmine-tmp-%s-redmine-ss-0" .Release.Name) }}
+{{- $githubClaim := .Values.storage.github.existingClaim | default (printf "github-%s-redmine-ss-0" .Release.Name) }}
+{{- $pluginsClaim := .Values.storage.plugins.existingClaim | default (printf "plugins-%s-redmine-ss-0" .Release.Name) }}
 {{- if and (hasKey .Values "redmineJobs") (.Values.redmineJobs.enabled) }}
 apiVersion: apps/v1
 kind: Deployment
@@ -83,16 +87,16 @@ spec:
       volumes:
       - name: redmine-files
         persistentVolumeClaim:
-          claimName: redmine-files-{{ .Release.Name }}-redmine-ss-0
+          claimName: {{ $filesClaim }}
       - name: redmine-tmp
         persistentVolumeClaim:
-          claimName: redmine-tmp-{{ .Release.Name }}-redmine-ss-0
+          claimName: {{ $tmpClaim }}
       - name: github
         persistentVolumeClaim:
-          claimName: github-{{ .Release.Name }}-redmine-ss-0
+          claimName: {{ $githubClaim }}
       - name: plugins
         persistentVolumeClaim:
-          claimName: plugins-{{ .Release.Name }}-redmine-ss-0
+          claimName: {{ $pluginsClaim }}
       - name: recurring-config
         configMap:
           name: {{ .Release.Name }}-redmine-recurring-cm

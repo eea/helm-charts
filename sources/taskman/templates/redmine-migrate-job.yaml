@@ -1,6 +1,10 @@
 {{- $migrate := .Values.redmineMigrate | default dict }}
 {{- $migrateEnabled := $migrate.enabled | default false }}
 {{- $migrateEnv := $migrate.environment | default dict }}
+{{- $filesClaim := .Values.storage.filesDir.existingClaim | default (printf "redmine-files-%s-redmine-ss-0" .Release.Name) }}
+{{- $tmpClaim := .Values.storage.tmpDir.existingClaim | default (printf "redmine-tmp-%s-redmine-ss-0" .Release.Name) }}
+{{- $githubClaim := .Values.storage.github.existingClaim | default (printf "github-%s-redmine-ss-0" .Release.Name) }}
+{{- $pluginsClaim := .Values.storage.plugins.existingClaim | default (printf "plugins-%s-redmine-ss-0" .Release.Name) }}
 {{- if $migrateEnabled }}
 apiVersion: batch/v1
 kind: Job
@@ -87,14 +91,14 @@ spec:
       volumes:
       - name: redmine-files
         persistentVolumeClaim:
-          claimName: redmine-files-{{ .Release.Name }}-redmine-ss-0
+          claimName: {{ $filesClaim }}
       - name: redmine-tmp
         persistentVolumeClaim:
-          claimName: redmine-tmp-{{ .Release.Name }}-redmine-ss-0
+          claimName: {{ $tmpClaim }}
       - name: github
         persistentVolumeClaim:
-          claimName: github-{{ .Release.Name }}-redmine-ss-0
+          claimName: {{ $githubClaim }}
       - name: plugins
         persistentVolumeClaim:
-          claimName: plugins-{{ .Release.Name }}-redmine-ss-0
+          claimName: {{ $pluginsClaim }}
 {{- end }}

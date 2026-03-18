@@ -1,6 +1,6 @@
 {{- $addonsSync := .Values.addonsSync | default dict }}
 {{- $addonsSyncEnabled := $addonsSync.enabled | default false }}
-{{- $redmineReplicas := int (.Values.redmine.replicas | default 1) }}
+{{- $pluginsClaim := .Values.storage.plugins.existingClaim | default (printf "plugins-%s-redmine-ss-0" .Release.Name) }}
 {{- if $addonsSyncEnabled }}
 apiVersion: batch/v1
 kind: Job
@@ -216,16 +216,12 @@ spec:
         - name: A1_THEME_ZIP
           value: {{ .Values.redmine.environment.A1_THEME_ZIP | default "a1_theme-4_1_2.zip" | quote }}
         volumeMounts:
-        {{- range $i, $_ := until $redmineReplicas }}
-        - name: plugins-{{ $i }}
-          mountPath: /addons-{{ $i }}
-        {{- end }}
+        - name: plugins
+          mountPath: /addons-0
         resources:
           {{- toYaml ($addonsSync.resources | default dict) | nindent 10 }}
       volumes:
-      {{- range $i, $_ := until $redmineReplicas }}
-      - name: plugins-{{ $i }}
+      - name: plugins
         persistentVolumeClaim:
-          claimName: plugins-{{ $.Release.Name }}-redmine-ss-{{ $i }}
-      {{- end }}
+          claimName: {{ $pluginsClaim }}
 {{- end }}

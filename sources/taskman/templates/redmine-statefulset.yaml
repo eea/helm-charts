@@ -1,7 +1,7 @@
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-redmine-ss
+  name: {{ .Release.Name }}-redmine-dpl
   labels:
     {{- include "appl.labels" . | nindent 4 }}
     component: redmine
@@ -9,10 +9,11 @@ spec:
   {{- $mainStartServer := .Values.redmine.environment.START_SERVER | default "1" }}
   {{- $mainStartCron := .Values.redmine.environment.START_CRON | default "0" }}
   {{- $mainStartSolidQueue := .Values.redmine.environment.START_SOLID_QUEUE | default "0" }}
-  {{- $recurring := .Values.redmineJobs.recurring | default dict }}
-  {{- $recurringEnabled := $recurring.enabled | default true }}
+  {{- $filesClaim := .Values.storage.filesDir.existingClaim | default (printf "redmine-files-%s-redmine-ss-0" .Release.Name) }}
+  {{- $tmpClaim := .Values.storage.tmpDir.existingClaim | default (printf "redmine-tmp-%s-redmine-ss-0" .Release.Name) }}
+  {{- $githubClaim := .Values.storage.github.existingClaim | default (printf "github-%s-redmine-ss-0" .Release.Name) }}
+  {{- $pluginsClaim := .Values.storage.plugins.existingClaim | default (printf "plugins-%s-redmine-ss-0" .Release.Name) }}
   replicas: {{ .Values.redmine.replicas | default 1 }}
-  serviceName: redmine
   selector:
     matchLabels:
       {{- include "appl.selectorLabels" . | nindent 6 }}
@@ -111,49 +112,17 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      volumes:
+      - name: redmine-files
+        persistentVolumeClaim:
+          claimName: {{ $filesClaim }}
+      - name: redmine-tmp
+        persistentVolumeClaim:
+          claimName: {{ $tmpClaim }}
+      - name: github
+        persistentVolumeClaim:
+          claimName: {{ $githubClaim }}
+      - name: plugins
+        persistentVolumeClaim:
+          claimName: {{ $pluginsClaim }}
       restartPolicy: Always
-  volumeClaimTemplates:
-    - metadata:
-        name: redmine-files
-      spec:
-        accessModes:
-          - ReadWriteOnce
-        {{- if .Values.storage.filesDir.storageClassName }}
-        storageClassName: "{{ .Values.storage.filesDir.storageClassName }}"
-        {{- end }}
-        resources:
-          requests:
-            storage: "{{ .Values.storage.filesDir.size }}"
-    - metadata:
-        name: redmine-tmp
-      spec:
-        accessModes:
-          - ReadWriteOnce
-        {{- if .Values.storage.tmpDir.storageClassName }}
-        storageClassName: "{{ .Values.storage.tmpDir.storageClassName }}"
-        {{- end }}
-        resources:
-          requests:
-            storage: "{{ .Values.storage.tmpDir.size }}"
-    - metadata:
-        name: plugins
-      spec:
-        accessModes:
-          - ReadWriteMany
-        {{- if .Values.storage.filesDir.storageClassName }}
-        storageClassName: "{{ .Values.storage.plugins.storageClassName }}"
-        {{- end }}
-        resources:
-          requests:
-            storage: "{{ .Values.storage.plugins.size }}"
-    - metadata:
-        name: github
-      spec:
-        accessModes:
-          - ReadWriteMany
-        {{- if .Values.storage.tmpDir.storageClassName }}
-        storageClassName: "{{ .Values.storage.github.storageClassName }}"
-        {{- end }}
-        resources:
-          requests:
-            storage: "{{ .Values.storage.github.size }}"

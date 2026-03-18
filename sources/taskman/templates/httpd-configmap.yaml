@@ -56,7 +56,7 @@ data:
 
         # --- Upstream (persistent keepalive) ---
         upstream redmine {
-            server redmine:3000 max_fails=3 fail_timeout=30s;
+            server redmine:3000;
             keepalive 128;
         }
 
@@ -155,6 +155,9 @@ data:
             location / {
                 proxy_pass http://redmine;
                 proxy_intercept_errors on;
+                proxy_next_upstream error timeout invalid_header http_502 http_503 http_504;
+                proxy_next_upstream_tries 3;
+                proxy_next_upstream_timeout 10s;
                 proxy_cache redmine_static;
                 proxy_cache_valid 200 10m;
                 proxy_cache_bypass $cookie__redmine_session;
