@@ -1,0 +1,231 @@
+{{- $addonsSync := .Values.addonsSync | default dict }}
+{{- $addonsSyncEnabled := $addonsSync.enabled | default false }}
+{{- $redmineReplicas := int (.Values.redmine.replicas | default 1) }}
+{{- if $addonsSyncEnabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .Release.Name }}-addons-sync-job
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: addons-sync
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "-10"
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+spec:
+  backoffLimit: {{ $addonsSync.backoffLimit | default 3 }}
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: addons-sync
+    spec:
+      restartPolicy: OnFailure
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      containers:
+      - name: {{ .Release.Name }}-addons-sync
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        command: ["/bin/bash", "-lc"]
+        args:
+        - |
+          set -euo pipefail
+
+          remote_meta() {
+            local url="$1"
+            local headers etag lm cl
+            if command -v curl >/dev/null 2>&1; then
+              headers="$(curl -fsSI --connect-timeout 20 --max-time 60 -u "${PLUGINS_USER}:${PLUGINS_PASSWORD}" "$url" || true)"
+            elif command -v wget >/dev/null 2>&1; then
+              headers="$(wget -q -S --spider --user="${PLUGINS_USER}" --password="${PLUGINS_PASSWORD}" "$url" 2>&1 || true)"
+            else
+              echo ""
+              return
+            fi
+            if [ -z "$headers" ]; then
+              echo ""
+              return
+            fi
+            etag="$(printf '%s\n' "$headers" | tr -d '\r' | awk -F': ' 'tolower($1)=="etag"{print $2; exit}')"
+            lm="$(printf '%s\n' "$headers" | tr -d '\r' | awk -F': ' 'tolower($1)=="last-modified"{print $2; exit}')"
+            cl="$(printf '%s\n' "$headers" | tr -d '\r' | awk -F': ' 'tolower($1)=="content-length"{print $2; exit}')"
+            printf '%s|%s|%s' "${etag:-no-etag}" "${lm:-no-last-modified}" "${cl:-no-content-length}"
+          }
+
+          read_addons_manifest() {
+            local cfg_addons="/usr/src/redmine/addons.cfg"
+            local cfg_plugins="/usr/src/redmine/plugins.cfg"
+            local c1="" c2="" c3="" c4="" kind="" name="" location="" archive=""
+
+            if [ -f "${cfg_addons}" ]; then
+              while IFS=: read -r c1 c2 c3 c4; do
+                [ -n "${c1}" ] || continue
+                case "${c1}" in
+                  \#*) continue ;;
+                esac
+                kind="${c1}"
+                name="${c2}"
+                location="${c3}"
+                archive="${c4}"
+                [ -n "${name}" ] || continue
+                [ -n "${location}" ] || continue
+                [ -n "${archive}" ] || continue
+                printf '%s:%s:%s:%s\n' "${kind}" "${name}" "${location}" "${archive}"
+              done < "${cfg_addons}"
+              return 0
+            fi
+
+            if [ -f "${cfg_plugins}" ]; then
+              while IFS=: read -r c1 c2; do
+                [ -n "${c1}" ] || continue
+                case "${c1}" in
+                  \#*) continue ;;
+                esac
+                name="${c1}"
+                archive="${c2}"
+                [ -n "${name}" ] || continue
+                [ -n "${archive}" ] || continue
+                printf 'plugin:%s:plugins:%s\n' "${name}" "${archive}"
+              done < "${cfg_plugins}"
+              return 0
+            fi
+
+            echo "No addons manifest found in image (${cfg_addons} or ${cfg_plugins})" >&2
+            return 1
+          }
+
+          theme_zip_from_manifest() {
+            local kind="" name="" location="" archive="" fallback=""
+            while IFS=: read -r kind name location archive; do
+              [ "${kind}" = "theme" ] || continue
+              if [ "${name}" = "${A1_THEME_ID:-a1}" ]; then
+                echo "${archive}"
+                return 0
+              fi
+              [ -n "${fallback}" ] || fallback="${archive}"
+            done < <(read_addons_manifest)
+            [ -n "${fallback}" ] && echo "${fallback}" || true
+          }
+
+          theme_location_from_manifest() {
+            local kind="" name="" location="" archive="" fallback=""
+            while IFS=: read -r kind name location archive; do
+              [ "${kind}" = "theme" ] || continue
+              if [ "${name}" = "${A1_THEME_ID:-a1}" ]; then
+                echo "${location}"
+                return 0
+              fi
+              [ -n "${fallback}" ] || fallback="${location}"
+            done < <(read_addons_manifest)
+            [ -n "${fallback}" ] && echo "${fallback}" || echo "themes"
+          }
+
+          compute_remote_hash() {
+            local manifest="" kind name location archive plugin_url meta theme_url theme_zip theme_location addons_base_url
+            addons_base_url="${ADDONS_BASE_URL:-${PLUGINS_URL%/plugins}}"
+            while IFS=: read -r kind name location archive; do
+              [ "${kind}" = "plugin" ] || continue
+              plugin_url="${addons_base_url}/${location}/${archive}"
+              meta="$(remote_meta "$plugin_url")"
+              if [ -z "$meta" ]; then
+                echo "Failed to read metadata for ${plugin_url}" >&2
+                return 1
+              fi
+              manifest="${manifest}${name}:${archive}:${meta}\n"
+            done < <(read_addons_manifest)
+            theme_zip="${A1_THEME_ZIP:-}"
+            if [ -z "${theme_zip}" ]; then
+              theme_zip="$(theme_zip_from_manifest)"
+            fi
+            if [ -z "${theme_zip}" ]; then
+              theme_zip="a1_theme-4_1_2.zip"
+            fi
+            theme_location="$(theme_location_from_manifest)"
+            theme_url="${A1_THEME_URL:-${addons_base_url}/${theme_location}/${theme_zip}}"
+            meta="$(remote_meta "$theme_url")"
+            if [ -z "$meta" ]; then
+              echo "Failed to read metadata for ${theme_url}" >&2
+              return 1
+            fi
+            manifest="${manifest}${A1_THEME_ID:-a1}:${theme_zip}:${meta}\n"
+            printf '%b' "$manifest" | sha256sum | awk '{print $1}'
+          }
+
+          run_sync_once() {
+            if [ "${ADDONS_SYNC_SOURCE:-share}" = "share" ]; then
+              /usr/local/bin/sync_addons_from_share.sh
+            else
+              /usr/local/bin/sync_addons_from_dir.sh
+            fi
+          }
+
+          REMOTE_HASH="$(compute_remote_hash)"
+          echo "Remote addons hash: ${REMOTE_HASH}"
+
+          synced=0
+          for addons_root in /addons-*; do
+            [ -d "${addons_root}" ] || continue
+            marker="${addons_root}/.addons-sync-remote.sha256"
+            current="$(cat "${marker}" 2>/dev/null || true)"
+            if [ -n "${current}" ] && [ "${current}" = "${REMOTE_HASH}" ]; then
+              echo "Skipping ${addons_root}; remote addons unchanged"
+              continue
+            fi
+            echo "Syncing addons to ${addons_root}"
+            for attempt in $(seq 1 20); do
+              set +e
+              ADDONS_VOLUME_ROOT="${addons_root}" run_sync_once
+              rc=$?
+              set -e
+              if [ "${rc}" -eq 0 ]; then
+                printf '%s\n' "${REMOTE_HASH}" > "${marker}"
+                synced=$((synced + 1))
+                echo "Synced ${addons_root} successfully"
+                break
+              fi
+              echo "addons sync for ${addons_root} attempt ${attempt}/20 failed (rc=${rc}), retrying..." >&2
+              sleep $([ "${attempt}" -lt 5 ] && echo 10 || echo 30)
+            done
+            if [ ! -f "${marker}" ] || [ "$(cat "${marker}" 2>/dev/null || true)" != "${REMOTE_HASH}" ]; then
+              echo "addons sync failed for ${addons_root} after retries" >&2
+              exit 1
+            fi
+          done
+
+          echo "addons sync completed, updated volumes: ${synced}"
+        env:
+        - name: ADDONS_SYNC_SOURCE
+          value: {{ $addonsSync.source | default "share" | quote }}
+        - name: ADDONS_SYNC_SKIP_IF_PRESENT
+          value: {{ $addonsSync.skipIfPresent | default "0" | quote }}
+        - name: PLUGINS_URL
+          value: {{ .Values.redmine.environment.PLUGINS_URL | quote }}
+        - name: ADDONS_BASE_URL
+          value: {{ .Values.redmine.environment.ADDONS_BASE_URL | default "" | quote }}
+        - name: PLUGINS_USER
+          value: {{ .Values.redmine.environment.PLUGINS_USER | quote }}
+        - name: PLUGINS_PASSWORD
+          value: {{ .Values.redmine.environment.PLUGINS_PASSWORD | quote }}
+        - name: A1_THEME_URL
+          value: {{ .Values.redmine.environment.A1_THEME_URL | default "" | quote }}
+        - name: A1_THEME_ZIP
+          value: {{ .Values.redmine.environment.A1_THEME_ZIP | default "a1_theme-4_1_2.zip" | quote }}
+        volumeMounts:
+        {{- range $i, $_ := until $redmineReplicas }}
+        - name: plugins-{{ $i }}
+          mountPath: /addons-{{ $i }}
+        {{- end }}
+        resources:
+          {{- toYaml ($addonsSync.resources | default dict) | nindent 10 }}
+      volumes:
+      {{- range $i, $_ := until $redmineReplicas }}
+      - name: plugins-{{ $i }}
+        persistentVolumeClaim:
+          claimName: plugins-{{ $.Release.Name }}-redmine-ss-{{ $i }}
+      {{- end }}
+{{- end }}

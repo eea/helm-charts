@@ -1,0 +1,19 @@
+production:
+  rails_pulse_summary:
+    class: RailsPulse::SummaryJob
+    schedule: every 5 minutes
+  rails_pulse_day_refresh:
+    command: "begin; RailsPulse::SummaryService.new('day', Time.current).perform; Rails.logger.info('[rails_pulse_day_refresh] ok'); rescue => e; Rails.logger.error(\"[rails_pulse_day_refresh] #{e.class}: #{e.message}\"); raise; end"
+    schedule: every 5 minutes
+  rails_pulse_cleanup:
+    class: RailsPulse::CleanupJob
+    schedule: 17 3 * * *
+  taskman_default_mailbox:
+    command: "begin; require 'open3'; missing=%w[T_EMAIL_HOST T_EMAIL_USER T_EMAIL_PASS T_EMAIL_PORT].select { |k| ENV[k].to_s.strip.empty? }; raise(\"taskman_default_mailbox missing env: #{missing.join(',')}\") if missing.any?; cmd=%Q{bundle exec rake -f /usr/src/redmine/Rakefile redmine:email:receive_imap RAILS_ENV=production host=#{ENV['T_EMAIL_HOST']} username=#{ENV['T_EMAIL_USER']} password=#{ENV['T_EMAIL_PASS']} ssl=#{ENV['T_EMAIL_SSL']} port=#{ENV['T_EMAIL_PORT']} folder=#{ENV['T_EMAIL_FOLDER']} project=it-helpdesk move_on_success=read move_on_failure=failed allow_override=project,tracker,priority,status,category,fixed_version}; out,status=Open3.capture2e(cmd); if !status.success?; tail=out.to_s.lines.last(20).join.strip; Rails.logger.error(\"[taskman_default_mailbox] failed rc=#{status.exitstatus} tail=#{tail}\"); raise(\"taskman_default_mailbox failed rc=#{status.exitstatus}: #{tail}\"); end; rescue => e; Rails.logger.error(\"[taskman_default_mailbox] #{e.class}: #{e.message}\"); raise; end"
+    schedule: every 5 minutes
+  entra_users_sync:
+    command: "system('bundle exec rake -f /usr/src/redmine/Rakefile entra_id:sync:users RAILS_ENV=production') || raise('entra_users_sync failed')"
+    schedule: 0 * * * *
+  entra_groups_sync:
+    command: "system('bundle exec rake -f /usr/src/redmine/Rakefile entra_id:sync:groups RAILS_ENV=production') || raise('entra_groups_sync failed')"
+    schedule: 15 4 * * *

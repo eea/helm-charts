@@ -3,7 +3,7 @@
 image:
   repository: eeacms/redmine
   pullPolicy: Always
-  tag: ""
+  tag: "redmine6"
 
 imagePullSecrets: []
 
@@ -28,7 +28,7 @@ ingress:
     proxy-read-timeout: "180s"
     proxy-send-timeout: "120s"
   tls: true
-  certificate: ""
+  certificate: "taskman-test-01dev-tls"
   widget:
     enabled: false
     configuration:
@@ -49,21 +49,39 @@ storage:
   plugins:
     storageClassName: "nfs-client"
     size: 1Gi
+  assets:
+    storageClassName: "nfs-client"
+    size: 2Gi
 
 
 redmine:
+  replicas: 1
   serviceType: ClusterIP
-  hostname: taskman.eea.europa.eu
+  hostname: taskman-test.01dev.eea.europa.eu
+  annotations: {}
   resources:
     limits:
       memory: 4Gi
     requests:
       memory: 4Gi
   environment:
+      START_SERVER: "1"
+      START_CRON: "0"
+      START_SOLID_QUEUE: "0"
+      RUN_DB_MIGRATE: "0"
+      FAST_BOOT: "1"
+      REQUIRE_MOUNTED_ADDONS: "1"
+      MOUNTED_ADDONS_ROOT: "/addons/current"
+      RUNTIME_PLUGIN_SYNC: "0"
+      RUNTIME_THEME_SYNC: "0"
+      RUNTIME_BUNDLE_INSTALL: "0"
+      ASSETS_PRECOMPILE: "0"
+      ASSETS_PRECOMPILE_FORCE: "0"
       GITHUB_AUTHENTICATION: ''
       HELPDESK_EMAIL_KEY: ''
+      ADDONS_BASE_URL: https://cmshare.eea.europa.eu/remote.php/dav/files/redmine_plugin_installer/redmine6-files
       PLUGINS_PASSWORD: ''
-      PLUGINS_URL: https://cmshare.eea.europa.eu/remote.php/dav/files/redmine_plugin_installer/taskman
+      PLUGINS_URL: https://cmshare.eea.europa.eu/remote.php/dav/files/redmine_plugin_installer/redmine6-files/plugins
       PLUGINS_USER: redmine_plugin_installer
       REDMINE_DB_ENCODING: utf8mb4
       REDMINE_DB_MYSQL: mysql
@@ -86,16 +104,30 @@ redmine:
       ENTRA_ID_TENANT_ID: ""
       ENTRA_ID_CLIENT_ID: ""
       ENTRA_ID_CLIENT_SECRET: ""
-
-  annotations: {}
+      RAILS_PULSE_ENABLED: "1"
+      RAILS_PULSE_AUTH_ENABLED: "1"
+      RAILS_PULSE_AUTH_MODE: "basic"
+      RAILS_PULSE_BASIC_AUTH_USERNAME: ""
+      RAILS_PULSE_BASIC_AUTH_PASSWORD: ""
+      MISSION_CONTROL_JOBS_AUTH_ENABLED: "1"
+      MISSION_CONTROL_JOBS_BASIC_AUTH_USERNAME: "admin"
+      MISSION_CONTROL_JOBS_BASIC_AUTH_PASSWORD: ""
   livenessProbe:
     httpGet:
-      path: /
+      path: /up
       port: 3000
     periodSeconds: 30
     timeoutSeconds: 15
     initialDelaySeconds: 0
     failureThreshold: 10
+    successThreshold: 1
+  readinessProbe:
+    httpGet:
+      path: /up
+      port: 3000
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
     successThreshold: 1
   startupProbe:
     tcpSocket:
@@ -105,7 +137,80 @@ redmine:
     initialDelaySeconds: 60
     failureThreshold: 30
     successThreshold: 1
-    
+
+addonsSync:
+  enabled: true
+  source: "share"
+  skipIfPresent: "0"
+  backoffLimit: 3
+  resources:
+    requests:
+      memory: 128Mi
+    limits:
+      memory: 256Mi
+
+redmineMigrate:
+  enabled: true
+  backoffLimit: 1
+  runDbMigrate: "1"
+  pluginsMigrate: "no"
+  assetsPrecompile: "1"
+  assetsPrecompileForce: "0"
+  adminBootstrapEnable: "0"
+  environment: {}
+  resources:
+    requests:
+      memory: 512Mi
+    limits:
+      memory: 1Gi
+
+redmineJobs:
+  enabled: true
+  replicas: 1
+  recurring:
+    enabled: true
+    config: |-
+      production:
+        rails_pulse_summary:
+          class: RailsPulse::SummaryJob
+          schedule: every 5 minutes
+        rails_pulse_day_refresh:
+          command: "begin; RailsPulse::SummaryService.new('day', Time.current).perform; Rails.logger.info('[rails_pulse_day_refresh] ok'); rescue => e; Rails.logger.error(\"[rails_pulse_day_refresh] #{e.class}: #{e.message}\"); raise; end"
+          schedule: every 5 minutes
+        rails_pulse_cleanup:
+          class: RailsPulse::CleanupJob
+          schedule: 17 3 * * *
+        taskman_default_mailbox:
+          command: "begin; require 'open3'; missing=%w[T_EMAIL_HOST T_EMAIL_USER T_EMAIL_PASS T_EMAIL_PORT].select { |k| ENV[k].to_s.strip.empty? }; raise(\"taskman_default_mailbox missing env: #{missing.join(',')}\") if missing.any?; cmd=%Q{bundle exec rake -f /usr/src/redmine/Rakefile redmine:email:receive_imap RAILS_ENV=production host=#{ENV['T_EMAIL_HOST']} username=#{ENV['T_EMAIL_USER']} password=#{ENV['T_EMAIL_PASS']} ssl=#{ENV['T_EMAIL_SSL']} port=#{ENV['T_EMAIL_PORT']} folder=#{ENV['T_EMAIL_FOLDER']} project=it-helpdesk move_on_success=read move_on_failure=failed allow_override=project,tracker,priority,status,category,fixed_version}; out,status=Open3.capture2e(cmd); if !status.success?; tail=out.to_s.lines.last(20).join.strip; Rails.logger.error(\"[taskman_default_mailbox] failed rc=#{status.exitstatus} tail=#{tail}\"); raise(\"taskman_default_mailbox failed rc=#{status.exitstatus}: #{tail}\"); end; rescue => e; Rails.logger.error(\"[taskman_default_mailbox] #{e.class}: #{e.message}\"); raise; end"
+          schedule: every 5 minutes
+        entra_users_sync:
+          command: "system('bundle exec rake -f /usr/src/redmine/Rakefile entra_id:sync:users RAILS_ENV=production') || raise('entra_users_sync failed')"
+          schedule: 0 * * * *
+        entra_groups_sync:
+          command: "system('bundle exec rake -f /usr/src/redmine/Rakefile entra_id:sync:groups RAILS_ENV=production') || raise('entra_groups_sync failed')"
+          schedule: 15 4 * * *
+  resources:
+    requests:
+      memory: 512Mi
+    limits:
+      memory: 1Gi
+  environment:
+    START_SERVER: "0"
+    START_CRON: "0"
+    START_SOLID_QUEUE: "1"
+    RUN_DB_MIGRATE: "0"
+    FAST_BOOT: "1"
+    REQUIRE_MOUNTED_ADDONS: "1"
+    MOUNTED_ADDONS_ROOT: "/addons/current"
+    WAIT_FOR_DB_TABLES: "solid_queue_jobs,solid_queue_recurring_tasks"
+    CRON_IN_ASYNC_JOBS_ONLY: "1"
+    ASSETS_PRECOMPILE: "0"
+    ASSETS_PRECOMPILE_FORCE: "0"
+    ACTIVE_JOB_QUEUE_ADAPTER: solid_queue
+    RAILS_PULSE_ENABLED: "1"
+    REDMINE_PLUGINS_MIGRATE: "no"
+
+
 drawio:
   enabled: true
   serviceType: ClusterIP
@@ -160,6 +265,9 @@ postfix:
       certificate: mailtrap.01dev.eea.europa.eu-tls
    
 mysql:
+  image:
+    repository: mysql
+    tag: "8.4.8"
   pullPolicy: IfNotPresent
   podAnnotations: {}
   podSecurityContext: {}

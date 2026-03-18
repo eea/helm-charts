@@ -6,6 +6,14 @@ metadata:
     {{- include "appl.labels" . | nindent 4 }}
     component: mysql
 spec:
+  {{- $mysqlImageRepo := "mysql" }}
+  {{- $mysqlImageTag := "8.4.8" }}
+  {{- if and (hasKey .Values.mysql "image") (hasKey .Values.mysql.image "repository") }}
+  {{- $mysqlImageRepo = .Values.mysql.image.repository }}
+  {{- end }}
+  {{- if and (hasKey .Values.mysql "image") (hasKey .Values.mysql.image "tag") }}
+  {{- $mysqlImageTag = .Values.mysql.image.tag }}
+  {{- end }}
   replicas: 1
   serviceName: {{ .Release.Name }}-mysql
   selector:
@@ -28,7 +36,7 @@ spec:
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
       containers:
         - name: mysql
-          image: mysql:8.0.41
+          image: "{{ $mysqlImageRepo }}:{{ $mysqlImageTag }}"
           imagePullPolicy: {{ .Values.mysql.pullPolicy }}
           ports:
             - containerPort: 3306

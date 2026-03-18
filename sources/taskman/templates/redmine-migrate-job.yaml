@@ -1,0 +1,100 @@
+{{- $migrate := .Values.redmineMigrate | default dict }}
+{{- $migrateEnabled := $migrate.enabled | default false }}
+{{- $migrateEnv := $migrate.environment | default dict }}
+{{- if $migrateEnabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .Release.Name }}-redmine-migrate-job
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: redmine-migrate
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "-5"
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+spec:
+  backoffLimit: {{ $migrate.backoffLimit | default 1 }}
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: redmine-migrate
+    spec:
+      restartPolicy: OnFailure
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      containers:
+      - name: {{ .Release.Name }}-redmine-migrate
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        env:
+        - name: TZ
+          value: "{{ .Values.timezone }}"
+        - name: REDMINE_DB_DATABASE
+          value: "{{ .Values.mysql.environment.MYSQL_DATABASE }}"
+        - name: REDMINE_DB_USERNAME
+          value: "{{ .Values.mysql.environment.MYSQL_USER }}"
+        - name: REDMINE_DB_PASSWORD
+          value: "{{ .Values.mysql.environment.MYSQL_PASSWORD }}"
+        - name: START_SERVER
+          value: "0"
+        - name: START_CRON
+          value: "0"
+        - name: START_SOLID_QUEUE
+          value: "0"
+        - name: MIGRATIONS_ONLY_STARTUP
+          value: "1"
+        - name: RUN_DB_MIGRATE
+          value: {{ $migrate.runDbMigrate | default "1" | quote }}
+        - name: REDMINE_PLUGINS_MIGRATE
+          value: {{ $migrate.pluginsMigrate | default "no" | quote }}
+        - name: ASSETS_PRECOMPILE
+          value: {{ $migrate.assetsPrecompile | default "1" | quote }}
+        - name: ASSETS_PRECOMPILE_FORCE
+          value: {{ $migrate.assetsPrecompileForce | default "0" | quote }}
+        - name: ADMIN_BOOTSTRAP_ENABLE
+          value: {{ $migrate.adminBootstrapEnable | default "0" | quote }}
+        {{- range $key, $value := .Values.redmine.environment }}
+        {{- if and (ne $key "START_SERVER") (ne $key "START_CRON") (ne $key "START_SOLID_QUEUE") (ne $key "RUN_DB_MIGRATE") (ne $key "MIGRATIONS_ONLY_STARTUP") (ne $key "REDMINE_PLUGINS_MIGRATE") (ne $key "ADMIN_BOOTSTRAP_ENABLE") (not (hasKey $migrateEnv $key)) (ne $value nil) }}
+        - name: {{ $key }}
+          value: {{ $value | quote }}
+        {{- end }}
+        {{- end }}
+        {{- range $key, $value := $migrateEnv }}
+        {{- if ne $value nil }}
+        - name: {{ $key }}
+          value: {{ $value | quote }}
+        {{- end }}
+        {{- end }}
+        volumeMounts:
+        - name: redmine-files
+          mountPath: /usr/src/redmine/files
+        - name: redmine-tmp
+          mountPath: /usr/src/redmine/tmp
+        - name: redmine-tmp
+          mountPath: /usr/src/redmine/public/assets
+          subPath: assets
+        - name: github
+          mountPath: /var/local/redmine/github/
+        - name: plugins
+          mountPath: /addons
+        resources:
+          {{- toYaml ($migrate.resources | default dict) | nindent 10 }}
+      volumes:
+      - name: redmine-files
+        persistentVolumeClaim:
+          claimName: redmine-files-{{ .Release.Name }}-redmine-ss-0
+      - name: redmine-tmp
+        persistentVolumeClaim:
+          claimName: redmine-tmp-{{ .Release.Name }}-redmine-ss-0
+      - name: github
+        persistentVolumeClaim:
+          claimName: github-{{ .Release.Name }}-redmine-ss-0
+      - name: plugins
+        persistentVolumeClaim:
+          claimName: plugins-{{ .Release.Name }}-redmine-ss-0
+{{- end }}

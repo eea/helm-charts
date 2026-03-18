@@ -1,0 +1,15 @@
+{{- $recurring := .Values.redmineJobs.recurring | default dict }}
+{{- $recurringEnabled := $recurring.enabled | default true }}
+{{- if and (hasKey .Values "redmineJobs") (.Values.redmineJobs.enabled) $recurringEnabled }}
+{{- $recurringConfig := $recurring.config | default (.Files.Get "files/recurring.yml") }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-redmine-recurring-cm
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: redmine-recurring
+data:
+  recurring.yml: |
+{{- $recurringConfig | nindent 4 }}
+{{- end }}
