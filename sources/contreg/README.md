@@ -17,8 +17,8 @@ This chart is configured for production use.
 
 <dl>
 
-  <dt>Version 1.0.0 (future)</dt>
-  <dd>First version to be used in production.</dd>
+  <dt>Version 0.3.5</dt>
+  <dd>Security upgrades, tomcat upgrade, sonarqube upgrade, sentry removal, SourcePageNotFoundException, NPE fixes</dd>
 
   <dt>Version 0.3.4</dt>
   <dd>Graylog config, CI fixes, libraries upgrades.</dd>
