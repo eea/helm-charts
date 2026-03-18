@@ -1,6 +1,42 @@
 ## EEA Taskman docker setup
 Taskman is a web application based on [Redmine](http://www.redmine.org) that facilitates Agile project management for EEA and Eionet software projects. It comes with some plugins and specific Taskman Redmine theme.
 
+### Horizontal scaling and performance tuning
+
+Use the settings below together when scaling Redmine web pods.
+
+1) Keep one stable session secret across all replicas
+
+  - Set `redmine.environment.SECRET_KEY_BASE` to a fixed value (do not rotate on each pod restart).
+
+2) Use shared persistent volumes when `redmine.replicas > 1`
+
+  - Set these to shared RWX claims:
+    - `storage.filesDir.existingClaim`
+    - `storage.tmpDir.existingClaim`
+    - `storage.github.existingClaim`
+    - `storage.plugins.existingClaim`
+  - For existing installations, reusing the existing `...-redmine-ss-0` claims is supported.
+
+3) Tune Puma and DB pool together
+
+  - `redmine.environment.WEB_CONCURRENCY`: number of Puma workers per pod.
+  - `redmine.environment.RAILS_MAX_THREADS`: threads per worker.
+  - `redmine.environment.REDMINE_DB_POOL`: should be at least `WEB_CONCURRENCY * RAILS_MAX_THREADS` for each web pod, plus headroom for jobs.
+  - Practical start values per web pod: `WEB_CONCURRENCY=2`, `RAILS_MAX_THREADS=5`, `REDMINE_DB_POOL=20-30`.
+
+4) Tune nginx fronting Redmine
+
+  - `httpd.replicas`: number of nginx pods in front of Redmine.
+  - Keep `proxy_next_upstream` enabled for transient upstream failures.
+  - If nginx config changes, restart nginx deployment on older releases that mount config via `subPath`.
+
+5) Validate after each change
+
+  - Check external and internal status codes.
+  - Check nginx logs for upstream reset errors.
+  - Confirm Redmine endpoints are healthy.
+
 ### Taskman stack variables
 
 1. RESTART_CRON - Crontab schedule (for example 0 2 * * *) to stop redmine container, will be started by Rancher ( not recreated), not mandatory
