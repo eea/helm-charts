@@ -48,6 +48,89 @@ questions:
     description: "Stops redmine process and container, to be restarted by rancher. Linux crontab format - for example, `0 2 * * *` is daily at 02:00 UTC. If empty, will not run."
     type: "string"
     group: "Redmine configuration"
+  - variable: "redmine.replicas"
+    label: "Redmine web replicas"
+    description: "Number of Redmine web pods. Keep this aligned with addons sync coverage."
+    type: "int"
+    default: 1
+    required: true
+    group: "Runtime and scaling"
+  - variable: "redmineJobs.enabled"
+    label: "Enable async jobs pod"
+    description: "Runs Solid Queue workers and recurring jobs in dedicated pod(s)."
+    type: "boolean"
+    default: true
+    required: true
+    group: "Runtime and scaling"
+  - variable: "redmineJobs.replicas"
+    label: "Async jobs pod replicas"
+    description: "Number of Redmine jobs pods."
+    type: "int"
+    default: 1
+    required: true
+    group: "Runtime and scaling"
+  - variable: "redmineJobs.recurring.enabled"
+    label: "Enable recurring jobs schedule"
+    description: "Enable/disable loading recurring.yml for periodic jobs."
+    type: "boolean"
+    default: true
+    required: true
+    group: "Runtime and scaling"
+  - variable: "addonsSync.enabled"
+    label: "Enable addons sync job"
+    description: "Sync plugins/themes from remote share into mounted addon volumes."
+    type: "boolean"
+    default: true
+    required: true
+    group: "Runtime and scaling"
+  - variable: "addonsSync.source"
+    label: "Addons sync source type"
+    description: "share downloads from remote source, dir uses mounted directory."
+    type: "enum"
+    default: "share"
+    options:
+      - "share"
+      - "dir"
+    required: true
+    group: "Runtime and scaling"
+  - variable: "addonsSync.skipIfPresent"
+    label: "Skip addons sync if present"
+    description: "Set 1 to skip sync when addons already exist."
+    type: "enum"
+    default: "0"
+    options:
+      - "0"
+      - "1"
+    required: true
+    group: "Runtime and scaling"
+  - variable: "redmineMigrate.enabled"
+    label: "Enable migrate job"
+    description: "Run dedicated migration job during install/upgrade."
+    type: "boolean"
+    default: true
+    required: true
+    group: "Runtime and scaling"
+  - variable: "redmineMigrate.runDbMigrate"
+    label: "Run DB migrations in migrate job"
+    description: "Controls db:migrate execution in migrate job."
+    type: "enum"
+    default: "1"
+    options:
+      - "0"
+      - "1"
+    required: true
+    group: "Runtime and scaling"
+  - variable: "redmineMigrate.pluginsMigrate"
+    label: "Run plugin migrations in migrate job"
+    description: "Plugin migration mode for migrate job."
+    type: "enum"
+    default: "no"
+    options:
+      - "no"
+      - "auto"
+      - "yes"
+    required: true
+    group: "Runtime and scaling"
   - variable: "redmine.environment.REDMINE_SMTP_DOMAIN"
     label: "Taskman default Outgoing SMTP domain"
     description: "Used in default outgoing mail settings, postfix"
@@ -348,4 +431,3 @@ questions:
     description: "If empty, https will not be enabled"
     default: "mailtrap.01dev.eea.europa.eu-tls"
     group: "Mail"
-
