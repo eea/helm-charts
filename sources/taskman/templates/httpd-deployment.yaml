@@ -16,6 +16,8 @@ spec:
       labels:
         {{- include "appl.selectorLabels" . | nindent 8 }}
         component: nginx
+      annotations:
+        checksum/nginx-config: {{ include (print $.Template.BasePath "/httpd-configmap.yaml") . | sha256sum }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
