@@ -4,6 +4,9 @@ This chart is configured for production use.
 
 ## Releases
 
+### Version 2.1.4
+- Security upgrades, tomcat upgrade, sonar upgrade, remove sentry.
+
 ### Version 2.1.3
 - Security/bug fixes.
 
