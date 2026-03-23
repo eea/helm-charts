@@ -31,5 +31,5 @@ spec:
           volumes:
             - name: geoipupdate-pv
               persistentVolumeClaim:
-                claimName: {{ .Release.Name }}-geoipupdate-pvc
+                claimName: {{ .Release.Name }}-misc-pvc
 

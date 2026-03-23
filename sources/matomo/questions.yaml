@@ -249,11 +249,27 @@ questions:
 
 
 
-  - variable: matomo.storage
-    label: "Matomo data volume size"
-    description: "Size of the persistent volume for Matomo data (e.g., 10Gi)."
+  - variable: matomo.storagePlugins
+    label: "Matomo plugins volume size"
+    description: "Size of the persistent volume for Matomo plugin data (e.g., 2Gi)."
     type: string
-    default: "10Gi"
+    default: "2Gi"
+    required: true
+    group: Storage
+
+  - variable: matomo.storageConfig
+    label: "Matomo config volume size"
+    description: "Size of the persistent volume for Matomo config data (e.g., 1Gi)."
+    type: string
+    default: "1Gi"
+    required: true
+    group: Storage
+
+  - variable: matomo.storageMisc
+    label: "Matomo config volume size"
+    description: "Size of the persistent volume for Matomo misc data (e.g., 1Gi)."
+    type: string
+    default: "1Gi"
     required: true
     group: Storage
 
@@ -263,15 +279,6 @@ questions:
     type: string
     default: "10Gi"
     group: Storage
-
-  - variable: geoipupdate.storage
-    label: "GeoIP data volume size"
-    description: "Size of the persistent volume for GeoIP data (e.g., 1Gi)."
-    type: string
-    default: "1Gi"
-    required: true
-    group: Storage
-
 
 
   - variable: matomo.resources.requests.memory

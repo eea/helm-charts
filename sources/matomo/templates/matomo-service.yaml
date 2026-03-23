@@ -7,8 +7,8 @@ metadata:
     component: matomo-service
 spec:
   ports:
-    - port: {{ .Values.matomo.environment.APACHE_HTTP_PORT_NUMBER }}
-      targetPort: {{ .Values.matomo.environment.APACHE_HTTP_PORT_NUMBER }}
+    - port: {{ .Values.matomo.environment.NGINX_HTTP_PORT_NUMBER }}
+      targetPort: {{ .Values.matomo.environment.NGINX_HTTP_PORT_NUMBER }}
       name: http
   selector:
     app.kubernetes.io/name: {{ .Release.Name }}-matomo

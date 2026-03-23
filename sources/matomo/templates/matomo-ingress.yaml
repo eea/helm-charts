@@ -30,7 +30,7 @@ spec:
           service:
             name: matomo
             port:
-              number: {{ .Values.matomo.environment.APACHE_HTTP_PORT_NUMBER }}
+              number: {{ .Values.matomo.environment.NGINX_HTTP_PORT_NUMBER }}
   {{- if .Values.ingress.tls }}
   tls:
   - hosts:

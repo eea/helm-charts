@@ -42,11 +42,11 @@ spec:
               env:
                 - name: MATOMO_DATABASE_HOST
                   value: mariadb
-                - name: MATOMO_DATABASE_PORT_NUMBER
+                - name: MATOMO_DATABASE_PORT
                   value: "3306"
-                - name: MATOMO_DATABASE_USER
+                - name: MATOMO_DATABASE_USERNAME
                   value: {{ $values.mariadb.environment.MARIADB_USER | quote }}
-                - name: MATOMO_DATABASE_NAME
+                - name: MATOMO_DATABASE_DBNAME
                   value: {{ $values.mariadb.environment.MARIADB_DATABASE | quote }}
                 - name: MATOMO_DATABASE_PASSWORD
                   value: {{ $values.mariadb.environment.MARIADB_PASSWORD | quote }}
@@ -55,7 +55,7 @@ spec:
                 - name: TZ
                   value: "{{ $values.timezone }}"
                 - name: MATOMO_URL
-                  value: "matomo:{{ $values.matomo.environment.APACHE_HTTP_PORT_NUMBER }}"
+                  value: "matomo:{{ $values.matomo.environment.NGINX_HTTP_PORT_NUMBER }}"
 
                 {{- range $key, $value := $archiver.environment }}
                 {{- if ($value) }}
@@ -68,34 +68,25 @@ spec:
                 - bash
                 - -c
               args:
-                - . /opt/bitnami/scripts/matomo-env.sh &&
-                  . /opt/bitnami/scripts/libbitnami.sh &&
-                  . /opt/bitnami/scripts/liblog.sh &&
-                  /opt/bitnami/scripts/apache/setup.sh &&
-                  /opt/bitnami/scripts/php/setup.sh &&
-                  /opt/bitnami/scripts/mysql-client/setup.sh &&
-                  /opt/bitnami/scripts/matomo/setup.sh &&
-                  /use_matomo_in_rancher.sh &&
-                  /post-init.sh &&
-                  /usr/bin/run_archiving.sh
+                - /usr/bin/run_archiving.sh
               resources:
                 requests:
                   memory: "{{ $archiver.resources.requests.memory }}"
                 limits:
                   memory: "{{ $archiver.resources.limits.memory }}"
               volumeMounts:
-                - name: matomo-pv
-                  mountPath: /bitnami
                 - name: matomo-tmp
-                  mountPath: /bitnami/matomo/tmp
+                  mountPath: /var/www/html/tmp
+                - name: matomo-config
+                  moountPath: /var/www/html/config
           restartPolicy: Never
           volumes:
-            - name: matomo-pv
-              persistentVolumeClaim:
-                claimName: {{ $release }}-matomo-pvc
             - name: matomo-tmp
               persistentVolumeClaim:
                 claimName: {{ $release }}-archive-tmp-pvc
+            - name: matomo-config
+              persistentVolumeClaim:
+                claimName: {{ $release }}-config-pvc
 
 {{- end }}
 

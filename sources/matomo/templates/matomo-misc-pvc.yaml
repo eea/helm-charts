@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ .Release.Name }}-matomo-pvc
+  name: {{ .Release.Name }}-misc-pvc
   annotations:
     {{- if .Values.pvc.resourcePolicyKeep }}
     "helm.sh/resource-policy": keep
@@ -14,4 +14,4 @@ spec:
     - ReadWriteMany
   resources:
     requests:
-      storage: {{ .Values.matomo.storage }}
+      storage: {{ .Values.matomo.storageMisc }}

@@ -15,63 +15,91 @@ spec:
         component: matomo
     spec:
       securityContext:
-        runAsUser: 0
-        runAsGroup: 0
-        fsGroup: 0
+        fsGroup: 82
       initContainers:
-      - name: wait-for-mariadb
-        image: busybox
-        command: 
-          - sh
-          - -c
-          - >
-            until nc -z mariadb 3306;
-            do echo waiting for mariadb; sleep 2; done;
+        - name: fix-permissions
+          image: busybox
+          command:
+            - sh
+            - -c
+            - |
+              chown -R 82:82 /var/www/html
+          securityContext:
+            runAsUser: 0
+          volumeMounts:
+            - name: matomo-html
+              mountPath: /var/www/html
+        - name: wait-for-mariadb
+          image: busybox
+          command:
+            - sh
+            - -c
+            - >
+              until nc -z mariadb 3306;
+              do echo waiting for mariadb; sleep 2; done;
       containers:
         - name: matomo
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ default "IfNotPresent" .Values.image.pullPolicy  }}
+          imagePullPolicy: {{ default "IfNotPresent" .Values.image.pullPolicy }}
           env:
             - name: MATOMO_DATABASE_HOST
               value: mariadb
-            - name: MATOMO_DATABASE_PORT_NUMBER
+            - name: MATOMO_DATABASE_PORT
               value: "3306"
-            - name: MATOMO_DATABASE_USER
+            - name: MATOMO_DATABASE_ADAPTER
+              value: mysql
+            - name: MATOMO_DATABASE_TABLES_PREFIX
+              value: matomo_
+            - name: MATOMO_DATABASE_USERNAME
               value: {{ .Values.mariadb.environment.MARIADB_USER | quote }}
-            - name: MATOMO_DATABASE_NAME
-              value: {{ .Values.mariadb.environment.MARIADB_DATABASE | quote }}
             - name: MATOMO_DATABASE_PASSWORD
               value: {{ .Values.mariadb.environment.MARIADB_PASSWORD | quote }}
-            - name: ALLOW_EMPTY_PASSWORD
-              value: "no"
+            - name: MATOMO_DATABASE_DBNAME
+              value: {{ .Values.mariadb.environment.MARIADB_DATABASE | quote }}
             - name: PHP_MEMORY_LIMIT
               value: {{ .Values.matomo.environment.PHP_MEMORY_LIMIT }}
-            - name: TZ
-              value: {{ .Values.timezone }}
-            - name: PHP_MAX_EXECUTION_TIME
-              value: {{ .Values.matomo.environment.PHP_MAX_EXECUTION_TIME }}
-            - name: PHP_MAX_INPUT_TIME
-              value: {{ .Values.matomo.environment.PHP_MAX_INPUT_TIME }}
-            - name: APACHE_HTTP_PORT_NUMBER
-              value: {{ quote .Values.matomo.environment.APACHE_HTTP_PORT_NUMBER }}
-            {{- if .Values.matomo.username }}
-            - name: MATOMO_USERNAME
-              value: {{ .Values.matomo.username }}
-            {{- end }}
-            {{- if .Values.matomo.password }}
-            - name: MATOMO_PASSWORD
-              value: {{ .Values.matomo.password }}
-            {{- end }}
+          volumeMounts:
+            - name: matomo-html
+              mountPath: /var/www/html
+            - name: matomo-config
+              mountPath: /var/www/html/config
+            - name: matomo-plugins
+              mountPath: /var/www/html/plugins
+            - name: matomo-misc
+              mountPath: /var/www/html/misc
           resources:
             requests:
               memory: {{ .Values.matomo.resources.requests.memory }}
             limits:
               memory: {{ .Values.matomo.resources.limits.memory }}
+          startupProbe:
+            tcpSocket:
+              port: 9000
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            timeoutSeconds: 10
+            failureThreshold: 10
+            successThreshold: 1
+          livenessProbe:
+            tcpSocket:
+              port: 9000
+            periodSeconds: 10
+        - name: nginx
+          image: nginx:alpine3.23
+          ports:
+            - containerPort: {{ .Values.matomo.environment.NGINX_HTTP_PORT_NUMBER }}
+              name: nginx
           volumeMounts:
-            - name: matomo-pv
-              mountPath: /bitnami
-            - name: geoipupdate-pv
-              mountPath: /geoupdate
+            - name: matomo-html
+              mountPath: /var/www/html
+              readOnly: true
+            - name: matomo-plugins
+              mountPath: /var/www/html/plugins
+              readOnly: true
+            - name: nginx-config
+              mountPath: /etc/nginx/conf.d
+            - name: matomo-misc
+              mountPath: /var/www/html/misc
               readOnly: true
           {{- if (.Values.matomo.livenessProbe) }}
           livenessProbe:
@@ -88,9 +116,17 @@ spec:
 
 
       volumes:
-        - name: matomo-pv
+        - name: matomo-config
           persistentVolumeClaim:
-            claimName: {{ .Release.Name }}-matomo-pvc
-        - name: geoipupdate-pv
+            claimName: {{ .Release.Name }}-config-pvc
+        - name: matomo-plugins
           persistentVolumeClaim:
-            claimName: {{ .Release.Name }}-geoipupdate-pvc
+            claimName: {{ .Release.Name }}-plugins-pvc
+        - name: matomo-misc
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-misc-pvc
+        - name: nginx-config
+          configMap:
+            name: {{ .Release.Name }}-nginx-config
+        - name: matomo-html
+          emptyDir: { }

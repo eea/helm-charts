@@ -1,17 +1,17 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ .Release.Name }}-geoipupdate-pvc
+  name: {{ .Release.Name }}-plugins-pvc
   annotations:
     {{- if .Values.pvc.resourcePolicyKeep }}
     "helm.sh/resource-policy": keep
     {{- end }}
 spec:
-  {{- if .Values.geoipupdate.storageClassName }}
-  storageClassName: "{{ .Values.geoipupdate.storageClassName }}"
+  {{- if .Values.matomo.storageClassName }}
+  storageClassName: "{{ .Values.matomo.storageClassName }}"
   {{- end }}
   accessModes:
     - ReadWriteMany
   resources:
     requests:
-      storage: {{ .Values.geoipupdate.storage }}
+      storage: {{ .Values.matomo.storagePlugins }}

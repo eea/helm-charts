@@ -44,93 +44,91 @@ It's recommended to check the release notes for any breaking changes or specific
 
 The following table lists the configurable parameters of the Matomo chart and their default values.
 
-| Parameter                                           | Description                                                                                                   | Default Value                     |
-|-----------------------------------------------------|---------------------------------------------------------------------------------------------------------------|-----------------------------------|
-| `timezone`                                          | Time zone for the deployment (e.g. Europe/Copenhagen).                                                        | `Europe/Copenhagen`               |
-| `pvc.resourcePolicyKeep`                            | If `true`, PersistentVolumeClaims are retained when the Helm release is deleted.                              | `true`                            |
-| `matomo.hostname`                                   | The primary public hostname for accessing your Matomo instance.                                               | `matomo.eea.europa.eu`            |
-| `matomo.image.repository`                           | Image repository for Matomo application.                                                                      | `eeacms/matomo`                   |
-| `matomo.image.tag`                                  | Image tag for Matomo application.                                                                             | `5.3.2-1`                         |
-| `matomo.replicaCount`                               | Number of Matomo application replicas (containers).                                                           | `1`                               |
-|`matomo.username`                                   | Optional username for the Matomo default user. If not set, a default username 'user' will be used.                 | `""`                              |
-| `matomo.password`                                   | Optional password for the Matomo default user. If set, it overrides the default password. Ensure this is a strong, unique password if set. | `""`                   |
-| `matomo.token`                                      | Matomo API authentication token for a user with permissions to import logs. Found in Matomo Admin > Personal > API Authentication Token. | `REPLACEME`                       |
-| `matomo.storage`                                    | Size of the persistent volume for Matomo data (e.g., 10Gi).                                                   | `10Gi`                            |
-| `matomo.storageClassName`                           | StorageClass for Matomo persistent volume. Leave empty for default.                                           | `""`                              |
-| `matomo.environment.PHP_MEMORY_LIMIT`               | PHP memory limit for Matomo website containers (e.g., 4096Mi). At least 4096Mi.                               | `4096Mi`                          |
-| `matomo.environment.PHP_MAX_EXECUTION_TIME`         | PHP maximum execution time for Matomo website.                                                                | `"0"`                             |
-| `matomo.environment.PHP_MAX_INPUT_TIME`             | PHP maximum input time for Matomo website.                                                                    | `"0"`                             |
-| `matomo.environment.APACHE_HTTP_PORT_NUMBER`        | Apache HTTP port number for Matomo website.                                                                   | `"9080"`                          |
-| `matomo.resources.requests.memory`                  | Matomo website memory requests (e.g., 2Gi). At least 2Gi.                                                     | `2Gi`                             |
-| `matomo.resources.limits.memory`                    | Matomo website memory limit (e.g., 5Gi). Must be more than the PHP memory_limit.                              | `5Gi`                             |
-| `mariadb.image.repository`                          | Image repository for MariaDB.                                                                                 | `mariadb`                         |
-| `mariadb.image.tag`                                 | Image tag for MariaDB.                                                                                        | `10.11.11`                        |
-| `mariadb.user`                                      | Username for Matomo to connect to MariaDB.                                                                    | `eea_matomo`                      |
-| `mariadb.database`                                  | Database name for Matomo within MariaDB.                                                                      | `eea_matomo_db`                   |
-| `mariadb.password`                                  | Password for the MariaDB user specified in `mariadb.user`.                                                    | `REPLACEME`                       |
-| `mariadb.rootPassword`                              | Password for the MariaDB root user.                                                                           | `REPLACEME`                       |
-| `mariadb.environment.MYSQL_ALLOW_EMPTY_PASSWORD`    | Set to `"yes"` to allow MariaDB to run with an empty root password. **Not recommended for production.**         | `"no"`                            |
-| `mariadb.storage`                                   | Storage size for MariaDB persistent volume (e.g., 10Gi).                                                      | `10Gi`                            |
-| `mariadb.storageClassName`                          | StorageClass for MariaDB persistent volume. Leave empty for default.                                          | `""`                              |
-| `mariadb.resources.requests.memory`                 | MariaDB memory requests (e.g., 7Gi). At least 7Gi.                                                            | `7Gi`                             |
-| `mariadb.resources.limits.memory`                   | MariaDB memory limit (e.g., 10Gi).                                                                            | `10Gi`                            |
-| `mariadb.commands`                                  | MariaDB server startup commands.                                                                              | See `values.yaml`                 |
-| `geoipupdate.image.repository`                      | Image repository for GeoIP update.                                                                            | `maxmindinc/geoipupdate`          |
-| `geoipupdate.image.tag`                             | Image tag for GeoIP update.                                                                                   | `v7.1`                            |
-| `geoipupdate.accountId`                             | Maxmind GeoIP account ID. Used for updating GeoIP database.                                                   | `REPLACEME`                       |
-| `geoipupdate.licenseKey`                            | Maxmind license key. Used for updating GeoIP database.                                                        | `REPLACEME`                       |
-| `geoipupdate.cronSchedule`                          | Cron schedule for updating GeoIP database.                                                                    | `"0 4 5 * *"`                     |
-| `geoipupdate.environment.GEOIPUPDATE_EDITION_IDS`   | Which GeoIP databases to download (e.g., GeoLite2-City).                                                        | `GeoLite2-City`                   |
-| `geoipupdate.environment.GEOIPUPDATE_VERBOSE`       | Enable verbose output for GeoIP update process (e.g., "1" for true, "0" for false).                             | `"1"`                             |
-| `geoipupdate.storage`                               | Size of the persistent volume for GeoIP data (e.g., 1Gi).                                                     | `1Gi`                             |
-| `geoipupdate.storageClassName`                      | StorageClass for GeoIP update persistent volume. Leave empty for default.                                     | `""`                              |
-| `geoipupdate.resources.requests.memory`             | Memory requests for GeoIP update container.                                                                   | `NODATA`                          |
-| `geoipupdate.resources.limits.memory`               | Memory limits for GeoIP update container.                                                                     | `NODATA`                          |
-| `postfix.image.repository`                          | Image repository for Postfix.                                                                                 | `eeacms/postfix`                  |
-| `postfix.image.tag`                                 | Image tag for Postfix.                                                                                        | `3.5-1.0`                         |
-| `postfix.user`                                      | User for Postfix.                                                                                             | `postfix`                         |
-| `postfix.password`                                  | Password for Postfix user.                                                                                    | `REPLACEME`                       |
-| `postfix.relay`                                     | Relay host for Postfix to send emails.                                                                        | `ironports.eea.europa.eu`         |
-| `postfix.port`                                      | Port for Postfix relay.                                                                                       | `8587`                            |
-| `postfix.environment.TZ`                            | Timezone for Postfix container.                                                                               | `Europe/Copenhagen`               |
-| `postfix.resources.requests.memory`                 | Postfix memory requests.                                                                                      | `256Mi`                           |
-| `postfix.resources.limits.memory`                   | Postfix memory limits.                                                                                        | `256Mi`                           |
-| `matomocronArchive.image.repository`                | Image repository for Matomo archive cronjob.                                                                  | `eeacms/matomo`                   |
-| `matomocronArchive.image.tag`                       | Image tag for Matomo archive cronjob.                                                                         | `5.3.2-1`                         |
-| `matomocronArchive.cronSchedule`                    | Cron schedule for Matomo archiving job.                                                                       | `"5 * * * *"`                     |
-| `matomocronArchive.environment.PHP_MEMORY_LIMIT`    | PHP memory limit for Matomo archive containers (e.g., 7168Mi). At least 7168Mi.                               | `7168Mi`                          |
-| `matomocronArchive.environment.PHP_MAX_EXECUTION_TIME` | Maximum execution time for PHP scripts in archive cronjob (0 for unlimited).                                  | `0`                               |
-| `matomocronArchive.environment.PHP_MAX_INPUT_TIME`  | Maximum input time for PHP scripts in archive cronjob (0 for unlimited).                                    | `0`                               |
-| `matomocronArchive.resources.requests.memory`       | Matomo archive container memory requests (e.g., 4Gi). At least 4Gi.                                           | `4Gi`                             |
-| `matomocronArchive.resources.limits.memory`         | Matomo archive memory limit (e.g., 6Gi). Must be more than its PHP memory_limit.                              | `6Gi`                             |
-| `matomocronLdapSync.image.repository`               | Image repository for Matomo LDAP synchronization job.                                                         | `eeacms/matomo`                   |
-| `matomocronLdapSync.image.tag`                      | Image tag for Matomo LDAP synchronization job.                                                                | `5.3.2-1`                         |
-| `matomocronLdapSync.cronSchedule`                   | Cron schedule for Matomo LDAP synchronization job.                                                            | `"10 1 * * *"`                    |
-| `matomocronLdapSync.resources.requests.memory`      | Matomo LDAP sync job memory requests.                                                                         | `256Mi`                           |
-| `matomocronLdapSync.resources.limits.memory`        | Matomo LDAP sync job memory limits.                                                                           | `256Mi`                           |
-| `matomocronDeleteData.image.repository`             | Image repository for Matomo delete old raw data job.                                                          | `eeacms/matomo`                   |
-| `matomocronDeleteData.image.tag`                    | Image tag for Matomo delete old raw data job.                                                                 | `5.3.2-1`                         |
-| `matomocronDeleteData.cronSchedule`                 | Cron schedule for Matomo delete old raw data job.                                                             | `"0 23 * * *"`                    |
-| `matomocronDeleteData.environment.PHP_MEMORY_LIMIT` | PHP memory limit for the delete old raw data job.                                                             | `512Mi`                           |
-| `matomocronDeleteData.environment.siteToDelete`     | ID of the site for which to delete old raw data. Set to 'all' to delete for all sites.                        | `"22"`                            |
-| `matomocronDeleteData.environment.daysToKeep`       | Number of days to keep raw visitor log data.                                                                  | `90`                              |
-| `matomocronDeleteData.resources.requests.memory`    | Matomo delete data container memory requests (e.g., 512Mi). At least 512Mi.                                   | `512Mi`                           |
-| `matomocronDeleteData.resources.limits.memory`      | Matomo delete data container memory limit (e.g., 2Gi). Must be more than requests.                            | `2Gi`                             |
-| `rsyncAnalytics.image.repository`                   | Image repository for rsync analytics.                                                                         | `eeacms/rsync`                    |
-| `rsyncAnalytics.image.tag`                          | Image tag for rsync analytics.                                                                                | `2.6`                             |
-| `rsyncAnalytics.cronSchedule`                       | Cron schedule for rsync analytics log import job.                                                             | `"5 * * * *"`                     |
-| `rsyncAnalytics.storage`                            | Size of the persistent volume for rsync analytics import (e.g., 1Gi).                                         | `1Gi`                             |
-| `rsyncAnalytics.storageClassName`                   | StorageClass for rsync analytics persistent volume. Leave empty for default.                                  | `""`                              |
-| `rsyncAnalytics.rsyncCommands`                      | Rsync command(s) to fetch logs. Example: `rsync -avz user@source:/logs/ /analytics/logs/1`.                   | `"rsync -e 'ssh -p 2222 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no' -avz --delete root@<IP>:<LOG_LOCATION_REMOTE> /analytics/logs/<SITE_ID>"` |
-| `rsyncAnalytics.ssh_id_rsa`                         | SSH private key (id_rsa) for rsync. Paste your SSH private key. This is used for secure rsync operations.     | `REPLACEME`                       |
-| `rsyncAnalytics.ssh_id_rsa_pub`                     | SSH public key (id_rsa.pub) for rsync. Paste the corresponding public key. Optional.                          | `REPLACEME`                       |
-| `rsyncAnalytics.ssh_known_hosts`                    | Known Hosts content for rsync. Optional known_hosts content for verifying SSH targets.                        | `REPLACEME`                       |
-| `rsyncAnalytics.ssh_config`                         | SSH Config content for rsync. Optional custom SSH config file contents.                                       | `REPLACEME`                       |
-| `matomoAnalytics.image.repository`                  | Image repository for Matomo log analytics importer.                                                           | `eeacms/matomo-log-analytics`     |
-| `matomoAnalytics.image.tag`                         | Image tag for Matomo log analytics importer.                                                                  | `2.4`                             |
-| `matomoAnalytics.cronSchedule`                      | Cron schedule for Matomo log analytics importer job.                                                          | `"30 0 * * *"`                    |
-| `matomoAnalytics.resources.requests.memory`         | Matomo log analytics job memory requests.                                                                     | `512Mi`                           |
-| `matomoAnalytics.resources.limits.memory`           | Matomo log analytics job memory limits.                                                                       | `1Gi`                             |
+| Parameter                                              | Description                                                                                                                                | Default Value                                                                                                                                                  |
+|--------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `timezone`                                             | Time zone for the deployment (e.g. Europe/Copenhagen).                                                                                     | `Europe/Copenhagen`                                                                                                                                            |
+| `pvc.resourcePolicyKeep`                               | If `true`, PersistentVolumeClaims are retained when the Helm release is deleted.                                                           | `true`                                                                                                                                                         |
+| `matomo.hostname`                                      | The primary public hostname for accessing your Matomo instance.                                                                            | `matomo.eea.europa.eu`                                                                                                                                         |
+| `matomo.image.repository`                              | Image repository for Matomo application.                                                                                                   | `eeacms/matomo`                                                                                                                                                |
+| `matomo.image.tag`                                     | Image tag for Matomo application.                                                                                                          | `5.3.2-1`                                                                                                                                                      |
+| `matomo.replicaCount`                                  | Number of Matomo application replicas (containers).                                                                                        | `1`                                                                                                                                                            |
+| `matomo.username`                                      | Optional username for the Matomo default user. If not set, a default username 'user' will be used.                                         | `""`                                                                                                                                                           |
+| `matomo.password`                                      | Optional password for the Matomo default user. If set, it overrides the default password. Ensure this is a strong, unique password if set. | `""`                                                                                                                                                           |
+| `matomo.token`                                         | Matomo API authentication token for a user with permissions to import logs. Found in Matomo Admin > Personal > API Authentication Token.   | `REPLACEME`                                                                                                                                                    |
+| `matomo.storage`                                       | Size of the persistent volume for Matomo data (e.g., 10Gi).                                                                                | `10Gi`                                                                                                                                                         |
+| `matomo.storageClassName`                              | StorageClass for Matomo persistent volume. Leave empty for default.                                                                        | `""`                                                                                                                                                           |
+| `matomo.environment.PHP_MEMORY_LIMIT`                  | PHP memory limit for Matomo website containers (e.g., 4096Mi). At least 4096Mi.                                                            | `4096Mi`                                                                                                                                                       |
+| `matomo.environment.PHP_MAX_EXECUTION_TIME`            | PHP maximum execution time for Matomo website.                                                                                             | `"0"`                                                                                                                                                          |
+| `matomo.environment.PHP_MAX_INPUT_TIME`                | PHP maximum input time for Matomo website.                                                                                                 | `"0"`                                                                                                                                                          |
+| `matomo.environment.NGINX_HTTP_PORT_NUMBER`            | Nginx HTTP port number for Matomo website.                                                                                                 | `"9080"`                                                                                                                                                       |
+| `matomo.resources.requests.memory`                     | Matomo website memory requests (e.g., 2Gi). At least 2Gi.                                                                                  | `2Gi`                                                                                                                                                          |
+| `matomo.resources.limits.memory`                       | Matomo website memory limit (e.g., 5Gi). Must be more than the PHP memory_limit.                                                           | `5Gi`                                                                                                                                                          |
+| `mariadb.image.repository`                             | Image repository for MariaDB.                                                                                                              | `mariadb`                                                                                                                                                      |
+| `mariadb.image.tag`                                    | Image tag for MariaDB.                                                                                                                     | `10.11.11`                                                                                                                                                     |
+| `mariadb.user`                                         | Username for Matomo to connect to MariaDB.                                                                                                 | `eea_matomo`                                                                                                                                                   |
+| `mariadb.database`                                     | Database name for Matomo within MariaDB.                                                                                                   | `eea_matomo_db`                                                                                                                                                |
+| `mariadb.password`                                     | Password for the MariaDB user specified in `mariadb.user`.                                                                                 | `REPLACEME`                                                                                                                                                    |
+| `mariadb.rootPassword`                                 | Password for the MariaDB root user.                                                                                                        | `REPLACEME`                                                                                                                                                    |
+| `mariadb.environment.MYSQL_ALLOW_EMPTY_PASSWORD`       | Set to `"yes"` to allow MariaDB to run with an empty root password. **Not recommended for production.**                                    | `"no"`                                                                                                                                                         |
+| `mariadb.storage`                                      | Storage size for MariaDB persistent volume (e.g., 10Gi).                                                                                   | `10Gi`                                                                                                                                                         |
+| `mariadb.storageClassName`                             | StorageClass for MariaDB persistent volume. Leave empty for default.                                                                       | `""`                                                                                                                                                           |
+| `mariadb.resources.requests.memory`                    | MariaDB memory requests (e.g., 7Gi). At least 7Gi.                                                                                         | `7Gi`                                                                                                                                                          |
+| `mariadb.resources.limits.memory`                      | MariaDB memory limit (e.g., 10Gi).                                                                                                         | `10Gi`                                                                                                                                                         |
+| `mariadb.commands`                                     | MariaDB server startup commands.                                                                                                           | See `values.yaml`                                                                                                                                              |
+| `geoipupdate.image.repository`                         | Image repository for GeoIP update.                                                                                                         | `maxmindinc/geoipupdate`                                                                                                                                       |
+| `geoipupdate.image.tag`                                | Image tag for GeoIP update.                                                                                                                | `v7.1`                                                                                                                                                         |
+| `geoipupdate.accountId`                                | Maxmind GeoIP account ID. Used for updating GeoIP database.                                                                                | `REPLACEME`                                                                                                                                                    |
+| `geoipupdate.licenseKey`                               | Maxmind license key. Used for updating GeoIP database.                                                                                     | `REPLACEME`                                                                                                                                                    |
+| `geoipupdate.cronSchedule`                             | Cron schedule for updating GeoIP database.                                                                                                 | `"0 4 5 * *"`                                                                                                                                                  |
+| `geoipupdate.environment.GEOIPUPDATE_EDITION_IDS`      | Which GeoIP databases to download (e.g., GeoLite2-City).                                                                                   | `GeoLite2-City`                                                                                                                                                |
+| `geoipupdate.environment.GEOIPUPDATE_VERBOSE`          | Enable verbose output for GeoIP update process (e.g., 1 for true, 0 for false).                                                            | `1`                                                                                                                                                            |
+| `geoipupdate.resources.requests.memory`                | Memory requests for GeoIP update container.                                                                                                | `NODATA`                                                                                                                                                       |
+| `geoipupdate.resources.limits.memory`                  | Memory limits for GeoIP update container.                                                                                                  | `NODATA`                                                                                                                                                       |
+| `postfix.image.repository`                             | Image repository for Postfix.                                                                                                              | `eeacms/postfix`                                                                                                                                               |
+| `postfix.image.tag`                                    | Image tag for Postfix.                                                                                                                     | `3.5-1.0`                                                                                                                                                      |
+| `postfix.user`                                         | User for Postfix.                                                                                                                          | `postfix`                                                                                                                                                      |
+| `postfix.password`                                     | Password for Postfix user.                                                                                                                 | `REPLACEME`                                                                                                                                                    |
+| `postfix.relay`                                        | Relay host for Postfix to send emails.                                                                                                     | `ironports.eea.europa.eu`                                                                                                                                      |
+| `postfix.port`                                         | Port for Postfix relay.                                                                                                                    | `8587`                                                                                                                                                         |
+| `postfix.environment.TZ`                               | Timezone for Postfix container.                                                                                                            | `Europe/Copenhagen`                                                                                                                                            |
+| `postfix.resources.requests.memory`                    | Postfix memory requests.                                                                                                                   | `256Mi`                                                                                                                                                        |
+| `postfix.resources.limits.memory`                      | Postfix memory limits.                                                                                                                     | `256Mi`                                                                                                                                                        |
+| `matomocronArchive.image.repository`                   | Image repository for Matomo archive cronjob.                                                                                               | `eeacms/matomo`                                                                                                                                                |
+| `matomocronArchive.image.tag`                          | Image tag for Matomo archive cronjob.                                                                                                      | `5.3.2-1`                                                                                                                                                      |
+| `matomocronArchive.cronSchedule`                       | Cron schedule for Matomo archiving job.                                                                                                    | `"5 * * * *"`                                                                                                                                                  |
+| `matomocronArchive.environment.PHP_MEMORY_LIMIT`       | PHP memory limit for Matomo archive containers (e.g., 7168Mi). At least 7168Mi.                                                            | `7168Mi`                                                                                                                                                       |
+| `matomocronArchive.environment.PHP_MAX_EXECUTION_TIME` | Maximum execution time for PHP scripts in archive cronjob (0 for unlimited).                                                               | `0`                                                                                                                                                            |
+| `matomocronArchive.environment.PHP_MAX_INPUT_TIME`     | Maximum input time for PHP scripts in archive cronjob (0 for unlimited).                                                                   | `0`                                                                                                                                                            |
+| `matomocronArchive.resources.requests.memory`          | Matomo archive container memory requests (e.g., 4Gi). At least 4Gi.                                                                        | `4Gi`                                                                                                                                                          |
+| `matomocronArchive.resources.limits.memory`            | Matomo archive memory limit (e.g., 6Gi). Must be more than its PHP memory_limit.                                                           | `6Gi`                                                                                                                                                          |
+| `matomocronLdapSync.image.repository`                  | Image repository for Matomo LDAP synchronization job.                                                                                      | `eeacms/matomo`                                                                                                                                                |
+| `matomocronLdapSync.image.tag`                         | Image tag for Matomo LDAP synchronization job.                                                                                             | `5.3.2-1`                                                                                                                                                      |
+| `matomocronLdapSync.cronSchedule`                      | Cron schedule for Matomo LDAP synchronization job.                                                                                         | `"10 1 * * *"`                                                                                                                                                 |
+| `matomocronLdapSync.resources.requests.memory`         | Matomo LDAP sync job memory requests.                                                                                                      | `256Mi`                                                                                                                                                        |
+| `matomocronLdapSync.resources.limits.memory`           | Matomo LDAP sync job memory limits.                                                                                                        | `256Mi`                                                                                                                                                        |
+| `matomocronDeleteData.image.repository`                | Image repository for Matomo delete old raw data job.                                                                                       | `eeacms/matomo`                                                                                                                                                |
+| `matomocronDeleteData.image.tag`                       | Image tag for Matomo delete old raw data job.                                                                                              | `5.3.2-1`                                                                                                                                                      |
+| `matomocronDeleteData.cronSchedule`                    | Cron schedule for Matomo delete old raw data job.                                                                                          | `"0 23 * * *"`                                                                                                                                                 |
+| `matomocronDeleteData.environment.PHP_MEMORY_LIMIT`    | PHP memory limit for the delete old raw data job.                                                                                          | `512Mi`                                                                                                                                                        |
+| `matomocronDeleteData.environment.siteToDelete`        | ID of the site for which to delete old raw data. Set to 'all' to delete for all sites.                                                     | `"22"`                                                                                                                                                         |
+| `matomocronDeleteData.environment.daysToKeep`          | Number of days to keep raw visitor log data.                                                                                               | `90`                                                                                                                                                           |
+| `matomocronDeleteData.resources.requests.memory`       | Matomo delete data container memory requests (e.g., 512Mi). At least 512Mi.                                                                | `512Mi`                                                                                                                                                        |
+| `matomocronDeleteData.resources.limits.memory`         | Matomo delete data container memory limit (e.g., 2Gi). Must be more than requests.                                                         | `2Gi`                                                                                                                                                          |
+| `rsyncAnalytics.image.repository`                      | Image repository for rsync analytics.                                                                                                      | `eeacms/rsync`                                                                                                                                                 |
+| `rsyncAnalytics.image.tag`                             | Image tag for rsync analytics.                                                                                                             | `2.6`                                                                                                                                                          |
+| `rsyncAnalytics.cronSchedule`                          | Cron schedule for rsync analytics log import job.                                                                                          | `"5 * * * *"`                                                                                                                                                  |
+| `rsyncAnalytics.storage`                               | Size of the persistent volume for rsync analytics import (e.g., 1Gi).                                                                      | `1Gi`                                                                                                                                                          |
+| `rsyncAnalytics.storageClassName`                      | StorageClass for rsync analytics persistent volume. Leave empty for default.                                                               | `""`                                                                                                                                                           |
+| `rsyncAnalytics.rsyncCommands`                         | Rsync command(s) to fetch logs. Example: `rsync -avz user@source:/logs/ /analytics/logs/1`.                                                | `"rsync -e 'ssh -p 2222 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no' -avz --delete root@<IP>:<LOG_LOCATION_REMOTE> /analytics/logs/<SITE_ID>"` |
+| `rsyncAnalytics.ssh_id_rsa`                            | SSH private key (id_rsa) for rsync. Paste your SSH private key. This is used for secure rsync operations.                                  | `REPLACEME`                                                                                                                                                    |
+| `rsyncAnalytics.ssh_id_rsa_pub`                        | SSH public key (id_rsa.pub) for rsync. Paste the corresponding public key. Optional.                                                       | `REPLACEME`                                                                                                                                                    |
+| `rsyncAnalytics.ssh_known_hosts`                       | Known Hosts content for rsync. Optional known_hosts content for verifying SSH targets.                                                     | `REPLACEME`                                                                                                                                                    |
+| `rsyncAnalytics.ssh_config`                            | SSH Config content for rsync. Optional custom SSH config file contents.                                                                    | `REPLACEME`                                                                                                                                                    |
+| `matomoAnalytics.image.repository`                     | Image repository for Matomo log analytics importer.                                                                                        | `eeacms/matomo-log-analytics`                                                                                                                                  |
+| `matomoAnalytics.image.tag`                            | Image tag for Matomo log analytics importer.                                                                                               | `2.4`                                                                                                                                                          |
+| `matomoAnalytics.cronSchedule`                         | Cron schedule for Matomo log analytics importer job.                                                                                       | `"30 0 * * *"`                                                                                                                                                 |
+| `matomoAnalytics.resources.requests.memory`            | Matomo log analytics job memory requests.                                                                                                  | `512Mi`                                                                                                                                                        |
+| `matomoAnalytics.resources.limits.memory`              | Matomo log analytics job memory limits.                                                                                                    | `1Gi`                                                                                                                                                          |
 
 *Note: For parameters with `REPLACEME` as the default value, you must provide a value during installation.*
 *Note: For `mariadb.commands` the default value is an array, please refer to `values.yaml` for the exact content.*
@@ -146,21 +144,21 @@ Before any major changes on the matomo application, you need to backup the confi
 
 On any matomo container:
 
-     $ cp /bitnami/matomo/config/config.ini.php /bitnami/backup/config.ini.php.$( date +%F )
+     $ cp /var/www/html/config/config.ini.php /bitnami/backup/config.ini.php.$( date +%F )
 
 or, if you prefer to have the time included:
 
-     $ cp /bitnami/matomo/config/config.ini.php /bitnami/backup/config.ini.php.$( date +%F.%T ) 
+     $ cp /var/www/html/config/config.ini.php /bitnami/backup/config.ini.php.$( date +%F.%T ) 
 
 ### Plugins backup
 
 On any matomo container:
 
-     $ cp -r /bitnami/matomo/plugins /bitnami/plugins.$( date +%F )
+     $ cp -r /var/www/html/plugins /bitnami/plugins.$( date +%F )
 
 or, if you prefer to have the time included:
 
-     $ cp -r /bitnami/matomo/plugins /bitnami/plugins.$( date +%F.%T )
+     $ cp -r /var/www/html/plugins /bitnami/plugins.$( date +%F.%T )
 
 
 
@@ -180,8 +178,8 @@ This needs to be present in the configuration:
 
 The `record_statistics` line was added in the configuration with the default value(1) to make it's disabling easier:
 
-     $ sed -i 's/^record_statistics.*/record_statistics = 0/' /bitnami/matomo/config/config.ini.php
-     $ grep record_statistics /bitnami/matomo/config/config.ini.php
+     $ sed -i 's/^record_statistics.*/record_statistics = 0/' /var/www/html/config/config.ini.php
+     $ grep record_statistics /var/www/html/config/config.ini.php
 
 #### *Disable UI* - the UI will have a maintenance message so it will not be available.
 
@@ -194,8 +192,8 @@ This needs to be present in the configuration:
 
 The `maintenance_mode` line was added in the configuration with the default value (0) to make it's disabling easier:
 
-     $ sed -i 's/^maintenance_mode.*/maintenance_mode = 1/' /bitnami/matomo/config/config.ini.php
-     $ grep maintenance_mode /bitnami/matomo/config/config.ini.php
+     $ sed -i 's/^maintenance_mode.*/maintenance_mode = 1/' /var/www/html/config/config.ini.php
+     $ grep maintenance_mode /var/www/html/config/config.ini.php
 
 #### *Restart* the container(s) to apply the change.
 
@@ -246,13 +244,13 @@ When making changes in the /bitnami directory in the container, make sure that t
 
 #### Restore configuration
 
-Matomo configuration is stored in `/bitnami/matomo/config/config.ini.php`. If you changed any configuration regarding the database connection, you will need to manually update the restored file.
+Matomo configuration is stored in `/var/www/html/config/config.ini.php`. If you changed any configuration regarding the database connection, you will need to manually update the restored file.
 
 #### Restore other matomo data
 
-1. Plugins - plugins are saved in `/bitnami/matomo/plugins` directory 
-2. Logo - the logo files are saved in `/opt/bitnami/matomo/misc/user`
-3. Geolite database - either you download it manually, or restore it in `/opt/bitnami/matomo/misc` ( this location is  a volume )
+1. Plugins - plugins are saved in `/var/www/html/plugins` directory 
+2. Logo - the logo files are saved in `/opt/var/www/html/misc/user`
+3. Geolite database - either you download it manually, or restore it in `/opt/var/www/html/misc` ( this location is  a volume )
 
 ### Disable maintenace mode - enable database writing
 
@@ -267,8 +265,8 @@ This should to be present in the configuration:
 
 The `record_statistics` line was added in the configuration with the default value(1) to make it's enabling/disabling easier:
 
-     $ sed -i 's/^record_statistics.*/record_statistics = 1/' /bitnami/matomo/config/config.ini.php
-     $ grep record_statistics /bitnami/matomo/config/config.ini.php
+     $ sed -i 's/^record_statistics.*/record_statistics = 1/' /var/www/html/config/config.ini.php
+     $ grep record_statistics /var/www/html/config/config.ini.php
 
 #### *Enable UI* - the UI will be available.
 
@@ -281,8 +279,8 @@ This should to be present in the configuration:
 
 The `maintenance_mode` line was added in the configuration with the default value (0) to make it's disabling easier:
 
-     $ sed -i 's/^maintenance_mode.*/maintenance_mode = 1/' /bitnami/matomo/config/config.ini.php
-     $ grep maintenance_mode /bitnami/matomo/config/config.ini.php
+     $ sed -i 's/^maintenance_mode.*/maintenance_mode = 1/' /var/www/html/config/config.ini.php
+     $ grep maintenance_mode /var/www/html/config/config.ini.php
 
 #### *Restart* the container(s) to apply the change.
 
@@ -346,15 +344,6 @@ You don't need to change anything on this container, it should work by having th
 
 
 ## Releases
-
-### Version 2.5.0 - 23 March 2026
-- Automated release of [eeacms/matomo:official-matomo-3](https://github.com/eea/eea.docker.matomo/releases) [EEA Jenkins - [`6471dbdf`](https://github.com/eea/helm-charts/commit/6471dbdf6a8d08995327b16b727b5d8453cf52a3)]
-
-### Version 2.4.0 - 23 March 2026
-- Automated release of [eeacms/matomo:official-matomo-2](https://github.com/eea/eea.docker.matomo/releases) [EEA Jenkins - [`42f4126e`](https://github.com/eea/helm-charts/commit/42f4126efed34620e4a7fa83949a3e4bbd54ff0d)]
-
-### Version 2.3.0 - 20 March 2026
-- Automated release of [eeacms/matomo:official-matomo](https://github.com/eea/eea.docker.matomo/releases) [EEA Jenkins - [`34be9552`](https://github.com/eea/helm-charts/commit/34be955297d1c4fe7f707c37bc51ee33ee1b9e30)]
 
 ### Version 2.2.2 - 19 February 2026
 - Fix netsecpol selectors [EEA Jenkins - [`38ce9c93`](https://github.com/eea/helm-charts/commit/38ce9c93c22a8057b73e68a2b07ed56cbad4392b)]
