@@ -15,6 +15,8 @@ links:
 
 commonEnv:
   ALLOWED_HOSTS: ""
+  API_PREFIX: ""
+  API_TOKEN: ""
   DEFAULT_FROM_EMAIL: ""
   DJANGO_COLLECT_STATIC: ""
   DJANGO_INDEX_CONTENT: ""
@@ -89,7 +91,6 @@ web:
       memory: 2Gi
   env:
     LOGSPOUT: ""
-    API_PREFIX: ""
     dianaboiangiu: ""
   nodeSelector: {}
   tolerations: []
@@ -106,8 +107,8 @@ cron:
       memory: 1Gi
   env:
     DEBUG: ""
+    dianaboiangiu: ""
     ELASTICSEARCH_TIMEOUT: ""
-    API_TOKEN: ""
   nodeSelector: {}
   tolerations: []
   affinity: {}
