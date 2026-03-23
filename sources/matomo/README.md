@@ -345,6 +345,9 @@ You don't need to change anything on this container, it should work by having th
 
 ## Releases
 
+### Version 2.3.1 - 23 March 2026
+- Fix mount path typo [miahi - [`27f82d0f`](https://github.com/eea/helm-charts/commit/27f82d0f8b059b6b7d6d48b41a0c103ba9fdb323)]
+
 ### Version 2.3.0 - 23 March 2026
 - Automated release of [eeacms/matomo:5.7.1-2.official](https://github.com/eea/eea.docker.matomo/releases) [EEA Jenkins - [`c91240c0`](https://github.com/eea/helm-charts/commit/c91240c088f4427079d7ea2cdc3bca60e3cce023)]
 
