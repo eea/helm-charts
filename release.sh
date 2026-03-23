@@ -2,6 +2,9 @@
 
 echo "Manual release script starting"
 
+if [ $( git diff . | wc -l ) -gt 0 ]; then
+
+
 
 if [ -z "$HELM_VERSION_TYPE" ]; then
 
@@ -27,3 +30,16 @@ fi
 
 
 CI=true ../../update_docs.sh
+
+
+unset HELM_VERSION_TYPE
+
+else
+
+	echo "There are no files to update !"
+	echo "Please run this script without adding the files in git ( neither 'git add' nor 'git commit')"
+	git status
+        git diff
+fi
+
+

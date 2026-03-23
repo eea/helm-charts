@@ -14,7 +14,7 @@ fi
 
 if  [ $(git diff . | wc -l ) -eq 0 ]; then
 	echo "There is nothing to modify!"
-	exit 0
+	exit 1
 fi
 
 git diff | cat
