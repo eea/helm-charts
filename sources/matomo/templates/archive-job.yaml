@@ -75,10 +75,8 @@ spec:
                 limits:
                   memory: "{{ $archiver.resources.limits.memory }}"
               volumeMounts:
-                      #               - name: matomo-tmp
-                      #                  mountPath: /var/www/html/tmp
                 - name: matomo-config
-                  moountPath: /var/www/html/config
+                  mountPath: /var/www/html/config
           restartPolicy: Never
           volumes:
                   #            - name: matomo-tmp
