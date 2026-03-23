@@ -75,15 +75,15 @@ spec:
                 limits:
                   memory: "{{ $archiver.resources.limits.memory }}"
               volumeMounts:
-                - name: matomo-tmp
-                  mountPath: /var/www/html/tmp
+                      #               - name: matomo-tmp
+                      #                  mountPath: /var/www/html/tmp
                 - name: matomo-config
                   moountPath: /var/www/html/config
           restartPolicy: Never
           volumes:
-            - name: matomo-tmp
-              persistentVolumeClaim:
-                claimName: {{ $release }}-archive-tmp-pvc
+                  #            - name: matomo-tmp
+                  #              persistentVolumeClaim:
+                  #                claimName: {{ $release }}-archive-tmp-pvc
             - name: matomo-config
               persistentVolumeClaim:
                 claimName: {{ $release }}-config-pvc
