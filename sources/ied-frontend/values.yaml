@@ -23,9 +23,7 @@ ingress:
     nginx.ingress.kubernetes.io/configuration-snippet: |-
       more_set_headers 'Server HTTPS'
         'Strict-Transport-Security max-age=31536000; includeSubDomains; preload'
-        "Expect-CT max-age=604800, report-uri='https://sentry.eea.europa.eu/api/45/security/?sentry_key=0343e20fc4e0469790b6016561f032e3'"
         'X-Content-Type-Options nosniff'
-        'X-XSS-Protection "1; mode=block"'
         "Referrer-Policy strict-origin-when-cross-origin"
         'Permissions-Policy accelerometer=(), autoplay=(), camera=(), encrypted-media=(), fullscreen=(self), geolocation=(self), gyroscope=(), magnetometer=(), microphone=(), midi=(), payment=(), picture-in-picture=(), sync-xhr=(self), usb=()';
     nginx.ingress.kubernetes.io/proxy-body-size: 1024m
@@ -77,6 +75,7 @@ volto:
     CSP_HEADER: >-
       default-src 'none';
       base-uri 'self';
+      worker-src 'self' blob:;
       form-action 'self';
       object-src 'none';
       manifest-src 'self';
@@ -88,6 +87,7 @@ volto:
       script-src 'self' {nonce} blob: https://webanalytics.europa.eu https://matomo.eea.europa.eu https://europa.eu https://www.google.com https://www.gstatic.com https://spreadsheets.google.com https://docs.google.com https://*.eionet.europa.eu https://*.eea.europa.eu https://d3js.org https://cdnjs.cloudflare.com https://code.jquery.com https://services.arcgis.com https://js.arcgis.com https://api.openaire.eu https://api.openaire.com https://api.zotero.org https://geocode.arcgis.com https://public.tableau.com;
       style-src 'self' 'unsafe-inline' https://www.google.com https://europa.eu https://fonts.googleapis.com https://js.arcgis.com https://api.openaire.eu https://api.openaire.com https://api.zotero.org https://ajax.googleapis.com https://www.gstatic.com https://*.eionet.europa.eu https://*.eea.europa.eu https://cdnjs.cloudflare.com https://code.jquery.com;
       frame-ancestors 'self' https://*.eionet.europa.eu https://*.eea.europa.eu;
+      upgrade-insecure-requests;
       report-to csp-endpoint;
       report-uri https://sentry.eea.europa.eu/api/49/security/?sentry_key=0343e20fc4e0469790b6016561f032e3;
   annotations: {}
