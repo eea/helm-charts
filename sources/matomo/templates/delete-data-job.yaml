@@ -1,4 +1,5 @@
 {{- if  .Values.matomocronDeleteData.enabled }}
+{{- $release := .Release.Name }}
 
 ---
 apiVersion: batch/v1
@@ -59,30 +60,28 @@ spec:
                 - name: SITE_TO_DELETE
                   value: "{{ .Values.matomocronDeleteData.environment.siteToDelete }}"
               command:
-                - bash
+                - sh
                 - -c
               args:
-                - . /opt/bitnami/scripts/matomo-env.sh &&
-                  . /opt/bitnami/scripts/libbitnami.sh &&
-                  . /opt/bitnami/scripts/liblog.sh &&
-                  /opt/bitnami/scripts/apache/setup.sh &&
-                  /opt/bitnami/scripts/php/setup.sh &&
-                  /opt/bitnami/scripts/mysql-client/setup.sh &&
-                  /opt/bitnami/scripts/matomo/setup.sh &&
-                  /use_matomo_in_rancher.sh &&
-                  /post-init.sh &&
-                  /usr/bin/run_delete_data.sh
+                - /usr/bin/run_delete_data.sh
               resources:
                 requests:
                   memory: "{{ .Values.matomocronDeleteData.resources.requests.memory }}"
                 limits:
                   memory: "{{ .Values.matomocronDeleteData.resources.limits.memory }}"
               volumeMounts:
-                - name: matomo-pv
-                  mountPath: /bitnami
+                - name: matomo-config
+                  mountPath: /config
+                  readOnly: true
+                - name: matomo-plugins
+                  mountPath: /plugins
+                  readOnly: true
           restartPolicy: Never
           volumes:
-            - name: matomo-pv
+            - name: matomo-config
               persistentVolumeClaim:
-                claimName: {{ .Release.Name }}-matomo-pvc
+                claimName: {{ $release }}-config-pvc
+            - name: matomo-plugins
+              persistentVolumeClaim:
+                claimName: {{ $release }}-plugins-pvc
 {{- end }}

@@ -65,7 +65,7 @@ spec:
                 {{- end }}
 
               command:
-                - bash
+                - sh
                 - -c
               args:
                 - /usr/bin/run_archiving.sh
@@ -76,15 +76,19 @@ spec:
                   memory: "{{ $archiver.resources.limits.memory }}"
               volumeMounts:
                 - name: matomo-config
-                  mountPath: /var/www/html/config
+                  mountPath: /config
+                  readOnly: true
+                - name: matomo-plugins
+                  mountPath: /plugins
+                  readOnly: true
           restartPolicy: Never
           volumes:
-                  #            - name: matomo-tmp
-                  #              persistentVolumeClaim:
-                  #                claimName: {{ $release }}-archive-tmp-pvc
             - name: matomo-config
               persistentVolumeClaim:
                 claimName: {{ $release }}-config-pvc
+            - name: matomo-plugins
+              persistentVolumeClaim:
+                claimName: {{ $release }}-plugins-pvc
 
 {{- end }}
 

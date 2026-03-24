@@ -1,3 +1,8 @@
+{{- $labels := ( include "appl.labels" . ) -}}
+{{- $values := .Values -}}
+{{- $appversion := .Chart.AppVersion }}
+{{- $release := .Release.Name }}
+
 ---
 apiVersion: batch/v1
 kind: CronJob
@@ -59,7 +64,7 @@ spec:
                 - name: ADMIN_EMAIL
                   value: {{ .Values.matomocronLdapSync.environment.ADMIN_EMAIL | quote }}
               command:
-                - bash
+                - sh
                 - -c
               args:
                 - /usr/bin/run_ldapsync.sh || true
@@ -69,10 +74,17 @@ spec:
                 limits:
                   memory: "{{ .Values.matomocronLdapSync.resources.limits.memory }}"
               volumeMounts:
-                - name: matomo-pv
-                  mountPath: /bitnami
+                - name: matomo-config
+                  mountPath: /config
+                  readOnly: true
+                - name: matomo-plugins
+                  mountPath: /plugins
+                  readOnly: true
           restartPolicy: Never
           volumes:
-            - name: matomo-pv
+            - name: matomo-config
               persistentVolumeClaim:
-                claimName: {{ .Release.Name }}-matomo-pvc
+                claimName: {{ $release }}-config-pvc
+            - name: matomo-plugins
+              persistentVolumeClaim:
+                claimName: {{ $release }}-plugins-pvc
