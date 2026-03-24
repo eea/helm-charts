@@ -10,6 +10,9 @@ This chart deployes the European Industrial Emissions Portal frontend app
 
 ## Releases
 
+### Version 1.42.3 - 24 March 2026
+- update security headers [Teodor - [`5731cfda`](https://github.com/eea/helm-charts/commit/5731cfda8d5ce8aa6c605a8811387ac686dda1f4)]
+
 ### Version 1.42.1 - 24 March 2026
 - update security headers for ied-frontend [Teodor - [`207a3cce`](https://github.com/eea/helm-charts/commit/207a3cce17470a493fbea6cb53d36de289c3cf9c)]
 
