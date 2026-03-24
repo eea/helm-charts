@@ -33,13 +33,15 @@ spec:
         - name: RAZZLE_SENTRY_RELEASE
           value: "{{ .Values.image.tag | default .Chart.AppVersion }}"
         - name: RAZZLE_FRONTEND_VERSION
-          value: "{{ .Values.image.tag | default .Chart.AppVersion }}"
+          value: "{{ .Values.volto.environment.RAZZLE_FRONTEND_VERSION | default (.Values.image.tag | default .Chart.AppVersion) }}"
+        - name: RAZZLE_FRONTEND_NAME
+          value: "{{ .Values.volto.environment.RAZZLE_FRONTEND_NAME | default .Chart.Name }}"
         - name: SENTRY_RELEASE
           value: "{{ .Values.image.tag | default .Chart.AppVersion }}"
         - name: TZ
           value: "{{ .Values.timezone }}"
         {{- range $key, $value := .Values.volto.environment }}
-        {{- if ($value) }}
+        {{- if and ($value) (ne $key "RAZZLE_FRONTEND_VERSION") (ne $key "RAZZLE_FRONTEND_NAME") }}
         - name: {{ $key }}
           value: {{ $value | quote }}
         {{- end }}
@@ -80,4 +82,3 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       restartPolicy: Always
-
