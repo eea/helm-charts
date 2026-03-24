@@ -39,6 +39,7 @@ spec:
                   number: 3000
             path: /_ha/
             pathType: Prefix
+  {{- if .Values.ingress.tls }}
   tls:
   - hosts:
     - {{ .Values.volto.hostname }}
