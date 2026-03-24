@@ -42,6 +42,19 @@ questions:
     default: "taskman.eea.europa.eu-tls"
     type: "string"
     show_if: "ingress.tls"
+  - variable: "ingress.restrictedRoutes.enabled"
+    label: "Enable private ingresses for /rails_pulse and /jobs"
+    description: "Creates dedicated ingresses for /rails_pulse and /jobs with source IP whitelist."
+    default: true
+    type: "boolean"
+    required: true
+  - variable: "ingress.restrictedRoutes.whitelistSourceRange"
+    label: "Private routes whitelist source ranges"
+    description: "Comma-separated CIDRs allowed to access /rails_pulse and /jobs."
+    default: "192.168.60.0/22,192.168.64.0/21,10.92.24.0/21,10.50.0.0/16,87.54.7.0/24,10.20.30.0/24,10.0.9.0/24,10.42.0.0/16"
+    type: "string"
+    required: true
+    show_if: "ingress.restrictedRoutes.enabled"
 
   - variable: "redmine.environment.RESTART_CRON"
     label: "Taskman restart crontab schedule(UTC):"
