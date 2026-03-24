@@ -106,6 +106,7 @@ redmine:
       T_EMAIL_PASS: ''
       T_EMAIL_PORT: '993'
       T_EMAIL_USER: ''
+      T_EMAIL_FOLDER: 'INBOX'
       REDMINE_SMTP_DOMAIN: "eionet.europa.eu"
       REDMINE_SMTP_TLS: "true"
       REDMINE_SMTP_STARTTLSAUTO: "true"
@@ -162,7 +163,7 @@ redmineMigrate:
   enabled: true
   backoffLimit: 1
   runDbMigrate: "1"
-  pluginsMigrate: "no"
+  pluginsMigrate: "auto"
   assetsPrecompile: "1"
   assetsPrecompileForce: "0"
   adminBootstrapEnable: "0"
@@ -189,8 +190,11 @@ redmineJobs:
         rails_pulse_cleanup:
           class: RailsPulse::CleanupJob
           schedule: 17 3 * * *
+        solid_queue_cleanup_old_jobs:
+          command: "begin; cutoff = 7.days.ago; scope = SolidQueue::Job.where.not(finished_at: nil).where('finished_at < ?', cutoff); total = scope.count; scope.in_batches(of: 500) { |batch| batch.delete_all }; Rails.logger.info(\"[solid_queue_cleanup_old_jobs] deleted=#{total} cutoff=#{cutoff.iso8601}\"); rescue => e; Rails.logger.error(\"[solid_queue_cleanup_old_jobs] #{e.class}: #{e.message}\"); raise; end"
+          schedule: 25 3 * * *
         taskman_default_mailbox:
-          command: "begin; require 'open3'; missing=%w[T_EMAIL_HOST T_EMAIL_USER T_EMAIL_PASS T_EMAIL_PORT].select { |k| ENV[k].to_s.strip.empty? }; raise(\"taskman_default_mailbox missing env: #{missing.join(',')}\") if missing.any?; cmd=%Q{bundle exec rake -f /usr/src/redmine/Rakefile redmine:email:receive_imap RAILS_ENV=production host=#{ENV['T_EMAIL_HOST']} username=#{ENV['T_EMAIL_USER']} password=#{ENV['T_EMAIL_PASS']} ssl=#{ENV['T_EMAIL_SSL']} port=#{ENV['T_EMAIL_PORT']} folder=#{ENV['T_EMAIL_FOLDER']} project=it-helpdesk move_on_success=read move_on_failure=failed allow_override=project,tracker,priority,status,category,fixed_version}; out,status=Open3.capture2e(cmd); if !status.success?; tail=out.to_s.lines.last(20).join.strip; Rails.logger.error(\"[taskman_default_mailbox] failed rc=#{status.exitstatus} tail=#{tail}\"); raise(\"taskman_default_mailbox failed rc=#{status.exitstatus}: #{tail}\"); end; rescue => e; Rails.logger.error(\"[taskman_default_mailbox] #{e.class}: #{e.message}\"); raise; end"
+          command: "begin; require 'open3'; unless ENV.fetch('TASKMAN_DEFAULT_MAILBOX_ENABLED', '0') == '1'; Rails.logger.info('[taskman_default_mailbox] skipped (disabled; using postfix outbound only)'); next; end; missing=%w[T_EMAIL_HOST T_EMAIL_USER T_EMAIL_PASS T_EMAIL_PORT].select { |k| ENV[k].to_s.strip.empty? }; if missing.any?; Rails.logger.warn(\"[taskman_default_mailbox] skipped missing env: #{missing.join(',')}\"); next; end; folder = ENV['T_EMAIL_FOLDER'].to_s.strip; folder = 'INBOX' if folder.empty?; lock_file='/tmp/taskman_default_mailbox.lock'; File.open(lock_file, 'w') do |f| unless f.flock(File::LOCK_EX | File::LOCK_NB); Rails.logger.info('[taskman_default_mailbox] skipped overlapping run'); next; end; cmd=%Q{bundle exec rake -f /usr/src/redmine/Rakefile redmine:email:receive_imap RAILS_ENV=production host=#{ENV['T_EMAIL_HOST']} username=#{ENV['T_EMAIL_USER']} password=#{ENV['T_EMAIL_PASS']} ssl=#{ENV['T_EMAIL_SSL']} port=#{ENV['T_EMAIL_PORT']} folder=#{folder} project=it-helpdesk move_on_success=read move_on_failure=failed allow_override=project,tracker,priority,status,category,fixed_version}; out,status=Open3.capture2e(cmd); if !status.success?; tail=out.to_s.lines.last(20).join.strip; Rails.logger.error(\"[taskman_default_mailbox] failed rc=#{status.exitstatus} tail=#{tail}\"); else Rails.logger.info('[taskman_default_mailbox] completed'); end; end; rescue => e; Rails.logger.error(\"[taskman_default_mailbox] #{e.class}: #{e.message}\"); end"
           schedule: every 5 minutes
         entra_users_sync:
           command: "system('bundle exec rake -f /usr/src/redmine/Rakefile entra_id:sync:users RAILS_ENV=production') || raise('entra_users_sync failed')"
@@ -217,6 +221,7 @@ redmineJobs:
     ASSETS_PRECOMPILE_FORCE: "0"
     ACTIVE_JOB_QUEUE_ADAPTER: solid_queue
     RAILS_PULSE_ENABLED: "1"
+    TASKMAN_DEFAULT_MAILBOX_ENABLED: "0"
     REDMINE_PLUGINS_MIGRATE: "no"
 
 
