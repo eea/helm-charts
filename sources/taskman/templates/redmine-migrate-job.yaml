@@ -1,6 +1,8 @@
 {{- $migrate := .Values.redmineMigrate | default dict }}
 {{- $migrateEnabled := $migrate.enabled | default false }}
 {{- $migrateEnv := $migrate.environment | default dict }}
+{{- $migrateHistorySlots := 3 }}
+{{- $migrateSlot := mod .Release.Revision $migrateHistorySlots }}
 {{- $filesClaim := .Values.storage.filesDir.existingClaim | default (printf "redmine-files-%s-redmine-ss-0" .Release.Name) }}
 {{- $tmpClaim := .Values.storage.tmpDir.existingClaim | default (printf "redmine-tmp-%s-redmine-ss-0" .Release.Name) }}
 {{- $githubClaim := .Values.storage.github.existingClaim | default (printf "github-%s-redmine-ss-0" .Release.Name) }}
@@ -9,14 +11,16 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ .Release.Name }}-redmine-migrate-job
+  name: {{ .Release.Name }}-redmine-migrate-job-{{ $migrateSlot }}
   labels:
     {{- include "appl.labels" . | nindent 4 }}
     component: redmine-migrate
+    migrate-history-slot: {{ $migrateSlot | quote }}
+    migrate-release-revision: {{ .Release.Revision | quote }}
   annotations:
     "helm.sh/hook": pre-install,pre-upgrade
     "helm.sh/hook-weight": "-5"
-    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+    "helm.sh/hook-delete-policy": before-hook-creation
 spec:
   backoffLimit: {{ $migrate.backoffLimit | default 1 }}
   template:
