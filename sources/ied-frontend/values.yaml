@@ -23,7 +23,9 @@ ingress:
     nginx.ingress.kubernetes.io/configuration-snippet: |-
       more_set_headers 'Server HTTPS'
         'Strict-Transport-Security max-age=31536000; includeSubDomains; preload'
+        "Expect-CT max-age=604800, report-uri='https://sentry.eea.europa.eu/api/45/security/?sentry_key=0343e20fc4e0469790b6016561f032e3'"
         'X-Content-Type-Options nosniff'
+        'X-XSS-Protection "1; mode=block"'
         "Referrer-Policy strict-origin-when-cross-origin"
         'Permissions-Policy accelerometer=(), autoplay=(), camera=(), encrypted-media=(), fullscreen=(self), geolocation=(self), gyroscope=(), magnetometer=(), microphone=(), midi=(), payment=(), picture-in-picture=(), sync-xhr=(self), usb=()';
     nginx.ingress.kubernetes.io/proxy-body-size: 1024m
