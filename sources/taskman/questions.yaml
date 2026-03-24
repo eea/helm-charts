@@ -134,6 +134,41 @@ questions:
     default: 1
     required: true
     group: "Runtime and scaling"
+  - variable: "redmineJobs.resources.requests.memory"
+    label: "Jobs memory request"
+    description: "Memory requested by the async jobs pod."
+    type: "string"
+    default: "384Mi"
+    required: true
+    group: "Runtime and scaling"
+  - variable: "redmineJobs.resources.limits.memory"
+    label: "Jobs memory limit"
+    description: "Hard memory limit for the async jobs pod."
+    type: "string"
+    default: "768Mi"
+    required: true
+    group: "Runtime and scaling"
+  - variable: "redmineJobs.environment.RAILS_MAX_THREADS"
+    label: "Jobs max threads"
+    description: "Rails thread count used by async jobs container."
+    type: "int"
+    default: 2
+    required: true
+    group: "Runtime and scaling"
+  - variable: "redmineJobs.environment.REDMINE_DB_POOL"
+    label: "Jobs DB pool"
+    description: "Database pool for async jobs pod."
+    type: "int"
+    default: 5
+    required: true
+    group: "Runtime and scaling"
+  - variable: "redmineJobs.environment.MALLOC_ARENA_MAX"
+    label: "Jobs malloc arenas"
+    description: "Lower values reduce allocator memory overhead."
+    type: "int"
+    default: 2
+    required: true
+    group: "Runtime and scaling"
   - variable: "redmineJobs.recurring.enabled"
     label: "Enable recurring jobs schedule"
     description: "Enable/disable loading recurring.yml for periodic jobs."

@@ -30,6 +30,29 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      initContainers:
+      - name: {{ .Release.Name }}-plugins-init
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        command: ["/bin/bash", "-lc"]
+        args:
+        - |
+          set -euo pipefail
+          mkdir -p /work/plugins
+          cp -a /usr/src/redmine/plugins/. /work/plugins/
+          if [ -d /addons/current/plugins ]; then
+            for source in /addons/current/plugins/*; do
+              [ -d "${source}" ] || continue
+              name="$(basename "${source}")"
+              rm -rf "/work/plugins/${name}"
+              cp -a "${source}" "/work/plugins/${name}"
+            done
+          fi
+        volumeMounts:
+        - name: plugins
+          mountPath: /addons
+        - name: plugins-workdir
+          mountPath: /work/plugins
       containers:
       - name: {{ .Release.Name }}-redmine-jobs
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -38,16 +61,6 @@ spec:
         args:
         - |
           cp /opt/recurring/recurring.yml /usr/src/redmine/config/recurring.yml
-          for source in /addons/current/plugins/*; do
-            [ -d "${source}" ] || continue
-            name="$(basename "${source}")"
-            target="/usr/src/redmine/plugins/${name}"
-            if [ -f "${source}/init.rb" ] && [ -d "${target}" ] && [ ! -f "${target}/init.rb" ]; then
-              echo "Replacing incomplete plugin dir ${target} with mounted addon ${source}"
-              rm -rf "${target}"
-              ln -s "${source}" "${target}"
-            fi
-          done
           exec /start_redmine.sh
         env:
         - name: TZ
@@ -88,6 +101,8 @@ spec:
           mountPath: /var/local/redmine/github/
         - name: plugins
           mountPath: /addons
+        - name: plugins-workdir
+          mountPath: /usr/src/redmine/plugins
         - name: recurring-config
           mountPath: /opt/recurring/recurring.yml
           subPath: recurring.yml
@@ -107,6 +122,8 @@ spec:
       - name: plugins
         persistentVolumeClaim:
           claimName: {{ $pluginsClaim }}
+      - name: plugins-workdir
+        emptyDir: {}
       - name: recurring-config
         configMap:
           name: {{ .Release.Name }}-redmine-recurring-cm

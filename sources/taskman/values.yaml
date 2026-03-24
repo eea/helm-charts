@@ -204,9 +204,9 @@ redmineJobs:
           schedule: 15 4 * * *
   resources:
     requests:
-      memory: 512Mi
+      memory: 384Mi
     limits:
-      memory: 1Gi
+      memory: 768Mi
   environment:
     START_SERVER: "0"
     START_CRON: "0"
@@ -220,6 +220,10 @@ redmineJobs:
     ASSETS_PRECOMPILE: "0"
     ASSETS_PRECOMPILE_FORCE: "0"
     ACTIVE_JOB_QUEUE_ADAPTER: solid_queue
+    WEB_CONCURRENCY: "1"
+    RAILS_MAX_THREADS: "2"
+    REDMINE_DB_POOL: "5"
+    MALLOC_ARENA_MAX: "2"
     RAILS_PULSE_ENABLED: "1"
     TASKMAN_DEFAULT_MAILBOX_ENABLED: "0"
     REDMINE_PLUGINS_MIGRATE: "no"
