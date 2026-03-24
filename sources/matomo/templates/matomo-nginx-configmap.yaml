@@ -42,7 +42,7 @@ data:
             return 403;
         }
 
-        location = /misc/GeoLite2-City.mmdb {
+        location ~* \.mmdb$ {
             deny all;
             return 403;
         }
