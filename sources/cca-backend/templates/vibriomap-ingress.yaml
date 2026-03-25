@@ -23,7 +23,7 @@ spec:
       http:
         paths:
           - path: /@@vibriomap-view-simple
-            pathType: Exact
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: {{ .Values.varnish.serviceName }}
