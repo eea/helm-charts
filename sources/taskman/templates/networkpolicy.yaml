@@ -30,14 +30,14 @@ spec:
   - Egress
   ingress:
   - from:
-    - podSelector:
+    - namespaceSelector:
         matchLabels:
-          {{- include "appl.selectorLabels" . | nindent 10 }}
+          kubernetes.io/metadata.name: {{ .Release.Namespace | quote }}
   egress:
   - to:
-    - podSelector:
+    - namespaceSelector:
         matchLabels:
-          {{- include "appl.selectorLabels" . | nindent 10 }}
+          kubernetes.io/metadata.name: {{ .Release.Namespace | quote }}
 {{- if .Values.networkPolicy.allowDnsEgress }}
   - to:
     - namespaceSelector:
