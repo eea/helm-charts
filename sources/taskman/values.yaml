@@ -459,3 +459,48 @@ httpd:
 
 
       
+
+
+networkPolicy:
+  enabled: true
+  allowDnsEgress: true
+  dns:
+    namespace: kube-system
+  ingressController:
+    namespace: kube-system
+    nameLabel: ""
+    componentLabel: ""
+  # Explicit egress allowlist for redmine/redmine-jobs (ai_helper and similar).
+  # Each item maps directly to a NetworkPolicy egress rule.
+  # Example:
+  # redmineExtraEgress:
+  #   - to:
+  #     - ipBlock:
+  #         cidr: 10.50.0.0/16
+  #     ports:
+  #     - protocol: TCP
+  #       port: 443
+  redmineExtraEgress:
+    - to:
+      - ipBlock:
+          cidr: 10.50.7.31/32
+      ports:
+      - protocol: TCP
+        port: 443
+  # Explicit egress allowlist for redmine-jobs only.
+  # Useful for Entra ID / email HTTPS calls without broadening web pod egress.
+  jobsExtraEgress:
+    - to:
+      - ipBlock:
+          cidr: 0.0.0.0/0
+      ports:
+      - protocol: TCP
+        port: 443
+      - protocol: TCP
+        port: 25
+      - protocol: TCP
+        port: 465
+      - protocol: TCP
+        port: 587
+      - protocol: TCP
+        port: 993

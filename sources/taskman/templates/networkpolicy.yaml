@@ -1,0 +1,151 @@
+{{- if .Values.networkPolicy.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ .Release.Name }}-default-deny
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: networkpolicy
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+  policyTypes:
+  - Ingress
+  - Egress
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ .Release.Name }}-allow-same-namespace
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: networkpolicy
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          {{- include "appl.selectorLabels" . | nindent 10 }}
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          {{- include "appl.selectorLabels" . | nindent 10 }}
+{{- if .Values.networkPolicy.allowDnsEgress }}
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: {{ .Values.networkPolicy.dns.namespace | quote }}
+      podSelector:
+        matchExpressions:
+        - key: k8s-app
+          operator: In
+          values:
+          - kube-dns
+          - coredns
+    ports:
+    - protocol: UDP
+      port: 53
+    - protocol: TCP
+      port: 53
+{{- end }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ .Release.Name }}-allow-ingress-controller-to-nginx
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: networkpolicy
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: nginx
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: {{ .Values.networkPolicy.ingressController.namespace | quote }}
+{{- if or .Values.networkPolicy.ingressController.nameLabel .Values.networkPolicy.ingressController.componentLabel }}
+      podSelector:
+        matchLabels:
+{{- if .Values.networkPolicy.ingressController.nameLabel }}
+          app.kubernetes.io/name: {{ .Values.networkPolicy.ingressController.nameLabel | quote }}
+{{- end }}
+{{- if .Values.networkPolicy.ingressController.componentLabel }}
+          app.kubernetes.io/component: {{ .Values.networkPolicy.ingressController.componentLabel | quote }}
+{{- end }}
+{{- end }}
+    ports:
+    - protocol: TCP
+      port: 80
+{{- if .Values.networkPolicy.redmineExtraEgress }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ .Release.Name }}-allow-redmine-extra-egress
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: networkpolicy
+spec:
+  podSelector:
+    matchExpressions:
+    - key: app.kubernetes.io/name
+      operator: In
+      values:
+      - {{ include "appl.name" . }}
+    - key: app.kubernetes.io/instance
+      operator: In
+      values:
+      - {{ .Release.Name }}
+    - key: component
+      operator: In
+      values:
+      - redmine
+      - redmine-jobs
+  policyTypes:
+  - Egress
+  egress:
+{{ toYaml .Values.networkPolicy.redmineExtraEgress | nindent 2 }}
+{{- end }}
+{{- if .Values.networkPolicy.jobsExtraEgress }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ .Release.Name }}-allow-redmine-jobs-extra-egress
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: networkpolicy
+spec:
+  podSelector:
+    matchExpressions:
+    - key: app.kubernetes.io/name
+      operator: In
+      values:
+      - {{ include "appl.name" . }}
+    - key: app.kubernetes.io/instance
+      operator: In
+      values:
+      - {{ .Release.Name }}
+    - key: component
+      operator: In
+      values:
+      - redmine-jobs
+  policyTypes:
+  - Egress
+  egress:
+{{ toYaml .Values.networkPolicy.jobsExtraEgress | nindent 2 }}
+{{- end }}
+{{- end }}
