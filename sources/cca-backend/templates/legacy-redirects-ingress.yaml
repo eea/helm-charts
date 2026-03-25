@@ -15,7 +15,8 @@ metadata:
     {{- include "appl.labels" $ | nindent 4 }}
     component: cca-redirect
   annotations:
-    nginx.ingress.kubernetes.io/permanent-redirect: https://{{ $host }}{{ $rule.target }}$is_args$args
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      return 301 https://{{ $host }}{{ $rule.target }}$is_args$args;
 spec:
   ingressClassName: nginx
   rules:
