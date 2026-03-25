@@ -26,6 +26,8 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: 01dev-eea-letsencrypt
     nginx.ingress.kubernetes.io/proxy-body-size: 100m
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
   certificate: climate-adapt.eea.europa.eu-tls
   tls: true
 

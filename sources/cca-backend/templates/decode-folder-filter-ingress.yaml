@@ -2,16 +2,13 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: cca-api
+  name: cca-decode-folder-filter
   labels:
     {{- include "appl.labels" . | nindent 4 }}
-    component: cca-api
+    component: cca-decode-folder-filter
   annotations:
     nginx.ingress.kubernetes.io/configuration-snippet: |
-      rewrite ^/(\+\+api\+\+)(.*)$ /VirtualHostBase/https/{{ .Values.plone.hostname }}:443/{{ .Values.plone.site }}/VirtualHostRoot/$1$2 break;
-{{ include "cca-backend.ingressCommonConfigurationSnippet" . | indent 6 }}
-{{ include "cca-backend.ingressSecurityHeaders" . | indent 6 }}
-    nginx.ingress.kubernetes.io/use-regex: "true"
+      deny all;
     nginx.ingress.kubernetes.io/proxy-body-size: 100m
   {{- with .Values.ingress.annotations }}
     {{- toYaml . | nindent 4 }}
@@ -22,8 +19,8 @@ spec:
     - host: {{ .Values.plone.hostname }}
       http:
         paths:
-          - path: /\+\+api\+\+(.*)
-            pathType: ImplementationSpecific
+          - path: /decodeFolderFilter
+            pathType: Exact
             backend:
               service:
                 name: {{ .Values.varnish.serviceName }}

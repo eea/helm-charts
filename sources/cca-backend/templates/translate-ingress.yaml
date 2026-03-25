@@ -9,6 +9,8 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/configuration-snippet: |
       rewrite ^/@@(translate-callback|save-etranslation|call-etranslation|sync-translated-paths)(.*)$ /VirtualHostBase/https/{{ .Values.plone.hostname }}:443/{{ .Values.plone.site }}/VirtualHostRoot/@@$1$2 break;
+{{ include "cca-backend.ingressCommonConfigurationSnippet" . | indent 6 }}
+{{ include "cca-backend.ingressSecurityHeaders" . | indent 6 }}
     nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/proxy-body-size: 100m
   {{- with .Values.ingress.annotations }}
