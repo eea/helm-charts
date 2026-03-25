@@ -345,6 +345,9 @@ You don't need to change anything on this container, it should work by having th
 
 ## Releases
 
+### Version 3.0.1 - 25 March 2026
+- Add letsencrypt network sec policy [valentinab25 - [`b6972e02`](https://github.com/eea/helm-charts/commit/b6972e026fbd3316c5ffa448b65c56a5b6aef0d6)]
+
 ### Version 3.0.0 - 24 March 2026
 - Switched to official Matomo image [miahi - [`b28440d6`](https://github.com/eea/helm-charts/commit/b28440d6bd557c510434b28fe2180fbc8a90db19)]
 
