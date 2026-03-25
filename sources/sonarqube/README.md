@@ -52,6 +52,9 @@ Because we are using docker, we only need to access <http://yourSonarQubeServerU
 
 ## Releases
 
+### Version 1.4.9 - 25 March 2026
+- Add letsencrypt net sec policy [valentinab25 - [`f7837431`](https://github.com/eea/helm-charts/commit/f7837431eb8c50e21e5a2067eb7368218029b0a5)]
+
 ### Version 1.4.8 - 28 January 2026
 - Upgrade eeacms/postgres:16.9-1 [EEA Jenkins - [`fa84737e`](https://github.com/eea/helm-charts/commit/fa84737e02b1a71731e649efe3d72c0c913f7c96)]
 
