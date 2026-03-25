@@ -49,8 +49,12 @@ spec:
             for source in /addons/current/plugins/*; do
               [ -d "${source}" ] || continue
               name="$(basename "${source}")"
-              rm -rf "/work/plugins/${name}"
-              cp -a "${source}" "/work/plugins/${name}"
+              if [ -f "${source}/init.rb" ]; then
+                rm -rf "/work/plugins/${name}"
+                cp -a "${source}" "/work/plugins/${name}"
+              else
+                echo "Skipping mounted plugin override for ${name}: init.rb not found"
+              fi
             done
           fi
         volumeMounts:
