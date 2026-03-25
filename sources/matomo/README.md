@@ -345,6 +345,9 @@ You don't need to change anything on this container, it should work by having th
 
 ## Releases
 
+### Version 3.5.0 - 25 March 2026
+- Automated release of [eeacms/matomo:5.7.1-16.official](https://github.com/eea/eea.docker.matomo/releases) [EEA Jenkins - [`7ede4819`](https://github.com/eea/helm-charts/commit/7ede48196b23c85987bc6d223403feb348b63c28)]
+
 ### Version 3.4.0 - 25 March 2026
 - Automated release of [eeacms/matomo:5.7.1-15.official](https://github.com/eea/eea.docker.matomo/releases) [EEA Jenkins - [`b0105e25`](https://github.com/eea/helm-charts/commit/b0105e25c77706499edb7313e74dcd24f931b197)]
 
