@@ -10,6 +10,9 @@ backends and adds the CCA-specific supporting services from the Rancher stack:
 Sensitive values are intentionally left empty in `values.yaml`.
 ## Releases
 
+### Version 0.2.7 - 25 March 2026
+- fix ingresses [Dobricean Ioan Dorian - [`15f96814`](https://github.com/eea/helm-charts/commit/15f9681417ca5af45c4229a9667462f1bc708a36)]
+
 ### Version 0.2.6 - 13 March 2026
 - remove memcache [Dobricean Ioan Dorian - [`d810cf06`](https://github.com/eea/helm-charts/commit/d810cf06b6ad32c0bb3ebb6978b6a248793a2f4f)]
 
