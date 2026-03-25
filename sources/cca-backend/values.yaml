@@ -133,57 +133,6 @@ plone:
   tolerations: []
   affinity: {}
 
-ploneAdmin:
-  enabled: true
-  serviceName: plone-admin
-  serviceType: ClusterIP
-  image:
-    repository: eeacms/eea.docker.plone-climateadapt
-    tag: "v11.0.3-plone6.1"
-    pullPolicy: Always
-  releaseVersion: ""
-  resources:
-    limits:
-      memory: 16Gi
-    requests:
-      memory: 8Gi
-  environment:
-    IS_JOB_EXECUTOR: "true"
-  command:
-    - sh
-    - -c
-    - mkdir -p /tmp/plone_mail_queue/cur /tmp/plone_mail_queue/new /tmp/plone_mail_queue/tmp && ./docker-entrypoint.sh start
-  livenessProbe:
-    httpGet:
-      path: /ok
-      port: http
-    periodSeconds: 20
-    timeoutSeconds: 10
-    initialDelaySeconds: 30
-    failureThreshold: 6
-    successThreshold: 1
-  startupProbe:
-    httpGet:
-      path: /ok
-      port: http
-    periodSeconds: 5
-    timeoutSeconds: 10
-    initialDelaySeconds: 20
-    failureThreshold: 18
-    successThreshold: 1
-  readinessProbe:
-    httpGet:
-      path: /ok
-      port: http
-    periodSeconds: 15
-    timeoutSeconds: 10
-    initialDelaySeconds: 60
-    failureThreshold: 4
-    successThreshold: 2
-  nodeSelector: {}
-  tolerations: []
-  affinity: {}
-
 ploneTranslate:
   enabled: true
   serviceName: plone-translate

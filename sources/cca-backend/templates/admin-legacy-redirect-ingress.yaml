@@ -2,28 +2,21 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: cca-admin
+  name: cca-admin-legacy-redirect
   labels:
     {{- include "appl.labels" . | nindent 4 }}
-    component: cca-admin
+    component: cca-admin-legacy-redirect
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /VirtualHostBase/https/{{ .Values.plone.hostname }}:443/{{ .Values.plone.site }}/VirtualHostRoot/_vh_admin/$1
-    nginx.ingress.kubernetes.io/use-regex: "true"
-    nginx.ingress.kubernetes.io/proxy-body-size: 100m
     nginx.ingress.kubernetes.io/configuration-snippet: |
-{{ include "cca-backend.ingressCommonConfigurationSnippet" . | indent 6 }}
-{{ include "cca-backend.ingressSecurityHeaders" . | indent 6 }}
-  {{- with .Values.ingress.annotations }}
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
+      return 301 https://{{ .Values.plone.hostname }}/admin$is_args$args;
 spec:
   ingressClassName: nginx
   rules:
     - host: {{ .Values.plone.hostname }}
       http:
         paths:
-          - path: /admin(.*)
-            pathType: ImplementationSpecific
+          - path: /_admin
+            pathType: Prefix
             backend:
               service:
                 name: {{ .Values.varnish.serviceName }}
