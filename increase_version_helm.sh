@@ -12,7 +12,7 @@ if [ ! -f Chart.yaml ]; then
 	exit 1
 fi
 
-if  [ $(git diff . | wc -l ) -eq 0 ]; then
+if  [ $(git diff . | wc -l ) -eq 0 ] && [ $(git ls-files . --exclude-standard --others | wc -l) -eq 0 ]; then
 	echo "There is nothing to modify!"
 	exit 1
 fi

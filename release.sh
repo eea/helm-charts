@@ -2,7 +2,9 @@
 
 echo "Manual release script starting"
 
-if [ $( git diff . | wc -l ) -gt 0 ]; then
+#check modified or new files:
+
+if [ $( git diff . | wc -l ) -gt 0 ] || [ $( git ls-files . --exclude-standard --others | wc -l ) -gt 0 ] ; then
 
 
 
