@@ -10,6 +10,9 @@ and the broken-links cron job.
 Sensitive values are intentionally left empty in `values.yaml`.
 ## Releases
 
+### Version 0.2.10 - 25 March 2026
+- align service with other backens [Dobricean Ioan Dorian - [`f4bd16fe`](https://github.com/eea/helm-charts/commit/f4bd16fe562264ef5c8635da583369653efbdfba)]
+
 ### Version 0.2.9 - 25 March 2026
 - fix ingress [Dobricean Ioan Dorian - [`203532de`](https://github.com/eea/helm-charts/commit/203532de9c134331137e4d170d1ed60c2605f8c6)]
 
