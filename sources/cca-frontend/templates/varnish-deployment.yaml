@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: varnish
+  name: {{ include "cca-frontend.componentName" (dict "root" . "component" "varnish") }}
   labels:
     {{- include "appl.labels" . | nindent 4 }}
     component: varnish

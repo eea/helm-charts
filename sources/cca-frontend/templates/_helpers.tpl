@@ -62,6 +62,13 @@ Create the name of the service account to use
 {{- end }}
 
 {{/*
+Create a release-specific name for component-scoped resources.
+*/}}
+{{- define "cca-frontend.componentName" -}}
+{{- printf "%s-%s" (include "appl.fullname" .root) .component | trunc 63 | trimSuffix "-" -}}
+{{- end }}
+
+{{/*
 Resolve the release version used in frontend release-related env vars.
 */}}
 {{- define "cca-frontend.releaseVersion" -}}
