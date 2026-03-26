@@ -81,6 +81,10 @@ spec:
           value: "0"
         - name: START_SOLID_QUEUE
           value: "1"
+        - name: RUNTIME_BUNDLE_INSTALL
+          value: "1"
+        - name: RUNTIME_BUNDLE_LOCAL_INSTALL
+          value: "1"
         - name: RUN_DB_MIGRATE
           value: "0"
         - name: REDMINE_PLUGINS_MIGRATE
@@ -88,13 +92,13 @@ spec:
         - name: MIGRATIONS_ONLY_STARTUP
           value: "0"
         {{- range $key, $value := .Values.redmine.environment }}
-        {{- if and (ne $key "REDIS_URL") (ne $key "START_SERVER") (ne $key "START_CRON") (ne $key "START_SOLID_QUEUE") (ne $key "RUN_DB_MIGRATE") (ne $key "CRON_IN_ASYNC_JOBS_ONLY") (ne $key "MIGRATIONS_ONLY_STARTUP") (ne $key "REDMINE_PLUGINS_MIGRATE") (ne $key "ADMIN_BOOTSTRAP_ENABLE") (not (hasKey $.Values.redmineJobs.environment $key)) (ne $value nil) }}
+        {{- if and (ne $key "REDIS_URL") (ne $key "START_SERVER") (ne $key "START_CRON") (ne $key "START_SOLID_QUEUE") (ne $key "RUNTIME_BUNDLE_INSTALL") (ne $key "RUNTIME_BUNDLE_LOCAL_INSTALL") (ne $key "RUN_DB_MIGRATE") (ne $key "CRON_IN_ASYNC_JOBS_ONLY") (ne $key "MIGRATIONS_ONLY_STARTUP") (ne $key "REDMINE_PLUGINS_MIGRATE") (ne $key "ADMIN_BOOTSTRAP_ENABLE") (not (hasKey $.Values.redmineJobs.environment $key)) (ne $value nil) }}
         - name: {{ $key }}
           value: {{ $value | quote }}
         {{- end }}
         {{- end }}
         {{- range $key, $value := .Values.redmineJobs.environment }}
-        {{- if and (ne $key "START_SERVER") (ne $key "START_CRON") (ne $key "START_SOLID_QUEUE") (ne $key "RUN_DB_MIGRATE") (ne $key "REDMINE_PLUGINS_MIGRATE") (ne $key "MIGRATIONS_ONLY_STARTUP") (ne $value nil) }}
+        {{- if and (ne $key "START_SERVER") (ne $key "START_CRON") (ne $key "START_SOLID_QUEUE") (ne $key "RUNTIME_BUNDLE_INSTALL") (ne $key "RUNTIME_BUNDLE_LOCAL_INSTALL") (ne $key "RUN_DB_MIGRATE") (ne $key "REDMINE_PLUGINS_MIGRATE") (ne $key "MIGRATIONS_ONLY_STARTUP") (ne $value nil) }}
         - name: {{ $key }}
           value: {{ $value | quote }}
         {{- end }}

@@ -81,7 +81,8 @@ redmine:
       MOUNTED_ADDONS_ROOT: "/addons/current"
       RUNTIME_PLUGIN_SYNC: "0"
       RUNTIME_THEME_SYNC: "0"
-      RUNTIME_BUNDLE_INSTALL: "0"
+      RUNTIME_BUNDLE_INSTALL: "1"
+      RUNTIME_BUNDLE_LOCAL_INSTALL: "1"
       ASSETS_PRECOMPILE: "0"
       ASSETS_PRECOMPILE_FORCE: "0"
       GITHUB_AUTHENTICATION: ''
@@ -167,7 +168,9 @@ redmineMigrate:
   assetsPrecompile: "1"
   assetsPrecompileForce: "0"
   adminBootstrapEnable: "0"
-  environment: {}
+  environment:
+    RUNTIME_BUNDLE_INSTALL: "1"
+    RUNTIME_BUNDLE_LOCAL_INSTALL: "1"
   resources:
     requests:
       memory: 512Mi
@@ -213,6 +216,7 @@ redmineJobs:
     START_SOLID_QUEUE: "1"
     RUN_DB_MIGRATE: "0"
     FAST_BOOT: "1"
+    RUNTIME_BUNDLE_INSTALL: "1"
     RUNTIME_BUNDLE_LOCAL_INSTALL: "1"
     REQUIRE_MOUNTED_ADDONS: "1"
     MOUNTED_ADDONS_ROOT: "/addons/current"
@@ -485,6 +489,12 @@ networkPolicy:
     - to:
       - ipBlock:
           cidr: 10.50.7.31/32
+      ports:
+      - protocol: TCP
+        port: 443
+    - to:
+      - ipBlock:
+          cidr: 0.0.0.0/0
       ports:
       - protocol: TCP
         port: 443
