@@ -148,4 +148,33 @@ spec:
   egress:
 {{ toYaml .Values.networkPolicy.jobsExtraEgress | nindent 2 }}
 {{- end }}
+{{- if .Values.networkPolicy.addonsSyncExtraEgress }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ .Release.Name }}-allow-addons-sync-extra-egress
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: networkpolicy
+spec:
+  podSelector:
+    matchExpressions:
+    - key: app.kubernetes.io/name
+      operator: In
+      values:
+      - {{ include "appl.name" . }}
+    - key: app.kubernetes.io/instance
+      operator: In
+      values:
+      - {{ .Release.Name }}
+    - key: component
+      operator: In
+      values:
+      - addons-sync
+  policyTypes:
+  - Egress
+  egress:
+{{ toYaml .Values.networkPolicy.addonsSyncExtraEgress | nindent 2 }}
+{{- end }}
 {{- end }}

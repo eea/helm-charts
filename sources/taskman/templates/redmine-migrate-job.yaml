@@ -1,5 +1,4 @@
 {{- $migrate := .Values.redmineMigrate | default dict }}
-{{- $migrateEnabled := $migrate.enabled | default false }}
 {{- $migrateEnv := $migrate.environment | default dict }}
 {{- $migrateHistorySlots := 3 }}
 {{- $migrateSlot := mod .Release.Revision $migrateHistorySlots }}
@@ -7,7 +6,6 @@
 {{- $tmpClaim := .Values.storage.tmpDir.existingClaim | default (printf "redmine-tmp-%s-redmine-ss-0" .Release.Name) }}
 {{- $githubClaim := .Values.storage.github.existingClaim | default (printf "github-%s-redmine-ss-0" .Release.Name) }}
 {{- $pluginsClaim := .Values.storage.plugins.existingClaim | default (printf "plugins-%s-redmine-ss-0" .Release.Name) }}
-{{- if $migrateEnabled }}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -94,7 +92,7 @@ spec:
         - name: ADMIN_BOOTSTRAP_ENABLE
           value: {{ $migrate.adminBootstrapEnable | default "0" | quote }}
         {{- range $key, $value := .Values.redmine.environment }}
-        {{- if and (ne $key "START_SERVER") (ne $key "START_CRON") (ne $key "START_SOLID_QUEUE") (ne $key "RUN_DB_MIGRATE") (ne $key "MIGRATIONS_ONLY_STARTUP") (ne $key "REDMINE_PLUGINS_MIGRATE") (ne $key "ADMIN_BOOTSTRAP_ENABLE") (not (hasKey $migrateEnv $key)) (ne $value nil) }}
+        {{- if and (ne $key "START_SERVER") (ne $key "START_CRON") (ne $key "START_SOLID_QUEUE") (ne $key "RUN_DB_MIGRATE") (ne $key "MIGRATIONS_ONLY_STARTUP") (ne $key "REDMINE_PLUGINS_MIGRATE") (ne $key "ASSETS_PRECOMPILE") (ne $key "ASSETS_PRECOMPILE_FORCE") (ne $key "ADMIN_BOOTSTRAP_ENABLE") (not (hasKey $migrateEnv $key)) (ne $value nil) }}
         - name: {{ $key }}
           value: {{ $value | quote }}
         {{- end }}
@@ -136,4 +134,3 @@ spec:
           claimName: {{ $pluginsClaim }}
       - name: plugins-workdir
         emptyDir: {}
-{{- end }}

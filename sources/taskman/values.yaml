@@ -505,3 +505,12 @@ networkPolicy:
         port: 587
       - protocol: TCP
         port: 993
+  # Explicit egress allowlist for addons-sync hook job.
+  # Required to download addons/theme archives over HTTPS.
+  addonsSyncExtraEgress:
+    - to:
+      - ipBlock:
+          cidr: 0.0.0.0/0
+      ports:
+      - protocol: TCP
+        port: 443
