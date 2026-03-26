@@ -168,7 +168,7 @@ questions:
   - variable: "plone.replicaCount"
     label: "Plone replicas"
     type: "int"
-    default: 6
+    default: 4
     required: true
     group: "General"
 
@@ -272,6 +272,189 @@ questions:
       - "false"
       - "true"
     group: "Varnish configuration"
+
+  - variable: "plone.resources.requests.memory"
+    label: "Plone memory reservation"
+    type: "string"
+    required: true
+    default: "6Gi"
+    group: "Memory"
+
+  - variable: "plone.resources.limits.memory"
+    label: "Plone memory limit"
+    description: ">= memory reservation"
+    type: "string"
+    required: true
+    default: "6Gi"
+    group: "Memory"
+
+  - variable: "ploneTranslate.resources.requests.memory"
+    label: "Translation memory reservation"
+    type: "string"
+    required: true
+    default: "8Gi"
+    group: "Memory"
+    show_if: "ploneTranslate.enabled=true"
+
+  - variable: "ploneTranslate.resources.limits.memory"
+    label: "Translation memory limit"
+    description: ">= memory reservation"
+    type: "string"
+    required: true
+    default: "8Gi"
+    group: "Memory"
+    show_if: "ploneTranslate.enabled=true"
+
+  - variable: "debug.resources.requests.memory"
+    label: "Debug memory reservation"
+    type: "string"
+    required: true
+    default: "1Gi"
+    group: "Memory"
+    show_if: "debug.enabled=true"
+
+  - variable: "debug.resources.limits.memory"
+    label: "Debug memory limit"
+    description: ">= memory reservation"
+    type: "string"
+    required: true
+    default: "4Gi"
+    group: "Memory"
+    show_if: "debug.enabled=true"
+
+  - variable: "varnish.resources.requests.memory"
+    label: "Varnish memory reservation"
+    type: "string"
+    required: true
+    default: "2Gi"
+    group: "Memory"
+
+  - variable: "varnish.resources.limits.memory"
+    label: "Varnish memory limit"
+    description: ">= memory reservation"
+    type: "string"
+    required: true
+    default: "3Gi"
+    group: "Memory"
+
+  - variable: "async.resources.requests.memory"
+    label: "Async translation memory reservation"
+    type: "string"
+    required: true
+    default: "512Mi"
+    group: "Memory"
+    show_if: "async.enabled=true"
+
+  - variable: "async.resources.limits.memory"
+    label: "Async translation memory limit"
+    description: ">= memory reservation"
+    type: "string"
+    required: true
+    default: "1Gi"
+    group: "Memory"
+    show_if: "async.enabled=true"
+
+  - variable: "converter.resources.requests.memory"
+    label: "Converter memory reservation"
+    type: "string"
+    required: true
+    default: "128Mi"
+    group: "Memory"
+    show_if: "converter.enabled=true"
+
+  - variable: "converter.resources.limits.memory"
+    label: "Converter memory limit"
+    description: ">= memory reservation"
+    type: "string"
+    required: true
+    default: "256Mi"
+    group: "Memory"
+    show_if: "converter.enabled=true"
+
+  - variable: "redis.resources.requests.memory"
+    label: "Redis memory reservation"
+    type: "string"
+    required: true
+    default: "256Mi"
+    group: "Memory"
+    show_if: "redis.enabled=true"
+
+  - variable: "redis.resources.limits.memory"
+    label: "Redis memory limit"
+    description: ">= memory reservation"
+    type: "string"
+    required: true
+    default: "512Mi"
+    group: "Memory"
+    show_if: "redis.enabled=true"
+
+  - variable: "zodbpack.resources.requests.memory"
+    label: "Zodbpack cron job memory reservation"
+    type: "string"
+    required: true
+    default: "8Gi"
+    group: "Memory"
+    show_if: "zodbpack.enabled=true"
+
+  - variable: "zodbpack.resources.limits.memory"
+    label: "Zodbpack cron job memory limit"
+    description: ">= memory reservation"
+    type: "string"
+    required: true
+    default: "8Gi"
+    group: "Memory"
+    show_if: "zodbpack.enabled=true"
+
+  - variable: "detectBrokenLinks.resources.requests.memory"
+    label: "Broken links cron memory reservation"
+    type: "string"
+    required: true
+    default: "32Mi"
+    group: "Memory"
+    show_if: "detectBrokenLinks.enabled=true"
+
+  - variable: "detectBrokenLinks.resources.limits.memory"
+    label: "Broken links cron memory limit"
+    description: ">= memory reservation"
+    type: "string"
+    required: true
+    default: "64Mi"
+    group: "Memory"
+    show_if: "detectBrokenLinks.enabled=true"
+
+  - variable: "memcachedflush.resources.requests.memory"
+    label: "Memcached flush cron memory reservation"
+    type: "string"
+    required: true
+    default: "32Mi"
+    group: "Memory"
+    show_if: "memcachedflush.enabled=true"
+
+  - variable: "memcachedflush.resources.limits.memory"
+    label: "Memcached flush cron memory limit"
+    description: ">= memory reservation"
+    type: "string"
+    required: true
+    default: "64Mi"
+    group: "Memory"
+    show_if: "memcachedflush.enabled=true"
+
+  - variable: "rsync.resources.requests.memory"
+    label: "Rsync memory reservation"
+    type: "string"
+    required: true
+    default: "512Mi"
+    group: "Memory"
+    show_if: "rsync.enabled=true"
+
+  - variable: "rsync.resources.limits.memory"
+    label: "Rsync memory limit"
+    description: ">= memory reservation"
+    type: "string"
+    required: true
+    default: "1Gi"
+    group: "Memory"
+    show_if: "rsync.enabled=true"
 
   - variable: "postfix.serviceName"
     label: "Postfix service name"
