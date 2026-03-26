@@ -24,6 +24,9 @@ The chart deploys a three-tier architecture:
 
 ## Releases
 
+### Version 7.18.0 - 26 March 2026
+- Automated release of [eeacms/clms-frontend:3.538.0](https://github.com/eea/clms-frontend/releases) [EEA Jenkins - [`085923a6`](https://github.com/eea/helm-charts/commit/085923a639d660ff517800c671b26252dced55f3)]
+
 ### Version 7.17.0 - 23 March 2026
 - Automated release of [eeacms/clms-frontend:3.537.0](https://github.com/eea/clms-frontend/releases) [EEA Jenkins - [`72e05ea3`](https://github.com/eea/helm-charts/commit/72e05ea3e11c843f714555d8a4d4f7ff293bb33e)]
 
