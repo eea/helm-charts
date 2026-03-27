@@ -7,6 +7,9 @@ and adds the Apache routing layer used by the existing Rancher stack. Secrets
 and tokens are intentionally left empty in `values.yaml`.
 ## Releases
 
+### Version 0.4.13 - 27 March 2026
+- add nginx in front [Dobricean Ioan Dorian - [`c97fca08`](https://github.com/eea/helm-charts/commit/c97fca08d500b2bf6782093fcba50227d5dff72e)]
+
 ### Version 0.4.8 - 27 March 2026
 - fi ingress [Dobricean Ioan Dorian - [`24cad991`](https://github.com/eea/helm-charts/commit/24cad991e9a9765ebcc2b46c3275b79575b75022)]
 
