@@ -7,6 +7,9 @@ and adds the Apache routing layer used by the existing Rancher stack. Secrets
 and tokens are intentionally left empty in `values.yaml`.
 ## Releases
 
+### Version 0.4.4 - 27 March 2026
+- remove apache [Dobricean Ioan Dorian - [`e3b599bb`](https://github.com/eea/helm-charts/commit/e3b599bb2f46146f84e073e75738783ebdf0ca02)]
+
 ### Version 0.4.2 - 26 March 2026
 - fix varnish deployment [Dobricean Ioan Dorian - [`58eaf33d`](https://github.com/eea/helm-charts/commit/58eaf33dc3155e1bf551d6445319f15b08004384)]
 
