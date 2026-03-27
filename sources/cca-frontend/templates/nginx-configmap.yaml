@@ -1,0 +1,121 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "cca-frontend.componentName" (dict "root" . "component" "nginx-config") }}
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: nginx
+data:
+  upstream.conf: |
+    upstream varnish_frontend {
+      server {{ .Values.varnish.serviceName }}:{{ .Values.varnish.port }};
+    }
+
+    upstream backend_varnish {
+      server backend:8080;
+    }
+
+    upstream backend_translate {
+      server backend-translate:8080;
+    }
+
+  default.conf: |
+    map $request_uri $frame_options {
+      default "SAMEORIGIN";
+      ~^/.*embed-chart "";
+    }
+
+    server {
+      listen 80;
+      server_name _;
+
+      access_log /dev/stdout;
+      error_log /dev/stderr warn;
+
+      proxy_set_header Host $host;
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header X-Forwarded-Proto https;
+      proxy_set_header X-Forwarded-Host $host;
+      proxy_set_header X-Forwarded-Port 443;
+      proxy_redirect http:// https://;
+      proxy_connect_timeout 60s;
+      proxy_read_timeout 600s;
+      proxy_send_timeout 600s;
+
+      add_header Strict-Transport-Security "max-age=15768000;" always;
+      add_header X-Content-Type-Options "nosniff" always;
+      add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+      add_header Expect-CT "max-age=604800, report-uri=\"https://sentry.eea.europa.eu/api/25/security/?sentry_key=36e966c526304fb38680f19ac1927bb5\"" always;
+      add_header Server "HTTPS" always;
+      add_header X-Xss-Protection "1" always;
+      add_header X-Frame-Options $frame_options always;
+
+      location = /decodeFolderFilter {
+        deny all;
+      }
+
+      location ~ ^/@@translate-callback(.*)$ {
+        rewrite ^/@@translate-callback(.*)$ /VirtualHostBase/https/$host:443/{{ include "cca-frontend.virtualHostRoot" . }}/VirtualHostRoot/@@translate-callback$1 break;
+        proxy_pass http://backend_translate;
+      }
+
+      location ~ ^/@@save-etranslation(.*)$ {
+        rewrite ^/@@save-etranslation(.*)$ /VirtualHostBase/https/$host:443/{{ include "cca-frontend.virtualHostRoot" . }}/VirtualHostRoot/@@save-etranslation$1 break;
+        proxy_pass http://backend_translate;
+      }
+
+      location ~ ^/@@call-etranslation(.*)$ {
+        rewrite ^/@@call-etranslation(.*)$ /VirtualHostBase/https/$host:443/{{ include "cca-frontend.virtualHostRoot" . }}/VirtualHostRoot/@@call-etranslation$1 break;
+        proxy_pass http://backend_translate;
+      }
+
+      location ~ ^/@@sync-translated-paths(.*)$ {
+        rewrite ^/@@sync-translated-paths(.*)$ /VirtualHostBase/https/$host:443/{{ include "cca-frontend.virtualHostRoot" . }}/VirtualHostRoot/@@sync-translated-paths$1 break;
+        proxy_pass http://backend_translate;
+      }
+
+      location ~ ^/metadata(.*)$ {
+        return 301 /en/metadata$1;
+      }
+
+      location ~ ^/observatory(.*)$ {
+        return 301 /en/observatory$1;
+      }
+
+      location ~ ^/mission(.*)$ {
+        return 301 /en/mission$1;
+      }
+
+      location ~ ^/eu-adaptation-policy(.*)$ {
+        return 301 /en/eu-adaptation-policy$1;
+      }
+
+      location ~ ^/\+\+api\+\+(.*)$ {
+        rewrite ^/\+\+api\+\+(.*)$ /VirtualHostBase/https/$host:443/{{ include "cca-frontend.virtualHostRoot" . }}/VirtualHostRoot/++api++$1 break;
+        proxy_pass http://backend_varnish;
+      }
+
+      location ~ ^/_admin(.*)$ {
+        return 301 /admin$1$is_args$args;
+      }
+
+      location ~ ^/admin(.*)$ {
+        rewrite ^/admin(.*)$ /VirtualHostBase/https/$host:443/{{ include "cca-frontend.virtualHostRoot" . }}/VirtualHostRoot/_vh_admin/$1 break;
+        proxy_pass http://backend_varnish;
+      }
+
+      location = /@@vibriomap-view-simple {
+        rewrite ^ /VirtualHostBase/https/$host:443/{{ include "cca-frontend.virtualHostRoot" . }}/VirtualHostRoot/@@vibriomap-view-simple break;
+        proxy_pass http://backend_varnish;
+      }
+
+      location ~ ^/(.*)/@@images(.*)$ {
+        rewrite ^/(.*)/@@images(.*)$ /VirtualHostBase/https/$host:443/{{ include "cca-frontend.virtualHostRoot" . }}/VirtualHostRoot/$1/@@images$2 break;
+        proxy_pass http://backend_varnish;
+      }
+
+      location / {
+        proxy_pass http://varnish_frontend;
+      }
+    }

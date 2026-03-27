@@ -18,6 +18,10 @@ releaseVersion: "1.113.0"
 
 links:
   backend: backend-varnish.cca
+  backendTranslate: plone-translate.cca
+
+backend:
+  virtualHostRoot: cca
 
 ingress:
   certificate: climate-adapt.eea.europa.eu-tls
@@ -33,6 +37,7 @@ ingressredirects: []
 volto:
   serviceType: ClusterIP
   hostname: climate-adapt.eea.europa.eu
+  publicScheme: https
   autoscaling:
     enabled: false
     minReplicas: 1
@@ -55,7 +60,6 @@ volto:
     RAZZLE_ALLOWED_CORS_DESTINATIONS: ""
     RAZZLE_BACKEND_NAME: cca-backend
     RAZZLE_DEMO_SITE: "false"
-    RAZZLE_INTERNAL_API_PATH: http://backend:8080/Plone
     RAZZLE_MATOMO_SITE_ID: "13"
     RAZZLE_MATOMO_URL: https://matomo.eea.europa.eu/
     RAZZLE_PROXY_ES_DSN: ""
@@ -63,28 +67,12 @@ volto:
     RAZZLE_PROXY_ES_DSN_missionAll: ""
     RAZZLE_PROXY_QA_DSN_globalsearch: ""
     RAZZLE_PROXY_QA_DSN_missionAll: ""
-    RAZZLE_PUBLIC_URL: https://climate-adapt.eea.europa.eu
+    RAZZLE_PUBLIC_URL: ""
     SENTRY_AUTH_TOKEN: ""
     SENTRY_ORG: eea
     SENTRY_PROJECT: climate-adapt-eea-europa.eu
     SENTRY_URL: https://sentry.eea.europa.eu
-    VOLTO_ROBOTSTXT: |-
-      Sitemap: https://climate-adapt.eea.europa.eu/sitemap-index.xml
-      User-agent: *
-      Disallow: /sandbox
-      Disallow: /en/sandbox
-      Disallow: /admin
-      Disallow: /_admin
-      Disallow: /contact-footer
-      Disallow: /en/observatory/metadata/
-      Disallow: /de/observatory/metadata/
-      Disallow: /fr/observatory/metadata/
-      Disallow: /es/observatory/metadata/
-      Disallow: /it/observatory/metadata/
-      Disallow: /pl/observatory/metadata/
-      Disallow: /@@multilingual-selector
-      Disallow: /*/observatory/metadata/
-      Disallow: /*/sandbox
+    VOLTO_ROBOTSTXT: ""
     CSP_HEADER: >-
       default-src 'none'; connect-src 'self' https://*.arcgis.com
       https://services.arcgisonline.com https://*.openstreetmap.org
@@ -191,6 +179,22 @@ varnish:
     initialDelaySeconds: 10
     failureThreshold: 12
     successThreshold: 1
+
+nginx:
+  serviceType: ClusterIP
+  serviceName: frontend-nginx
+  image:
+    repository: nginx
+    tag: "1.23.3"
+    pullPolicy: IfNotPresent
+  resources:
+    limits:
+      memory: 1Gi
+    requests:
+      memory: 512Mi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
 
 debug:
   addonsPath: /app/src/addons

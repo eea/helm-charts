@@ -78,3 +78,47 @@ Resolve the release version used in frontend release-related env vars.
 {{- .Chart.AppVersion -}}
 {{- end -}}
 {{- end }}
+
+{{/*
+Resolve the public URL used by Volto and generated robots.txt.
+*/}}
+{{- define "cca-frontend.publicURL" -}}
+{{- if .Values.volto.environment.RAZZLE_PUBLIC_URL -}}
+{{- .Values.volto.environment.RAZZLE_PUBLIC_URL -}}
+{{- else -}}
+{{- printf "%s://%s" (.Values.volto.publicScheme | default "https") .Values.volto.hostname -}}
+{{- end -}}
+{{- end }}
+
+{{/*
+Resolve the backend path used by VirtualHostBase rewrites.
+*/}}
+{{- define "cca-frontend.virtualHostRoot" -}}
+{{- .Values.backend.virtualHostRoot | default "cca" | trimPrefix "/" | trimSuffix "/" -}}
+{{- end }}
+
+{{/*
+Default robots.txt content, generated from the public URL when not overridden.
+*/}}
+{{- define "cca-frontend.robotsTxt" -}}
+{{- if .Values.volto.environment.VOLTO_ROBOTSTXT -}}
+{{- .Values.volto.environment.VOLTO_ROBOTSTXT -}}
+{{- else -}}
+Sitemap: {{ include "cca-frontend.publicURL" . }}/sitemap-index.xml
+User-agent: *
+Disallow: /sandbox
+Disallow: /en/sandbox
+Disallow: /admin
+Disallow: /_admin
+Disallow: /contact-footer
+Disallow: /en/observatory/metadata/
+Disallow: /de/observatory/metadata/
+Disallow: /fr/observatory/metadata/
+Disallow: /es/observatory/metadata/
+Disallow: /it/observatory/metadata/
+Disallow: /pl/observatory/metadata/
+Disallow: /@@multilingual-selector
+Disallow: /*/observatory/metadata/
+Disallow: /*/sandbox
+{{- end -}}
+{{- end }}

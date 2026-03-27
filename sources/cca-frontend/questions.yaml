@@ -15,6 +15,22 @@ questions:
     default: "backend-varnish.cca"
     group: "General"
 
+  - variable: "links.backendTranslate"
+    label: "Backend translate service"
+    description: "Translation backend service, format SERVICE.NAMESPACE"
+    type: "string"
+    required: true
+    default: "plone-translate.cca"
+    group: "General"
+
+  - variable: "backend.virtualHostRoot"
+    label: "Backend virtual host root"
+    description: "Backend site path used in VirtualHostBase rewrites"
+    type: "string"
+    required: true
+    default: "cca"
+    group: "General"
+
   - variable: "ingress.tls"
     label: "Enable https"
     default: true
@@ -71,19 +87,27 @@ questions:
     group: "General"
     show_if: "debug.enabled=true"
 
-  - variable: "volto.environment.RAZZLE_INTERNAL_API_PATH"
-    label: "Internal API path"
-    description: "Location of the backend API accessible from the frontend pod"
-    default: "http://backend:8080/Plone"
+  - variable: "nginx.resources.requests.memory"
+    label: "Nginx memory request"
+    description: "Memory requested by nginx"
+    default: "512Mi"
     required: true
     type: "string"
-    group: "Volto configuration"
+    group: "Memory"
+
+  - variable: "nginx.resources.limits.memory"
+    label: "Nginx memory limit"
+    description: "Maximum memory available to nginx"
+    default: "1Gi"
+    required: true
+    type: "string"
+    group: "Memory"
 
   - variable: "volto.environment.RAZZLE_PUBLIC_URL"
     label: "Public URL"
-    description: "Frontend public URL"
-    default: "https://climate-adapt.eea.europa.eu"
-    required: true
+    description: "Optional frontend public URL override; defaults to https://<hostname>"
+    default: ""
+    required: false
     type: "string"
     group: "Volto configuration"
 
@@ -249,7 +273,7 @@ questions:
 
   - variable: "volto.environment.VOLTO_ROBOTSTXT"
     label: "robots.txt"
-    description: "Robots.txt content"
+    description: "Optional robots.txt override; defaults to generated content based on hostname"
     type: "multiline"
     required: false
     group: "Volto configuration"

@@ -19,9 +19,9 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: {{ .Values.varnish.serviceName }}
+                name: {{ .Values.nginx.serviceName }}
                 port:
-                  number: {{ .Values.varnish.port }}
+                  number: 80
   {{- if .Values.ingress.tls }}
   tls:
     - hosts:

@@ -39,12 +39,17 @@ spec:
               value: "{{ .Values.volto.environment.RAZZLE_FRONTEND_VERSION | default (include "cca-frontend.releaseVersion" .) }}"
             - name: RAZZLE_FRONTEND_NAME
               value: "{{ .Values.volto.environment.RAZZLE_FRONTEND_NAME | default .Chart.Name }}"
+            - name: RAZZLE_PUBLIC_URL
+              value: "{{ include "cca-frontend.publicURL" . }}"
             - name: SENTRY_RELEASE
               value: "{{ include "cca-frontend.releaseVersion" . }}"
             - name: TZ
               value: "{{ .Values.timezone }}"
+            - name: VOLTO_ROBOTSTXT
+              value: |-
+{{ include "cca-frontend.robotsTxt" . | nindent 16 }}
             {{- range $key, $value := .Values.volto.environment }}
-            {{- if and $value (ne $key "RAZZLE_FRONTEND_VERSION") (ne $key "RAZZLE_FRONTEND_NAME") }}
+            {{- if and $value (ne $key "RAZZLE_FRONTEND_VERSION") (ne $key "RAZZLE_FRONTEND_NAME") (ne $key "RAZZLE_PUBLIC_URL") (ne $key "VOLTO_ROBOTSTXT") }}
             - name: {{ $key }}
               value: {{ $value | quote }}
             {{- end }}
