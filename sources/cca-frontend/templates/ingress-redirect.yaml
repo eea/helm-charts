@@ -1,8 +1,7 @@
 {{- $labels := (include "appl.labels" .) -}}
 {{- $hostname := .Values.volto.hostname -}}
-{{- $useApache := and .Values.apache .Values.apache.enabled -}}
-{{- $serviceName := ternary .Values.apache.serviceName .Values.varnish.serviceName $useApache -}}
-{{- $servicePort := ternary 80 .Values.varnish.port $useApache -}}
+{{- $serviceName := .Values.varnish.serviceName -}}
+{{- $servicePort := .Values.varnish.port -}}
 {{- range $index, $redirect := .Values.ingressredirects }}
 {{- if $redirect.enabled }}
 apiVersion: networking.k8s.io/v1

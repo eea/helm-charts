@@ -15,22 +15,6 @@ questions:
     default: "backend-varnish.cca"
     group: "General"
 
-  - variable: "links.backendAdmin"
-    label: "Admin backend"
-    description: "Admin backend service, format SERVICE.NAMESPACE"
-    type: "string"
-    required: true
-    default: "plone-admin.cca"
-    group: "General"
-
-  - variable: "links.backendTranslate"
-    label: "Translate backend"
-    description: "Translation backend service, format SERVICE.NAMESPACE"
-    type: "string"
-    required: true
-    default: "plone-translate.cca"
-    group: "General"
-
   - variable: "ingress.tls"
     label: "Enable https"
     default: true
@@ -64,14 +48,6 @@ questions:
       - "NodePort"
       - "ClusterIP"
     default: "ClusterIP"
-    required: true
-    group: "General"
-
-  - variable: "apache.enabled"
-    label: "Enable apache"
-    description: "Enable Apache routing layer in front of Varnish"
-    default: true
-    type: "boolean"
     required: true
     group: "General"
 
@@ -375,19 +351,4 @@ questions:
     type: "string"
     required: true
     default: "3Gi"
-    group: "Memory"
-
-  - variable: "apache.resources.requests.memory"
-    label: "Apache memory request"
-    type: "string"
-    required: true
-    default: "512Mi"
-    group: "Memory"
-
-  - variable: "apache.resources.limits.memory"
-    label: "Apache memory limit"
-    description: "Must be greater than or equal to request"
-    type: "string"
-    required: true
-    default: "1Gi"
     group: "Memory"

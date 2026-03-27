@@ -18,8 +18,6 @@ releaseVersion: "1.113.0"
 
 links:
   backend: backend-varnish.cca
-  backendAdmin: plone-admin.cca
-  backendTranslate: plone-translate.cca
 
 ingress:
   certificate: climate-adapt.eea.europa.eu-tls
@@ -193,91 +191,6 @@ varnish:
     initialDelaySeconds: 10
     failureThreshold: 12
     successThreshold: 1
-
-apache:
-  enabled: true
-  serviceType: ClusterIP
-  serviceName: frontend-apache
-  image:
-    repository: eeacms/apache
-    tag: "2.4-3.4"
-  modules: "proxy_html_module xml2enc_module expires_module rewrite_module headers_module proxy_module proxy_http_module"
-  config: |
-    <VirtualHost *:80>
-        ServerAdmin helpdesk@eea.europa.eu
-        ServerName climate-adapt.eea.europa.eu
-
-        ErrorLog /var/log/apache.log
-        RewriteEngine On
-        ProxyTimeout 600
-
-        RewriteRule ^/@@translate-callback(.*) http://backend-translate:8080/VirtualHostBase/https/climate-adapt.eea.europa.eu:443/cca/VirtualHostRoot/@@translate-callback$1 [P,L]
-        RewriteRule ^/@@save-etranslation(.*) http://backend-translate:8080/VirtualHostBase/https/climate-adapt.eea.europa.eu:443/cca/VirtualHostRoot/@@save-etranslation$1 [P,L]
-        RewriteRule ^/@@call-etranslation(.*) http://backend-translate:8080/VirtualHostBase/https/climate-adapt.eea.europa.eu:443/cca/VirtualHostRoot/@@call-etranslation$1 [P,L]
-        RewriteRule ^/@@sync-translated-paths(.*) http://backend-translate:8080/VirtualHostBase/https/climate-adapt.eea.europa.eu:443/cca/VirtualHostRoot/@@sync-translated-paths$1 [P,L]
-
-        RewriteRule ^/metadata(.*)$ /en/metadata$1 [R=301,L]
-        RewriteRule ^/observatory(.*)$ /en/observatory$1 [R=301,L]
-        RewriteRule ^/mission(.*)$ /en/mission$1 [R=301,L]
-        RewriteRule ^/eu-adaptation-policy(.*)$ /en/eu-adaptation-policy$1 [R=301,L]
-
-        RewriteRule ^/\+\+api\+\+(.*) http://backend:8080/VirtualHostBase/https/climate-adapt.eea.europa.eu:443/cca/VirtualHostRoot/++api++$1 [P,L]
-        RewriteRule ^/_admin(.*) http://backend-admin:8080/VirtualHostBase/https/climate-adapt.eea.europa.eu:443/cca/VirtualHostRoot/_vh__admin$1 [P,L]
-        RewriteRule ^@@vibriomap-view-simple http://backend:8080/VirtualHostBase/https/climate-adapt.eea.europa.eu:443/cca/VirtualHostRoot/@@vibriomap-view-simple [P,L]
-        RewriteRule ^/(.*)/@@images(.*) http://backend:8080/VirtualHostBase/https/climate-adapt.eea.europa.eu:443/cca/VirtualHostRoot/$1/@@images$2 [P,L]
-        RewriteRule ^/(.*) http://frontend-varnish:3000/$1 [P,L]
-
-        SetEnvIf Request_URI "^/.*embed-chart" EMBED_PATH
-        Header set X-Frame-Options "SAMEORIGIN" env=!EMBED_PATH
-
-        ProxyPreserveHost On
-
-        <LocationMatch "/decodeFolderFilter$">
-            Require all denied
-        </LocationMatch>
-
-        Header always set Strict-Transport-Security "max-age=15768000;"
-        Header always set X-Content-Type-Options "nosniff"
-        Header always set Referrer-Policy "strict-origin-when-cross-origin"
-        Header always set Expect-CT "max-age=604800, report-uri='https://sentry.eea.europa.eu/api/25/security/?sentry_key=36e966c526304fb38680f19ac1927bb5'"
-        Header always set Server "HTTPS"
-        Header always set X-Xss-Protection "1"
-
-       <IfModule mod_deflate.c>
-            AddOutputFilterByType DEFLATE application/octet-stream
-            AddOutputFilterByType DEFLATE application/x-font-ttf
-            AddOutputFilterByType DEFLATE application/x-font-woff
-            AddOutputFilterByType DEFLATE font/opentype
-            AddOutputFilterByType DEFLATE font/woff
-            AddOutputFilterByType DEFLATE font/woff2
-            AddOutputFilterByType DEFLATE image/x-icon
-            AddOutputFilterByType DEFLATE application/manifest+json
-       </IfModule>
-    </VirtualHost>
-  resources:
-    limits:
-      memory: 1Gi
-    requests:
-      memory: 512Mi
-  livenessProbe:
-    tcpSocket:
-      port: http
-    periodSeconds: 10
-    timeoutSeconds: 10
-    initialDelaySeconds: 30
-    failureThreshold: 5
-    successThreshold: 1
-  startupProbe:
-    tcpSocket:
-      port: http
-    periodSeconds: 5
-    timeoutSeconds: 10
-    initialDelaySeconds: 10
-    failureThreshold: 12
-    successThreshold: 1
-  nodeSelector: {}
-  tolerations: []
-  affinity: {}
 
 debug:
   addonsPath: /app/src/addons
