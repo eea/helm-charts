@@ -26,21 +26,6 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
-      {{- if .Values.volto.waitForBackend.enabled }}
-      initContainers:
-        - name: wait-for-backend
-          image: "{{ .Values.volto.waitForBackend.image.repository }}:{{ .Values.volto.waitForBackend.image.tag }}"
-          imagePullPolicy: {{ .Values.volto.waitForBackend.image.pullPolicy }}
-          command:
-            - sh
-            - -c
-            - >
-              until curl -fsSL "{{ .Values.volto.environment.RAZZLE_INTERNAL_API_PATH }}" >/dev/null;
-              do
-                echo "Waiting for backend {{ .Values.volto.environment.RAZZLE_INTERNAL_API_PATH }}";
-                sleep 5;
-              done
-      {{- end }}
       containers:
         - name: volto
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
