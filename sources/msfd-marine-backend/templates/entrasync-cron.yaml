@@ -41,7 +41,7 @@ spec:
             - --portal
             - {{ .Values.plone.site }}
             - --zope-conf
-            - /app/etc/relstorage.conf
+            - /app/etc/zope.conf
             env:
             - name: SERVER_NAME
               value: "{{ .Values.plone.hostname }}"
