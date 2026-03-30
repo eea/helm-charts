@@ -31,9 +31,19 @@ spec:
         args:
         - -m
         - "{{ .Values.memcached.cache_size_m }}"
+        - -c
+        - "{{ .Values.memcached.max_connections | default 4096 }}"
+        - -t
+        - "{{ .Values.memcached.threads | default 8 }}"
+        - -R
+        - "{{ .Values.memcached.request_per_event | default 50 }}"
         {{- if (.Values.memcached.slab_page_size) }}
         - -I
         - "{{ .Values.memcached.slab_page_size }}"
+        {{- end }}
+        {{- if (.Values.memcached.modern_options) }}
+        - -o
+        - "{{ .Values.memcached.modern_options }}"
         {{- end }}
         env:
         - name: TZ

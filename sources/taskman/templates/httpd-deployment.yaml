@@ -37,6 +37,10 @@ spec:
         - name: nginx-config
           mountPath: /etc/nginx/nginx.conf
           subPath: nginx.conf
+        - name: nginx-cache-cold
+          mountPath: /var/cache/nginx
+        - name: nginx-cache-hot
+          mountPath: /dev/shm/nginx-hot
         resources:
           {{- toYaml .Values.httpd.resources | nindent 10 }}
         securityContext:
@@ -61,6 +65,11 @@ spec:
       - name: nginx-config
         configMap:
           name: {{ .Release.Name }}-nginx-config-cm
+      - name: nginx-cache-cold
+        emptyDir: {}
+      - name: nginx-cache-hot
+        emptyDir:
+          medium: Memory
 
       {{- with .Values.httpd.nodeSelector }}
       nodeSelector:
@@ -70,9 +79,12 @@ spec:
       affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- with .Values.httpd.topologySpreadConstraints }}
+      topologySpreadConstraints:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       {{- with .Values.httpd.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       restartPolicy: Always
-

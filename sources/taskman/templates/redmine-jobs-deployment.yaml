@@ -149,6 +149,10 @@ spec:
       affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- with .Values.redmineJobs.topologySpreadConstraints }}
+      topologySpreadConstraints:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       {{- with .Values.redmineJobs.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}

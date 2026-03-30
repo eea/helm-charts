@@ -27,6 +27,11 @@ ingress:
     proxy-body-size: "256m"
     proxy-read-timeout: "180s"
     proxy-send-timeout: "120s"
+    proxy-http-version: "1.1"
+    upstream-hash-by: "$request_uri"
+    upstream-keepalive-connections: "256"
+    upstream-keepalive-requests: "10000"
+    upstream-keepalive-timeout: "120"
   tls: true
   certificate: "taskman-test-01dev-tls"
   restrictedRoutes:
@@ -93,7 +98,7 @@ redmine:
       PLUGINS_USER: redmine_plugin_installer
       REDMINE_DB_ENCODING: utf8mb4
       REDMINE_DB_MYSQL: mysql
-      REDMINE_DB_POOL: '10'
+      REDMINE_DB_POOL: '15'
       WEB_CONCURRENCY: "2"
       RAILS_MAX_THREADS: "5"
       REDMINE_HOST: redmine:3000
@@ -148,6 +153,14 @@ redmine:
     initialDelaySeconds: 60
     failureThreshold: 30
     successThreshold: 1
+  topologySpreadConstraints:
+    - maxSkew: 1
+      topologyKey: kubernetes.io/hostname
+      whenUnsatisfiable: ScheduleAnyway
+      labelSelector:
+        matchLabels:
+          app.kubernetes.io/name: taskman
+          component: redmine
 
 addonsSync:
   enabled: true
@@ -180,6 +193,14 @@ redmineMigrate:
 redmineJobs:
   enabled: true
   replicas: 1
+  topologySpreadConstraints:
+    - maxSkew: 1
+      topologyKey: kubernetes.io/hostname
+      whenUnsatisfiable: ScheduleAnyway
+      labelSelector:
+        matchLabels:
+          app.kubernetes.io/name: taskman
+          component: redmine-jobs
   recurring:
     enabled: true
     config: |-
@@ -227,7 +248,7 @@ redmineJobs:
     ACTIVE_JOB_QUEUE_ADAPTER: solid_queue
     WEB_CONCURRENCY: "1"
     RAILS_MAX_THREADS: "2"
-    REDMINE_DB_POOL: "5"
+    REDMINE_DB_POOL: "8"
     MALLOC_ARENA_MAX: "2"
     RAILS_PULSE_ENABLED: "1"
     TASKMAN_DEFAULT_MAILBOX_ENABLED: "0"
@@ -403,6 +424,7 @@ mysqlbackup:
 
 memcached:
   enabled: true
+  replicas: 1
   securityContext: {}
   resources:
     requests:
@@ -412,6 +434,10 @@ memcached:
   #needs < = memory request and limit
   cache_size_m: 512
   slab_page_size: 100m
+  max_connections: 4096
+  threads: 8
+  request_per_event: 50
+  modern_options: "modern,track_sizes,lru_crawler,lru_maintainer"
   nodeSelector: {}
   tolerations: []
   affinity: {}
@@ -433,7 +459,7 @@ memcached:
     successThreshold: 1
        
 httpd:
-  replicas: 1
+  replicas: 2
   serviceType: ClusterIP
   securityContext: {}
   resources:
@@ -458,6 +484,22 @@ httpd:
     initialDelaySeconds: 5
     failureThreshold: 30
     successThreshold: 1
+  readinessProbe:
+    httpGet:
+      path: /robots.txt
+      port: 80
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+    successThreshold: 1
+  topologySpreadConstraints:
+    - maxSkew: 1
+      topologyKey: kubernetes.io/hostname
+      whenUnsatisfiable: ScheduleAnyway
+      labelSelector:
+        matchLabels:
+          app.kubernetes.io/name: taskman
+          component: nginx
   nodeSelector: {}
   tolerations: []
   affinity: {}
