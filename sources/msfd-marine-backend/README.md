@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 0.19.1 - 30 March 2026
+- cronjob entrasync [Dobricean Ioan Dorian - [`09e8ea66`](https://github.com/eea/helm-charts/commit/09e8ea66186a41d56c15fed315debd6e1ed315ad)]
+
 ### Version 0.18.0 - 18 March 2026
 - Automated release of [eeacms/msfd-backend:6.1.3-12](https://github.com/eea/msfd-backend/releases) [EEA Jenkins - [`f1c136e6`](https://github.com/eea/helm-charts/commit/f1c136e66068327aa4931925f4bb8dd2d00630b2)]
 
