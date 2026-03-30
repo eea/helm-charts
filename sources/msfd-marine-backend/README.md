@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 0.19.3 - 30 March 2026
+- make for zeo [Dobricean Ioan Dorian - [`48a2c612`](https://github.com/eea/helm-charts/commit/48a2c612fbce86ec90d730920b8be804d3a50d2c)]
+
 ### Version 0.19.2 - 30 March 2026
 - fix entrasync [Dobricean Ioan Dorian - [`a66e6bfb`](https://github.com/eea/helm-charts/commit/a66e6bfb1b615ce39e67f2796546a2b75342f0e1)]
 
