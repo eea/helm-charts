@@ -40,6 +40,8 @@ spec:
             - /app/bin/sync_eea_entra
             - --portal
             - {{ .Values.plone.site }}
+            - --zope-conf
+            - /app/etc/relstorage.conf
             env:
             - name: SERVER_NAME
               value: "{{ .Values.plone.hostname }}"
