@@ -1,0 +1,85 @@
+{{- if .Values.entrasync.enabled }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ .Release.Name }}-entrasync-cron
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: entrasync
+spec:
+  schedule: "{{ .Values.entrasync.schedule }}"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: {{ .Values.entrasync.keepSuccessfulPods }}
+  failedJobsHistoryLimit: {{ .Values.entrasync.keepFailedPods }}
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            {{- include "appl.selectorLabels" . | nindent 12 }}
+            component: entrasync
+          {{- with .Values.entrasync.podAnnotations }}
+          annotations:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+        spec:
+          {{- with .Values.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          serviceAccountName: {{ include "appl.serviceAccountName" . }}
+          {{- with .Values.entrasync.podSecurityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          containers:
+          - name: entrasync
+            image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+            imagePullPolicy: {{ .Values.image.pullPolicy }}
+            args:
+            - /app/bin/sync_eea_entra
+            - --portal
+            - {{ .Values.plone.site }}
+            env:
+            - name: SERVER_NAME
+              value: "{{ .Values.plone.hostname }}"
+            - name: SENTRY_SITE
+              value: "{{ .Values.plone.hostname }}"
+            - name: GRAYLOG_FACILITY
+              value: "{{ .Values.plone.hostname }}"
+            - name: BACKEND_VERSION
+              value: "{{ .Values.image.tag | default .Chart.AppVersion }}"
+            - name: SENTRY_RELEASE
+              value: "{{ .Values.image.tag | default .Chart.AppVersion }}"
+            - name: TZ
+              value: "{{ .Values.timezone }}"
+            - name: ZEO_ADDRESS
+              value: "zeo:8100"
+            - name: MEMCACHE_SERVER
+              value: "{{ .Release.Name }}-memcached:11211"
+            {{- range $key, $value := .Values.plone.environment }}
+            {{- if ($value) }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+            {{- end }}
+            resources:
+              {{- toYaml .Values.entrasync.resources | nindent 14 }}
+            {{- with .Values.entrasync.securityContext }}
+            securityContext:
+              {{- toYaml . | nindent 14 }}
+            {{- end }}
+          {{- with .Values.entrasync.nodeSelector }}
+          nodeSelector:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.entrasync.affinity }}
+          affinity:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.entrasync.tolerations }}
+          tolerations:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          restartPolicy: Never
+{{- end }}

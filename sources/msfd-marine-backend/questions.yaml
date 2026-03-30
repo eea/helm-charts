@@ -71,6 +71,22 @@ questions:
     required: true
     group: "General"
 
+  - variable: "entrasync.enabled"
+    label: "Enable entrasync"
+    default: false
+    type: "boolean"
+    required: true
+    group: "General"
+
+  - variable: "entrasync.schedule"
+    label: "Entrasync schedule"
+    description: "Cron schedule for Entra sync"
+    default: "0 0 3 * *"
+    type: "string"
+    required: true
+    group: "General"
+    show_if: "entrasync.enabled=true"
+
   - variable: "plone.environment.MARINE_PASS"
     label: "Marine Password"
     type: "password"
@@ -176,3 +192,19 @@ questions:
     required: true
     default: "2Gi"
     group: "Memory"
+
+  - variable: "entrasync.resources.requests.memory"
+    label: "Entrasync memory reservation"
+    type: "string"
+    required: true
+    default: "1Gi"
+    group: "Memory"
+    show_if: "entrasync.enabled=true"
+
+  - variable: "entrasync.resources.limits.memory"
+    label: "Entrasync memory limit"
+    type: "string"
+    required: true
+    default: "1Gi"
+    group: "Memory"
+    show_if: "entrasync.enabled=true"
