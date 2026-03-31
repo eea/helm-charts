@@ -1,0 +1,336 @@
+
+
+image:
+  repository: eeacms/redmine
+  pullPolicy: Always
+  tag: ""
+
+imagePullSecrets: []
+
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: false
+  annotations: {}
+  name: ""
+
+timezone: Europe/Copenhagen
+
+denyIPList:
+- 18.143.202.0/24
+
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations: {}
+  letsencrypt: "01dev-eea-letsencrypt"
+  configuration:
+    proxy-body-size: "256m"
+    proxy-read-timeout: "180s"
+    proxy-send-timeout: "120s"
+  tls: true
+  certificate: ""
+  widget:
+    enabled: false
+    configuration:
+      limit-rph: 4
+
+
+
+storage:
+  filesDir:
+    storageClassName: "nfs-client"
+    size: 200Gi
+  tmpDir:
+    storageClassName: "nfs-client"
+    size: 10Gi
+  github:
+    storageClassName: "nfs-client"
+    size: 1Gi
+  plugins:
+    storageClassName: "nfs-client"
+    size: 1Gi
+
+
+redmine:
+  serviceType: ClusterIP
+  hostname: taskman.eea.europa.eu
+  resources:
+    limits:
+      memory: 4Gi
+    requests:
+      memory: 4Gi
+  environment:
+      GITHUB_AUTHENTICATION: ''
+      HELPDESK_EMAIL_KEY: ''
+      PLUGINS_PASSWORD: ''
+      PLUGINS_URL: https://cmshare.eea.europa.eu/remote.php/dav/files/redmine_plugin_installer/taskman
+      PLUGINS_USER: redmine_plugin_installer
+      REDMINE_DB_ENCODING: utf8mb4
+      REDMINE_DB_MYSQL: mysql
+      REDMINE_DB_POOL: '10'
+      REDMINE_HOST: redmine:3000
+      REDMINE_SMTP_DOMAIN: eionet.europa.eu
+      REDMINE_SMTP_STARTTLSAUTO: 'true'
+      REDMINE_SMTP_TLS: 'true'
+      RESTART_CRON: 0 1 * * *
+      SYNC_API_KEY: ''
+      SYNC_REDMINE_URL: http://redmine:3000/sys/fetch_changesets?key=%s
+      T_EMAIL_HOST: gayal.eea.europa.eu
+      T_EMAIL_PASS: ''
+      T_EMAIL_PORT: '993'
+      T_EMAIL_USER: ''
+      REDMINE_SMTP_DOMAIN: "eionet.europa.eu"
+      REDMINE_SMTP_TLS: "true"
+      REDMINE_SMTP_STARTTLSAUTO: "true"
+      SECRET_KEY_BASE: ""
+      ENTRA_ID_TENANT_ID: ""
+      ENTRA_ID_CLIENT_ID: ""
+      ENTRA_ID_CLIENT_SECRET: ""
+
+  annotations: {}
+  livenessProbe:
+    httpGet:
+      path: /
+      port: 3000
+    periodSeconds: 30
+    timeoutSeconds: 15
+    initialDelaySeconds: 0
+    failureThreshold: 10
+    successThreshold: 1
+  startupProbe:
+    tcpSocket:
+      port: 3000
+    periodSeconds: 10
+    timeoutSeconds: 5
+    initialDelaySeconds: 60
+    failureThreshold: 30
+    successThreshold: 1
+    
+drawio:
+  enabled: true
+  serviceType: ClusterIP
+  hostname: drawio.eea.europa.eu
+  ingress:
+    enabled: true
+    className: "nginx"
+    annotations: {}
+    letsencrypt: "01dev-eea-letsencrypt"
+    configuration:
+      proxy-body-size: "256m"
+      proxy-read-timeout: "180s"
+      proxy-send-timeout: "120s"
+    tls: true
+    certificate: ""
+  livenessProbe:
+    httpGet:
+      path: /
+      port: 8080
+    periodSeconds: 10
+    timeoutSeconds: 5
+    initialDelaySeconds: 0
+    failureThreshold: 5
+    successThreshold: 1
+  startupProbe:
+    tcpSocket:
+      port: 8080
+    periodSeconds: 5
+    timeoutSeconds: 5
+    initialDelaySeconds: 5
+    failureThreshold: 30
+    successThreshold: 1
+
+    
+postfix:
+  fullnameOverride: ''
+  dryrun: false
+  serverName: taskman.eea.europa.eu
+  mtpPass: ''
+  mtpPort: ''
+  mtpRelay: ''
+  mtpUser: ''
+  serviceName: 'postfix'
+  mailtrap:
+    httpenabled: false
+    serviceType: NodePort
+    ingress:
+      enabled: false
+      hostname: mailtrap.01dev.eea.europa.eu
+      annotations:
+        cert-manager.io/cluster-issuer: 01dev-eea-letsencrypt
+      certificate: mailtrap.01dev.eea.europa.eu-tls
+   
+mysql:
+  pullPolicy: IfNotPresent
+  podAnnotations: {}
+  podSecurityContext: {}
+  securityContext: {}
+  environment:
+    MYSQL_DATABASE: redmine
+    MYSQL_USER: redmine
+    MYSQL_PASSWORD: redmine
+    MYSQL_ROOT_PASSWORD: password
+  args:
+    - '--innodb-buffer-pool-size=3200M'
+    - '--innodb-buffer-pool-instances=8'
+    - '--innodb-lru-scan-depth=256'
+    - '--innodb-io-capacity=4000'
+    - '--innodb-io-capacity-max=8000'
+    - '--innodb-redo-log-capacity=512M'
+    - '--innodb-flush-log-at-trx-commit=1'
+    - '--innodb-buffer-pool-dump-at-shutdown=ON'
+    - '--innodb-buffer-pool-load-at-startup=ON'
+    - '--innodb-thread-concurrency=0'
+    - '--innodb-read-io-threads=16'
+    - '--innodb-write-io-threads=16'
+    - '--innodb-purge-threads=4'
+    - '--innodb-page-cleaners=8'
+    - '--innodb-flush-neighbors=0'
+    - '--innodb-adaptive-hash-index=ON'
+    - '--innodb-stats-on-metadata=OFF'
+    - '--innodb-log-buffer-size=64M'
+    - '--table-open-cache=8000'
+    - '--table-open-cache-instances=16'
+    - '--table-definition-cache=8192'
+    - '--open-files-limit=20000'
+    - '--net-read-timeout=120'
+    - '--net-write-timeout=120'
+    - '--max-allowed-packet=64M'
+    - '--tmp-table-size=64M'
+    - '--max-heap-table-size=64M'
+    - '--join-buffer-size=4M'
+    - '--sort-buffer-size=2M'
+    - '--read-buffer-size=256K'
+    - '--read-rnd-buffer-size=512K'
+    - '--thread-cache-size=100'
+    - '--max-connections=100'
+    - '--back-log=200'
+    - '--character-set-server=utf8mb4'
+    - '--collation-server=utf8mb4_unicode_ci'
+    - '--sql-mode=NO_ENGINE_SUBSTITUTION'
+    - >-
+      --optimizer-switch=index_merge=on,index_merge_union=on,index_merge_sort_union=on,index_merge_intersection=on
+    - '--optimizer-switch=mrr=on,mrr_cost_based=off,batched_key_access=on'
+    - '--optimizer-switch=derived_merge=on,subquery_to_derived=on'
+    - >-
+      --optimizer-switch=semijoin=on,loosescan=on,firstmatch=on,materialization=on
+    - '--optimizer-switch=condition_fanout_filter=on'
+    - '--optimizer-switch=use_index_extensions=on'
+    - '--optimizer-switch=prefer_ordering_index=on'
+    - '--optimizer-switch=skip_scan=on'
+    - '--optimizer-switch=hash_join=on'
+    - '--optimizer-switch=engine_condition_pushdown=on'
+    - '--optimizer-switch=derived_condition_pushdown=on'
+    - '--optimizer-switch=use_invisible_indexes=off'
+    - '--performance-schema=ON'
+    - '--performance-schema-instrument=stage/%=ON'
+    - '--performance-schema-consumer-events-stages-current=ON'
+  datastorage:
+    size: 50Gi
+    storageClassName: "nfs-client"
+  resources:
+    requests:
+      memory: 16Gi
+    limits:
+      memory: 16Gi
+  livenessProbe:
+    tcpSocket:
+      port: 3306
+    periodSeconds: 10
+    timeoutSeconds: 3
+  startupProbe:
+    tcpSocket:
+      port: 3306
+    failureThreshold: 10
+    periodSeconds: 5
+    initialDelaySeconds: 5
+    timeoutSeconds: 2
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+mysqlbackup:
+  pullPolicy: IfNotPresent
+  podAnnotations: {}
+  podSecurityContext: {}
+  securityContext: {}
+  environment:
+    DB_DUMP_BEGIN: '1720'
+    DB_DUMP_FILENAME_PATTERN: taskman_db_dump.gz
+    DB_DUMP_FREQUENCY: '1440'    
+  resources:
+    requests:
+      memory: 2Gi
+    limits:
+      memory: 2Gi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  storage:
+    size: 10Gi
+    storageClassName: "nfs-client"
+
+
+memcached:
+  enabled: true
+  securityContext: {}
+  resources:
+    requests:
+      memory: 512Mi
+    limits:
+      memory: 512Mi
+  #needs < = memory request and limit
+  cache_size_m: 512
+  slab_page_size: 100m
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  pullPolicy: IfNotPresent
+  podAnnotations: {}
+  livenessProbe:
+    tcpSocket:
+      port: 11211
+    periodSeconds: 10
+    timeoutSeconds: 3
+    successThreshold: 1
+    failureThreshold: 5
+  startupProbe:
+    tcpSocket:
+      port: 11211
+    failureThreshold: 9
+    periodSeconds: 10
+    timeoutSeconds: 3
+    successThreshold: 1
+       
+httpd:
+  serviceType: ClusterIP
+  securityContext: {}
+  resources:
+    requests:
+      memory: 512Mi
+    limits:
+      memory: 512Mi
+  livenessProbe:
+    httpGet:
+      path: /
+      port: 80
+    periodSeconds: 60
+    timeoutSeconds: 15
+    failureThreshold: 5
+    successThreshold: 1
+  startupProbe:
+    httpGet:
+      path: /
+      port: 80
+    periodSeconds: 15
+    timeoutSeconds: 15
+    initialDelaySeconds: 5
+    failureThreshold: 30
+    successThreshold: 1
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+
+      

@@ -1,0 +1,38 @@
+{{- if ( default .Values.securityEnabled true) -}}
+
+{{/*
+  By default, allow only access from pods in the same namespace to port 5432
+  No egress
+*/}}
+
+
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ .Release.Name }}-postgres-allow
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+
+
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: postgres
+
+
+  policyTypes:
+  - Ingress
+  - Egress
+
+  egress: []
+
+  ingress:  
+  - from:
+    - podSelector:
+        matchLabels:
+          {{- include "appl.selectorLabels" . | nindent 10 }}
+    ports:
+    - protocol: TCP
+      port: 5432
+{{- end }}

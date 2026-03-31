@@ -462,6 +462,11 @@ httpd:
   replicas: 2
   serviceType: ClusterIP
   securityContext: {}
+  ratelimiting:
+    enabled: false
+    period: 10m
+    rate: 10r/m
+    burst: 5
   resources:
     requests:
       memory: 512Mi

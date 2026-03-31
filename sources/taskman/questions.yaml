@@ -56,6 +56,30 @@ questions:
     required: true
     show_if: "ingress.restrictedRoutes.enabled"
 
+
+  - variable: "httpd.ratelimiting.enabled"
+    label: "Enable ratelimiting on unauthenticated users"
+    default: false
+    type: "boolean"
+    required: true
+  - variable: "httpd.ratelimiting.period"
+    label: "Rate limiting period"
+    default: "10m"
+    type: "string"
+    show_if: "httpd.ratelimiting.enabled"
+  - variable: "httpd.ratelimiting.rate"
+    label: "Rate limiting rate"
+    default: "10r/m"
+    type: "string"
+    show_if: "httpd.ratelimiting.enabled"
+  - variable: "httpd.ratelimiting.burst"
+    label: "Rate limiting burst"
+    default: "5"
+    type: "string"
+    show_if: "httpd.ratelimiting.enabled"
+
+
+
   - variable: "redmine.environment.RESTART_CRON"
     label: "Taskman restart crontab schedule(UTC):"
     description: "Stops redmine process and container, to be restarted by rancher. Linux crontab format - for example, `0 2 * * *` is daily at 02:00 UTC. If empty, will not run."

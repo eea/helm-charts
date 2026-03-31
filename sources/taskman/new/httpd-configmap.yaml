@@ -8,7 +8,7 @@ data:
     worker_processes auto;
 
     events {
-        worker_connections 4096;
+        worker_connections 1024;
         multi_accept on;
         use epoll;
     }
@@ -56,59 +56,26 @@ data:
 
         # --- Upstream (persistent keepalive) ---
         upstream redmine {
-            server redmine:3000;
-            keepalive 256;
-            keepalive_requests 10000;
-            keepalive_timeout 120s;
+            server redmine:3000 max_fails=3 fail_timeout=30s;
+            keepalive 128;
         }
 
-        # --- Two-tier proxy cache ---
-        # hot: memory-backed cache for hashed/static assets
-        proxy_cache_path /dev/shm/nginx-hot levels=1:2
-            keys_zone=redmine_hot:64m
-            max_size=1g
-            inactive=7d
-            use_temp_path=off;
-        # cold: disk-backed cache for longer tail
-        proxy_cache_path /var/cache/nginx/redmine-cold levels=1:2
-            keys_zone=redmine_cold:256m
-            max_size=10g
+        # --- Proxy Cache (RAM metadata + disk data) ---
+        proxy_cache_path /var/cache/nginx/redmine_static levels=1:2
+            keys_zone=redmine_static:256m   # store ~2M cached entries metadata in RAM
+            max_size=10g                    # total disk cache size
             inactive=60d
             use_temp_path=off;
 
-        proxy_temp_path /var/cache/nginx/proxy_temp;
+        proxy_temp_path /tmp/nginx-cache-temp;
         proxy_cache_lock_timeout 5s;
         proxy_cache_min_uses 2;
-        map $uri $static_cache_zone {
-            default redmine_cold;
-            ~^/assets/ redmine_hot;
-            ~^/plugin_assets/ redmine_hot;
-            ~^/themes/ redmine_hot;
-            ~^/javascripts/ redmine_hot;
-            ~^/stylesheets/ redmine_hot;
-            ~^/images/ redmine_hot;
-        }
 
         # File descriptor caching
         open_file_cache max=50000 inactive=60s;
         open_file_cache_valid 120s;
         open_file_cache_min_uses 2;
         open_file_cache_errors on;
-
-
-
-
-        {{- if .Values.httpd.ratelimiting.enabled }}
-        # Map cookie header to an auth flag   
-        map $cookie__redmine_eea $limit_user  {
-            default "";
-            ""      $binary_remote_addr; # Use IP if no cookie
-        }
-
-        # Rate limit zone for anonymous users (keyed by client IP)
-        limit_req_zone $limit_user zone=redmine_anon:{{ .Values.httpd.ratelimiting.period | default "10m" }} rate={{ .Values.httpd.ratelimiting.rate | default "10r/m"}};
-        {{- end }}
-
 
         # ================================================================
         # MAIN SERVER
@@ -149,12 +116,14 @@ data:
             proxy_set_header Host $host;
             proxy_set_header X-Real-IP $remote_addr;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-            # Preserve original proto from ingress to avoid OAuth redirect_uri scheme mismatches.
-            set $forwarded_proto $http_x_forwarded_proto;
-            if ($forwarded_proto = "") {
-                set $forwarded_proto $scheme;
-            }
-            proxy_set_header X-Forwarded-Proto $forwarded_proto;
+            proxy_set_header X-Forwarded-Proto $scheme;
+
+            # Blacklist IPs
+            #
+            {{- range $value := .Values.denyIPList }}
+            deny {{ $value }};
+            {{- end }}
+            allow all;
 
             # ===========================================================
             # LOCAL STATIC FILES & AUTH-BASED SEARCH BLOCK
@@ -172,7 +141,7 @@ data:
             # ===========================================================
             # STATIC CACHE (plugin_assets, themes, js, css, images, fonts)
             # ===========================================================
-            location ~* ^/(?:assets|plugin_assets|themes|javascripts|stylesheets|images|favicon).*?\.(?:css|js|png|jpg|jpeg|gif|ico|svg|woff2?|ttf)(\?[0-9]+)?$ {
+            location ~* ^/(?:plugin_assets|themes|javascripts|stylesheets|images|favicon).*?\.(?:css|js|png|jpg|jpeg|gif|ico|svg|woff2?|ttf)(\?[0-9]+)?$ {
                 expires 365d;
                 add_header Cache-Control "public, max-age=31536000, immutable";
                 access_log off;
@@ -180,47 +149,20 @@ data:
                 proxy_pass http://redmine;
                 proxy_set_header Host $host;
 
-                proxy_cache $static_cache_zone;
+                proxy_cache redmine_static;
                 proxy_cache_valid 200 301 302 365d;
                 proxy_cache_use_stale error timeout updating;
                 proxy_cache_lock on;
                 proxy_ignore_headers Cache-Control Set-Cookie;
-                add_header X-Static-Cache-Zone $static_cache_zone always;
             }
-
-            {{- if .Values.httpd.ratelimiting.enabled }}
-
-            # ===========================================================
-            # NO RATE LIMITING ON LOGIN PAGES (default backend)
-            # ===========================================================
-            location ~* ^/(login|entra_id)(/|$) { {
-                proxy_pass http://redmine;
-                proxy_intercept_errors on;
-                proxy_next_upstream error timeout invalid_header http_502 http_503 http_504;
-                proxy_next_upstream_tries 3;
-                proxy_next_upstream_timeout 10s;
-                proxy_cache redmine_cold;
-                proxy_cache_valid 200 10m;
-                proxy_cache_bypass $cookie__redmine_session;
-                add_header X-Cache-Status $upstream_cache_status always;
-            }
-            {{- end }}
 
             # ===========================================================
             # DYNAMIC PAGES (default backend)
             # ===========================================================
             location / {
-
-                {{- if .Values.httpd.ratelimiting.enabled }}
-                limit_req zone=redmine_anon burst={{ .Values.httpd.ratelimiting.burst | default 5 }} nodelay;
-                {{- end }}
-
                 proxy_pass http://redmine;
                 proxy_intercept_errors on;
-                proxy_next_upstream error timeout invalid_header http_502 http_503 http_504;
-                proxy_next_upstream_tries 3;
-                proxy_next_upstream_timeout 10s;
-                proxy_cache redmine_cold;
+                proxy_cache redmine_static;
                 proxy_cache_valid 200 10m;
                 proxy_cache_bypass $cookie__redmine_session;
                 add_header X-Cache-Status $upstream_cache_status always;
