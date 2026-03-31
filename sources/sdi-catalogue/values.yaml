@@ -68,6 +68,8 @@ apache:
     limits:
       memory: 128Mi
   serverAdmin: helpdesk@eea.europa.eu
+  limitRequestBody: 42949672960
+  proxyTimeout: 21600
   service:
     type: ClusterIP
     annotations: {}
@@ -121,7 +123,8 @@ nextcloud:
     internal: f/512629
     restricted: f/512630
   localstorage_allowsymlinks: true
-  maxUploadSize: 16G
+  maxUploadSize: 40G
+  apacheBodyLimit: 42949672960
   phpMemoryLimit: 512M
 
 nextclouddb:

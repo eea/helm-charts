@@ -192,7 +192,13 @@ data:
             ProxyPass http://nextcloud
             ProxyPassReverse http://nextcloud
             ProxyPassReverseCookiePath /datashare /datashare
-            
+
+            # No body size limit for large file uploads
+            LimitRequestBody {{ int64 .Values.apache.limitRequestBody }}
+
+            # 6 hours timeout for slow large uploads (32 GiB at 2.5 MB/s ~ 3.6h)
+            ProxyTimeout {{ .Values.apache.proxyTimeout }}
+
             # Send the client IP to Nextcloud
             RequestHeader set X-Real-IP expr=%{REMOTE_ADDR}
             RequestHeader set X-Forwarded-Proto "https"

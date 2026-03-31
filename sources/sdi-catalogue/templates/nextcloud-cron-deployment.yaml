@@ -67,7 +67,7 @@ spec:
         - name: PHP_MEMORY_LIMIT
           value: {{ .Values.nextcloud.phpMemoryLimit | quote }}
         - name: APACHE_BODY_LIMIT
-          value: "17179869184" # 16 GiB in bytes
+          value: {{ .Values.nextcloud.apacheBodyLimit | quote }}
         resources:
           {{- toYaml .Values.nextcloudCron.resources | nindent 10 }}
         tty: true
