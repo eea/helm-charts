@@ -193,7 +193,7 @@ data:
             # ===========================================================
             # NO RATE LIMITING ON LOGIN PAGES (default backend)
             # ===========================================================
-            location ~* ^/(login|entra_id)(/|$) { {
+            location ~* ^/(login|entra_id)(/|$) {
                 proxy_pass http://redmine;
                 proxy_intercept_errors on;
                 proxy_next_upstream error timeout invalid_header http_502 http_503 http_504;
