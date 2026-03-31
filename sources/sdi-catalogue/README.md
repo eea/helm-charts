@@ -69,6 +69,9 @@ The OAuth2 client registration is named `eea` in the Spring Security configurati
 
 ## Releases
 
+### Version 0.8.46 - 31 March 2026
+- Fix Nextcloud large file uploads: increase limits to 40 GiB, add ProxyTimeout, templatize upload settings [Juan Luis Rodriguez Ponce - [`9804faf0`](https://github.com/eea/helm-charts/commit/9804faf0487c338b22dd5b05773056800d7b0409)]
+
 ### Version 0.8.45 - 3§ March 2026
 - Update GN46 (`eea-4.9.x-29556785`).
 
