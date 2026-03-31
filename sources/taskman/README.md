@@ -495,6 +495,9 @@ grunt
 
 ## Releases
 
+### Version 0.15.1 - 31 March 2026
+- Add ratelimiting configuration [valentinab25 - [`2ea970bf`](https://github.com/eea/helm-charts/commit/2ea970bf17fb5fb6dd27c395cb524b3277b03542)]
+
 ### Version 0.14.0 - 12 February 2026
 - Automated release of [eeacms/redmine:5.1-1.33](https://github.com/eea/eea.docker.redmine/releases) [EEA Jenkins - [`c8e1ca7d`](https://github.com/eea/helm-charts/commit/c8e1ca7d0a756fcb49062c4f820577c88848d477)]
 
