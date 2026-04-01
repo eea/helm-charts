@@ -1,0 +1,43 @@
+questions:
+  - variable: "ingress.enabled"
+    label: "Enable ingress"
+    description: "Create an Ingress resource for external access"
+    default: false
+    type: "boolean"
+    required: true
+    group: "General"
+
+  - variable: "ingress.hosts[0].host"
+    label: "Server name"
+    description: "DNS name exposed by ingress"
+    default: "eunis.eea.europa.eu"
+    type: "string"
+    required: true
+    group: "General"
+    show_if: "ingress.enabled=true"
+
+  - variable: "apache.enabled"
+    label: "Enable Apache front proxy"
+    description: "Place Apache in front of Tomcat even when no redirects are needed"
+    default: false
+    type: "boolean"
+    required: true
+    group: "General"
+
+  - variable: "apache.redirectConfig"
+    label: "Apache redirect rules"
+    description: "Apache RewriteRule directives applied before unmatched requests are proxied to Tomcat"
+    default: |-
+      RewriteRule ^/species/([0-9]+)$ https://biodiversity.europa.eu/species/$1 [R=301,L,NE]
+    type: "multiline"
+    required: false
+    group: "General"
+    show_if: "apache.enabled=true"
+
+  - variable: "apache.extraConfig"
+    label: "Apache extra config"
+    description: "Additional Apache directives appended inside the VirtualHost"
+    type: "multiline"
+    required: false
+    group: "General"
+    show_if: "apache.enabled=true"

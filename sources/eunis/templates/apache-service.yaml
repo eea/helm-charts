@@ -1,0 +1,19 @@
+{{- if eq (include "appl.apacheEnabled" .) "true" }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "appl.frontServiceName" . }}
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: apache
+spec:
+  type: {{ .Values.apache.serviceType }}
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+      protocol: TCP
+  selector:
+    {{- include "appl.selectorLabels" . | nindent 4 }}
+    component: apache
+{{- end }}
