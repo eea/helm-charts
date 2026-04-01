@@ -39502,6 +39502,51 @@ entries:
       category: Productivity
       images: |
         - name: webserver
+          image: eeacms/danswer:web-v2.12.10.eea.0.0.104-dev
+        - name: background
+          image: eeacms/danswer:backend-v2.12.10.eea.0.0.104-dev
+        - name: model-server
+          image: eeacms/danswer:model_server-v2.12.10.eea.0.0.104-dev
+        - name: vespa
+          image: vespaengine/vespa:8.609.39
+      licenses: MIT
+    apiVersion: v2
+    appVersion: v2.12.10-eea.0.0.104-dev
+    created: "2026-04-01T11:44:27.84067+03:00"
+    dependencies:
+    - condition: vespa.enabled
+      name: vespa
+      repository: https://eea.github.io/helm-charts
+      version: 0.2.26
+    - condition: minio.enabled
+      name: minio
+      repository: https://charts.min.io/
+      version: 5.4.0
+    - condition: postfix.enabled
+      name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.2.0
+    description: An Onyx derived Helm chart for GPTLab
+    digest: 05f475830e0f6b6eb3830defd3f3a765d9b89d007d1ba0ed97dbb264f8f73b3d
+    home: https://www.onyx.app/
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/onyx/logo_onyx.png
+    keywords:
+    - gptlab
+    - ai
+    - search
+    - question-answering
+    - onyx
+    name: onyx-stack
+    sources:
+    - https://github.com/onyx-dot-app/onyx
+    type: application
+    urls:
+    - onyx-stack-0.4.22.tgz
+    version: 0.4.22
+  - annotations:
+      category: Productivity
+      images: |
+        - name: webserver
           image: eeacms/danswer:web-v2.5.3.eea.0.0.102
         - name: background
           image: eeacms/danswer:backend-v2.5.3.eea.0.0.102
@@ -48579,4 +48624,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2026-04-01T07:45:08.388178878Z"
+generated: "2026-04-01T11:44:27.836389+03:00"
