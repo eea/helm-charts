@@ -118,17 +118,9 @@ Shared PVC-backed mounts used by the Plone family of workloads.
 - name: shared-data
   mountPath: {{ .Values.persistence.data.mountPath }}
 {{- end }}
-{{- if .Values.persistence.import.enabled }}
-- name: import-data
-  mountPath: {{ .Values.persistence.import.mountPath }}
-{{- end }}
 {{- if .Values.persistence.legacyImport.enabled }}
 - name: legacy-import-data
   mountPath: {{ .Values.persistence.legacyImport.mountPath }}
-{{- end }}
-{{- if .Values.persistence.sources.enabled }}
-- name: sources-data
-  mountPath: {{ .Values.persistence.sources.mountPath }}
 {{- end }}
 {{- end }}
 
@@ -141,19 +133,9 @@ Shared PVC-backed volumes used by the Plone family of workloads.
   persistentVolumeClaim:
     claimName: {{ .Values.persistence.data.existingClaim | default (printf "%s-shared-data" .Release.Name) }}
 {{- end }}
-{{- if .Values.persistence.import.enabled }}
-- name: import-data
-  persistentVolumeClaim:
-    claimName: {{ .Values.persistence.import.existingClaim | default (printf "%s-import" .Release.Name) }}
-{{- end }}
 {{- if .Values.persistence.legacyImport.enabled }}
 - name: legacy-import-data
   persistentVolumeClaim:
     claimName: {{ .Values.persistence.legacyImport.existingClaim | default (printf "%s-legacy-import" .Release.Name) }}
-{{- end }}
-{{- if .Values.persistence.sources.enabled }}
-- name: sources-data
-  persistentVolumeClaim:
-    claimName: {{ .Values.persistence.sources.existingClaim | default (printf "%s-sources" .Release.Name) }}
 {{- end }}
 {{- end }}
