@@ -2,7 +2,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: debug
+  name: {{ .Release.Name }}-dpl-debug
   labels:
     {{- include "appl.labels" . | nindent 4 }}
     component: debug
@@ -60,4 +60,5 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      restartPolicy: Always
 {{- end }}
