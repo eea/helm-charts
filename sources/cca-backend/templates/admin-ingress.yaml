@@ -22,7 +22,7 @@ spec:
     - host: {{ .Values.plone.hostname }}
       http:
         paths:
-          - path: /admin(.*)
+          - path: /_admin(.*)
             pathType: ImplementationSpecific
             backend:
               service:
