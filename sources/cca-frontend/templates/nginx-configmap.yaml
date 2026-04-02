@@ -97,12 +97,12 @@ data:
       }
 
       location ~ ^/_admin(.*)$ {
-        return 301 /admin$1$is_args$args;
+        rewrite ^/_admin(.*)$ /VirtualHostBase/https/$host:443/{{ include "cca-frontend.virtualHostRoot" . }}/VirtualHostRoot/_vh_admin/$1 break;
+        proxy_pass http://backend_varnish;
       }
 
       location ~ ^/admin(.*)$ {
-        rewrite ^/admin(.*)$ /VirtualHostBase/https/$host:443/{{ include "cca-frontend.virtualHostRoot" . }}/VirtualHostRoot/_vh_admin/$1 break;
-        proxy_pass http://backend_varnish;
+        return 404;
       }
 
       location = /@@vibriomap-view-simple {
