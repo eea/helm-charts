@@ -172,13 +172,6 @@ questions:
     required: true
     group: "General"
 
-  - variable: "rsync.enabled"
-    label: "Enable rsync"
-    default: false
-    type: "boolean"
-    required: true
-    group: "General"
-
   - variable: "zodbpack.enabled"
     label: "Enable zodbpack"
     default: true
@@ -470,23 +463,6 @@ questions:
     default: "64Mi"
     group: "Memory"
     show_if: "memcachedflush.enabled=true"
-
-  - variable: "rsync.resources.requests.memory"
-    label: "Rsync memory reservation"
-    type: "string"
-    required: true
-    default: "512Mi"
-    group: "Memory"
-    show_if: "rsync.enabled=true"
-
-  - variable: "rsync.resources.limits.memory"
-    label: "Rsync memory limit"
-    description: ">= memory reservation"
-    type: "string"
-    required: true
-    default: "1Gi"
-    group: "Memory"
-    show_if: "rsync.enabled=true"
 
   - variable: "postfix.serviceName"
     label: "Postfix service name"
