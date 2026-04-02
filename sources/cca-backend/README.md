@@ -10,6 +10,9 @@ and the broken-links cron job.
 Sensitive values are intentionally left empty in `values.yaml`.
 ## Releases
 
+### Version 0.2.18 - 02 April 2026
+- fix entrasync and zodbpack [Dobricean Ioan Dorian - [`0ca45b93`](https://github.com/eea/helm-charts/commit/0ca45b93d67426ee0cb91e9039295f9df7c77632)]
+
 ### Version 0.2.17 - 02 April 2026
 - Fix zodbpack [Dobricean Ioan Dorian - [`3d670d7c`](https://github.com/eea/helm-charts/commit/3d670d7cc7a827a19cdd8ffa56b2ea40460e4537)]
 
