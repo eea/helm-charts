@@ -10,6 +10,9 @@ and the broken-links cron job.
 Sensitive values are intentionally left empty in `values.yaml`.
 ## Releases
 
+### Version 0.2.15 - 02 April 2026
+- add entrasync corn job [Dobricean Ioan Dorian - [`e7b207ad`](https://github.com/eea/helm-charts/commit/e7b207ada67d1d133de738f1463b12d8b79c8901)]
+
 ### Version 0.2.14 - 02 April 2026
 - remove /admin [Dobricean Ioan Dorian - [`2b135d01`](https://github.com/eea/helm-charts/commit/2b135d0138f37c39e8bf9cd00aa73591af91e19f)]
 
