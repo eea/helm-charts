@@ -217,6 +217,21 @@ questions:
     group: "General"
     show_if: "detectBrokenLinks.enabled=true"
 
+  - variable: "entrasync.enabled"
+    label: "Enable Entra Id synchronization"
+    default: false
+    type: "boolean"
+    required: true
+    group: "General"
+
+  - variable: "entrasync.schedule"
+    label: "Scheduled Entra ID synchronization time"
+    type: "string"
+    default: "0 0 3 * *"
+    required: true
+    group: "General"
+    show_if: "entrasync.enabled=true"
+
   - variable: "varnish.port"
     label: "Varnish port"
     description: "To simplify, we use the same port as the backend"
@@ -321,6 +336,23 @@ questions:
     default: "4Gi"
     group: "Memory"
     show_if: "debug.enabled=true"
+
+  - variable: "entrasync.resources.requests.memory"
+    label: "Entrasync cron job memory reservation"
+    type: "string"
+    required: true
+    default: "1Gi"
+    group: "Memory"
+    show_if: "entrasync.enabled=true"
+
+  - variable: "entrasync.resources.limits.memory"
+    label: "Entrasync memory limit"
+    description: ">= memory reservation"
+    type: "string"
+    required: true
+    default: "1Gi"
+    group: "Memory"
+    show_if: "entrasync.enabled=true"
 
   - variable: "varnish.resources.requests.memory"
     label: "Varnish memory reservation"

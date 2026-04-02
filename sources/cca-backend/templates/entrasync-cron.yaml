@@ -1,0 +1,60 @@
+{{- if .Values.entrasync.enabled }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ .Release.Name }}-entrasync-cron
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: entrasync
+spec:
+  schedule: "{{ .Values.entrasync.schedule }}"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: {{ .Values.entrasync.keepSuccessfulPods }}
+  failedJobsHistoryLimit: {{ .Values.entrasync.keepFailedPods }}
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          {{- with .Values.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          serviceAccountName: {{ include "appl.serviceAccountName" . }}
+          containers:
+            - name: entrasync
+              image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+              imagePullPolicy: {{ .Values.image.pullPolicy }}
+              {{- if .Values.entrasync.command }}
+              command:
+                {{- toYaml .Values.entrasync.command | nindent 16 }}
+              {{- end }}
+              env:
+{{ include "cca-backend.backendEnv" (dict "root" . "component" .Values.entrasync) | nindent 16 }}
+              {{- $mounts := include "cca-backend.sharedVolumeMounts" . | trim }}
+              {{- if $mounts }}
+              volumeMounts:
+{{ $mounts | nindent 16 }}
+              {{- end }}
+              resources:
+                {{- toYaml .Values.entrasync.resources | nindent 16 }}
+              securityContext:
+                {{- toYaml .Values.entrasync.securityContext | nindent 16 }}
+          {{- $volumes := include "cca-backend.sharedVolumes" . | trim }}
+          {{- if $volumes }}
+          volumes:
+{{ $volumes | nindent 12 }}
+          {{- end }}
+          {{- with .Values.entrasync.nodeSelector }}
+          nodeSelector:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.entrasync.affinity }}
+          affinity:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.entrasync.tolerations }}
+          tolerations:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          restartPolicy: Never
+{{- end }}

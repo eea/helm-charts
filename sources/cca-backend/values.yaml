@@ -404,6 +404,31 @@ debug:
   securityContext: {}
   environment: {}
 
+entrasync:
+  enabled: false
+  schedule: "0 0 3 * *"
+  keepSuccessfulPods: 3
+  keepFailedPods: 5
+  releaseVersion: ""
+  command:
+    - /app/bin/sync_eea_entra
+    - --portal
+    - cca
+    - --zope-conf
+    - /app/etc/relstorage.conf
+  resources:
+    limits:
+      memory: 1Gi
+    requests:
+      memory: 1Gi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  podAnnotations: {}
+  podSecurityContext: {}
+  securityContext: {}
+  environment: {}
+
 postfix:
   fullnameOverride: ""
   dryrun: false
