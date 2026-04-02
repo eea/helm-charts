@@ -22,7 +22,7 @@ spec:
           serviceAccountName: {{ include "appl.serviceAccountName" . }}
           containers:
             - name: entrasync
-              image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+              image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
               imagePullPolicy: {{ .Values.image.pullPolicy }}
               {{- if .Values.entrasync.args }}
               args:
