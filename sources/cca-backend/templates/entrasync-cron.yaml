@@ -24,9 +24,9 @@ spec:
             - name: entrasync
               image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
               imagePullPolicy: {{ .Values.image.pullPolicy }}
-              {{- if .Values.entrasync.command }}
-              command:
-                {{- toYaml .Values.entrasync.command | nindent 16 }}
+              {{- if .Values.entrasync.args }}
+              args:
+                {{- toYaml .Values.entrasync.args | nindent 16 }}
               {{- end }}
               env:
 {{ include "cca-backend.backendEnv" (dict "root" . "component" .Values.entrasync) | nindent 16 }}

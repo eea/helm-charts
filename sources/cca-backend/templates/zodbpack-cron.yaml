@@ -24,9 +24,9 @@ spec:
             - name: zodbpack
               image: "{{ .Values.zodbpack.image.repository }}:{{ .Values.zodbpack.image.tag }}"
               imagePullPolicy: {{ .Values.zodbpack.image.pullPolicy }}
-              {{- if .Values.zodbpack.command }}
-              command:
-                {{- toYaml .Values.zodbpack.command | nindent 16 }}
+              {{- if .Values.zodbpack.args }}
+              args:
+                {{- toYaml .Values.zodbpack.args | nindent 16 }}
               {{- end }}
               env:
 {{ include "cca-backend.backendEnv" (dict "root" . "component" .Values.zodbpack) | nindent 16 }}

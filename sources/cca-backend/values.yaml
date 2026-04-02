@@ -330,7 +330,7 @@ zodbpack:
     tag: "v10.0.0-plone6.1"
     pullPolicy: Always
   releaseVersion: ""
-  command:
+  args:
     - /app/bin/zodbpack
     - /app/sources/zodbpack.conf
   resources:
@@ -390,7 +390,7 @@ entrasync:
   keepSuccessfulPods: 3
   keepFailedPods: 5
   releaseVersion: ""
-  command:
+  args:
     - /app/bin/sync_eea_entra
     - --portal
     - cca
