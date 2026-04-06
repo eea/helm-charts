@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 1.40.0 - 06 April 2026
+- Automated release of [eeacms/marine-backend:6.1.3-11](https://github.com/eea/marine-backend/releases) [EEA Jenkins - [`a726c2af`](https://github.com/eea/helm-charts/commit/a726c2aff1c1ea116f2404c488d649be15de93d1)]
+
 ### Version 1.39.0 - 06 April 2026
 - Automated release of [eeacms/marine-backend:6.1.3-10](https://github.com/eea/marine-backend/releases) [EEA Jenkins - [`0a4c301d`](https://github.com/eea/helm-charts/commit/0a4c301d8b69df0908e1162c4bf572141c532363)]
 
