@@ -10,6 +10,9 @@ and the broken-links cron job.
 Sensitive values are intentionally left empty in `values.yaml`.
 ## Releases
 
+### Version 0.2.24 - 09 April 2026
+- relax plone [Dobricean Ioan Dorian - [`5b0ee8b9`](https://github.com/eea/helm-charts/commit/5b0ee8b92c5d151cd7ce8effb764007a9dff07b2)]
+
 ### Version 0.2.23 - 09 April 2026
 - relax plone health probes to avoid restarts during long broken-links scans
 
