@@ -12,5 +12,5 @@ spec:
     - name: wget
       image: busybox
       command: ['wget']
-      args: ['{{ include "appl.fullname" . }}:{{ .Values.service.port }}/systemcheck.jsp']
+      args: ['{{ include "appl.frontServiceName" . }}:{{ include "appl.frontServicePort" . }}/systemcheck.jsp']
   restartPolicy: Never

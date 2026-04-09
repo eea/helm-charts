@@ -94,13 +94,40 @@ ingress:
   #    hosts:
   #      - eunis.eea.europa.eu
 
-redirects:
+apache:
   enabled: false
-  annotations: {}
-  rules:
-    - path: /species/([0-9]+)
-      pathType: ImplementationSpecific
-      target: https://biodiversity.europa.eu/species/$1
+  image:
+    repository: eeacms/apache
+    tag: "2.4-3.4"
+  serviceType: ClusterIP
+  modules: "headers_module proxy_module proxy_http_module rewrite_module"
+  redirectConfig: |-
+    RewriteRule ^/species/([0-9]+)$ https://biodiversity.europa.eu/species/$1 [R=301,L,NE]
+  extraConfig: ""
+  resources:
+    requests:
+      memory: 256Mi
+    limits:
+      memory: 512Mi
+  livenessProbe:
+    tcpSocket:
+      port: http
+    periodSeconds: 10
+    timeoutSeconds: 10
+    initialDelaySeconds: 30
+    failureThreshold: 5
+    successThreshold: 1
+  startupProbe:
+    tcpSocket:
+      port: http
+    periodSeconds: 5
+    timeoutSeconds: 10
+    initialDelaySeconds: 10
+    failureThreshold: 12
+    successThreshold: 1
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
 
 resources:
   requests:
