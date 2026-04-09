@@ -102,33 +102,34 @@ plone:
     - sh
     - -c
     - mkdir -p /tmp/plone_mail_queue/cur /tmp/plone_mail_queue/new /tmp/plone_mail_queue/tmp && chown -R plone /tmp/plone_mail_queue && ./docker-entrypoint.sh start
+  # Broken-links scans can hold waitress workers for extended periods.
   livenessProbe:
     httpGet:
       path: /ok
       port: http
-    periodSeconds: 20
-    timeoutSeconds: 10
-    initialDelaySeconds: 30
-    failureThreshold: 6
+    periodSeconds: 30
+    timeoutSeconds: 30
+    initialDelaySeconds: 60
+    failureThreshold: 10
     successThreshold: 1
   startupProbe:
     httpGet:
       path: /ok
       port: http
     periodSeconds: 5
-    timeoutSeconds: 10
-    initialDelaySeconds: 30
-    failureThreshold: 24
+    timeoutSeconds: 30
+    initialDelaySeconds: 60
+    failureThreshold: 36
     successThreshold: 1
   readinessProbe:
     httpGet:
       path: /ok
       port: http
     periodSeconds: 15
-    timeoutSeconds: 10
+    timeoutSeconds: 30
     initialDelaySeconds: 60
-    failureThreshold: 4
-    successThreshold: 2
+    failureThreshold: 6
+    successThreshold: 1
   nodeSelector: {}
   tolerations: []
   affinity: {}
