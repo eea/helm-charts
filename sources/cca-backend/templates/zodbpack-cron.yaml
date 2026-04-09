@@ -22,8 +22,8 @@ spec:
           serviceAccountName: {{ include "appl.serviceAccountName" . }}
           containers:
             - name: zodbpack
-              image: "{{ .Values.zodbpack.image.repository }}:{{ .Values.zodbpack.image.tag }}"
-              imagePullPolicy: {{ .Values.zodbpack.image.pullPolicy }}
+              image: "{{ .Values.zodbpack.image.repository | default .Values.image.repository }}:{{ .Values.zodbpack.image.tag | default (.Values.image.tag | default .Chart.AppVersion) }}"
+              imagePullPolicy: {{ .Values.zodbpack.image.pullPolicy | default .Values.image.pullPolicy }}
               {{- if .Values.zodbpack.args }}
               args:
                 {{- toYaml .Values.zodbpack.args | nindent 16 }}
