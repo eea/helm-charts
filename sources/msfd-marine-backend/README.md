@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 0.24.0 - 15 April 2026
+- Automated release of [eeacms/msfd-backend:6.1.3-16](https://github.com/eea/msfd-backend/releases) [EEA Jenkins - [`37fdd4ea`](https://github.com/eea/helm-charts/commit/37fdd4eae4df6ec1536677ed56122bb2ad7f1bfc)]
+
 ### Version 0.23.1 - 14 April 2026
 - add plone registry yaml [Dobricean Ioan Dorian - [`af314e3b`](https://github.com/eea/helm-charts/commit/af314e3b4f76789ac24cab9d527bc76b19d6394b)]
 
