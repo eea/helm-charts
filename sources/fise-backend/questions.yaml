@@ -36,6 +36,22 @@
     default: "demo.europa.eu-tls"
     type: "string"
     group: "General"
+
+  - variable: "links.createDatabaseService"
+    label: "Create postgres ExternalName service"
+    description: "Set to false if the service already exists in the namespace (e.g. from a database release)"
+    default: true
+    type: "boolean"
+    required: true
+    group: "General"
+
+  - variable: "links.createMemcachedService"
+    label: "Create memcached ExternalName service"
+    description: "Set to false if the service already exists in the namespace (e.g. from a database release)"
+    default: true
+    type: "boolean"
+    required: true
+    group: "General"
     
   - variable: "links.memcached"
     label: "Memcached service"
@@ -43,6 +59,7 @@
     type: "string"
     required: true
     group: "General"
+    show_if: "links.createMemcachedService=true"
 
   - variable: "links.database"
     label: "PostgreSQL"
@@ -50,6 +67,7 @@
     type: "string"
     required: true
     group: "General"
+    show_if: "links.createDatabaseService=true"
   
   - variable: "entrasync.enabled"
     label: "Enable Entra Id synchronization"
@@ -428,4 +446,3 @@
     description: "If empty, https will not be enabled"
     default: "mailtrap.01dev.eea.europa.eu-tls"
     group: "Mail"
-
