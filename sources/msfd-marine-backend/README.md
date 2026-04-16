@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 0.25.0 - 16 April 2026
+- Automated release of [eeacms/msfd-backend:6.1.3-17](https://github.com/eea/msfd-backend/releases) [EEA Jenkins - [`53cb6e0d`](https://github.com/eea/helm-charts/commit/53cb6e0ded7c3d419231eaa3a5e9b15c829822e9)]
+
 ### Version 0.24.0 - 15 April 2026
 - Automated release of [eeacms/msfd-backend:6.1.3-16](https://github.com/eea/msfd-backend/releases) [EEA Jenkins - [`37fdd4ea`](https://github.com/eea/helm-charts/commit/37fdd4eae4df6ec1536677ed56122bb2ad7f1bfc)]
 
