@@ -11,6 +11,9 @@ This chart deployes the Climate Advisory Board backend app
 
 ## Releases
 
+### Version 1.38.0 - 17 April 2026
+- Automated release of [eeacms/advisory-board-backend:6.1.3-14](https://github.com/eea/advisory-board-backend/releases) [EEA Jenkins - [`cc8a7f9a`](https://github.com/eea/helm-charts/commit/cc8a7f9ad76f84ddcb5d96504f7ac4d36014c16c)]
+
 ### Version 1.37.0 - 15 April 2026
 - Automated release of [eeacms/advisory-board-backend:6.1.3-12](https://github.com/eea/advisory-board-backend/releases) [EEA Jenkins - [`7c34ad49`](https://github.com/eea/helm-charts/commit/7c34ad49a3218d57ec4d92b0070c7d543631be2b)]
 
