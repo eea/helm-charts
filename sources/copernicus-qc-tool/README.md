@@ -16,3 +16,8 @@ Required secret keys:
 - `mariadb-password`
 - `mariadb-root-password`
 - `smtp-password`
+## Releases
+
+### Version 0.1.1 - 17 April 2026
+- first release [Dobricean Ioan Dorian - [`d400cade`](https://github.com/eea/helm-charts/commit/d400cadefab101dd41caaad74f6d48d15e2b4337)]
+
