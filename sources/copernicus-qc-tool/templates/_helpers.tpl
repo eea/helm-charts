@@ -69,7 +69,13 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}
 
 {{- define "qctool.postfixServiceName" -}}
-{{- printf "%s-postfix" (include "qctool.fullname" .) | trunc 63 | trimSuffix "-" -}}
+{{- if .Values.postfix.serviceName -}}
+{{- .Values.postfix.serviceName -}}
+{{- else if .Values.postfix.fullnameOverride -}}
+{{- .Values.postfix.fullnameOverride | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+{{- printf "%s-postfix" .Release.Name | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
 {{- end -}}
 
 {{/* Workload names */}}
@@ -95,10 +101,6 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 
 {{- define "qctool.redisName" -}}
 {{- printf "%s-redis" (include "qctool.fullname" .) | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
-{{- define "qctool.postfixName" -}}
-{{- printf "%s-postfix" (include "qctool.fullname" .) | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{- define "qctool.volumeTesterName" -}}

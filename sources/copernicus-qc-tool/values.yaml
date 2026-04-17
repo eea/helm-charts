@@ -208,31 +208,34 @@ nextcloudCron:
   affinity: {}
 
 postfix:
-  enabled: true
-  replicaCount: 1
+  fullnameOverride: ""
+  dryrun: false
+  serverName: dev-qc-copernicus.01dev.eea.europa.eu
+  mtpPass: ""
+  mtpPort: "8587"
+  mtpRelay: ironport1.eea.europa.eu
+  mtpUser: clms_qc_tool
+  serviceName: "postfix"
+  mailtrap:
+    httpenabled: false
+    serviceType: ClusterIP
+    mtUser: mailtrap
+    mtPasswd: mailtrap
+    ingress:
+      enabled: false
+      hostname: mailtrap.01dev.eea.europa.eu
+      annotations:
+        cert-manager.io/cluster-issuer: 01dev-eea-letsencrypt
+      certificate: mailtrap.01dev.eea.europa.eu-tls
   image:
     repository: eeacms/postfix
     tag: "3.5-1.0"
-    pullPolicy: IfNotPresent
-  service:
-    type: ClusterIP
-    port: 25
-  env:
-    MTP_HOST: eea.europa.eu
-    MTP_PORT: "8587"
-    MTP_RELAY: ironport1.eea.europa.eu
-    MTP_USER: clms_qc_tool
-  mtpPass: ""
-  extraEnv: {}
+  timezone: Europe/Copenhagen
   resources:
     requests:
       memory: 128Mi
     limits:
       memory: 128Mi
-  podAnnotations: {}
-  nodeSelector: {}
-  tolerations: []
-  affinity: {}
 
 volumeTester:
   enabled: false

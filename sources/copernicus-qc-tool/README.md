@@ -9,6 +9,7 @@ Notes:
 - for `nextcloudAppData` the chart uses the claim name `qc_tool_nextcloud_appdata`, because that is the volume name mounted by the provided stack
 - the default frontend hostname is `dev-qc-copernicus.01dev.eea.europa.eu` and can be changed from `questions.yaml`
 - PostgreSQL is expected to be deployed separately, for example with `plone-postgres`; this chart only stores the connection settings and creates an internal alias service
+- email delivery is handled through the shared `postfix` subchart, with the same `dryrun` and `mailtrap` options used by other EEA applications
 
 Required password values:
 

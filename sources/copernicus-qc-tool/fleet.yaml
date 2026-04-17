@@ -10,6 +10,14 @@ helm:
   values:
     links:
       database: postgres-postgres.database
+    postfix:
+      dryrun: true
+      mailtrap:
+        httpenabled: false
+        ingress:
+          enabled: false
+          hostname: mailtrap.01dev.eea.europa.eu
+          certificate: mailtrap.01dev.eea.europa.eu-tls
     ingress:
       frontend:
         host: dev-qc-copernicus.01dev.eea.europa.eu
