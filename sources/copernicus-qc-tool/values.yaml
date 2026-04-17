@@ -36,7 +36,7 @@ persistence:
     enabled: true
     create: true
     existingClaim: ""
-    storageClassName: rancher-nfs
+    storageClassName: ""
     accessModes:
       - ReadWriteMany
     size: 5Gi
@@ -44,7 +44,7 @@ persistence:
     enabled: true
     create: true
     existingClaim: ""
-    storageClassName: rancher-nfs
+    storageClassName: ""
     accessModes:
       - ReadWriteMany
     size: 5Gi
@@ -52,7 +52,7 @@ persistence:
     enabled: true
     create: true
     existingClaim: ""
-    storageClassName: rancher-nfs
+    storageClassName: ""
     accessModes:
       - ReadWriteMany
     size: 10Gi
@@ -60,7 +60,7 @@ persistence:
     enabled: true
     create: true
     existingClaim: ""
-    storageClassName: rancher-nfs
+    storageClassName: ""
     accessModes:
       - ReadWriteMany
     size: 5Gi
@@ -68,7 +68,7 @@ persistence:
     enabled: true
     create: true
     existingClaim: ""
-    storageClassName: rancher-nfs
+    storageClassName: ""
     accessModes:
       - ReadWriteMany
     size: 5Gi
@@ -76,7 +76,7 @@ persistence:
     enabled: true
     create: true
     existingClaim: ""
-    storageClassName: rancher-nfs
+    storageClassName: ""
     accessModes:
       - ReadWriteMany
     size: 20Gi
@@ -84,7 +84,7 @@ persistence:
     enabled: true
     create: true
     existingClaim: ""
-    storageClassName: rancher-ebs
+    storageClassName: ""
     accessModes:
       - ReadWriteOnce
     size: 20Gi
@@ -92,7 +92,7 @@ persistence:
     enabled: true
     create: true
     existingClaim: ""
-    storageClassName: rancher-ebs
+    storageClassName: ""
     accessModes:
       - ReadWriteOnce
     size: 30Gi
@@ -100,7 +100,7 @@ persistence:
     enabled: true
     create: true
     existingClaim: ""
-    storageClassName: rancher-ebs
+    storageClassName: ""
     accessModes:
       - ReadWriteOnce
     size: 5Gi
