@@ -113,7 +113,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- if $volume.existingClaim -}}
 {{- $volume.existingClaim -}}
 {{- else -}}
-{{- printf "%s-%s" (include "qctool.fullname" $root) $name | trunc 63 | trimSuffix "-" -}}
+{{- printf "%s-%s" (include "qctool.fullname" $root) ($name | kebabcase) | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 {{- end -}}
 

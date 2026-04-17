@@ -34,80 +34,80 @@ ingress:
 persistence:
   boundary:
     enabled: true
-    create: false
-    existingClaim: qc_tool_boundary
-    storageClassName: ""
+    create: true
+    existingClaim: ""
+    storageClassName: rancher-nfs
     accessModes:
       - ReadWriteMany
     size: 5Gi
   incoming:
     enabled: true
-    create: false
-    existingClaim: qc_tool_incoming
-    storageClassName: ""
+    create: true
+    existingClaim: ""
+    storageClassName: rancher-nfs
     accessModes:
       - ReadWriteMany
     size: 5Gi
   submission:
     enabled: true
-    create: false
-    existingClaim: qc_tool_submission
-    storageClassName: ""
+    create: true
+    existingClaim: ""
+    storageClassName: rancher-nfs
     accessModes:
       - ReadWriteMany
     size: 10Gi
   submissionEtc:
     enabled: true
-    create: false
-    existingClaim: qc_tool_submission_etc
-    storageClassName: ""
+    create: true
+    existingClaim: ""
+    storageClassName: rancher-nfs
     accessModes:
       - ReadWriteMany
     size: 5Gi
   frontend:
     enabled: true
-    create: false
-    existingClaim: qc_tool_frontend
-    storageClassName: ""
+    create: true
+    existingClaim: ""
+    storageClassName: rancher-nfs
     accessModes:
       - ReadWriteMany
     size: 5Gi
   work:
     enabled: true
-    create: false
-    existingClaim: qc_tool_work
-    storageClassName: ""
+    create: true
+    existingClaim: ""
+    storageClassName: rancher-nfs
     accessModes:
       - ReadWriteMany
     size: 20Gi
   nextcloudAppData:
     enabled: true
-    create: false
-    existingClaim: qc_tool_nextcloud_appdata
-    storageClassName: ""
+    create: true
+    existingClaim: ""
+    storageClassName: rancher-ebs
     accessModes:
       - ReadWriteOnce
     size: 20Gi
   mariadbData:
     enabled: true
-    create: false
-    existingClaim: qctoolmariadbdata
-    storageClassName: ""
+    create: true
+    existingClaim: ""
+    storageClassName: rancher-ebs
     accessModes:
       - ReadWriteOnce
     size: 30Gi
   redisData:
     enabled: true
-    create: false
-    existingClaim: nextcloudredisdata
-    storageClassName: ""
+    create: true
+    existingClaim: ""
+    storageClassName: rancher-ebs
     accessModes:
       - ReadWriteOnce
     size: 5Gi
   volumeTesterData:
-    enabled: true
+    enabled: false
     create: false
-    existingClaim: qctool_cws_test_volume
+    existingClaim: ""
     storageClassName: ""
     accessModes:
       - ReadWriteOnce
