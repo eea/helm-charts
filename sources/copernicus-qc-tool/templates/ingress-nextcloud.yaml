@@ -1,0 +1,41 @@
+{{- if and .Values.nextcloud.enabled .Values.ingress.nextcloud.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "qctool.nextcloudName" . }}
+  labels:
+    {{- include "qctool.labels" . | nindent 4 }}
+    component: nextcloud
+  {{- if or .Values.ingress.nextcloud.letsencrypt .Values.ingress.nextcloud.annotations }}
+  annotations:
+    {{- if .Values.ingress.nextcloud.letsencrypt }}
+    cert-manager.io/cluster-issuer: {{ .Values.ingress.nextcloud.letsencrypt | quote }}
+    {{- end }}
+    {{- with .Values.ingress.nextcloud.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- end }}
+spec:
+  {{- if .Values.ingress.nextcloud.className }}
+  ingressClassName: {{ .Values.ingress.nextcloud.className }}
+  {{- end }}
+  rules:
+    - host: {{ .Values.ingress.nextcloud.host | quote }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "qctool.nextcloudServiceName" . }}
+                port:
+                  number: {{ .Values.nextcloud.service.port }}
+  {{- if .Values.ingress.nextcloud.tls }}
+  tls:
+    - hosts:
+        - {{ .Values.ingress.nextcloud.host | quote }}
+      {{- if .Values.ingress.nextcloud.certificate }}
+      secretName: {{ .Values.ingress.nextcloud.certificate | quote }}
+      {{- end }}
+  {{- end }}
+{{- end }}

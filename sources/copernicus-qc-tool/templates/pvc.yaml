@@ -1,0 +1,22 @@
+{{- range $name, $volume := .Values.persistence }}
+{{- if and $volume.enabled $volume.create (not $volume.existingClaim) }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "qctool.claimName" (dict "root" $ "name" $name "volume" $volume) }}
+  labels:
+    {{- include "qctool.labels" $ | nindent 4 }}
+    component: storage
+spec:
+  accessModes:
+    {{- toYaml $volume.accessModes | nindent 4 }}
+  resources:
+    requests:
+      storage: {{ $volume.size | quote }}
+  {{- if $volume.storageClassName }}
+  storageClassName: {{ $volume.storageClassName | quote }}
+  {{- end }}
+{{- end }}
+{{- end }}
+

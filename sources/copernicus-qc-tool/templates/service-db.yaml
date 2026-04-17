@@ -1,0 +1,20 @@
+{{- if .Values.mariadb.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "qctool.mariadbServiceName" . }}
+  labels:
+    {{- include "qctool.labels" . | nindent 4 }}
+    component: db
+spec:
+  type: {{ .Values.mariadb.service.type }}
+  selector:
+    {{- include "qctool.selectorLabels" . | nindent 4 }}
+    component: db
+  ports:
+    - name: mysql
+      port: {{ .Values.mariadb.service.port }}
+      targetPort: mysql
+      protocol: TCP
+{{- end }}
+

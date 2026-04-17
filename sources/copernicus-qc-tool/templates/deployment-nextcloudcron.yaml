@@ -1,0 +1,91 @@
+{{- if .Values.nextcloudCron.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "qctool.nextcloudCronName" . }}
+  labels:
+    {{- include "qctool.labels" . | nindent 4 }}
+    component: nextcloudcron
+spec:
+  replicas: {{ .Values.nextcloudCron.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "qctool.selectorLabels" . | nindent 6 }}
+      component: nextcloudcron
+  template:
+    metadata:
+      labels:
+        {{- include "qctool.selectorLabels" . | nindent 8 }}
+        component: nextcloudcron
+      {{- with .Values.nextcloudCron.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "qctool.serviceAccountName" . }}
+      containers:
+        - name: nextcloudcron
+          image: "{{ .Values.nextcloud.image.repository }}:{{ .Values.nextcloud.image.tag }}"
+          imagePullPolicy: {{ .Values.nextcloud.image.pullPolicy }}
+          command:
+            {{- toYaml .Values.nextcloudCron.command | nindent 12 }}
+          env:
+            - name: TZ
+              value: {{ .Values.timezone | quote }}
+            - name: MYSQL_DATABASE
+              value: {{ .Values.mariadb.database.name | quote }}
+            - name: MYSQL_USER
+              value: {{ .Values.mariadb.database.user | quote }}
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "qctool.secretName" . }}
+                  key: mariadb-password
+            - name: MYSQL_HOST
+              value: {{ include "qctool.mariadbServiceName" . | quote }}
+            - name: REDIS_HOST
+              value: {{ include "qctool.redisServiceName" . | quote }}
+            - name: REDIS_HOST_PORT
+              value: {{ .Values.redis.service.port | quote }}
+            {{- $env := mergeOverwrite (deepCopy .Values.nextcloudCron.env) .Values.nextcloudCron.extraEnv }}
+            {{- range $key := keys $env | sortAlpha }}
+            - name: {{ $key }}
+              value: {{ index $env $key | quote }}
+            {{- end }}
+          resources:
+            {{- toYaml .Values.nextcloudCron.resources | nindent 12 }}
+          volumeMounts:
+            - name: submission
+              mountPath: /mnt/qc_tool_submission
+            - name: nextcloud-appdata
+              mountPath: /var/www/html
+            - name: submission-etc
+              mountPath: /mnt/sp_data
+      volumes:
+        - name: submission
+          persistentVolumeClaim:
+            claimName: {{ include "qctool.claimName" (dict "root" . "name" "submission" "volume" .Values.persistence.submission) }}
+        - name: nextcloud-appdata
+          persistentVolumeClaim:
+            claimName: {{ include "qctool.claimName" (dict "root" . "name" "nextcloudAppData" "volume" .Values.persistence.nextcloudAppData) }}
+        - name: submission-etc
+          persistentVolumeClaim:
+            claimName: {{ include "qctool.claimName" (dict "root" . "name" "submissionEtc" "volume" .Values.persistence.submissionEtc) }}
+      {{- with .Values.nextcloudCron.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.nextcloudCron.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.nextcloudCron.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}
+

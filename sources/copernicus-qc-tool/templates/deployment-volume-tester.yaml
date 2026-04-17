@@ -1,0 +1,59 @@
+{{- if .Values.volumeTester.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "qctool.volumeTesterName" . }}
+  labels:
+    {{- include "qctool.labels" . | nindent 4 }}
+    component: volume-tester
+spec:
+  replicas: {{ .Values.volumeTester.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "qctool.selectorLabels" . | nindent 6 }}
+      component: volume-tester
+  template:
+    metadata:
+      labels:
+        {{- include "qctool.selectorLabels" . | nindent 8 }}
+        component: volume-tester
+      {{- with .Values.volumeTester.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "qctool.serviceAccountName" . }}
+      containers:
+        - name: volume-tester
+          image: "{{ .Values.volumeTester.image.repository }}:{{ .Values.volumeTester.image.tag }}"
+          imagePullPolicy: {{ .Values.volumeTester.image.pullPolicy }}
+          command:
+            {{- toYaml .Values.volumeTester.command | nindent 12 }}
+          resources:
+            {{- toYaml .Values.volumeTester.resources | nindent 12 }}
+          volumeMounts:
+            - name: volume-tester-data
+              mountPath: /data
+              readOnly: true
+      volumes:
+        - name: volume-tester-data
+          persistentVolumeClaim:
+            claimName: {{ include "qctool.claimName" (dict "root" . "name" "volumeTesterData" "volume" .Values.persistence.volumeTesterData) }}
+      {{- with .Values.volumeTester.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.volumeTester.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.volumeTester.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}
+

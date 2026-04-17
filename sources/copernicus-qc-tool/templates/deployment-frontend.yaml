@@ -1,0 +1,101 @@
+{{- if .Values.frontend.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "qctool.frontendName" . }}
+  labels:
+    {{- include "qctool.labels" . | nindent 4 }}
+    component: frontend
+spec:
+  replicas: {{ .Values.frontend.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "qctool.selectorLabels" . | nindent 6 }}
+      component: frontend
+  template:
+    metadata:
+      labels:
+        {{- include "qctool.selectorLabels" . | nindent 8 }}
+        component: frontend
+      {{- with .Values.frontend.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "qctool.serviceAccountName" . }}
+      containers:
+        - name: frontend
+          image: "{{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag }}"
+          imagePullPolicy: {{ .Values.frontend.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.frontend.service.port }}
+              protocol: TCP
+          env:
+            - name: TZ
+              value: {{ .Values.timezone | quote }}
+            - name: POSTGRES_HOST
+              value: {{ include "qctool.databaseServiceName" . | quote }}
+            - name: POSTGRES_PORT
+              value: {{ .Values.frontend.database.port | quote }}
+            - name: POSTGRES_DB
+              value: {{ .Values.frontend.database.name | quote }}
+            - name: POSTGRES_USER
+              value: {{ .Values.frontend.database.user | quote }}
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "qctool.secretName" . }}
+                  key: postgres-password
+            {{- $frontendDefaults := dict "API_URL" (include "qctool.frontendApiUrl" .) "CSRF_TRUSTED_ORIGINS" (include "qctool.frontendCsrfTrustedOrigins" .) }}
+            {{- $env := mergeOverwrite (deepCopy $frontendDefaults) (deepCopy .Values.frontend.env) .Values.frontend.extraEnv }}
+            {{- range $key := keys $env | sortAlpha }}
+            - name: {{ $key }}
+              value: {{ index $env $key | quote }}
+            {{- end }}
+          resources:
+            {{- toYaml .Values.frontend.resources | nindent 12 }}
+          volumeMounts:
+            - name: boundary
+              mountPath: /mnt/qc_tool_boundary
+            - name: incoming
+              mountPath: /mnt/qc_tool_incoming
+            - name: submission
+              mountPath: /mnt/qc_tool_submission
+            - name: work
+              mountPath: /mnt/qc_tool_work
+            - name: frontend
+              mountPath: /mnt/qc_tool_frontend
+      volumes:
+        - name: boundary
+          persistentVolumeClaim:
+            claimName: {{ include "qctool.claimName" (dict "root" . "name" "boundary" "volume" .Values.persistence.boundary) }}
+        - name: incoming
+          persistentVolumeClaim:
+            claimName: {{ include "qctool.claimName" (dict "root" . "name" "incoming" "volume" .Values.persistence.incoming) }}
+        - name: submission
+          persistentVolumeClaim:
+            claimName: {{ include "qctool.claimName" (dict "root" . "name" "submission" "volume" .Values.persistence.submission) }}
+        - name: work
+          persistentVolumeClaim:
+            claimName: {{ include "qctool.claimName" (dict "root" . "name" "work" "volume" .Values.persistence.work) }}
+        - name: frontend
+          persistentVolumeClaim:
+            claimName: {{ include "qctool.claimName" (dict "root" . "name" "frontend" "volume" .Values.persistence.frontend) }}
+      {{- with .Values.frontend.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.frontend.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.frontend.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}

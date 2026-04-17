@@ -1,0 +1,20 @@
+{{- if .Values.redis.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "qctool.redisServiceName" . }}
+  labels:
+    {{- include "qctool.labels" . | nindent 4 }}
+    component: redis
+spec:
+  type: {{ .Values.redis.service.type }}
+  selector:
+    {{- include "qctool.selectorLabels" . | nindent 4 }}
+    component: redis
+  ports:
+    - name: redis
+      port: {{ .Values.redis.service.port }}
+      targetPort: redis
+      protocol: TCP
+{{- end }}
+

@@ -1,0 +1,161 @@
+questions:
+  - variable: "timezone"
+    label: "Timezone"
+    type: "string"
+    default: "Europe/Copenhagen"
+    required: true
+    group: "General"
+
+  - variable: "secrets.existingSecret"
+    label: "Existing secret"
+    description: "Optional secret name containing postgres-password, mariadb-password, mariadb-root-password and smtp-password"
+    type: "string"
+    default: ""
+    group: "General"
+
+  - variable: "links.database"
+    label: "PostgreSQL service"
+    description: "External PostgreSQL service, format SERVICE.NAMESPACE"
+    type: "string"
+    default: "plone-postgres.namespace"
+    required: true
+    group: "General"
+
+  - variable: "frontend.database.name"
+    label: "PostgreSQL database"
+    type: "string"
+    default: "qc_tool"
+    required: true
+    group: "General"
+
+  - variable: "frontend.database.user"
+    label: "PostgreSQL user"
+    type: "string"
+    default: "qc_user"
+    required: true
+    group: "General"
+
+  - variable: "frontend.database.port"
+    label: "PostgreSQL port"
+    type: "int"
+    default: 5432
+    required: true
+    group: "General"
+
+  - variable: "frontend.image.tag"
+    label: "Frontend image tag"
+    type: "string"
+    default: "2.4.0"
+    group: "Frontend"
+
+  - variable: "worker.image.tag"
+    label: "Worker image tag"
+    type: "string"
+    default: "2.4.0"
+    group: "Worker"
+
+  - variable: "nextcloud.image.tag"
+    label: "Nextcloud image tag"
+    type: "string"
+    default: "30.0.2-apache"
+    group: "Nextcloud"
+
+  - variable: "frontend.replicaCount"
+    label: "Frontend replicas"
+    type: "int"
+    default: 1
+    required: true
+    group: "Frontend"
+
+  - variable: "worker.replicaCount"
+    label: "Worker replicas"
+    type: "int"
+    default: 8
+    required: true
+    group: "Worker"
+
+  - variable: "ingress.frontend.enabled"
+    label: "Enable frontend ingress"
+    type: "boolean"
+    default: true
+    required: true
+    group: "Ingress"
+
+  - variable: "ingress.frontend.host"
+    label: "Frontend hostname"
+    type: "string"
+    default: "dev-qc-copernicus.01dev.eea.europa.eu"
+    required: true
+    group: "Ingress"
+    show_if: "ingress.frontend.enabled=true"
+
+  - variable: "ingress.frontend.certificate"
+    label: "Frontend certificate"
+    type: "string"
+    default: "dev-qc-copernicus.01dev.eea.europa.eu-tls"
+    group: "Ingress"
+    show_if: "ingress.frontend.enabled=true&&ingress.frontend.tls=true"
+
+  - variable: "ingress.nextcloud.enabled"
+    label: "Enable nextcloud ingress"
+    type: "boolean"
+    default: true
+    required: true
+    group: "Ingress"
+
+  - variable: "ingress.nextcloud.host"
+    label: "Nextcloud hostname"
+    type: "string"
+    default: "admin-qc-copernicus.eea.europa.eu"
+    required: true
+    group: "Ingress"
+    show_if: "ingress.nextcloud.enabled=true"
+
+  - variable: "ingress.nextcloud.certificate"
+    label: "Nextcloud certificate"
+    type: "string"
+    default: "admin-qc-copernicus.eea.europa.eu-tls"
+    group: "Ingress"
+    show_if: "ingress.nextcloud.enabled=true&&ingress.nextcloud.tls=true"
+
+  - variable: "persistence.boundary.existingClaim"
+    label: "Boundary claim"
+    type: "string"
+    default: "qc_tool_boundary"
+    group: "Storage"
+
+  - variable: "persistence.incoming.existingClaim"
+    label: "Incoming claim"
+    type: "string"
+    default: "qc_tool_incoming"
+    group: "Storage"
+
+  - variable: "persistence.submission.existingClaim"
+    label: "Submission claim"
+    type: "string"
+    default: "qc_tool_submission"
+    group: "Storage"
+
+  - variable: "persistence.frontend.existingClaim"
+    label: "Frontend claim"
+    type: "string"
+    default: "qc_tool_frontend"
+    group: "Storage"
+
+  - variable: "persistence.work.existingClaim"
+    label: "Work claim"
+    type: "string"
+    default: "qc_tool_work"
+    group: "Storage"
+
+  - variable: "persistence.mariadbData.existingClaim"
+    label: "MariaDB claim"
+    type: "string"
+    default: "qctoolmariadbdata"
+    group: "Storage"
+
+  - variable: "persistence.redisData.existingClaim"
+    label: "Redis claim"
+    type: "string"
+    default: "nextcloudredisdata"
+    group: "Storage"

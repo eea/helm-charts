@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "qctool.databaseServiceName" . }}
+  labels:
+    {{- include "qctool.labels" . | nindent 4 }}
+    component: database
+spec:
+  type: ExternalName
+  externalName: "{{ .Values.links.database }}.svc.cluster.local"

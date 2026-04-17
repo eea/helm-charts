@@ -1,0 +1,82 @@
+{{- if .Values.worker.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "qctool.workerName" . }}
+  labels:
+    {{- include "qctool.labels" . | nindent 4 }}
+    component: worker
+spec:
+  replicas: {{ .Values.worker.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "qctool.selectorLabels" . | nindent 6 }}
+      component: worker
+  template:
+    metadata:
+      labels:
+        {{- include "qctool.selectorLabels" . | nindent 8 }}
+        component: worker
+      {{- with .Values.worker.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "qctool.serviceAccountName" . }}
+      containers:
+        - name: worker
+          image: "{{ .Values.worker.image.repository }}:{{ .Values.worker.image.tag }}"
+          imagePullPolicy: {{ .Values.worker.image.pullPolicy }}
+          env:
+            - name: TZ
+              value: {{ .Values.timezone | quote }}
+            - name: PULL_JOB_URL
+              value: {{ include "qctool.workerPullJobUrl" . | quote }}
+            {{- $workerDefaults := dict "API_URL" (include "qctool.frontendApiUrl" .) }}
+            {{- $env := mergeOverwrite (deepCopy $workerDefaults) (deepCopy .Values.worker.env) .Values.worker.extraEnv }}
+            {{- range $key := keys $env | sortAlpha }}
+            - name: {{ $key }}
+              value: {{ index $env $key | quote }}
+            {{- end }}
+          resources:
+            {{- toYaml .Values.worker.resources | nindent 12 }}
+          volumeMounts:
+            - name: boundary
+              mountPath: /mnt/qc_tool_boundary
+            - name: incoming
+              mountPath: /mnt/qc_tool_incoming
+            - name: work
+              mountPath: /mnt/qc_tool_work
+            - name: dshm
+              mountPath: /dev/shm
+      volumes:
+        - name: boundary
+          persistentVolumeClaim:
+            claimName: {{ include "qctool.claimName" (dict "root" . "name" "boundary" "volume" .Values.persistence.boundary) }}
+        - name: incoming
+          persistentVolumeClaim:
+            claimName: {{ include "qctool.claimName" (dict "root" . "name" "incoming" "volume" .Values.persistence.incoming) }}
+        - name: work
+          persistentVolumeClaim:
+            claimName: {{ include "qctool.claimName" (dict "root" . "name" "work" "volume" .Values.persistence.work) }}
+        - name: dshm
+          emptyDir:
+            medium: Memory
+            sizeLimit: {{ .Values.worker.shmSize | quote }}
+      {{- with .Values.worker.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.worker.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.worker.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}
