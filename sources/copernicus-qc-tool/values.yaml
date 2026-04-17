@@ -13,15 +13,6 @@ timezone: Europe/Copenhagen
 links:
   database: plone-postgres.namespace
 
-secrets:
-  create: true
-  existingSecret: ""
-  data:
-    postgresPassword: "change-me-postgres"
-    mariadbPassword: "change-me-mariadb"
-    mariadbRootPassword: "change-me-mariadb-root"
-    smtpPassword: "change-me-smtp"
-
 ingress:
   frontend:
     enabled: true
@@ -152,6 +143,7 @@ frontend:
     port: 5432
     name: qc_tool
     user: qc_user
+    password: ""
   resources: {}
   podAnnotations: {}
   nodeSelector: {}
@@ -230,6 +222,7 @@ postfix:
     MTP_PORT: "8587"
     MTP_RELAY: ironport1.eea.europa.eu
     MTP_USER: clms_qc_tool
+  mtpPass: ""
   extraEnv: {}
   resources:
     requests:
@@ -270,6 +263,8 @@ mariadb:
   database:
     name: nextcloud
     user: nc
+    password: ""
+    rootPassword: ""
   args:
     - --transaction-isolation=READ-COMMITTED
     - --binlog-format=ROW

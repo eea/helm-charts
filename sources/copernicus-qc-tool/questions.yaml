@@ -6,13 +6,6 @@ questions:
     required: true
     group: "General"
 
-  - variable: "secrets.existingSecret"
-    label: "Existing secret"
-    description: "Optional secret name containing postgres-password, mariadb-password, mariadb-root-password and smtp-password"
-    type: "string"
-    default: ""
-    group: "General"
-
   - variable: "links.database"
     label: "PostgreSQL service"
     description: "External PostgreSQL service, format SERVICE.NAMESPACE"
@@ -42,6 +35,13 @@ questions:
     required: true
     group: "General"
 
+  - variable: "frontend.database.password"
+    label: "PostgreSQL password"
+    type: "password"
+    default: ""
+    required: true
+    group: "General"
+
   - variable: "frontend.image.tag"
     label: "Frontend image tag"
     type: "string"
@@ -59,6 +59,27 @@ questions:
     type: "string"
     default: "30.0.2-apache"
     group: "Nextcloud"
+
+  - variable: "mariadb.database.password"
+    label: "MariaDB password"
+    type: "password"
+    default: ""
+    required: true
+    group: "Database"
+
+  - variable: "mariadb.database.rootPassword"
+    label: "MariaDB root password"
+    type: "password"
+    default: ""
+    required: true
+    group: "Database"
+
+  - variable: "postfix.mtpPass"
+    label: "Postfix password"
+    type: "password"
+    default: ""
+    required: true
+    group: "Mail"
 
   - variable: "frontend.replicaCount"
     label: "Frontend replicas"

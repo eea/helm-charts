@@ -44,15 +44,9 @@ spec:
             - name: MYSQL_USER
               value: {{ .Values.mariadb.database.user | quote }}
             - name: MYSQL_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "qctool.secretName" . }}
-                  key: mariadb-password
+              value: {{ .Values.mariadb.database.password | quote }}
             - name: MYSQL_ROOT_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "qctool.secretName" . }}
-                  key: mariadb-root-password
+              value: {{ .Values.mariadb.database.rootPassword | quote }}
             {{- range $key := keys .Values.mariadb.extraEnv | sortAlpha }}
             - name: {{ $key }}
               value: {{ index $.Values.mariadb.extraEnv $key | quote }}
@@ -91,4 +85,3 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
 {{- end }}
-

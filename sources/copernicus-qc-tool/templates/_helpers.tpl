@@ -47,15 +47,6 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}
 {{- end -}}
 
-{{/* Secret name */}}
-{{- define "qctool.secretName" -}}
-{{- if .Values.secrets.existingSecret -}}
-{{- .Values.secrets.existingSecret -}}
-{{- else -}}
-{{- printf "%s-secrets" (include "qctool.fullname" .) | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-{{- end -}}
-
 {{/* Service names */}}
 {{- define "qctool.frontendServiceName" -}}
 {{- printf "%s-frontend" (include "qctool.fullname" .) | trunc 63 | trimSuffix "-" -}}

@@ -43,10 +43,7 @@ spec:
             - name: MYSQL_USER
               value: {{ .Values.mariadb.database.user | quote }}
             - name: MYSQL_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "qctool.secretName" . }}
-                  key: mariadb-password
+              value: {{ .Values.mariadb.database.password | quote }}
             - name: MYSQL_HOST
               value: {{ include "qctool.mariadbServiceName" . | quote }}
             - name: REDIS_HOST

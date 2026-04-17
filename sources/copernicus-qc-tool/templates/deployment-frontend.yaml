@@ -47,10 +47,7 @@ spec:
             - name: POSTGRES_USER
               value: {{ .Values.frontend.database.user | quote }}
             - name: POSTGRES_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "qctool.secretName" . }}
-                  key: postgres-password
+              value: {{ .Values.frontend.database.password | quote }}
             {{- $frontendDefaults := dict "API_URL" (include "qctool.frontendApiUrl" .) "CSRF_TRUSTED_ORIGINS" (include "qctool.frontendCsrfTrustedOrigins" .) }}
             {{- $env := mergeOverwrite (deepCopy $frontendDefaults) (deepCopy .Values.frontend.env) .Values.frontend.extraEnv }}
             {{- range $key := keys $env | sortAlpha }}

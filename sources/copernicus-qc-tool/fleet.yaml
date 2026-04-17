@@ -10,8 +10,6 @@ helm:
   values:
     links:
       database: postgres-postgres.database
-    secrets:
-      existingSecret: qc-tool-secrets
     ingress:
       frontend:
         host: dev-qc-copernicus.01dev.eea.europa.eu
