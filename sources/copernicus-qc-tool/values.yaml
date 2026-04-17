@@ -185,7 +185,7 @@ nextcloud:
     PHP_MEMORY_LIMIT: 512M
   extraEnv: {}
   healthcheck:
-    path: /login
+    path: /status.php
     host: ""
   resources: {}
   podAnnotations: {}

@@ -63,10 +63,10 @@ spec:
               httpHeaders:
                 - name: Host
                   value: {{ default .Values.ingress.nextcloud.host .Values.nextcloud.healthcheck.host | quote }}
-            initialDelaySeconds: 60
-            periodSeconds: 20
+            initialDelaySeconds: 30
+            periodSeconds: 60
             timeoutSeconds: 5
-            failureThreshold: 6
+            failureThreshold: 5
           readinessProbe:
             httpGet:
               path: {{ .Values.nextcloud.healthcheck.path | quote }}
@@ -74,10 +74,10 @@ spec:
               httpHeaders:
                 - name: Host
                   value: {{ default .Values.ingress.nextcloud.host .Values.nextcloud.healthcheck.host | quote }}
-            initialDelaySeconds: 30
-            periodSeconds: 10
+            initialDelaySeconds: 10
+            periodSeconds: 60
             timeoutSeconds: 5
-            failureThreshold: 6
+            failureThreshold: 3
           startupProbe:
             httpGet:
               path: {{ .Values.nextcloud.healthcheck.path | quote }}
@@ -85,10 +85,10 @@ spec:
               httpHeaders:
                 - name: Host
                   value: {{ default .Values.ingress.nextcloud.host .Values.nextcloud.healthcheck.host | quote }}
-            initialDelaySeconds: 20
+            initialDelaySeconds: 5
             periodSeconds: 10
             timeoutSeconds: 5
-            failureThreshold: 24
+            failureThreshold: 18
           resources:
             {{- toYaml .Values.nextcloud.resources | nindent 12 }}
           volumeMounts:
