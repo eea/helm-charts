@@ -18,5 +18,8 @@ Required password values:
 - `postfix.mtpPass`
 ## Releases
 
+### Version 0.1.2 - 17 April 2026
+- add passwords vars [Dobricean Ioan Dorian - [`a6737c7b`](https://github.com/eea/helm-charts/commit/a6737c7b5c6de972d4d70d240707d5d21cf93c30)]
+
 ### Version 0.1.1 - 17 April 2026
 - first release [Dobricean Ioan Dorian - [`d400cade`](https://github.com/eea/helm-charts/commit/d400cadefab101dd41caaad74f6d48d15e2b4337)]
