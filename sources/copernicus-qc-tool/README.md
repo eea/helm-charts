@@ -19,6 +19,9 @@ Required password values:
 - `postfix.mtpPass`
 ## Releases
 
+### Version 0.1.7 - 20 April 2026
+- add letsencrypt cluster issuer defaults for frontend and nextcloud ingresses [Codex]
+
 ### Version 0.1.6 - 17 April 2026
 - fix health check [Dobricean Ioan Dorian - [`46ff8efd`](https://github.com/eea/helm-charts/commit/46ff8efd6d60c91d6463819ff9f99df88ab51c55)]
 

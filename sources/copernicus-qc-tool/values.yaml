@@ -17,7 +17,7 @@ ingress:
   frontend:
     enabled: true
     className: nginx
-    letsencrypt: ""
+    letsencrypt: "01dev-eea-letsencrypt"
     annotations: {}
     host: dev-qc-copernicus.01dev.eea.europa.eu
     tls: true
@@ -25,7 +25,7 @@ ingress:
   nextcloud:
     enabled: true
     className: nginx
-    letsencrypt: ""
+    letsencrypt: "01dev-eea-letsencrypt"
     annotations: {}
     host: admin-qc-copernicus.eea.europa.eu
     tls: true

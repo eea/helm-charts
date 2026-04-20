@@ -4,7 +4,7 @@ helm:
   releaseName: copernicus-qc-tool
   chart: "copernicus-qc-tool"
   repo: "https://eea.github.io/helm-charts"
-  version: "0.1.0"
+  version: "0.1.7"
   force: true
   timeoutSeconds: 0
   values:
@@ -20,9 +20,11 @@ helm:
           certificate: mailtrap.01dev.eea.europa.eu-tls
     ingress:
       frontend:
+        letsencrypt: 01dev-eea-letsencrypt
         host: dev-qc-copernicus.01dev.eea.europa.eu
         certificate: dev-qc-copernicus.01dev.eea.europa.eu-tls
       nextcloud:
+        letsencrypt: 01dev-eea-letsencrypt
         host: admin-qc-copernicus.eea.europa.eu
         certificate: admin-qc-copernicus.eea.europa.eu-tls
     volumeTester:
