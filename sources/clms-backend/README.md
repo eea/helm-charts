@@ -10,6 +10,9 @@ This chart deployes the CLMS backend app
 
 ## Releases
 
+### Version 2.21.0 - 20 April 2026
+- Automated release of [eeacms/clms-backend:6.0.15-146](https://github.com/eea/clms-backend/releases) [EEA Jenkins - [`7f9c82de`](https://github.com/eea/helm-charts/commit/7f9c82de7d11d92cc5ea785b686dd83e31ed21d5)]
+
 ### Version 2.20.0 - 17 April 2026
 - Automated release of [eeacms/clms-backend:6.0.15-145](https://github.com/eea/clms-backend/releases) [EEA Jenkins - [`34f6c478`](https://github.com/eea/helm-charts/commit/34f6c47872bb1f171ca758372b8ad8b9e33f18b6)]
 
