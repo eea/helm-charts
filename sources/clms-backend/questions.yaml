@@ -381,6 +381,13 @@ questions:
     required: false
     default: ""
     group: "Plone configuration"
+  - variable: "plone.environment.TECHNICAL_LIBRARY_REVIEW_EMAIL_TO"
+    label: "TECHNICAL_LIBRARY_REVIEW_EMAIL_TO"
+    description: "Comma separated email addresses to send technical library review alerts to"
+    type: "string"
+    required: false
+    default: ""
+    group: "Plone configuration"
   - variable: "plone.environment.CRON_JOBS"
     label: "CRON_JOBS"
     description: "Cron jobs configuration"
