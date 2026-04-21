@@ -42499,6 +42499,55 @@ entries:
       category: Productivity
       images: |
         - name: webserver
+          image: eeacms/danswer:web-v3.2.1-eea.0.0.105-dev
+        - name: background
+          image: eeacms/danswer:backend-v3.2.1-eea.0.0.105-dev
+        - name: model-server
+          image: eeacms/danswer:model_server-v3.2.1-eea.0.0.105-dev
+        - name: vespa
+          image: vespaengine/vespa:8.609.39
+      licenses: MIT
+    apiVersion: v2
+    appVersion: v3.2.1-eea.0.0.105-dev
+    created: "2026-04-21T14:16:05.520906+03:00"
+    dependencies:
+    - condition: vespa.enabled
+      name: vespa
+      repository: https://eea.github.io/helm-charts
+      version: 0.2.26
+    - condition: opensearch.enabled
+      name: opensearch
+      repository: https://opensearch-project.github.io/helm-charts
+      version: 3.4.0
+    - condition: minio.enabled
+      name: minio
+      repository: https://charts.min.io/
+      version: 5.4.0
+    - condition: postfix.enabled
+      name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.2.0
+    description: An Onyx derived Helm chart for GPTLab
+    digest: dbb88f544f6a689c828ed1ca0f3c5333831eca624699fc445eb7f5416f2b9b1a
+    home: https://www.onyx.app/
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/onyx/logo_onyx.png
+    keywords:
+    - gptlab
+    - ai
+    - search
+    - question-answering
+    - onyx
+    name: onyx-stack
+    sources:
+    - https://github.com/onyx-dot-app/onyx
+    type: application
+    urls:
+    - onyx-stack-0.5.0.tgz
+    version: 0.5.0
+  - annotations:
+      category: Productivity
+      images: |
+        - name: webserver
           image: eeacms/danswer:web-v2.12.10.eea.0.0.104-dev
         - name: background
           image: eeacms/danswer:backend-v2.12.10.eea.0.0.104-dev
@@ -51621,4 +51670,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2026-04-21T10:36:40.88975027Z"
+generated: "2026-04-21T14:16:05.516392+03:00"
