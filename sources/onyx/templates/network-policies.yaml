@@ -219,6 +219,16 @@ spec:
           port: 8081
         - protocol: TCP
           port: 19071
+    {{- if .Values.opensearch.enabled }}
+    # Allow egress to OpenSearch REST API
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .Release.Namespace }}
+      ports:
+        - protocol: TCP
+          port: 9200
+    {{- end }}
     # Allow egress to MinIO
     - to:
         - podSelector:
@@ -619,6 +629,16 @@ spec:
           port: 8081
         - protocol: TCP
           port: 19071
+    {{- if .Values.opensearch.enabled }}
+    # Allow egress to OpenSearch REST API
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .Release.Namespace }}
+      ports:
+        - protocol: TCP
+          port: 9200
+    {{- end }}
     # Allow egress to MinIO
     - to:
         - podSelector:
@@ -738,6 +758,16 @@ spec:
           port: 8081
         - protocol: TCP
           port: 19071
+    {{- if .Values.opensearch.enabled }}
+    # Allow egress to OpenSearch REST API
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .Release.Namespace }}
+      ports:
+        - protocol: TCP
+          port: 9200
+    {{- end }}
     # Allow egress to MinIO
     - to:
         - podSelector:
