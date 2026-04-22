@@ -10,6 +10,9 @@ This chart deployes the CLMS backend app
 
 ## Releases
 
+### Version 2.23.1 - 22 April 2026
+- add clms entrasync [Dobricean Ioan Dorian - [`bcfb655a`](https://github.com/eea/helm-charts/commit/bcfb655ad6af6eafc6f752fc0333d40465f44cbc)]
+
 ### Version 2.23.0 - 22 April 2026
 - Automated release of [eeacms/clms-backend:6.0.15-148](https://github.com/eea/clms-backend/releases) [EEA Jenkins - [`c505eac8`](https://github.com/eea/helm-charts/commit/c505eac8eda5d2c474182bb247e9ca2119cf0c09)]
 
