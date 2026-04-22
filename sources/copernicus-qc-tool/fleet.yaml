@@ -4,12 +4,12 @@ helm:
   releaseName: copernicus-qc-tool
   chart: "copernicus-qc-tool"
   repo: "https://eea.github.io/helm-charts"
-  version: "0.1.9"
+  version: "0.1.11"
   force: true
   timeoutSeconds: 0
   values:
     links:
-      database: postgres-postgres.database
+      database: postgres.qc-tool
     postfix:
       dryrun: true
       mailtrap:
