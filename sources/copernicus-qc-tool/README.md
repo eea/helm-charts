@@ -19,6 +19,9 @@ Required password values:
 - `postfix.mtpPass`
 ## Releases
 
+### Version 0.1.10 - 22 April 2026
+- fix postgres comunication [Dobricean Ioan Dorian - [`5dc3d5f2`](https://github.com/eea/helm-charts/commit/5dc3d5f23d9e439650d896dfb0fe36777e1a09b6)]
+
 ### Version 0.1.9 - 22 April 2026
 - use a stable local PostgreSQL alias service name, matching backend chart conventions [Codex]
 
