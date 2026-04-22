@@ -57,7 +57,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}
 
 {{- define "qctool.databaseServiceName" -}}
-{{- printf "%s-database" (include "qctool.fullname" .) | trunc 63 | trimSuffix "-" -}}
+{{- "postgres" -}}
 {{- end -}}
 
 {{- define "qctool.mariadbServiceName" -}}
