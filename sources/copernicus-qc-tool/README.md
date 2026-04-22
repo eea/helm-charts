@@ -19,6 +19,9 @@ Required password values:
 - `postfix.mtpPass`
 ## Releases
 
+### Version 0.1.12 - 22 April 2026
+- fix database [Dobricean Ioan Dorian - [`24fa75bf`](https://github.com/eea/helm-charts/commit/24fa75bf2c7bf1cc3ced761b749da66d997769d4)]
+
 ### Version 0.1.11 - 22 April 2026
 - point the internal PostgreSQL alias service to the existing postgres service in the qc-tool namespace [Codex]
 
