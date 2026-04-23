@@ -25,7 +25,7 @@ spec:
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
       containers:
         - name: plone-translate
-          image: "{{ .Values.ploneTranslate.image.repository }}:{{ .Values.ploneTranslate.image.tag }}"
+          image: "{{ .Values.ploneTranslate.image.repository | default .Values.image.repository }}:{{ .Values.ploneTranslate.image.tag | default (.Values.image.tag | default .Chart.AppVersion) }}"
           imagePullPolicy: {{ .Values.ploneTranslate.image.pullPolicy }}
           env:
 {{ include "cca-backend.backendEnv" (dict "root" . "component" .Values.ploneTranslate) | nindent 12 }}

@@ -1,7 +1,7 @@
 image:
-  repository: dobri1408/climateadapt-develop-test
+  repository: eeacms/eea.docker.plone-climateadapt
   pullPolicy: Always
-  tag: "experiment"
+  tag: ""
 
 imagePullSecrets: []
 
@@ -14,7 +14,7 @@ serviceAccount:
   name: ""
 
 timezone: Europe/Copenhagen
-releaseVersion: "v10.0.1-plone6.1"
+releaseVersion: ""
 
 links:
   createPostgresService: false
@@ -139,8 +139,8 @@ ploneTranslate:
   serviceName: plone-translate
   serviceType: ClusterIP
   image:
-    repository: dobri1408/climateadapt-develop-test
-    tag: "experiment"
+    repository: ""
+    tag: ""
     pullPolicy: Always
   releaseVersion: ""
   resources:
