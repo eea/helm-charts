@@ -1,0 +1,11 @@
+{{- with .Values.ingress.responseHeaders }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "appl.ingressResponseHeadersConfigMapName" $ }}
+  labels:
+    {{- include "appl.labels" $ | nindent 4 }}
+    component: clms-frontend
+data:
+  {{- toYaml . | nindent 2 }}
+{{- end }}

@@ -60,3 +60,10 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+Create the name of the ingress response headers ConfigMap.
+*/}}
+{{- define "appl.ingressResponseHeadersConfigMapName" -}}
+{{- printf "%s-response-headers" (include "appl.fullname" .) | trunc 63 | trimSuffix "-" }}
+{{- end }}
