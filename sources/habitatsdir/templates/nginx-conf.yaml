@@ -16,4 +16,10 @@ data:
             gzip_types text/plain application/x-javascript text/css;
             expires 1d;
         }
+            location / {
+            send_timeout 1800;
+            client_body_timeout 400;
+            keepalive_timeout 0;
+            client_max_body_size 200M;
+        }
     }
