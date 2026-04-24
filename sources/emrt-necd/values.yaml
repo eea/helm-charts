@@ -116,6 +116,10 @@ plone:
   probeTimeoutSeconds: 3
 
 plone6:
+  image:
+    repository: eeacms/plone-emrt-necd
+    pullPolicy: IfNotPresent
+    tag: "6.1-3.0.6"
   securityContext: {}
   resources:
     requests:
@@ -124,9 +128,6 @@ plone6:
       memory: 4Gi
   probePath: /
   probeTimeoutSeconds: 3
-
-
-plone6develop: "git+https://github.com/eea/emrt.necd.content.git@python3#egg=emrt.necd.content git+https://github.com/BHUVAN-RJ/collective.deletepermission@python3#egg=collective.deletepermission git+https://github.com/eea/emrt.necd.theme.git@python3#egg=emrt.necd.theme git+https://github.com/david-batranu/plone.formwidget.multifile.git#egg=plone.formwidget.multifile"
 
 varnish:
   securityContext: {}
