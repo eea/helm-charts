@@ -10,6 +10,9 @@ This chart deployes the European Industrial Emissions Portal backend app
 
 ## Releases
 
+### Version 2.32.1 - 24 April 2026
+- increase plone replicas [Dobricean Ioan Dorian - [`f81f8bf7`](https://github.com/eea/helm-charts/commit/f81f8bf737a03231d359d4ca26445dc121675474)]
+
 ### Version 2.32.0 - 22 April 2026
 - Automated release of [eeacms/ied-backend:6.1.3-59](https://github.com/eea/ied-backend/releases) [EEA Jenkins - [`8c378628`](https://github.com/eea/helm-charts/commit/8c378628b9b7c2fd78d174b2c916d5e97dbc05c9)]
 
