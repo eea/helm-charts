@@ -24,6 +24,9 @@ The chart deploys a three-tier architecture:
 
 ## Releases
 
+### Version 7.25.2 - 24 April 2026
+- revert to old nginx [Dobricean Ioan Dorian - [`5f7446fa`](https://github.com/eea/helm-charts/commit/5f7446fa375a1bc76cc05145034b9ad100c49271)]
+
 ### Version 7.25.1 - 23 April 2026
 - fix configuration snippets [Dobricean Ioan Dorian - [`7e544e6d`](https://github.com/eea/helm-charts/commit/7e544e6df30a0e87c40aa3647becf60f26e1a40a)]
 
