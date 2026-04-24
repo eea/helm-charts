@@ -9,9 +9,6 @@ metadata:
   {{- with .Values.ingress.annotations }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- with .Values.ingress.responseHeaders }}
-    nginx.ingress.kubernetes.io/custom-headers: {{ printf "%s/%s" $.Release.Namespace (include "appl.ingressResponseHeadersConfigMapName" $) | quote }}
-  {{- end }}
   {{- if .Values.ingress.serverSnippet }}
     nginx.ingress.kubernetes.io/server-snippet: |
       {{- .Values.ingress.serverSnippet | nindent 6 }}
