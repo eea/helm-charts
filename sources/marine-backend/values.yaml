@@ -111,9 +111,9 @@ varnish:
   port: 8080
   resources:
     limits:
-      memory: 2Gi
+      memory: 3Gi
     requests:
-      memory: 2Gi
+      memory: 3Gi
   nodeSelector: {}
   tolerations: []
   affinity: {}
@@ -123,8 +123,8 @@ varnish:
     VARNISH_BERESP_TTL: "60s"
     VARNISH_BERESP_GRACE: "120s"
     VARNISH_BERESP_KEEP: "120s"
-    VARNISH_GZIP_ENABLED: "false"
-    VARNISH_GZIP_JSON_ENABLED: "false"
+    VARNISH_GZIP_ENABLED: "true"
+    VARNISH_GZIP_JSON_ENABLED: "true"
     AUTOKILL_CRON: ""
   livenessProbe:
     httpGet:

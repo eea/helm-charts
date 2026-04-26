@@ -161,7 +161,8 @@ varnish:
     VARNISH_DNS_TTL: 20s
     VARNISH_GZIP_ENABLED: 'true'
     VARNISH_SIZE: 2G
-    VARNISH_GZIP_JSON_ENABLED: 'true'
+    VARNISH_GZIP_ENABLED: "false"
+    VARNISH_GZIP_JSON_ENABLED: "false"
   livenessProbe:
     failureThreshold: 5
     httpGet:

@@ -334,7 +334,7 @@ questions:
   - variable: "varnish.environment.VARNISH_GZIP_JSON_ENABLED"
     label: "Enable gzip on json content types"
     type: "enum"
-    default: "false"
+    default: "true"
     required: true
     options:
       - "false"
@@ -417,14 +417,14 @@ questions:
     label: "Varnish memory reservation"
     type: "string"
     required: true
-    default: "2Gi"
+    default: "3Gi"
     group: "Memory"
   - variable: "varnish.resources.limits.memory"
     label: "Varnish memory limit"
     description: ">= memory reservation"
     type: "string"
     required: true
-    default: "2Gi"
+    default: "3Gi"
     group: "Memory"
 
   - variable: "postfix.serviceName"

@@ -335,12 +335,12 @@ questions:
     label: "Varnish memory reservation"
     type: "string"
     required: true
-    default: "2Gi"
+    default: "3Gi"
     group: "Memory"
   - variable: "varnish.resources.limits.memory"
     label: "Varnish memory limit"
     description: ">= memory reservation"
     type: "string"
     required: true
-    default: "2Gi"
+    default: "3Gi"
     group: "Memory"

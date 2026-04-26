@@ -191,14 +191,14 @@ questions:
     label: "Varnish memory reservation"
     type: "string"
     required: true
-    default: "2Gi"
+    default: "3Gi"
     group: "Memory"
 
   - variable: "varnish.resources.limits.memory"
     label: "Varnish memory limit"
     type: "string"
     required: true
-    default: "2Gi"
+    default: "3Gi"
     group: "Memory"
 
   - variable: "entrasync.resources.requests.memory"
