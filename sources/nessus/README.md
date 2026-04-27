@@ -10,6 +10,7 @@ Tenable.io linking key.
 
 | Version | Date | Comment |
 | ------- | -----| ------- |
+| 1.1.6 | 27 April 2026 | Upgrade image to 10.12.0-oracle. |
 | 1.1.5 | 6 January 2026 | Upgrade image to 10.11.1-oracle. |
 | 1.1.4 | 1 October 2025 | Upgrade image to 10.9.4-oracle. |
 | 1.1.3 | 9 September 2025 | User can specify podAnnotations, podSecurityContext and pullPolicy. |
