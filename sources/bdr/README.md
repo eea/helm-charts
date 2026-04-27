@@ -67,6 +67,9 @@ This can be used to set the rabbitmq host to be used.
 
 ## Releases
 
+### Version 0.60.0 - 27 April 2026
+- Automated release of [eeacms/reportek-bdr:5.9.4-274](https://github.com/eea/eea.docker.reportek.bdr-instance/releases) [EEA Jenkins - [`e46587e5`](https://github.com/eea/helm-charts/commit/e46587e568f8f8de6268911b3c66ad89b742373d)]
+
 ### Version 0.59.0 - 23 April 2026
 - Automated release of [eeacms/reportek-bdr:5.9.4-272](https://github.com/eea/eea.docker.reportek.bdr-instance/releases) [EEA Jenkins - [`9633b633`](https://github.com/eea/helm-charts/commit/9633b633688d29c2fb99fa201e635a21098beafc)]
 
