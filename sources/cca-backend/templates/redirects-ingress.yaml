@@ -1,0 +1,88 @@
+{{- if .Values.ingress.enabled }}
+{{- $host := .Values.plone.hostname }}
+{{- $languages := "bg|es|cs|da|de|et|el|en|fr|ga|hr|it|lv|lt|hu|mt|nl|pl|pt|ro|sk|sl|fi|sv|is|nn|tr" }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: cca-redirects
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: cca-redirect
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      if ($uri ~ "^/metadata(/.*)?$") {
+        return 301 https://{{ $host }}/en/metadata$is_args$args;
+      }
+      if ($uri ~ "^/observatory(/.*)?$") {
+        return 301 https://{{ $host }}/en/observatory$is_args$args;
+      }
+      if ($uri ~ "^/mission(/.*)?$") {
+        return 301 https://{{ $host }}/en/mission$is_args$args;
+      }
+      if ($uri ~ "^/eu-adaptation-policy(/.*)?$") {
+        return 301 https://{{ $host }}/en/eu-adaptation-policy$is_args$args;
+      }
+      if ($uri ~ "^/({{ $languages }})/mission/news/news-inactive/mission-success-stories-showcasing-adaptation-achievements-across-europe/?$") {
+        return 301 https://mission-adaptation-portal.ec.europa.eu/stories-0_en;
+      }
+      if ($uri ~ "^/({{ $languages }})/mission/solutions/mission-success-stories/?(.*)$") {
+        return 301 https://mission-adaptation-portal.ec.europa.eu/stories-0_en;
+      }
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: {{ $host }}
+      http:
+        paths:
+          - path: /metadata(/.*)?
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: {{ .Values.varnish.serviceName }}
+                port:
+                  number: {{ .Values.varnish.port }}
+          - path: /observatory(/.*)?
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: {{ .Values.varnish.serviceName }}
+                port:
+                  number: {{ .Values.varnish.port }}
+          - path: /mission(/.*)?
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: {{ .Values.varnish.serviceName }}
+                port:
+                  number: {{ .Values.varnish.port }}
+          - path: /eu-adaptation-policy(/.*)?
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: {{ .Values.varnish.serviceName }}
+                port:
+                  number: {{ .Values.varnish.port }}
+          - path: /({{ $languages }})/mission/news/news-inactive/mission-success-stories-showcasing-adaptation-achievements-across-europe/?
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: {{ .Values.varnish.serviceName }}
+                port:
+                  number: {{ .Values.varnish.port }}
+          - path: /({{ $languages }})/mission/solutions/mission-success-stories/?(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: {{ .Values.varnish.serviceName }}
+                port:
+                  number: {{ .Values.varnish.port }}
+  {{- if .Values.ingress.tls }}
+  tls:
+    - hosts:
+        - {{ $host }}
+      {{- if .Values.ingress.certificate }}
+      secretName: {{ .Values.ingress.certificate }}
+      {{- end }}
+  {{- end }}
+{{- end }}

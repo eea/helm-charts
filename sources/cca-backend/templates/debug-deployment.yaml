@@ -25,7 +25,7 @@ spec:
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
       containers:
         - name: debug
-          image: "{{ .Values.debug.image.repository }}:{{ .Values.debug.image.tag }}"
+          image: "{{ .Values.debug.image.repository }}:{{ .Values.debug.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.debug.image.pullPolicy }}
           args:
             - cat
