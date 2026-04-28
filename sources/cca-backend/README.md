@@ -10,6 +10,9 @@ and the broken-links cron job.
 Sensitive values are intentionally left empty in `values.yaml`.
 ## Releases
 
+### Version 0.2.29 - 28 April 2026
+- update image and ingresses [Dobricean Ioan Dorian - [`53687a01`](https://github.com/eea/helm-charts/commit/53687a0188f0dcb85da13dd3e85c33ef96d9fe67)]
+
 ### Version 0.2.28 - 23 April 2026
 - move to offical eea image [Dobricean Ioan Dorian - [`b8102bd7`](https://github.com/eea/helm-charts/commit/b8102bd7bb7391c7ee0a2ef3b2f3e99075d45a29)]
 
