@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "matrix-webhook.fullname" . }}-nginx
+  labels:
+    {{- include "matrix-webhook.labels" . | nindent 4 }}
+    app.kubernetes.io/component: nginx
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "matrix-webhook.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: nginx

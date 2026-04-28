@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "matrix-webhook.fullname" . }}-app
+  labels:
+    {{- include "matrix-webhook.labels" . | nindent 4 }}
+    app.kubernetes.io/component: matrix-webhook
+spec:
+  type: ClusterIP
+  ports:
+    - port: 4785
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "matrix-webhook.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: matrix-webhook

@@ -1,0 +1,12 @@
+matrix-webhook deployed as release "{{ .Release.Name }}".
+
+Send a webhook:
+  curl -X POST http{{ if .Values.ingress.tls }}s{{ end }}://{{ .Values.ingress.host }}/ \
+    -H 'Content-Type: application/json' \
+    -d '{"text":"hello","key":"<WEBHOOK_KEY>","room_id":"!room:matrix.eea.europa.eu"}'
+
+{{- if not .Values.ingress.enabled }}
+No Ingress created. To expose externally:
+  --set ingress.enabled=true
+  --set ingress.host=hooks.your-domain.com
+{{- end }}

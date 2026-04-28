@@ -1,0 +1,46 @@
+matrix:
+  url: "https://matrix.eea.europa.eu"
+  id: "@agentsys:matrix.eea.europa.eu"
+  token: ""
+
+webhookKey: ""
+
+# Reference an existing Secret instead of creating one.
+# The Secret must contain keys: matrix-token, webhook-key
+existingSecret: ""
+
+matrixWebhook:
+  image:
+    repository: halfshot/matrix-hookshot
+    tag: 7.3.2
+    pullPolicy: IfNotPresent
+  replicaCount: 1
+  resources: {}
+  podAnnotations: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+nginx:
+  image:
+    repository: nginx
+    tag: alpine
+    pullPolicy: IfNotPresent
+  replicaCount: 1
+  resources: {}
+  podAnnotations: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  host: "matrix-webhook.example.com"
+  tls: false
+  tlsSecret: "matrix-webhook-tls"

@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "matrix-webhook.fullname" . }}-app
+  labels:
+    {{- include "matrix-webhook.labels" . | nindent 4 }}
+    app.kubernetes.io/component: matrix-webhook
+spec:
+  replicas: {{ .Values.matrixWebhook.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "matrix-webhook.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: matrix-webhook
+  template:
+    metadata:
+      {{- with .Values.matrixWebhook.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "matrix-webhook.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: matrix-webhook
+    spec:
+      containers:
+        - name: matrix-webhook
+          image: "{{ .Values.matrixWebhook.image.repository }}:{{ .Values.matrixWebhook.image.tag }}"
+          imagePullPolicy: {{ .Values.matrixWebhook.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 4785
+              protocol: TCP
+          env:
+            - name: MATRIX_URL
+              value: {{ .Values.matrix.url | quote }}
+            - name: MATRIX_ID
+              value: {{ .Values.matrix.id | quote }}
+            - name: MATRIX_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "matrix-webhook.secretName" . }}
+                  key: matrix-token
+            - name: API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "matrix-webhook.secretName" . }}
+                  key: webhook-key
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          {{- with .Values.matrixWebhook.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+      {{- with .Values.matrixWebhook.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.matrixWebhook.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.matrixWebhook.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
