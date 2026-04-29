@@ -188,11 +188,30 @@ loadbalancer:
   service:
     type: LoadBalancer
     ports:
-      syslogTcp: 1514
-      syslogUdp: 1514
-      gelfTcp: 12201
-      gelfUdp: 12201
-
+      - port: 1514
+        containerPort: 1514
+        protocol: TCP
+        name: syslog-tcp
+      - port: 1514
+        containerPort: 1514
+        protocol: UDP
+        name: syslog-udp
+      - port: 12201
+        containerPort: 12201
+        protocol: TCP
+        name: gelf-tcp
+      - port: 12201
+        containerPort: 12201
+        protocol: UDP
+        name: gelf-udp
+      - port: 12202
+        containerPort: 12202
+        protocol: TCP
+        name: gelf2-tcp
+      - port: 12202
+        containerPort: 12202
+        protocol: UDP
+        name: gelf2-udp
   resources:
     limits:
       memory: "512Mi"

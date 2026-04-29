@@ -36,18 +36,11 @@ spec:
             - name: TZ
               value: {{ .Values.global.timezone | quote }}
           ports:
-            - name: syslog-tcp
-              containerPort: 1514
-              protocol: TCP
-            - name: syslog-udp
-              containerPort: 1514
-              protocol: UDP
-            - name: gelf-tcp
-              containerPort: 12201
-              protocol: TCP
-            - name: gelf-udp
-              containerPort: 12201
-              protocol: UDP
+            {{- range $key := .Values.loadbalancer.service.ports }}
+            - name: {{ $key.name }}
+              containerPort: {{ $key.containerPort }}
+              protocol: {{ $key.protocol }}
+            {{- end }}
           resources:
             {{- toYaml .Values.loadbalancer.resources | nindent 12 }}
       {{- with .Values.loadbalancer.nodeSelector }}
@@ -72,22 +65,13 @@ metadata:
 spec:
   type: {{ .Values.loadbalancer.service.type }}
   ports:
-    - port: {{ .Values.loadbalancer.service.ports.syslogTcp }}
-      targetPort: 1514
-      protocol: TCP
-      name: syslog-tcp
-    - port: {{ .Values.loadbalancer.service.ports.syslogUdp }}
-      targetPort: 1514
-      protocol: UDP
-      name: syslog-udp
-    - port: {{ .Values.loadbalancer.service.ports.gelfTcp }}
-      targetPort: 12201
-      protocol: TCP
-      name: gelf-tcp
-    - port: {{ .Values.loadbalancer.service.ports.gelfUdp }}
-      targetPort: 12201
-      protocol: UDP
-      name: gelf-udp
+    {{- range $key := .Values.loadbalancer.service.ports }}
+    - port: {{ $key.port }}
+      targetPort: {{ $key.containerPort }}
+      protocol: {{ $key.protocol }}
+      name: {{ $key.name }}
+    {{- end }}
+
   selector:
     {{- include "logcentral-graylog5.loadbalancer.selectorLabels" . | nindent 4 }}
 {{- end }}
