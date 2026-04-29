@@ -174,3 +174,8 @@ kubectl logs -l app.kubernetes.io/component=graylog-master
 ## Values Reference
 
 See `values.yaml` for complete configuration options.
+## Releases
+
+### Version 0.1.11 - 29 April 2026
+- Configure ports in values [valentinab25 - [`8b02faf8`](https://github.com/eea/helm-charts/commit/8b02faf8d65c43c2ffcb68451d9e91422b95c6c4)]
+
