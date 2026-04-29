@@ -36,10 +36,10 @@ spec:
             - name: TZ
               value: {{ .Values.global.timezone | quote }}
           ports:
-            {{- range $key := .Values.loadbalancer.service.ports }}
-            - name: {{ $key.name }}
-              containerPort: {{ $key.containerPort }}
-              protocol: {{ $key.protocol }}
+            {{- range .Values.loadbalancer.service.ports }}
+            - name: {{ .name }}
+              containerPort: {{ .containerPort }}
+              protocol: {{ .protocol }}
             {{- end }}
           resources:
             {{- toYaml .Values.loadbalancer.resources | nindent 12 }}
@@ -65,11 +65,11 @@ metadata:
 spec:
   type: {{ .Values.loadbalancer.service.type }}
   ports:
-    {{- range $key := .Values.loadbalancer.service.ports }}
-    - port: {{ $key.port }}
-      targetPort: {{ $key.containerPort }}
-      protocol: {{ $key.protocol }}
-      name: {{ $key.name }}
+    {{- range .Values.loadbalancer.service.ports }}
+    - port: {{ .port }}
+      targetPort: {{ .containerPort }}
+      protocol: {{ .protocol }}
+      name: {{ .name }}
     {{- end }}
 
   selector:

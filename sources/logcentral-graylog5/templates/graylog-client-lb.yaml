@@ -11,11 +11,11 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-    {{- range $key := .Values.loadbalancer.service.ports }}
-    - port: {{ $key.port }}
-      targetPort: {{ $key.containerPort }}
-      protocol: {{ $key.protocol }}
-      name: {{ $key.name }}
+    {{- range .Values.loadbalancer.service.ports }}
+    - port: {{ .port }}
+      targetPort: {{ .containerPort }}
+      protocol: {{ .protocol }}
+      name: {{ .name }}
     {{- end }}
   selector:
     {{- include "logcentral-graylog5.graylog-client.selectorLabels" . | nindent 4 }}

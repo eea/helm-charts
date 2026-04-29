@@ -80,10 +80,10 @@ spec:
             - name: graylog
               containerPort: 9000
               protocol: TCP
-            {{- range $key := .Values.loadbalancer.service.ports }}
-            - name: {{ $key.name }}
-              containerPort: {{ $key.containerPort }}
-              protocol: {{ $key.protocol }}
+            {{- range .Values.loadbalancer.service.ports }}
+            - name: {{ .name }}
+              containerPort: {{ .containerPort }}
+              protocol: {{ .protocol }}
             {{- end }}
           volumeMounts:
             - name: graylog-data
