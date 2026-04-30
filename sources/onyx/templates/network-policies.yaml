@@ -260,6 +260,16 @@ spec:
       ports:
         - protocol: TCP
           port: 25
+    {{- if .Values.codeInterpreter.enabled }}
+    # Allow egress to Code Interpreter
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .Release.Namespace }}
+      ports:
+        - protocol: TCP
+          port: 8000
+    {{- end }}
     # DNS
     - to:
         - namespaceSelector: {}
@@ -678,6 +688,16 @@ spec:
       ports:
         - protocol: TCP
           port: 25
+    {{- if .Values.codeInterpreter.enabled }}
+    # Allow egress to Code Interpreter
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .Release.Namespace }}
+      ports:
+        - protocol: TCP
+          port: 8000
+    {{- end }}
     # DNS
     - to:
         - namespaceSelector: {}
@@ -694,6 +714,42 @@ spec:
         - protocol: TCP
           port: 443
 ---
+# Code Interpreter ingress policy
+{{- if .Values.codeInterpreter.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "onyx.fullname" . }}-code-interpreter
+  labels:
+    {{- include "onyx.labels" . | nindent 4 }}
+spec:
+  podSelector:
+    matchExpressions:
+      - key: app.kubernetes.io/name
+        operator: In
+        values:
+          - code-interpreter
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .Release.Namespace }}
+          podSelector:
+            matchLabels:
+              scope: onyx-backend
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .Release.Namespace }}
+          podSelector:
+            matchLabels:
+              scope: onyx-backend-celery
+      ports:
+        - protocol: TCP
+          port: 8000
+---
+{{- end }}
 # Model Servers network policy
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy

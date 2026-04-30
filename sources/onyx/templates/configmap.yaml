@@ -14,7 +14,11 @@ data:
   POSTGRES_PORT: {{ .Values.postgresql.external.port | default 5432 | quote }}
   {{- end }}
   {{- if .Values.vespa.enabled }}
+  {{- if .Values.vespa.deployProxy.enabled }}
+  VESPA_HOST: {{ default (printf "%s-vespa-deploy-proxy" (include "onyx.fullname" .)) .Values.vespa.deployProxy.name }}.{{ .Release.Namespace }}.svc.cluster.local
+  {{- else }}
   VESPA_HOST: {{ .Values.vespa.name }}.{{ .Values.vespa.service.name }}.{{ .Release.Namespace }}.svc.cluster.local
+  {{- end }}
   {{- end }}
   {{- if .Values.opensearch.enabled }}
   OPENSEARCH_HOST: {{ .Values.opensearch.clusterName }}-{{ .Values.opensearch.nodeGroup }}.{{ .Release.Namespace }}.svc.cluster.local
@@ -34,4 +38,7 @@ data:
 {{- end }}
   {{- if .Values.minio.enabled }}
   S3_ENDPOINT_URL: "http://{{ .Release.Name }}-minio:{{ default 9000 .Values.minio.service.port }}"
+  {{- end }}
+  {{- if .Values.codeInterpreter.enabled }}
+  CODE_INTERPRETER_BASE_URL: "http://{{ .Release.Name }}-code-interpreter:{{ .Values.codeInterpreter.service.port }}"
   {{- end }}

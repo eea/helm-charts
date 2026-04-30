@@ -3,8 +3,8 @@
 # Declare variables to be passed into your templates.
 
 global:
-  # Global version for all Onyx components (overrides .Chart.AppVersion)
-  version: "v3.2.1-eea.0.0.105-dev"
+  # Global version for all Onyx components (overrides .Chart.AppVersion when non-empty)
+  version: ""
   # Optional global image settings. If repository is set, all core components default to this repo.
   # Component-specific tags can be set under tags; fall back to per-component tags or global.version.
   image:
@@ -174,6 +174,30 @@ vespa:
       limits:
         cpu: 2000m
         memory: 4Gi
+  # Temporary migration fix used during Vespa document/schema migrations.
+  # When enabled, chart creates a no-op verify script ConfigMap.
+  migrationFix:
+    enabled: false
+    verifyRankSetupConfigMapName: "vespa-noop-verify"
+  # Proxy used for Vespa prepareandactivate to append ignoreValidationErrors=true.
+  # This avoids deployment failures during migration windows.
+  deployProxy:
+    enabled: false
+    name: ""
+    configMapName: ""
+    image: "nginx:1.27-alpine"
+    replicas: 1
+    resolver: "kube-dns.kube-system.svc.cluster.local"
+    resolverValid: "10s"
+    service:
+      port: 19071
+    resources:
+      requests:
+        cpu: 50m
+        memory: 64Mi
+      limits:
+        cpu: 200m
+        memory: 128Mi
 
 opensearch:
   # Enabled by default. Override to false and set the appropriate env vars in
@@ -342,6 +366,91 @@ indexCapability:
       mountPath: /tmp
 config:
   envConfigMapName: env-configmap
+
+monitoring:
+  grafana:
+    dashboards:
+      # Enable to deploy Grafana dashboard ConfigMaps for Onyx.
+      enabled: false
+  serviceMonitors:
+    enabled: false
+    labels: {}
+
+# Code Interpreter - Python code execution service
+codeInterpreter:
+  enabled: true
+  replicaCount: 1
+  image:
+    repository: onyxdotapp/code-interpreter
+    pullPolicy: Always
+    tag: ""
+  service:
+    type: ClusterIP
+    port: 8000
+    targetPort: 8000
+  codeInterpreter:
+    maxExecTimeoutMs: 60000
+    maxOutputBytes: "1000000"
+    cpuTimeLimitSec: 5
+    memoryLimitMb: 256
+    host: "0.0.0.0"
+    port: 8000
+    kubernetesExecutor:
+      namespace: ""
+      image: ""
+      serviceAccount: ""
+      podResources:
+        limits:
+          cpu: "1"
+          memory: "256Mi"
+        requests:
+          cpu: "100m"
+          memory: "64Mi"
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 1000m
+      memory: 512Mi
+  rbac:
+    create: true
+  podSecurityContext:
+    runAsNonRoot: true
+    runAsUser: 1000
+    fsGroup: 1000
+  securityContext:
+    capabilities:
+      drop:
+        - ALL
+    readOnlyRootFilesystem: false
+    runAsNonRoot: true
+    runAsUser: 1000
+    allowPrivilegeEscalation: false
+  livenessProbe:
+    httpGet:
+      path: /health
+      port: 8000
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+  readinessProbe:
+    httpGet:
+      path: /health
+      port: 8000
+    initialDelaySeconds: 5
+    periodSeconds: 5
+    timeoutSeconds: 3
+    failureThreshold: 3
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 80
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
 
 serviceAccount:
   # Specifies whether a service account should be created

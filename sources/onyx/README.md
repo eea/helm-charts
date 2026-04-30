@@ -72,5 +72,34 @@ When `autoscaling.engine` is set to `keda`, the chart will render the existing S
 
 ## Releases
 
+### Version 0.5.0 - 22 April 2026
+- Set chart `appVersion` to `v3.2.1-eea.0.0.106-dev` and keep image tag resolution automatic from chart appVersion when `global.version` is empty.
+- Added Vespa migration fix support:
+  - optional Vespa deploy proxy (`vespa.deployProxy.*`) that appends `ignoreValidationErrors=true` for `prepareandactivate`.
+  - optional no-op ranksetup verification ConfigMap (`vespa.migrationFix.*`) for migration windows.
+  - automatic `VESPA_HOST` switch to deploy-proxy service when proxy is enabled.
+- Added upstream monitoring integration:
+  - optional Grafana dashboard ConfigMap via `monitoring.grafana.dashboards.enabled`.
+- Added upstream Code Interpreter integration:
+  - `codeInterpreter` dependency and `CODE_INTERPRETER_BASE_URL` env wiring.
+  - network policy rules for API/Celery egress to port `8000` and Code Interpreter ingress from backend pods.
+- Updated dev values to mount `vespa-verify-ranksetup-bin` from `vespa-noop-verify` ConfigMap and enable the deploy proxy.
+- OpenSearch migration note: if API startup fails on `... requires setting [index.knn]`, delete stale old-format index so Onyx can recreate it with k-NN settings.
+
+### Vespa Migration Fix (Documents Migration)
+
+Use this only during Vespa document/schema migration windows:
+
+1. Enable `vespa.migrationFix.enabled: true` to create `vespa-noop-verify`.
+2. Mount `vespa-verify-ranksetup-bin` into Vespa at `/opt/vespa/bin/vespa-verify-ranksetup-bin`.
+3. Enable `vespa.deployProxy.enabled: true` and point `VESPA_HOST` to the proxy (handled automatically by the chart).
+4. Upgrade chart and restart API if needed.
+
+Verification checks:
+- `kubectl -n <ns> get deploy <release>-onyx-stack-api-server`
+- `kubectl -n <ns> get deploy vespa-deploy-proxy` (or custom proxy name)
+- `kubectl -n <ns> get cm vespa-noop-verify`
+- `kubectl -n <ns> exec deploy/<release>-onyx-stack-api-server -- wget -qO- http://localhost:8080/health`
+
 ### Version 0.4.12 - 18 December 2025
 - Release of dependent chart postfix:3.2.0 [EEA Jenkins - [`db97375f`](https://github.com/eea/helm-charts/commit/db97375fccb5b7460fb4809d77e3092727ff2848)]

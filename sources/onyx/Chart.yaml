@@ -12,18 +12,18 @@ keywords:
   - question-answering
   - onyx
 type: application
-version: 0.5.0  
-appVersion: "v3.2.1-eea.0.0.106-dev"
+version: 0.5.1  
+appVersion: "v3.2.1-eea.0.0.107-dev"
 annotations:
   category: Productivity
   licenses: MIT
   images: |
     - name: webserver
-      image: eeacms/danswer:web-v3.2.1-eea.0.0.105-dev
+      image: eeacms/danswer:web-v3.2.1-eea.0.0.106-dev
     - name: background
-      image: eeacms/danswer:backend-v3.2.1-eea.0.0.105-dev
+      image: eeacms/danswer:backend-v3.2.1-eea.0.0.106-dev
     - name: model-server
-      image: eeacms/danswer:model_server-v3.2.1-eea.0.0.105-dev
+      image: eeacms/danswer:model_server-v3.2.1-eea.0.0.106-dev
     - name: vespa
       image: vespaengine/vespa:8.609.39
 dependencies:
@@ -43,3 +43,7 @@ dependencies:
     version: 3.2.0
     repository: https://eea.github.io/helm-charts
     condition: postfix.enabled
+  - name: code-interpreter
+    version: 0.3.3
+    repository: https://onyx-dot-app.github.io/python-sandbox/
+    condition: codeInterpreter.enabled

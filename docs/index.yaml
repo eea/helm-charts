@@ -44234,6 +44234,59 @@ entries:
       category: Productivity
       images: |
         - name: webserver
+          image: eeacms/danswer:web-v3.2.1-eea.0.0.106-dev
+        - name: background
+          image: eeacms/danswer:backend-v3.2.1-eea.0.0.106-dev
+        - name: model-server
+          image: eeacms/danswer:model_server-v3.2.1-eea.0.0.106-dev
+        - name: vespa
+          image: vespaengine/vespa:8.609.39
+      licenses: MIT
+    apiVersion: v2
+    appVersion: v3.2.1-eea.0.0.107-dev
+    created: "2026-04-30T18:09:00.578608+03:00"
+    dependencies:
+    - condition: vespa.enabled
+      name: vespa
+      repository: https://eea.github.io/helm-charts
+      version: 0.2.26
+    - condition: opensearch.enabled
+      name: opensearch
+      repository: https://opensearch-project.github.io/helm-charts
+      version: 3.4.0
+    - condition: minio.enabled
+      name: minio
+      repository: https://charts.min.io/
+      version: 5.4.0
+    - condition: postfix.enabled
+      name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.2.0
+    - condition: codeInterpreter.enabled
+      name: code-interpreter
+      repository: https://onyx-dot-app.github.io/python-sandbox/
+      version: 0.3.3
+    description: An Onyx derived Helm chart for GPTLab
+    digest: cc2f8ae79810284530a5eb96415b01a10cc476a3ad9aa5d869764c535c0156de
+    home: https://www.onyx.app/
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/onyx/logo_onyx.png
+    keywords:
+    - gptlab
+    - ai
+    - search
+    - question-answering
+    - onyx
+    name: onyx-stack
+    sources:
+    - https://github.com/onyx-dot-app/onyx
+    type: application
+    urls:
+    - onyx-stack-0.5.1.tgz
+    version: 0.5.1
+  - annotations:
+      category: Productivity
+      images: |
+        - name: webserver
           image: eeacms/danswer:web-v3.2.1-eea.0.0.105-dev
         - name: background
           image: eeacms/danswer:backend-v3.2.1-eea.0.0.105-dev
@@ -53405,4 +53458,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2026-04-30T14:45:08.275043Z"
+generated: "2026-04-30T18:09:00.573066+03:00"
