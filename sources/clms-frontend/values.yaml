@@ -183,7 +183,8 @@ apache:
   tolerations: []
   affinity: {}
   livenessProbe:
-    tcpSocket:
+    httpGet:
+      path: /ok
       port: http
     periodSeconds: 10
     timeoutSeconds: 10
@@ -191,7 +192,8 @@ apache:
     failureThreshold: 5
     successThreshold: 1
   startupProbe:
-    tcpSocket:
+    httpGet:
+      path: /ok
       port: http
     periodSeconds: 5
     timeoutSeconds: 10

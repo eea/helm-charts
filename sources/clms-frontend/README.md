@@ -24,6 +24,9 @@ The chart deploys a three-tier architecture:
 
 ## Releases
 
+### Version 7.27.1 - 04 May 2026
+- Use HTTP probes for Apache health checks.
+
 ### Version 7.27.0 - 04 May 2026
 - Automated release of [eeacms/clms-frontend:3.547.0](https://github.com/eea/clms-frontend/releases) [EEA Jenkins - [`657f5231`](https://github.com/eea/helm-charts/commit/657f5231d51af1fb8ab42f26dac2eb103d6bbbd7)]
 
