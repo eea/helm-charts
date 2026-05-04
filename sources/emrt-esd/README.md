@@ -4,6 +4,9 @@ The EMRT(EEA Emission Review Tool) is a web-based tool hosted by the EEA to faci
 
 ## Releases
 
+### Version 3.0.5 - 04 May 2026
+- Use HTTP probes for Varnish health checks.
+
 ### Version 3.0.3 - 19 January 2026
 - Switch ingress to plone6.
 

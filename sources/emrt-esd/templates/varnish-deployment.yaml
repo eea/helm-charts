@@ -56,14 +56,16 @@ spec:
           subPath: default.vcl
 
         livenessProbe:
-          tcpSocket:
+          httpGet:
+            path: /ok
             port: 6081
           initialDelaySeconds: 60
           periodSeconds: 10
           timeoutSeconds: 3
 
         readinessProbe:
-          tcpSocket:
+          httpGet:
+            path: /ok
             port: 6081
           initialDelaySeconds: 10
           periodSeconds: 5

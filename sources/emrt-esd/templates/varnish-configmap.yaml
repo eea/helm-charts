@@ -23,6 +23,10 @@ data:
 
     sub vcl_recv {
 
+        if (req.url == "/ok") {
+            return (synth(200, "OK"));
+        }
+
         if (req.method == "PURGE") {
             # Not from an allowed IP? Then die with an error.
             if (!client.ip ~ purge) {
