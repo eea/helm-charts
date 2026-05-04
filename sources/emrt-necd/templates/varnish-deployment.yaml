@@ -48,7 +48,8 @@ spec:
           value: Europe/Copenhagen
 
         livenessProbe:
-          tcpSocket:
+          httpGet:
+            path: /
             port: 6081
           initialDelaySeconds: 60
           periodSeconds: 10
