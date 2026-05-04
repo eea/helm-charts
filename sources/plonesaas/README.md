@@ -18,6 +18,9 @@ This chart deployes the PloneSaaS app together with several frontends as Ingress
 
 ## Releases
 
+### Version 2.6.4 - 04 May 2026
+- Use HTTP probes for Varnish and climate-energy frontend health checks.
+
 ### Version 2.6.3 - 18 December 2025
 - Release of dependent chart postfix:3.2.0 [EEA Jenkins - [`7bbb52a3`](https://github.com/eea/helm-charts/commit/7bbb52a37b36858206b0e83e0be340c4efed1f40)]
 
@@ -58,4 +61,3 @@ This chart deployes the PloneSaaS app together with several frontends as Ingress
 
 ### Version 2.4.0
 - Initial release. Version matching Rancher 1 catalog version.
-

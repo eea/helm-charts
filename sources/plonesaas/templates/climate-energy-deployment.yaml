@@ -42,13 +42,15 @@ spec:
           name: webui
 
         livenessProbe:
-          tcpSocket:
+          httpGet:
+            path: /ok
             port: webui
           periodSeconds: 15
           timeoutSeconds: 2
 
         startupProbe:
-          tcpSocket:
+          httpGet:
+            path: /ok
             port: webui
           failureThreshold: 12
           periodSeconds: 10

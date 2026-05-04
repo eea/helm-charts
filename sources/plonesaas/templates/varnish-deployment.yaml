@@ -42,14 +42,16 @@ spec:
           name: dashboard
 
         livenessProbe:
-          tcpSocket:
+          httpGet:
+            path: /ok
             port: webui
           periodSeconds: 20
           timeoutSeconds: 3
           successThreshold: 1
 
         startupProbe:
-          tcpSocket:
+          httpGet:
+            path: /ok
             port: webui
           failureThreshold: 12
           periodSeconds: 10
