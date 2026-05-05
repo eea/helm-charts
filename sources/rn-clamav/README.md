@@ -15,6 +15,9 @@ Clamav scanner for Reportek.
 
 ## Releases
 
+### Version 0.1.9 - 05 May 2026
+- Updated appVersion to 2.6.99 [Olimpiu Rob - [`cc4ecc06`](https://github.com/eea/helm-charts/commit/cc4ecc061f44c67850276f755d58ca7e3a4a572b)]
+
 ### Version 0.1.8
 - Further egress restrictions.
 
