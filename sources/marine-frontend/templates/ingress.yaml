@@ -17,7 +17,7 @@ spec:
   - host: {{ .Values.volto.hostname }}
     http:
       paths:
-      - path: {{ .Values.ingress.path | default "/" }}(?!/assessment-module|/policy-and-reporting|/national-descriptors-assessments|/regional-descriptors-assessments|/\+\+theme\+\+|/\+\+api\+\+|/\+\+plone\+\+|/\+\+resource\+\+|/\+\+webresource\+\+|/@@site-logo|/@@search|/@@ajax-search|/plonejsi18n|/login|/favicon.ico|/sitemap|/accessibility-info|/contact-info|/admin)(.*)
+      - path: {{ .Values.ingress.path | default "/" }}(?!/assessment-module|/policy-and-reporting|/national-descriptors-assessments|/\+\+theme\+\+|/\+\+api\+\+|/\+\+plone\+\+|/\+\+resource\+\+|/admin)(.*)
         pathType: ImplementationSpecific
         backend:
           service:
