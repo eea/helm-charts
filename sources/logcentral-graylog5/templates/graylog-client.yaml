@@ -81,9 +81,9 @@ spec:
               containerPort: 9000
               protocol: TCP
             {{- range .Values.loadbalancer.service.ports }}
-            - name: {{ .name }}
+            - name: {{ .name | quote }}
               containerPort: {{ .containerPort }}
-              protocol: {{ .protocol }}
+              protocol: {{ .protocol | quote }}
             {{- end }}
           volumeMounts:
             - name: graylog-data

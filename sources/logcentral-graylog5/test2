@@ -1,0 +1,1098 @@
+---
+# Source: logcentral-graylog5/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: graylog-logcentral-graylog5
+  labels:
+    helm.sh/chart: logcentral-graylog5-0.1.12
+    app.kubernetes.io/name: logcentral-graylog5
+    app.kubernetes.io/instance: graylog
+    app.kubernetes.io/version: "5.2.12"
+    app.kubernetes.io/managed-by: Helm
+---
+# Source: logcentral-graylog5/templates/graylog-config.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: graylog-logcentral-graylog5-graylog-config
+  labels:
+    helm.sh/chart: logcentral-graylog5-0.1.12
+    app.kubernetes.io/name: logcentral-graylog5
+    app.kubernetes.io/instance: graylog
+    app.kubernetes.io/version: "5.2.12"
+    app.kubernetes.io/managed-by: Helm
+data:
+  graylog.conf: |
+    # Graylog configuration file
+    # See https://docs.graylog.org/docs/server-conf for documentation
+
+    # If you are running more than one instances of Graylog server you have to select one of these
+    # instances as leader. The leader will perform some periodical tasks that non-leaders won't perform.
+    is_leader = true
+
+    # The auto-generated node ID will be stored in this file and read after restarts. It is a good idea
+    # to use an absolute file path here if you are starting Graylog server from init scripts or similar.
+    node_id_file = /usr/share/graylog/data/node-id
+
+    # You MUST set a secret to secure/pepper the stored user passwords here. Use at least 64 characters.
+    # Generate one by using for example: pwgen -N 1 -s 96
+    # ATTENTION: This value must be the same on all Graylog nodes in the cluster.
+    # Changing this value after installation will render all user sessions and encrypted values in the database invalid. (Default: empty)
+    password_secret = 46bd4f4c74d8e65708b2c18d0a6bc54f0013d5e348eb84ee737fdf9d0edb463146bd4f4c74d8e65708b2c18d0a6bc54f0013d5e348eb84ee737fdf9d0edb4631
+
+    # The default root user is named 'admin'
+    # You MUST specify a hash password for the root user (which you only need to initially set up the
+    # system and in case you lose connectivity to your authentication backend)
+    # This password cannot be changed using the API or via the web interface. If you need to change it,
+    # modify it in this file.
+    # Create one by using for example: echo -n yourpassword | shasum -a 256
+    # and put the resulting hash value into the following line
+    # ATTENTION: This value must be the same on all Graylog nodes in the cluster.
+    root_password_sha2 = 46bd4f4c74d8e65708b2c18d0a6bc54f0013d5e348eb84ee737fdf9d0edb4631
+
+    # The email address of the root user.
+    # Default is empty
+    #root_email = ""
+
+    # The timezone setting of the root user. See http://www.joda.org/joda-time/timezones.html for a list of valid time zones.
+    # Default is UTC
+    root_timezone = Europe/Bucharest
+
+    # Set plugin directory here (relative or absolute)
+    plugin_dir = /usr/share/graylog/plugin
+
+    # REST API listen URI. Must be reachable by other Graylog server nodes if you run a cluster.
+    # When using Graylog Collectors, this URI will be used to receive heartbeat messages and must be accessible for all collectors.
+    rest_listen_uri = http://0.0.0.0:9001/
+
+    # REST API transport address. Defaults to the value of rest_listen_uri. Exception: If rest_listen_uri
+    # is set to a wildcard IP address (0.0.0.0) the first non-loopback IPv4 system address is used.
+    # If set, this will be promoted in the cluster discovery APIs, so other nodes may try to connect on
+    # this address and it is used to generate URLs addressing entities in the REST API. (see rest_listen_uri)
+    # You will need to define this, if your Graylog server is running behind a HTTP proxy that is rewriting
+    # the scheme, host name or URI.
+    # rest_transport_uri = http://192.168.1.1:9001/
+
+    # Enable CORS headers for REST API. This is necessary for JS-clients accessing the server directly.
+    # If these are disabled, modern browsers will refuse to execute AJAX requests to the REST API.
+    # Enable this if you want to use the web interface on a different server.
+    rest_enable_cors = true
+
+    # Enable GZIP support for REST API. This compresses API responses and therefore helps to reduce
+    # overall round trip times.
+    rest_enable_gzip = true
+
+    # Enable HTTPS support for the REST API. This secures the communication with the REST API with
+    # TLS to prevent request and response tampering. This is disabled by default. Uncomment the next line to enable it.
+    #rest_enable_tls = true
+
+    # The X.509 certificate chain file in PEM format to use for securing the REST API.
+    #rest_tls_cert_file = /path/to/graylog.crt
+
+    # The PKCS#8 private key file in PEM format to use for securing the REST API.
+    #rest_tls_key_file = /path/to/graylog.key
+
+    # The password to unlock the private key used for securing the REST API.
+    #rest_tls_key_password = secret
+
+    # The maximum size of the HTTP request headers in bytes.
+    #rest_max_header_size = 8192
+
+    # The HTTP External URI of this Graylog node. This setting is only used in this node as fallback.
+    #
+    # This will be promoted in the cluster discovery APIs, so other nodes may try to connect on this
+    # address and it is used to generate URLs addressing entities in the REST API. (see rest_listen_uri)
+    # You will need to define this, if your Graylog server is running behind a HTTP proxy that is rewriting
+    # the scheme, host name or URI.
+    # This must not contain a path other than "/".
+    http_external_uri = https://logs.eea.europa.eu/
+
+    # Enable the embedded Graylog web interface.
+    # Default: true
+    web_enable = true
+
+    # Web interface listen URI.
+    # Configuring a path for the URI here effectively prefixes all URIs in the web interface. This is a replacement
+    # for the application.context configuration parameter in pre-2.0 versions of the Graylog web interface.
+    web_listen_uri = 0.0.0.0:9000
+
+    # Web interface X-Forwarded-For, X-Real-IP and X-Forwarded-Proto headers handling.
+    # Defaults to false. Enable this if you are using a reverse proxy or load balancer and want to use the client IP
+    # address in audit logs and for the login form.
+    #web_enable_cors = false
+    #web_enable_gzip = true
+    #web_enable_tls = false
+    #web_tls_cert_file = /path/to/graylog-web.crt
+    #web_tls_key_file = /path/to/graylog-web.key
+    #web_tls_key_password = secret
+    #web_max_header_size = 8192
+
+    # Enable extraction of the client SSL certificate from X-Forwarded-For header.
+    # Defaults to false.
+    #trusted_proxies = 127.0.0.1/32, 0:0:0:0:0:0:0:1/128
+
+    # List of Elasticsearch hosts Graylog should connect to.
+    # Need to be specified as a comma-separated list of valid URIs for the http ports of your elasticsearch nodes.
+    # If one or more of your elasticsearch hosts require authentication, include the credentials in each node URI that
+    # requires authentication.
+    #
+    # Default: http://127.0.0.1:9200
+    elasticsearch_hosts = http://opensearch-cluster-master:9200
+
+    # Automatically try to discover other Elasticsearch nodes from your existing cluster.
+    # If automatic discovery is disabled, Graylog will only connect to the hosts in elasticsearch_hosts.
+    # Setting this to true will make Graylog round-robin between your hosts on every request. This is helpful
+    # if you have multiple Elasticsearch hosts.
+    # Default: false
+    #elasticsearch_discovery_enabled = true
+
+    # Change the default Elasticsearch analyzer used for message indexing. The default is standard.
+    # If this setting is changed and you have already stored messages in Graylog, the existing messages
+    # will not be searchable until the index is rebuilt or the messages are re-indexed.
+    # Default: standard
+    #elasticsearch_analyzer = standard
+
+    # Global request timeout for Elasticsearch requests (e. g. during search, index creation, or index time-range
+    # calculations) based on a best-effort to restrict the runtime of Elasticsearch operations.
+    # Default: 1m
+    #elasticsearch_request_timeout = 1m
+
+    # Time interval between index optimization runs. This number should be higher than your specified
+    # index rotation period. Setting this to a lower value might slow down your Elasticsearch cluster.
+    #elasticsearch_index_optimization_timeout = 1h
+
+    # Disable checking the version of Elasticsearch for being compatible with this Graylog release.
+    # WARNING: Using Graylog with unsupported and untested versions of Elasticsearch may lead to data loss!
+    #elasticsearch_disable_version_check = true
+
+    # For how many minutes should we wait for Elasticsearch to be available and only then start startup process.
+    #startup_timeout = 5m
+
+    # Disable message retention and therefore message deletion in Elasticsearch or MongoDB.
+    # Attention: Not running retention means that Graylog will never delete any data. You should manually delete old messages/indexes or your storage will run full very soon.
+    # Default: true
+    #disable_retention = false
+
+    # Do not send usage statistics to Graylog, Inc.
+    usage_statistics_enabled = false
+
+    # The threshold of the garbage collection runs. If GC runs take longer than this threshold, a system notification
+    # will be generated to inform the administrator about possible problems with the system. Default: 1s
+    #gc_warning_threshold = 1s
+
+    # Connection timeout for a configured LDAP server (e. g. ActiveDirectory) in milliseconds.
+    #ldap_connection_timeout = 2000
+
+    # MongoDB connection string
+    # See https://docs.mongodb.com/manual/reference/connection-string/ for details
+    mongodb_uri = mongodb://graylog-logcentral-graylog5-mongodb:27017/graylog
+
+    # Authenticate against the MongoDB server
+    #mongodb_username = grayloguser
+    #mongodb_password = secret
+
+    # Use a replica set instead of a single host
+    #mongodb_replica_set = localhost:27017,localhost:27018,localhost:27019
+
+    # DNS Seedlist Connection Format
+    # Use the +srv connection string modifier to automatically set the replicaSet option and obtain the host list
+    # mongodb_uri = mongodb+srv://server.example.com/database
+
+    # Increase this value according to the maximum connections your MongoDB server can handle from a single client
+    # if you encounter MongoDB connection problems.
+    mongodb_max_connections = 100
+
+    # Number of threads allowed to be blocked by MongoDB connections multiplier. Default: 5
+    # If mongodb_max_connections is 100, and mongodb_threads_allowed_to_block_multiplier is 5,
+    # then 500 threads can be blocked. More than that and an exception will be thrown.
+    # http://api.mongodb.com/java/current/com/mongodb/MongoOptions.html#threadsAllowedToBlockForConnectionMultiplier
+    mongodb_threads_allowed_to_block_multiplier = 5
+
+    # Email transport
+    transport_email_enabled = true
+    transport_email_hostname = postfix
+    transport_email_port = 25
+    transport_email_use_auth = false
+    transport_email_use_tls = false
+    transport_email_use_ssl = false
+    transport_email_auth_username = 
+    transport_email_auth_password = 
+    transport_email_subject_prefix = [graylog2]
+    transport_email_from_email = graylog@eea.europa.eu
+
+    # HTTP settings
+    # Uncomment the next line if you are running Graylog behind a HTTP proxy and want to use the client IP
+    # address in audit logs and for the login form.
+    #http_connect_timeout = 5s
+    #http_read_timeout = 10s
+    #http_write_timeout = 10s
+
+    # Enable the disk-based message journal.
+    message_journal_enabled = true
+
+    # The directory which will be used to store the message journal. The directory must be exclusively used by Graylog and
+    # must not contain any other files than the ones created by Graylog itself.
+    #
+    # ATTENTION: This path must be readable and writable for the Graylog server user on all Graylog server nodes.
+    message_journal_dir = /usr/share/graylog/data/journal
+
+    # Journal hold messages before they could be written to Elasticsearch.
+    # For a maximum of 12 hours or 5 GB whichever happens first.
+    # During normal operation the journal will be smaller.
+    #message_journal_max_age = 12h
+    #message_journal_max_size = 5gb
+
+    #message_journal_flush_age = 1m
+    #message_journal_flush_interval = 1000000
+    #message_journal_segment_age = 1h
+    #message_journal_segment_size = 100mb
+
+    # Number of old segments to keep beyond the calculated segment count from max size and segment size
+    # Defaults: 0
+    #message_journal_max_segments = 0
+
+    # The number of parallel running processors.
+    # Raise this number if your buffers are filling up.
+    processbuffer_processors = 20
+    outputbuffer_processors = 3
+
+    #outputbuffer_processor_keep_alive_time = 5000
+    #outputbuffer_processor_threads_core_pool_size = 3
+    #outputbuffer_processor_threads_max_pool_size = 30
+
+    # The number of entries in the ring buffers. Must be a power of 2. (512, 1024, 2048, ...)
+    #ring_size = 65536
+
+    inputbuffer_ring_size = 65536
+    inputbuffer_processors = 2
+    inputbuffer_wait_strategy = blocking
+
+    # Size of internal ring buffers. Raise this if raising outputbuffer_processors does not help anymore.
+    # For optimum performance your LogMessage objects in the ring buffer should fit in your CPU L3 cache.
+    # Start server with --statistics flag to see buffer utilization.
+    # Must be a power of 2. (512, 1024, 2048, ...)
+    #outputbuffer_ring_size = 65536
+---
+# Source: logcentral-graylog5/templates/graylog-config.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: graylog-logcentral-graylog5-graylog-client-config
+  labels:
+    helm.sh/chart: logcentral-graylog5-0.1.12
+    app.kubernetes.io/name: logcentral-graylog5
+    app.kubernetes.io/instance: graylog
+    app.kubernetes.io/version: "5.2.12"
+    app.kubernetes.io/managed-by: Helm
+data:
+  graylog.conf: |
+    # Graylog configuration file
+    # See https://docs.graylog.org/docs/server-conf for documentation
+
+    # If you are running more than one instances of Graylog server you have to select one of these
+    # instances as leader. The leader will perform some periodical tasks that non-leaders won't perform.
+    is_leader = false
+
+    # The auto-generated node ID will be stored in this file and read after restarts. It is a good idea
+    # to use an absolute file path here if you are starting Graylog server from init scripts or similar.
+    node_id_file = /usr/share/graylog/data/node-id
+
+    # You MUST set a secret to secure/pepper the stored user passwords here. Use at least 64 characters.
+    # Generate one by using for example: pwgen -N 1 -s 96
+    # ATTENTION: This value must be the same on all Graylog nodes in the cluster.
+    # Changing this value after installation will render all user sessions and encrypted values in the database invalid. (Default: empty)
+    password_secret = g51YPqrVKuiaLPG1ESAbCIJMd6DAjv2yzimxj9AIQH9l852X7MMVGRSK1YqVZ1utIfFUxXyGdNpBmSa5MNB6w33ZhKJ4vtj6
+
+    # The default root user is named 'admin'
+    # You MUST specify a hash password for the root user (which you only need to initially set up the
+    # system and in case you lose connectivity to your authentication backend)
+    # This password cannot be changed using the API or via the web interface. If you need to change it,
+    # modify it in this file.
+    # Create one by using for example: echo -n yourpassword | shasum -a 256
+    # and put the resulting hash value into the following line
+    # ATTENTION: This value must be the same on all Graylog nodes in the cluster.
+    root_password_sha2 = cc12c0babf3d89b645656325d876d9ecd3599f3a5621acd387f449642f08a87d
+
+    # The email address of the root user.
+    # Default is empty
+    #root_email = ""
+
+    # The timezone setting of the root user. See http://www.joda.org/joda-time/timezones.html for a list of valid time zones.
+    # Default is UTC
+    root_timezone = Europe/Bucharest
+
+    # Set plugin directory here (relative or absolute)
+    plugin_dir = /usr/share/graylog/plugin
+
+    # REST API listen URI. Must be reachable by other Graylog server nodes if you run a cluster.
+    # When using Graylog Collectors, this URI will be used to receive heartbeat messages and must be accessible for all collectors.
+    rest_listen_uri = http://0.0.0.0:9001/
+
+    # REST API transport address. Defaults to the value of rest_listen_uri. Exception: If rest_listen_uri
+    # is set to a wildcard IP address (0.0.0.0) the first non-loopback IPv4 system address is used.
+    # If set, this will be promoted in the cluster discovery APIs, so other nodes may try to connect on
+    # this address and it is used to generate URLs addressing entities in the REST API. (see rest_listen_uri)
+    # You will need to define this, if your Graylog server is running behind a HTTP proxy that is rewriting
+    # the scheme, host name or URI.
+    # rest_transport_uri = http://192.168.1.1:9001/
+
+    # Enable CORS headers for REST API. This is necessary for JS-clients accessing the server directly.
+    # If these are disabled, modern browsers will refuse to execute AJAX requests to the REST API.
+    # Enable this if you want to use the web interface on a different server.
+    rest_enable_cors = true
+
+    # Enable GZIP support for REST API. This compresses API responses and therefore helps to reduce
+    # overall round trip times.
+    rest_enable_gzip = true
+
+    # Enable HTTPS support for the REST API. This secures the communication with the REST API with
+    # TLS to prevent request and response tampering. This is disabled by default. Uncomment the next line to enable it.
+    #rest_enable_tls = true
+
+    # The X.509 certificate chain file in PEM format to use for securing the REST API.
+    #rest_tls_cert_file = /path/to/graylog.crt
+
+    # The PKCS#8 private key file in PEM format to use for securing the REST API.
+    #rest_tls_key_file = /path/to/graylog.key
+
+    # The password to unlock the private key used for securing the REST API.
+    #rest_tls_key_password = secret
+
+    # The maximum size of the HTTP request headers in bytes.
+    #rest_max_header_size = 8192
+
+    # The HTTP External URI of this Graylog node. This setting is only used in this node as fallback.
+    #
+    # This will be promoted in the cluster discovery APIs, so other nodes may try to connect on this
+    # address and it is used to generate URLs addressing entities in the REST API. (see rest_listen_uri)
+    # You will need to define this, if your Graylog server is running behind a HTTP proxy that is rewriting
+    # the scheme, host name or URI.
+    # This must not contain a path other than "/".
+    http_external_uri = https://logs.eea.europa.eu/
+
+    # Enable the embedded Graylog web interface.
+    # Default: true
+    web_enable = true
+
+    # Web interface listen URI.
+    # Configuring a path for the URI here effectively prefixes all URIs in the web interface. This is a replacement
+    # for the application.context configuration parameter in pre-2.0 versions of the Graylog web interface.
+    web_listen_uri = 0.0.0.0:9000
+
+    # Web interface X-Forwarded-For, X-Real-IP and X-Forwarded-Proto headers handling.
+    # Defaults to false. Enable this if you are using a reverse proxy or load balancer and want to use the client IP
+    # address in audit logs and for the login form.
+    #web_enable_cors = false
+    #web_enable_gzip = true
+    #web_enable_tls = false
+    #web_tls_cert_file = /path/to/graylog-web.crt
+    #web_tls_key_file = /path/to/graylog-web.key
+    #web_tls_key_password = secret
+    #web_max_header_size = 8192
+
+    # Enable extraction of the client SSL certificate from X-Forwarded-For header.
+    # Defaults to false.
+    #trusted_proxies = 127.0.0.1/32, 0:0:0:0:0:0:0:1/128
+
+    # List of Elasticsearch hosts Graylog should connect to.
+    # Need to be specified as a comma-separated list of valid URIs for the http ports of your elasticsearch nodes.
+    # If one or more of your elasticsearch hosts require authentication, include the credentials in each node URI that
+    # requires authentication.
+    #
+    # Default: http://127.0.0.1:9200
+    elasticsearch_hosts = http://opensearch-cluster-master:9200
+
+    # Automatically try to discover other Elasticsearch nodes from your existing cluster.
+    # If automatic discovery is disabled, Graylog will only connect to the hosts in elasticsearch_hosts.
+    # Setting this to true will make Graylog round-robin between your hosts on every request. This is helpful
+    # if you have multiple Elasticsearch hosts.
+    # Default: false
+    #elasticsearch_discovery_enabled = true
+
+    # Change the default Elasticsearch analyzer used for message indexing. The default is standard.
+    # If this setting is changed and you have already stored messages in Graylog, the existing messages
+    # will not be searchable until the index is rebuilt or the messages are re-indexed.
+    # Default: standard
+    #elasticsearch_analyzer = standard
+
+    # Global request timeout for Elasticsearch requests (e. g. during search, index creation, or index time-range
+    # calculations) based on a best-effort to restrict the runtime of Elasticsearch operations.
+    # Default: 1m
+    #elasticsearch_request_timeout = 1m
+
+    # Time interval between index optimization runs. This number should be higher than your specified
+    # index rotation period. Setting this to a lower value might slow down your Elasticsearch cluster.
+    #elasticsearch_index_optimization_timeout = 1h
+
+    # Disable checking the version of Elasticsearch for being compatible with this Graylog release.
+    # WARNING: Using Graylog with unsupported and untested versions of Elasticsearch may lead to data loss!
+    #elasticsearch_disable_version_check = true
+
+    # For how many minutes should we wait for Elasticsearch to be available and only then start startup process.
+    #startup_timeout = 5m
+
+    # Disable message retention and therefore message deletion in Elasticsearch or MongoDB.
+    # Attention: Not running retention means that Graylog will never delete any data. You should manually delete old messages/indexes or your storage will run full very soon.
+    # Default: true
+    #disable_retention = false
+
+    # Do not send usage statistics to Graylog, Inc.
+    usage_statistics_enabled = false
+
+    # The threshold of the garbage collection runs. If GC runs take longer than this threshold, a system notification
+    # will be generated to inform the administrator about possible problems with the system. Default: 1s
+    #gc_warning_threshold = 1s
+
+    # Connection timeout for a configured LDAP server (e. g. ActiveDirectory) in milliseconds.
+    #ldap_connection_timeout = 2000
+
+    # MongoDB connection string
+    # See https://docs.mongodb.com/manual/reference/connection-string/ for details
+    mongodb_uri = mongodb://graylog-logcentral-graylog5-mongodb:27017/graylog
+
+    # Authenticate against the MongoDB server
+    #mongodb_username = grayloguser
+    #mongodb_password = secret
+
+    # Use a replica set instead of a single host
+    #mongodb_replica_set = localhost:27017,localhost:27018,localhost:27019
+
+    # DNS Seedlist Connection Format
+    # Use the +srv connection string modifier to automatically set the replicaSet option and obtain the host list
+    # mongodb_uri = mongodb+srv://server.example.com/database
+
+    # Increase this value according to the maximum connections your MongoDB server can handle from a single client
+    # if you encounter MongoDB connection problems.
+    mongodb_max_connections = 100
+
+    # Number of threads allowed to be blocked by MongoDB connections multiplier. Default: 5
+    # If mongodb_max_connections is 100, and mongodb_threads_allowed_to_block_multiplier is 5,
+    # then 500 threads can be blocked. More than that and an exception will be thrown.
+    # http://api.mongodb.com/java/current/com/mongodb/MongoOptions.html#threadsAllowedToBlockForConnectionMultiplier
+    mongodb_threads_allowed_to_block_multiplier = 5
+
+    # Email transport
+    transport_email_enabled = true
+    transport_email_hostname = postfix
+    transport_email_port = 25
+    transport_email_use_auth = false
+    transport_email_use_tls = false
+    transport_email_use_ssl = false
+    transport_email_auth_username = 
+    transport_email_auth_password = 
+    transport_email_subject_prefix = [graylog2]
+    transport_email_from_email = graylog@eea.europa.eu
+
+    # HTTP settings
+    # Uncomment the next line if you are running Graylog behind a HTTP proxy and want to use the client IP
+    # address in audit logs and for the login form.
+    #http_connect_timeout = 5s
+    #http_read_timeout = 10s
+    #http_write_timeout = 10s
+
+    # Enable the disk-based message journal.
+    message_journal_enabled = true
+
+    # The directory which will be used to store the message journal. The directory must be exclusively used by Graylog and
+    # must not contain any other files than the ones created by Graylog itself.
+    #
+    # ATTENTION: This path must be readable and writable for the Graylog server user on all Graylog server nodes.
+    message_journal_dir = /usr/share/graylog/data/journal
+
+    # Journal hold messages before they could be written to Elasticsearch.
+    # For a maximum of 12 hours or 5 GB whichever happens first.
+    # During normal operation the journal will be smaller.
+    #message_journal_max_age = 12h
+    #message_journal_max_size = 5gb
+
+    #message_journal_flush_age = 1m
+    #message_journal_flush_interval = 1000000
+    #message_journal_segment_age = 1h
+    #message_journal_segment_size = 100mb
+
+    # Number of old segments to keep beyond the calculated segment count from max size and segment size
+    # Defaults: 0
+    #message_journal_max_segments = 0
+
+    # The number of parallel running processors.
+    # Raise this number if your buffers are filling up.
+    processbuffer_processors = 20
+    outputbuffer_processors = 3
+
+    #outputbuffer_processor_keep_alive_time = 5000
+    #outputbuffer_processor_threads_core_pool_size = 3
+    #outputbuffer_processor_threads_max_pool_size = 30
+
+    # The number of entries in the ring buffers. Must be a power of 2. (512, 1024, 2048, ...)
+    #ring_size = 65536
+
+    inputbuffer_ring_size = 65536
+    inputbuffer_processors = 2
+    inputbuffer_wait_strategy = blocking
+
+    # Size of internal ring buffers. Raise this if raising outputbuffer_processors does not help anymore.
+    # For optimum performance your LogMessage objects in the ring buffer should fit in your CPU L3 cache.
+    # Start server with --statistics flag to see buffer utilization.
+    # Must be a power of 2. (512, 1024, 2048, ...)
+    #outputbuffer_ring_size = 65536
+---
+# Source: logcentral-graylog5/templates/graylog-client-lb.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: graylog-logcentral-graylog5-graylog-client
+  labels:
+    helm.sh/chart: logcentral-graylog5-0.1.12
+    app.kubernetes.io/name: logcentral-graylog5
+    app.kubernetes.io/instance: graylog
+    app.kubernetes.io/version: "5.2.12"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: graylog-client
+  annotations:
+    metallb.universe.tf/loadBalancerIPs: 10.50.7.60
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 1514
+      targetPort: 1514
+      protocol: TCP
+      name: syslog-tcp
+    - port: 1514
+      targetPort: 1514
+      protocol: UDP
+      name: syslog-udp
+    - port: 12201
+      targetPort: 12201
+      protocol: TCP
+      name: gelf-tcp
+    - port: 12201
+      targetPort: 12201
+      protocol: UDP
+      name: gelf-udp
+    - port: 12202
+      targetPort: 12202
+      protocol: TCP
+      name: gelf2-tcp
+    - port: 12202
+      targetPort: 12202
+      protocol: UDP
+      name: gelf2-udp
+  selector:
+    app.kubernetes.io/name: logcentral-graylog5
+    app.kubernetes.io/instance: graylog
+    app.kubernetes.io/component: graylog-client
+---
+# Source: logcentral-graylog5/templates/graylog-master.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: graylog-logcentral-graylog5-graylog-master
+  labels:
+    helm.sh/chart: logcentral-graylog5-0.1.12
+    app.kubernetes.io/name: logcentral-graylog5
+    app.kubernetes.io/instance: graylog
+    app.kubernetes.io/version: "5.2.12"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: graylog-master
+spec:
+  type: ClusterIP
+  ports:
+    - port: 9000
+      targetPort: 9000
+      protocol: TCP
+      name: graylog
+  selector:
+    app.kubernetes.io/name: logcentral-graylog5
+    app.kubernetes.io/instance: graylog
+    app.kubernetes.io/component: graylog-master
+---
+# Source: logcentral-graylog5/templates/mongodb.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: graylog-logcentral-graylog5-mongodb
+  labels:
+    helm.sh/chart: logcentral-graylog5-0.1.12
+    app.kubernetes.io/name: logcentral-graylog5
+    app.kubernetes.io/instance: graylog
+    app.kubernetes.io/version: "5.2.12"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: mongodb
+spec:
+  type: ClusterIP
+  ports:
+    - port: 27017
+      targetPort: 27017
+      protocol: TCP
+      name: mongodb
+  selector:
+    app.kubernetes.io/name: logcentral-graylog5
+    app.kubernetes.io/instance: graylog
+    app.kubernetes.io/component: mongodb
+---
+# Source: logcentral-graylog5/templates/postfix.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: postfix
+  labels:
+    helm.sh/chart: logcentral-graylog5-0.1.12
+    app.kubernetes.io/name: logcentral-graylog5
+    app.kubernetes.io/instance: graylog
+    app.kubernetes.io/version: "5.2.12"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: postfix
+spec:
+  type: ClusterIP
+  ports:
+    - port: 25
+      targetPort: 25
+      protocol: TCP
+      name: smtp
+  selector:
+    app.kubernetes.io/name: logcentral-graylog5
+    app.kubernetes.io/instance: graylog
+    app.kubernetes.io/component: postfix
+---
+# Source: logcentral-graylog5/templates/postfix.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: graylog-logcentral-graylog5-postfix
+  labels:
+    helm.sh/chart: logcentral-graylog5-0.1.12
+    app.kubernetes.io/name: logcentral-graylog5
+    app.kubernetes.io/instance: graylog
+    app.kubernetes.io/version: "5.2.12"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: postfix
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: logcentral-graylog5
+      app.kubernetes.io/instance: graylog
+      app.kubernetes.io/component: postfix
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: logcentral-graylog5
+        app.kubernetes.io/instance: graylog
+        app.kubernetes.io/component: postfix
+    spec:
+      serviceAccountName: graylog-logcentral-graylog5
+      securityContext:
+        {}
+      containers:
+        - name: postfix
+          securityContext:
+            fsGroup: 0
+            runAsGroup: 0
+            runAsUser: 0
+          image: "eeacms/postfix:3.5-1.0"
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: MTP_USER
+              value: "logcentral"
+            - name: MTP_PASS
+              value: "L0ogGrr4y#@2017"
+            - name: MTP_HOST
+              value: "logs.eea.europa.eu"
+            - name: MTP_RELAY
+              value: "ironports.eea.europa.eu"
+            - name: MTP_PORT
+              value: "8587"
+            - name: TZ
+              value: "Europe/Bucharest"
+          resources:
+            limits:
+              memory: 512Mi
+            requests:
+              memory: 256Mi
+---
+# Source: logcentral-graylog5/templates/graylog-client.yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: graylog-logcentral-graylog5-graylog-client
+  labels:
+    helm.sh/chart: logcentral-graylog5-0.1.12
+    app.kubernetes.io/name: logcentral-graylog5
+    app.kubernetes.io/instance: graylog
+    app.kubernetes.io/version: "5.2.12"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: graylog-client
+spec:
+  serviceName: graylog-logcentral-graylog5-graylog-client
+  replicas: 3
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: logcentral-graylog5
+      app.kubernetes.io/instance: graylog
+      app.kubernetes.io/component: graylog-client
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: logcentral-graylog5
+        app.kubernetes.io/instance: graylog
+        app.kubernetes.io/component: graylog-client
+    spec:
+      serviceAccountName: graylog-logcentral-graylog5
+      securityContext:
+        fsGroup: 0
+        runAsGroup: 0
+        runAsUser: 0
+      containers:
+        - name: graylog-client
+          securityContext:
+            fsGroup: 0
+            runAsGroup: 0
+            runAsUser: 0
+          image: "graylog/graylog:5.2.12"
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: GRAYLOG_HTTP_BIND_ADDRESS
+              value: "0.0.0.0:9000"
+            - name: GRAYLOG_HTTP_EXTERNAL_URI
+              value: "https://logs.eea.europa.eu/"
+            - name: GRAYLOG_TRANSPORT_EMAIL_ENABLED
+              value: "true"
+            - name: GRAYLOG_TRANSPORT_EMAIL_HOSTNAME
+              value: "postfix"
+            - name: GRAYLOG_TRANSPORT_EMAIL_PORT
+              value: "25"
+            - name: GRAYLOG_TRANSPORT_EMAIL_SUBJECT_PREFIX
+              value: "[graylog2]"
+            - name: GRAYLOG_TRANSPORT_EMAIL_FROM_EMAIL
+              value: "graylog@eea.europa.eu"
+            - name: GRAYLOG_TRANSPORT_EMAIL_WEB_INTERFACE_URL
+              value: "https://logs.eea.europa.eu/"
+            - name: GRAYLOG_TRANSPORT_EMAIL_USE_AUTH
+              value: "false"
+            - name: GRAYLOG_TRANSPORT_EMAIL_USE_TLS
+              value: "false"
+            - name: GRAYLOG_TRANSPORT_EMAIL_USE_SSL
+              value: "false"
+            - name: GRAYLOG_SERVER_JAVA_OPTS
+              value: "-Xms2g -Xmx4g -XX:NewRatio=1 -XX:MaxMetaspaceSize=256m -server -XX:+ResizeTLAB -XX:-OmitStackTraceInFastThrow"
+            - name: GRAYLOG_PROCESSBUFFER_PROCESSORS
+              value: "20"
+            - name: GRAYLOG_ELASTICSEARCH_HOSTS
+              value: "http://opensearch-cluster-master:9200"
+            - name: GRAYLOG_TELEMETRY_ENABLED
+              value: "false"
+            - name: GRAYLOG_IS_LEADER
+              value: "false"
+            - name: TZ
+              value: "Europe/Bucharest"
+            - name: GRAYLOG_MONGODB_URI
+              value: "mongodb://graylog-logcentral-graylog5-mongodb:27017/graylog"
+            - name: GRAYLOG_PASSWORD_SECRET
+              value: "g51YPqrVKuiaLPG1ESAbCIJMd6DAjv2yzimxj9AIQH9l852X7MMVGRSK1YqVZ1utIfFUxXyGdNpBmSa5MNB6w33ZhKJ4vtj6"
+            - name: GRAYLOG_ROOT_PASSWORD_SHA2
+              value: "cc12c0babf3d89b645656325d876d9ecd3599f3a5621acd387f449642f08a87d"
+          ports:
+            - name: graylog
+              containerPort: 9000
+              protocol: TCP
+            - name: syslog-tcp
+              containerPort: 1514
+              protocol: TCP
+            - name: syslog-udp
+              containerPort: 1514
+              protocol: UDP
+            - name: gelf-tcp
+              containerPort: 12201
+              protocol: TCP
+            - name: gelf-udp
+              containerPort: 12201
+              protocol: UDP
+            - name: gelf2-tcp
+              containerPort: 12202
+              protocol: TCP
+            - name: gelf2-udp
+              containerPort: 12202
+              protocol: UDP
+          volumeMounts:
+            - name: graylog-data
+              mountPath: /usr/share/graylog/data
+            - name: graylog-journal
+              mountPath: /usr/share/graylog/data/journal
+            - name: graylog-plugins
+              mountPath: /usr/share/graylog/plugin
+            - name: graylog-config
+              mountPath: /usr/share/graylog/data/config
+          resources:
+            limits:
+              memory: 8Gi
+            requests:
+              memory: 8Gi
+      nodeSelector:
+        ReservedFor: Graylog
+      tolerations:
+        - effect: NoSchedule
+          key: ReservedFor
+          operator: Equal
+          value: Graylog
+      volumes:
+        - name: graylog-config
+          configMap:
+            name: graylog-logcentral-graylog5-graylog-client-config
+  volumeClaimTemplates:
+    - metadata:
+        name: graylog-data
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        storageClassName: nfs-rancher
+        resources:
+          requests:
+            storage: 10Gi
+    - metadata:
+        name: graylog-journal
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        storageClassName: nfs-rancher
+        resources:
+          requests:
+            storage: 50Gi
+    - metadata:
+        name: graylog-plugins
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        storageClassName: nfs-rancher
+        resources:
+          requests:
+            storage: 1Gi
+---
+# Source: logcentral-graylog5/templates/graylog-master.yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: graylog-logcentral-graylog5-graylog-master
+  labels:
+    helm.sh/chart: logcentral-graylog5-0.1.12
+    app.kubernetes.io/name: logcentral-graylog5
+    app.kubernetes.io/instance: graylog
+    app.kubernetes.io/version: "5.2.12"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: graylog-master
+spec:
+  serviceName: graylog-logcentral-graylog5-graylog-master
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: logcentral-graylog5
+      app.kubernetes.io/instance: graylog
+      app.kubernetes.io/component: graylog-master
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: logcentral-graylog5
+        app.kubernetes.io/instance: graylog
+        app.kubernetes.io/component: graylog-master
+    spec:
+      serviceAccountName: graylog-logcentral-graylog5
+      securityContext:
+        fsGroup: 0
+        runAsGroup: 0
+        runAsUser: 0
+      containers:
+        - name: graylog-master
+          securityContext:
+            fsGroup: 0
+            runAsGroup: 0
+            runAsUser: 0
+          image: "graylog/graylog:5.2.12"
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: GRAYLOG_HTTP_BIND_ADDRESS
+              value: "0.0.0.0:9000"
+            - name: GRAYLOG_HTTP_EXTERNAL_URI
+              value: "https://logs.eea.europa.eu/"
+            - name: GRAYLOG_TRANSPORT_EMAIL_ENABLED
+              value: "true"
+            - name: GRAYLOG_TRANSPORT_EMAIL_HOSTNAME
+              value: "postfix"
+            - name: GRAYLOG_TRANSPORT_EMAIL_PORT
+              value: "25"
+            - name: GRAYLOG_TRANSPORT_EMAIL_SUBJECT_PREFIX
+              value: "[graylog2]"
+            - name: GRAYLOG_TRANSPORT_EMAIL_FROM_EMAIL
+              value: "graylog@eea.europa.eu"
+            - name: GRAYLOG_TRANSPORT_EMAIL_WEB_INTERFACE_URL
+              value: "https://logs.eea.europa.eu/"
+            - name: GRAYLOG_TRANSPORT_EMAIL_USE_AUTH
+              value: "false"
+            - name: GRAYLOG_TRANSPORT_EMAIL_USE_TLS
+              value: "false"
+            - name: GRAYLOG_TRANSPORT_EMAIL_USE_SSL
+              value: "false"
+            - name: GRAYLOG_SERVER_JAVA_OPTS
+              value: "-Xms2g -Xmx4g -XX:NewRatio=1 -XX:MaxMetaspaceSize=256m -server -XX:+ResizeTLAB -XX:-OmitStackTraceInFastThrow"
+            - name: GRAYLOG_PROCESSBUFFER_PROCESSORS
+              value: "20"
+            - name: GRAYLOG_ELASTICSEARCH_HOSTS
+              value: "http://opensearch-cluster-master:9200"
+            - name: GRAYLOG_TELEMETRY_ENABLED
+              value: "false"
+            - name: GRAYLOG_IS_LEADER
+              value: "true"
+            - name: TZ
+              value: "Europe/Bucharest"
+            - name: GRAYLOG_PASSWORD_SECRET
+              value: "g51YPqrVKuiaLPG1ESAbCIJMd6DAjv2yzimxj9AIQH9l852X7MMVGRSK1YqVZ1utIfFUxXyGdNpBmSa5MNB6w33ZhKJ4vtj6"
+            - name: GRAYLOG_ROOT_PASSWORD_SHA2
+              value: "cc12c0babf3d89b645656325d876d9ecd3599f3a5621acd387f449642f08a87d"
+            - name: GRAYLOG_MONGODB_URI
+              value: "mongodb://graylog-logcentral-graylog5-mongodb:27017/graylog"
+          ports:
+            - name: graylog
+              containerPort: 9000
+              protocol: TCP
+          volumeMounts:
+            - name: graylog-data
+              mountPath: /usr/share/graylog/data
+            - name: graylog-journal
+              mountPath: /usr/share/graylog/data/journal
+            - name: graylog-plugins
+              mountPath: /usr/share/graylog/plugin
+            - name: graylog-config
+              mountPath: /usr/share/graylog/data/config
+          resources:
+            limits:
+              memory: 4Gi
+            requests:
+              memory: 4Gi
+      volumes:
+        - name: graylog-config
+          configMap:
+            name: graylog-logcentral-graylog5-graylog-config
+      nodeSelector:
+        ReservedFor: Graylog
+      tolerations:
+        - effect: NoSchedule
+          key: ReservedFor
+          operator: Equal
+          value: Graylog
+  volumeClaimTemplates:
+    - metadata:
+        name: graylog-data
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        storageClassName: nfs-rancher
+        resources:
+          requests:
+            storage: 10Gi
+    - metadata:
+        name: graylog-journal
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        storageClassName: nfs-rancher
+        resources:
+          requests:
+            storage: 50Gi
+    - metadata:
+        name: graylog-plugins
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        storageClassName: nfs-rancher
+        resources:
+          requests:
+            storage: 1Gi
+---
+# Source: logcentral-graylog5/templates/mongodb.yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: graylog-logcentral-graylog5-mongodb
+  labels:
+    helm.sh/chart: logcentral-graylog5-0.1.12
+    app.kubernetes.io/name: logcentral-graylog5
+    app.kubernetes.io/instance: graylog
+    app.kubernetes.io/version: "5.2.12"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: mongodb
+spec:
+  serviceName: graylog-logcentral-graylog5-mongodb
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: logcentral-graylog5
+      app.kubernetes.io/instance: graylog
+      app.kubernetes.io/component: mongodb
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: logcentral-graylog5
+        app.kubernetes.io/instance: graylog
+        app.kubernetes.io/component: mongodb
+    spec:
+      serviceAccountName: graylog-logcentral-graylog5
+      securityContext:
+        {}
+      containers:
+        - name: mongodb
+          securityContext:
+            fsGroup: 0
+            runAsGroup: 0
+            runAsUser: 0
+          image: "mongo:5.0.31"
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: TZ
+              value: "Europe/Bucharest"
+          ports:
+            - name: mongodb
+              containerPort: 27017
+              protocol: TCP
+          volumeMounts:
+            - name: mongodb-data
+              mountPath: /data/db
+          resources:
+            limits:
+              memory: 2Gi
+            requests:
+              memory: 2Gi
+  volumeClaimTemplates:
+    - metadata:
+        name: mongodb-data
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        storageClassName: nfs-rancher
+        resources:
+          requests:
+            storage: 20Gi
+---
+# Source: logcentral-graylog5/templates/ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: graylog-logcentral-graylog5
+  labels:
+    helm.sh/chart: logcentral-graylog5-0.1.12
+    app.kubernetes.io/name: logcentral-graylog5
+    app.kubernetes.io/instance: graylog
+    app.kubernetes.io/version: "5.2.12"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    nginx.ingress.kubernetes.io/server-snippet: |
+      deny 18.143.202.0/24;
+      allow all;
+spec:
+  tls:
+    - hosts:
+        - "logs.eea.europa.eu"
+      secretName: 
+  rules:
+    - host: "logs.eea.europa.eu"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: graylog-logcentral-graylog5-graylog-master
+                port:
+                  number: 9000
+

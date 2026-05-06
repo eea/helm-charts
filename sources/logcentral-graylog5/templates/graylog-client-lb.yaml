@@ -14,8 +14,8 @@ spec:
     {{- range .Values.loadbalancer.service.ports }}
     - port: {{ .port }}
       targetPort: {{ .containerPort }}
-      protocol: {{ .protocol }}
-      name: {{ .name }}
+      protocol: {{ .protocol | quote }}
+      name: {{ .name | quote }}
     {{- end }}
   selector:
     {{- include "logcentral-graylog5.graylog-client.selectorLabels" . | nindent 4 }}
