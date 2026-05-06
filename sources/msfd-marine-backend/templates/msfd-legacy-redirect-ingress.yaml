@@ -1,13 +1,16 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: msfd-national-descriptors-redirect
+  name: msfd-legacy-redirect
   labels:
     {{- include "appl.labels" . | nindent 4 }}
-    component: msfd-national-descriptors-redirect
+    component: msfd-legacy-redirect
   annotations:
     nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/configuration-snippet: |
+      if ($uri ~ "^/marine/(policy-and-reporting.*)$") {
+        return 301 https://$host/marine/assessment-module/$1$is_args$args;
+      }
       if ($uri ~ "^/marine/(national-descriptors-assessments.*)$") {
         return 301 https://$host/marine/assessment-module/$1$is_args$args;
       }
@@ -21,6 +24,13 @@ spec:
   - host: {{ .Values.plone.hostname }}
     http:
       paths:
+      - path: /marine/(policy-and-reporting.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: {{ .Values.varnish.serviceName }}
+            port:
+              number: {{ .Values.varnish.port }}
       - path: /marine/(national-descriptors-assessments.*)
         pathType: ImplementationSpecific
         backend:
