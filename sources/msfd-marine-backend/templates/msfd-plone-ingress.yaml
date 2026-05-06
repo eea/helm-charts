@@ -51,13 +51,6 @@ spec:
             name: {{ .Values.varnish.serviceName }}
             port:
               number: {{ .Values.varnish.port }}
-      - path: /marine/(national-descriptors-assessments.*)
-        pathType: ImplementationSpecific
-        backend:
-          service:
-            name: {{ .Values.varnish.serviceName }}
-            port:
-              number: {{ .Values.varnish.port }}
       - path: /marine/(regional-descriptors-assessments.*)
         pathType: ImplementationSpecific
         backend:
