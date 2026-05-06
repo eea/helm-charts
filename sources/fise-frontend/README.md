@@ -10,6 +10,9 @@ This chart deployes the Forest Information System of Europe website frontend app
 
 ## Releases
 
+### Version 1.26.2 - 06 May 2026
+- remove datacatalogue [Dobricean Ioan Dorian - [`556c8d9b`](https://github.com/eea/helm-charts/commit/556c8d9b3b24b6f2444209ac411d206d8d8648ee)]
+
 ### Version 1.26.0 - 06 May 2026
 - Removed `/datacatalogue` redirection and the `ingress.datacatalogueRedirectUrl` value.
 
