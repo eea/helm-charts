@@ -4,6 +4,9 @@ The EMRT (EEA Emission Review Tool) is a web-based tool hosted by the EEA to fac
 
 ## Releases
 
+### Version 2.1.6 - 06 May 2026
+- Use eeacms/plone-emrt-necd:6.1-3.0.8
+
 ### Version 2.1.5 - 05 May 2026
 - Use eeacms/plone-emrt-necd:6.1-3.0.7
 
