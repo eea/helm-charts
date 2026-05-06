@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 0.31.2 - 06 May 2026
+- add more exceptions [Dobricean Ioan Dorian - [`4882d941`](https://github.com/eea/helm-charts/commit/4882d94111889aa530192e575197367185dbbba5)]
+
 ### Version 0.31.1 - 06 May 2026
 - fix ingress msfd [Dobricean Ioan Dorian - [`3ef45746`](https://github.com/eea/helm-charts/commit/3ef4574611430ec362e88f73f36d965206364af0)]
 
