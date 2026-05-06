@@ -10,6 +10,9 @@ This chart deployes the Forest Information System of Europe website frontend app
 
 ## Releases
 
+### Version 1.26.0 - 06 May 2026
+- Removed `/datacatalogue` redirection and the `ingress.datacatalogueRedirectUrl` value.
+
 ### Version 1.25.0 - 30 April 2026
 - Automated release of [eeacms/fise-frontend:4.13.0](https://github.com/eea/fise-frontend/releases) [EEA Jenkins - [`18d61ac7`](https://github.com/eea/helm-charts/commit/18d61ac755a92dd638808147397d4aef3618ec99)]
 
