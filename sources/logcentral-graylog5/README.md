@@ -176,6 +176,9 @@ kubectl logs -l app.kubernetes.io/component=graylog-master
 See `values.yaml` for complete configuration options.
 ## Releases
 
+### Version 0.1.13 - 06 May 2026
+- remove default protocol [valentinab25 - [`70c81aff`](https://github.com/eea/helm-charts/commit/70c81affd3bbad5839e69b69ddb9fbf196edb8a9)]
+
 ### Version 0.1.12 - 29 April 2026
 - Fix range command [valentinab25 - [`e3a2efa0`](https://github.com/eea/helm-charts/commit/e3a2efa08b36d9b7de7d44e3276e52f561a8d9cb)]
 
