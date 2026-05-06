@@ -37,6 +37,13 @@ spec:
             name: {{ .Values.varnish.serviceName }}
             port:
               number: {{ .Values.varnish.port }}
+      - path: /marine/(policy-and-reporting/reports-and-assessments.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: {{ .Values.varnish.serviceName }}
+            port:
+              number: {{ .Values.varnish.port }}
   {{- if .Values.ingress.tls }}
   tls:
   - hosts:
