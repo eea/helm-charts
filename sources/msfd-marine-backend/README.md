@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 0.31.1 - 06 May 2026
+- fix ingress msfd [Dobricean Ioan Dorian - [`3ef45746`](https://github.com/eea/helm-charts/commit/3ef4574611430ec362e88f73f36d965206364af0)]
+
 ### Version 0.31.0 - 06 May 2026
 - Automated release of [eeacms/msfd-backend:6.1.4-3](https://github.com/eea/msfd-backend/releases) [EEA Jenkins - [`591d60e4`](https://github.com/eea/helm-charts/commit/591d60e4dcc866773dea0a0c2cd0d6d29b504dfb)]
 
