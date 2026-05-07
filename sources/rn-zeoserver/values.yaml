@@ -45,6 +45,10 @@ service:
 storage: 30Gi
 # storageName: default. Note that this will be the prefix of the volume name
 storageName: zeodata
+# Set to ReadWriteMany on a storage class that supports it (e.g. nfs-client)
+# to allow other pods (Zope instances) to mount the same volume for shared
+# blob storage. Default ReadWriteOnce.
+accessMode: ReadWriteOnce
 
 timezone: Europe/Copenhagen
 zeoUid: 500

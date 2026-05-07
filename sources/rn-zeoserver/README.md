@@ -6,6 +6,7 @@ Zeoserver is the Zope server for Reportek
 
 ## Configuration
 
+- `accessMode` - Access mode for PVC. Defaults to ReadWriteOnce.
 - `timezone` - Time zone.
 - `storage` - Size of the persistent volume claim.
 - `storageName` - Name of the persistent volume claim.

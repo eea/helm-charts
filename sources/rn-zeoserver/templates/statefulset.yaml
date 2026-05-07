@@ -97,7 +97,7 @@ spec:
       name: {{ .Values.storageName }}
     spec:
       accessModes:
-      - ReadWriteOnce
+      - {{ .Values.accessMode | default "ReadWriteOnce" }}
       resources:
         requests:
           storage: {{ .Values.storage }}
