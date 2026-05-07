@@ -47,12 +47,12 @@ spec:
           env:
             - name: TZ
               value: {{ .Values.timezone }}
-            - name: MAX_FILE_SIZE
-              value: "{{ .Values.maxFileSize }}"
-            - name: MAX_SCAN_SIZE
-              value: "{{ .Values.maxScanSize }}"
-            - name: STREAM_MAX_LENGTH
-              value: "{{ .Values.streamMaxLength }}"
+            - name: CLAMD_STARTUP_TIMEOUT
+              value: "{{ .Values.clamdStartupTimeout }}"
+          {{- with .Values.startupProbe }}
+          startupProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           livenessProbe:
             {{- toYaml .Values.livenessProbe | nindent 12 }}
           readinessProbe:
@@ -60,12 +60,22 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
-            - mountPath: /data
+            - mountPath: /var/lib/clamav
               name: {{ .Values.storageName }}
+            - mountPath: /etc/clamav/clamd.conf
+              name: clamd-config
+              subPath: clamd.conf
+              readOnly: true
       volumes:
         - name: {{ .Values.storageName }}
           persistentVolumeClaim:
             claimName: {{ .Values.storageName }}
+        - name: clamd-config
+          configMap:
+            name: {{ include "appl.fullname" . }}-config
+            items:
+              - key: clamd.conf
+                path: clamd.conf
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

@@ -6,7 +6,7 @@ enabled: true
 replicaCount: 1
 
 image:
-  repository: tiredofit/clamav
+  repository: clamav/clamav
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
@@ -17,9 +17,17 @@ fullnameOverride: ""
 
 timezone: Europe/Copenhagen
 
+# clamd.conf scan limits (bytes). Rendered into the ConfigMap.
 maxFileSize: "2147483648"
 maxScanSize: "2147483648"
 streamMaxLength: "2147483648"
+
+# Extra clamd.conf directives appended verbatim to the ConfigMap.
+extraClamdConf: ""
+
+# Wait up to 3 minutes for freshclam to populate the signature DB before
+# clamd starts accepting connections. Override via env if needed.
+clamdStartupTimeout: "180"
 
 storage: 3Gi
 storageName: clamav-data
@@ -28,6 +36,9 @@ storageName: clamav-data
 networkPolicy:
   # -- Enable network policy
   enabled: true
+  # CIDR allowed for ingress on the clamd port. Must cover the cluster's
+  # node IPs so kubelet probes (TCP startup/liveness/readiness) reach the pod.
+  nodeCidr: 10.0.0.0/8
   spec: {}
 
 serviceAccount:
@@ -38,8 +49,10 @@ serviceAccount:
 podAnnotations: {}
 podLabels: {}
 
-podSecurityContext: {}
-  # fsGroup: 2000
+podSecurityContext:
+  # The upstream clamav/clamav image runs as the `clamav` user (uid/gid 100).
+  # fsGroup ensures the persistent signature DB volume is writable.
+  fsGroup: 100
 
 securityContext: {}
   # capabilities:
@@ -65,15 +78,21 @@ resources: {}
   #   cpu: 100m
   #   memory: 128Mi
 
+# clamd only starts listening once freshclam has loaded the signature DB.
+# On a fresh PVC that download can take several minutes, so a generous
+# startupProbe gates the readiness/liveness checks.
+startupProbe:
+  tcpSocket:
+    port: 3310
+  periodSeconds: 10
+  failureThreshold: 180  # 30 minutes
 readinessProbe:
   tcpSocket:
     port: 3310
-  initialDelaySeconds: 180
   periodSeconds: 10
 livenessProbe:
   tcpSocket:
     port: 3310
-  initialDelaySeconds: 200
   periodSeconds: 10
 
 autoscaling:
