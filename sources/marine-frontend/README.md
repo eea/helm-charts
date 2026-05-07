@@ -1,6 +1,6 @@
-# Climate Advisory Board frontend - Plone 6
+# WISE MARINE frontend - Plone 6
 
-This chart deployes the Climate Advisory Board frontend app
+This chart deployes the Wise Marine frontend app
 
 ## Values
 
