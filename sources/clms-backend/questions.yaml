@@ -120,36 +120,12 @@ questions:
     show_if: "asyncjobs.enabled=true"
 
   - variable: "postgresDownloadtool.enabled"
-    label: "Enable PostgreSQL for DownloadTool"
-    description: "Enable PostgreSQL database for DownloadTool storage"
+    label: "Enable DownloadTool database"
+    description: "Enable the DownloadTool database connection"
     default: false
     type: "boolean"
     required: true
     group: "General"
-
-  - variable: "postgresDownloadtool.image.tag"
-    label: "PostgreSQL DownloadTool image tag"
-    type: "string"
-    default: "16s"
-    required: true
-    group: "General"
-    show_if: "postgresDownloadtool.enabled=true"
-
-  - variable: "postgresDownloadtool.postgresUser"
-    label: "PostgreSQL admin user"
-    type: "string"
-    default: "postgres"
-    required: true
-    group: "General"
-    show_if: "postgresDownloadtool.enabled=true"
-
-  - variable: "postgresDownloadtool.postgresPassword"
-    label: "PostgreSQL admin password"
-    type: "password"
-    default: "postgres"
-    required: true
-    group: "General"
-    show_if: "postgresDownloadtool.enabled=true"
 
   - variable: "postgresDownloadtool.dbName"
     label: "DownloadTool database name"

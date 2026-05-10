@@ -221,23 +221,9 @@ asyncjobs:
 
 postgresDownloadtool:
   enabled: false
-  serviceType: ClusterIP
-  image:
-    repository: eeacms/postgres
-    tag: "16s"
-  postgresUser: postgres
-  postgresPassword: postgres
   dbName: downloadtool
   dbUser: zope
   dbPassword: zope
-  resources:
-    limits:
-      memory: 1Gi
-    requests:
-      memory: 512Mi
-  nodeSelector: {}
-  tolerations: []
-  affinity: {}
 
 techlibimporter:
   enabled: false

@@ -50,7 +50,7 @@ spec:
         {{- end }}
         {{- if .Values.postgresDownloadtool.enabled }}
         - name: DOWNLOADTOOL_DB_DSN
-          value: "dbname={{ .Values.postgresDownloadtool.dbName }} user={{ .Values.postgresDownloadtool.dbUser }} password={{ .Values.postgresDownloadtool.dbPassword }} host=postgres-downloadtool"
+          value: "dbname={{ .Values.postgresDownloadtool.dbName }} user={{ .Values.postgresDownloadtool.dbUser }} password={{ .Values.postgresDownloadtool.dbPassword }} host=postgres"
         {{- end }}
         {{- if .Values.ploneAuthToken }}
         - name: PLONE_AUTH_TOKEN
@@ -98,4 +98,3 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       restartPolicy: Always
-
