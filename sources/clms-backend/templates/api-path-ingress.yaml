@@ -1,10 +1,10 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: ied-api-path
+  name: clms-api-path
   labels:
     {{- include "appl.labels" . | nindent 4 }}
-    component: ied-api-path
+    component: clms-api-path
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /VirtualHostBase/https/{{ .Values.plone.hostname }}:443/{{ .Values.plone.site }}/VirtualHostRoot/_vh_api/$1
     nginx.ingress.kubernetes.io/use-regex: "true"
