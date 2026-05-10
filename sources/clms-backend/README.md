@@ -10,6 +10,9 @@ This chart deployes the CLMS backend app
 
 ## Releases
 
+### Version 2.24.3 - 10 May 2026
+- change database [Dobricean Ioan Dorian - [`512a9858`](https://github.com/eea/helm-charts/commit/512a9858a8703893f140f1094827446ad01a64dd)]
+
 ### Version 2.24.2 - 10 May 2026
 - rename ingresses [Dobricean Ioan Dorian - [`35556870`](https://github.com/eea/helm-charts/commit/35556870dcc99fdaabcde099ecce260d9ae351ea)]
 
