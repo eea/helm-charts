@@ -1,7 +1,9 @@
 #
-# Allow any to contact the frontend service on port 8080.
+# Allow the ingress controller to reach the front service exposed by the chart.
 #
-{{- if .Values.ingress.enabled }}
+{{ if .Values.ingress.enabled }}
+{{- $frontComponent := include "appl.frontComponent" . -}}
+{{- $frontPort := include "appl.frontServicePort" . -}}
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -13,12 +15,12 @@ spec:
   podSelector:
     matchLabels:
       {{- include "appl.selectorLabels" . | nindent 6 }}
-      component : frontend
+      component: {{ $frontComponent }}
   policyTypes:
   - Ingress
 
   ingress:
   - ports:
-    - port: 8080
+    - port: {{ $frontPort }}
       protocol: TCP
 {{- end }}

@@ -1,0 +1,37 @@
+{{- if eq (include "appl.apacheEnabled" .) "true" }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "appl.fullname" . }}-apache-config
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: apache
+data:
+  vh-my-app.conf: |-
+    <VirtualHost *:80>
+      {{- if .Values.ingress.hosts }}
+      ServerName {{ (index .Values.ingress.hosts 0).host }}
+      {{- range $index, $host := .Values.ingress.hosts }}
+      {{- if gt $index 0 }}
+      ServerAlias {{ $host.host }}
+      {{- end }}
+      {{- end }}
+      {{- end }}
+
+      ProxyRequests Off
+      ProxyPreserveHost On
+      RewriteEngine On
+
+      {{- with .Values.apache.redirectConfig }}
+{{ . | trim | nindent 6 }}
+
+      {{- end }}
+
+      {{- with .Values.apache.extraConfig }}
+{{ . | trim | nindent 6 }}
+
+      {{- end }}
+      ProxyPass / http://{{ include "appl.tomcatServiceName" $ }}:{{ $.Values.service.port }}/
+      ProxyPassReverse / http://{{ include "appl.tomcatServiceName" $ }}:{{ $.Values.service.port }}/
+    </VirtualHost>
+{{- end }}

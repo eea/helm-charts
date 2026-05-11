@@ -60,3 +60,55 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+Whether an Apache front proxy should be placed in front of Tomcat.
+*/}}
+{{- define "appl.apacheEnabled" -}}
+{{- if and .Values.apache .Values.apache.enabled -}}
+true
+{{- else -}}
+false
+{{- end -}}
+{{- end }}
+
+{{/*
+Name of the service exposed to ingress and end users.
+*/}}
+{{- define "appl.frontServiceName" -}}
+{{- include "appl.fullname" . -}}
+{{- end }}
+
+{{/*
+Port exposed by the front service.
+*/}}
+{{- define "appl.frontServicePort" -}}
+{{- if eq (include "appl.apacheEnabled" .) "true" -}}
+80
+{{- else -}}
+{{- .Values.service.port -}}
+{{- end -}}
+{{- end }}
+
+{{/*
+Internal Tomcat service name.
+When Apache is enabled, Tomcat gets a dedicated internal service.
+*/}}
+{{- define "appl.tomcatServiceName" -}}
+{{- if eq (include "appl.apacheEnabled" .) "true" -}}
+{{- printf "%s-tomcat" (include "appl.fullname" .) | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+{{- include "appl.fullname" . -}}
+{{- end -}}
+{{- end }}
+
+{{/*
+Front component selected by ingress.
+*/}}
+{{- define "appl.frontComponent" -}}
+{{- if eq (include "appl.apacheEnabled" .) "true" -}}
+apache
+{{- else -}}
+frontend
+{{- end -}}
+{{- end }}
