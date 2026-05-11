@@ -8,7 +8,7 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/configuration-snippet: |
-      if ($uri ~ "^/marine/(policy-and-reporting.*)$") {
+      if ($uri ~ "^/marine/(policy-and-reporting/reports-and-assessments(/.*)?)$") {
         return 301 https://$host/marine/assessment-module/$1$is_args$args;
       }
       if ($uri ~ "^/marine/(national-descriptors-assessments.*)$") {
@@ -24,7 +24,7 @@ spec:
   - host: {{ .Values.plone.hostname }}
     http:
       paths:
-      - path: /marine/(policy-and-reporting.*)
+      - path: /marine/(policy-and-reporting/reports-and-assessments(/.*)?)
         pathType: ImplementationSpecific
         backend:
           service:
