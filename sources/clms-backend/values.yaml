@@ -39,7 +39,7 @@ plone:
     maxReplicas: 6
     # targetCPUUtilizationPercentage: 80
     targetMemoryUtilizationPercentage: 60
-  replicaCount: 1
+  replicaCount: 6
   resources:
     limits:
       memory: 2Gi
@@ -228,40 +228,6 @@ postgresDownloadtool:
 techlibimporter:
   enabled: false
   schedule: "30 5 * * *"
-  keepSuccessfulPods: 3
-  keepFailedPods: 5
-  image:
-    repository: curlimages/curl
-    tag: "8.8.0"
-  resources:
-    limits:
-      memory: 64Mi
-    requests:
-      memory: 32Mi
-  nodeSelector: {}
-  tolerations: []
-  affinity: {}
-
-cdsemonitor:
-  enabled: false
-  schedule: "0 * * * *"
-  keepSuccessfulPods: 3
-  keepFailedPods: 5
-  image:
-    repository: curlimages/curl
-    tag: "8.8.0"
-  resources:
-    limits:
-      memory: 64Mi
-    requests:
-      memory: 32Mi
-  nodeSelector: {}
-  tolerations: []
-  affinity: {}
-
-cdseusage:
-  enabled: false
-  schedule: "30 8 * * *"
   keepSuccessfulPods: 3
   keepFailedPods: 5
   image:

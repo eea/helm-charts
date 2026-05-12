@@ -174,38 +174,6 @@ questions:
     group: "General"
     show_if: "techlibimporter.enabled=true"
 
-  - variable: "cdsemonitor.enabled"
-    label: "Enable CDSE Monitor cron job"
-    description: "Enable CDSE status monitor cron job"
-    default: false
-    type: "boolean"
-    required: true
-    group: "General"
-
-  - variable: "cdsemonitor.schedule"
-    label: "CDSE Monitor cron schedule"
-    type: "string"
-    default: "0 * * * *"
-    required: true
-    group: "General"
-    show_if: "cdsemonitor.enabled=true"
-
-  - variable: "cdseusage.enabled"
-    label: "Enable CDSE Usage cron job"
-    description: "Enable CDSE usage limits monitor cron job"
-    default: false
-    type: "boolean"
-    required: true
-    group: "General"
-
-  - variable: "cdseusage.schedule"
-    label: "CDSE Usage cron schedule"
-    type: "string"
-    default: "30 8 * * *"
-    required: true
-    group: "General"
-    show_if: "cdseusage.enabled=true"
-
   - variable: "varnish.serviceType"
     label: "Expose varnish"
     description: "Select NodePort to expose varnish"
