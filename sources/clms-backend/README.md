@@ -10,6 +10,9 @@ This chart deployes the CLMS backend app
 
 ## Releases
 
+### Version 2.26.1 - 12 May 2026
+- remove cdse cron [Dobricean Ioan Dorian - [`22708292`](https://github.com/eea/helm-charts/commit/227082925989146653e84ffe0da90bd95909289c)]
+
 ### Version 2.26.0 - 12 May 2026
 - Automated release of [eeacms/clms-backend:6.0.15-151](https://github.com/eea/clms-backend/releases) [EEA Jenkins - [`18c007a4`](https://github.com/eea/helm-charts/commit/18c007a47e856db3e62e5d4c479fb71841a11e0f)]
 
