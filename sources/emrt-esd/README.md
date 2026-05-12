@@ -4,6 +4,9 @@ The EMRT(EEA Emission Review Tool) is a web-based tool hosted by the EEA to faci
 
 ## Releases
 
+### Version 4.0.1 - 12 May 2026
+- remove plone4 [Dobricean Ioan Dorian - [`0d0e7c63`](https://github.com/eea/helm-charts/commit/0d0e7c637c3500819b6a9059b14000c02894fc26)]
+
 ### Version 4.0.0 - 12 May 2026
 - Remove Plone 4 deployment, service, and old zeoserver dependency.
 - Use Plone 6 as the only Plone runtime.
