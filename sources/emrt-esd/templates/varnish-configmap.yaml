@@ -9,7 +9,7 @@ data:
     vcl 4.0;
 
     backend default {
-      .host = "{{ .Values.varnish.backendHost | default "plone" }}";
+      .host = "plone6";
       .port = "{{ .Values.varnish.backendPort | default "8080" }}";
       .connect_timeout = {{ .Values.varnish.connectTimeout | default "300s" }};
       .first_byte_timeout = {{ .Values.varnish.firstByteTimeout | default "300s" }};

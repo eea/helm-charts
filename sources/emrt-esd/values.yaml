@@ -10,9 +10,7 @@ autoscaling:
 
 
 image:
-  repository: eeacms/plone-emrt
   pullPolicy: IfNotPresent
-  tag: ""
 
 imagePullSecrets: []
 nameOverride: ""
@@ -111,16 +109,6 @@ postfix:
   mtpRelay: ''
   mtpUser: ''
 
-plone:
-  securityContext: {}
-  resources:
-    requests:
-      memory: 1536Mi
-    limits:
-      memory: 4Gi
-  probePath: /Plone/2023/
-  probeTimeoutSeconds: 3
-
 plone6:
   image: "plone/plone-backend:6.1.1"
   securityContext: {}
@@ -139,7 +127,6 @@ plone6develop: "git+https://github.com/eea/esdrt.content.git@python3#egg=esdrt.c
 
 varnish:
   securityContext: {}
-  backendHost: plone
   backendPort: 8080
   connectTimeout: 300s
   firstByteTimeout: 300s
@@ -162,12 +149,3 @@ zeo6:
   resources:
     requests:
       memory: 1Gi
-
-
-zeoserver:
-  fullnameOverride: "zeoserver"
-  storage: 30Gi
-  resources:
-    requests:
-      memory: 1Gi
-

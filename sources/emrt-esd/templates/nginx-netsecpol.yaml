@@ -13,7 +13,7 @@ spec:
   podSelector:
     matchLabels:
       {{- include "appl.selectorLabels" . | nindent 6 }}
-      component : varnish
+      component: plone6
   policyTypes:
   - Ingress
 
