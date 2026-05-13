@@ -5,6 +5,9 @@ This chart is configured for production use.
 ## Releases
 
 <dl>
+  <dt>Version 0.1.13</dt>
+  <dd>httpServletRequest is not exposed in new thymeleaf version fix.</dd>
+
   <dt>Version 0.1.12</dt>
   <dd>Deprecated th:include attribute, formatting fixes.</dd>
 
