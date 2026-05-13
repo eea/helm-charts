@@ -5,6 +5,9 @@ This chart is configured for production use.
 ## Releases
 
 <dl>
+  <dt>Version 0.1.12</dt>
+  <dd>Deprecated th:include attribute, formatting fixes.</dd>
+
   <dt>Version 0.1.11</dt>
   <dd>Thymeleaf, log4j upgrades, invalid property fix.</dd>
 
