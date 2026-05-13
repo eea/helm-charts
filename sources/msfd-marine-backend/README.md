@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 0.41.1 - 13 May 2026
+- fix entrasync [Dobricean Ioan Dorian - [`15dc6ebd`](https://github.com/eea/helm-charts/commit/15dc6ebd5e3706ed33cbdd42988e49af91a1fa3d)]
+
 ### Version 0.41.0 - 13 May 2026
 - Automated release of [eeacms/msfd-backend:6.1.4-5.entraId.07](https://github.com/eea/msfd-backend/releases) [EEA Jenkins - [`b9d96e01`](https://github.com/eea/helm-charts/commit/b9d96e012ee5d73ad4d125b5545c8a4fb4939684)]
 
