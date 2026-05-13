@@ -24,6 +24,9 @@ This chart is configured for production use.
 ## Releases
 
 <dl>
+  <dt>Version 1.0.0</dt>
+  <dd>Java 11 upgrade, libs upgrades, remove unused code dependencies, better logging.</dd>
+
   <dt>Version 0.2.8</dt>
   <dd>Tomcat, libraries upgrades.</dd>
 
