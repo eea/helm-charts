@@ -74,6 +74,8 @@ spec:
               {{- toYaml . | nindent 14 }}
             {{- end }}
             volumeMounts:
+            - mountPath: /app/var/blobstorage
+              name: entrasync-blobcache
             - mountPath: /data
               name: {{ .Release.Name }}-storage
               subPath: data
@@ -93,6 +95,8 @@ spec:
             {{- toYaml . | nindent 12 }}
           {{- end }}
           volumes:
+          - name: entrasync-blobcache
+            emptyDir: {}
           - name: {{ .Release.Name }}-storage
             persistentVolumeClaim:
               claimName: {{ .Values.zeoserver.storageName | default (printf "%s-storage-v2" .Release.Name) }}
