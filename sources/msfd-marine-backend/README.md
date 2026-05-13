@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 0.41.3 - 13 May 2026
+- fix [Dobricean Ioan Dorian - [`d4d55399`](https://github.com/eea/helm-charts/commit/d4d55399ab1ded09c14d80701c18f006f9f37152)]
+
 ### Version 0.41.2 - 13 May 2026
 - fix entrasync cron [Dobricean Ioan Dorian - [`2096f928`](https://github.com/eea/helm-charts/commit/2096f928455bdc9f475a54adcda979095bc91308)]
 
