@@ -56,11 +56,11 @@ spec:
             - name: TZ
               value: "{{ .Values.timezone }}"
             - name: ZEO_ADDRESS
-              value: "zeo:8100"
+              value: "{{ .Values.plone.environment.ZEO_ADDRESS | default (printf "%s-zeoserver:8100" .Release.Name) }}"
             - name: MEMCACHE_SERVER
               value: "{{ .Release.Name }}-memcached:11211"
             {{- range $key, $value := .Values.plone.environment }}
-            {{- if ($value) }}
+            {{- if and ($value) (not (has $key (list "ZEO_ADDRESS"))) }}
             - name: {{ $key }}
               value: {{ $value | quote }}
             {{- end }}
