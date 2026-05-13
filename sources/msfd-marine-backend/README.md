@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 0.42.2 - 13 May 2026
+- fix [Dobricean Ioan Dorian - [`16afad62`](https://github.com/eea/helm-charts/commit/16afad62a25c5fb32680fe9d66b10212f47be234)]
+
 ### Version 0.42.1 - 13 May 2026
 - fix entrasync [Dobricean Ioan Dorian - [`43a0f5e5`](https://github.com/eea/helm-charts/commit/43a0f5e59d443cd7cee73bffe7963651056ac927)]
 
