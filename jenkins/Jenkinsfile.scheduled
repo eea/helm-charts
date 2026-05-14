@@ -20,18 +20,13 @@ stage('Check Sonarqube Upgrades') {
     HELM_UPGRADE_APPVERSION = 'yes'
     DOCKER_IMAGENAME = 'sonarqube'
     DOCKER_ARTIFACT = 'sonarqube'
-    DOCKER_NAME = "${IMAGE_NAME}-gitflow-sonarqube"
+    DOCKER_NAME = BUILD_TAG.toLowerCase().replaceAll('[^a-z0-9_.-]', '-') + "-gitflow-sonarqube"
     FLEET_LOCATIONS = ''
   }
 
   steps {
     withCredentials([string(credentialsId: 'eea-jenkins-token', variable: 'GITHUB_TOKEN')]) {
       script {
-        try {
-          sh '''
-            set -eu
-            mkdir -p artifacts previous-artifacts
-          '''
 
           copyArtifacts(
             projectName: env.JOB_NAME,
@@ -41,6 +36,12 @@ stage('Check Sonarqube Upgrades') {
             fingerprintArtifacts: true,
             optional: true
           )
+
+       try {
+          sh '''
+            set -eu
+            mkdir -p artifacts previous-artifacts
+          '''
 
           sh '''
             set -eu
