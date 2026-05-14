@@ -7,7 +7,7 @@ pipeline {
     cron('H 2 * * *')
   }
   options {
-    copyArtifactPermission('Scheduled/helm-charts/main')
+    copyArtifactPermission('*')
   }
 
   environment {
