@@ -72,6 +72,24 @@ When `autoscaling.engine` is set to `keda`, the chart will render the existing S
 
 ## Releases
 
+### Version 0.5.2 - 14 May 2026
+- Added MCP server (deployment, service, ingress) and Discord bot deployment
+- Added pgInto tooling ConfigMap with psql script mounting helpers
+- Added Celery worker `user-files-indexing` (deployment, HPA, ScaledObject)
+- Added Prometheus ServiceMonitor templates for all Celery workers
+- Added Redis chart dependency (redis v0.16.6) with Redis standalone config (`redis.redisStandalone.name`)
+- Added `auth.opensearch` secret config with admin password validation
+- Added `securityEnabled` flag to values.yaml
+- Added `auth.userauth` secret for password reset / verification tokens and OAuth/OIDC state signing
+- Default `global.version` set to `v2.3.0-eea.0.0.90-dev`; default `vespa.enabled` set to `true`
+- PostgreSQL defaults updated: `nameOverride: cloudnative-pg`, 1 instance, 10Gi storage, superuser access
+- Network policies tightened: removed egress to OpenSearch (9200) and HTTPS/80 from most services
+- Added cert-manager network policy for HTTP-01 solver matching sonarqube/matomo pattern
+- Added ingress-nginx dependency (v4.13.3)
+- Refactored `_helpers.tpl`: removed `onyx.autoscaling.engine` and `onyx.version` helpers; added `onyx.pgInto.*` helpers
+- Updated HPA/ScaledObject templates across all Celery worker deployments
+- Updated PostgreSQL backup cronjob, restore job, and statefulset templates
+
 ### Version 0.5.0 - 22 April 2026
 - Set chart `appVersion` to `v3.2.1-eea.0.0.106-dev` and keep image tag resolution automatic from chart appVersion when `global.version` is empty.
 - Added Vespa migration fix support:
