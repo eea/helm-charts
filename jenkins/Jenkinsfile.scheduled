@@ -13,7 +13,8 @@ pipeline {
     stage('Check Sonarqube Upgrades') {
       environment {
         HELM_CHART="sonarqube"
-        GITHUB_RELEASES="https://api.github.com/repos/SonarSource/sonarqube/releases"
+        GITHUB_RELEASES="https://api.github.com/repos/SonarSource/docker-sonarqube/releases"
+        GITHUB_RELEASE_REGEXP="^20[0-9][0-9]\\.[0-9]+\\.[0-9]+$"
         RELEASE_PREFIX=""
         RELEASE_SUFFIX="-developer"
         HELM_UPGRADE_APPVERSION="yes"
@@ -30,8 +31,9 @@ pipeline {
    /*
     stage('Check Onyx Upgrades') {
       environment {
-        HELM_CHART="onyx-demo"
+        HELM_CHART="onyx"
         GITHUB_RELEASES="https://api.github.com/repos/onyx-dot-app/onyx/releases"
+        GITHUB_RELEASE_REGEXP=""
         RELEASE_PREFIX=""
         RELEASE_SUFFIX=""
         HELM_UPGRADE_APPVERSION="yes"
