@@ -1830,6 +1830,11 @@ postfix:
     cleanupLegacyDeploymentSelector: true
     # Optional override for Deployment name. Empty = <release>-postfix
     deploymentName: ""
+    # Image used by pre-upgrade cleanup hook job
+    hookImage:
+      repository: "rancher/kubectl"
+      tag: "v1.30.3"
+      pullPolicy: "IfNotPresent"
   dryrun: false
   serverName: ""
   mtpHost: ""

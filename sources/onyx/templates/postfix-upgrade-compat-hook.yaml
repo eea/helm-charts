@@ -1,5 +1,8 @@
 {{- if and .Values.postfix.enabled (default true .Values.postfix.upgradeCompatibility.cleanupLegacyDeploymentSelector) }}
 {{- $targetDeployment := (default (printf "%s-postfix" .Release.Name) .Values.postfix.upgradeCompatibility.deploymentName) -}}
+{{- $hookRepo := (default "rancher/kubectl" .Values.postfix.upgradeCompatibility.hookImage.repository) -}}
+{{- $hookTag := (default "v1.30.3" .Values.postfix.upgradeCompatibility.hookImage.tag) -}}
+{{- $hookPullPolicy := (default "IfNotPresent" .Values.postfix.upgradeCompatibility.hookImage.pullPolicy) -}}
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -64,8 +67,8 @@ spec:
       serviceAccountName: {{ include "onyx.fullname" . }}-postfix-upgrade-hook
       containers:
         - name: cleanup-postfix-deployment
-          image: bitnami/kubectl:1.30
-          imagePullPolicy: IfNotPresent
+          image: {{ printf "%s:%s" $hookRepo $hookTag | quote }}
+          imagePullPolicy: {{ $hookPullPolicy }}
           command: ["/bin/sh", "-ec"]
           args:
             - |
