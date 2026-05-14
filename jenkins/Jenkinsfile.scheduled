@@ -48,9 +48,8 @@ stage('Check Sonarqube Upgrades') {
           sh '''
             set -e
             mkdir -p artifacts previous-artifacts/artifacts
-            ls -ltr previous-artifacts/*
-            ls -ltr previous-artifacts/artifacts/*
-            DOCKER_ARTIFACT_CONTENT=$(cat "previous-artifacts/artifacts/${DOCKER_ARTIFACT}" | echo "")
+
+            DOCKER_ARTIFACT_CONTENT=$(cat "previous-artifacts/artifacts/${DOCKER_ARTIFACT}" || echo "")
 
             echo "Starting docker image"
 
