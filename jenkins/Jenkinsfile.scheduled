@@ -17,6 +17,9 @@ pipeline {
 
   stages {
 stage('Check Sonarqube Upgrades') {
+  when {
+    triggeredBy 'TimerTrigger'
+  }
   environment {
     HELM_CHART = 'sonarqube'
     GITHUB_RELEASES = 'https://api.github.com/repos/SonarSource/docker-sonarqube/releases'
