@@ -6,6 +6,9 @@ pipeline {
   triggers {
     cron('H 2 * * *')
   }
+  options {
+    copyArtifactPermission('Scheduled/helm-charts/main')
+  }
 
   environment {
     IMAGE_NAME = BUILD_TAG.toLowerCase().replaceAll('[^a-z0-9_.-]', '-') 
