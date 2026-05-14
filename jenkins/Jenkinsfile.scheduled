@@ -30,7 +30,7 @@ stage('Check Sonarqube Upgrades') {
   steps {
     withCredentials([string(credentialsId: 'eea-jenkins-token', variable: 'GITHUB_TOKEN')]) {
       script {
-
+        catchError(buildResult: 'SUCCESS', stageResult: 'SUCCESS') {
           copyArtifacts(
             projectName: env.JOB_NAME,
             selector: lastSuccessful(),
@@ -39,6 +39,7 @@ stage('Check Sonarqube Upgrades') {
             fingerprintArtifacts: true,
             optional: true
           )
+       }
 
        try {
           sh '''
