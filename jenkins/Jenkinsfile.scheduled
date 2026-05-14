@@ -13,12 +13,12 @@ pipeline {
     stage('Check Sonarqube Upgrades') {
       environment {
         HELM_CHART=sonarqube
-        GITHUB_RELEASES=https://api.github.com/repos/SonarSource/sonarqube/releases
+        GITHUB_RELEASES="https://api.github.com/repos/SonarSource/sonarqube/releases"
         RELEASE_PREFIX=""
         RELEASE_SUFFIX="-developer"
         HELM_UPGRADE_APPVERSION="yes"
-        DOCKER_IMAGENAME=sonarqube
-        DOCKER_NAME=$IMAGE_NAME-gitflow-sonarqube
+        DOCKER_IMAGENAME="sonarqube"
+        DOCKER_NAME="$IMAGE_NAME-gitflow-sonarqube"
         FLEET_LOCATIONS=""
       }
       steps {
