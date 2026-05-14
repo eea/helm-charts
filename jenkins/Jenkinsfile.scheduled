@@ -7,6 +7,9 @@ pipeline {
     cron('H 2 * * *')
   }
 
+  environment {
+    IMAGE_NAME = BUILD_TAG.toLowerCase().replaceAll('[^a-z0-9_.-]', '-') 
+  }
 
 
   stages {
@@ -19,8 +22,8 @@ stage('Check Sonarqube Upgrades') {
     RELEASE_SUFFIX = '-developer'
     HELM_UPGRADE_APPVERSION = 'yes'
     DOCKER_IMAGENAME = 'sonarqube'
-    DOCKER_ARTIFACT = 'sonarqube'
-    DOCKER_NAME = BUILD_TAG.toLowerCase().replaceAll('[^a-z0-9_.-]', '-') + '-gitflow-sonarqube'
+    DOCKER_ARTIFACT = "sonarqube"
+    DOCKER_NAME = "${IMAGE_NAME}-gitflow-sonarqube"
     FLEET_LOCATIONS = ''
   }
 
