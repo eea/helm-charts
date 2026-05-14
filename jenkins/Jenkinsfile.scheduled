@@ -32,7 +32,7 @@ stage('Check Sonarqube Upgrades') {
       script {
         catchError(buildResult: 'SUCCESS', stageResult: 'SUCCESS') {
           copyArtifacts(
-            projectName: env.JOB_NAME,
+            projectName: "/${env.JOB_NAME}",
             selector: lastSuccessful(),
             filter: 'artifacts/**',
             target: 'previous-artifacts',
