@@ -85,15 +85,15 @@ Render the shared Plone-related environment variables.
 - name: SERVER_NAME
   value: "{{ $root.Values.plone.hostname }}"
 - name: SENTRY_SITE
-  value: "{{ $root.Values.plone.hostname }}"
+  value: "{{ default $root.Values.plone.hostname (get $env "SENTRY_SITE") }}"
 - name: GRAYLOG_FACILITY
-  value: "{{ $root.Values.plone.hostname }}"
+  value: "{{ default $root.Values.plone.hostname (get $env "GRAYLOG_FACILITY") }}"
 - name: BACKEND_VERSION
   value: "{{ include "cca-backend.releaseVersion" (dict "root" $root "component" $component) }}"
 - name: SENTRY_RELEASE
-  value: "{{ include "cca-backend.releaseVersion" (dict "root" $root "component" $component) }}"
+  value: "{{ default (include "cca-backend.releaseVersion" (dict "root" $root "component" $component)) (get $env "SENTRY_RELEASE") }}"
 - name: TZ
-  value: "{{ $root.Values.timezone }}"
+  value: "{{ default $root.Values.timezone (get $env "TZ") }}"
 - name: RELSTORAGE_DSN
   value: "host='postgres' dbname='{{ $root.Values.plone.database.POSTGRES_DB }}' user='{{ $root.Values.plone.database.POSTGRES_USER }}' password='{{ $root.Values.plone.database.POSTGRES_PASSWORD }}'"
 {{- if $root.Values.redis.enabled }}

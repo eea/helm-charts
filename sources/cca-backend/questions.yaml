@@ -128,6 +128,45 @@ questions:
     required: true
     group: "Plone configuration"
 
+  - variable: "commonEnv.SENTRY_RELEASE"
+    label: "Sentry release"
+    description: "Leave empty to use the backend release version"
+    type: "string"
+    default: ""
+    required: false
+    group: "Plone configuration"
+
+  - variable: "commonEnv.SENTRY_SITE"
+    label: "Sentry site"
+    description: "Leave empty to use the server name"
+    type: "string"
+    default: ""
+    required: false
+    group: "Plone configuration"
+
+  - variable: "commonEnv.GRAYLOG_FACILITY"
+    label: "Graylog facility"
+    description: "Leave empty to use the server name"
+    type: "string"
+    default: ""
+    required: false
+    group: "Plone configuration"
+
+  - variable: "commonEnv.MARINE_PASS"
+    label: "Marine password"
+    type: "password"
+    default: ""
+    required: false
+    group: "Plone configuration"
+
+  - variable: "commonEnv.TZ"
+    label: "Timezone"
+    description: "Leave empty to use the chart timezone"
+    type: "string"
+    default: ""
+    required: false
+    group: "Plone configuration"
+
   - variable: "commonEnv.CORS_ALLOW_ORIGIN"
     label: "CORS allow origin"
     type: "string"
