@@ -43,7 +43,7 @@ stage('Check Sonarqube Upgrades') {
 
        try {
           sh '''
-            set -eu
+            set -e
             mkdir -p artifacts previous-artifacts/artifacts
             DOCKER_ARTIFACT_CONTENT=$(cat "previous-artifacts/artifacts/${DOCKER_ARTIFACT}" | echo "")
 
