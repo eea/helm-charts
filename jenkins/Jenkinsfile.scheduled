@@ -15,7 +15,7 @@ pipeline {
         HELM_CHART=sonarqube
         GITHUB_RELEASES=https://api.github.com/repos/SonarSource/sonarqube/releases
         RELEASE_PREFIX=""
-        RELEASE_SUFFIX="-community"
+        RELEASE_SUFFIX="-developer"
         HELM_UPGRADE_APPVERSION="yes"
         DOCKER_IMAGENAME=sonarqube
         DOCKER_NAME=$IMAGE_NAME-gitflow-sonarqube
@@ -27,7 +27,7 @@ pipeline {
         }
       }
     }
-
+   /*
     stage('Check Onyx Upgrades') {
       environment {
         HELM_CHART=onyx-demo
@@ -45,7 +45,7 @@ pipeline {
         }
       }
     }
-
+    */
   }
 
   post {
