@@ -52,6 +52,9 @@ Because we are using docker, we only need to access <http://yourSonarQubeServerU
 
 ## Releases
 
+### Version 1.5.0 - 14 May 2026
+- Set the developer version as default [valentinab25 - [`bf9cf775`](https://github.com/eea/helm-charts/commit/bf9cf7751d75a04aedca7ace30bc786f9ce242ce)]
+
 ### Version 1.4.9 - 25 March 2026
 - Add letsencrypt net sec policy [valentinab25 - [`f7837431`](https://github.com/eea/helm-charts/commit/f7837431eb8c50e21e5a2067eb7368218029b0a5)]
 
