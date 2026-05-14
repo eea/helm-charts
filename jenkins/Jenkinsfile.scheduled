@@ -20,7 +20,7 @@ stage('Check Sonarqube Upgrades') {
     HELM_UPGRADE_APPVERSION = 'yes'
     DOCKER_IMAGENAME = 'sonarqube'
     DOCKER_ARTIFACT = 'sonarqube'
-    DOCKER_NAME = BUILD_TAG.toLowerCase().replaceAll('[^a-z0-9_.-]', '-') + "-gitflow-sonarqube"
+    DOCKER_NAME = BUILD_TAG.toLowerCase().replaceAll('[^a-z0-9_.-]', '-') + '-gitflow-sonarqube'
     FLEET_LOCATIONS = ''
   }
 
