@@ -1,4 +1,4 @@
-{{- if gt (int .Values.indexCapability.replicaCount) 0 }}
+{{- if and .Values.vectorDB.enabled (gt (int .Values.indexCapability.replicaCount) 0) }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -10,6 +10,10 @@ metadata:
     {{- end }}
 spec:
   replicas: {{ .Values.indexCapability.replicaCount }}
+  {{- with .Values.indexCapability.strategy }}
+  strategy:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   selector:
     matchLabels:
       {{- include "onyx.selectorLabels" . | nindent 6 }}
@@ -32,9 +36,6 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-      {{- if .Values.indexCapability.runtimeClassName }}
-      runtimeClassName: {{ .Values.indexCapability.runtimeClassName }}
-      {{- end }}
       {{- if .Values.indexCapability.podSecurityContext }}
       securityContext:
         {{- toYaml .Values.indexCapability.podSecurityContext | nindent 8 }}
@@ -47,7 +48,7 @@ spec:
       {{- if and .Values.indexCapability.image .Values.indexCapability.image.repository }}
         {{- $modelRepo = .Values.indexCapability.image.repository }}
       {{- end }}
-      {{- $modelTag := default .Values.global.image.tags.modelServer (printf "model_server-%s" (include "onyx.version" .)) }}
+      {{- $modelTag := default .Values.global.image.tags.modelServer (printf "model_server-%s" .Values.global.version) }}
       {{- if and .Values.indexCapability.image .Values.indexCapability.image.tag }}
         {{- $modelTag = .Values.indexCapability.image.tag }}
       {{- end }}
@@ -63,7 +64,7 @@ spec:
       - name: {{ .Values.indexCapability.name }}
         image: "{{ $modelRepo }}:{{ $modelTag }}"
         imagePullPolicy: {{ .Values.global.pullPolicy }}
-        command: [ "uvicorn", "model_server.main:app", "--host", "0.0.0.0", "--port", "{{ .Values.indexCapability.containerPorts.server }}", "--limit-concurrency", "{{ .Values.indexCapability.limitConcurrency }}" ]
+        command: [ "uvicorn", "model_server.main:app", "--host", "{{ .Values.global.host }}", "--port", "{{ .Values.indexCapability.containerPorts.server }}", "--limit-concurrency", "{{ .Values.indexCapability.limitConcurrency }}" ]
         ports:
         - name: model-server
           containerPort: {{ .Values.indexCapability.containerPorts.server }}
@@ -74,10 +75,6 @@ spec:
         env:
           - name: INDEXING_ONLY
             value: "{{ default "True" .Values.indexCapability.indexingOnly }}"
-          {{- if .Values.indexCapability.huggingfaceCacheDir }}
-          - name: HF_HOME
-            value: "{{ .Values.indexCapability.huggingfaceCacheDir }}"
-          {{- end }}
           {{- include "onyx.envSecrets" . | nindent 10}}
         {{- if .Values.indexCapability.securityContext }}
         securityContext:
@@ -91,8 +88,21 @@ spec:
         volumeMounts:
           {{- toYaml . | nindent 10 }}
         {{- end }}
+        {{- with .Values.indexCapability.startupProbe }}
+        startupProbe:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        {{- with .Values.indexCapability.readinessProbe }}
+        readinessProbe:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        {{- with .Values.indexCapability.livenessProbe }}
+        livenessProbe:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
       {{- with .Values.indexCapability.volumes }}
       volumes:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+
 {{- end }}
