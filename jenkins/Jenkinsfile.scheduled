@@ -57,8 +57,6 @@ stage('Check Sonarqube Upgrades') {
               DOCKER_ARTIFACT_CONTENT=$(cat "$PREVIOUS_ARTIFACT")
             fi
 
-            docker rm -v "$DOCKER_NAME" >/dev/null 2>&1 || true
-
             docker run --pull always -i \
               --name="$DOCKER_NAME" \
               -e GIT_TOKEN="$GITHUB_TOKEN" \
