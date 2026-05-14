@@ -47,6 +47,8 @@ stage('Check Sonarqube Upgrades') {
             mkdir -p artifacts previous-artifacts/artifacts
             DOCKER_ARTIFACT_CONTENT=$(cat "previous-artifacts/artifacts/${DOCKER_ARTIFACT}" | echo "")
 
+            echo "Starting docker image"
+
             docker run --pull always -i \
               --name="$DOCKER_NAME" \
               -e GIT_TOKEN="$GITHUB_TOKEN" \
