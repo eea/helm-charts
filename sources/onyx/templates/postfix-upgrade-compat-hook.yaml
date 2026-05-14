@@ -1,0 +1,73 @@
+{{- if and .Values.postfix.enabled (default true .Values.postfix.upgradeCompatibility.cleanupLegacyDeploymentSelector) }}
+{{- $targetDeployment := (default (printf "%s-postfix" .Release.Name) .Values.postfix.upgradeCompatibility.deploymentName) -}}
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ include "onyx.fullname" . }}-postfix-upgrade-hook
+  labels:
+    {{- include "onyx.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": pre-upgrade
+    "helm.sh/hook-weight": "-10"
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ include "onyx.fullname" . }}-postfix-upgrade-hook
+  labels:
+    {{- include "onyx.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": pre-upgrade
+    "helm.sh/hook-weight": "-9"
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+rules:
+  - apiGroups: ["apps"]
+    resources: ["deployments"]
+    verbs: ["get", "list", "delete"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ include "onyx.fullname" . }}-postfix-upgrade-hook
+  labels:
+    {{- include "onyx.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": pre-upgrade
+    "helm.sh/hook-weight": "-8"
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "onyx.fullname" . }}-postfix-upgrade-hook
+    namespace: {{ .Release.Namespace }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ include "onyx.fullname" . }}-postfix-upgrade-hook
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "onyx.fullname" . }}-postfix-upgrade-hook
+  labels:
+    {{- include "onyx.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": pre-upgrade
+    "helm.sh/hook-weight": "-7"
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+spec:
+  backoffLimit: 0
+  ttlSecondsAfterFinished: 300
+  template:
+    spec:
+      restartPolicy: Never
+      serviceAccountName: {{ include "onyx.fullname" . }}-postfix-upgrade-hook
+      containers:
+        - name: cleanup-postfix-deployment
+          image: bitnami/kubectl:1.30
+          imagePullPolicy: IfNotPresent
+          command: ["/bin/sh", "-ec"]
+          args:
+            - |
+              kubectl -n {{ .Release.Namespace }} delete deployment {{ $targetDeployment }} --ignore-not-found=true
+{{- end }}

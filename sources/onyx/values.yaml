@@ -4,7 +4,7 @@
 
 global:
   # Global version for all Onyx components (overrides .Chart.AppVersion)
-  version: "v2.3.0-eea.0.0.90-dev"
+  version: ""
   # Optional global image settings. If repository is set, all core components default to this repo.
   # Component-specific tags can be set under tags; fall back to per-component tags or global.version.
   image:
@@ -1824,6 +1824,12 @@ configMap:
 # Postfix mail relay configuration
 postfix:
   enabled: false
+  # Compatibility hook for upgrades where old postfix Deployment selectors are immutable.
+  # On upgrade this deletes the old `<release>-postfix` Deployment so Helm can recreate it.
+  upgradeCompatibility:
+    cleanupLegacyDeploymentSelector: true
+    # Optional override for Deployment name. Empty = <release>-postfix
+    deploymentName: ""
   dryrun: false
   serverName: ""
   mtpHost: ""
