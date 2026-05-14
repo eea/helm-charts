@@ -12,7 +12,7 @@ pipeline {
   stages {
     stage('Check Sonarqube Upgrades') {
       environment {
-        HELM_CHART=sonarqube
+        HELM_CHART="sonarqube"
         GITHUB_RELEASES="https://api.github.com/repos/SonarSource/sonarqube/releases"
         RELEASE_PREFIX=""
         RELEASE_SUFFIX="-developer"
@@ -30,13 +30,13 @@ pipeline {
    /*
     stage('Check Onyx Upgrades') {
       environment {
-        HELM_CHART=onyx-demo
-        GITHUB_RELEASES=https://api.github.com/repos/onyx-dot-app/onyx/releases
+        HELM_CHART="onyx-demo"
+        GITHUB_RELEASES="https://api.github.com/repos/onyx-dot-app/onyx/releases"
         RELEASE_PREFIX=""
         RELEASE_SUFFIX=""
         HELM_UPGRADE_APPVERSION="yes"
-        DOCKER_IMAGENAME=onyx
-        DOCKER_NAME=$IMAGE_NAME-gitflow-onyx
+        DOCKER_IMAGENAME="onyx"
+        DOCKER_NAME="$IMAGE_NAME-gitflow-onyx"
         FLEET_LOCATIONS="apps/01dev/onyx-demo"
       }
       steps {
