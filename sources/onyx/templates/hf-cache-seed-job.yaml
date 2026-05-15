@@ -1,0 +1,55 @@
+{{- if and .Values.hfCache.enabled .Values.hfCache.seedJob.enabled }}
+{{- $seedRepo := .Values.global.image.repository }}
+{{- if and .Values.hfCache.seedJob.image .Values.hfCache.seedJob.image.repository }}
+  {{- $seedRepo = .Values.hfCache.seedJob.image.repository }}
+{{- end }}
+{{- $seedTag := default .Values.global.image.tags.modelServer (printf "model_server-%s" (default .Chart.AppVersion .Values.global.version)) }}
+{{- if and .Values.hfCache.seedJob.image .Values.hfCache.seedJob.image.tag }}
+  {{- $seedTag = .Values.hfCache.seedJob.image.tag }}
+{{- end }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "onyx.fullname" . }}-hf-cache-seed
+  labels:
+    {{- include "onyx.labels" . | nindent 4 }}
+spec:
+  backoffLimit: {{ default 1 .Values.hfCache.seedJob.backoffLimit }}
+  {{- if .Values.hfCache.seedJob.activeDeadlineSeconds }}
+  activeDeadlineSeconds: {{ .Values.hfCache.seedJob.activeDeadlineSeconds }}
+  {{- end }}
+  {{- if .Values.hfCache.seedJob.ttlSecondsAfterFinished }}
+  ttlSecondsAfterFinished: {{ .Values.hfCache.seedJob.ttlSecondsAfterFinished }}
+  {{- end }}
+  template:
+    metadata:
+      labels:
+        {{- include "onyx.labels" . | nindent 8 }}
+    spec:
+      restartPolicy: OnFailure
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: hf-cache-seed
+          image: "{{ $seedRepo }}:{{ $seedTag }}"
+          imagePullPolicy: {{ default "IfNotPresent" .Values.hfCache.seedJob.image.pullPolicy }}
+          command:
+            - /bin/sh
+            - -ec
+            - |
+              mkdir -p {{ .Values.hfCache.mountPath }}
+              cp -a {{ .Values.hfCache.mountPath }}/. /cache
+          {{- with .Values.hfCache.seedJob.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+            - name: hf-cache
+              mountPath: /cache
+      volumes:
+        - name: hf-cache
+          persistentVolumeClaim:
+            claimName: {{ .Values.hfCache.pvc.name }}
+{{- end }}

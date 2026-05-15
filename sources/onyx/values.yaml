@@ -1874,3 +1874,26 @@ networkPolicy:
     # Allow access from specific source IP ranges (CIDR notation)
     # If empty, allows from any source (less secure but more flexible)
     allowFrom: []
+
+# Optional shared HuggingFace cache volume (opt-in)
+hfCache:
+  enabled: false
+  pvc:
+    name: "onyx-hf-cache"
+    storageClass: ""
+    size: "20Gi"
+    accessModes:
+      - ReadWriteMany
+  mountPath: "/usr/share/huggingface"
+  seedJob:
+    enabled: false
+    backoffLimit: 1
+    # Optional for large image pulls / long copies
+    # activeDeadlineSeconds: 7200
+    # ttlSecondsAfterFinished: 86400
+    # Use model-server image by default (version-aware via appVersion/global.version fallback)
+    image:
+      repository: ""
+      tag: ""
+      pullPolicy: "IfNotPresent"
+    resources: {}

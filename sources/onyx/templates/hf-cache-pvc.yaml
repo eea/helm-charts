@@ -1,0 +1,17 @@
+{{- if .Values.hfCache.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Values.hfCache.pvc.name }}
+  labels:
+    {{- include "onyx.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    {{- toYaml .Values.hfCache.pvc.accessModes | nindent 4 }}
+  resources:
+    requests:
+      storage: {{ .Values.hfCache.pvc.size }}
+  {{- if .Values.hfCache.pvc.storageClass }}
+  storageClassName: {{ .Values.hfCache.pvc.storageClass }}
+  {{- end }}
+{{- end }}
