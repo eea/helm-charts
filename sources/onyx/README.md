@@ -73,7 +73,8 @@ When `autoscaling.engine` is set to `keda`, the chart will render the existing S
 ## Releases
 
 ### Version 0.5.3 - 14 May 2026
-- Added postfix upgrade compatibility hook (pre-upgrade cleanup of legacy `onyx-postfix` Deployment selector conflicts), kept image tag resolution from Chart `appVersion` (`global.version: ""`), and fixed 01dev nginx rate-limiting typo (`enabled: true`).
+- Added postfix upgrade compatibility hook (pre-upgrade cleanup of legacy `onyx-postfix` Deployment selector conflicts), then fixed hook execution by running `kubectl` directly (no `/bin/sh` dependency) and by honoring explicit `postfix.upgradeCompatibility.cleanupLegacyDeploymentSelector: false`.
+- Kept image tag resolution from Chart `appVersion` (`global.version: ""`) and fixed 01dev nginx rate-limiting typo (`enabled: true`).
 
 ### Version 0.5.2 - 14 May 2026
 - Added MCP server (deployment, service, ingress) and Discord bot deployment

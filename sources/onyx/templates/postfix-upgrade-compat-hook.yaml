@@ -1,4 +1,8 @@
-{{- if and .Values.postfix.enabled (default true .Values.postfix.upgradeCompatibility.cleanupLegacyDeploymentSelector) }}
+{{- $cleanupEnabled := true -}}
+{{- if and .Values.postfix .Values.postfix.upgradeCompatibility (hasKey .Values.postfix.upgradeCompatibility "cleanupLegacyDeploymentSelector") -}}
+{{- $cleanupEnabled = .Values.postfix.upgradeCompatibility.cleanupLegacyDeploymentSelector -}}
+{{- end -}}
+{{- if and .Values.postfix.enabled $cleanupEnabled }}
 {{- $targetDeployment := (default (printf "%s-postfix" .Release.Name) .Values.postfix.upgradeCompatibility.deploymentName) -}}
 {{- $hookRepo := (default "rancher/kubectl" .Values.postfix.upgradeCompatibility.hookImage.repository) -}}
 {{- $hookTag := (default "v1.30.3" .Values.postfix.upgradeCompatibility.hookImage.tag) -}}
@@ -69,8 +73,12 @@ spec:
         - name: cleanup-postfix-deployment
           image: {{ printf "%s:%s" $hookRepo $hookTag | quote }}
           imagePullPolicy: {{ $hookPullPolicy }}
-          command: ["/bin/sh", "-ec"]
+          command: ["kubectl"]
           args:
-            - |
-              kubectl -n {{ .Release.Namespace }} delete deployment {{ $targetDeployment }} --ignore-not-found=true
+            - "-n"
+            - {{ .Release.Namespace | quote }}
+            - "delete"
+            - "deployment"
+            - {{ $targetDeployment | quote }}
+            - "--ignore-not-found=true"
 {{- end }}
