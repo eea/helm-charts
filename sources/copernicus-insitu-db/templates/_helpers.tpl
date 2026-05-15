@@ -87,6 +87,10 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- printf "%s-webserver" (include "appl.fullname" .) }}
 {{- end }}
 
+{{- define "appl.commonEnvConfigMapName" -}}
+{{- printf "%s-common-env" (include "appl.fullname" .) }}
+{{- end }}
+
 {{/* Shared PVC names */}}
 {{- define "appl.staticClaimName" -}}
 {{- if .Values.persistence.staticfiles.existingClaim }}

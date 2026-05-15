@@ -24,12 +24,15 @@ spec:
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
       containers:
         - name: web
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
               containerPort: {{ .Values.web.service.port }}
               protocol: TCP
+          envFrom:
+            - configMapRef:
+                name: {{ include "appl.commonEnvConfigMapName" . }}
           env:
             - name: TZ
               value: {{ .Values.timezone | quote }}
@@ -37,7 +40,7 @@ spec:
               value: {{ include "appl.databaseServiceName" . | quote }}
             - name: EMAIL_HOST
               value: {{ include "appl.mailserverServiceName" . | quote }}
-            {{- $env := mergeOverwrite (deepCopy .Values.commonEnv) .Values.web.env }}
+            {{- $env := default (dict) .Values.web.env }}
             {{- range $key := keys $env | sortAlpha }}
             - name: {{ $key }}
               value: {{ index $env $key | quote }}

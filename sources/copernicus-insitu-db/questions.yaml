@@ -15,7 +15,8 @@ questions:
   - variable: "image.tag"
     label: "Image tag"
     type: "string"
-    default: "3.0.8"
+    default: ""
+    description: "Defaults to Chart.appVersion when empty"
     group: "General"
 
   - variable: "image.pullPolicy"

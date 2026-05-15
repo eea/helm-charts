@@ -24,12 +24,15 @@ spec:
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
       containers:
         - name: cron
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           {{- if .Values.cron.command }}
           command:
             {{- toYaml .Values.cron.command | nindent 12 }}
           {{- end }}
+          envFrom:
+            - configMapRef:
+                name: {{ include "appl.commonEnvConfigMapName" . }}
           env:
             - name: TZ
               value: {{ .Values.timezone | quote }}
@@ -37,7 +40,7 @@ spec:
               value: {{ include "appl.databaseServiceName" . | quote }}
             - name: EMAIL_HOST
               value: {{ include "appl.mailserverServiceName" . | quote }}
-            {{- $env := mergeOverwrite (deepCopy .Values.commonEnv) .Values.cron.env }}
+            {{- $env := default (dict) .Values.cron.env }}
             {{- range $key := keys $env | sortAlpha }}
             - name: {{ $key }}
               value: {{ index $env $key | quote }}
