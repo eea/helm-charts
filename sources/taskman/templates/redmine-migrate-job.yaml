@@ -1,3 +1,4 @@
+{{- if ne .Values.redmineMigrate.enabled false }}
 {{- $migrate := .Values.redmineMigrate | default dict }}
 {{- $migrateEnv := $migrate.environment | default dict }}
 {{- $migrateHistorySlots := 3 }}
@@ -134,3 +135,4 @@ spec:
           claimName: {{ $pluginsClaim }}
       - name: plugins-workdir
         emptyDir: {}
+{{- end }}

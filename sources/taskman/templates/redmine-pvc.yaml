@@ -1,0 +1,84 @@
+{{- $filesClaim := .Values.storage.filesDir.existingClaim | default (printf "redmine-files-%s-redmine-ss-0" .Release.Name) }}
+{{- $tmpClaim := .Values.storage.tmpDir.existingClaim | default (printf "redmine-tmp-%s-redmine-ss-0" .Release.Name) }}
+{{- $githubClaim := .Values.storage.github.existingClaim | default (printf "github-%s-redmine-ss-0" .Release.Name) }}
+{{- $pluginsClaim := .Values.storage.plugins.existingClaim | default (printf "plugins-%s-redmine-ss-0" .Release.Name) }}
+{{- $filesExisting := .Values.storage.filesDir.existingClaim | default "" }}
+{{- $tmpExisting := .Values.storage.tmpDir.existingClaim | default "" }}
+{{- $githubExisting := .Values.storage.github.existingClaim | default "" }}
+{{- $pluginsExisting := .Values.storage.plugins.existingClaim | default "" }}
+{{- if not $filesExisting }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ $filesClaim }}
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    app.kubernetes.io/component: redmine
+  annotations:
+    "helm.sh/resource-policy": keep
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.storage.filesDir.size | default "200Gi" }}
+  storageClassName: {{ .Values.storage.filesDir.storageClassName | quote }}
+{{- end }}
+{{- if not $tmpExisting }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ $tmpClaim }}
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    app.kubernetes.io/component: redmine
+  annotations:
+    "helm.sh/resource-policy": keep
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.storage.tmpDir.size | default "10Gi" }}
+  storageClassName: {{ .Values.storage.tmpDir.storageClassName | quote }}
+{{- end }}
+{{- if not $githubExisting }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ $githubClaim }}
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    app.kubernetes.io/component: redmine
+  annotations:
+    "helm.sh/resource-policy": keep
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.storage.github.size | default "1Gi" }}
+  storageClassName: {{ .Values.storage.github.storageClassName | quote }}
+{{- end }}
+{{- if not $pluginsExisting }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ $pluginsClaim }}
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    app.kubernetes.io/component: redmine
+  annotations:
+    "helm.sh/resource-policy": keep
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.storage.plugins.size | default "1Gi" }}
+  storageClassName: {{ .Values.storage.plugins.storageClassName | quote }}
+{{- end }}

@@ -211,6 +211,8 @@ spec:
           value: {{ .Values.redmine.environment.PLUGINS_USER | quote }}
         - name: PLUGINS_PASSWORD
           value: {{ .Values.redmine.environment.PLUGINS_PASSWORD | quote }}
+        - name: ADDONS_SYNC_MODE
+          value: {{ .Values.addonsSync.syncMode | default "full" | quote }}
         - name: A1_THEME_URL
           value: {{ .Values.redmine.environment.A1_THEME_URL | default "" | quote }}
         - name: A1_THEME_ZIP
@@ -218,10 +220,21 @@ spec:
         volumeMounts:
         - name: plugins
           mountPath: /addons-0
+        {{- if eq .Values.addonsSync.syncMode "additive" }}
+        - name: sync-addons-script
+          mountPath: /usr/local/bin/sync_addons_from_share.sh
+          subPath: sync_addons_from_share.sh
+        {{- end }}
         resources:
           {{- toYaml ($addonsSync.resources | default dict) | nindent 10 }}
       volumes:
       - name: plugins
         persistentVolumeClaim:
           claimName: {{ $pluginsClaim }}
+      {{- if eq .Values.addonsSync.syncMode "additive" }}
+      - name: sync-addons-script
+        configMap:
+          name: {{ .Release.Name }}-sync-addons-script
+          defaultMode: 0755
+      {{- end }}
 {{- end }}

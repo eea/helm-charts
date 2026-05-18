@@ -164,6 +164,7 @@ redmine:
 
 addonsSync:
   enabled: true
+  syncMode: full  # "full" = wipe+re-download all; "additive" = preserve non-manifest plugins
   source: "share"
   skipIfPresent: "0"
   backoffLimit: 3
@@ -205,15 +206,6 @@ redmineJobs:
     enabled: true
     config: |-
       production:
-        rails_pulse_summary:
-          class: RailsPulse::SummaryJob
-          schedule: every 5 minutes
-        rails_pulse_day_refresh:
-          command: "begin; RailsPulse::SummaryService.new('day', Time.current).perform; Rails.logger.info('[rails_pulse_day_refresh] ok'); rescue => e; Rails.logger.error(\"[rails_pulse_day_refresh] #{e.class}: #{e.message}\"); raise; end"
-          schedule: every 5 minutes
-        rails_pulse_cleanup:
-          class: RailsPulse::CleanupJob
-          schedule: 17 3 * * *
         solid_queue_cleanup_old_jobs:
           command: "begin; cutoff = 7.days.ago; scope = SolidQueue::Job.where.not(finished_at: nil).where('finished_at < ?', cutoff); total = scope.count; scope.in_batches(of: 500) { |batch| batch.delete_all }; Rails.logger.info(\"[solid_queue_cleanup_old_jobs] deleted=#{total} cutoff=#{cutoff.iso8601}\"); rescue => e; Rails.logger.error(\"[solid_queue_cleanup_old_jobs] #{e.class}: #{e.message}\"); raise; end"
           schedule: 25 3 * * *
