@@ -3,6 +3,9 @@
 Helm chart for the Copernicus In-Situ DB stack.
 ## Releases
 
+### Version 1.2.8 - 18 May 2026
+- Added configurable NodePort questions for CIS2 web services
+
 ### Version 1.2.7 - 18 May 2026
 - Upgraded eeacms/copernicus-insitu-db:4.0.5 [Diana Boiangiu - [`d298bff4`](https://github.com/eea/helm-charts/commit/d298bff4fddddc7771d63cf332597d129314f326)]
 
@@ -50,4 +53,3 @@ Helm chart for the Copernicus In-Situ DB stack.
 
 ### Version 0.1.1 - 27 February 2026
 - fix ingres [Dobricean Ioan Dorian - [`956d42ab`](https://github.com/eea/helm-charts/commit/956d42abcfe84268a175b67e8f5d78762ef90e9b)]
-

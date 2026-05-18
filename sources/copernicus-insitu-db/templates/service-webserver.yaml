@@ -12,6 +12,9 @@ spec:
       port: {{ .Values.webserver.service.port }}
       targetPort: http
       protocol: TCP
+      {{- if and (eq .Values.webserver.service.type "NodePort") .Values.webserver.service.nodePort }}
+      nodePort: {{ .Values.webserver.service.nodePort }}
+      {{- end }}
   selector:
     {{- include "appl.selectorLabels" . | nindent 4 }}
     component: webserver

@@ -157,6 +157,14 @@ questions:
     required: true
     group: "Web"
 
+  - variable: "web.service.nodePort"
+    label: "Web NodePort"
+    description: "Optional fixed NodePort for the web service. Leave empty to let Kubernetes assign one."
+    type: "string"
+    default: ""
+    group: "Web"
+    show_if: "web.service.type=NodePort"
+
   - variable: "web.resources.requests.memory"
     label: "Web memory request"
     type: "string"
@@ -544,6 +552,14 @@ questions:
     default: 80
     required: true
     group: "Webserver"
+
+  - variable: "webserver.service.nodePort"
+    label: "Webserver NodePort"
+    description: "Optional fixed NodePort for exposing the application. Leave empty to let Kubernetes assign one."
+    type: "string"
+    default: ""
+    group: "Webserver"
+    show_if: "webserver.service.type=NodePort"
 
   - variable: "webserver.resources.requests.memory"
     label: "Webserver memory request"

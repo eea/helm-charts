@@ -84,6 +84,7 @@ web:
   service:
     type: ClusterIP
     port: 8000
+    nodePort: ""
   resources:
     requests:
       memory: 1Gi
@@ -152,6 +153,7 @@ webserver:
   service:
     type: ClusterIP
     port: 80
+    nodePort: ""
   resources:
     requests:
       memory: 64Mi
