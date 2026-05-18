@@ -1,0 +1,17 @@
+{{- if .Values.instance.env.zipCacheEnabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "appl.fullname" . }}-zipcache-storage
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    app.kubernetes.io/component: zope-zipcache-storage
+  annotations:
+    "helm.sh/resource-policy": keep
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+{{- end }}

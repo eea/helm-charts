@@ -1,0 +1,66 @@
+{{- if and .Values.ingress.enabled (eq .Values.ingress.type "gatewayAPI") }}
+{{- $fullName := include "appl.fullname" . }}
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: {{ $fullName }}-https
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    app.kubernetes.io/component: gateway-httproute
+spec:
+  hostnames:
+    - {{ .Values.ingress.hostname | quote }}
+  parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: {{ .Values.ingress.gatewayAPI.gatewayName }}
+      {{- with .Values.ingress.gatewayAPI.gatewayNamespace }}
+      namespace: {{ . }}
+      {{- end }}
+      sectionName: {{ .Values.ingress.gatewayAPI.sectionName }}
+  rules:
+    - backendRefs:
+        {{- range .Values.ingress.paths }}
+        - name: {{ .backendServiceName | default (printf "%s-varnish" $fullName) }}
+          port: {{ .backendPort | default 8080 }}
+        {{- end }}
+      matches:
+        {{- range .Values.ingress.paths }}
+        - path:
+            type: {{ if eq .pathType "Exact" }}Exact{{ else }}PathPrefix{{ end }}
+            value: {{ .path }}
+        {{- end }}
+      {{- with .Values.ingress.proxyReadTimeout }}
+      timeouts:
+        backendRequest: {{ printf "%ss" . | quote }}
+      {{- end }}
+      filters:
+        - type: URLRewrite
+          urlRewrite:
+            path:
+              type: ReplacePrefixMatch
+              replacePrefixMatch: /VirtualHostBase/https/{{ .Values.ingress.hostname }}:443/VirtualHostRoot/
+        {{- if .Values.ingress.responseHeaders }}
+        - type: ResponseHeaderModifier
+          responseHeaderModifier:
+            set:
+              {{- range .Values.ingress.responseHeaders }}
+              - name: {{ .name }}
+                value: {{ .value | quote }}
+              {{- end }}
+        {{- end }}
+        {{- if .Values.ingress.rateLimit.enabled }}
+        - type: ExtensionRef
+          extensionRef:
+            group: traefik.io
+            kind: Middleware
+            name: {{ $fullName }}-rate-limit
+        {{- end }}
+        {{- if .Values.ingress.proxyBodySize }}
+        - type: ExtensionRef
+          extensionRef:
+            group: traefik.io
+            kind: Middleware
+            name: {{ $fullName }}-buffering
+        {{- end }}
+{{- end }}

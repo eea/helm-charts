@@ -1,0 +1,63 @@
+{{- if and .Values.ingress.enabled (eq .Values.ingress.type "nginx") -}}
+{{- $fullName := include "appl.fullname" . -}}
+{{- $prefix := .Values.ingress.nginx.annotationPrefix -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ $fullName }}
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    app.kubernetes.io/component: ingress
+  annotations:
+    {{ $prefix }}/use-regex: "true"
+    {{ $prefix }}/rewrite-target: /VirtualHostBase/https/{{ .Values.ingress.hostname }}:443/VirtualHostRoot/$1
+    {{ $prefix }}/proxy-body-size: {{ .Values.ingress.proxyBodySize | quote }}
+    {{ $prefix }}/proxy-read-timeout: {{ .Values.ingress.proxyReadTimeout | quote }}
+    {{ $prefix }}/proxy-send-timeout: {{ .Values.ingress.proxySendTimeout | quote }}
+    {{- if .Values.ingress.responseHeaders }}
+    {{ $prefix }}/configuration-snippet: |
+      {{- range .Values.ingress.responseHeaders }}
+      more_set_headers "{{ .name }}: {{ .value }}";
+      {{- end }}
+    {{- end }}
+    {{- if .Values.ingress.nginx.serverSnippet }}
+    {{ $prefix }}/server-snippet: |
+      {{- .Values.ingress.nginx.serverSnippet | nindent 6 }}
+    {{- end }}
+    {{- if .Values.ingress.rateLimit.enabled }}
+    {{ $prefix }}/limit-rps: {{ .Values.ingress.rateLimit.rps | quote }}
+    {{- if .Values.ingress.rateLimit.rpm }}
+    {{ $prefix }}/limit-rpm: {{ .Values.ingress.rateLimit.rpm | quote }}
+    {{- end }}
+    {{- if .Values.ingress.rateLimit.connections }}
+    {{ $prefix }}/limit-connections: {{ .Values.ingress.rateLimit.connections | quote }}
+    {{- end }}
+    {{- if .Values.ingress.rateLimit.whitelist }}
+    {{ $prefix }}/limit-whitelist: {{ .Values.ingress.rateLimit.whitelist | quote }}
+    {{- end }}
+    {{- end }}
+    {{- with .Values.ingress.nginx.extraAnnotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  ingressClassName: {{ .Values.ingress.nginx.className }}
+  {{- if .Values.ingress.tlsSecretName }}
+  tls:
+    - hosts:
+        - {{ .Values.ingress.hostname | quote }}
+      secretName: {{ .Values.ingress.tlsSecretName | quote }}
+  {{- end }}
+  rules:
+    - host: {{ .Values.ingress.hostname | quote }}
+      http:
+        paths:
+          {{- range .Values.ingress.paths }}
+          - path: {{ .path }}(.*)
+            pathType: {{ .pathType | default "ImplementationSpecific" }}
+            backend:
+              service:
+                name: {{ .backendServiceName | default (printf "%s-varnish" $fullName) }}
+                port:
+                  number: {{ .backendPort | default 8080 }}
+          {{- end }}
+{{- end }}

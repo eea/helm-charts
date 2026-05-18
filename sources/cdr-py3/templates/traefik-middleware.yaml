@@ -1,0 +1,39 @@
+{{- if .Values.ingress.enabled }}
+{{- $fullName := include "appl.fullname" . }}
+{{- if and (eq .Values.ingress.type "gatewayAPI") .Values.ingress.rateLimit.enabled }}
+# Rate limiting (used by gatewayAPI mode)
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: {{ $fullName }}-rate-limit
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+spec:
+  rateLimit:
+    average: {{ .Values.ingress.rateLimit.rps }}
+    burst: {{ .Values.ingress.rateLimit.burst }}
+{{- end }}
+{{- if and (eq .Values.ingress.type "gatewayAPI") .Values.ingress.proxyBodySize }}
+# Request body size limit (used by gatewayAPI mode)
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: {{ $fullName }}-buffering
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+spec:
+  buffering:
+    {{- $sizeStr := .Values.ingress.proxyBodySize -}}
+    {{- $sizeInt := 0 -}}
+    {{- if hasSuffix "m" $sizeStr -}}
+      {{- $sizeInt = mul (trimSuffix "m" $sizeStr | int64) 1048576 -}}
+    {{- else if hasSuffix "g" $sizeStr -}}
+      {{- $sizeInt = mul (trimSuffix "g" $sizeStr | int64) 1073741824 -}}
+    {{- else -}}
+      {{- $sizeInt = $sizeStr | int64 -}}
+    {{- end }}
+    maxRequestBodyBytes: {{ $sizeInt }}
+{{- end }}
+{{- end }}

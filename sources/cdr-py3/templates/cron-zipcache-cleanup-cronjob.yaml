@@ -1,0 +1,58 @@
+{{- if and .Values.cron.enabled .Values.cronzipcachecleanup.enabled }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "appl.fullname" . }}-cron-zipcache-cleanup
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    app.kubernetes.io/component: job
+
+spec:
+  schedule: "{{ .Values.cronzipcachecleanup.schedule }}"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          {{- with .Values.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
+          containers:
+          - name: {{ include "appl.fullname" . }}
+            image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+            imagePullPolicy: {{ .Values.image.pullPolicy }}
+            resources:
+              {{- toYaml .Values.cronzipcachecleanup.resources | nindent 14 }}
+            # Pass via args so the image entrypoint runs first and generates
+            # /opt/zope/etc/zodb.conf before zconsole tries to read it.
+            args:
+            - bash
+            - -c
+            - |
+              /opt/zope/bin/zconsole run /opt/zope/etc/zope.conf /opt/zope/bin/zip_cache_cleanup && echo "Successfully zip cache cleanup"
+            envFrom:
+            - configMapRef:
+                name: {{ include "appl.fullname" . }}-instance-env
+            - secretRef:
+                name: {{ include "appl.fullname" . }}-instance-env
+            volumeMounts:
+              {{- if .Values.instance.env.zipCacheEnabled }}
+              - mountPath: /opt/zope/var/zip_cache
+                name: {{ include "appl.fullname" . }}-zipcache-storage
+              {{- end }}
+              - mountPath: /tmp
+                name: {{ include "appl.fullname" . }}-tmpdir-storage
+          restartPolicy: Never
+          volumes:
+            {{- if .Values.instance.env.zipCacheEnabled }}
+            - name: {{ include "appl.fullname" . }}-zipcache-storage
+              persistentVolumeClaim:
+                claimName: {{ include "appl.fullname" . }}-zipcache-storage
+            {{- end }}
+            - name: {{ include "appl.fullname" . }}-tmpdir-storage
+              persistentVolumeClaim:
+                claimName: {{ include "appl.fullname" . }}-tmpdir-storage
+{{- end }}

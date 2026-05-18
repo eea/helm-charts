@@ -1,0 +1,627 @@
+questions:
+  # Basic Settings
+  - variable: timezone
+    label: "Timezone"
+    type: string
+    default: "Europe/Copenhagen"
+    group: "Basic Settings"
+
+  - variable: instance.replicaCount
+    label: "Number of CDR zope instances"
+    type: int
+    min: 1
+    default: 2
+    group: "Basic Settings"
+
+  # Core components
+  - variable: instance.resources.requests.memory
+    label: "Zope instance Memory Request"
+    type: string
+    default: "2Gi"
+    group: "Core components"
+
+  - variable: instance.resources.limits.memory
+    label: "Zope instance Memory Limit"
+    type: string
+    default: "2Gi"
+    group: "Core components"
+
+  - variable: instance.resources.requests.cpu
+    label: "Zope instance CPU Request"
+    type: string
+    default: "500m"
+    group: "Core components"
+
+  - variable: autoscaling.enabled
+    label: "Enable Zope instances Autoscaling"
+    type: boolean
+    default: false
+    group: "Core components"
+    show_subquestion_if: true
+    subquestions:
+      - variable: autoscaling.minReplicas
+        label: "Minimum Replicas"
+        type: int
+        default: 1
+        group: "Core components"
+
+      - variable: autoscaling.maxReplicas
+        label: "Maximum Replicas"
+        type: int
+        default: 2
+        group: "Core components"
+
+  - variable: zeoserver.storage
+    label: "ZEO Server Storage Size"
+    type: string
+    default: "10Gi"
+    group: "Core components"
+
+  - variable: zeoserver.accessMode
+    label: "ZEO Server Storage Access Mode"
+    description: "Set to ReadWriteMany on a storage class that supports it (e.g. nfs-client) to allow shared-blob mode (instance pods mount the same volume directly)."
+    type: enum
+    options:
+      - "ReadWriteOnce"
+      - "ReadWriteMany"
+    default: "ReadWriteOnce"
+    group: "Core components"
+
+  - variable: zeoserver.resources.requests.memory
+    label: "ZEO Server Memory Request"
+    type: string
+    default: "1Gi"
+    group: "Core components"
+
+  - variable: varnish.resources.requests.memory
+    label: "Varnish Memory Request"
+    type: string
+    default: "5Gi"
+    group: "Core components"
+
+  - variable: varnish.varnishBackend
+    label: "Varnish Backend"
+    type: string
+    default: "cdr-py3-instance"
+    group: "Core components"
+
+  - variable: varnish.varnishBackendPort
+    label: "Varnish Backend Port"
+    type: string
+    default: "8080"
+    group: "Core components"
+
+  - variable: local-converters.resources.requests.memory
+    label: "Local Converters Memory Request"
+    type: string
+    default: "1.5Gi"
+    group: "Core components"
+
+  - variable: local-converters.resources.requests.cpu
+    label: "Local Converters CPU Request"
+    type: string
+    default: "300m"
+    group: "Core components"
+
+  - variable: local-converters.resources.limits.memory
+    label: "Local Converters Memory Limit"
+    type: string
+    default: "1.5Gi"
+    group: "Core components"
+
+  - variable: local-converters.autoscaling.enabled
+    label: "Enable Autoscaling for Local Converters"
+    type: boolean
+    default: true
+    group: "Core components"
+    show_subquestion_if: true
+    subquestions:
+      - variable: local-converters.autoscaling.minReplicas
+        label: "Minimum Replicas for Local Converters"
+        type: int
+        default: 1
+        group: "Core components"
+      - variable: local-converters.autoscaling.maxReplicas
+        label: "Maximum Replicas for Local Converters"
+        type: int
+        default: 2
+        group: "Core components"
+
+  - variable: clamav.storage
+    label: "ClamAV Storage Size"
+    type: string
+    default: "1Gi"
+    group: "Core components"
+
+  - variable: clamav.resources.requests.memory
+    label: "ClamAV Memory Request"
+    type: string
+    default: "3.5Gi"
+    group: "Core components"
+
+  - variable: clamav.resources.requests.cpu
+    label: "ClamAV CPU Request"
+    type: string
+    default: "300m"
+    group: "Core components"
+
+  - variable: clamav.resources.limits.memory
+    label: "ClamAV Memory Limit"
+    type: string
+    default: "3.5Gi"
+    group: "Core components"
+
+  - variable: clamav.resources.limits.cpu
+    label: "ClamAV CPU Limit"
+    type: string
+    default: "300m"
+    group: "Core components"
+
+  - variable: clamav.autoscaling.enabled
+    label: "Enable Autoscaling for ClamAV"
+    type: boolean
+    default: true
+    group: "Core components"
+    show_subquestion_if: true
+    subquestions:
+      - variable: clamav.autoscaling.minReplicas
+        label: "Minimum Replicas for ClamAV"
+        type: int
+        default: 1
+        group: "Core components"
+      - variable: clamav.autoscaling.maxReplicas
+        label: "Maximum Replicas for ClamAV"
+        type: int
+        default: 2
+        group: "Core components"
+      - variable: clamav.autoscaling.targetCPUUtilizationPercentage
+        label: "Target CPU Utilization Percentage for ClamAV"
+        type: int
+        default: 80
+        group: "Core components"
+
+  - variable: rabbitmq.create
+    label: "Create RabbitMQ"
+    type: boolean
+    default: false
+    group: "Core components"
+
+  - variable: rabbitmq.name
+    label: "RabbitMQ Name"
+    type: string
+    default: "rabbitmq"
+    group: "Core components"
+
+  # Cron jobs
+  - variable: cron.enabled
+    label: "Enable Cron Jobs (master switch)"
+    description: "Master switch for all cron jobs. Each individual cron also has its own enabled flag — both must be true for a job to run."
+    type: boolean
+    default: true
+    group: "Cron jobs"
+
+  - variable: cronzeopack.enabled
+    label: "Enable Cron zeopack"
+    type: boolean
+    default: false
+    group: "Cron jobs"
+
+  - variable: cronzeopack.schedule
+    label: "Cron zeopack Schedule"
+    type: string
+    default: "0 3 * * *"
+    show_if: "cronzeopack.enabled"
+    group: "Cron jobs"
+
+  - variable: cronzeopack.repository
+    label: "Cron zeopack Image Repository"
+    description: "zeopack uses the ZEO server image, not the CDR instance image."
+    type: string
+    default: "eeacms/reportek.zeoserver"
+    show_if: "cronzeopack.enabled"
+    group: "Cron jobs"
+
+  - variable: cronzeopack.tag
+    label: "Cron zeopack Image Tag"
+    description: "Required — no fallback to Chart.AppVersion."
+    type: string
+    default: "z5-1.0"
+    show_if: "cronzeopack.enabled"
+    group: "Cron jobs"
+
+  - variable: cronautoenvcleanup.enabled
+    label: "Enable Cron auto env cleanup"
+    type: boolean
+    default: false
+    group: "Cron jobs"
+
+  - variable: cronautoenvcleanup.schedule
+    label: "Cron auto env cleanup Schedule"
+    type: string
+    default: "45 3 * * *"
+    show_if: "cronautoenvcleanup.enabled"
+    group: "Cron jobs"
+
+  - variable: cronautocleanup.enabled
+    label: "Enable Cron auto cleanup"
+    type: boolean
+    default: false
+    group: "Cron jobs"
+
+  - variable: cronautocleanup.schedule
+    label: "Cron auto cleanup Schedule"
+    type: string
+    default: "45 3 * * *"
+    show_if: "cronautocleanup.enabled"
+    group: "Cron jobs"
+
+  - variable: cronautofallin.enabled
+    label: "Enable Cron auto fallin"
+    type: boolean
+    default: false
+    group: "Cron jobs"
+
+  - variable: cronautofallin.schedule
+    label: "Cron auto fallin Schedule"
+    type: string
+    default: "*/5 * 16 11 *"
+    show_if: "cronautofallin.enabled"
+    group: "Cron jobs"
+
+  - variable: cronautofallin.env.scheduleStart
+    label: "Cron auto fallin Schedule Start"
+    type: string
+    default: "2019-11-04"
+    show_if: "cronautofallin.enabled"
+    group: "Cron jobs"
+
+  - variable: cronautofallin.env.schedulePeriod
+    label: "Cron auto fallin Schedule Period"
+    type: string
+    default: "yearly"
+    show_if: "cronautofallin.enabled"
+    group: "Cron jobs"
+
+  - variable: cronzipcachecleanup.enabled
+    label: "Enable Cron zip cache cleanup"
+    type: boolean
+    default: true
+    group: "Cron jobs"
+
+  - variable: cronzipcachecleanup.schedule
+    label: "Cron zip cache cleanup Schedule"
+    type: string
+    default: "0 0 4 * *"
+    show_if: "cronzipcachecleanup.enabled"
+    group: "Cron jobs"
+
+  # Networking
+  - variable: ingress.enabled
+    label: "Enable Ingress"
+    type: boolean
+    default: false
+    group: "Networking"
+
+  - variable: ingress.type
+    label: "Ingress Type"
+    type: enum
+    default: "nginx"
+    options:
+      - "nginx"
+      - "gatewayAPI"
+    group: "Networking"
+    show_if: "ingress.enabled=true"
+
+  - variable: ingress.hostname
+    label: "Ingress Hostname"
+    type: string
+    default: "cdr.eionet.europa.eu"
+    group: "Networking"
+    show_if: "ingress.enabled=true"
+
+  - variable: ingress.tlsSecretName
+    label: "TLS Secret Name"
+    type: string
+    default: ""
+    group: "Networking"
+    show_if: "ingress.enabled=true"
+
+  - variable: ingress.nginx.className
+    label: "Ingress Class Name"
+    type: string
+    default: "nginx"
+    group: "Networking"
+    show_if: "ingress.enabled=true&&ingress.type=nginx"
+
+  - variable: ingress.nginx.annotationPrefix
+    label: "Annotation Prefix"
+    type: string
+    default: "nginx.ingress.kubernetes.io"
+    group: "Networking"
+    show_if: "ingress.enabled=true&&ingress.type=nginx"
+
+  - variable: ingress.gatewayAPI.gatewayName
+    label: "Gateway Name"
+    type: string
+    default: "traefik-gateway"
+    group: "Networking"
+    show_if: "ingress.enabled=true&&ingress.type=gatewayAPI"
+
+  - variable: ingress.gatewayAPI.gatewayNamespace
+    label: "Gateway Namespace"
+    type: string
+    default: ""
+    group: "Networking"
+    show_if: "ingress.enabled=true&&ingress.type=gatewayAPI"
+    description: "Namespace where the Gateway resource lives (leave empty if it's in the same namespace as the release)"
+
+  - variable: ingress.gatewayAPI.sectionName
+    label: "Gateway Section Name"
+    type: string
+    default: "websecure"
+    group: "Networking"
+    show_if: "ingress.enabled=true&&ingress.type=gatewayAPI"
+
+  # Webforms Configuration
+  - variable: webforms.0.enabled
+    label: "Enable Webforms Integration"
+    type: boolean
+    default: false
+    group: "Webforms"
+    description: "Enable or disable the webforms external service integration"
+
+  - variable: webforms.0.upstream.host
+    label: "Webforms External Host"
+    type: string
+    default: "webforms.eionet.europa.eu"
+    group: "Webforms"
+    show_if: "webforms.0.enabled=true"
+    description: "External hostname of the webforms service (used as DNS name, Host header, and SNI)"
+
+  - variable: webforms.0.publicPath
+    label: "Webforms Path"
+    type: string
+    default: "/webforms"
+    group: "Webforms"
+    show_if: "webforms.0.enabled=true"
+    description: "URL path prefix exposed on the public ingress (the chart adds the rewrite for nginx and uses PathPrefix for gatewayAPI)"
+
+  - variable: webforms.0.proxyBodySize
+    label: "Maximum Request Body Size"
+    type: string
+    default: "10m"
+    group: "Webforms"
+    show_if: "webforms.0.enabled=true"
+    description: "Maximum allowed size of the client request body"
+
+  - variable: webforms.0.upstream.readTimeout
+    label: "Upstream Read Timeout"
+    type: string
+    default: "60"
+    group: "Webforms"
+    show_if: "webforms.0.enabled=true"
+    description: "Seconds to wait for a response from the external service"
+
+  - variable: webforms.0.upstream.sendTimeout
+    label: "Upstream Send Timeout"
+    type: string
+    default: "60"
+    group: "Webforms"
+    show_if: "webforms.0.enabled=true"
+    description: "Seconds to wait while sending a request to the external service"
+
+  # Advanced Settings
+  - variable: instance.env.zopeThreads
+    label: "Zope Threads"
+    type: int
+    default: 4
+    group: "Advanced Settings"
+
+  - variable: instance.env.beakerSecret
+    label: "Beaker Secret"
+    type: password
+    default: ""
+    group: "Advanced Settings"
+
+  - variable: instance.env.deploymentHost
+    label: "Deployment Host"
+    type: string
+    default: "cdr.eionet.europa.eu"
+    group: "Advanced Settings"
+
+  - variable: instance.env.cachePurgingEnabled
+    label: "Enable Cache Purging"
+    type: boolean
+    default: true
+    group: "Advanced Settings"
+
+  - variable: instance.env.cacheSettingsEnabled
+    label: "Enable Cache Settings"
+    type: boolean
+    default: true
+    show_if: "instance.env.cachePurgingEnabled"
+    group: "Advanced Settings"
+
+  - variable: instance.env.cachePurgingDomain
+    label: "Cache Purging Domain"
+    type: string
+    default: "cdr.eionet.europa.eu"
+    show_if: "instance.env.cachePurgingEnabled"
+    group: "Advanced Settings"
+
+  - variable: instance.env.cachePurgingVhost
+    label: "Cache Purging Vhost"
+    type: string
+    default: "true"
+    show_if: "instance.env.cachePurgingEnabled"
+    group: "Advanced Settings"
+
+  - variable: instance.env.cachePurgingProxy
+    label: "Cache Purging Proxy"
+    type: string
+    default: "http://cdr-py3-varnish"
+    show_if: "instance.env.cachePurgingEnabled"
+    group: "Advanced Settings"
+
+  - variable: instance.env.cachePurgingProxyPort
+    label: "Cache Purging Proxy Port"
+    type: string
+    default: "8080"
+    show_if: "instance.env.cachePurgingEnabled"
+    group: "Advanced Settings"
+
+  - variable: instance.env.clamavHost
+    label: "ClamAV Host"
+    type: string
+    default: "cdr-py3-clamav"
+    group: "Advanced Settings"
+
+  - variable: instance.env.sentryDSN
+    label: "Sentry DSN"
+    type: string
+    default: ""
+    group: "Advanced Settings"
+
+  - variable: instance.env.sentrySite
+    label: "Sentry Site"
+    type: string
+    default: "cdr.eionet.europa.eu"
+    group: "Advanced Settings"
+
+  - variable: instance.env.sentryEnvironment
+    label: "Sentry Environment"
+    type: string
+    default: "production"
+    group: "Advanced Settings"
+
+  - variable: instance.env.graylog
+    label: "Graylog"
+    type: string
+    default: ""
+    group: "Advanced Settings"
+
+  - variable: instance.env.graylogFacility
+    label: "Graylog Facility"
+    type: string
+    default: ""
+    group: "Advanced Settings"
+
+  - variable: instance.env.rabbitmqEnabled
+    label: "Enable RabbitMQ"
+    type: boolean
+    default: true
+    group: "Advanced Settings"
+
+  - variable: instance.env.rabbitmqHost
+    label: "RabbitMQ Host"
+    type: string
+    default: "rabbitmq"
+    show_if: "instance.env.rabbitmqEnabled"
+    group: "Advanced Settings"
+
+  - variable: instance.env.rabbitmqUser
+    label: "RabbitMQ User"
+    type: string
+    default: "guest"
+    show_if: "instance.env.rabbitmqEnabled"
+    group: "Advanced Settings"
+
+  - variable: instance.env.rabbitmqPass
+    label: "RabbitMQ Password"
+    type: password
+    default: ""
+    show_if: "instance.env.rabbitmqEnabled"
+    group: "Advanced Settings"
+
+  - variable: instance.env.rabbitmqPort
+    label: "RabbitMQ Port"
+    type: string
+    default: "5672"
+    show_if: "instance.env.rabbitmqEnabled"
+    group: "Advanced Settings"
+
+  - variable: instance.env.zipCacheEnabled
+    label: "Enable ZIP Cache"
+    type: boolean
+    default: true
+    group: "Advanced Settings"
+
+  - variable: instance.env.zipCacheThreshold
+    label: "ZIP Cache Threshold"
+    type: string
+    default: "100000000"
+    show_if: "instance.env.zipCacheEnabled"
+    group: "Advanced Settings"
+
+  - variable: instance.env.localConvertersHost
+    label: "Local Converters Host"
+    type: string
+    default: "cdr-py3-local-converters"
+    group: "Advanced Settings"
+
+  - variable: instance.env.zeoAddress
+    label: "ZEO Address"
+    type: string
+    default: "cdr-py3-zeoserver:8100"
+    group: "Advanced Settings"
+
+  - variable: instance.env.zeoSharedBlobDir
+    label: "Shared Blob Directory Mode"
+    description: "When 'on', instance pods mount the ZEO server's PVC directly at /opt/zope/var/blobstorage and Zope reads blobs from the shared filesystem instead of streaming over ZEO. Requires zeoserver.accessMode: ReadWriteMany and disables the per-pod emptyDir blob cache."
+    type: enum
+    options:
+      - "off"
+      - "on"
+    default: "off"
+    group: "Advanced Settings"
+
+  - variable: instance.env.blobStorageCacheVolumeEnabled
+    label: "Enable Blob Storage Cache Volume"
+    description: "Per-pod emptyDir cache for blobs streamed from ZEO. Mutually exclusive with shared-blob mode."
+    type: boolean
+    default: true
+    show_if: "instance.env.zeoSharedBlobDir=off"
+    group: "Advanced Settings"
+
+  - variable: instance.env.blobStorageCacheVolumeSize
+    label: "Blob Storage Cache Volume Size"
+    type: string
+    default: "1Gi"
+    show_if: "instance.env.blobStorageCacheVolumeEnabled&&instance.env.zeoSharedBlobDir=off"
+    group: "Advanced Settings"
+
+  - variable: instance.env.zeoClientCacheSize
+    label: "ZEO Client Cache Size"
+    description: "Size of the ZEO client object cache (cache-size in zodb.conf)."
+    type: string
+    default: "128MB"
+    group: "Advanced Settings"
+
+  - variable: instance.env.zeoClientBlobCacheSize
+    label: "ZEO Client Blob Cache Size"
+    description: "Size of the local blob cache. Only applies when shared-blob mode is off."
+    type: string
+    default: "512MB"
+    show_if: "instance.env.zeoSharedBlobDir=off"
+    group: "Advanced Settings"
+
+  - variable: zeoserver.zeoUid
+    label: "ZEO Server UID"
+    description: "UID of the user running the ZEO server. Must be 1000 when zeoSharedBlobDir is on."
+    type: int
+    default: 1000
+    group: "Advanced Settings"
+
+  - variable: zeoserver.zeoGid
+    label: "ZEO Server GID"
+    description: "GID of the user running the ZEO server. Must be 1000 when zeoSharedBlobDir is on."
+    type: int
+    default: 1000
+    group: "Advanced Settings"
+
+  - variable: zeoserver.podSecurityContext.fsGroup
+    label: "ZEO Server fsGroup"
+    description: "Pod fsGroup for the ZEO server. Should match zeoUid/zeoGid."
+    type: int
+    default: 1000
+    group: "Advanced Settings"

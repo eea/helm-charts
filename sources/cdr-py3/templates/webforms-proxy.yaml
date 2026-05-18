@@ -1,0 +1,109 @@
+{{- range .Values.webforms }}
+{{- if .enabled }}
+{{- $wfName := .name }}
+{{- $fullName := include "appl.fullname" $ }}
+{{- $proxyName := printf "%s-%s-proxy" $fullName $wfName }}
+# Nginx reverse proxy for {{ $wfName }} external service
+# Replaces ExternalName service to avoid Traefik ExternalName limitations
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ $proxyName }}-config
+  labels:
+    {{- include "appl.labels" $ | nindent 4 }}
+    app.kubernetes.io/component: {{ $wfName }}-proxy
+data:
+  default.conf: |
+    server {
+        listen 8080;
+
+        location / {
+            proxy_pass https://{{ .upstream.host }};
+            proxy_set_header Host {{ .upstream.host }};
+            proxy_ssl_server_name on;
+            proxy_ssl_name {{ .upstream.host }};
+            {{- if not .upstream.sslVerify }}
+            proxy_ssl_verify off;
+            {{- end }}
+            proxy_read_timeout {{ .upstream.readTimeout }}s;
+            proxy_send_timeout {{ .upstream.sendTimeout }}s;
+            proxy_http_version 1.1;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            {{- if .upstream.forwardClientIP }}
+            proxy_set_header X-Client-IP $remote_addr;
+            {{- end }}
+            {{- if .upstream.forwardHost }}
+            proxy_set_header X-Forwarded-Host $host;
+            {{- end }}
+        }
+    }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $proxyName }}
+  labels:
+    {{- include "appl.labels" $ | nindent 4 }}
+    app.kubernetes.io/component: {{ $wfName }}-proxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: {{ $.Release.Name }}
+      app.kubernetes.io/component: {{ $wfName }}-proxy
+  template:
+    metadata:
+      labels:
+        {{- include "appl.labels" $ | nindent 8 }}
+        app.kubernetes.io/component: {{ $wfName }}-proxy
+      annotations:
+        checksum/config: {{ print .upstream.host .upstream.sslVerify .upstream.readTimeout .upstream.sendTimeout .upstream.forwardClientIP .upstream.forwardHost | sha256sum }}
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:alpine
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: config
+              mountPath: /etc/nginx/conf.d
+          resources:
+            requests:
+              memory: 32Mi
+              cpu: 10m
+            limits:
+              memory: 64Mi
+          livenessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          readinessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+      volumes:
+        - name: config
+          configMap:
+            name: {{ $proxyName }}-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $proxyName }}
+  labels:
+    {{- include "appl.labels" $ | nindent 4 }}
+    app.kubernetes.io/component: {{ $wfName }}-proxy
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8080
+      targetPort: 8080
+      protocol: TCP
+  selector:
+    app.kubernetes.io/instance: {{ $.Release.Name }}
+    app.kubernetes.io/component: {{ $wfName }}-proxy
+{{- end }}
+{{- end }}

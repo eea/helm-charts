@@ -1,0 +1,75 @@
+{{- if and .Values.ingress.enabled (eq .Values.ingress.type "gatewayAPI") }}
+{{- $fullName := include "appl.fullname" . }}
+{{- range .Values.webforms }}
+{{- if .enabled }}
+{{- $wfName := .name }}
+{{- $backendName := printf "%s-%s-proxy" $fullName $wfName }}
+{{- $backendPort := 8080 }}
+# Gateway API HTTPRoute for {{ $wfName }} external service
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: {{ $fullName }}-{{ $wfName }}
+  labels:
+    {{- include "appl.labels" $ | nindent 4 }}
+    app.kubernetes.io/component: gateway-httproute-external
+spec:
+  hostnames:
+    - {{ $.Values.ingress.hostname | quote }}
+  parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: {{ $.Values.ingress.gatewayAPI.gatewayName }}
+      {{- with $.Values.ingress.gatewayAPI.gatewayNamespace }}
+      namespace: {{ . }}
+      {{- end }}
+      sectionName: {{ $.Values.ingress.gatewayAPI.sectionName }}
+  rules:
+    - backendRefs:
+        - name: {{ $backendName }}
+          port: {{ $backendPort }}
+      matches:
+        - path:
+            type: PathPrefix
+            value: {{ .publicPath }}
+      timeouts:
+        backendRequest: {{ printf "%ss" .upstream.readTimeout | quote }}
+      filters:
+        - type: URLRewrite
+          urlRewrite:
+            path:
+              type: ReplacePrefixMatch
+              replacePrefixMatch: /
+        {{- if .proxyBodySize }}
+        - type: ExtensionRef
+          extensionRef:
+            group: traefik.io
+            kind: Middleware
+            name: {{ $fullName }}-{{ $wfName }}-buffering
+        {{- end }}
+{{- if .proxyBodySize }}
+# Body size limit for {{ $wfName }}
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: {{ $fullName }}-{{ $wfName }}-buffering
+  labels:
+    {{- include "appl.labels" $ | nindent 4 }}
+spec:
+  buffering:
+    {{- $sizeStr := .proxyBodySize -}}
+    {{- $sizeInt := 0 -}}
+    {{- if hasSuffix "m" $sizeStr -}}
+      {{- $sizeInt = mul (trimSuffix "m" $sizeStr | int64) 1048576 -}}
+    {{- else if hasSuffix "g" $sizeStr -}}
+      {{- $sizeInt = mul (trimSuffix "g" $sizeStr | int64) 1073741824 -}}
+    {{- else -}}
+      {{- $sizeInt = $sizeStr | int64 -}}
+    {{- end }}
+    maxRequestBodyBytes: {{ $sizeInt }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}

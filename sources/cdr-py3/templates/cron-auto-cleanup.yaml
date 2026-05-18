@@ -1,0 +1,47 @@
+{{- if and .Values.cron.enabled .Values.cronautocleanup.enabled }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "appl.fullname" . }}-cron-auto-cleanup
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    app.kubernetes.io/component: job
+
+spec:
+  schedule: "{{ .Values.cronautocleanup.schedule }}"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          {{- with .Values.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
+          containers:
+          - name: {{ include "appl.fullname" . }}
+            image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+            imagePullPolicy: {{ .Values.image.pullPolicy }}
+            resources:
+              {{- toYaml .Values.cronautocleanup.resources | nindent 14 }}
+            command:
+            - /bin/bash
+            - -c
+            - |
+              /zope-setup.sh && \
+              /opt/zope/bin/instance run /opt/zope/bin/auto_cleanup \
+                --container /xmlexports/prefills/designation_types \
+                --recursive true \
+                --c_type File \
+                --prefix OLD_ \
+                --threshold 5
+            envFrom:
+            - configMapRef:
+                name: {{ include "appl.fullname" . }}-instance-env
+            - secretRef:
+                name: {{ include "appl.fullname" . }}-instance-env
+
+          restartPolicy: Never
+{{- end }}

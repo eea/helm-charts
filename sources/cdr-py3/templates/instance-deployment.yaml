@@ -1,0 +1,133 @@
+{{- $sharedBlobs := eq (.Values.instance.env.zeoSharedBlobDir | default "off" | toString) "on" -}}
+{{- if $sharedBlobs -}}
+{{- if .Values.instance.env.blobStorageCacheVolumeEnabled -}}
+{{- fail "instance.env.zeoSharedBlobDir=on and instance.env.blobStorageCacheVolumeEnabled=true are mutually exclusive: shared mode means the instance pod reads blobs directly from ZEO's shared volume, so the per-pod emptyDir cache must be off." -}}
+{{- end -}}
+{{- $zAccess := .Values.zeoserver.accessMode | default "ReadWriteOnce" -}}
+{{- if ne $zAccess "ReadWriteMany" -}}
+{{- fail (printf "instance.env.zeoSharedBlobDir=on requires zeoserver.accessMode: ReadWriteMany so the instance pods can mount the same PVC; got %s." $zAccess) -}}
+{{- end -}}
+{{- $zUid := .Values.zeoserver.zeoUid | default 500 -}}
+{{- $zGid := .Values.zeoserver.zeoGid | default 500 -}}
+{{- if or (ne (toString $zUid) "1000") (ne (toString $zGid) "1000") -}}
+{{- fail (printf "instance.env.zeoSharedBlobDir=on requires zeoserver.zeoUid/zeoGid to be 1000/1000 (matching the instance pod's hardcoded UID); got %v/%v." $zUid $zGid) -}}
+{{- end -}}
+{{- end -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "appl.fullname" . }}-instance
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    app.kubernetes.io/component: zope
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.instance.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: zope
+  template:
+    metadata:
+      annotations:
+        checksum/instance-env-configmap: {{ include (print $.Template.BasePath "/instance-env-configmap.yaml") . | sha256sum }}
+        checksum/instance-env-secret: {{ include (print $.Template.BasePath "/instance-env-secret.yaml") . | sha256sum }}
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: zope
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      {{- if and .Values.instance.env.blobStorageCacheVolumeEnabled (not $sharedBlobs) }}
+      initContainers:
+      - name: init-blobstorage
+        image: busybox:1.37.0
+        command:
+          [
+            "sh",
+            "-c",
+            "mkdir -p /blobstorage && chown -R 1000:1000 /blobstorage",
+          ]
+        volumeMounts:
+        - name: blobstorage
+          mountPath: /blobstorage
+          subPath: blobstorage
+      {{- end }}
+      containers:
+      - name: {{ include "appl.fullname" . }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+
+        ports:
+        - containerPort: {{ .Values.instance.port }}
+          name: http
+          protocol: TCP
+
+        envFrom:
+        - configMapRef:
+            name: {{ include "appl.fullname" . }}-instance-env
+        - secretRef:
+            name: {{ include "appl.fullname" . }}-instance-env
+
+        volumeMounts:
+        {{- if .Values.instance.env.zipCacheEnabled }}
+          - mountPath: /opt/zope/var/zip_cache
+            name: {{ include "appl.fullname" . }}-zipcache-storage
+        {{- end }}
+        {{- if $sharedBlobs }}
+          - mountPath: /opt/zope/var/blobstorage
+            name: zeo-storage
+            subPath: blobstorage
+        {{- else if .Values.instance.env.blobStorageCacheVolumeEnabled }}
+          - mountPath: /opt/zope/var/blobstorage
+            name: blobstorage
+            subPath: blobstorage
+        {{- end }}
+          - mountPath: /tmp
+            name: {{ include "appl.fullname" . }}-tmpdir-storage
+
+        livenessProbe:
+          {{- toYaml .Values.instance.livenessProbe | nindent 10 }}
+        {{- with .Values.instance.readinessProbe }}
+        readinessProbe:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        resources:
+          {{- toYaml .Values.instance.resources | nindent 10 }}
+
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+      restartPolicy: Always
+      volumes:
+        {{- if .Values.instance.env.zipCacheEnabled }}
+        - name: {{ include "appl.fullname" . }}-zipcache-storage
+          persistentVolumeClaim:
+            claimName: {{ include "appl.fullname" . }}-zipcache-storage
+        {{- end }}
+        {{- if $sharedBlobs }}
+        - name: zeo-storage
+          persistentVolumeClaim:
+            claimName: {{ printf "%s-%s-zeoserver-0" .Values.zeoserver.storageName .Release.Name }}
+        {{- else if .Values.instance.env.blobStorageCacheVolumeEnabled }}
+        - name: blobstorage
+          emptyDir:
+            sizeLimit: {{ .Values.instance.env.blobStorageCacheVolumeSize }}
+        {{- end }}
+        - name: {{ include "appl.fullname" . }}-tmpdir-storage
+          persistentVolumeClaim:
+            claimName: {{ include "appl.fullname" . }}-tmpdir-storage

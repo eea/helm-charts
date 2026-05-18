@@ -1,0 +1,42 @@
+{{- if and .Values.cron.enabled .Values.cronzeopack.enabled }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "appl.fullname" . }}-cron-zeopack
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    app.kubernetes.io/component: job
+
+spec:
+  schedule: "{{ .Values.cronzeopack.schedule }}"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          {{- with .Values.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          serviceAccountName: {{ include "appl.serviceAccountName" . }}
+
+          containers:
+          - name: {{ include "appl.fullname" . }}
+            image: "{{ .Values.cronzeopack.repository }}:{{ .Values.cronzeopack.tag }}"
+            imagePullPolicy: {{ .Values.image.pullPolicy }}
+            resources:
+              {{- toYaml .Values.cronzeopack.resources | nindent 14 }}
+            command:
+            - '/bin/sh'
+            args: ["-c", "$(PACK_REQUEST)"]
+            envFrom:
+            - configMapRef:
+                name: {{ include "appl.fullname" . }}-instance-env
+            - secretRef:
+                name: {{ include "appl.fullname" . }}-instance-env
+            env:
+            - name: PACK_REQUEST
+              value: 'zeopack -h {{ include "appl.fullname" . }}-zeoserver -p {{ .Values.zeoserver.port | default 8100 }} -d 7 && echo "Successfully called pack"'
+          restartPolicy: Never
+
+{{- end }}

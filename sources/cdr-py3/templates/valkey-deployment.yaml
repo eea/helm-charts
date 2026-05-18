@@ -1,0 +1,50 @@
+{{- if .Values.valkey.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "appl.fullname" . }}-valkey
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    app.kubernetes.io/component: valkey
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: valkey
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: valkey
+    spec:
+      containers:
+        - name: valkey
+          image: "{{ .Values.valkey.image.repository }}:{{ .Values.valkey.image.tag }}"
+          imagePullPolicy: {{ .Values.valkey.image.pullPolicy }}
+          {{- with .Values.valkey.env }}
+          env:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          ports:
+            - name: valkey
+              containerPort: 6379
+              protocol: TCP
+          livenessProbe:
+            {{- toYaml .Values.valkey.livenessProbe | nindent 12 }}
+          readinessProbe:
+            {{- toYaml .Values.valkey.readinessProbe | nindent 12 }}
+          resources:
+            {{- toYaml .Values.valkey.resources | nindent 12 }}
+          {{- if .Values.valkey.persistence.enabled }}
+          volumeMounts:
+            - name: valkey-data
+              mountPath: /data
+          {{- end }}
+      {{- if .Values.valkey.persistence.enabled }}
+      volumes:
+        - name: valkey-data
+          persistentVolumeClaim:
+            claimName: {{ include "appl.fullname" . }}-valkey-data
+      {{- end }}
+{{- end }}

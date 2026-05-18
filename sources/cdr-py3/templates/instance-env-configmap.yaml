@@ -1,0 +1,44 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "appl.fullname" . }}-instance-env
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    app.kubernetes.io/component: zope
+data:
+  USE_BEAKER_SESSION: '{{ .Values.instance.env.useBeakerSession }}'
+  REDIS_URL: '{{ .Values.instance.env.redisUrl }}'
+  CACHE_PURGING_DOMAIN: '{{ .Values.instance.env.cachePurgingDomain }}'
+  CACHE_PURGING_ENABLED: '{{ .Values.instance.env.cachePurgingEnabled }}'
+  CACHE_PURGING_PROXY: '{{ .Values.instance.env.cachePurgingProxy }}'
+  CACHE_PURGING_PROXY_PORT: '{{ .Values.instance.env.cachePurgingProxyPort }}'
+  CACHE_PURGING_VHOST: '{{ .Values.instance.env.cachePurgingVhost }}'
+  CACHE_SETTINGS_ENABLED: '{{ .Values.instance.env.cacheSettingsEnabled }}'
+  CLAMAV_HOST: '{{ .Values.instance.env.clamavHost }}'
+  DEPLOYMENT_HOST: '{{ .Values.instance.env.deploymentHost }}'
+  GRAYLOG: '{{ .Values.instance.env.graylog }}'
+  GRAYLOG_FACILITY: '{{ .Values.instance.env.graylogFacility }}'
+  RABBITMQ_ENABLED: '{{ .Values.instance.env.rabbitmqEnabled }}'
+  RABBITMQ_HOST: '{{ .Values.instance.env.rabbitmqHost }}'
+  RABBITMQ_PORT: '{{ .Values.instance.env.rabbitmqPort }}'
+  RABBITMQ_USER: '{{ .Values.instance.env.rabbitmqUser }}'
+  SENTRY_SITE: '{{ .Values.instance.env.sentrySite }}'
+  SENTRY_ENVIRONMENT: '{{ .Values.instance.env.sentryEnvironment }}'
+  SENTRY_RELEASE: '{{ include "appl.chart" . }}:{{ .Chart.AppVersion }}'
+  TZ: '{{ .Values.timezone }}'
+  ZEO_ADDRESS: '{{ .Values.instance.env.zeoAddress }}'
+  ZIP_CACHE_ENABLED: '{{ .Values.instance.env.zipCacheEnabled }}'
+  ZIP_CACHE_PATH: '{{ .Values.instance.env.zipCachePath }}'
+  ZIP_CACHE_THRESHOLD: '{{ .Values.instance.env.zipCacheThreshold }}'
+  ZOPE_THREADS: '{{ .Values.instance.env.zopeThreads }}'
+  ZOPE_DEBUG_MODE: '{{ .Values.instance.env.zopeDebugMode }}'
+  EVENT_LOG_LEVEL: '{{ .Values.instance.env.eventLogLevel }}'
+  PYTHONFAULTHANDLER: '{{ .Values.instance.env.pythonFaulthandler }}'
+  ZEO_CLIENT_CACHE_SIZE: '{{ .Values.instance.env.zeoClientCacheSize }}'
+  {{- if ne (.Values.instance.env.zeoSharedBlobDir | default "off" | toString) "on" }}
+  ZEO_CLIENT_BLOB_CACHE_SIZE: '{{ .Values.instance.env.zeoClientBlobCacheSize }}'
+  {{- end }}
+  ZEO_SHARED_BLOB_DIR: '{{ if eq (.Values.instance.env.zeoSharedBlobDir | default "off" | toString) "on" }}on{{ else }}off{{ end }}'
+  SESSION_MANAGER_TIMEOUT: '{{ .Values.instance.env.sessionManagerTimeout }}'
+  SESSION_COOKIE_EXPIRES: '{{ .Values.instance.env.sessionCookieExpires }}'
+  LOCAL_CONVERTERS_HOST: '{{ .Values.instance.env.localConvertersHost }}'
