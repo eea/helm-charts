@@ -60,7 +60,7 @@ spec:
               PGPASSWORD=$POSTGRES_PASSWORD psql -h $POSTGRES_HOST -U $POSTGRES_USER -p 5432 -f /docker-entrypoint-initdb.d/init-litellm-db.sql
           env:
             - name: POSTGRES_HOST
-              value: {{ include "appl.postgresql.hostname" . }}
+              value: {{ include "appl.postgresql.hostname" . | quote }}
             - name: POSTGRES_USER
               value: {{ .Values.postgresql.auth.username }}
             - name: POSTGRES_PASSWORD
@@ -89,12 +89,12 @@ spec:
           {{- end }}
           image: "{{ .Values.litellm.image.repository }}:{{ .Values.litellm.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.litellm.image.pullPolicy }}
-        command:
-          - sh
-          - -c
-          - |
-            echo "=== Starting LiteLLM v1.83.3 ==="
-            exec litellm --port 4000 --num_workers {{ .Values.litellm.numWorkers | default 6 }} --config /app/litellm/llmguard-plugin/plugin/plugin/llmguard_config.yaml
+          command:
+            - sh
+            - -c
+            - |
+              echo "=== Starting LiteLLM v1.83.3 ==="
+              exec litellm --port 4000 --num_workers {{ .Values.litellm.numWorkers | default 6 }} --config /app/litellm/llmguard-plugin/plugin/plugin/llmguard_config.yaml
           env:
             - name: PORT
               value: {{ .Values.litellm.service.port | quote }}
