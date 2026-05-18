@@ -3,6 +3,9 @@
 Helm chart for the Copernicus In-Situ DB stack.
 ## Releases
 
+### Version 1.2.7 - 18 May 2026
+- Upgraded eeacms/copernicus-insitu-db:4.0.5 [Diana Boiangiu - [`d298bff4`](https://github.com/eea/helm-charts/commit/d298bff4fddddc7771d63cf332597d129314f326)]
+
 ### Version 1.2.6 - 15 May 2026
 - Upgraded eeacms/copernicus-insitu-db:4.0.3 [Diana Boiangiu - [`578d76de`](https://github.com/eea/helm-charts/commit/578d76de98504841130bb4c532fb058b2283c3f7)]
 
