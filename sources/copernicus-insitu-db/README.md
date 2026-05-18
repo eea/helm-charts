@@ -3,6 +3,9 @@
 Helm chart for the Copernicus In-Situ DB stack.
 ## Releases
 
+### Version 1.2.9 - 18 May 2026
+- add nodeport for testing [Dobricean Ioan Dorian - [`27521fc5`](https://github.com/eea/helm-charts/commit/27521fc5be787e324b1b9cb185e44fdeed84afb5)]
+
 ### Version 1.2.8 - 18 May 2026
 - Added configurable NodePort questions for CIS2 web services
 
