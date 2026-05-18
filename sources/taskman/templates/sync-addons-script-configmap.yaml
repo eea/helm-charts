@@ -1,0 +1,15 @@
+{{- if eq .Values.addonsSync.syncMode "additive" }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-sync-addons-script
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: sync-addons-script
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "-20"
+    "helm.sh/hook-delete-policy": before-hook-creation
+binaryData:
+  sync_addons_from_share.sh: {{ .Files.Get "config/runtime/sync_addons_from_share.sh" | b64enc }}
+{{- end }}

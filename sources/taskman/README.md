@@ -495,6 +495,13 @@ grunt
 
 ## Releases
 
+### Unreleased
+- Runtime patch operations note: when `runtime-compat-config` ConfigMap is mounted to `/usr/src/redmine/config/initializers/runtime_compat.rb` using `subPath`, container image updates do not change effective runtime patch code.
+  - To roll out runtime patch changes in this mode: update ConfigMap data first, then restart/rollout Redmine deployment.
+- Added runtime toggle guidance for activity endpoint patch:
+  - `TASKMAN_PATCH_ACTIVITY_AUTHOR_PRELOAD` (default enabled in `runtime_compat.rb`)
+  - Intended to reduce author-related N+1 on `/projects/:identifier/activity`.
+
 ### Version 0.15.1 - 31 March 2026
 - Add ratelimiting configuration [valentinab25 - [`2ea970bf`](https://github.com/eea/helm-charts/commit/2ea970bf17fb5fb6dd27c395cb524b3277b03542)]
 
@@ -590,4 +597,3 @@ grunt
 
 ### Version 0.0.1
 - First draft
-
