@@ -18,6 +18,9 @@ This chart deployes the PloneSaaS app together with several frontends as Ingress
 
 ## Releases
 
+### Version 2.7.0 - 19 May 2026
+- Automated release of [eeacms/plonesaas:5.2.13-34](https://github.com/eea/eea.docker.plonesaas/releases) [EEA Jenkins - [`bd7fe5c2`](https://github.com/eea/helm-charts/commit/bd7fe5c2d662f7834fd94556e8b77d54eb75324b)]
+
 ### Version 2.6.4 - 04 May 2026
 - Use HTTP probes for Varnish and climate-energy frontend health checks.
 
