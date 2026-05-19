@@ -12,6 +12,7 @@ Cronjobs have been removed since the update to GN 5/ GN 46 and the new folder st
 |-----|------|---------|-------------|
 | serverName | string | sdi.eea.europa.eu | Name of the server |
 | serverUrl | string | <https://sdi.eea.europa.eu:443> | URL of the server. The port is required. |
+| gn5.proxy.enabled | boolean | false | Enable proxy support in GN5 (sets `geonetwork.proxy.enabled`) |
 | gn5.oauth2.enabled | boolean | false | Enable OAuth2 authentication for GN5 |
 | gn5.oauth2.clientId | string | '' | OAuth2 client ID |
 | gn5.oauth2.clientSecret | string | '' | OAuth2 client secret (only for helm install via --set-string flag, NOT for values.yaml) |

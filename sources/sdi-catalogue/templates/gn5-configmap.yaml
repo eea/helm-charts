@@ -19,6 +19,9 @@ data:
         url: {{ .Values.gn5.index.protocol }}://{{ .Values.gn5.index.host }}:{{ .Values.gn5.index.port }}
         indexRecordName: {{ .Values.gn5.index.indexRecordName }}
 
+      proxy:
+        enabled: {{ .Values.gn5.proxy.enabled | default false }}
+
       directory:
         data: {{ .Values.gn5.geonetwork_data_dir }}
         metadata:
