@@ -109,5 +109,8 @@ If you're deploying for the first time:
 
 ## Releases
 
+### Version 0.1.1 - 19 May 2026
+- Fixed webforms proxy [Olimpiu Rob - [`de19303d`](https://github.com/eea/helm-charts/commit/de19303dce02ca717056182de12be9179741d6d4)]
+
 ### Version 0.1.0 - 18 May 2026
 - Initial release.
