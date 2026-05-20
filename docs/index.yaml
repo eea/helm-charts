@@ -46264,6 +46264,59 @@ entries:
           image: vespaengine/vespa:8.609.39
       licenses: MIT
     apiVersion: v2
+    appVersion: v3.2.1-eea.0.0.112-dev
+    created: "2026-05-20T13:13:52.161227685Z"
+    dependencies:
+    - condition: vespa.enabled
+      name: vespa
+      repository: https://eea.github.io/helm-charts
+      version: 0.2.26
+    - condition: opensearch.enabled
+      name: opensearch
+      repository: https://opensearch-project.github.io/helm-charts
+      version: 3.4.0
+    - condition: minio.enabled
+      name: minio
+      repository: https://charts.min.io/
+      version: 5.4.0
+    - condition: postfix.enabled
+      name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.2.0
+    - condition: codeInterpreter.enabled
+      name: code-interpreter
+      repository: https://onyx-dot-app.github.io/python-sandbox/
+      version: 0.3.3
+    description: An Onyx derived Helm chart for GPTLab
+    digest: 1093e9107a9f00fab2a3c1ec0317d6e195c1e7455d641f647e4d11d383fcb946
+    home: https://www.onyx.app/
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/onyx/logo_onyx.png
+    keywords:
+    - gptlab
+    - ai
+    - search
+    - question-answering
+    - onyx
+    name: onyx-stack
+    sources:
+    - https://github.com/onyx-dot-app/onyx
+    type: application
+    urls:
+    - onyx-stack-0.7.0.tgz
+    version: 0.7.0
+  - annotations:
+      category: Productivity
+      images: |
+        - name: webserver
+          image: eeacms/danswer:web-v3.2.1-eea.0.0.110-dev
+        - name: background
+          image: eeacms/danswer:backend-v3.2.1-eea.0.0.110-dev
+        - name: model-server
+          image: eeacms/danswer:model_server-v3.2.1-eea.0.0.110-dev
+        - name: vespa
+          image: vespaengine/vespa:8.609.39
+      licenses: MIT
+    apiVersion: v2
     appVersion: v3.2.1-eea.0.0.111-dev
     created: "2026-05-20T11:55:43.64325998Z"
     dependencies:
@@ -55852,4 +55905,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2026-05-20T11:55:43.633185695Z"
+generated: "2026-05-20T13:13:52.150498985Z"
