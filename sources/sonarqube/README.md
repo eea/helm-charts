@@ -52,6 +52,9 @@ Because we are using docker, we only need to access <http://yourSonarQubeServerU
 
 ## Releases
 
+### Version 1.7.0 - 20 May 2026
+- Automated release of sonarqube:2026.3.0-developer [EEA Jenkins - [`c95bf67e`](https://github.com/eea/helm-charts/commit/c95bf67e8242d923598eb9401400d23900a355f7)]
+
 ### Version 1.6.0 - 14 May 2026
 - Automated release of sonarqube:2026.2.1-developer [EEA Jenkins - [`d5a509ca`](https://github.com/eea/helm-charts/commit/d5a509ca259725e25099dd90f4ff81dc6f927c92)]
 
