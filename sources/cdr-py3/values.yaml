@@ -142,6 +142,8 @@ cronzipcachecleanup:
       memory: 3Gi
 
 zeoserver:
+  image:
+    tag: "z5-1.0"
   storage: 10Gi
   storageName: cdr-py3-storage
   zeoUid: 1000
