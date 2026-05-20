@@ -109,6 +109,9 @@ If you're deploying for the first time:
 
 ## Releases
 
+### Version 0.1.2 - 20 May 2026
+- Set zeoserver image tag to z5-1.0 [Olimpiu Rob - [`7b728abb`](https://github.com/eea/helm-charts/commit/7b728abb1ea31d6e60de9bceaa9633920878ebcc)]
+
 ### Version 0.1.1 - 19 May 2026
 - Fixed webforms proxy [Olimpiu Rob - [`de19303d`](https://github.com/eea/helm-charts/commit/de19303dce02ca717056182de12be9179741d6d4)]
 
