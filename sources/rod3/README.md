@@ -24,6 +24,9 @@ This chart is configured for production use.
 ## Releases
 
 <dl>
+  <dt>Version 1.0.1</dt>
+  <dd>ogging filter for rpcrouter.</dd>
+
   <dt>Version 1.0.0</dt>
   <dd>Java 11 upgrade, libs upgrades, remove unused code dependencies, better logging.</dd>
 
