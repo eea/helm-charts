@@ -39,6 +39,14 @@ ingress:
     nginx.ingress.kubernetes.io/proxy-send-timeout: '120'
   certificate: dev-clms.copernicus.01dev.eea.europa.eu-tls
   tls: enabled
+  ratelimitting:
+    egmsapi:
+      enabled: true
+      path: /egms-oauth 
+      configuration:
+        limit-burst-multiplier: '5'
+        limit-rps: '1'
+
 volto:
   serviceType: ClusterIP
   hostname: dev-clms.copernicus.01dev.eea.europa.eu
