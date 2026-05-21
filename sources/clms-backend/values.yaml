@@ -27,6 +27,13 @@ ingress:
     cert-manager.io/cluster-issuer: 01dev-eea-letsencrypt
   certificate: key-01dev-letsencrypt
   tls: true
+  ratelimitting:
+    egmsapi:
+      enabled: true
+      path: /api/validate
+      configuration:
+        limit-burst-multiplier: '5'
+        limit-rps: '1'
 
 plone:
   serviceType: ClusterIP
