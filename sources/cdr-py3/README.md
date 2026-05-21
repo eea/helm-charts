@@ -59,6 +59,8 @@ This Helm chart deploys Kubernetes Network Policies to enhance the security of t
 
 *   **Default Deny Policies:** The chart includes deny Network Policies (`netsecpol-ingress-default.yaml` and `netsecpol-egress-default.yaml`) that, when enabled with `defaultNetworkPolicyDeny.enabled: true`, block all ingress and egress traffic unless overridden by more specific policies. This ensures a secure starting point and encourages explicit definition of allowed traffic.
 
+    Under default-deny, the chart auto-deploys ingress allows for the in-cluster `valkey` and `memcached` pods (when enabled), permitting traffic from any pod in the same release — no extra rules needed.
+
 **Modifying Network Policies:**
 
 To customize the network policies, you should modify the `instance.networkPolicy.egress` and `varnish.networkPolicy` sections within your `values.yaml` file.  Refer to the Kubernetes Network Policy documentation for details on how to define rules using `ipBlock`, `namespaceSelector`, `podSelector`, ports, and protocols.
@@ -106,6 +108,23 @@ If you're deploying for the first time:
 2. Make sure your storage class supports `ReadWriteMany` (the chart only
    declares the access mode; the cluster must back it).
 
+
+## LDAP cache (memcached)
+
+The Zope instances use memcached as a backend cache for LDAP lookups via the
+`LDAP_MEMCACHED_SERVERS` env var (comma-separated `host:port`). To deploy an
+in-cluster memcached and wire it up:
+
+```yaml
+memcached:
+  enabled: true                          # deploys memcached + Service on TCP/11211
+
+instance:
+  env:
+    ldapMemcachedServers: "cdr-py3-memcached:11211"
+```
+
+When `ldapMemcachedServers` is empty the env var is omitted entirely.
 
 ## Releases
 

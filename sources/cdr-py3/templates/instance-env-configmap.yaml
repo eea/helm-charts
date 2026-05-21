@@ -42,3 +42,6 @@ data:
   SESSION_MANAGER_TIMEOUT: '{{ .Values.instance.env.sessionManagerTimeout }}'
   SESSION_COOKIE_EXPIRES: '{{ .Values.instance.env.sessionCookieExpires }}'
   LOCAL_CONVERTERS_HOST: '{{ .Values.instance.env.localConvertersHost }}'
+  {{- if .Values.instance.env.ldapMemcachedServers }}
+  LDAP_MEMCACHED_SERVERS: '{{ .Values.instance.env.ldapMemcachedServers }}'
+  {{- end }}

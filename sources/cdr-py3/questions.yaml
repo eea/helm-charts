@@ -180,6 +180,36 @@ questions:
         default: 80
         group: "Core components"
 
+  - variable: memcached.enabled
+    label: "Enable Memcached"
+    description: "Deploy an in-cluster memcached used as an LDAP lookup cache by the Zope instances. When enabled, also set the LDAP memcached servers env var below."
+    type: boolean
+    default: false
+    group: "Core components"
+    show_subquestion_if: true
+    subquestions:
+      - variable: memcached.image.tag
+        label: "Memcached Image Tag"
+        type: string
+        default: "1.6.34-alpine"
+        group: "Core components"
+      - variable: memcached.maxMemory
+        label: "Memcached Max Memory (MB)"
+        description: "Value passed to memcached's -m flag (slab allocator size in megabytes)."
+        type: int
+        default: 64
+        group: "Core components"
+      - variable: memcached.resources.requests.memory
+        label: "Memcached Memory Request"
+        type: string
+        default: "96Mi"
+        group: "Core components"
+      - variable: memcached.resources.limits.memory
+        label: "Memcached Memory Limit"
+        type: string
+        default: "128Mi"
+        group: "Core components"
+
   - variable: rabbitmq.create
     label: "Create RabbitMQ"
     type: boolean
@@ -557,6 +587,13 @@ questions:
     label: "Local Converters Host"
     type: string
     default: "cdr-py3-local-converters"
+    group: "Advanced Settings"
+
+  - variable: instance.env.ldapMemcachedServers
+    label: "LDAP Memcached Servers"
+    description: "Comma-separated host:port list used by the Zope instances as the LDAP lookup cache (LDAP_MEMCACHED_SERVERS). Leave empty to omit. Typically points at the in-cluster memcached service, e.g. cdr-py3-memcached:11211."
+    type: string
+    default: ""
     group: "Advanced Settings"
 
   - variable: instance.env.zeoAddress

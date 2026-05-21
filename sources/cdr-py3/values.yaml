@@ -90,6 +90,11 @@ instance:
     zeoSharedBlobDir: "off"
     sessionManagerTimeout: 3600 # How long till a session expires in minutes
     sessionCookieExpires: "false" # true = expire on browser close, false = never expire, or seconds
+    # Comma-separated list of memcached servers used as a backend cache for LDAP
+    # lookups (host:port). Leave empty to omit LDAP_MEMCACHED_SERVERS from the
+    # instance environment. When memcached.enabled=true, point this at the
+    # in-cluster memcached service, e.g. "cdr-py3-memcached:11211".
+    ldapMemcachedServers: ""
 
 cronzeopack:
   enabled: false
@@ -314,6 +319,31 @@ autoscaling:
 nodeSelector: {}
 tolerations: []
 affinity: {}
+
+memcached:
+  enabled: false
+  image:
+    repository: memcached
+    tag: 1.6.34-alpine
+    pullPolicy: IfNotPresent
+  maxMemory: 64
+  livenessProbe:
+    tcpSocket:
+      port: memcached
+    initialDelaySeconds: 5
+    periodSeconds: 10
+  readinessProbe:
+    tcpSocket:
+      port: memcached
+    initialDelaySeconds: 5
+    periodSeconds: 10
+  resources:
+    requests:
+      cpu: 50m
+      memory: 96Mi
+    limits:
+      cpu: 200m
+      memory: 128Mi
 
 valkey:
   enabled: true
