@@ -128,6 +128,9 @@ When `ldapMemcachedServers` is empty the env var is omitted entirely.
 
 ## Releases
 
+### Version 0.1.3 - 21 May 2026
+- Updated appVersion to z5-1.9 and added LDAP memcached deployment [Olimpiu Rob - [`d530fffb`](https://github.com/eea/helm-charts/commit/d530fffbad33b017485b067b05f38a4421191658)]
+
 ### Version 0.1.2 - 20 May 2026
 - Set zeoserver image tag to z5-1.0 [Olimpiu Rob - [`7b728abb`](https://github.com/eea/helm-charts/commit/7b728abb1ea31d6e60de9bceaa9633920878ebcc)]
 
