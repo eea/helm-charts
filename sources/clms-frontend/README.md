@@ -24,6 +24,9 @@ The chart deploys a three-tier architecture:
 
 ## Releases
 
+### Version 7.38.3 - 21 May 2026
+- Add ratelimiting for egms oauth api configuration [valentinab25 - [`819509e2`](https://github.com/eea/helm-charts/commit/819509e25173094af652b16503697acd4af9b9f6)]
+
 ### Version 7.38.2 - 21 May 2026
 - test auto deploy [Dobricean Ioan Dorian - [`3c293aac`](https://github.com/eea/helm-charts/commit/3c293aace07d69d44c144de6ae1b97f98990a13f)]
 
