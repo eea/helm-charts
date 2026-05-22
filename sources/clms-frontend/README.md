@@ -24,6 +24,9 @@ The chart deploys a three-tier architecture:
 
 ## Releases
 
+### Version 7.39.1 - 22 May 2026
+- Remove oauth ingress [valentinab25 - [`a1385ed0`](https://github.com/eea/helm-charts/commit/a1385ed06c37fc385e158a53ffb24ca788ff7984)]
+
 ### Version 7.39.0 - 22 May 2026
 - Automated release of clms-frontend:3.559.0 [EEA Jenkins - [`d97e4ad3`](https://github.com/eea/helm-charts/commit/d97e4ad38af9c3156f2d206c86ebf845b1d2cdd7)]
 
