@@ -10,6 +10,9 @@ This chart deployes the CLMS backend app
 
 ## Releases
 
+### Version 2.30.0 - 22 May 2026
+- Automated release of clms-backend:6.0.15-155 [EEA Jenkins - [`0494e15d`](https://github.com/eea/helm-charts/commit/0494e15d13d121be8af8e834e0a66ffa52050e3c)]
+
 ### Version 2.29.1 - 22 May 2026
 - Add ratelimiting configuration for egms validate [valentinab25 - [`3a3a46a9`](https://github.com/eea/helm-charts/commit/3a3a46a95e685479aa8c400ced3247d139a77d67)]
 
