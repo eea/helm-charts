@@ -1,20 +1,20 @@
-{{- if .Values.ingress.ratelimitting.egmsapi.enabled -}}
+{{- if .Values.ingress.ratelimitting.egmsapivalidate.enabled -}}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: clms-api-egms
+  name: clms-api-egms-validate
   labels:
     {{- include "appl.labels" . | nindent 4 }}
     component: clms-api-egms
   annotations:
     nginx.ingress.kubernetes.io/configuration-snippet: |
-      rewrite ^/(.*)$ /VirtualHostBase/https/{{ .Values.plone.hostname }}:443/{{ .Values.plone.site }}/VirtualHostRoot/$1 break;
+      rewrite ^/api/(.*)$ /VirtualHostBase/https/{{ .Values.plone.hostname }}:443/{{ .Values.plone.site }}/VirtualHostRoot/_vh_api/$1 break;
     nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/proxy-body-size: 100m
   {{- with .Values.ingress.annotations }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- range $key, $value := .Values.ingress.ratelimitting.egmsapi.configuration }}
+  {{- range $key, $value := .Values.ingress.ratelimitting.egmsapivalidate.configuration }}
     {{- if ($value) }}
     nginx.ingress.kubernetes.io/{{ $key }}: {{ $value | quote }}
     {{- end }}
@@ -26,7 +26,7 @@ spec:
   - host: {{ .Values.plone.hostname }}
     http:
       paths:
-      - path: {{ .Values.ingress.ratelimitting.egmsapi.path }}
+      - path: {{ .Values.ingress.ratelimitting.egmsapivalidate.path }}
         pathType: ImplementationSpecific
         backend:
           service:
