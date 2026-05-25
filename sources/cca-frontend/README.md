@@ -7,6 +7,9 @@ and adds the Apache routing layer used by the existing Rancher stack. Secrets
 and tokens are intentionally left empty in `values.yaml`.
 ## Releases
 
+### Version 0.29.0 - 25 May 2026
+- Snapshot for upgrade to Rancher 2 [Tiberiu Ichim - [`1d8ab0d9`](https://github.com/eea/helm-charts/commit/1d8ab0d90007ad899655e6400164d3c04de74fe3)]
+
 ### Version 0.27.0 - 25 May 2026
 - Automated release of [eeacms/cca-frontend:4.0.0-alpha.7](https://github.com/eea/cca-frontend/releases) [EEA Jenkins - [`2c4a5bb3`](https://github.com/eea/helm-charts/commit/2c4a5bb3b751d9e2f242d5b173b65212572f18ce)]
 
