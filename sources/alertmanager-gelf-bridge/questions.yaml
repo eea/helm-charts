@@ -1,0 +1,55 @@
+questions:
+  - variable: clusterName
+    label: Cluster name
+    description: Name attached to Alertmanager messages sent to Graylog, for example 01prod or 01test.
+    type: string
+    required: true
+    group: "Graylog settings"
+
+  - variable: graylogUrl
+    label: Graylog GELF HTTP URL
+    description: Full Graylog GELF HTTP endpoint, for example http://graylog.example:12202/gelf.
+    type: string
+    required: true
+    group: "Graylog settings"
+
+  - variable: replicaCount
+    label: Replica count
+    description: Keep this at 1 unless the bridge is made stateful-safe.
+    type: int
+    default: 1
+    required: true
+    group: "Deployment settings"
+
+  - variable: image.repository
+    label: Image repository
+    type: string
+    default: python
+    required: true
+    group: "Container image"
+
+  - variable: image.tag
+    label: Image tag
+    type: string
+    default: "3.12-alpine"
+    required: true
+    group: "Container image"
+
+  - variable: image.pullPolicy
+    label: Image pull policy
+    type: enum
+    default: IfNotPresent
+    required: true
+    options:
+      - Always
+      - IfNotPresent
+      - Never
+    group: "Container image"
+
+  - variable: alertmanagerConfig.enabled
+    label: Create AlertmanagerConfig
+    description: Optional. Prefer false and create AlertmanagerConfig separately in Rancher UI after the bridge is verified.
+    type: boolean
+    default: false
+    required: true
+    group: "Alertmanager routing"

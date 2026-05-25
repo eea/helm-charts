@@ -1,0 +1,44 @@
+# Cluster name attached to every GELF message.
+# Example: "01test"
+clusterName: ""
+
+# Full Graylog GELF HTTP input URL.
+# Example: "http://graylog.example:12202/gelf"
+graylogUrl: ""
+
+replicaCount: 1
+
+image:
+  repository: python
+  tag: "3.12-alpine"
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 8080
+
+podAnnotations: {}
+podLabels: {}
+
+resources: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+# Keep AlertmanagerConfig outside this chart by default.
+# Recommended: create it separately from Rancher UI after the bridge is running.
+alertmanagerConfig:
+  enabled: false
+  name: graylog-gelf-http
+  namespace: ""
+  sendResolved: true
+  groupBy:
+    - alertname
+    - namespace
+    - severity
+  groupWait: 30s
+  groupInterval: 5m
+  repeatInterval: 4h

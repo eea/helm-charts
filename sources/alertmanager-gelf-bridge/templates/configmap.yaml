@@ -1,0 +1,122 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "alertmanager-gelf-bridge.fullname" . }}
+  labels:
+    {{- include "alertmanager-gelf-bridge.labels" . | nindent 4 }}
+data:
+  bridge.py: |
+    import json
+    import os
+    import time
+    import urllib.request
+    from http.server import BaseHTTPRequestHandler, HTTPServer
+
+    GRAYLOG_URL = os.environ["GRAYLOG_URL"]
+    CLUSTER_NAME = os.environ["CLUSTER_NAME"]
+
+    def gelf_level(alert_status, severity):
+        if alert_status == "resolved":
+            return 6
+        if severity == "critical":
+            return 2
+        if severity == "warning":
+            return 4
+        return 5
+
+    class Handler(BaseHTTPRequestHandler):
+        def log_message(self, fmt, *args):
+            # Keep container logs quiet unless there is an actual error.
+            return
+
+        def do_GET(self):
+            if self.path in ("/", "/healthz", "/readyz"):
+                self.send_response(200)
+                self.end_headers()
+                self.wfile.write(b"ok")
+                return
+            self.send_response(404)
+            self.end_headers()
+
+        def do_POST(self):
+            try:
+                content_length = int(self.headers.get("Content-Length", 0))
+                body = self.rfile.read(content_length)
+                payload = json.loads(body)
+
+                notification_status = payload.get("status", "unknown")
+                alerts = payload.get("alerts", [])
+
+                for alert in alerts:
+                    labels = alert.get("labels", {})
+                    annotations = alert.get("annotations", {})
+
+                    alertname = labels.get("alertname", "unknown")
+                    alert_status = alert.get("status", "unknown")
+                    severity = labels.get("severity", "")
+
+                    gelf = {
+                        "version": "1.1",
+                        "host": CLUSTER_NAME,
+                        "short_message": f"{alert_status.upper()} {alertname}",
+                        "full_message": json.dumps(alert, separators=(",", ":")),
+                        "timestamp": time.time(),
+                        "level": gelf_level(alert_status, severity),
+
+                        "_source_type": "alertmanager",
+                        "_cluster_name": CLUSTER_NAME,
+                        "_alertname": alertname,
+
+                        # Individual alert status. Use this for firing/resolved filters.
+                        "_status": alert_status,
+                        "_alert_status": alert_status,
+
+                        # Top-level Alertmanager notification status. This may differ from alert_status
+                        # for grouped notifications containing mixed firing/resolved alerts.
+                        "_notification_status": notification_status,
+                        "_alertmanager_status": notification_status,
+
+                        "_severity": severity,
+                        "_namespace": labels.get("namespace", ""),
+                        "_pod": labels.get("pod", ""),
+                        "_container": labels.get("container", ""),
+                        "_node": labels.get("node", ""),
+                        "_job": labels.get("job", ""),
+                        "_instance": labels.get("instance", ""),
+
+                        "_summary": annotations.get("summary", ""),
+                        "_description": annotations.get("description", ""),
+                        "_runbook_url": annotations.get("runbook_url", ""),
+                        "_generatorURL": alert.get("generatorURL", ""),
+
+                        "_fingerprint": alert.get("fingerprint", ""),
+                        "_startsAt": alert.get("startsAt", ""),
+                        "_endsAt": alert.get("endsAt", ""),
+                        "_updatedAt": alert.get("updatedAt", ""),
+
+                        "_groupKey": payload.get("groupKey", ""),
+                        "_receiver": payload.get("receiver", ""),
+                        "_externalURL": payload.get("externalURL", ""),
+                        "_commonLabels": json.dumps(payload.get("commonLabels", {}), separators=(",", ":")),
+                        "_commonAnnotations": json.dumps(payload.get("commonAnnotations", {}), separators=(",", ":")),
+                        "_groupLabels": json.dumps(payload.get("groupLabels", {}), separators=(",", ":")),
+                    }
+
+                    req = urllib.request.Request(
+                        GRAYLOG_URL,
+                        data=json.dumps(gelf).encode("utf-8"),
+                        headers={"Content-Type": "application/json"},
+                        method="POST",
+                    )
+                    urllib.request.urlopen(req, timeout=10).read()
+
+                self.send_response(200)
+                self.end_headers()
+                self.wfile.write(b"ok")
+            except Exception as exc:
+                print(f"ERROR processing request: {exc}", flush=True)
+                self.send_response(500)
+                self.end_headers()
+                self.wfile.write(str(exc).encode("utf-8"))
+
+    HTTPServer(("0.0.0.0", 8080), Handler).serve_forever()
