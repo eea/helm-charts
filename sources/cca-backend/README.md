@@ -10,6 +10,9 @@ and the broken-links cron job.
 Sensitive values are intentionally left empty in `values.yaml`.
 ## Releases
 
+### Version 0.3.0 - 25 May 2026
+- Sync for Rancher 2 deployment [Tiberiu Ichim - [`00b99718`](https://github.com/eea/helm-charts/commit/00b9971822628992b1dc099186bbf7d1e8b2a112)]
+
 ### Version 0.2.30 - 14 May 2026
 - add missing vars [Dobricean Ioan Dorian - [`d9debafa`](https://github.com/eea/helm-charts/commit/d9debafaa4be711863a1e96a909a47441ca85642)]
 
