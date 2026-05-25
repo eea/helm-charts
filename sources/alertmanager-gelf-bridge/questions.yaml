@@ -48,8 +48,36 @@ questions:
 
   - variable: alertmanagerConfig.enabled
     label: Create AlertmanagerConfig
-    description: Optional. Prefer false and create AlertmanagerConfig separately in Rancher UI after the bridge is verified.
+    description: Optional. Enable this to create the AlertmanagerConfig receiver and route with this chart.
     type: boolean
     default: false
     required: true
     group: "Alertmanager routing"
+
+
+  - variable: alertmanagerConfig.name
+    label: AlertmanagerConfig name
+    description: Name of the AlertmanagerConfig resource to create.
+    type: string
+    default: graylog-gelf-http
+    required: true
+    group: "Alertmanager routing"
+    show_if: "alertmanagerConfig.enabled=true"
+
+  - variable: alertmanagerConfig.receiverName
+    label: Alertmanager receiver name
+    description: Receiver name referenced by the AlertmanagerConfig route.
+    type: string
+    default: graylog-gelf-http
+    required: true
+    group: "Alertmanager routing"
+    show_if: "alertmanagerConfig.enabled=true"
+
+  - variable: alertmanagerConfig.sendResolved
+    label: Send resolved alerts
+    description: Send resolved notifications to the bridge.
+    type: boolean
+    default: true
+    required: true
+    group: "Alertmanager routing"
+    show_if: "alertmanagerConfig.enabled=true"

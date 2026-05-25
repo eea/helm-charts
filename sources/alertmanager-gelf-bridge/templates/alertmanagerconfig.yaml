@@ -2,20 +2,20 @@
 apiVersion: monitoring.coreos.com/v1alpha1
 kind: AlertmanagerConfig
 metadata:
-  name: {{ .Values.alertmanagerConfig.name | default (include "alertmanager-gelf-bridge.fullname" .) }}
-  namespace: {{ .Values.alertmanagerConfig.namespace | default .Release.Namespace }}
+  name: {{ .Values.alertmanagerConfig.name | default (include "alertmanager-gelf-bridge.fullname" .) | quote }}
+  namespace: {{ .Values.alertmanagerConfig.namespace | default .Release.Namespace | quote }}
   labels:
     {{- include "alertmanager-gelf-bridge.labels" . | nindent 4 }}
 spec:
   route:
-    receiver: graylog-gelf-http
+    receiver: {{ .Values.alertmanagerConfig.receiverName | default "graylog-gelf-http" | quote }}
     groupBy:
       {{- toYaml .Values.alertmanagerConfig.groupBy | nindent 6 }}
     groupWait: {{ .Values.alertmanagerConfig.groupWait }}
     groupInterval: {{ .Values.alertmanagerConfig.groupInterval }}
     repeatInterval: {{ .Values.alertmanagerConfig.repeatInterval }}
   receivers:
-    - name: graylog-gelf-http
+    - name: {{ .Values.alertmanagerConfig.receiverName | default "graylog-gelf-http" | quote }}
       webhookConfigs:
         - url: http://{{ include "alertmanager-gelf-bridge.fullname" . }}.{{ .Release.Namespace }}.svc:{{ .Values.service.port }}/
           sendResolved: {{ .Values.alertmanagerConfig.sendResolved }}

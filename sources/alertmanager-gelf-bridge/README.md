@@ -9,27 +9,19 @@ clusterName: "01test"
 graylogUrl: "http://graylog.example:12202/gelf"
 ```
 
-## Recommended AlertmanagerConfig
+## Optional AlertmanagerConfig
 
-Create this separately in Rancher UI after the bridge is running:
+The chart can optionally create the `AlertmanagerConfig` too:
 
 ```yaml
-apiVersion: monitoring.coreos.com/v1alpha1
-kind: AlertmanagerConfig
-metadata:
+alertmanagerConfig:
+  enabled: true
   name: graylog-gelf-http
-  namespace: cattle-monitoring-system
-spec:
-  route:
-    receiver: graylog-gelf-http
-  receivers:
-    - name: graylog-gelf-http
-      webhookConfigs:
-        - url: http://alertmanager-gelf-bridge.cattle-monitoring-system.svc:8080/
-          sendResolved: true
+  receiverName: graylog-gelf-http
+  sendResolved: true
 ```
 
-If the Helm release name is not `alertmanager-gelf-bridge`, adjust the service name accordingly.
+If disabled, create the AlertmanagerConfig separately in Rancher UI after the bridge is running.
 
 ## Graylog fields
 
