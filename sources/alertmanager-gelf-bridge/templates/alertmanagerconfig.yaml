@@ -8,14 +8,24 @@ metadata:
     {{- include "alertmanager-gelf-bridge.labels" . | nindent 4 }}
 spec:
   route:
-    receiver: {{ .Values.alertmanagerConfig.receiverName | default "graylog-gelf-http" | quote }}
+    receiver: {{ .Values.alertmanagerConfig.receiverName | default "graylog-gelf-http-receiver" | quote }}
+    {{- with .Values.alertmanagerConfig.groupBy }}
     groupBy:
-      {{- toYaml .Values.alertmanagerConfig.groupBy | nindent 6 }}
-    groupWait: {{ .Values.alertmanagerConfig.groupWait }}
-    groupInterval: {{ .Values.alertmanagerConfig.groupInterval }}
-    repeatInterval: {{ .Values.alertmanagerConfig.repeatInterval }}
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    groupWait: {{ .Values.alertmanagerConfig.groupWait | quote }}
+    groupInterval: {{ .Values.alertmanagerConfig.groupInterval | quote }}
+    repeatInterval: {{ .Values.alertmanagerConfig.repeatInterval | quote }}
+    {{- with .Values.alertmanagerConfig.matchers }}
+    matchers:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- $continueValue := .Values.alertmanagerConfig.continue }}
+    {{- if or (eq $continueValue true) (eq $continueValue false) (eq (toString $continueValue) "true") (eq (toString $continueValue) "false") }}
+    continue: {{ $continueValue }}
+    {{- end }}
   receivers:
-    - name: {{ .Values.alertmanagerConfig.receiverName | default "graylog-gelf-http" | quote }}
+    - name: {{ .Values.alertmanagerConfig.receiverName | default "graylog-gelf-http-receiver" | quote }}
       webhookConfigs:
         - url: http://{{ include "alertmanager-gelf-bridge.fullname" . }}.{{ .Release.Namespace }}.svc:{{ .Values.service.port }}/
           sendResolved: {{ .Values.alertmanagerConfig.sendResolved }}

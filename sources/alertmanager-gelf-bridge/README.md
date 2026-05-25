@@ -9,19 +9,32 @@ clusterName: "01test"
 graylogUrl: "http://graylog.example:12202/gelf"
 ```
 
+## Recommended routing pattern
+
+By default, this chart deploys only the bridge:
+
+```yaml
+alertmanagerConfig:
+  enabled: false
+```
+
+This is recommended when the cluster already has AlertmanagerConfig resources. Create or manage Alertmanager routing separately to avoid overlapping top-level routes.
+
 ## Optional AlertmanagerConfig
 
-The chart can optionally create the `AlertmanagerConfig` too:
+The chart can optionally create an AlertmanagerConfig:
 
 ```yaml
 alertmanagerConfig:
   enabled: true
-  name: graylog-gelf-http
-  receiverName: graylog-gelf-http
+  name: graylog-gelf-http-config
+  receiverName: graylog-gelf-http-receiver
   sendResolved: true
+  matchers: []
+  continue: null
 ```
 
-If disabled, create the AlertmanagerConfig separately in Rancher UI after the bridge is running.
+Important: prometheus-operator can inject namespace matchers and route continuation when merging multiple AlertmanagerConfig resources. If several top-level routes match the same alert, duplicate notifications can occur.
 
 ## Graylog fields
 

@@ -28,14 +28,28 @@ tolerations: []
 
 affinity: {}
 
-# Keep AlertmanagerConfig outside this chart by default.
-# Recommended: create it separately from Rancher UI after the bridge is running.
+# AlertmanagerConfig is disabled by default.
+# Recommended production pattern:
+#   - install the bridge app with alertmanagerConfig.enabled=false
+#   - manage Alertmanager routing separately if you already have existing routes
+#
+# Important: prometheus-operator may inject namespace matchers and route continuation
+# when merging multiple AlertmanagerConfig resources. This can create duplicate
+# notifications if multiple top-level routes match the same alert.
 alertmanagerConfig:
   enabled: false
-  name: graylog-gelf-http
+
+  # Kubernetes object name for the optional AlertmanagerConfig.
+  name: graylog-gelf-http-config
+
+  # Empty means use the Helm release namespace.
   namespace: ""
-  receiverName: graylog-gelf-http
+
+  # Alertmanager receiver name referenced by spec.route.receiver.
+  receiverName: graylog-gelf-http-receiver
+
   sendResolved: true
+
   groupBy:
     - alertname
     - namespace
@@ -43,3 +57,21 @@ alertmanagerConfig:
   groupWait: 30s
   groupInterval: 5m
   repeatInterval: 4h
+
+  # Optional route matchers. Leave empty to let this route match all alerts
+  # allowed by prometheus-operator's AlertmanagerConfig matcher strategy.
+  # Examples:
+  # matchers:
+  #   - name: severity
+  #     matchType: =~
+  #     value: warning|critical
+  #   - name: alertname
+  #     matchType: !=
+  #     value: Watchdog
+  matchers: []
+
+  # Optional route continuation.
+  # Set to true only if you intentionally want Alertmanager to continue evaluating
+  # later sibling routes after this one matches.
+  # Leave null to omit the field from the AlertmanagerConfig.
+  continue: null

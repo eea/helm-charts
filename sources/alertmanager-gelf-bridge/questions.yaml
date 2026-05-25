@@ -48,18 +48,17 @@ questions:
 
   - variable: alertmanagerConfig.enabled
     label: Create AlertmanagerConfig
-    description: Optional. Enable this to create the AlertmanagerConfig receiver and route with this chart.
+    description: Optional. Enable only if you want this chart to manage Alertmanager routing. Disable if you already manage AlertmanagerConfig resources separately.
     type: boolean
     default: false
     required: true
     group: "Alertmanager routing"
 
-
   - variable: alertmanagerConfig.name
-    label: AlertmanagerConfig name
-    description: Name of the AlertmanagerConfig resource to create.
+    label: AlertmanagerConfig resource name
+    description: Kubernetes name of the AlertmanagerConfig resource created by this chart.
     type: string
-    default: graylog-gelf-http
+    default: graylog-gelf-http-config
     required: true
     group: "Alertmanager routing"
     show_if: "alertmanagerConfig.enabled=true"
@@ -68,7 +67,7 @@ questions:
     label: Alertmanager receiver name
     description: Receiver name referenced by the AlertmanagerConfig route.
     type: string
-    default: graylog-gelf-http
+    default: graylog-gelf-http-receiver
     required: true
     group: "Alertmanager routing"
     show_if: "alertmanagerConfig.enabled=true"
@@ -78,6 +77,33 @@ questions:
     description: Send resolved notifications to the bridge.
     type: boolean
     default: true
+    required: true
+    group: "Alertmanager routing"
+    show_if: "alertmanagerConfig.enabled=true"
+
+  - variable: alertmanagerConfig.groupWait
+    label: Group wait
+    description: Alertmanager group_wait value for this route.
+    type: string
+    default: 30s
+    required: true
+    group: "Alertmanager routing"
+    show_if: "alertmanagerConfig.enabled=true"
+
+  - variable: alertmanagerConfig.groupInterval
+    label: Group interval
+    description: Alertmanager group_interval value for this route.
+    type: string
+    default: 5m
+    required: true
+    group: "Alertmanager routing"
+    show_if: "alertmanagerConfig.enabled=true"
+
+  - variable: alertmanagerConfig.repeatInterval
+    label: Repeat interval
+    description: Alertmanager repeat_interval value for this route.
+    type: string
+    default: 4h
     required: true
     group: "Alertmanager routing"
     show_if: "alertmanagerConfig.enabled=true"
