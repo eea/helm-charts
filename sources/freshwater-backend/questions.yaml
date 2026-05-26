@@ -257,6 +257,12 @@ questions:
     default: ""
     group: "Plone configuration"
 
+  - variable: "plone.environment.LLM_API_KEY"
+    label: "LLM Api Key"
+    description: "LLM Api Key"
+    type: "password"
+    group: "LLM configuration"
+
   - variable: "varnish.port"
     label: "Varnish backend/exposed port"
     description: "To simplify, we use the same port as the web application"
