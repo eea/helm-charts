@@ -58,6 +58,10 @@ spec:
               value: {{ .Values.mariadb.environment.MARIADB_DATABASE | quote }}
             - name: PHP_MEMORY_LIMIT
               value: {{ .Values.matomo.environment.PHP_MEMORY_LIMIT }}
+            - name: PHP_MAX_EXECUTION_TIME
+              value: {{ .Values.matomo.environment.PHP_MAX_EXECUTION_TIME | quote }}
+            - name: PHP_MAX_INPUT_TIME
+              value: {{ .Values.matomo.environment.PHP_MAX_INPUT_TIME | quote }}    
           volumeMounts:
             - name: matomo-html
               mountPath: /var/www/html
