@@ -2,7 +2,7 @@
 
 On the command line you can add the repository with the helm tool.
 
-    helm add repo eea-charts https://eea.github.io/helm-charts/
+    helm repo add eea-charts https://eea.github.io/helm-charts/
 
 Try also [the index.yaml](index.yaml) file.
 
