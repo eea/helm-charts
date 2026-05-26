@@ -345,6 +345,9 @@ You don't need to change anything on this container, it should work by having th
 
 ## Releases
 
+### Version 3.10.0 - 26 May 2026
+- Automated release of [eeacms/matomo:5.8.0-2](https://github.com/eea/eea.docker.matomo/releases) [EEA Jenkins - [`6eb40917`](https://github.com/eea/helm-charts/commit/6eb409178ea1ebb3c859ab8170a48fffaaacb4a3)]
+
 ### Version 3.9.1 - 30 March 2026
 - Minor MariaDB upgrade [miahi - [`beae087c`](https://github.com/eea/helm-charts/commit/beae087c69d523c45cb7c14261465f6884e9cbd8)]
 
