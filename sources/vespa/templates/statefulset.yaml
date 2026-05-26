@@ -91,10 +91,14 @@ spec:
           {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-          {{- if .Values.volumeMounts }}
+          {{- if or .Values.volumeMounts .Values.tmpfsVolumeMount.enabled }}
           volumeMounts:
             {{- with .Values.volumeMounts }}
             {{- toYaml . | nindent 12 }}
+            {{- end }}
+            {{- if .Values.tmpfsVolumeMount.enabled }}
+            - name: vespa-tmp
+              mountPath: {{ .Values.tmpfsVolumeMount.mountPath }}
             {{- end }}
           {{- end }}
           env:
@@ -120,6 +124,14 @@ spec:
             value: {{ .value | quote }}
           {{- end }}
           {{- end }}
+
+ {{- if .Values.tmpfsVolumeMount.enabled }}
+  volumes:
+  - name: vespa-tmp
+    emptyDir:
+      medium: Memory
+      sizeLimit: {{ .Values.tmpfsVolumeMount.sizeLimit | default "1Gi" }}
+  {{- end }}
 
   volumeClaimTemplates:
   {{- range .Values.volumeClaimTemplates }}

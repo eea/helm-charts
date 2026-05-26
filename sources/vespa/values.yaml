@@ -30,6 +30,8 @@ serviceAccount:
 podAnnotations: {}
 podLabels:
   app: vespa
+  app.kubernetes.io/name: vespa
+  app.kubernetes.io/instance: vespa
 
 statefulSet:
   ports:
@@ -53,7 +55,7 @@ statefulSet:
   podManagementPolicy: OrderedReady
 
 podSecurityContext:
-  # fsGroup: 2000
+  fsGroup: 0
 
 # Readiness probe: Determines when the pod is ready to accept traffic
 # Vespa needs time to initialize all services, load indexes, and warm up caches
@@ -82,12 +84,10 @@ livenessProbe:
   failureThreshold: 3       # Three failures trigger restart (90 seconds total)
 
 securityContext:
-  # capabilities:
-  #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  runAsUser: 1000
+  privileged: false
+  runAsNonRoot: false
+  runAsUser: 0
+  readOnlyRootFilesystem: false
 
 labels:
   app: vespa
@@ -157,6 +157,12 @@ affinity: {}
 env:
   - name: VESPA_CONFIGSERVERS
     value: vespa-0.vespa.default.svc.cluster.local
+
+# tmpfs emptyDir for writable logs path
+tmpfsVolumeMount:
+  enabled: true
+  mountPath: /opt/vespa/var/logs
+  sizeLimit: "1Gi"
 
 # Additional configuration for single-node optimization
 vespaConfig:
