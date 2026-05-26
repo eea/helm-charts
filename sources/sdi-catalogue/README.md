@@ -70,6 +70,9 @@ The OAuth2 client registration is named `eea` in the Spring Security configurati
 
 ## Releases
 
+### Version 0.8.52 - 26 May 2026
+- Update gn46 to eea-4.9.x-fca1ae32 [Juan Luis Rodriguez Ponce - [`b2be517a`](https://github.com/eea/helm-charts/commit/b2be517a7d2251de353de803b299139d9ed45676)]
+
 ### Version 0.8.51 - 19 May 2026
 - Add gn5.proxy.enabled value to control GN5 proxy, defaults to false [Juan Luis Rodriguez Ponce - [`cc03ab4f`](https://github.com/eea/helm-charts/commit/cc03ab4fbab46fcfb7ca67b2bd2f9ccf93eb86ba)]
 
