@@ -10,6 +10,9 @@ This chart deployes the EEA Website Plone 6 backend app
 
 ## Releases
 
+### Version 1.55.0 - 27 May 2026
+- Automated release of [eeacms/eea-website-backend:6.1.4-6](https://github.com/eea/eea-website-backend/releases) [EEA Jenkins - [`079bc7b1`](https://github.com/eea/helm-charts/commit/079bc7b19a1106c7c410c7604a5229c8d238236d)]
+
 ### Version 1.54.2 - 18 May 2026
 - Automated release of [eeacms/eea-website-backend:6.1.4-5.beta-1](https://github.com/eea/eea-website-backend/releases) [EEA Jenkins - [`a76ae3d2`](https://github.com/eea/helm-charts/commit/a76ae3d258376c2e7e94643dfbbc6857baad1713)]
 
