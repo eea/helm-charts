@@ -53,8 +53,8 @@ matomo:
   hostname: "dev-matomo.01dev.eea.europa.eu"
   environment:
     PHP_MEMORY_LIMIT: 4096M
-    PHP_MAX_EXECUTION_TIME: '0'
-    PHP_MAX_INPUT_TIME: '0'
+    PHP_MAX_EXECUTION_TIME: 180
+    PHP_MAX_INPUT_TIME: 120
     NGINX_HTTP_PORT_NUMBER: "80"
   resources:
     requests:

@@ -62,6 +62,21 @@ questions:
     type: "string"
     group: Matomo
 
+  - variable: matomo.environment.PHP_MAX_EXECUTION_TIME
+    label: "PHP Max Execution Time (Web)"
+    description: "Maximum execution time for PHP scripts in website (0 for unlimited)."
+    type: int
+    default: 180
+    required: true
+    group: Matomo
+
+  - variable: matomo.environment.PHP_MAX_INPUT_TIME
+    label: "PHP Max Input Time (Web)"
+    description: "Maximum input time for PHP scripts in website (0 for unlimited)."
+    type: int
+    default: 120
+    required: true
+    group: Matomo
 
   - variable: mariadb.environment.MARIADB_USER
     label: "MariaDB username"
