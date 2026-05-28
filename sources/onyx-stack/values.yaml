@@ -658,7 +658,7 @@ webserver:
   startupProbe:
     httpGet:
       path: /health
-      port: api-server-port
+      port: 8080
     initialDelaySeconds: 30
     periodSeconds: 10
     timeoutSeconds: 5
@@ -666,7 +666,7 @@ webserver:
   readinessProbe:
     httpGet:
       path: /health
-      port: api-server-port
+      port: 8080
     initialDelaySeconds: 15
     periodSeconds: 10
     timeoutSeconds: 5
@@ -674,7 +674,7 @@ webserver:
   livenessProbe:
     httpGet:
       path: /health
-      port: api-server-port
+      port: 8080
     initialDelaySeconds: 30
     periodSeconds: 10
     timeoutSeconds: 5
@@ -762,7 +762,7 @@ api:
   startupProbe:
     httpGet:
       path: /health
-      port: api-server-port
+      port: 8080
     initialDelaySeconds: 30
     periodSeconds: 10
     timeoutSeconds: 5
@@ -771,7 +771,7 @@ api:
   readinessProbe:
     httpGet:
       path: /health
-      port: api-server-port
+      port: 8080
     initialDelaySeconds: 15
     periodSeconds: 10
     timeoutSeconds: 5
@@ -779,7 +779,7 @@ api:
   livenessProbe:
     httpGet:
       path: /health
-      port: api-server-port
+      port: 8080
     initialDelaySeconds: 30
     periodSeconds: 10
     timeoutSeconds: 5
