@@ -345,6 +345,9 @@ You don't need to change anything on this container, it should work by having th
 
 ## Releases
 
+### Version 3.13.0 - 28 May 2026
+- Automated release of [eeacms/matomo:5.10.0-1](https://github.com/eea/eea.docker.matomo/releases) [EEA Jenkins - [`1e13f1e5`](https://github.com/eea/helm-charts/commit/1e13f1e5857051710d91fb13c3dcefa621e17947)]
+
 ### Version 3.12.1 - 27 May 2026
 - Added PHP limits in questions [miahi - [`6053ac57`](https://github.com/eea/helm-charts/commit/6053ac5720709c23efee26ae0ca9d7c58812cae9)]
 
