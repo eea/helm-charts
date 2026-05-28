@@ -44,7 +44,20 @@ spec:
           set -euo pipefail
           mkdir -p /work/plugins
           cp -a /usr/src/redmine/plugins/. /work/plugins/
-          if [ -d /addons/current/plugins ]; then
+          # Only apply PVC overlay if the PVC was updated since image load
+          image_load_time=$(stat -c '%Y' /work/plugins 2>/dev/null || echo 0)
+          overlay_ok=1
+          if [ -d /addons/current/plugins ] && [ -f /addons/.addons-sync-remote.sha256 ]; then
+            pvc_sync_marker=/addons/.addons-sync-remote.sha256
+            pvc_mod_time=$(stat -c '%Y' "${pvc_sync_marker}" 2>/dev/null || echo 0)
+            if [ "${pvc_mod_time}" -gt "${image_load_time}" ]; then
+              echo "PVC overlay is newer than image load, applying"
+            else
+              echo "PVC overlay is not newer, skipping (keeping image plugins)"
+              overlay_ok=0
+            fi
+          fi
+          if [ "${overlay_ok}" -eq 1 ] && [ -d /addons/current/plugins ]; then
             for source in /addons/current/plugins/*; do
               [ -d "${source}" ] || continue
               name="$(basename "${source}")"
