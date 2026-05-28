@@ -82,9 +82,18 @@ spec:
                 name: {{ .Values.config.envConfigMapName }}
           env:
             {{- include "onyx.envSecrets" . | nindent 12}}
+          {{- if .Values.hfCache.enabled }}
+          volumeMounts:
+            - name: hf-cache
+              mountPath: {{ .Values.hfCache.mountPath }}
+            {{- with .Values.celery_beat.volumeMounts }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          {{- else }}
           {{- with .Values.celery_beat.volumeMounts }}
           volumeMounts:
             {{- toYaml . | nindent 12 }}
+          {{- end }}
           {{- end }}
           startupProbe:
             {{ .Values.celery_shared.startupProbe | toYaml | nindent 12}}
@@ -108,14 +117,21 @@ spec:
                     python onyx/background/celery/celery_k8s_probe.py
                     --probe liveness
                     --filename /tmp/onyx_k8s_beat_liveness.txt
-      {{- if .Values.celery_beat.volumes }}
+      {{- if or .Values.hfCache.enabled .Values.celery_beat.volumes }}
       volumes:
+        {{- if .Values.hfCache.enabled }}
+        - name: hf-cache
+          persistentVolumeClaim:
+            claimName: {{ .Values.hfCache.pvc.name }}
+        {{- end }}
+        {{- if .Values.celery_beat.volumes }}
         {{- range .Values.celery_beat.volumes }}
         {{- if ne .name "data" }}
         - name: {{ .name }}
           {{- if .emptyDir }}
           emptyDir: {{- toYaml .emptyDir | nindent 12 }}
           {{- end }}
+        {{- end }}
         {{- end }}
         {{- end }}
         - name: data

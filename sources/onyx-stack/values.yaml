@@ -148,12 +148,15 @@ vespa:
     app.kubernetes.io/name: vespa
   securityContext:
     privileged: false
-    runAsNonRoot: true
-    runAsUser: 1000
-    readOnlyRootFilesystem: true
-    capabilities:
-      drop:
-      - ALL
+    runAsNonRoot: false
+    runAsUser: 0
+    readOnlyRootFilesystem: false
+  podSecurityContext:
+    fsGroup: 0
+  tmpfsVolumeMount:
+    enabled: true
+    mountPath: /opt/vespa/var/logs
+    sizeLimit: "1Gi"
   resources:
     # The Vespa Helm chart specifies default resources, which are quite modest. We override
     # them here to increase chances of the chart running successfully. If you plan to index at
@@ -177,6 +180,7 @@ vespa:
     retention:
       enabled: true
       days: 7  # Keep backups for 7 days
+    ttlSecondsAfterFinished: 86400  # Keep completed Job pods for 24 hours
     resources:
       requests:
         cpu: 1000m
@@ -187,14 +191,14 @@ vespa:
   # Temporary migration fix used during Vespa document/schema migrations.
   # When enabled, chart creates a no-op verify script ConfigMap.
   migrationFix:
-    enabled: false
+    enabled: true
     verifyRankSetupConfigMapName: "vespa-noop-verify"
   # Proxy used for Vespa prepareandactivate to append ignoreValidationErrors=true.
   # This avoids deployment failures during migration windows.
   deployProxy:
-    enabled: false
-    name: ""
-    configMapName: ""
+    enabled: true
+    name: "vespa-deploy-proxy"
+    configMapName: "vespa-proxy-nginx-conf"
     image: "nginx:1.27-alpine"
     replicas: 1
     resolver: "kube-dns.kube-system.svc.cluster.local"
@@ -645,15 +649,36 @@ webserver:
       cpu: 1000m
       memory: 1Gi
 
-  # Optional health probes
+ # Optional health probes
   # Example:
   # readinessProbe:
   #   httpGet:
-  #     path: /api/health
-  #     port: http
-  startupProbe: {}
-  readinessProbe: {}
-  livenessProbe: {}
+  #     path: /health
+  #     port: api-server-port
+  startupProbe:
+    httpGet:
+      path: /health
+      port: api-server-port
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 60  # up to 10 minutes for model loading
+  readinessProbe:
+    httpGet:
+      path: /health
+      port: api-server-port
+    initialDelaySeconds: 15
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+  livenessProbe:
+    httpGet:
+      path: /health
+      port: api-server-port
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3  # restart after 30s of unresponsiveness
 
   autoscaling:
     enabled: false
@@ -733,15 +758,32 @@ api:
       cpu: 1000m
       memory: 3Gi
 
-  # Optional health probes
-  # Example:
-  # readinessProbe:
-  #   httpGet:
-  #     path: /health
-  #     port: api-server-port
-  startupProbe: {}
-  readinessProbe: {}
-  livenessProbe: {}
+  # Health probes - /health endpoint returns 200 when the server is responsive
+  startupProbe:
+    httpGet:
+      path: /health
+      port: api-server-port
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    successThreshold: 1
+    failureThreshold: 60  # up to 10 minutes for model loading
+  readinessProbe:
+    httpGet:
+      path: /health
+      port: api-server-port
+    initialDelaySeconds: 15
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+  livenessProbe:
+    httpGet:
+      path: /health
+      port: api-server-port
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3  # restart after 30s of unresponsiveness
 
   autoscaling:
     enabled: false
