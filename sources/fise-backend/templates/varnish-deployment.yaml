@@ -55,6 +55,10 @@ spec:
           {{- toYaml .Values.varnish.startupProbe | nindent 10 }}
         {{- end }}
 
+        securityContext:
+          capabilities:
+            add: ["IPC_LOCK"]
+
         resources:
           {{- toYaml .Values.varnish.resources | nindent 10 }}
 
