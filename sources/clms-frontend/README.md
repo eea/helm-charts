@@ -24,6 +24,9 @@ The chart deploys a three-tier architecture:
 
 ## Releases
 
+### Version 7.42.1 - 02 June 2026
+- Move Apache VirtualHost config from the container environment into a mounted ConfigMap to avoid oversized process environments.
+
 ### Version 7.42.0 - 29 May 2026
 - Automated release of [eeacms/clms-frontend:3.562.0](https://github.com/eea/clms-frontend/releases) [EEA Jenkins - [`f71a949e`](https://github.com/eea/helm-charts/commit/f71a949eaaf3b0f261341ea269024c7f0b5adf75)]
 

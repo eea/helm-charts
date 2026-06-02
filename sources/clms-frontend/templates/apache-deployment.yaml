@@ -1,4 +1,17 @@
 {{- if and .Values.apache .Values.apache.enabled }}
+{{- if .Values.apache.config }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-apache-config
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: apache
+data:
+  vh-my-app.conf: |
+{{ .Values.apache.config | replace "\t" "    " | indent 4 }}
+---
+{{- end }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -32,9 +45,10 @@ spec:
           value: "{{ .Values.timezone }}"
         - name: APACHE_MODULES
           value: "{{ .Values.apache.modules }}"
-        - name: APACHE_CONFIG
-          value: |
-{{ .Values.apache.config | replace "\t" "    " | indent 12 }}
+        {{- if .Values.apache.config }}
+        - name: APACHE_CONFIG_URL
+          value: "file:///mnt/apache-config/vh-my-app.conf"
+        {{- end }}
 
         ports:
         - name: http
@@ -53,17 +67,31 @@ spec:
         resources:
           {{- toYaml .Values.apache.resources | nindent 10 }}
 
-        {{- if .Values.apache.staticContent.enabled }}
+        {{- if or .Values.apache.config .Values.apache.staticContent.enabled }}
         volumeMounts:
+        {{- if .Values.apache.config }}
+        - name: apache-config
+          mountPath: /mnt/apache-config
+          readOnly: true
+        {{- end }}
+        {{- if .Values.apache.staticContent.enabled }}
         - name: static-content
           mountPath: /staticcontent
         {{- end }}
+        {{- end }}
 
-      {{- if .Values.apache.staticContent.enabled }}
+      {{- if or .Values.apache.config .Values.apache.staticContent.enabled }}
       volumes:
+      {{- if .Values.apache.config }}
+      - name: apache-config
+        configMap:
+          name: {{ .Release.Name }}-apache-config
+      {{- end }}
+      {{- if .Values.apache.staticContent.enabled }}
       - name: static-content
         persistentVolumeClaim:
           claimName: {{ .Values.apache.staticContent.existingClaim | default (printf "%s-apache-static" .Release.Name) }}
+      {{- end }}
       {{- end }}
 
       {{- with .Values.apache.nodeSelector }}

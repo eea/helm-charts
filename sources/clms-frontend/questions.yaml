@@ -138,7 +138,7 @@ questions:
 
   - variable: "apache.config"
     label: "Apache VirtualHost config"
-    description: "Full Apache VirtualHost configuration (same format as Rancher 1)"
+    description: "Full Apache VirtualHost configuration, mounted into Apache from a ConfigMap"
     type: "multiline"
     required: false
     group: "General"
