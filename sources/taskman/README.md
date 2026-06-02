@@ -495,6 +495,9 @@ grunt
 
 ## Releases
 
+### Version 0.16.0 - 02 June 2026
+- Automated release of [eeacms/redmine:6.1.2-1.38](https://github.com/eea/eea.docker.redmine/releases) [EEA Jenkins - [`e2be8a88`](https://github.com/eea/helm-charts/commit/e2be8a882d35fed30ad89ddeb4eabe3967cb2d4d)]
+
 ### Unreleased
 - Runtime patch operations note: when `runtime-compat-config` ConfigMap is mounted to `/usr/src/redmine/config/initializers/runtime_compat.rb` using `subPath`, container image updates do not change effective runtime patch code.
   - To roll out runtime patch changes in this mode: update ConfigMap data first, then restart/rollout Redmine deployment.
