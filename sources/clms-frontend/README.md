@@ -24,6 +24,9 @@ The chart deploys a three-tier architecture:
 
 ## Releases
 
+### Version 7.42.2 - 02 June 2026
+- fix apache [Dobricean Ioan Dorian - [`34c30dd3`](https://github.com/eea/helm-charts/commit/34c30dd38deb802608d4e3078d0967db9963af52)]
+
 ### Version 7.42.1 - 02 June 2026
 - Move Apache VirtualHost config from the container environment into a mounted ConfigMap to avoid oversized process environments.
 
