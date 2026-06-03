@@ -31,7 +31,7 @@ spec:
 
       containers:
       - name: mediaserver
-        image: eeacms/nginx-eionet-styles:1.5
+        image: nginx:1.31.1-alpine
         env:
         - name: TZ
           value: {{ .Values.timezone }}
@@ -55,7 +55,8 @@ spec:
         - mountPath: /var/local/gemet/exports
           name: www-eionet-gemet-exports
           readOnly: true
-
+        - name: nginx-config
+          mountPath: /etc/nginx/conf.d
         livenessProbe:
           tcpSocket:
             port: 80
@@ -90,4 +91,6 @@ spec:
         persistentVolumeClaim:
           claimName: www-eionet-gemet-exports
           readOnly: true
-
+      - name: nginx-config
+        configMap:
+          name: {{ .Release.Name }}-nginx-config
