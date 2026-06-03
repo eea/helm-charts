@@ -89,7 +89,7 @@ spec:
               port: 9000
             periodSeconds: 10
         - name: nginx
-          image: nginx:alpine3.23
+          image: nginx:1.31.1-alpine
           ports:
             - containerPort: {{ .Values.matomo.environment.NGINX_HTTP_PORT_NUMBER }}
               name: nginx
