@@ -4,6 +4,9 @@ This chart is (almost) configured for production.
 
 ## Releases
 
+### Version 0.5.4 - 03 June 2026
+- Use nginx:1.31.1-alpine with configmap [valentinab25 - [`be56fcc1`](https://github.com/eea/helm-charts/commit/be56fcc18358c74e0d55b803f4104e77e78617c3)]
+
 ### Version 0.5.3 - 13 March 2025
 - Automated release of [eeacms/apache:2.4-3.4](https://github.com/eea/eea.docker.apache/releases) [EEA Jenkins - [`36a7b01`](https://github.com/eea/helm-charts/commit/36a7b016db51559df4a1bd443d71133d82e1a12d)]
 
