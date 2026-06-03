@@ -23,7 +23,7 @@ spec:
       - key: component
         operator: NotIn
         values:
-          - postgres
+          - mysql
       - key: name
         operator: NotIn
         values:
@@ -42,7 +42,7 @@ spec:
               - key: component
                 operator: NotIn
                 values:
-                  - postgres
+                  - mysql
               - key: name
                 operator: NotIn
                 values:
@@ -50,7 +50,4 @@ spec:
 
             
 {{- end }}
-
-
-
 

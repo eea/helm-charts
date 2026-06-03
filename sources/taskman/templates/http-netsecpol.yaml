@@ -1,15 +1,14 @@
 {{- if ( default .Values.securityEnabled true) -}}
 
 {{/*
-  By default, allow only access from pods in the same namespace to port 5432
-  No egress
+  Any http port needs access to if from ingress or if you want to test it with a Node Port
 */}}
 
 
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: {{ .Release.Name }}-mysql-allow
+  name: {{ .Release.Name }}-http-allow
   labels:
     {{- include "appl.labels" . | nindent 4 }}
 
@@ -20,20 +19,17 @@ spec:
       - key: component
         operator: In
         values:
-          - mysql
+          - redmine
+          - drawio
     matchLabels:
-      component: mysql
-
-
+      component: matomo
 
   policyTypes:
   - Ingress
-  - Egress
-
-  egress: []
-
-  ingress:  
-  - ports:
-    - protocol: TCP
-      port: 3306
+  ingress:
+    - ports:
+        - port: 8080
+          protocol: TCP
+        - port: 3000
+          protocol: TCP
 {{- end }}

@@ -1,0 +1,27 @@
+{{- if and (default .Values.securityEnabled true) (.Values.ingress.letsencrypt) }}
+
+{{/*
+ Letsencrypt creates a pod in the namespace and needs access on port 8089
+*/}}
+
+
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ .Release.Name }}-letsencrypt-allow
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+
+spec:
+  ingress:
+    - ports:
+        - port: 8089
+          protocol: TCP
+  podSelector:
+    matchExpressions:
+      - key: acme.cert-manager.io/http01-solver
+        operator: Exists
+  policyTypes:
+    - Ingress
+
+{{- end }}
