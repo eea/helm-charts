@@ -128,6 +128,9 @@ When `ldapMemcachedServers` is empty the env var is omitted entirely.
 
 ## Releases
 
+### Version 0.1.6 - 03 June 2026
+- Changed webforms proxy image tag to: 1.31.1-alpine [Olimpiu Rob - [`2c7ddad7`](https://github.com/eea/helm-charts/commit/2c7ddad7f05300c8b58538abb124fcafb9a4bac9)]
+
 ### Version 0.1.5 - 03 June 2026
 - Updated appVersion to z5-1.11 [Olimpiu Rob - [`2cf6ed8d`](https://github.com/eea/helm-charts/commit/2cf6ed8dc137000ab9b69f596f0604c9d3209dc2)]
 
