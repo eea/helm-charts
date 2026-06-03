@@ -47,18 +47,22 @@ ingress:
 storage:
   filesDir:
     storageClassName: "nfs-client"
+    accessMode: ReadWriteMany
     size: 200Gi
     existingClaim: ""
   tmpDir:
     storageClassName: "nfs-client"
+    accessMode: ReadWriteMany
     size: 10Gi
     existingClaim: ""
   github:
     storageClassName: "nfs-client"
+    accessMode: ReadWriteMany
     size: 1Gi
     existingClaim: ""
   plugins:
     storageClassName: "nfs-client"
+    accessMode: ReadWriteMany
     size: 1Gi
     existingClaim: ""
   assets:

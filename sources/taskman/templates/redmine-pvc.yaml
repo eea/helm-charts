@@ -19,7 +19,7 @@ metadata:
     "helm.sh/resource-policy": keep
 spec:
   accessModes:
-  - ReadWriteOnce
+  - {{ .Values.storage.filesDir.accessMode | default "ReadWriteMany" | quote }}
   resources:
     requests:
       storage: {{ .Values.storage.filesDir.size | default "200Gi" }}
@@ -38,7 +38,7 @@ metadata:
     "helm.sh/resource-policy": keep
 spec:
   accessModes:
-  - ReadWriteOnce
+  - {{ .Values.storage.tmpDir.accessMode | default "ReadWriteMany" | quote }}
   resources:
     requests:
       storage: {{ .Values.storage.tmpDir.size | default "10Gi" }}
@@ -57,7 +57,7 @@ metadata:
     "helm.sh/resource-policy": keep
 spec:
   accessModes:
-  - ReadWriteOnce
+  - {{ .Values.storage.github.accessMode | default "ReadWriteMany" | quote }}
   resources:
     requests:
       storage: {{ .Values.storage.github.size | default "1Gi" }}
@@ -76,7 +76,7 @@ metadata:
     "helm.sh/resource-policy": keep
 spec:
   accessModes:
-  - ReadWriteOnce
+  - {{ .Values.storage.plugins.accessMode | default "ReadWriteMany" | quote }}
   resources:
     requests:
       storage: {{ .Values.storage.plugins.size | default "1Gi" }}
