@@ -26,7 +26,7 @@ spec:
 
       containers:
       - name: {{ .Release.Name }}-static
-        image: "{{ .Values.static.image }}"
+        image: nginx:1.31.1-alpine
         env:
         - name: TZ
           value: "{{ .Values.timezone }}"
