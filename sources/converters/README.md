@@ -6,7 +6,7 @@ This chart is configured for production use.
 
 <dl>
   <dt>Version 0.2.2</dt>
-  <dd>Jon executor manual ACK.</dd>
+  <dd>Job executor manual ACK.</dd>
 
   <dt>Version 0.2.1</dt>
   <dd>Transactional cron job.</dd>
