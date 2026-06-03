@@ -260,7 +260,6 @@ nginx:
       - name: nginx-config
   # Simple Deployment configuration (when useSimpleDeployment: true)
   simple:
-    tag: "alpine"
     replicas: 1
     serviceType: "ClusterIP"
     resources:

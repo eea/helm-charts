@@ -89,7 +89,7 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: nginx:{{ .Values.nginx.simple.tag | default "alpine" }}
+        image: nginx:1.31.1-alpine
         imagePullPolicy: {{ .Values.global.pullPolicy }}
         ports:
         - containerPort: 80
