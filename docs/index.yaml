@@ -55810,6 +55810,23 @@ entries:
   share-it:
   - apiVersion: v2
     appVersion: 25.0.12-fpm-alpine
+    created: "2026-06-03T11:25:49.754865194+03:00"
+    dependencies:
+    - name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.2.0
+    description: A NextCloud service for sharing files
+    digest: ab36cc240dac278826d6b63adbce0528c3548cd1428a92de079ddb5a45b98e90
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/share-it/shareit.svg
+    keywords:
+    - Sharing
+    name: share-it
+    type: application
+    urls:
+    - share-it-0.3.3.tgz
+    version: 0.3.3
+  - apiVersion: v2
+    appVersion: 25.0.12-fpm-alpine
     created: "2026-01-14T13:04:46.212984+01:00"
     dependencies:
     - name: postfix
@@ -58224,4 +58241,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2026-06-03T11:23:08.325186119+03:00"
+generated: "2026-06-03T11:25:49.753741506+03:00"

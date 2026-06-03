@@ -4,6 +4,9 @@ A Nextcloud instance for sharing files.
 
 ## Releases
 
+### Version 0.3.3 - 03 June 2026
+- Update nginx to 1.31.1 - Refs [#304237](https://taskman.eionet.europa.eu/issues/304237) [valentinab25 - [`41f56ed0`](https://github.com/eea/helm-charts/commit/41f56ed0905e8aff9dc334daf97fcd1920e8913f)]
+
 ### Version 0.3.2 - 18 December 2025
 - Release of dependent chart postfix:3.2.0 [EEA Jenkins - [`d2e34511`](https://github.com/eea/helm-charts/commit/d2e345113b4a7d04599cf389e0b04f8990a461f6)]
 
