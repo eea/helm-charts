@@ -5,6 +5,9 @@ This chart is configured for production use.
 ## Releases
 
 <dl>
+  <dt>Version 0.2.0</dt>
+  <dd>Delete stuck workers cron job, delete heart beat queue on app shutdown</dd>
+
   <dt>Version 0.1.13</dt>
   <dd>httpServletRequest is not exposed in new thymeleaf version fix.</dd>
 
