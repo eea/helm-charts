@@ -147,8 +147,6 @@ webserver:
   securityContext:
     readOnlyRootFilesystem: false
   image:
-    repository: nginx
-    tag: "alpine"
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP

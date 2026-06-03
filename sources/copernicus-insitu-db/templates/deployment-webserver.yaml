@@ -24,7 +24,7 @@ spec:
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
       containers:
         - name: webserver
-          image: "{{ .Values.webserver.image.repository }}:{{ .Values.webserver.image.tag }}"
+          image: nginx:1.31.1-alpine
           imagePullPolicy: {{ .Values.webserver.image.pullPolicy }}
           ports:
             - name: http
