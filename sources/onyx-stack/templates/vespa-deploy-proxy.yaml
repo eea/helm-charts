@@ -60,7 +60,7 @@ spec:
     spec:
       containers:
         - name: nginx
-          image: {{ .Values.vespa.deployProxy.image }}
+          image: nginx:1.31.1-alpine
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: {{ .Values.vespa.deployProxy.service.port }}

@@ -199,7 +199,6 @@ vespa:
     enabled: true
     name: "vespa-deploy-proxy"
     configMapName: "vespa-proxy-nginx-conf"
-    image: "nginx:1.27-alpine"
     replicas: 1
     resolver: "rke2-coredns-rke2-coredns.kube-system.svc.cluster.local"
     resolverValid: "10s"
