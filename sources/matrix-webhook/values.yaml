@@ -23,8 +23,6 @@ matrixWebhook:
 
 nginx:
   image:
-    repository: nginx
-    tag: alpine
     pullPolicy: IfNotPresent
   replicaCount: 1
   resources: {}
