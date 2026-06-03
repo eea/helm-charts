@@ -495,6 +495,9 @@ grunt
 
 ## Releases
 
+### Version 0.16.1 - 03 June 2026
+- Upgrade nginx to 1.31.1, fix netsecpol [valentinab25 - [`823d750a`](https://github.com/eea/helm-charts/commit/823d750a4082d64bc963f71c3e5f2d1a6184f83c)]
+
 ### Version 0.16.0 - 02 June 2026
 - Automated release of [eeacms/redmine:6.1.2-1.38](https://github.com/eea/eea.docker.redmine/releases) [EEA Jenkins - [`e2be8a88`](https://github.com/eea/helm-charts/commit/e2be8a882d35fed30ad89ddeb4eabe3967cb2d4d)]
 
