@@ -100,7 +100,8 @@ plone:
     POSTGRES_DB: datafs
     POSTGRES_USER: zope
     POSTGRES_PASSWORD: ""
-  environment: {}
+  environment:
+    REDIS_PORT: "6379"
   annotations: {}
   command:
     - sh
@@ -312,6 +313,9 @@ async:
 
 converter:
   enabled: true
+  serviceName: converter
+  serviceType: ClusterIP
+  port: 8000
   image:
     repository: eeacms/eea-volto-blocks-converter
     tag: "v1.0.7"

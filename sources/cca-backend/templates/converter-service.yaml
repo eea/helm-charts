@@ -1,0 +1,19 @@
+{{- if .Values.converter.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.converter.serviceName }}
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: converter
+spec:
+  type: {{ .Values.converter.serviceType }}
+  ports:
+    - name: converter
+      port: {{ .Values.converter.port }}
+      protocol: TCP
+      targetPort: {{ .Values.converter.port }}
+  selector:
+    {{- include "appl.selectorLabels" . | nindent 4 }}
+    component: converter
+{{- end }}

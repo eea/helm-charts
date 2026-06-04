@@ -100,7 +100,7 @@ Render the shared Plone-related environment variables.
 - name: REDIS_HOST
   value: "redis"
 - name: REDIS_PORT
-  value: "6379"
+  value: "{{ default "6379" (get $env "REDIS_PORT") }}"
 {{- end }}
 {{- range $key, $value := $env }}
 {{- if and $value (not (has $key $reserved)) }}
