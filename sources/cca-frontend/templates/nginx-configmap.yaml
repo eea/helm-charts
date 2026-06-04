@@ -97,7 +97,7 @@ data:
       }
 
       location ~ ^/_admin(.*)$ {
-        rewrite ^/_admin(.*)$ /VirtualHostBase/https/$host:443/{{ include "cca-frontend.virtualHostRoot" . }}/VirtualHostRoot/_vh_admin/$1 break;
+        rewrite ^/_admin(.*)$ /VirtualHostBase/https/$host:443/{{ include "cca-frontend.virtualHostRoot" . }}/VirtualHostRoot/_vh__admin/$1 break;
         proxy_pass http://backend_varnish;
       }
 
