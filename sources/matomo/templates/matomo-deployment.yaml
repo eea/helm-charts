@@ -79,10 +79,10 @@ spec:
           startupProbe:
             tcpSocket:
               port: 9000
-            initialDelaySeconds: 20
+            initialDelaySeconds: 30
             periodSeconds: 10
             timeoutSeconds: 10
-            failureThreshold: 10
+            failureThreshold: 50
             successThreshold: 1
           livenessProbe:
             tcpSocket:

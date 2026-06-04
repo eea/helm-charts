@@ -68,12 +68,13 @@ matomo:
   username: ""
   password: ""
   startupProbe:
-    tcpSocket:
+    httpGet:
+      path: /matomo.php
       port: 80
     initialDelaySeconds: 30
     periodSeconds: 10
     timeoutSeconds: 5
-    failureThreshold: 20
+    failureThreshold: 50
     successThreshold: 1
   livenessProbe:
     httpGet:
