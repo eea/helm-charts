@@ -5,6 +5,9 @@ This chart is configured for production use.
 ## Releases
 
 <dl>
+  <dt>Version 0.2.3</dt>
+  <dd>Scheduled task deletes stuck workers from Rancher and database.</dd>
+
   <dt>Version 0.2.2</dt>
   <dd>Job executor manual ACK.</dd>
 
