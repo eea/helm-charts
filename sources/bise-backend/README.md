@@ -10,6 +10,9 @@ This chart deployes the BISE backend app
 
 ## Releases
 
+### Version 1.58.2 - 08 June 2026
+- fix entrasync active deadline [Dobricean Ioan Dorian - [`b17003ac`](https://github.com/eea/helm-charts/commit/b17003ac9fa4fa11b02eece41cfc7c41e9b28b4b)]
+
 ### Version 1.58.1 - 08 June 2026
 - Fix Entra sync CronJob history limits and add a 10h active deadline for stuck Jobs
 
