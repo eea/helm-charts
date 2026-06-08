@@ -10,6 +10,9 @@ This chart deployes the Forest Information System of Europe website backend app
 
 ## Releases
 
+### Version 1.53.2 - 08 June 2026
+- fix entrasync active deadline [Dobricean Ioan Dorian - [`1ca40c60`](https://github.com/eea/helm-charts/commit/1ca40c6066cd6876a46d5b8c878cc6ec8bab0dfe)]
+
 ### Version 1.53.1 - 08 June 2026
 - Fix Entra sync CronJob history limits and add a 10h active deadline for stuck Jobs
 
