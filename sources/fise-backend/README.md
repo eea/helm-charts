@@ -10,6 +10,9 @@ This chart deployes the Forest Information System of Europe website backend app
 
 ## Releases
 
+### Version 1.53.1 - 08 June 2026
+- Fix Entra sync CronJob history limits and add a 10h active deadline for stuck Jobs
+
 ### Version 1.53.0 - 04 June 2026
 - Automated release of [eeacms/fise-backend:6.1.4-7](https://github.com/eea/fise-backend/releases) [EEA Jenkins - [`892760bb`](https://github.com/eea/helm-charts/commit/892760bb0077522705beb5594d2265a74b73ab77)]
 

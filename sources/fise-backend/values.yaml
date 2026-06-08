@@ -147,6 +147,7 @@ debug:
 entrasync:
   enabled: false
   schedule: "0 0 3 * *"
+  activeDeadlineSeconds: 36000
   keepSuccessfulPods: 3
   keepFailedPods: 5
   resources:
