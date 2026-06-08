@@ -64,6 +64,15 @@ questions:
     group: "General"
     show_if: "entrasync.enabled=true"
 
+  - variable: "entrasync.activeDeadlineSeconds"
+    label: "Entra ID synchronization timeout"
+    description: "Maximum runtime in seconds before Kubernetes marks the Job failed"
+    type: "int"
+    default: 36000
+    required: true
+    group: "General"
+    show_if: "entrasync.enabled=true"
+
   - variable: "zodbpack.enabled"
     label: "Enable Zodbpack cleanup"
     default: false

@@ -10,6 +10,9 @@ This chart deployes the BISE backend app
 
 ## Releases
 
+### Version 1.58.1 - 08 June 2026
+- Fix Entra sync CronJob history limits and add a 10h active deadline for stuck Jobs
+
 ### Version 1.58.0 - 27 May 2026
 - Automated release of [eeacms/bise-backend:6.1.4-4](https://github.com/eea/bise-backend/releases) [EEA Jenkins - [`bbb0922c`](https://github.com/eea/helm-charts/commit/bbb0922c59c63ac9167d513122cda755211b4315)]
 
