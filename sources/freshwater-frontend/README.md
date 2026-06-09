@@ -4,6 +4,9 @@ A Helm chart for deploying the WISE Freshwater frontend application.
 
 ## Releases
 
+### Version 2.16.2 - 09 June 2026
+- Automated release of [eeacms/freshwater-frontend:2.34.0-beta.2](https://github.com/eea/freshwater-frontend/releases) [EEA Jenkins - [`3961cd2d`](https://github.com/eea/helm-charts/commit/3961cd2da1d88c665dc0815f3f642bfee42dff2c)]
+
 ### Version 2.16.1 - 09 June 2026
 - Automated release of [eeacms/freshwater-frontend:2.34.0-beta.1](https://github.com/eea/freshwater-frontend/releases) [EEA Jenkins - [`8d327f32`](https://github.com/eea/helm-charts/commit/8d327f322ffa1f61ba50724092d4180f6860d637)]
 
