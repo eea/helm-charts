@@ -65,6 +65,11 @@ data:
         proxy_pass http://backend_translate;
       }
 
+      location ~ ^/@@delete-translation(.*)$ {
+        rewrite ^/@@delete-translation(.*)$ /VirtualHostBase/https/$host:443/cca/VirtualHostRoot/@@delete-translation$1 break;
+        proxy_pass http://backend_translate;
+      }
+
       location ~ ^/@@call-etranslation(.*)$ {
         rewrite ^/@@call-etranslation(.*)$ /VirtualHostBase/https/$host:443/{{ include "cca-frontend.virtualHostRoot" . }}/VirtualHostRoot/@@call-etranslation$1 break;
         proxy_pass http://backend_translate;
