@@ -45,6 +45,18 @@ spec:
               value: {{ $.Values.timezone | quote }}
             - name: SYNC_CMD
               value: {{ printf "curl --silent --header \"Authorization: %s\" \"%s\"" $cronjob.token $cronjob.syncURL | quote }}
+          {{- with $.Values.cron.sharedCronJobNodeSelector }}
+          nodeSelector:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with $.Values.cron.sharedCronJobAffinity }}
+          affinity:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with $.Values.cron.sharedCronJobTolerations }}
+          tolerations:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           restartPolicy: Never
 {{- end }}
 {{- end }}

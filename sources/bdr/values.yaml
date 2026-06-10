@@ -575,6 +575,9 @@ service:
 cron:
   enabled: true
   sharedCronJobImage: curlimages/curl:8.16.0
+  sharedCronJobAffinity: {}
+  sharedCronJobNodeSelector: {}
+  sharedCronJobTolerations: []
 
 ingress:
   enabled: false
