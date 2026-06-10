@@ -55,6 +55,7 @@ echo "Readme message is $HELM_UPGRADE_MESSAGE"
 echo "Commit message is $HELM_COMMIT_MESSAGE"
 
 export HELM_COMMIT_MESSAGE
+export HELM_UPGRADE_MESSAGE
 
 
 readme_link=""
