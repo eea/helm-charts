@@ -67,6 +67,9 @@ This can be used to set the rabbitmq host to be used.
 
 ## Releases
 
+### Version 0.65.2 - 10 June 2026
+- Added sharedCronJobAffinity, sharedCronJobNodeSelector and sharedCronJobTolerations [Olimpiu Rob - [`95d00233`](https://github.com/eea/helm-charts/commit/95d002336325378d4d61c90c23ea44ff2179a13b)]
+
 ### Version 0.65.1 - 10 June 2026
 - Made sync cronjobs resources configurable [Olimpiu Rob - [`aec7b182`](https://github.com/eea/helm-charts/commit/aec7b182b9ba4b61bba35e15d2ff8a7a4551a032)]
 
