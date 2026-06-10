@@ -28,7 +28,7 @@ spec:
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
       containers:
       - name: ogcproxy
-        image: eeacms/clms-ogcproxy:1.0.0
+        image: eeacms/clms-ogcproxy:1.0.1
         imagePullPolicy: {{ .Values.ogcproxy.image.pullPolicy }}
         env:
         - name: TZ
