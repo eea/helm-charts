@@ -1,0 +1,79 @@
+{{- if .Values.ogcproxy.enabled }}
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-dpl-ogcproxy
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: ogcproxy
+
+spec:
+  replicas: {{ .Values.ogcproxy.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: ogcproxy
+
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: ogcproxy
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      containers:
+      - name: ogcproxy
+        image: "{{ .Values.ogcproxy.image.repository }}:{{ .Values.ogcproxy.image.tag }}"
+        imagePullPolicy: {{ .Values.ogcproxy.image.pullPolicy }}
+        env:
+        - name: TZ
+          value: "{{ .Values.timezone }}"
+        {{- range $key, $value := .Values.ogcproxy.environment }}
+        {{- if ($value) }}
+        - name: {{ $key }}
+          value: {{ $value | quote }}
+        {{- end }}
+        {{- end }}
+
+        ports:
+        - name: http
+          containerPort: {{ .Values.ogcproxy.port }}
+
+        {{- if (.Values.ogcproxy.livenessProbe) }}
+        livenessProbe:
+          {{- toYaml .Values.ogcproxy.livenessProbe | nindent 10 }}
+        {{- end }}
+
+        {{- if (.Values.ogcproxy.startupProbe) }}
+        startupProbe:
+          {{- toYaml .Values.ogcproxy.startupProbe | nindent 10 }}
+        {{- end }}
+
+        {{- if (.Values.ogcproxy.readinessProbe) }}
+        readinessProbe:
+          {{- toYaml .Values.ogcproxy.readinessProbe | nindent 10 }}
+        {{- end }}
+
+        resources:
+          {{- toYaml .Values.ogcproxy.resources | nindent 10 }}
+
+      {{- with .Values.ogcproxy.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.ogcproxy.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.ogcproxy.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+
+{{- end }}

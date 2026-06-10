@@ -1,0 +1,21 @@
+{{- if .Values.ogcproxy.enabled }}
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.ogcproxy.serviceName }}
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: ogcproxy
+
+spec:
+  type: {{ .Values.ogcproxy.serviceType }}
+  ports:
+  - name: http
+    port: {{ .Values.ogcproxy.port }}
+    targetPort: http
+  selector:
+    {{- include "appl.selectorLabels" . | nindent 4 }}
+    component: ogcproxy
+
+{{- end }}

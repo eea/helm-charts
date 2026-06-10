@@ -233,6 +233,53 @@ asyncjobs:
   tolerations: []
   affinity: {}
 
+ogcproxy:
+  enabled: false
+  replicaCount: 1
+  serviceType: ClusterIP
+  serviceName: ogcproxy
+  port: 8000
+  image:
+    repository: eeacms/clms-ogcproxy
+    tag: "v1.0.0"
+    pullPolicy: Always
+  resources:
+    limits:
+      memory: 256Mi
+    requests:
+      memory: 128Mi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  environment:
+    WORKERS: "2"
+    TIMEOUT: "30"
+    REDIS_URL: "redis://redis:6379/0"
+  livenessProbe:
+    tcpSocket:
+      port: http
+    periodSeconds: 20
+    timeoutSeconds: 10
+    initialDelaySeconds: 30
+    failureThreshold: 6
+    successThreshold: 1
+  startupProbe:
+    tcpSocket:
+      port: http
+    periodSeconds: 5
+    timeoutSeconds: 10
+    initialDelaySeconds: 10
+    failureThreshold: 12
+    successThreshold: 1
+  readinessProbe:
+    tcpSocket:
+      port: http
+    periodSeconds: 15
+    timeoutSeconds: 10
+    initialDelaySeconds: 10
+    failureThreshold: 4
+    successThreshold: 2
+
 postgresDownloadtool:
   enabled: false
   dbName: downloadtool
