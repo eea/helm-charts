@@ -10,6 +10,9 @@ This chart deployes the CLMS backend app
 
 ## Releases
 
+### Version 2.33.2 - 10 June 2026
+- Automated release of [eeacms/clms-ogcproxy:1.0.1](https://github.com/eea/clms-ogcproxy/releases) [EEA Jenkins - [`8a5f1fdf`](https://github.com/eea/helm-charts/commit/8a5f1fdffc13f15333701d9df920a31066dbcda5)]
+
 ### Version 2.33.1 - 10 June 2026
 - Prepare for jenkins release [valentinab25 - [`abff7001`](https://github.com/eea/helm-charts/commit/abff700177bc850e03168419e491c2d06d47becc)]
 
