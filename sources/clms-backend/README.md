@@ -10,6 +10,9 @@ This chart deployes the CLMS backend app
 
 ## Releases
 
+### Version 2.33.0 - 10 June 2026
+- Add ogcproxy service [ana-oprea - [`98aded80`](https://github.com/eea/helm-charts/commit/98aded801566a62d585bb14520040d134820fdfe)]
+
 ### Version 2.32.0 - 27 May 2026
 - Automated release of [eeacms/clms-backend:6.0.15-157](https://github.com/eea/clms-backend/releases) [EEA Jenkins - [`179bac12`](https://github.com/eea/helm-charts/commit/179bac1270e8be210a73e1372989cbe59e1588f2)]
 
