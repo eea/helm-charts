@@ -67,6 +67,9 @@ This can be used to set the rabbitmq host to be used.
 
 ## Releases
 
+### Version 0.65.1 - 10 June 2026
+- Made sync cronjobs resources configurable [Olimpiu Rob - [`aec7b182`](https://github.com/eea/helm-charts/commit/aec7b182b9ba4b61bba35e15d2ff8a7a4551a032)]
+
 ### Version 0.65.0 - 29 May 2026
 - Automated release of [eeacms/reportek-bdr:5.9.4-279](https://github.com/eea/eea.docker.reportek.bdr-instance/releases) [EEA Jenkins - [`743f506d`](https://github.com/eea/helm-charts/commit/743f506d9cb2aeb9881055d1b85709ea0afb2d21)]
 
