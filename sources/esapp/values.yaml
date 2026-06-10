@@ -18,52 +18,105 @@ serviceAccount:
   annotations: {}
   name: ""
 
-url: esapp.eea.europa.eu
+url: ""
 
 timezone: Europe/Copenhagen
 
 
 
 esapp:
-  serviceType: ClusterIP
+  replicaCount: 1
+  image:
+    repository: eeacms/esbootstrap
+    pullPolicy: Always
+    tag: v3.2.0
+  env:
+    VERSION_INFO: eeacms/esbootstrap:v3.2.0
+    elastic_host: elastictest01-data-ingress
+    AUTO_INDEXING: "false"
+    elastic_index: pam
+    APP_CONFIG_DIRNAME: ""
+    elastic_appalias: "prod"
+    elastic_rwuser: "rw"
+    elastic_rwpass: "rwtest"
+    elastic_rouser: "ro"
+    elastic_ropass: "rotest"
+    SENTRY_DSN: ""
+    API_token: ""
+    sourceconf_url: ""
+    sourceconf_bulksize: ""
+    sourceconf_counturl: ""
+  service:
+    type: ClusterIP
+    port: 3000
   resources:
-    requests:
-      memory: "4Gi"
     limits:
-      memory: "4Gi"
+      memory: 1Gi
+    requests:
+      memory: 512Mi
   livenessProbe:
     httpGet:
-      path: /
-      port: 9000
-    periodSeconds: 10
+      path: /API/v1/healthcheck
+      port: 3000
+    periodSeconds: 20
     timeoutSeconds: 10
-    initialDelaySeconds: 0
-    failureThreshold: 5
-    successThreshold: 1
+    initialDelaySeconds: 15
+    failureThreshold: 3
   startupProbe:
     httpGet:
-      path: /
-      port: 9000
+      path: /API/v1/healthcheck
+      port: 3000
     periodSeconds: 5
     timeoutSeconds: 5
     initialDelaySeconds: 15
-    failureThreshold: 20
-    successThreshold: 1
+    failureThreshold: 24
+
+esbootstrap:
+  image:
+    repository: eeacms/esbootstrap-configs
+    pullPolicy: Always
+    tag: v3.0.121
+  env:
+    github_repo: https://github.com/eea/eea.esbootstrap.configs
+    DEV_ENV: "false"
 
 ingress:
   enabled: true
-  className: ""
+  className: "nginx"
   annotations: {}
   letsencrypt: "01dev-eea-letsencrypt"
   configuration:
     proxy-body-size: "256m"
     proxy-read-timeout: "180s"
     proxy-send-timeout: "120s"
-  tls: true
-  certificate: ""
+
 
 storage:
+  enabled: true
+  configSize: 1Gi
   extensionsSize: 1Gi
   logsSize: 10Gi
   dataSize: 5Gi
   className: "nfs-client"
+
+ide:
+  enabled: true
+  replicaCount: 1
+  image:
+    repository: linuxserver/code-server
+    pullPolicy: IfNotPresent
+    tag: latest
+  env:
+    TZ: Europe/Copenhagen
+    PUID: 0
+    PGID: 0
+    PASSWORD: password
+  resources:
+    limits:
+      memory: 2Gi
+    requests:
+      memory: 512Mi
+  service:
+    type: ClusterIP
+    port: 55721
+

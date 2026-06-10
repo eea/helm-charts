@@ -1,0 +1,112 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "appl.fullname" . }}
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    app.kubernetes.io/component: esapp
+spec:
+  replicas: {{ .Values.esapp.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: esapp
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: esapp
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      initContainers:
+      - name: esbootstrap-data-config
+        image: "{{ .Values.esbootstrap.image.repository }}:{{ .Values.esbootstrap.image.tag }}"
+        imagePullPolicy: {{ .Values.esbootstrap.image.pullPolicy }}
+        env:
+        - name: github_repo
+          value: "{{ .Values.esbootstrap.env.github_repo }}"
+        - name: DEV_ENV
+          value: "{{ .Values.esbootstrap.env.DEV_ENV }}"
+        - name: TZ
+          value: "{{ .Values.timezone }}"
+        volumeMounts:
+        - name: esbootstrapdataconfig
+          mountPath: /code/config
+        resources:
+          limits:
+            memory: 64Mi
+          requests:
+            memory: 32Mi
+      containers:
+      - name: esapp
+        securityContext:
+          runAsUser: 0
+        image: "{{ .Values.esapp.image.repository }}:{{ .Values.esapp.image.tag }}"
+        imagePullPolicy: {{ .Values.esapp.image.pullPolicy }}
+        {{- if .Values.ide.enabled }}
+        command: ["/bin/sh", "-c"]
+        args:
+          - |
+            /node_modules/.bin/nodemon --watch code/ --watch /node_modules/eea-searchserver /code/app.js runserver
+        {{- end }}
+        env:
+        {{- range $key, $value := .Values.esapp.env }}
+        - name: {{ $key }}
+          value: {{ $value | quote }}
+        {{- end }}
+        - name: TZ
+          value: "{{ .Values.timezone }}"
+        ports:
+        - name: http
+          containerPort: 3000
+          protocol: TCP
+        resources:
+          {{- toYaml .Values.esapp.resources | nindent 10 }}
+        livenessProbe:
+          {{- toYaml .Values.esapp.livenessProbe | nindent 10 }}
+        readinessProbe:
+          {{- toYaml .Values.esapp.livenessProbe | nindent 10 }}
+        startupProbe:
+          {{- toYaml .Values.esapp.startupProbe | nindent 10 }}
+        volumeMounts:
+        - name: esbootstrapdataconfig
+          mountPath: /code/config
+      {{- if .Values.ide.enabled }}
+      - name: ide
+        securityContext:
+          runAsUser: 0
+        image: "{{ .Values.ide.image.repository }}:{{ .Values.ide.image.tag }}"
+        imagePullPolicy: {{ .Values.ide.image.pullPolicy }}
+        env:
+        - name: PUID
+          value: "{{ .Values.ide.env.PUID }}"
+        - name: PGID
+          value: "{{ .Values.ide.env.PGID }}"
+        - name: TZ
+          value: "{{ .Values.ide.env.TZ }}"
+        - name: PASSWORD
+          value: "{{ .Values.ide.env.PASSWORD }}"
+        - name: DEFAULT_WORKSPACE
+          value: "/code/config"
+        resources:
+          {{- toYaml .Values.ide.resources | nindent 10 }}
+        ports:
+        - name: http-ide
+          containerPort: 8443
+          protocol: TCP
+        volumeMounts:
+        - name: esbootstrapdataconfig
+          mountPath: /code/config
+      {{- end }}
+      volumes:
+      - name: esbootstrapdataconfig
+      {{- if .Values.storage.enabled }}
+        persistentVolumeClaim:
+          claimName: {{ include "appl.fullname" . }}-config
+      {{- else }}
+        emptyDir: {}
+      {{- end }}

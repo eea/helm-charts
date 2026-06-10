@@ -31,11 +31,7 @@ spec:
             name: {{ .Release.Name }} 
             port:
               number: 3000
-  {{- if .Values.ingress.tls }}
+  {{- if and .Values.ingress.tls (kindIs "slice" .Values.ingress.tls) }}
   tls:
-  - hosts:
-    - {{ .Values.url }}
-    {{- if .Values.ingress.certificate }}
-    secretName: {{ .Values.ingress.certificate }}
-    {{- end  }}
-  {{- end  }}
+    {{- toYaml .Values.ingress.tls | nindent 4 }}
+  {{- end }}
