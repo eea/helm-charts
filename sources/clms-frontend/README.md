@@ -24,6 +24,9 @@ The chart deploys a three-tier architecture:
 
 ## Releases
 
+### Version 7.49.1 - 10 June 2026
+- Remove CSP from ingress [valentinab25 - [`528726d2`](https://github.com/eea/helm-charts/commit/528726d2091c5b7a86ebb53e5b58f70c0cdb775a)]
+
 ### Version 7.49.0 - 09 June 2026
 - Automated release of [eeacms/clms-frontend:3.569.0](https://github.com/eea/clms-frontend/releases) [EEA Jenkins - [`f92c6729`](https://github.com/eea/helm-charts/commit/f92c67291a53bcf1b4a825736f2438529387e77d)]
 
