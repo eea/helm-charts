@@ -36,10 +36,7 @@ spec:
             image: {{ $.Values.cron.sharedCronJobImage }}
             imagePullPolicy: {{ $.Values.image.pullPolicy }}
             resources:
-              requests:
-                memory: 16Mi
-              limits:
-                memory: 16Mi
+              {{- toYaml $cronjob.resources | nindent 14 }}
             command:
             - "/bin/sh"
             args: ["-c", "$(SYNC_CMD)"]

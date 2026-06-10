@@ -126,42 +126,77 @@ synccronjobs:
     token: ""
     syncURL: ""
     backoffLimit: 1
+    resources:
+      requests:
+        memory: 16Mi
+      limits:
+        memory: 16Mi
   - name: sync-ods
     enabled: false
     schedule: "3-59/5 * * * *"
     token: ""
     syncURL: ""
     backoffLimit: 1
+    resources:
+      requests:
+        memory: 16Mi
+      limits:
+        memory: 16Mi
   - name: sync-licenses
     enabled: false
     schedule: "6 0 * * *"
     token: ""
     syncURL: ""
     backoffLimit: 5
+    resources:
+      requests:
+        memory: 16Mi
+      limits:
+        memory: 16Mi
   - name: sync-match
     enabled: false
     schedule: "4-59/5 * * * *"
     token: ""
     syncURL: ""
     backoffLimit: 1
+    resources:
+      requests:
+        memory: 16Mi
+      limits:
+        memory: 16Mi
   - name: sync-stocks
     enabled: false
     schedule: "0 3 * * *"
     token: ""
     syncURL: ""
     backoffLimit: 5
+    resources:
+      requests:
+        memory: 16Mi
+      limits:
+        memory: 16Mi
   - name: notifications-fetch
     enabled: false
     schedule: "15 0 * * *"
     token: ""
     syncURL: ""
     backoffLimit: 5
+    resources:
+      requests:
+        memory: 16Mi
+      limits:
+        memory: 16Mi
   - name: sync-auditors
     enabled: false
     schedule: "30 * * * *"
     token: ""
     syncURL: ""
     backoffLimit: 5
+    resources:
+      requests:
+        memory: 16Mi
+      limits:
+        memory: 16Mi
 
 zeoserver:
   storage: 150Gi
