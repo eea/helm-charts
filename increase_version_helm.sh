@@ -17,7 +17,11 @@ if  [ $(git diff . | wc -l ) -eq 0 ] && [ $(git ls-files . --exclude-standard --
 	exit 1
 fi
 
-git diff | cat
+echo "--------------------------------------------"
+
+git diff . | cat
+git status . | cat
+echo "--------------------------------------------"
 
 if [ $# -eq 1 ]; then
 	HELM_VERSION_TYPE=$1
@@ -49,10 +53,14 @@ HELM_COMMIT_MESSAGE="${HELM_COMMIT_MESSAGE:-$HELM_UPGRADE_MESSAGE}"
 HELM_ADD_COMMIT_LINK_README="${HELM_ADD_COMMIT_LINK_README:-yes}"
 
 echo "Found differences, will now start the version increase"
+
+echo "----------------------------------------------------"
 echo "HELM_VERSION_TYPE is $HELM_VERSION_TYPE"
 echo "Version will be increased with $HELM_VERSION_TYPE"
 echo "Readme message is $HELM_UPGRADE_MESSAGE"
 echo "Commit message is $HELM_COMMIT_MESSAGE"
+echo "----------------------------------------------------"
+
 
 export HELM_COMMIT_MESSAGE
 export HELM_UPGRADE_MESSAGE
@@ -66,6 +74,22 @@ helm lint .
 
 if [[ "$HELM_ADD_COMMIT_LINK_README" == "yes" ]]; then
   echo "Will now create a commit only with the changes in the chart used in Changelog"
+
+
+  if [ $(git status . | grep 'Untracked files' | wc -l) -ne 0 ] && [ -z "$CI" ]; then
+	echo "------------------------------------------------------"
+        echo "Looks like you have new files to add in this release!"
+	echo "Please check that you want to commit them!"
+        echo "Check if you are not commiting passwords by mistake:"
+	git status .
+        echo "Ok? Enter to continue, anything else to stop"
+        read y
+        if [ -n "$y" ] ; then
+              unset HELM_UPGRADE_MESSAGE
+	      exit 1
+        fi
+  fi
+
   git add .
   git commit -m "$HELM_COMMIT_MESSAGE"
   commit=$(git rev-parse HEAD)
