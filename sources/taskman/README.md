@@ -495,6 +495,9 @@ grunt
 
 ## Releases
 
+### Version 0.23.0 - 11 June 2026
+- Automated release of [eeacms/redmine:6.1.2-1.45](https://github.com/eea/eea.docker.redmine/releases) [EEA Jenkins - [`98886892`](https://github.com/eea/helm-charts/commit/9888689257190185991e9bf54ed86f27f3159d99)]
+
 ### Version 0.22.0 - 11 June 2026
 - Automated release of [eeacms/redmine:6.1.2-1.44](https://github.com/eea/eea.docker.redmine/releases) [EEA Jenkins - [`f5ec7164`](https://github.com/eea/helm-charts/commit/f5ec71647df81700448e191df12b28d178f1accd)]
 
