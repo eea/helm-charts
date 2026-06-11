@@ -1,6 +1,6 @@
 image:
+  repository: eeacms/fise-backend
   pullPolicy: Always
-  repository: eeacms/fise-backend  
   tag: ''
 
 imagePullSecrets: []
@@ -88,8 +88,18 @@ plone:
     timeoutSeconds: 10
 
 varnish:
-  affinity: {}
+  serviceType: ClusterIP
+  serviceName: backend-varnish
   backend: backend-plone
+  port: 8080
+  resources:
+    limits:
+      memory: 5Gi
+    requests:
+      memory: 3Gi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
   environment:
     AUTOKILL_CRON: ''
     VARNISH_BERESP_GRACE: 120s
@@ -100,59 +110,48 @@ varnish:
     VARNISH_GZIP_JSON_ENABLED: 'true'
     VARNISH_SIZE: 2G
   livenessProbe:
-    failureThreshold: 5
     httpGet:
       path: /ok
       port: http
-    initialDelaySeconds: 30
     periodSeconds: 10
-    successThreshold: 1
     timeoutSeconds: 10
-  nodeSelector: {}
-  port: 8080
-  resources:
-    limits:
-      memory: 3Gi
-    requests:
-      memory: 3Gi
-  serviceName: backend-varnish
-  serviceType: ClusterIP
+    initialDelaySeconds: 30
+    failureThreshold: 5
+    successThreshold: 1
   startupProbe:
-    failureThreshold: 12
     httpGet:
       path: /ok
       port: http
-    initialDelaySeconds: 10
     periodSeconds: 5
-    successThreshold: 1
     timeoutSeconds: 10
-  tolerations: []
+    initialDelaySeconds: 10
+    failureThreshold: 12
+    successThreshold: 1
 
 debug:
-  affinity: {}
+  serviceType: NodePort
   enabled: true
-  environment: {}
-  nodeSelector: {}
-  podAnnotations: {}
-  podSecurityContext: {}
   resources:
     limits:
-      memory: 3Gi
+      memory: 4Gi
     requests:
-      memory: 3Gi
+      memory: 1Gi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  podAnnotations: {}
+  podSecurityContext: {}
   securityContext: {}
-  serviceType: NodePort
-  tolerations: []  
+  environment: {}
 
 entrasync:
   enabled: false
-  schedule: "0 0 3 * *"
-  activeDeadlineSeconds: 36000
+  schedule: "0 0 * * *"
   keepSuccessfulPods: 3
   keepFailedPods: 5
   resources:
     limits:
-      memory: 1Gi
+      memory: 2Gi
     requests:
       memory: 1Gi
   nodeSelector: {}
@@ -164,12 +163,12 @@ entrasync:
 
 zodbpack:
   enabled: false
-  schedule: "0 0 3 * *"
+  schedule: "0 3 * * 0"
   keepSuccessfulPods: 3
   keepFailedPods: 5
   resources:
     limits:
-      memory: 1Gi
+      memory: 2Gi
     requests:
       memory: 1Gi
   nodeSelector: {}
