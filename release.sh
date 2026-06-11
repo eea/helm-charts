@@ -35,6 +35,9 @@ CI=true ../../update_docs.sh
 
 
 unset HELM_VERSION_TYPE
+unset HELM_COMMIT_MESSAGE
+unset HELM_UPGRADE_MESSAGE
+
 
 else
 
