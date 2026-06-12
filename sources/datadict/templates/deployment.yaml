@@ -44,6 +44,11 @@ spec:
             value: "false"
           - name: queryLogRetentionDays
             value: P60D
+          - name: JWT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Release.Name }}-jwt-secret
+                key: jwt-secret
           - name: CATALINA_OPTS
             value: >-
               '-Xmx6144m'
@@ -69,6 +74,7 @@ spec:
               '-Denv.siteCode.allocate.maxAmountWithoutName={{ .Values.siteCode.allocate.maxAmountWithoutName }}'
               '-Denv.siteCode.allocate.maxAmountForEtcEeaUsers={{ .Values.siteCode.allocate.maxAmountForEtcEeaUsers }}'
               '-Denv.siteCode.reserve.maxAmount={{ .Values.siteCode.reserve.maxAmount }}'
+              '-Denv.dd.vocabulary.api.key=$(JWT_SECRET)'
               '-Denv.dd.vocabulary.api.jwt.timeout=10000'
               '-Duns.sendNotification.method=/v2/uns/event/legacy/sendNotification/'
               '-Duns.makeSubscription.method=/v2/uns/event/legacy/makeSubscription/'
