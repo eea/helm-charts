@@ -107,6 +107,7 @@ spec:
               path: /
               port: tomcat8080
             periodSeconds: 20
+            timeoutSeconds: 2
 
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
