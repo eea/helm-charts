@@ -11,6 +11,9 @@ This chart deployes the Climate Advisory Board backend app
 
 ## Releases
 
+### Version 1.45.1 - 14 June 2026
+- Increase zodbpack and entrasync CronJob CPU resources and add entrasync timeout
+
 ### Version 1.45.0 - 04 June 2026
 - Automated release of [eeacms/advisory-board-backend:6.1.4-5](https://github.com/eea/advisory-board-backend/releases) [EEA Jenkins - [`21d0934b`](https://github.com/eea/helm-charts/commit/21d0934bc97e6e8e68a17fc831ebc319a45aec91)]
 
@@ -195,4 +198,3 @@ This chart deployes the Climate Advisory Board backend app
 
 ### Version 1.0.0
 - Initial release. Version matching Rancher 1 catalog version.
-
