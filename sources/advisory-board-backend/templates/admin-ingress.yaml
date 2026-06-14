@@ -12,6 +12,11 @@ metadata:
   {{- with .Values.ingress.annotations }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
+  {{- if and .Values.nginx.basicAuth.username .Values.nginx.basicAuth.password }}
+    nginx.ingress.kubernetes.io/auth-type: basic
+    nginx.ingress.kubernetes.io/auth-secret: {{ include "appl.fullname" . }}-basic-auth
+    nginx.ingress.kubernetes.io/auth-realm: "Restricted Area"
+  {{- end }}
 
 spec:
   ingressClassName: nginx

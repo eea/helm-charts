@@ -11,6 +11,9 @@ This chart deployes the Climate Advisory Board backend app
 
 ## Releases
 
+### Version 1.45.3 - 14 June 2026
+- Added basic auth to /admin
+
 ### Version 1.45.2 - 14 June 2026
 - fix cronjob [Dobricean Ioan Dorian - [`c161978f`](https://github.com/eea/helm-charts/commit/c161978ff83ec1dcedfd324fd00e2f000dada624)]
 
