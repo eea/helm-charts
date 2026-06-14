@@ -11,6 +11,9 @@ This chart deployes the Climate Advisory Board backend app
 
 ## Releases
 
+### Version 1.45.4 - 14 June 2026
+- basic auth [Dobricean Ioan Dorian - [`8430089f`](https://github.com/eea/helm-charts/commit/8430089f2032cddaeb374a71dcc68003c963a315)]
+
 ### Version 1.45.3 - 14 June 2026
 - Added basic auth to /admin
 
