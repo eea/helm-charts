@@ -35,6 +35,20 @@ questions:
     type: "string"
     group: "General"
 
+  - variable: "nginx.basicAuth.username"
+    label: "Username for /admin"
+    description: "Set username for /admin endpoint"
+    type: "string"
+    required: true
+    group: "Nginx"
+
+  - variable: "nginx.basicAuth.password"
+    label: "Password for /admin"
+    description: "Set password for /admin endpoint"
+    type: "string"
+    required: true
+    group: "Nginx"
+
   - variable: "links.memcached"
     label: "Memcached service"
     description: "Memcached service for python caching, SERVICE.NAMESPACE"
@@ -60,6 +74,15 @@ questions:
     label: "Scheduled Endra ID synchronization time"
     type: "string"
     default: "0 0 0 * *"
+    required: true
+    group: "General"
+    show_if: "entrasync.enabled=true"
+
+  - variable: "entrasync.activeDeadlineSeconds"
+    label: "Entra ID synchronization timeout"
+    description: "Maximum runtime in seconds before Kubernetes marks the Job failed"
+    type: "int"
+    default: 36000
     required: true
     group: "General"
     show_if: "entrasync.enabled=true"
@@ -314,6 +337,23 @@ questions:
     group: "Memory"
     show_if: "entrasync.enabled=true"
 
+  - variable: "entrasync.resources.requests.cpu"
+    label: "Entrasync cron job CPU reservation"
+    type: "string"
+    required: true
+    default: "1"
+    group: "CPU"
+    show_if: "entrasync.enabled=true"
+
+  - variable: "entrasync.resources.limits.cpu"
+    label: "Entrasync cron job CPU limit"
+    description: ">= CPU reservation"
+    type: "string"
+    required: true
+    default: "2"
+    group: "CPU"
+    show_if: "entrasync.enabled=true"
+
   - variable: "zodbpack.resources.requests.memory"
     label: "Zodbpack cron job memory reservation"
     type: "string"
@@ -329,6 +369,23 @@ questions:
     required: true
     default: "1Gi"
     group: "Memory"
+    show_if: "zodbpack.enabled=true"
+
+  - variable: "zodbpack.resources.requests.cpu"
+    label: "Zodbpack cron job CPU reservation"
+    type: "string"
+    required: true
+    default: "1"
+    group: "CPU"
+    show_if: "zodbpack.enabled=true"
+
+  - variable: "zodbpack.resources.limits.cpu"
+    label: "Zodbpack cron job CPU limit"
+    description: ">= CPU reservation"
+    type: "string"
+    required: true
+    default: "2"
+    group: "CPU"
     show_if: "zodbpack.enabled=true"
 
   - variable: "varnish.resources.requests.memory"

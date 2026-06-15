@@ -11,6 +11,8 @@ metadata:
 spec:
   schedule: "{{ .Values.zodbpack.schedule }}"
   concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: {{ .Values.zodbpack.keepSuccessfulPods }}
+  failedJobsHistoryLimit: {{ .Values.zodbpack.keepFailedPods }}
   jobTemplate:
     spec:
       template:
@@ -20,8 +22,6 @@ spec:
             {{- toYaml . | nindent 8 }}
           {{- end }}
           serviceAccountName: {{ include "appl.serviceAccountName" . }}
-          successfulJobsHistoryLimit: {{ .Values.zodbpack.keepSuccessfulPods }}
-          failedJobsHistoryLimit: {{ .Values.zodbpack.keepFailedPods }}
           containers:
           - name: zodbpack
             image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -50,7 +50,7 @@ spec:
             {{- end }}
             {{- end }}
             resources:
-              {{- toYaml .Values.zodbpack.resources | nindent 10 }}
+              {{- toYaml .Values.zodbpack.resources | nindent 14 }}
 
             securityContext:
               {{- toYaml .Values.zodbpack.securityContext | nindent 16 }}

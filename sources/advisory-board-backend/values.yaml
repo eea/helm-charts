@@ -25,6 +25,11 @@ ingress:
   certificate: plone.eea.europa.eu-tls
   tls: enabled
 
+nginx:
+  basicAuth:
+    username: eeaploneadmin
+    password: ""
+
 plone:
   serviceType: ClusterIP
   hostname: plone.eea.europa.eu
@@ -145,12 +150,15 @@ debug:
 entrasync:
   enabled: false
   schedule: "0 0 3 * *"
+  activeDeadlineSeconds: 36000
   keepSuccessfulPods: 3
   keepFailedPods: 5
   resources:
     limits:
+      cpu: 2
       memory: 1Gi
     requests:
+      cpu: 1
       memory: 1Gi
   nodeSelector: {}
   tolerations: []
@@ -166,8 +174,10 @@ zodbpack:
   keepFailedPods: 5
   resources:
     limits:
+      cpu: 2
       memory: 1Gi
     requests:
+      cpu: 1
       memory: 1Gi
   nodeSelector: {}
   tolerations: []

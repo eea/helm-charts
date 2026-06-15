@@ -11,6 +11,24 @@ This chart deployes the Climate Advisory Board backend app
 
 ## Releases
 
+### Version 1.45.6 - 15 June 2026
+- secure email [Dobricean Ioan Dorian - [`dba22525`](https://github.com/eea/helm-charts/commit/dba22525772e7821fe33b02ba002407aed1777fe)]
+
+### Version 1.45.5 - 15 June 2026
+- Blocked /++api++/@email-send and /++api++/@email-notification
+
+### Version 1.45.4 - 14 June 2026
+- basic auth [Dobricean Ioan Dorian - [`8430089f`](https://github.com/eea/helm-charts/commit/8430089f2032cddaeb374a71dcc68003c963a315)]
+
+### Version 1.45.3 - 14 June 2026
+- Added basic auth to /admin
+
+### Version 1.45.2 - 14 June 2026
+- fix cronjob [Dobricean Ioan Dorian - [`c161978f`](https://github.com/eea/helm-charts/commit/c161978ff83ec1dcedfd324fd00e2f000dada624)]
+
+### Version 1.45.1 - 14 June 2026
+- Increase zodbpack and entrasync CronJob CPU resources and add entrasync timeout
+
 ### Version 1.45.0 - 04 June 2026
 - Automated release of [eeacms/advisory-board-backend:6.1.4-5](https://github.com/eea/advisory-board-backend/releases) [EEA Jenkins - [`21d0934b`](https://github.com/eea/helm-charts/commit/21d0934bc97e6e8e68a17fc831ebc319a45aec91)]
 
@@ -195,4 +213,3 @@ This chart deployes the Climate Advisory Board backend app
 
 ### Version 1.0.0
 - Initial release. Version matching Rancher 1 catalog version.
-

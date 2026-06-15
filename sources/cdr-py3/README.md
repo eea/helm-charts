@@ -128,6 +128,9 @@ When `ldapMemcachedServers` is empty the env var is omitted entirely.
 
 ## Releases
 
+### Version 0.1.11 - 12 June 2026
+- Updated appVersion to z5-1.16 [Olimpiu Rob - [`0e13ba7a`](https://github.com/eea/helm-charts/commit/0e13ba7ae2f127ff19c26b7eee92f7cf27b8d9db)]
+
 ### Version 0.1.10 - 10 June 2026
 - Updated appVersion to z5-1.15 [Olimpiu Rob - [`ef21d534`](https://github.com/eea/helm-charts/commit/ef21d5340c99708879ab1c202d0b8ecc057af173)]
 

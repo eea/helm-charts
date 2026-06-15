@@ -18,6 +18,78 @@ entries:
   advisory-board-backend:
   - apiVersion: v2
     appVersion: 6.1.4-5
+    created: "2026-06-15T07:32:51.823055+03:00"
+    dependencies:
+    - name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.2.0
+    description: Climate advisory backend
+    digest: a426cc5a9e0f17c2eddc8be1475bcae79f753269a9f63257e5015ad6bb1b6d94
+    home: https://github.com/eea/advisory-board-backend
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/advisory-board-backend/volto.png
+    keywords:
+    - CMS
+    name: advisory-board-backend
+    type: application
+    urls:
+    - advisory-board-backend-1.45.6.tgz
+    version: 1.45.6
+  - apiVersion: v2
+    appVersion: 6.1.4-5
+    created: "2026-06-14T16:54:09.005355+03:00"
+    dependencies:
+    - name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.2.0
+    description: Climate advisory backend
+    digest: 7ba702c9d6f781701813c277172415799ecd849200a12286797dcf03808b649a
+    home: https://github.com/eea/advisory-board-backend
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/advisory-board-backend/volto.png
+    keywords:
+    - CMS
+    name: advisory-board-backend
+    type: application
+    urls:
+    - advisory-board-backend-1.45.4.tgz
+    version: 1.45.4
+  - apiVersion: v2
+    appVersion: 6.1.4-5
+    created: "2026-06-14T16:29:56.062348+03:00"
+    dependencies:
+    - name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.2.0
+    description: Climate advisory backend
+    digest: 1194e4b21357685b76dbb7c067e02bef07f877a07db97e3e2349c4432994cec6
+    home: https://github.com/eea/advisory-board-backend
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/advisory-board-backend/volto.png
+    keywords:
+    - CMS
+    name: advisory-board-backend
+    type: application
+    urls:
+    - advisory-board-backend-1.45.2.tgz
+    version: 1.45.2
+  - apiVersion: v2
+    appVersion: 6.1.4-5
+    created: "2026-06-14T16:27:54.41572+03:00"
+    dependencies:
+    - name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.2.0
+    description: Climate advisory backend
+    digest: 98920c4bce8e38ca1ef5e35fca91bca1fba94779b7924534ffc515e809c1dd48
+    home: https://github.com/eea/advisory-board-backend
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/advisory-board-backend/volto.png
+    keywords:
+    - CMS
+    name: advisory-board-backend
+    type: application
+    urls:
+    - advisory-board-backend-1.45.1.tgz
+    version: 1.45.1
+  - apiVersion: v2
+    appVersion: 6.1.4-5
     created: "2026-06-04T08:47:52.232105149Z"
     dependencies:
     - name: postfix
@@ -13373,6 +13445,24 @@ entries:
     version: 1.0.0
   cca-backend:
   - apiVersion: v2
+    appVersion: v11.0.15-plone6.1
+    created: "2026-06-12T16:10:20.761608212+03:00"
+    dependencies:
+    - name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.2.0
+    description: Climate-ADAPT backend
+    digest: 30e47058f56fab6433e1d086122dd6430c2ea012ef137615632fff2faa9d3651
+    home: https://climate-adapt.eea.europa.eu
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/cca-backend/logo.svg
+    keywords:
+    - CMS
+    name: cca-backend
+    type: application
+    urls:
+    - cca-backend-0.6.2.tgz
+    version: 0.6.2
+  - apiVersion: v2
     appVersion: v11.0.13-plone6.1
     created: "2026-06-11T14:28:28.483788005+03:00"
     dependencies:
@@ -13913,6 +14003,20 @@ entries:
     - cca-backend-0.1.0.tgz
     version: 0.1.0
   cca-frontend:
+  - apiVersion: v2
+    appVersion: 4.0.0
+    created: "2026-06-12T08:52:52.415080167Z"
+    description: Climate-ADAPT frontend
+    digest: 10970ddb962c0df2e6bd6bb5422e1c7785c9805c3b7908f832901ce58083e1dd
+    home: https://climate-adapt.eea.europa.eu
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/cca-frontend/logo.svg
+    keywords:
+    - CMS
+    name: cca-frontend
+    type: application
+    urls:
+    - cca-frontend-0.34.0.tgz
+    version: 0.34.0
   - apiVersion: v2
     appVersion: 4.0.0-alpha.11
     created: "2026-06-08T12:27:53.423544729Z"
@@ -18778,6 +18882,37 @@ entries:
     - cdr-0.1.0.tgz
     version: 0.1.0
   cdr-py3:
+  - apiVersion: v2
+    appVersion: z5-1.16
+    created: "2026-06-12T17:02:25.342266+03:00"
+    dependencies:
+    - alias: zeoserver
+      name: rn-zeoserver
+      repository: https://eea.github.io/helm-charts
+      version: 0.2.0
+    - alias: varnish
+      condition: rn-varnish.enabled
+      name: rn-varnish
+      repository: https://eea.github.io/helm-charts
+      version: 0.5.0
+    - alias: local-converters
+      condition: rn-local-converters.enabled
+      name: rn-local-converters
+      repository: https://eea.github.io/helm-charts
+      version: 0.1.6
+    - alias: clamav
+      condition: rn-clamav.enabled
+      name: rn-clamav
+      repository: https://eea.github.io/helm-charts
+      version: 1.0.0
+    description: A CDR Helm chart for Kubernetes (Python 3 / Zope 5+ stack)
+    digest: 8bf3152429dbafe2cfe3cbce20c221be7482b571fe105680e3ea6886eacc554d
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/cdr/logo_eionet.png
+    name: cdr-py3
+    type: application
+    urls:
+    - cdr-py3-0.1.11.tgz
+    version: 0.1.11
   - apiVersion: v2
     appVersion: z5-1.15
     created: "2026-06-10T14:01:12.2378+03:00"
@@ -32687,6 +32822,20 @@ entries:
     version: 1.0.0
   freshwater-frontend:
   - apiVersion: v2
+    appVersion: 2.34.0-beta.3
+    created: "2026-06-14T21:12:30.148476639Z"
+    description: Wise freshwater frontend
+    digest: a7e23723eeeb8a9c743a1a2b495be74f0262ec2f64360ca9d75f4db427ca348e
+    home: https://github.com/eea/freshwater-frontend
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/freshwater-frontend/volto.png
+    keywords:
+    - CMS
+    name: freshwater-frontend
+    type: application
+    urls:
+    - freshwater-frontend-2.16.3.tgz
+    version: 2.16.3
+  - apiVersion: v2
     appVersion: 2.34.0-beta.2
     created: "2026-06-09T10:56:48.511228396Z"
     description: Wise freshwater frontend
@@ -42177,6 +42326,60 @@ entries:
     version: 1.0.0
   marine-backend:
   - apiVersion: v2
+    appVersion: 6.1.4-18.beta.02
+    created: "2026-06-12T16:35:20.6059694Z"
+    dependencies:
+    - name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.2.0
+    description: Marine backend
+    digest: 535cdeffd8c6a8641ee2488387f031419f22d6a87ccf0badbf33fa7a0aad3465
+    home: https://github.com/eea/marine-backend
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/marine-backend/volto.png
+    keywords:
+    - CMS
+    name: marine-backend
+    type: application
+    urls:
+    - marine-backend-1.70.2.tgz
+    version: 1.70.2
+  - apiVersion: v2
+    appVersion: 6.1.4-18.beta.01
+    created: "2026-06-12T10:18:19.095732149Z"
+    dependencies:
+    - name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.2.0
+    description: Marine backend
+    digest: 465a200cf018871540e5c2a8a1cbcdf00345375f94d3446a72d95bdd6d8bbf97
+    home: https://github.com/eea/marine-backend
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/marine-backend/volto.png
+    keywords:
+    - CMS
+    name: marine-backend
+    type: application
+    urls:
+    - marine-backend-1.70.1.tgz
+    version: 1.70.1
+  - apiVersion: v2
+    appVersion: 6.1.4-18
+    created: "2026-06-12T09:10:25.489159871Z"
+    dependencies:
+    - name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.2.0
+    description: Marine backend
+    digest: 712817588e1c5672a52acc207689f17f258d258cc80db2c6720468a049ba07df
+    home: https://github.com/eea/marine-backend
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/marine-backend/volto.png
+    keywords:
+    - CMS
+    name: marine-backend
+    type: application
+    urls:
+    - marine-backend-1.70.0.tgz
+    version: 1.70.0
+  - apiVersion: v2
     appVersion: 6.1.4-17
     created: "2026-06-12T06:44:11.680161923Z"
     dependencies:
@@ -43347,6 +43550,34 @@ entries:
     - marine-backend-1.22.1.tgz
     version: 1.22.1
   marine-frontend:
+  - apiVersion: v2
+    appVersion: 3.23.0-beta.07
+    created: "2026-06-12T14:27:35.813843725Z"
+    description: Wise marine frontend
+    digest: f078ccedb014aabc5b2f70bf345ff51ad9bddc758230ddf8af754bb9cef88f0e
+    home: https://github.com/eea/marine-frontend
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/marine-frontend/volto.png
+    keywords:
+    - CMS
+    name: marine-frontend
+    type: application
+    urls:
+    - marine-frontend-1.45.7.tgz
+    version: 1.45.7
+  - apiVersion: v2
+    appVersion: 3.23.0-beta.06
+    created: "2026-06-12T10:19:00.594300246Z"
+    description: Wise marine frontend
+    digest: c62d9863b051693693537301504b9747434aaab8fd095ebbe82efc75bb9638a6
+    home: https://github.com/eea/marine-frontend
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/marine-frontend/volto.png
+    keywords:
+    - CMS
+    name: marine-frontend
+    type: application
+    urls:
+    - marine-frontend-1.45.6.tgz
+    version: 1.45.6
   - apiVersion: v2
     appVersion: 3.23.0-beta.05
     created: "2026-06-12T06:28:48.459603978Z"
@@ -48030,6 +48261,20 @@ entries:
     - metricbeat-0.1.0.tgz
     version: 0.1.0
   msfd-marine-backend:
+  - apiVersion: v2
+    appVersion: 6.1.4-20
+    created: "2026-06-13T00:13:04.101087335Z"
+    description: MSFD Marine backend
+    digest: b668e11cd178cf936d13d34d501bd4125db397dcc4eb5a64747ddccb22f967c8
+    home: https://github.com/eea/marine-backend
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/marine-backend/volto.png
+    keywords:
+    - CMS
+    name: msfd-marine-backend
+    type: application
+    urls:
+    - msfd-marine-backend-0.58.0.tgz
+    version: 0.58.0
   - apiVersion: v2
     appVersion: 6.1.4-18
     created: "2026-06-11T00:22:56.686485102Z"
@@ -58103,6 +58348,27 @@ entries:
     version: 0.1.0
   taskman:
   - apiVersion: v2
+    appVersion: 6.1.2-1.46
+    created: "2026-06-12T15:44:25.133921347Z"
+    dependencies:
+    - condition: postfix.enabled
+      name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.2.0
+    description: taskman.eionet.europa.eu - Redmine based Agile project management
+      tool
+    digest: 674e331cc8151ad2d10dd7ef74da87c5eece58a52edc87d9512421c0efc75830
+    home: https://github.com/eea/eea.docker.redmine
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/taskman/taskman.png
+    keywords:
+    - Redmine
+    - Tickets
+    name: taskman
+    type: application
+    urls:
+    - taskman-0.24.0.tgz
+    version: 0.24.0
+  - apiVersion: v2
     appVersion: 6.1.2-1.45
     created: "2026-06-11T12:12:38.137136473Z"
     dependencies:
@@ -60054,4 +60320,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2026-06-12T06:44:11.67824174Z"
+generated: "2026-06-15T07:32:51.821652+03:00"

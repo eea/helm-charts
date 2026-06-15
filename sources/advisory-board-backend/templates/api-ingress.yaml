@@ -7,6 +7,14 @@ metadata:
     component: advisory-board-api
   annotations:
     nginx.ingress.kubernetes.io/configuration-snippet: |
+      if ($uri = "/++api++/@email-send") {
+        return 403;
+      }
+
+      if ($uri = "/++api++/@email-notification") {
+        return 403;
+      }
+
       rewrite ^/(\+\+api\+\+)(.*)$ /VirtualHostBase/https/{{ .Values.plone.hostname }}:443/{{ .Values.plone.site }}/$1/VirtualHostRoot$2 break;
     nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/proxy-body-size: 100m
