@@ -28,6 +28,9 @@ database:
 ## Release notes
 
 <dl>
+  <dt>Version 1.1.0</dt>
+  <dd>XForms functionality removal, jackson update.</dd>
+
   <dt>Version 1.0.9</dt>
   <dd>Hibernate validator upgrade.</dd>
 
