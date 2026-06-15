@@ -1,8 +1,5 @@
-{{- $recurring := .Values.redmineJobs.recurring | default dict }}
-{{- $recurringEnabled := $recurring.enabled | default true }}
-{{- $schedulerEnabled := and (hasKey .Values "solidQueue") (.Values.solidQueue.enabled) (.Values.solidQueue.scheduler.enabled) }}
-{{- if or $schedulerEnabled (and (hasKey .Values "redmineJobs") (.Values.redmineJobs.enabled) $recurringEnabled) }}
-{{- $recurringConfig := $recurring.config | default (.Files.Get "files/recurring.yml") }}
+{{- if and .Values.solidQueue.enabled .Values.solidQueue.scheduler.enabled }}
+{{- $recurringConfig := .Values.solidQueue.scheduler.recurring.config | default (.Files.Get "files/recurring.yml") }}
 apiVersion: v1
 kind: ConfigMap
 metadata:

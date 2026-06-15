@@ -201,15 +201,16 @@ redmineMigrate:
       memory: 1Gi
 
 solidQueue:
-  enabled: false  # Set to true to enable SolidQueue scheduler/worker separation
+  enabled: true
   scheduler:
+    # Singleton — must stay at replicas: 1. Owns recurring tasks and job dispatch.
     enabled: true
     replicas: 1
     railsMaxThreads: "2"
     topologySpreadConstraints:
       - maxSkew: 1
         topologyKey: kubernetes.io/hostname
-        whenUnsatisfiable: ScheduleAnyway
+        whenUnsatisfiable: DoNotSchedule  # hard: prevents accidental second scheduler
         labelSelector:
           matchLabels:
             app.kubernetes.io/name: taskman
@@ -224,11 +225,28 @@ solidQueue:
     environment:
       REDMINE_DB_POOL: "8"
       RAILS_PULSE_ENABLED: "1"
+    # Recurring tasks. Leave config empty to use the built-in default (files/recurring.yml).
+    recurring:
+      config: |-
+        production:
+          solid_queue_cleanup_old_jobs:
+            command: "begin; cutoff = 7.days.ago; scope = SolidQueue::Job.where.not(finished_at: nil).where('finished_at < ?', cutoff); total = scope.count; scope.in_batches(of: 500) { |batch| batch.delete_all }; Rails.logger.info(\"[solid_queue_cleanup_old_jobs] deleted=#{total} cutoff=#{cutoff.iso8601}\"); rescue => e; Rails.logger.error(\"[solid_queue_cleanup_old_jobs] #{e.class}: #{e.message}\"); raise; end"
+            schedule: 25 3 * * *
+          taskman_default_mailbox:
+            command: "begin; if ENV.fetch('TASKMAN_DEFAULT_MAILBOX_ENABLED', '0') == '1'; require 'open3'; missing=%w[T_EMAIL_HOST T_EMAIL_USER T_EMAIL_PASS T_EMAIL_PORT].select { |k| ENV[k].to_s.strip.empty? }; if missing.any?; Rails.logger.warn(\"[taskman_default_mailbox] skipped missing env: #{missing.join(',')}\"); else; folder = ENV['T_EMAIL_FOLDER'].to_s.strip; folder = 'INBOX' if folder.empty?; lock_file='/tmp/taskman_default_mailbox.lock'; File.open(lock_file, 'w') do |f| if f.flock(File::LOCK_EX | File::LOCK_NB); cmd=%Q{bundle exec rake -f /usr/src/redmine/Rakefile redmine:email:receive_imap RAILS_ENV=production host=#{ENV['T_EMAIL_HOST']} username=#{ENV['T_EMAIL_USER']} password=#{ENV['T_EMAIL_PASS']} ssl=#{ENV['T_EMAIL_SSL']} port=#{ENV['T_EMAIL_PORT']} folder=#{folder} project=it-helpdesk move_on_success=read move_on_failure=failed allow_override=project,tracker,priority,status,category,fixed_version}; out,status=Open3.capture2e(cmd); if !status.success?; tail=out.to_s.lines.last(20).join.strip; Rails.logger.error(\"[taskman_default_mailbox] failed rc=#{status.exitstatus} tail=#{tail}\"); else Rails.logger.info('[taskman_default_mailbox] completed'); end; else; Rails.logger.info('[taskman_default_mailbox] skipped overlapping run'); end; end; end; else; Rails.logger.info('[taskman_default_mailbox] skipped (disabled; using postfix outbound only)'); end; rescue => e; Rails.logger.error(\"[taskman_default_mailbox] #{e.class}: #{e.message}\"); end"
+            schedule: every 5 minutes
+          entra_users_sync:
+            command: "system('bundle exec rake -f /usr/src/redmine/Rakefile entra_id:sync:users RAILS_ENV=production') || raise('entra_users_sync failed')"
+            schedule: 0 * * * *
+          entra_groups_sync:
+            command: "system('bundle exec rake -f /usr/src/redmine/Rakefile entra_id:sync:groups RAILS_ENV=production') || raise('entra_groups_sync failed')"
+            schedule: 15 4 * * *
   workers:
+    # Scalable — increase replicas freely. Only processes jobs, never schedules.
     enabled: true
-    replicas: 2  # Scale with: kubectl scale deployment/taskman-solidqueue-workers-dpl -n taskman --replicas=N
-    processesPerReplica: 2  # Worker processes per replica
-    threadsPerProcess: 4    # Worker threads per process (total threads per replica = 2 × 4 = 8)
+    replicas: 2
+    processesPerReplica: 2
+    threadsPerProcess: 4
     topologySpreadConstraints:
       - maxSkew: 1
         topologyKey: kubernetes.io/hostname
@@ -247,66 +265,6 @@ solidQueue:
     environment:
       REDMINE_DB_POOL: "8"
       RAILS_PULSE_ENABLED: "1"
-
-redmineJobs:
-  enabled: true
-  replicas: 1
-  topologySpreadConstraints:
-    - maxSkew: 1
-      topologyKey: kubernetes.io/hostname
-      whenUnsatisfiable: ScheduleAnyway
-      labelSelector:
-        matchLabels:
-          app.kubernetes.io/name: taskman
-          component: redmine-jobs
-  recurring:
-    enabled: true
-    config: |-
-      production:
-        solid_queue_cleanup_old_jobs:
-          command: "begin; cutoff = 7.days.ago; scope = SolidQueue::Job.where.not(finished_at: nil).where('finished_at < ?', cutoff); total = scope.count; scope.in_batches(of: 500) { |batch| batch.delete_all }; Rails.logger.info(\"[solid_queue_cleanup_old_jobs] deleted=#{total} cutoff=#{cutoff.iso8601}\"); rescue => e; Rails.logger.error(\"[solid_queue_cleanup_old_jobs] #{e.class}: #{e.message}\"); raise; end"
-          schedule: 25 3 * * *
-        taskman_default_mailbox:
-          command: "begin; if ENV.fetch('TASKMAN_DEFAULT_MAILBOX_ENABLED', '0') == '1'; require 'open3'; missing=%w[T_EMAIL_HOST T_EMAIL_USER T_EMAIL_PASS T_EMAIL_PORT].select { |k| ENV[k].to_s.strip.empty? }; if missing.any?; Rails.logger.warn(\"[taskman_default_mailbox] skipped missing env: #{missing.join(',')}\"); else; folder = ENV['T_EMAIL_FOLDER'].to_s.strip; folder = 'INBOX' if folder.empty?; lock_file='/tmp/taskman_default_mailbox.lock'; File.open(lock_file, 'w') do |f| if f.flock(File::LOCK_EX | File::LOCK_NB); cmd=%Q{bundle exec rake -f /usr/src/redmine/Rakefile redmine:email:receive_imap RAILS_ENV=production host=#{ENV['T_EMAIL_HOST']} username=#{ENV['T_EMAIL_USER']} password=#{ENV['T_EMAIL_PASS']} ssl=#{ENV['T_EMAIL_SSL']} port=#{ENV['T_EMAIL_PORT']} folder=#{folder} project=it-helpdesk move_on_success=read move_on_failure=failed allow_override=project,tracker,priority,status,category,fixed_version}; out,status=Open3.capture2e(cmd); if !status.success?; tail=out.to_s.lines.last(20).join.strip; Rails.logger.error(\"[taskman_default_mailbox] failed rc=#{status.exitstatus} tail=#{tail}\"); else Rails.logger.info('[taskman_default_mailbox] completed'); end; else; Rails.logger.info('[taskman_default_mailbox] skipped overlapping run'); end; end; end; else; Rails.logger.info('[taskman_default_mailbox] skipped (disabled; using postfix outbound only)'); end; rescue => e; Rails.logger.error(\"[taskman_default_mailbox] #{e.class}: #{e.message}\"); end"
-          schedule: every 5 minutes
-        entra_users_sync:
-          command: "system('bundle exec rake -f /usr/src/redmine/Rakefile entra_id:sync:users RAILS_ENV=production') || raise('entra_users_sync failed')"
-          schedule: 0 * * * *
-        entra_groups_sync:
-          command: "system('bundle exec rake -f /usr/src/redmine/Rakefile entra_id:sync:groups RAILS_ENV=production') || raise('entra_groups_sync failed')"
-          schedule: 15 4 * * *
-  resources:
-    requests:
-      memory: 384Mi
-    limits:
-      memory: 768Mi
-  environment:
-    START_SERVER: "0"
-    START_CRON: "0"
-    START_SOLID_QUEUE: "1"
-    RUN_DB_MIGRATE: "0"
-    FAST_BOOT: "1"
-    RUNTIME_BUNDLE_INSTALL: "1"
-    RUNTIME_BUNDLE_LOCAL_INSTALL: "1"
-    REQUIRE_MOUNTED_ADDONS: "1"
-    MOUNTED_ADDONS_ROOT: "/addons/current"
-    WAIT_FOR_DB_TABLES: "solid_queue_jobs,solid_queue_recurring_tasks"
-    CRON_IN_ASYNC_JOBS_ONLY: "1"
-    ASSETS_PRECOMPILE: "0"
-    ASSETS_PRECOMPILE_FORCE: "0"
-    ACTIVE_JOB_QUEUE_ADAPTER: solid_queue
-    WEB_CONCURRENCY: "1"
-    RAILS_MAX_THREADS: "2"
-    REDMINE_DB_POOL: "8"
-    MALLOC_ARENA_MAX: "2"
-    RAILS_PULSE_ENABLED: "1"
-    TASKMAN_DEFAULT_MAILBOX_ENABLED: "0"
-    REDMINE_PLUGINS_MIGRATE: "no"
-    MEMCACHE_POOL_ENABLED: "1"
-    MEMCACHE_POOL_SIZE: "32"
-    MEMCACHE_POOL_TIMEOUT: "1"
-    MEMCACHE_RACE_CONDITION_TTL: "30"
-    MEMCACHE_EXPIRES_IN: "3600"
 
 
 drawio:
