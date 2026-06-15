@@ -1,0 +1,193 @@
+{{- if and (hasKey .Values "solidQueue") (.Values.solidQueue.enabled) }}
+{{- $workersEnabled := .Values.solidQueue.workers.enabled | default true }}
+{{- $workersReplicas := .Values.solidQueue.workers.replicas | default 2 }}
+{{- $filesClaim := .Values.storage.filesDir.existingClaim | default (printf "redmine-files-%s-redmine-ss-0" .Release.Name) }}
+{{- $tmpClaim := .Values.storage.tmpDir.existingClaim | default (printf "redmine-tmp-%s-redmine-ss-0" .Release.Name) }}
+{{- $githubClaim := .Values.storage.github.existingClaim | default (printf "github-%s-redmine-ss-0" .Release.Name) }}
+{{- $pluginsClaim := .Values.storage.plugins.existingClaim | default (printf "plugins-%s-redmine-ss-0" .Release.Name) }}
+{{- if $workersEnabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-solidqueue-workers-dpl
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: solidqueue-workers
+spec:
+  replicas: {{ $workersReplicas }}
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: solidqueue-workers
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: solidqueue-workers
+    spec:
+      terminationGracePeriodSeconds: 30
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      initContainers:
+      - name: {{ .Release.Name }}-plugins-init
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        command: ["/bin/bash", "-lc"]
+        args:
+        - |
+          set -euo pipefail
+          mkdir -p /work/plugins
+          cp -a /usr/src/redmine/plugins/. /work/plugins/
+          if [ -d /addons/current/plugins ]; then
+            for source in /addons/current/plugins/*; do
+              [ -d "${source}" ] || continue
+              name="$(basename "${source}")"
+              if [ -f "${source}/init.rb" ]; then
+                rm -rf "/work/plugins/${name}"
+                cp -a "${source}" "/work/plugins/${name}"
+              else
+                echo "Skipping mounted plugin override for ${name}: init.rb not found"
+              fi
+            done
+          fi
+        volumeMounts:
+        - name: plugins
+          mountPath: /addons
+        - name: plugins-workdir
+          mountPath: /work/plugins
+      containers:
+      - name: {{ .Release.Name }}-solidqueue-workers
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        command: ["/bin/bash", "-lc"]
+        args:
+        - |
+          cp /opt/recurring/recurring.yml /usr/src/redmine/config/recurring.yml
+          exec /start_redmine.sh
+        env:
+        - name: TZ
+          value: "{{ .Values.timezone }}"
+        - name: REDMINE_DB_DATABASE
+          value: "{{ .Values.mysql.environment.MYSQL_DATABASE }}"
+        - name: REDMINE_DB_USERNAME
+          value: "{{ .Values.mysql.environment.MYSQL_USER }}"
+        - name: REDMINE_DB_PASSWORD
+          value: "{{ .Values.mysql.environment.MYSQL_PASSWORD }}"
+        - name: START_SERVER
+          value: "0"
+        - name: START_CRON
+          value: "0"
+        - name: START_SOLID_QUEUE
+          value: "1"
+        - name: SOLID_QUEUE_ROLE
+          value: worker
+        - name: SOLID_QUEUE_ONLY_WORK
+          value: "1"
+        - name: SOLID_QUEUE_SKIP_RECURRING
+          value: "1"
+        - name: RUN_DB_MIGRATE
+          value: "0"
+        - name: REDMINE_PLUGINS_MIGRATE
+          value: "no"
+        - name: MIGRATIONS_ONLY_STARTUP
+          value: "0"
+        - name: FAST_BOOT
+          value: "1"
+        - name: RUNTIME_BUNDLE_INSTALL
+          value: "1"
+        - name: RUNTIME_BUNDLE_LOCAL_INSTALL
+          value: "1"
+        - name: REQUIRE_MOUNTED_ADDONS
+          value: "1"
+        - name: MOUNTED_ADDONS_ROOT
+          value: "/addons/current"
+        - name: MALLOC_ARENA_MAX
+          value: "2"
+        - name: RUBYOPT
+          value: --yjit-mem-size=256
+        - name: RAILS_MAX_THREADS
+          value: "{{ .Values.solidQueue.workers.threadsPerProcess }}"
+        - name: RAILS_LOG_LEVEL
+          value: warn
+        - name: REDMINE_DB_MYSQL
+          value: mysql
+        - name: REDMINE_DB_ENCODING
+          value: utf8mb4
+        - name: REDMINE_HOST
+          value: redmine:3000
+        - name: SOLID_QUEUE_PROCESSES
+          value: "{{ .Values.solidQueue.workers.processesPerReplica }}"
+        - name: SOLID_QUEUE_WORKER_THREADS
+          value: "{{ .Values.solidQueue.workers.threadsPerProcess }}"
+        - name: MEMCACHE_SERVERS
+          value: "{{ .Values.memcached.servers | default "taskman-memcached:11211" }}"
+        {{- range $key, $value := .Values.solidQueue.workers.environment }}
+        {{- if and (ne $key nil) (ne $key "START_SERVER") (ne $key "START_CRON") (ne $key "START_SOLID_QUEUE") (ne $key "RUN_DB_MIGRATE") (ne $key "REDMINE_PLUGINS_MIGRATE") (ne $key "MIGRATIONS_ONLY_STARTUP") (ne $key "SOLID_QUEUE_ROLE") (ne $key "SOLID_QUEUE_ONLY_WORK") (ne $key "SOLID_QUEUE_SKIP_RECURRING") (ne $key "FAST_BOOT") (ne $key "MALLOC_ARENA_MAX") (ne $key "RAILS_MAX_THREADS") (ne $key "RAILS_LOG_LEVEL") (ne $key "RUNTIME_BUNDLE_INSTALL") (ne $key "RUNTIME_BUNDLE_LOCAL_INSTALL") (ne $key "REQUIRE_MOUNTED_ADDONS") (ne $key "MOUNTED_ADDONS_ROOT") (ne $key "SOLID_QUEUE_PROCESSES") (ne $key "SOLID_QUEUE_WORKER_THREADS") (ne $key "MEMCACHE_SERVERS") }}
+        - name: {{ $key }}
+          value: {{ $value | quote }}
+        {{- end }}
+        {{- end }}
+        volumeMounts:
+        - name: redmine-files
+          mountPath: /usr/src/redmine/files
+        - name: redmine-tmp
+          mountPath: /usr/src/redmine/tmp
+        - name: redmine-tmp
+          mountPath: /usr/src/redmine/public/assets
+          subPath: assets
+        - name: github
+          mountPath: /var/local/redmine/github/
+        - name: plugins
+          mountPath: /addons
+        - name: plugins-workdir
+          mountPath: /usr/src/redmine/plugins
+        - name: recurring-config
+          mountPath: /opt/recurring/recurring.yml
+          subPath: recurring.yml
+          readOnly: true
+        resources:
+          {{- toYaml .Values.solidQueue.workers.resources | nindent 10 }}
+      volumes:
+      - name: redmine-files
+        persistentVolumeClaim:
+          claimName: {{ $filesClaim }}
+      - name: redmine-tmp
+        persistentVolumeClaim:
+          claimName: {{ $tmpClaim }}
+      - name: github
+        persistentVolumeClaim:
+          claimName: {{ $githubClaim }}
+      - name: plugins
+        persistentVolumeClaim:
+          claimName: {{ $pluginsClaim }}
+      - name: plugins-workdir
+        emptyDir: {}
+      - name: recurring-config
+        configMap:
+          name: {{ .Release.Name }}-redmine-recurring-cm
+      {{- with .Values.solidQueue.workers.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.solidQueue.workers.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.solidQueue.workers.topologySpreadConstraints }}
+      topologySpreadConstraints:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.solidQueue.workers.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}
+{{- end }}

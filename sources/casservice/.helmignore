@@ -1,3 +1,7 @@
 .helmignore
 docker-compose.yml
 rancher-compose.yml
+
+# Environment-specific value overrides (may contain secrets)
+values.*.yaml
+value.*.yaml

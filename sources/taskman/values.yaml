@@ -132,6 +132,13 @@ redmine:
       MISSION_CONTROL_JOBS_AUTH_ENABLED: "1"
       MISSION_CONTROL_JOBS_BASIC_AUTH_USERNAME: "admin"
       MISSION_CONTROL_JOBS_BASIC_AUTH_PASSWORD: ""
+      MEMCACHE_SERVERS: "{{ .Values.memcached.servers }}"
+      MEMCACHE_POOL_ENABLED: "1"
+      MEMCACHE_POOL_SIZE: "32"
+      MEMCACHE_POOL_TIMEOUT: "1"
+      MEMCACHE_RACE_CONDITION_TTL: "30"
+      MEMCACHE_EXPIRES_IN: "3600"
+      MEMCACHE_NAMESPACE: "{{ .Release.Name }}"
   livenessProbe:
     httpGet:
       path: /up
@@ -145,17 +152,17 @@ redmine:
     httpGet:
       path: /up
       port: 3000
-    periodSeconds: 10
+    periodSeconds: 5
     timeoutSeconds: 5
     failureThreshold: 6
     successThreshold: 1
   startupProbe:
     tcpSocket:
       port: 3000
-    periodSeconds: 10
+    periodSeconds: 5
     timeoutSeconds: 5
-    initialDelaySeconds: 60
-    failureThreshold: 30
+    initialDelaySeconds: 20
+    failureThreshold: 60
     successThreshold: 1
   topologySpreadConstraints:
     - maxSkew: 1
@@ -194,6 +201,54 @@ redmineMigrate:
       memory: 512Mi
     limits:
       memory: 1Gi
+
+solidQueue:
+  enabled: false  # Set to true to enable SolidQueue scheduler/worker separation
+  scheduler:
+    enabled: true
+    replicas: 1
+    railsMaxThreads: "2"
+    topologySpreadConstraints:
+      - maxSkew: 1
+        topologyKey: kubernetes.io/hostname
+        whenUnsatisfiable: ScheduleAnyway
+        labelSelector:
+          matchLabels:
+            app.kubernetes.io/name: taskman
+            component: solidqueue-scheduler
+    resources:
+      requests:
+        memory: 384Mi
+        cpu: 500m
+      limits:
+        memory: 1Gi
+        cpu: "1"
+    environment:
+      REDMINE_DB_POOL: "8"
+      RAILS_PULSE_ENABLED: "1"
+  workers:
+    enabled: true
+    replicas: 2  # Scale with: kubectl scale deployment/taskman-solidqueue-workers-dpl -n taskman --replicas=N
+    processesPerReplica: 2  # Worker processes per replica
+    threadsPerProcess: 4    # Worker threads per process (total threads per replica = 2 × 4 = 8)
+    topologySpreadConstraints:
+      - maxSkew: 1
+        topologyKey: kubernetes.io/hostname
+        whenUnsatisfiable: ScheduleAnyway
+        labelSelector:
+          matchLabels:
+            app.kubernetes.io/name: taskman
+            component: solidqueue-workers
+    resources:
+      requests:
+        memory: 1Gi
+        cpu: 500m
+      limits:
+        memory: 2Gi
+        cpu: "1"
+    environment:
+      REDMINE_DB_POOL: "8"
+      RAILS_PULSE_ENABLED: "1"
 
 redmineJobs:
   enabled: true
@@ -249,6 +304,13 @@ redmineJobs:
     RAILS_PULSE_ENABLED: "1"
     TASKMAN_DEFAULT_MAILBOX_ENABLED: "0"
     REDMINE_PLUGINS_MIGRATE: "no"
+    MEMCACHE_SERVERS: "{{ .Values.memcached.servers }}"
+    MEMCACHE_POOL_ENABLED: "1"
+    MEMCACHE_POOL_SIZE: "32"
+    MEMCACHE_POOL_TIMEOUT: "1"
+    MEMCACHE_RACE_CONDITION_TTL: "30"
+    MEMCACHE_EXPIRES_IN: "3600"
+    MEMCACHE_NAMESPACE: "{{ .Release.Name }}"
 
 
 drawio:
@@ -434,6 +496,7 @@ memcached:
   threads: 8
   request_per_event: 50
   modern_options: "modern,track_sizes,lru_crawler,lru_maintainer"
+  servers: "taskman-memcached:11211"  # Override per helm release (e.g. your-memcached.svc.cluster.local:11211)
   nodeSelector: {}
   tolerations: []
   affinity: {}
