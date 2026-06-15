@@ -54,7 +54,7 @@ spec:
             {{- end }}
             {{- end }}
             resources:
-              {{- toYaml .Values.entrasync.resources | nindent 10 }}
+              {{- toYaml .Values.entrasync.resources | nindent 14 }}
 
             securityContext:
               {{- toYaml .Values.entrasync.securityContext | nindent 16 }}
