@@ -25,6 +25,8 @@ spec:
       component: redmine
   template:
     metadata:
+      annotations:
+        checksum/env: {{ .Values.redmine.environment | default dict | toJson | sha256sum }}
       labels:
         {{- include "appl.selectorLabels" . | nindent 8 }}
         component: redmine
