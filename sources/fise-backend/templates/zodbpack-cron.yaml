@@ -50,10 +50,10 @@ spec:
             {{- end }}
             {{- end }}
             resources:
-              {{- toYaml .Values.zodbpack.resources | nindent 10 }}
+              {{- toYaml .Values.zodbpack.resources | nindent 14 }}
 
             securityContext:
-              {{- toYaml .Values.zodbpack.securityContext | nindent 16 }}
+              {{- toYaml .Values.zodbpack.securityContext | nindent 14 }}
             
           {{- with .Values.zodbpack.nodeSelector }}
           nodeSelector:
