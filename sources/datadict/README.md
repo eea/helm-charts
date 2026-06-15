@@ -4,6 +4,9 @@ This chart is configured for production use.
 
 ## Releases
 
+### Version 2.2.0
+- Remove member/collaborative country code lookup, remove dead LDAP functionality, JWT signing key as secret, liveness probe timeout raised.
+
 ### Version 2.1.4
 - Security upgrades, tomcat upgrade, sonar upgrade, remove sentry.
 
