@@ -207,14 +207,6 @@ solidQueue:
     enabled: true
     replicas: 1
     railsMaxThreads: "2"
-    topologySpreadConstraints:
-      - maxSkew: 1
-        topologyKey: kubernetes.io/hostname
-        whenUnsatisfiable: DoNotSchedule  # hard: prevents accidental second scheduler
-        labelSelector:
-          matchLabels:
-            app.kubernetes.io/name: taskman
-            component: solidqueue-scheduler
     resources:
       requests:
         memory: 384Mi
