@@ -128,9 +128,11 @@ spec:
         - name: SOLID_QUEUE_WORKER_THREADS
           value: "{{ .Values.solidQueue.workers.threadsPerProcess }}"
         - name: MEMCACHE_SERVERS
-          value: "{{ .Values.memcached.servers | default "taskman-memcached:11211" }}"
+          value: {{ .Values.memcached.servers | default (printf "%s-memcached:11211" .Release.Name) | quote }}
+        - name: MEMCACHE_NAMESPACE
+          value: {{ .Release.Name | quote }}
         {{- range $key, $value := .Values.solidQueue.workers.environment }}
-        {{- if and (ne $key nil) (ne $key "START_SERVER") (ne $key "START_CRON") (ne $key "START_SOLID_QUEUE") (ne $key "RUN_DB_MIGRATE") (ne $key "REDMINE_PLUGINS_MIGRATE") (ne $key "MIGRATIONS_ONLY_STARTUP") (ne $key "SOLID_QUEUE_ROLE") (ne $key "SOLID_QUEUE_ONLY_WORK") (ne $key "SOLID_QUEUE_SKIP_RECURRING") (ne $key "FAST_BOOT") (ne $key "MALLOC_ARENA_MAX") (ne $key "RAILS_MAX_THREADS") (ne $key "RAILS_LOG_LEVEL") (ne $key "RUNTIME_BUNDLE_INSTALL") (ne $key "RUNTIME_BUNDLE_LOCAL_INSTALL") (ne $key "REQUIRE_MOUNTED_ADDONS") (ne $key "MOUNTED_ADDONS_ROOT") (ne $key "SOLID_QUEUE_PROCESSES") (ne $key "SOLID_QUEUE_WORKER_THREADS") (ne $key "MEMCACHE_SERVERS") }}
+        {{- if and (ne $key nil) (ne $key "START_SERVER") (ne $key "START_CRON") (ne $key "START_SOLID_QUEUE") (ne $key "RUN_DB_MIGRATE") (ne $key "REDMINE_PLUGINS_MIGRATE") (ne $key "MIGRATIONS_ONLY_STARTUP") (ne $key "SOLID_QUEUE_ROLE") (ne $key "SOLID_QUEUE_ONLY_WORK") (ne $key "SOLID_QUEUE_SKIP_RECURRING") (ne $key "FAST_BOOT") (ne $key "MALLOC_ARENA_MAX") (ne $key "RAILS_MAX_THREADS") (ne $key "RAILS_LOG_LEVEL") (ne $key "RUNTIME_BUNDLE_INSTALL") (ne $key "RUNTIME_BUNDLE_LOCAL_INSTALL") (ne $key "REQUIRE_MOUNTED_ADDONS") (ne $key "MOUNTED_ADDONS_ROOT") (ne $key "SOLID_QUEUE_PROCESSES") (ne $key "SOLID_QUEUE_WORKER_THREADS") (ne $key "MEMCACHE_SERVERS") (ne $key "MEMCACHE_NAMESPACE") }}
         - name: {{ $key }}
           value: {{ $value | quote }}
         {{- end }}

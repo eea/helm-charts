@@ -103,6 +103,10 @@ spec:
           value: "no"
         - name: MIGRATIONS_ONLY_STARTUP
           value: "0"
+        - name: MEMCACHE_SERVERS
+          value: {{ .Values.memcached.servers | default (printf "%s-memcached:11211" .Release.Name) | quote }}
+        - name: MEMCACHE_NAMESPACE
+          value: {{ .Release.Name | quote }}
         {{- range $key, $value := .Values.redmine.environment }}
         {{- if and (ne $key "START_SERVER") (ne $key "START_CRON") (ne $key "START_SOLID_QUEUE") (ne $key "RUN_DB_MIGRATE") (ne $key "REDMINE_PLUGINS_MIGRATE") (ne $key "MIGRATIONS_ONLY_STARTUP") (ne $value nil) }}
         - name: {{ $key }}

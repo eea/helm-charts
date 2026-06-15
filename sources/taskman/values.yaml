@@ -132,13 +132,11 @@ redmine:
       MISSION_CONTROL_JOBS_AUTH_ENABLED: "1"
       MISSION_CONTROL_JOBS_BASIC_AUTH_USERNAME: "admin"
       MISSION_CONTROL_JOBS_BASIC_AUTH_PASSWORD: ""
-      MEMCACHE_SERVERS: "{{ .Values.memcached.servers }}"
       MEMCACHE_POOL_ENABLED: "1"
       MEMCACHE_POOL_SIZE: "32"
       MEMCACHE_POOL_TIMEOUT: "1"
       MEMCACHE_RACE_CONDITION_TTL: "30"
       MEMCACHE_EXPIRES_IN: "3600"
-      MEMCACHE_NAMESPACE: "{{ .Release.Name }}"
   livenessProbe:
     httpGet:
       path: /up
@@ -304,13 +302,11 @@ redmineJobs:
     RAILS_PULSE_ENABLED: "1"
     TASKMAN_DEFAULT_MAILBOX_ENABLED: "0"
     REDMINE_PLUGINS_MIGRATE: "no"
-    MEMCACHE_SERVERS: "{{ .Values.memcached.servers }}"
     MEMCACHE_POOL_ENABLED: "1"
     MEMCACHE_POOL_SIZE: "32"
     MEMCACHE_POOL_TIMEOUT: "1"
     MEMCACHE_RACE_CONDITION_TTL: "30"
     MEMCACHE_EXPIRES_IN: "3600"
-    MEMCACHE_NAMESPACE: "{{ .Release.Name }}"
 
 
 drawio:
@@ -496,7 +492,6 @@ memcached:
   threads: 8
   request_per_event: 50
   modern_options: "modern,track_sizes,lru_crawler,lru_maintainer"
-  servers: "taskman-memcached:11211"  # Override per helm release (e.g. your-memcached.svc.cluster.local:11211)
   nodeSelector: {}
   tolerations: []
   affinity: {}
