@@ -11,6 +11,9 @@ This chart deployes the Climate Advisory Board backend app
 
 ## Releases
 
+### Version 1.45.6 - 15 June 2026
+- secure email [Dobricean Ioan Dorian - [`dba22525`](https://github.com/eea/helm-charts/commit/dba22525772e7821fe33b02ba002407aed1777fe)]
+
 ### Version 1.45.5 - 15 June 2026
 - Blocked /++api++/@email-send and /++api++/@email-notification
 
