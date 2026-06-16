@@ -1,16 +1,44 @@
 production:
-  redmine_github_sync:
-    command: "begin; require 'open3'; out, status = Open3.capture2e('python3 /var/local/redmine/crons/redmine.py -o /var/local/redmine/github'); Rails.logger.info(\"[redmine_github_sync] #{out.strip}\") unless out.strip.empty?; raise(\"[redmine_github_sync] failed rc=#{status.exitstatus}\") unless status.success?; rescue => e; Rails.logger.error(\"[redmine_github_sync] #{e.class}: #{e.message}\"); raise; end"
+  github_repo_sync:
+    command: "system('/var/local/redmine/crons/redmine_github_sync.sh') || raise('github_repo_sync failed')"
     schedule: 15 6 * * *
-  helpdesk:
-    command: "begin; require 'net/http'; require 'uri'; url = \"http://#{ENV.fetch('REDMINE_HOST', 'redmine:3000')}/helpdesk_mailer/get_mail?key=#{ENV.fetch('HELPDESK_EMAIL_KEY', '')}\"; res = Net::HTTP.get_response(URI(url)); Rails.logger.info(\"[helpdesk] status=#{res.code} body=#{res.body.to_s.strip.truncate(200)}\"); rescue => e; Rails.logger.error(\"[helpdesk] #{e.class}: #{e.message}\"); end"
-    schedule: every 5 minutes
-  taskman_default_mailbox:
-    command: "begin; if ENV.fetch('TASKMAN_DEFAULT_MAILBOX_ENABLED', '0') == '1'; require 'open3'; missing=%w[T_EMAIL_HOST T_EMAIL_USER T_EMAIL_PASS T_EMAIL_PORT].select { |k| ENV[k].to_s.strip.empty? }; if missing.any?; Rails.logger.warn(\"[taskman_default_mailbox] skipped missing env: #{missing.join(',')}\"); else; folder = ENV['T_EMAIL_FOLDER'].to_s.strip; folder = 'INBOX' if folder.empty?; lock_file='/tmp/taskman_default_mailbox.lock'; File.open(lock_file, 'w') do |f| if f.flock(File::LOCK_EX | File::LOCK_NB); cmd=%Q{bundle exec rake -f /usr/src/redmine/Rakefile redmine:email:receive_imap RAILS_ENV=production host=#{ENV['T_EMAIL_HOST']} username=#{ENV['T_EMAIL_USER']} password=#{ENV['T_EMAIL_PASS']} ssl=#{ENV['T_EMAIL_SSL']} port=#{ENV['T_EMAIL_PORT']} folder=#{folder} project=it-helpdesk move_on_success=read move_on_failure=failed allow_override=project,tracker,priority,status,category,fixed_version}; out,status=Open3.capture2e(cmd); if !status.success?; tail=out.to_s.lines.last(20).join.strip; Rails.logger.error(\"[taskman_default_mailbox] failed rc=#{status.exitstatus} tail=#{tail}\"); else Rails.logger.info('[taskman_default_mailbox] completed'); end; else; Rails.logger.info('[taskman_default_mailbox] skipped overlapping run'); end; end; end; else; Rails.logger.info('[taskman_default_mailbox] skipped (disabled; using postfix outbound only)'); end; rescue => e; Rails.logger.error(\"[taskman_default_mailbox] #{e.class}: #{e.message}\"); end"
-    schedule: every 5 minutes
+  taskman_mail:
+    command: >-
+      conn = ActiveRecord::Base.connection;
+      acquired = conn.execute("SELECT GET_LOCK('taskman_mail', 0)").first.first == 1;
+      next unless acquired;
+      begin;
+        ENV['host']=ENV['T_EMAIL_HOST'];
+        ENV['username']=ENV['T_EMAIL_USER'];
+        ENV['password']=ENV['T_EMAIL_PASS'];
+        ENV['ssl']=ENV.fetch('T_EMAIL_SSL','false');
+        ENV['port']=ENV['T_EMAIL_PORT'].to_s;
+        ENV['folder']=ENV.fetch('T_EMAIL_FOLDER','INBOX');
+        ENV['project']='it-helpdesk';
+        ENV['move_on_success']='read';
+        ENV['move_on_failure']='failed';
+        ENV['allow_override']='project,tracker,priority,status,category,fixed_version';
+        Rake::Task['redmine:email:receive_imap'].reenable;
+        Rake::Task['redmine:email:receive_imap'].invoke;
+      ensure;
+        conn.execute("SELECT RELEASE_LOCK('taskman_mail')");
+      end
+    schedule: "2/5 * * * *"
+  helpdesk_fetch_mail:
+    command: >-
+      conn = ActiveRecord::Base.connection;
+      acquired = conn.execute("SELECT GET_LOCK('helpdesk_fetch_mail', 0)").first.first == 1;
+      next unless acquired;
+      begin;
+        Rake::Task['redmine:email:helpdesk:receive'].reenable;
+        Rake::Task['redmine:email:helpdesk:receive'].invoke;
+      ensure;
+        conn.execute("SELECT RELEASE_LOCK('helpdesk_fetch_mail')");
+      end
+    schedule: "*/5 * * * *"
   entra_users_sync:
-    command: "begin; system('bundle exec rake -f /usr/src/redmine/Rakefile entra_id:sync:users RAILS_ENV=production') || raise('entra_users_sync failed'); rescue => e; Rails.logger.error(\"[entra_users_sync] #{e.class}: #{e.message}\"); raise; end"
+    command: "system('bundle exec rake -f /usr/src/redmine/Rakefile entra_id:sync:users RAILS_ENV=production') || raise('entra_users_sync failed')"
     schedule: 0 * * * *
   entra_groups_sync:
-    command: "begin; system('bundle exec rake -f /usr/src/redmine/Rakefile entra_id:sync:groups RAILS_ENV=production') || raise('entra_groups_sync failed'); rescue => e; Rails.logger.error(\"[entra_groups_sync] #{e.class}: #{e.message}\"); raise; end"
+    command: "system('bundle exec rake -f /usr/src/redmine/Rakefile entra_id:sync:groups RAILS_ENV=production') || raise('entra_groups_sync failed')"
     schedule: 15 4 * * *
