@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 3.26.1 - 16 June 2026
+- increase cpu for cronjobs [Dobricean Ioan Dorian - [`0dfd4119`](https://github.com/eea/helm-charts/commit/0dfd41192dceac6eca6993f873256d134ae974d1)]
+
 ### Version 3.26.0 - 12 June 2026
 - Automated release of [eeacms/freshwater-backend:6.1.4-23](https://github.com/eea/freshwater-backend/releases) [EEA Jenkins - [`3744d348`](https://github.com/eea/helm-charts/commit/3744d34852cac5dc5192a1a9c9db0566350ccaaa)]
 
