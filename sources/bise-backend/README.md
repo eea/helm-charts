@@ -10,6 +10,9 @@ This chart deployes the BISE backend app
 
 ## Releases
 
+### Version 1.58.3 - 16 June 2026
+- increase cpu for cronjobs [Dobricean Ioan Dorian - [`01103656`](https://github.com/eea/helm-charts/commit/011036563d3f2bd2fa57561bc0ebf3d3feb0aa2c)]
+
 ### Version 1.58.2 - 08 June 2026
 - fix entrasync active deadline [Dobricean Ioan Dorian - [`b17003ac`](https://github.com/eea/helm-charts/commit/b17003ac9fa4fa11b02eece41cfc7c41e9b28b4b)]
 
