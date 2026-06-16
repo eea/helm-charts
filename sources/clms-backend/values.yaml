@@ -176,8 +176,10 @@ entrasync:
   keepFailedPods: 5
   resources:
     limits:
+      cpu: 2
       memory: 1Gi
     requests:
+      cpu: 1
       memory: 1Gi
   nodeSelector: {}
   tolerations: []
@@ -193,8 +195,10 @@ zodbpack:
   keepFailedPods: 5
   resources:
     limits:
+      cpu: 2
       memory: 1Gi
     requests:
+      cpu: 1
       memory: 1Gi
   nodeSelector: {}
   tolerations: []
