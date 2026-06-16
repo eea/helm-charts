@@ -10,6 +10,9 @@ This chart deployes the CLMS backend app
 
 ## Releases
 
+### Version 2.33.4 - 16 June 2026
+- fix cronjobs [Dobricean Ioan Dorian - [`21765eb5`](https://github.com/eea/helm-charts/commit/21765eb56805042380f344f7e4aa1aeecc1e9541)]
+
 ### Version 2.33.3 - 11 June 2026
 - Add ogc questions, add redis if ogc enabled [valentinab25 - [`0b31394a`](https://github.com/eea/helm-charts/commit/0b31394a5fc67ab89ef8b322d19cc4fa874f45f6)]
 
