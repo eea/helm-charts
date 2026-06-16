@@ -180,16 +180,20 @@ cronjobs:
     schedule: "0 1 * * 0"
     resources:
       limits:
+        cpu: 2
         memory: 2Gi
       requests:
+        cpu: 1
         memory: 1Gi
   entrasync:
     enabled: true
     schedule: "0 0 * * *"
     resources:
       limits:
+        cpu: 2
         memory: 2Gi
       requests:
+        cpu: 1
         memory: 1Gi
 
 # Memcached configuration (external dependency)
