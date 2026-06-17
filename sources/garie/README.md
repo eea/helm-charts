@@ -69,6 +69,9 @@ We have the following services that should be exposed in ingress:
 
 # Releases
 
+### Version 0.0.28 - 17 June 2026
+- update plugins versions [Mihai Dobrescu - [`427e3758`](https://github.com/eea/helm-charts/commit/427e37587ad877761e1ee351f07b4ca831721407)]
+
 ### Version 0.0.27 - 17 June 2026
 - influxdb upgrade [Mihai Dobrescu - [`b94708f6`](https://github.com/eea/helm-charts/commit/b94708f6790909b8873c30ff5ad3abad83aa1e25)]
 
