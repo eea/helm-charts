@@ -69,6 +69,9 @@ We have the following services that should be exposed in ingress:
 
 # Releases
 
+### Version 0.0.29 - 17 June 2026
+- upgrade appVersion [Mihai Dobrescu - [`aafe7f78`](https://github.com/eea/helm-charts/commit/aafe7f78d2533c7af0c104492c89b7a03ae98e60)]
+
 ### Version 0.0.28 - 17 June 2026
 - update plugins versions [Mihai Dobrescu - [`427e3758`](https://github.com/eea/helm-charts/commit/427e37587ad877761e1ee351f07b4ca831721407)]
 
