@@ -77,18 +77,24 @@ if [[ "$HELM_ADD_COMMIT_LINK_README" == "yes" ]]; then
 
 
   if [ $(git status . | grep 'Untracked files' | wc -l) -ne 0 ] && [ -z "$CI" ]; then
-	echo "------------------------------------------------------"
+	    echo "------------------------------------------------------"
         echo "Looks like you have new files to add in this release!"
-	echo "Please check that you want to commit them!"
-        echo "Check if you are not commiting passwords by mistake:"
-	git status .
-        echo "Ok? Enter to continue, anything else to stop"
-        read y
-        if [ -n "$y" ] ; then
-              unset HELM_UPGRADE_MESSAGE
+	    echo "Please check that you want to commit them!"
+        echo "Check if you are not commiting passwords or unused files by mistake:"
+	    echo "------------------------------------------------------"
+        echo "------------------------------------------------------"
+        git status .
+        echo "------------------------------------------------------"
+        echo "------------------------------------------------------"
+        echo "Ok? Write 'yes' or 'y' to continue!"
+		while [ -z "$y" ]; do
+		  read y
+		done
+        if  [[ ! "$y" =~ ^([yY][eE][sS]|[yY])$ ]]; then
+          unset HELM_UPGRADE_MESSAGE
 	      exit 1
         fi
-  fi
+   fi
 
   git add .
   git commit -m "$HELM_COMMIT_MESSAGE"
