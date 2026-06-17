@@ -57,7 +57,6 @@ volto:
     enabled: false
     minReplicas: 1
     maxReplicas: 6
-    # targetCPUUtilizationPercentage: 80
     targetMemoryUtilizationPercentage: 60
   replicaCount: 1
   resources:
@@ -88,9 +87,9 @@ volto:
     RAZZLE_PROXY_ES_DSN_globalsearch:
     RAZZLE_PROXY_QA_DSN_globalsearch:
     RAZZLE_PROXY_ES_DSN_freshwatermeasure:
-    RAZZLE_PROXY_QA_DSN_freshwatermeasure:
-    RAZZLE_ES_INDEX:
-    RAZZLE_ES_INDEX_NAME:
+    RAZZLE_PROXY_QA_DSN_freshwatermeasure: "http://nlp_internal.ai-lab-aws.eea.europa.eu:9200/api"
+    RAZZLE_ES_INDEX: "_es/freshwatermeasure"
+    RAZZLE_ES_INDEX_NAME: "data_searchui"
     RAZZLE_PROXY_ES_DSN: ""
     VOLTO_ROBOTSTXT:
     RAZZLE_DISABLE_DRAFT_WATERMARK:
@@ -98,7 +97,7 @@ volto:
     DANSWER_API_KEY: ""
     LLMGW_TOKEN: ""
     LLMGW_URL: ""
-    CSP_HEADER:
+    CSP_HEADER: "default-src 'none'; base-uri 'self'; script-src 'self' {nonce} https://public.tableau.com https://*.discomap.eea.europa.eu https://api.openaire.eu https://api.openaire.com https://api.zotero.org https://taskman.eionet.europa.eu https://matomo.eea.europa.eu https://openlayers.org https://js.arcgis.com https://geocode.arcgis.com https://services.arcgis.com https://*.eea.europa.eu; style-src 'self' 'unsafe-inline' https://api.openaire.eu https://*.discomap.eea.europa.eu https://api.openaire.com https://api.zotero.org https://taskman.eionet.europa.eu https://openlayers.org https://js.arcgis.com https://*.eea.europa.eu; img-src 'self' https: data: blob:; font-src 'self' data: https://js.arcgis.com https://*.eea.europa.eu; frame-src 'self' https://*.europa.eu https://europa.eu https://*.discomap.eea.europa.eu https://*.eea.europa.eu; connect-src 'self' https://*.arcgis.com https://*.arcgisonline.com https://*.discomap.eea.europa.eu https://api.openaire.eu https://api.openaire.com https://api.zotero.org https://taskman.eionet.europa.eu https://api.friendlycaptcha.com/api/v1/ https://*.openstreetmap.org https://*.eea.europa.eu https://*.ec.europa.eu; form-action 'self' https://*.eea.europa.eu; frame-ancestors 'self' https://biodiversity.europa.eu https://*.eea.europa.eu; object-src 'none'; manifest-src 'self'; upgrade-insecure-requests; report-uri https://sentry.eea.europa.eu/api/22/security/?sentry_key=c2d7a7ca8deb46909d3bfc1bd468eb3d"
     ONYX_URL: ""
     ONYX_API_KEY: ""
   annotations: {}
