@@ -69,6 +69,9 @@ We have the following services that should be exposed in ingress:
 
 # Releases
 
+### Version 0.0.27 - 17 June 2026
+- influxdb upgrade [Mihai Dobrescu - [`b94708f6`](https://github.com/eea/helm-charts/commit/b94708f6790909b8873c30ff5ad3abad83aa1e25)]
+
 ### Version 0.0.25 - 17 March 2026
 - upgrade ssllabs and webscore containers versions [mihaidobrescu1111 - [`1d72924`](https://github.com/eea/helm-charts/commit/1d729242ed3233b69d92e20046eca74cfd13205c)]
 
