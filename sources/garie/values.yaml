@@ -948,8 +948,11 @@ grafana:
     storageClassName: nfs-client
   timezone: UTC
 influxdb:
-  adminPassword: password
+  token: dev-token
+  org: garie
+  bucket: default
   adminUser: admin
+  adminPassword: password
   antiAffinity: false
   livenessProbe:
     failureThreshold: 3

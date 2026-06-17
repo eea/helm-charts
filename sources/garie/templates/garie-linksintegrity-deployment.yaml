@@ -19,10 +19,12 @@ spec:
         spec:
             containers:
               - name: garie-linksintegrity
-                image: eeacms/garie-linksintegrity:1.4.0
+                image: eeacms/garie-linksintegrity:1.4.1
                 env:
                   - name: HOST
                     value: influxdb
+                  - name: INFLUX_TOKEN
+                    value: {{ .Values.influxdb.token | quote }}
                   - name: CONFIG
                     value: {{ .Values.garieConfig.config | squote }}
                   - name: TZ

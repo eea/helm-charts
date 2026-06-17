@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: garie-webbkoll
-          image: eeacms/garie-webbkoll:2.0.1
+          image: eeacms/garie-webbkoll:2.0.6
           env:
             - name: TZ
               value: {{ .Values.timezone | default "UTC" | quote }}          
@@ -27,6 +27,8 @@ spec:
               value: {{ .Values.garieConfig.config | squote }}              
             - name: HOST
               value: influxdb
+            - name: INFLUX_TOKEN
+              value: {{ .Values.influxdb.token | quote }}
             - name: BACKEND_HOST
               value: webbkoll-backend
             - name: BACKEND_PORT

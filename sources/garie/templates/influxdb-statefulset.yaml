@@ -4,7 +4,7 @@ metadata:
   name: influxdb
   labels:
     app: garie
-    role: influxdb 
+    role: influxdb
 spec:
   serviceName: influxdb
   replicas: {{ .Values.influxdb.replicas }}
@@ -35,14 +35,20 @@ spec:
       {{ end }}
       containers:
         - name: influxdb
-          image: influxdb:1.8.10
+          image: influxdb:2.7
           env:
-            - name: INFLUXDB_ADMIN_USER
+            - name: DOCKER_INFLUXDB_INIT_MODE
+              value: "setup"
+            - name: DOCKER_INFLUXDB_INIT_USERNAME
               value: {{ .Values.influxdb.adminUser | quote }}
-            - name: INFLUXDB_ADMIN_PASSWORD
+            - name: DOCKER_INFLUXDB_INIT_PASSWORD
               value: {{ .Values.influxdb.adminPassword | quote }}
-            - name: INFLUXDB_REPORTING_DISABLED
-              value: "true"
+            - name: DOCKER_INFLUXDB_INIT_ORG
+              value: {{ .Values.influxdb.org | quote }}
+            - name: DOCKER_INFLUXDB_INIT_BUCKET
+              value: {{ .Values.influxdb.bucket | quote }}
+            - name: DOCKER_INFLUXDB_INIT_ADMIN_TOKEN
+              value: {{ .Values.influxdb.token | quote }}
             - name: TZ
               value: {{ .Values.general.timezone | quote }}
           ports:
@@ -55,7 +61,7 @@ spec:
               memory: {{ .Values.influxdb.resources.limits.memory }}
           volumeMounts:
             - name: influxdb-data
-              mountPath: /var/lib/influxdb
+              mountPath: /var/lib/influxdb2
           livenessProbe:
             httpGet:
               path: /health

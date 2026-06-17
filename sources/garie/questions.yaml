@@ -78,6 +78,24 @@ questions:
         type: password
         required: true
 
+      - variable: influxdb.token
+        default: dev-token
+        description: InfluxDB admin token (used for authentication by all Garie plugins)
+        type: password
+        required: true
+
+      - variable: influxdb.org
+        default: garie
+        description: InfluxDB organization name
+        type: string
+        required: true
+
+      - variable: influxdb.bucket
+        default: default
+        description: InfluxDB bucket name
+        type: string
+        required: true
+
       - variable: influxdb.timezone
         default: UTC
         description: Container timezone (TZ) for InfluxDB

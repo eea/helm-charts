@@ -1,3 +1,6 @@
+# NOTE: Chronograf 1.x is NOT compatible with InfluxDB 2.7.
+# InfluxDB 2.7 includes a built-in web UI at port 8086 which replaces Chronograf.
+# Consider removing this deployment when migrating to InfluxDB 2.7.
 apiVersion: apps/v1
 kind: Deployment
 metadata:

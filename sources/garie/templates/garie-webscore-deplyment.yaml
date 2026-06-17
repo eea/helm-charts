@@ -24,6 +24,8 @@ spec:
           env:
             - name: HOST
               value: influxdb
+            - name: INFLUX_TOKEN
+              value: {{ .Values.influxdb.token | quote }}
             - name: TZ
               value: {{ .Values.timezone | default "UTC" | quote }}
             - name: REPORTS_PATH
