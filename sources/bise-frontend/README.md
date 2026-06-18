@@ -10,6 +10,9 @@ This chart deployes the BISE frontend app
 
 ## Releases
 
+### Version 2.15.2 - 18 June 2026
+- Automated release of [eeacms/bise-frontend:3.44.0-beta.3](https://github.com/eea/bise-frontend/releases) [EEA Jenkins - [`2b8526ef`](https://github.com/eea/helm-charts/commit/2b8526ef6f8eb6789bdfe37def93a0a66f580048)]
+
 ### Version 2.15.1 - 27 May 2026
 - Automated release of [eeacms/bise-frontend:3.44.0-beta.1](https://github.com/eea/bise-frontend/releases) [EEA Jenkins - [`3a51917c`](https://github.com/eea/helm-charts/commit/3a51917c4474288fcc2444e8dcc0293db7958dda)]
 
