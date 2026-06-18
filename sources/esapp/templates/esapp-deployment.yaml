@@ -24,7 +24,7 @@ spec:
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
       initContainers:
       - name: esbootstrap-data-config
-        image: "{{ .Values.esbootstrap.image.repository }}:{{ .Values.esbootstrap.image.tag }}"
+        image: eeacms/esbootstrap-configs:v3.0.121 
         imagePullPolicy: {{ .Values.esbootstrap.image.pullPolicy }}
         env:
         - name: github_repo
@@ -40,12 +40,12 @@ spec:
           limits:
             memory: 64Mi
           requests:
-            memory: 32Mi
+            memory: 64Mi
       containers:
       - name: esapp
         securityContext:
           runAsUser: 0
-        image: "{{ .Values.esapp.image.repository }}:{{ .Values.esapp.image.tag }}"
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.esapp.image.pullPolicy }}
         {{- if .Values.ide.enabled }}
         command: ["/bin/sh", "-c"]
@@ -58,6 +58,8 @@ spec:
         - name: {{ $key }}
           value: {{ $value | quote }}
         {{- end }}
+        - name: "VERSION_INFO"
+          value: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
         - name: TZ
           value: "{{ .Values.timezone }}"
         ports:
@@ -75,33 +77,6 @@ spec:
         volumeMounts:
         - name: esbootstrapdataconfig
           mountPath: /code/config
-      {{- if .Values.ide.enabled }}
-      - name: ide
-        securityContext:
-          runAsUser: 0
-        image: "{{ .Values.ide.image.repository }}:{{ .Values.ide.image.tag }}"
-        imagePullPolicy: {{ .Values.ide.image.pullPolicy }}
-        env:
-        - name: PUID
-          value: "{{ .Values.ide.env.PUID }}"
-        - name: PGID
-          value: "{{ .Values.ide.env.PGID }}"
-        - name: TZ
-          value: "{{ .Values.ide.env.TZ }}"
-        - name: PASSWORD
-          value: "{{ .Values.ide.env.PASSWORD }}"
-        - name: DEFAULT_WORKSPACE
-          value: "/code/config"
-        resources:
-          {{- toYaml .Values.ide.resources | nindent 10 }}
-        ports:
-        - name: http-ide
-          containerPort: 8443
-          protocol: TCP
-        volumeMounts:
-        - name: esbootstrapdataconfig
-          mountPath: /code/config
-      {{- end }}
       volumes:
       - name: esbootstrapdataconfig
       {{- if .Values.storage.enabled }}

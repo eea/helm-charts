@@ -4,7 +4,7 @@
 securityEnabled: true
 
 image:
-  repository: eeacms/esbootstrap-configs
+  repository: eeacms/esbootstrap
   pullPolicy: Always
   tag: ""
 
@@ -18,7 +18,7 @@ serviceAccount:
   annotations: {}
   name: ""
 
-url: ""
+url: "esapp.01dev.eea.europa.eu"
 
 timezone: Europe/Copenhagen
 
@@ -27,11 +27,8 @@ timezone: Europe/Copenhagen
 esapp:
   replicaCount: 1
   image:
-    repository: eeacms/esbootstrap
     pullPolicy: Always
-    tag: v3.2.0
   env:
-    VERSION_INFO: eeacms/esbootstrap:v3.2.0
     elastic_host: elastictest01-data-ingress
     AUTO_INDEXING: "false"
     elastic_index: pam
@@ -73,9 +70,7 @@ esapp:
 
 esbootstrap:
   image:
-    repository: eeacms/esbootstrap-configs
     pullPolicy: Always
-    tag: v3.0.121
   env:
     github_repo: https://github.com/eea/eea.esbootstrap.configs
     DEV_ENV: "false"
@@ -83,6 +78,7 @@ esbootstrap:
 ingress:
   enabled: true
   className: "nginx"
+  certificate: "esapp.01dev.eea.europa.eu-tls"
   annotations: {}
   letsencrypt: "01dev-eea-letsencrypt"
   configuration:
@@ -103,9 +99,7 @@ ide:
   enabled: true
   replicaCount: 1
   image:
-    repository: linuxserver/code-server
     pullPolicy: IfNotPresent
-    tag: latest
   env:
     TZ: Europe/Copenhagen
     PUID: 0

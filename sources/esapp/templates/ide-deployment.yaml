@@ -1,0 +1,65 @@
+{{- if .Values.ide.enabled }}
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "appl.fullname" . }}-ide
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    app.kubernetes.io/component: ide
+spec:
+  replicas: {{ .Values.esapp.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: ide
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: ide
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      containers:
+      {{- if .Values.ide.enabled }}
+      - name: ide
+        securityContext:
+          runAsUser: 0
+        image: linuxserver/code-server:4.125.0
+        imagePullPolicy: {{ .Values.ide.image.pullPolicy }}
+        env:
+        - name: PUID
+          value: "{{ .Values.ide.env.PUID }}"
+        - name: PGID
+          value: "{{ .Values.ide.env.PGID }}"
+        - name: TZ
+          value: "{{ .Values.ide.env.TZ }}"
+        - name: PASSWORD
+          value: "{{ .Values.ide.env.PASSWORD }}"
+        - name: DEFAULT_WORKSPACE
+          value: "/code/config"
+        resources:
+          {{- toYaml .Values.ide.resources | nindent 10 }}
+        ports:
+        - name: http-ide
+          containerPort: 8443
+          protocol: TCP
+        volumeMounts:
+        - name: esbootstrapdataconfig
+          mountPath: /code/config
+      {{- end }}
+      volumes:
+      - name: esbootstrapdataconfig
+      {{- if .Values.storage.enabled }}
+        persistentVolumeClaim:
+          claimName: {{ include "appl.fullname" . }}-config
+      {{- else }}
+        emptyDir: {}
+      {{- end }}
+
+
+{{- end }}      

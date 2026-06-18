@@ -1,10 +1,10 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ .Release.Name }}-ingress
+  name: {{ include "appl.fullname" . }}-ingress
   labels:
     {{- include "appl.labels" . | nindent 4 }}
-    component: httpd
+    component: esapp-ingress
   annotations:
   {{- if .Values.ingress.letsencrypt }}
     cert-manager.io/cluster-issuer: "{{ .Values.ingress.letsencrypt }}"
@@ -19,7 +19,7 @@ metadata:
   {{- end }}
 
 spec:
-  ingressClassName: nginx
+  ingressClassName: {{ .Values.ingress.className }}
   rules:
   - host: {{ .Values.url }}
     http:
@@ -28,10 +28,14 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: {{ .Release.Name }} 
+            name: {{ include "appl.fullname" . }}
             port:
               number: 3000
-  {{- if and .Values.ingress.tls (kindIs "slice" .Values.ingress.tls) }}
+  {{- if .Values.ingress.tls }}
   tls:
-    {{- toYaml .Values.ingress.tls | nindent 4 }}
-  {{- end }}
+  - hosts:
+    - {{ .Values.url }}
+    {{- if .Values.ingress.certificate }}
+    secretName: {{ .Values.ingress.certificate }}
+    {{- end  }}
+  {{- end  }}

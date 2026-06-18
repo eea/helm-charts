@@ -1,4 +1,5 @@
 {{- if ( default .Values.securityEnabled true) -}}
+{{- if .Values.ide.enabled }}
 
 {{/*
   Any http port needs access to if from ingress or if you want to test it with a Node Port
@@ -8,7 +9,7 @@
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: {{ .Release.Name }}-http-allow
+  name: {{ .Release.Name }}-http-ide-allow
   labels:
     {{- include "appl.labels" . | nindent 4 }}
 
@@ -17,13 +18,14 @@ spec:
   podSelector:
     matchLabels:
       {{- include "appl.selectorLabels" . | nindent 6 }}
-      component: esapp
+      component: ide
 
 
   policyTypes:
   - Ingress
   ingress:
     - ports:
-        - port: 3000
+        - port: 8443
           protocol: TCP
+{{- end }}
 {{- end }}
