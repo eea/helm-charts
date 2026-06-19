@@ -67,6 +67,9 @@ This can be used to set the rabbitmq host to be used.
 
 ## Releases
 
+### Version 0.66.0 - 19 June 2026
+- Automated release of [eeacms/reportek-bdr:5.9.4-280](https://github.com/eea/eea.docker.reportek.bdr-instance/releases) [EEA Jenkins - [`541478b6`](https://github.com/eea/helm-charts/commit/541478b6bb19f7e773143739602bbd0ac970932a)]
+
 ### Version 0.65.2 - 10 June 2026
 - Added sharedCronJobAffinity, sharedCronJobNodeSelector and sharedCronJobTolerations [Olimpiu Rob - [`95d00233`](https://github.com/eea/helm-charts/commit/95d002336325378d4d61c90c23ea44ff2179a13b)]
 
