@@ -10,6 +10,9 @@ This chart deployes the Wise Marine frontend app
 
 ## Releases
 
+### Version 1.47.0 - 21 June 2026
+- Automated release of [eeacms/marine-frontend:3.24.0](https://github.com/eea/marine-frontend/releases) [EEA Jenkins - [`07317379`](https://github.com/eea/helm-charts/commit/07317379ad5063fc4e604d7d985e0f6cbaad7da1)]
+
 ### Version 1.46.1 - 17 June 2026
 - Automated release of [eeacms/marine-frontend:3.24.0-beta.01](https://github.com/eea/marine-frontend/releases) [EEA Jenkins - [`d6fb8115`](https://github.com/eea/helm-charts/commit/d6fb8115c4e44aec70797db6c0d4e09c5921a178)]
 
