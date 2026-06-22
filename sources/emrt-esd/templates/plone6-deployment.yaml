@@ -28,7 +28,8 @@ spec:
 
       containers:
       - name: plone6
-        image: {{ .Values.plone6.image }}
+        image: "{{ .Values.plone6.image.repository }}:{{ .Values.plone6.image.tag }}"
+        imagePullPolicy: {{ .Values.plone6.image.pullPolicy }}
         env:
         - name: TZ
           value: {{ .Values.timezone }}
@@ -46,10 +47,6 @@ spec:
           value: {{ .Values.proxyBaseUrl }}
         - name: MEMCACHE_SERVER
           value: memcached:11211
-        - name: COLLECTIVE_EXPORTIMPORT_CENTRAL_DIRECTORY
-          value: "/plone4data"
-        - name: DEVELOP
-          value: {{ .Values.plone6develop }}
         {{- range $key, $value := .Values.plone6.environment }}
         {{- if ($value) }}
         - name: {{ $key }}
@@ -93,4 +90,3 @@ spec:
       - name: emrt-esd-exportimport
         persistentVolumeClaim:
           claimName: emrt-esd-exportimport
-

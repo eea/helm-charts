@@ -110,7 +110,10 @@ postfix:
   mtpUser: ''
 
 plone6:
-  image: "plone/plone-backend:6.1.1"
+  image:
+    repository: eeacms/plone-emrt
+    pullPolicy: IfNotPresent
+    tag: "6.1-2.0.3"
   securityContext: {}
   environment:
     ZOPE_FORM_MEMORY_LIMIT: 50MB
@@ -121,9 +124,6 @@ plone6:
       memory: 4Gi
   probePath: /
   probeTimeoutSeconds: 3
-
-
-plone6develop: "git+https://github.com/eea/esdrt.content.git@python3#egg=esdrt.content git+https://github.com/BHUVAN-RJ/collective.deletepermission@python3#egg=collective.deletepermission git+https://github.com/eea/esdrt.theme.git@python3#egg=esdrt.theme"
 
 varnish:
   securityContext: {}
