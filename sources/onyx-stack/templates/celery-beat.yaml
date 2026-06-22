@@ -119,9 +119,9 @@ spec:
                     --filename /tmp/onyx_k8s_beat_liveness.txt
       {{- if or .Values.hfCache.enabled .Values.celery_beat.volumes }}
       volumes:
-       {{- if .Values.hfCache.enabled }}
-          - name: hf-cache
-            emptyDir: {}
+        {{- if .Values.hfCache.enabled }}
+        - name: hf-cache
+          emptyDir: {}
         {{- end }}
         {{- if .Values.celery_beat.volumes }}
         {{- range .Values.celery_beat.volumes }}

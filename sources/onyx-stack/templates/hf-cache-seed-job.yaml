@@ -48,7 +48,7 @@ spec:
           volumeMounts:
             - name: hf-cache
               mountPath: /cache
-   volumes:
-         - name: hf-cache
-           emptyDir: {}
+      volumes:
+        - name: hf-cache
+          emptyDir: {}
 {{- end }}

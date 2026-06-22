@@ -120,10 +120,10 @@ spec:
                     python onyx/background/celery/celery_k8s_probe.py
                     --probe liveness
                     --filename /tmp/onyx_k8s_userfileprocessing_liveness.txt
-  {{- if .Values.hfCache.enabled }}
-       volumes:
-         - name: hf-cache
-           emptyDir: {}
+      {{- if .Values.hfCache.enabled }}
+      volumes:
+        - name: hf-cache
+          emptyDir: {}
         {{- with .Values.celery_worker_user_file_processing.volumes }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
