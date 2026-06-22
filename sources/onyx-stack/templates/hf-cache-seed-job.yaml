@@ -48,8 +48,7 @@ spec:
           volumeMounts:
             - name: hf-cache
               mountPath: /cache
-      volumes:
-        - name: hf-cache
-          persistentVolumeClaim:
-            claimName: {{ .Values.hfCache.pvc.name }}
+   volumes:
+         - name: hf-cache
+           emptyDir: {}
 {{- end }}

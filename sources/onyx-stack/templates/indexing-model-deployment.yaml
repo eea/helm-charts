@@ -40,6 +40,9 @@ spec:
       securityContext:
         {{- toYaml .Values.indexCapability.podSecurityContext | nindent 8 }}
       {{- end }}
+      {{- if .Values.indexCapability.runtimeClassName }}
+      runtimeClassName: {{ .Values.indexCapability.runtimeClassName }}
+      {{- end }}
       {{- with .Values.indexCapability.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -109,11 +112,10 @@ spec:
         livenessProbe:
           {{- toYaml . | nindent 10 }}
         {{- end }}
-      {{- if .Values.hfCache.enabled }}
-      volumes:
-        - name: hf-cache
-          persistentVolumeClaim:
-            claimName: {{ .Values.hfCache.pvc.name }}
+{{- if .Values.hfCache.enabled }}
+       volumes:
+         - name: hf-cache
+           emptyDir: {}
         {{- with .Values.indexCapability.volumes }}
         {{- toYaml . | nindent 8 }}
         {{- end }}

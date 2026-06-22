@@ -246,10 +246,18 @@ spec:
     - to:
         - podSelector:
             matchLabels:
-              app: postfix
+              app.kubernetes.io/name: postfix
       ports:
         - protocol: TCP
           port: 25
+    # Allow egress to OpenSearch
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: opensearch
+      ports:
+        - protocol: TCP
+          port: 9200
     # DNS
     - to:
         - namespaceSelector: {}
@@ -622,6 +630,14 @@ spec:
       ports:
         - protocol: TCP
           port: 9000
+    # Allow egress to OpenSearch
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: opensearch
+      ports:
+        - protocol: TCP
+          port: 9200
     # Allow egress to Model Servers
     - to:
         - podSelector:
@@ -649,7 +665,7 @@ spec:
     - to:
         - podSelector:
             matchLabels:
-              app: postfix
+              app.kubernetes.io/name: postfix
       ports:
         - protocol: TCP
           port: 25
@@ -662,15 +678,11 @@ spec:
       ports:
         - protocol: UDP
           port: 53
-    # Allow HTTPS/HTTP egress for external APIs and connectors (COMMENTED OUT - TOO PERMISSIVE)
-    # Required for accessing external data sources and APIs
+    # Allow HTTPS egress for external APIs/connectors (e.g., sentry.eea.europa.eu).
     # Note: NetworkPolicies do not support domain-based filtering.
-    # Uncomment if external HTTPS access is required:
-    # - ports:
-    #     - protocol: TCP
-    #       port: 443
-    #     - protocol: TCP
-    #       port: 80
+    - ports:
+        - protocol: TCP
+          port: 443
 ---
 # Model Servers network policy
 apiVersion: networking.k8s.io/v1
@@ -756,10 +768,18 @@ spec:
     - to:
         - podSelector:
             matchLabels:
-              app: postfix
+              app.kubernetes.io/name: postfix
       ports:
         - protocol: TCP
           port: 25
+    # Allow egress to OpenSearch
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: opensearch
+      ports:
+        - protocol: TCP
+          port: 9200
     # DNS
     - to:
         - namespaceSelector: {}
@@ -769,14 +789,12 @@ spec:
       ports:
         - protocol: UDP
           port: 53
-    # Allow HTTPS egress for model downloads, and page fetching (COMMENTED OUT - TOO PERMISSIVE)
-    # Required for:
-    # - HuggingFace model downloads (nomic-ai/nomic-embed-text-v1) from huggingface.co
+    # Allow HTTPS egress for model downloads and external APIs.
+    # Required for Hugging Face model downloads (e.g. nomic-ai/nomic-embed-text-v1).
     # Note: NetworkPolicies do not support domain-based filtering.
-    # Uncomment if external HTTPS access is required:
-    # - ports:
-    #     - protocol: TCP
-    #       port: 443
+    - ports:
+        - protocol: TCP
+          port: 443
 ---
 # Document Fetching Worker HTTPS egress policy
 # Allows HTTPS egress specifically for the docfetching worker to fetch external documents
@@ -854,7 +872,7 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      app: postfix
+      app.kubernetes.io/name: postfix
   policyTypes:
     - Ingress
     - Egress

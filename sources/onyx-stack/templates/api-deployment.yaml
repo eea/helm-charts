@@ -120,8 +120,7 @@ spec:
       {{- if .Values.hfCache.enabled }}
       volumes:
         - name: hf-cache
-          persistentVolumeClaim:
-            claimName: {{ .Values.hfCache.pvc.name }}
+          emptyDir: {}
         {{- with .Values.api.volumes }}
         {{- toYaml . | nindent 8 }}
         {{- end }}

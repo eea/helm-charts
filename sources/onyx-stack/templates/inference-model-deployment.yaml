@@ -31,6 +31,9 @@ spec:
       securityContext:
         {{- toYaml .Values.inferenceCapability.podSecurityContext | nindent 8 }}
       {{- end }}
+      {{- if .Values.inferenceCapability.runtimeClassName }}
+      runtimeClassName: {{ .Values.inferenceCapability.runtimeClassName }}
+      {{- end }}
       {{- with .Values.inferenceCapability.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -101,8 +104,7 @@ spec:
       {{- if .Values.hfCache.enabled }}
       volumes:
         - name: hf-cache
-          persistentVolumeClaim:
-            claimName: {{ .Values.hfCache.pvc.name }}
+          emptyDir: {}
         {{- with .Values.inferenceCapability.volumes }}
         {{- toYaml . | nindent 8 }}
         {{- end }}

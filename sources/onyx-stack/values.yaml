@@ -315,6 +315,7 @@ inferenceCapability:
     capabilities:
       drop:
       - ALL
+  runtimeClassName: "" # Set to "nvidia" for production
   nodeSelector: {}
   tolerations: []
   affinity: {}
@@ -385,6 +386,7 @@ indexCapability:
     capabilities:
       drop:
       - ALL
+  runtimeClassName: "" # Set to "nvidia" for production
   nodeSelector: {}
   tolerations: []
   affinity: {}
@@ -656,24 +658,24 @@ webserver:
   #     port: api-server-port
   startupProbe:
     httpGet:
-      path: /health
-      port: 8080
+      path: /
+      port: http
     initialDelaySeconds: 30
     periodSeconds: 10
     timeoutSeconds: 5
     failureThreshold: 60  # up to 10 minutes for model loading
   readinessProbe:
     httpGet:
-      path: /health
-      port: 8080
+      path: /
+      port: http
     initialDelaySeconds: 15
     periodSeconds: 10
     timeoutSeconds: 5
     failureThreshold: 3
   livenessProbe:
     httpGet:
-      path: /health
-      port: 8080
+      path: /
+      port: http
     initialDelaySeconds: 30
     periodSeconds: 10
     timeoutSeconds: 5

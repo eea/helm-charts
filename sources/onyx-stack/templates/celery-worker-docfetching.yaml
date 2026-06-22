@@ -128,10 +128,9 @@ spec:
                     --probe liveness
                     --filename /tmp/onyx_k8s_docfetching_liveness.txt
       {{- if .Values.hfCache.enabled }}
-      volumes:
-        - name: hf-cache
-          persistentVolumeClaim:
-            claimName: {{ .Values.hfCache.pvc.name }}
+       volumes:
+         - name: hf-cache
+           emptyDir: {}
         {{- with .Values.celery_worker_docfetching.volumes }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
