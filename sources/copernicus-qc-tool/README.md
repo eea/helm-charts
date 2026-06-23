@@ -21,6 +21,9 @@ Required password values:
 - `postfix.mtpPass`
 ## Releases
 
+### Version 0.1.16 - 23 June 2026
+- fix [Dobricean Ioan Dorian - [`10a4e5a6`](https://github.com/eea/helm-charts/commit/10a4e5a6ab22a88a03d2c630df6e6fe4326730b8)]
+
 ### Version 0.1.15 - 23 June 2026
 - sync existing Nextcloud config.php with chart values before startup [Codex]
 
