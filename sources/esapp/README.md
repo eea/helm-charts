@@ -3,6 +3,9 @@
 
 ## Releases
 
+### Version 0.1.2 - 23 June 2026
+- Add questions [valentinab25 - [`60db639c`](https://github.com/eea/helm-charts/commit/60db639ca6529dcbe0cb12159da7b06bfae8c71b)]
+
 ### Version 0.1.1 - 23 June 2026
 - Fix netsecpol [valentinab25 - [`40f82525`](https://github.com/eea/helm-charts/commit/40f8252580a365672c0117fabd8c6b4257144d9d)]
 
