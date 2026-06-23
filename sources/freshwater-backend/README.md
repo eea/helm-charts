@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 3.33.0 - 23 June 2026
+- Automated release of [eeacms/freshwater-backend:6.1.4-33](https://github.com/eea/freshwater-backend/releases) [EEA Jenkins - [`b1eae9c3`](https://github.com/eea/helm-charts/commit/b1eae9c329b694e759aa229e7e3a2bc7af4e44e2)]
+
 ### Version 3.32.0 - 22 June 2026
 - Automated release of [eeacms/freshwater-backend:6.1.4-32](https://github.com/eea/freshwater-backend/releases) [EEA Jenkins - [`e879187a`](https://github.com/eea/helm-charts/commit/e879187aab87d01a3bcf4e3a4ee79fe4a3001d1e)]
 
