@@ -10,6 +10,7 @@ Notes:
 - the default frontend hostname is `dev-qc-copernicus.01dev.eea.europa.eu` and can be changed from `questions.yaml`
 - PostgreSQL is expected to be deployed separately, for example with `plone-postgres`; this chart only stores the connection settings and creates an internal alias service
 - MariaDB exposes the release-specific service and a `db` compatibility alias for existing Nextcloud configs
+- existing Nextcloud `config.php` files are synced with the chart database, Redis, and trusted domain values before startup
 - email delivery is handled through the shared `postfix` subchart, with the same `dryrun` and `mailtrap` options used by other EEA applications
 
 Required password values:
@@ -19,6 +20,9 @@ Required password values:
 - `mariadb.database.rootPassword`
 - `postfix.mtpPass`
 ## Releases
+
+### Version 0.1.15 - 23 June 2026
+- sync existing Nextcloud config.php with chart values before startup [Codex]
 
 ### Version 0.1.14 - 23 June 2026
 - fix [Dobricean Ioan Dorian - [`0554361c`](https://github.com/eea/helm-charts/commit/0554361ca31d2b286ffb3640ecb4135a0b7ed595)]

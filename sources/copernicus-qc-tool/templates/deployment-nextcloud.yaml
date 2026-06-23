@@ -27,6 +27,10 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       serviceAccountName: {{ include "qctool.serviceAccountName" . }}
+      {{- if .Values.nextcloud.configSync.enabled }}
+      initContainers:
+        {{- include "qctool.nextcloudConfigSyncInitContainer" . | nindent 8 }}
+      {{- end }}
       containers:
         - name: nextcloud
           image: "{{ .Values.nextcloud.image.repository }}:{{ .Values.nextcloud.image.tag }}"

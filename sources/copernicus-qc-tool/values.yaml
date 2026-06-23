@@ -187,6 +187,8 @@ nextcloud:
   healthcheck:
     path: /status.php
     host: ''
+  configSync:
+    enabled: true
   resources: {}
   podAnnotations: {}
   nodeSelector: {}

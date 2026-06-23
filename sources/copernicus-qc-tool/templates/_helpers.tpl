@@ -139,3 +139,87 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- define "qctool.frontendCsrfTrustedOrigins" -}}
 {{- printf "%s,http://localhost,http://127.0.0.1" (include "qctool.frontendPublicUrl" .) -}}
 {{- end -}}
+
+{{/* Sync existing Nextcloud config.php from persistent volumes with Helm values. */}}
+{{- define "qctool.nextcloudConfigSyncInitContainer" -}}
+- name: sync-nextcloud-config
+  image: "{{ .Values.nextcloud.image.repository }}:{{ .Values.nextcloud.image.tag }}"
+  imagePullPolicy: {{ .Values.nextcloud.image.pullPolicy }}
+  command:
+    - /bin/sh
+    - -ec
+  args:
+    - |
+      config=/var/www/html/config/config.php
+      [ -f "$config" ] || exit 0
+      php <<'PHP'
+      <?php
+      $configFile = '/var/www/html/config/config.php';
+      include $configFile;
+
+      if (!isset($CONFIG) || !is_array($CONFIG)) {
+          exit(0);
+      }
+
+      $changed = false;
+      $set = function ($key, $value) use (&$CONFIG, &$changed) {
+          if ($value !== '' && (!array_key_exists($key, $CONFIG) || $CONFIG[$key] !== $value)) {
+              $CONFIG[$key] = $value;
+              $changed = true;
+          }
+      };
+
+      $trustedDomain = getenv('NEXTCLOUD_TRUSTED_DOMAIN') ?: '';
+      if ($trustedDomain !== '') {
+          $domains = isset($CONFIG['trusted_domains']) && is_array($CONFIG['trusted_domains'])
+              ? $CONFIG['trusted_domains']
+              : [];
+          if (!in_array($trustedDomain, $domains, true)) {
+              $domains[] = $trustedDomain;
+              $changed = true;
+          }
+          $domains = array_values(array_unique($domains));
+          if (($CONFIG['trusted_domains'] ?? null) !== $domains) {
+              $CONFIG['trusted_domains'] = $domains;
+              $changed = true;
+          }
+          $set('overwrite.cli.url', 'https://' . $trustedDomain);
+      }
+
+      $set('dbhost', getenv('MYSQL_HOST') ?: '');
+
+      if (!isset($CONFIG['redis']) || !is_array($CONFIG['redis'])) {
+          $CONFIG['redis'] = [];
+          $changed = true;
+      }
+      $redisHost = getenv('REDIS_HOST') ?: '';
+      if ($redisHost !== '' && (($CONFIG['redis']['host'] ?? null) !== $redisHost)) {
+          $CONFIG['redis']['host'] = $redisHost;
+          $changed = true;
+      }
+      $redisPort = getenv('REDIS_HOST_PORT') ?: '';
+      if ($redisPort !== '' && ctype_digit($redisPort)) {
+          $redisPort = (int) $redisPort;
+          if (($CONFIG['redis']['port'] ?? null) !== $redisPort) {
+              $CONFIG['redis']['port'] = $redisPort;
+              $changed = true;
+          }
+      }
+
+      if ($changed) {
+          file_put_contents($configFile, "<?php\n\$CONFIG = " . var_export($CONFIG, true) . ";\n");
+      }
+      PHP
+  env:
+    - name: NEXTCLOUD_TRUSTED_DOMAIN
+      value: {{ .Values.ingress.nextcloud.host | quote }}
+    - name: MYSQL_HOST
+      value: {{ include "qctool.mariadbServiceName" . | quote }}
+    - name: REDIS_HOST
+      value: {{ include "qctool.redisServiceName" . | quote }}
+    - name: REDIS_HOST_PORT
+      value: {{ .Values.redis.service.port | quote }}
+  volumeMounts:
+    - name: nextcloud-appdata
+      mountPath: /var/www/html
+{{- end -}}
