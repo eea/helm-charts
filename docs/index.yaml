@@ -20408,6 +20408,27 @@ entries:
   copernicus-qc-tool:
   - apiVersion: v2
     appVersion: 2.4.0
+    created: "2026-06-23T12:26:21.597787+03:00"
+    dependencies:
+    - name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.2.0
+    description: Helm chart for the Copernicus QC Tool stack
+    digest: 97fc47f45dd35edcc62ea7671eefdff6882cbabbd5df2371a4355746a36f9cef
+    home: https://github.com/eea/helm-charts
+    keywords:
+    - copernicus
+    - qc-tool
+    - nextcloud
+    - postgres
+    - mariadb
+    name: copernicus-qc-tool
+    type: application
+    urls:
+    - copernicus-qc-tool-0.1.18.tgz
+    version: 0.1.18
+  - apiVersion: v2
+    appVersion: 2.4.0
     created: "2026-06-23T10:49:33.282864+03:00"
     dependencies:
     - name: postfix
@@ -57779,4 +57800,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2026-06-23T12:08:55.423933538+03:00"
+generated: "2026-06-23T12:26:21.596466+03:00"

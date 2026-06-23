@@ -21,6 +21,9 @@ Required password values:
 - `postfix.mtpPass`
 ## Releases
 
+### Version 0.1.18 - 23 June 2026
+- fix [Dobricean Ioan Dorian - [`02bb60a7`](https://github.com/eea/helm-charts/commit/02bb60a7eb9ba65ee9ad7e2eb423e484cd9e6465)]
+
 ### Version 0.1.17 - 23 June 2026
 - use `links.database` directly for frontend PostgreSQL host [Codex]
 
