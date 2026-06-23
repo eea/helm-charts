@@ -67,6 +67,9 @@ This can be used to set the rabbitmq host to be used.
 
 ## Releases
 
+### Version 0.68.4 - 23 June 2026
+- Updated rn-local-converters to 0.1.10 [Olimpiu Rob - [`6d369173`](https://github.com/eea/helm-charts/commit/6d36917333f20b2aa6283482d4e7984e1e049225)]
+
 ### Version 0.68.3 - 23 June 2026
 - Updated rn-local-converters to 0.1.9 [Olimpiu Rob - [`6e505ba3`](https://github.com/eea/helm-charts/commit/6e505ba3f4de2f9c676f68225188d3619931b37e)]
 
