@@ -3,6 +3,9 @@
 
 ## Releases
 
+### Version 0.1.3 - 23 June 2026
+- fix ide service [valentinab25 - [`2f7f01a6`](https://github.com/eea/helm-charts/commit/2f7f01a683682a031576d08314f330addbe64ea0)]
+
 ### Version 0.1.2 - 23 June 2026
 - Add questions [valentinab25 - [`60db639c`](https://github.com/eea/helm-charts/commit/60db639ca6529dcbe0cb12159da7b06bfae8c71b)]
 
