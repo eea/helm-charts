@@ -65,6 +65,9 @@ To customize the network policies, you should modify the `instance.networkPolicy
 
 ## Releases
 
+### Version 0.78.3 - 23 June 2026
+- Updated rn-local-converters to 0.1.9 [Olimpiu Rob - [`6d7cceeb`](https://github.com/eea/helm-charts/commit/6d7cceebb86e39c6fc083cee7fcfb5bd26bd90b5)]
+
 ### Version 0.78.2 - 23 June 2026
 - Updated rn-local-converters to 0.1.8 [Olimpiu Rob - [`263ac369`](https://github.com/eea/helm-charts/commit/263ac3697e8fbe1460ed22d5165eeb59bd7264cb)]
 
