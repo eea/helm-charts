@@ -10,7 +10,6 @@ spec:
   type: {{ .Values.ide.service.type }}
   ports:
   - name: http
-    port: {{ .Values.ide.service.port }}
     targetPort: 8443
   selector:
     {{- include "appl.selectorLabels" . | nindent 4 }}

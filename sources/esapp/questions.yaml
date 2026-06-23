@@ -1,0 +1,138 @@
+questions:
+  - variable: "url"
+    label: "Url"
+    description: "DNS name for this deployment"
+    default: "esapp.eea.europa.eu"
+    type: "string"
+    required: true
+    group: "General"
+
+  - variable: "securityEnabled"
+    label: "Enable Security"
+    description: "Add Network Security Policies"
+    default: true
+    type: "boolean"
+    required: true
+    group: "General"
+
+
+  - variable: "esapp.env.APP_CONFIG_DIRNAME"
+    label: "ESAPP DIRNAME"
+    type: "enum"
+    options:
+      - "CO2_passenger_cars"
+      - "CO2_vans"
+      - "efdb"
+      - "pam"
+      - "poleval"
+    required: true
+    group: "Configuration"
+
+  - variable: "esapp.env.SENTRY_DSN"
+    label: "Sentry DSN"
+    type: "string"
+    required: true
+    group: "Configuration"
+
+  - variable: "esapp.env.DASHBOARD_SRC"
+    label: "Dashboard SRC"
+    type: "string"
+    group: "Configuration"
+
+
+  - variable: "esapp.env.elastic_rwuser"
+    label: "ElasticSearch Write User"
+    type: "string"
+    group: "Configuration"
+  - variable: "esapp.env.elastic_rwpass"
+    label: "ElasticSearch Write User Password"
+    type: "string"
+    group: "Configuration"      
+  - variable: "esapp.env.elastic_rouser"
+    label: "ElasticSearch Read User"
+    type: "string"
+    group: "Configuration"
+  - variable: "esapp.env.elastic_ropass"
+    label: "ElasticSearch Read User Password"
+    type: "string"
+    group: "Configuration"
+
+
+
+  - variable: "ideEnabled"
+    label: "Enable IDE to modify configuration"
+    description: "Only on non-production environments"
+    default: true
+    type: "boolean"
+    required: true
+    group: "Configuration"
+
+
+  - variable: "ide.service.type"
+    label: "IDE service type"
+    description: "Choose NodePort to expose the service"
+    default: "NodePort"
+    type: "enum"
+    options:
+      - "NodePort"
+      - "ClusterIP"
+    required: true
+    group: "Configuration"
+
+  - variable: "ide.env.PASSWORD"
+    label: "IDE User Password"
+    type: "string"
+    group: "Configuration"
+    show_if: "ide.enabled"
+
+  - variable: "ingress.tls"
+    label: "Enable https"
+    default: true
+    type: "boolean"
+    required: true
+    group: "General"
+
+  - variable: "ingress.letsencrypt"
+    label: "Ingress letsencrypt cluster-issuer"
+    description: "Leave empty when not using letsencrypt"
+    default: "01dev-eea-letsencrypt"
+    group: "General"
+
+  - variable: "ingress.certificate"
+    label: "Certificate name"
+    description: "Leave blank for default certificate, hostname-tls for letsencrypt"
+    default: "esapps.eea.europa.eu-tls"
+    type: "string"
+    show_if: "ingress.tls"
+    group: "General"
+
+  - variable: "ingress.configuration.proxy-body-size"
+    label: "Rancher LB body size"
+    description: "Example 100m"
+    type: "string"
+    default: "100m"
+    group: "General"
+
+  - variable: "ingress.configuration.proxy-read-timeout"
+    label: "Rancher LB read timeout"
+    description: "Maximum response time from upstream server, in seconds, example 60s"
+    type: "string"
+    default: "120s"
+    group: "General"
+
+  - variable: "ingress.configuration.proxy-send-timeout"
+    label: "Rancher LB send timeout"
+    description: "Timeout before closing the connection"
+    type: "string"
+    default: "60s"
+    group: "General"
+
+  - variable: "ingress.restrictFromInternet"
+    label: "Restict internet access"
+    description: "If checked, will not be available from the internet, only inside the network"
+    default: true
+    type: "boolean"
+    required: true
+    group: "General"
+
+

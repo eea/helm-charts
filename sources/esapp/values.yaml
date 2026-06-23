@@ -34,9 +34,9 @@ esapp:
     elastic_index: pam
     APP_CONFIG_DIRNAME: ""
     elastic_appalias: "prod"
-    elastic_rwuser: "rw"
+    elastic_rwuser: "elastic"
     elastic_rwpass: "rwtest"
-    elastic_rouser: "ro"
+    elastic_rouser: "elastic"
     elastic_ropass: "rotest"
     SENTRY_DSN: ""
     API_token: ""
@@ -114,5 +114,4 @@ ide:
       memory: 512Mi
   service:
     type: NodePort
-    port: 32721
 
