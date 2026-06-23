@@ -48,10 +48,14 @@ spec:
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.esapp.image.pullPolicy }}
         {{- if .Values.ide.enabled }}
-        command: ["/bin/sh", "-c"]
         args:
-          - |
-            /node_modules/.bin/nodemon --watch code/ --watch /node_modules/eea-searchserver /code/app.js runserver
+          - >
+            /node_modules/.bin/nodemon -L --watch
+            /code/config/CO2_vans/settings.json --watch /code/app.js
+            /code/app.js runserver
+        command:
+          - /bin/sh
+          - '-c'
         {{- end }}
         env:
         {{- range $key, $value := .Values.esapp.env }}

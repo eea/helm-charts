@@ -17,7 +17,7 @@ spec:
   podSelector:
     matchLabels:
       {{- include "appl.selectorLabels" . | nindent 6 }}
-      component: esapp
+      app.kubernetes.io/component: esapp
 
 
   policyTypes:

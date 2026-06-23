@@ -18,6 +18,17 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 
+  {{- if .Values.ingress.restrictFromInternet }}
+    nginx.ingress.kubernetes.io/whitelist-source-range: |
+      192.168.60.0/22,
+      192.168.64.0/21,
+      10.92.24.0/21,
+      10.50.0.0/16,
+      10.20.30.0/24,
+      10.0.9.0/24,
+      10.50.7.57
+  {{- end }}
+
 spec:
   ingressClassName: {{ .Values.ingress.className }}
   rules:

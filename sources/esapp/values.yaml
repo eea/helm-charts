@@ -43,6 +43,7 @@ esapp:
     sourceconf_url: ""
     sourceconf_bulksize: ""
     sourceconf_counturl: ""
+    DASHBOARD_SRC: ""
   service:
     type: ClusterIP
     port: 3000
@@ -77,6 +78,7 @@ esbootstrap:
 
 ingress:
   enabled: true
+  tls: true
   className: "nginx"
   certificate: "esapp.01dev.eea.europa.eu-tls"
   annotations: {}
@@ -85,7 +87,7 @@ ingress:
     proxy-body-size: "256m"
     proxy-read-timeout: "180s"
     proxy-send-timeout: "120s"
-
+  restrictFromInternet: true
 
 storage:
   enabled: true
@@ -111,6 +113,6 @@ ide:
     requests:
       memory: 512Mi
   service:
-    type: ClusterIP
-    port: 55721
+    type: NodePort
+    port: 32721
 
