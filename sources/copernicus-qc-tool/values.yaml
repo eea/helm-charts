@@ -1,12 +1,12 @@
 imagePullSecrets: []
 
-nameOverride: ""
-fullnameOverride: ""
+nameOverride: ''
+fullnameOverride: ''
 
 serviceAccount:
   create: false
   annotations: {}
-  name: ""
+  name: ''
 
 timezone: Europe/Copenhagen
 
@@ -17,7 +17,7 @@ ingress:
   frontend:
     enabled: true
     className: nginx
-    letsencrypt: "01dev-eea-letsencrypt"
+    letsencrypt: '01dev-eea-letsencrypt'
     annotations: {}
     host: dev-qc-copernicus.01dev.eea.europa.eu
     tls: true
@@ -25,7 +25,7 @@ ingress:
   nextcloud:
     enabled: true
     className: nginx
-    letsencrypt: "01dev-eea-letsencrypt"
+    letsencrypt: '01dev-eea-letsencrypt'
     annotations: {}
     host: admin-qc-copernicus.eea.europa.eu
     tls: true
@@ -35,80 +35,80 @@ persistence:
   boundary:
     enabled: true
     create: true
-    existingClaim: ""
-    storageClassName: ""
+    existingClaim: ''
+    storageClassName: ''
     accessModes:
       - ReadWriteMany
     size: 5Gi
   incoming:
     enabled: true
     create: true
-    existingClaim: ""
-    storageClassName: ""
+    existingClaim: ''
+    storageClassName: ''
     accessModes:
       - ReadWriteMany
     size: 5Gi
   submission:
     enabled: true
     create: true
-    existingClaim: ""
-    storageClassName: ""
+    existingClaim: ''
+    storageClassName: ''
     accessModes:
       - ReadWriteMany
     size: 10Gi
   submissionEtc:
     enabled: true
     create: true
-    existingClaim: ""
-    storageClassName: ""
+    existingClaim: ''
+    storageClassName: ''
     accessModes:
       - ReadWriteMany
     size: 5Gi
   frontend:
     enabled: true
     create: true
-    existingClaim: ""
-    storageClassName: ""
+    existingClaim: ''
+    storageClassName: ''
     accessModes:
       - ReadWriteMany
     size: 5Gi
   work:
     enabled: true
     create: true
-    existingClaim: ""
-    storageClassName: ""
+    existingClaim: ''
+    storageClassName: ''
     accessModes:
       - ReadWriteMany
     size: 20Gi
   nextcloudAppData:
     enabled: true
     create: true
-    existingClaim: ""
-    storageClassName: ""
+    existingClaim: ''
+    storageClassName: ''
     accessModes:
       - ReadWriteOnce
     size: 20Gi
   mariadbData:
     enabled: true
     create: true
-    existingClaim: ""
-    storageClassName: ""
+    existingClaim: ''
+    storageClassName: ''
     accessModes:
       - ReadWriteOnce
     size: 30Gi
   redisData:
     enabled: true
     create: true
-    existingClaim: ""
-    storageClassName: ""
+    existingClaim: ''
+    storageClassName: ''
     accessModes:
       - ReadWriteOnce
     size: 5Gi
   volumeTesterData:
     enabled: false
     create: false
-    existingClaim: ""
-    storageClassName: ""
+    existingClaim: ''
+    storageClassName: ''
     accessModes:
       - ReadWriteOnce
     size: 1Gi
@@ -118,32 +118,32 @@ frontend:
   replicaCount: 1
   image:
     repository: eeacms/copernicus-qctool-frontend
-    tag: "2.4.0"
+    tag: '2.4.0'
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
     port: 8000
   env:
     BOUNDARY_DIR: /mnt/qc_tool_boundary/boundaries
-    CASE_INSENSITIVE_USERNAMES: "yes"
+    CASE_INSENSITIVE_USERNAMES: 'yes'
     DB_ENGINE: postgres
     FRONTEND_DB_PATH: /mnt/qc_tool_frontend/frontend.sqlite3
-    FRONTEND_PORT: "8000"
+    FRONTEND_PORT: '8000'
     INCOMING_DIR: /mnt/qc_tool_incoming/incoming
-    MAINTENANCE_MODE: "no"
-    REFRESH_JOB_STATUSES_BACKGROUND: "yes"
-    REFRESH_JOB_STATUSES_BACKGROUND_INTERVAL: "60"
+    MAINTENANCE_MODE: 'no'
+    REFRESH_JOB_STATUSES_BACKGROUND: 'yes'
+    REFRESH_JOB_STATUSES_BACKGROUND_INTERVAL: '60'
     SUBMISSION_DIR: /mnt/qc_tool_submission/submission
-    UPDATE_JOB_STATUSES: "yes"
-    UPDATE_JOB_STATUSES_INTERVAL: "30000"
+    UPDATE_JOB_STATUSES: 'yes'
+    UPDATE_JOB_STATUSES_INTERVAL: '30000'
     WORK_DIR: /mnt/qc_tool_work/work
-    WORKER_ALIVE_TIMEOUT: "30"
+    WORKER_ALIVE_TIMEOUT: '30'
   extraEnv: {}
   database:
     port: 5432
     name: qc_tool
     user: qc_user
-    password: ""
+    password: ''
   resources: {}
   podAnnotations: {}
   nodeSelector: {}
@@ -155,7 +155,7 @@ worker:
   replicaCount: 8
   image:
     repository: eeacms/copernicus-qctool-worker
-    tag: "2.4.0"
+    tag: '2.4.0'
     pullPolicy: IfNotPresent
   env:
     BOUNDARY_DIR: /mnt/qc_tool_boundary/boundaries
@@ -163,7 +163,7 @@ worker:
     INSPIRE_SERVICE_URL: http://localhost:8080/validator/v2/
     WORK_DIR: /mnt/qc_tool_work/work
   extraEnv: {}
-  pullJobUrl: ""
+  pullJobUrl: ''
   shmSize: 1Gi
   resources: {}
   podAnnotations: {}
@@ -176,7 +176,7 @@ nextcloud:
   replicaCount: 1
   image:
     repository: eeacms/nextcloud
-    tag: "30.0.2-apache"
+    tag: '30.0.2-apache'
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
@@ -186,7 +186,7 @@ nextcloud:
   extraEnv: {}
   healthcheck:
     path: /status.php
-    host: ""
+    host: ''
   resources: {}
   podAnnotations: {}
   nodeSelector: {}
@@ -208,19 +208,19 @@ nextcloudCron:
   affinity: {}
 
 postfix:
-  fullnameOverride: ""
+  fullnameOverride: ''
   dryrun: false
   serverName: dev-qc-copernicus.01dev.eea.europa.eu
-  mtpPass: ""
-  mtpPort: "8587"
+  mtpPass: ''
+  mtpPort: '8587'
   mtpRelay: ironport1.eea.europa.eu
   mtpUser: clms_qc_tool
-  serviceName: "postfix"
+  serviceName: 'postfix'
   mailtrap:
     httpenabled: false
     serviceType: ClusterIP
     mtUser: mailtrap
-    mtPasswd: mailtrap
+    mtPasswd: mailtrap # betterleaks:allow
     ingress:
       enabled: false
       hostname: mailtrap.01dev.eea.europa.eu
@@ -229,7 +229,7 @@ postfix:
       certificate: mailtrap.01dev.eea.europa.eu-tls
   image:
     repository: eeacms/postfix
-    tag: "3.5-1.0"
+    tag: '3.5-1.0'
   timezone: Europe/Copenhagen
   resources:
     requests:
@@ -242,7 +242,7 @@ volumeTester:
   replicaCount: 1
   image:
     repository: ubuntu
-    tag: "20.04"
+    tag: '20.04'
     pullPolicy: IfNotPresent
   command:
     - sleep
@@ -258,16 +258,18 @@ mariadb:
   replicaCount: 1
   image:
     repository: mariadb
-    tag: "10.6.20"
+    tag: '10.6.20'
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
     port: 3306
+    # Compatibility alias for existing Nextcloud configs that use dbhost "db".
+    legacyName: db
   database:
     name: nextcloud
     user: nc
-    password: ""
-    rootPassword: ""
+    password: ''
+    rootPassword: ''
   args:
     - --transaction-isolation=READ-COMMITTED
     - --binlog-format=ROW
@@ -288,7 +290,7 @@ redis:
   replicaCount: 1
   image:
     repository: redis
-    tag: "7.4.1-alpine"
+    tag: '7.4.1-alpine'
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP

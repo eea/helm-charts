@@ -1,8 +1,29 @@
 {{- if .Values.mariadb.enabled }}
+{{- $mariadbServiceName := include "qctool.mariadbServiceName" . }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "qctool.mariadbServiceName" . }}
+  name: {{ $mariadbServiceName }}
+  labels:
+    {{- include "qctool.labels" . | nindent 4 }}
+    component: db
+spec:
+  type: {{ .Values.mariadb.service.type }}
+  selector:
+    {{- include "qctool.selectorLabels" . | nindent 4 }}
+    component: db
+  ports:
+    - name: mysql
+      port: {{ .Values.mariadb.service.port }}
+      targetPort: mysql
+      protocol: TCP
+{{- $legacyName := .Values.mariadb.service.legacyName | default "" }}
+{{- if and $legacyName (ne $legacyName $mariadbServiceName) }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $legacyName }}
   labels:
     {{- include "qctool.labels" . | nindent 4 }}
     component: db
@@ -17,4 +38,4 @@ spec:
       targetPort: mysql
       protocol: TCP
 {{- end }}
-
+{{- end }}
