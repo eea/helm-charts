@@ -20,6 +20,9 @@ Required password values:
 - `postfix.mtpPass`
 ## Releases
 
+### Version 0.1.14 - 23 June 2026
+- fix [Dobricean Ioan Dorian - [`0554361c`](https://github.com/eea/helm-charts/commit/0554361ca31d2b286ffb3640ecb4135a0b7ed595)]
+
 ### Version 0.1.13 - 23 June 2026
 - add MariaDB `db` service alias for existing Nextcloud configs [Codex]
 
