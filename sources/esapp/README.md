@@ -3,6 +3,9 @@
 
 ## Releases
 
+### Version 0.1.4 - 24 June 2026
+- Fix directory name in command [valentinab25 - [`8c42cf3b`](https://github.com/eea/helm-charts/commit/8c42cf3bc627594c454d9b62c376fb7598f403d4)]
+
 ### Version 0.1.3 - 23 June 2026
 - fix ide service [valentinab25 - [`2f7f01a6`](https://github.com/eea/helm-charts/commit/2f7f01a683682a031576d08314f330addbe64ea0)]
 
