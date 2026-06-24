@@ -4,6 +4,10 @@ This chart is configured for production use.
 
 ## Releases
 
+### Version 3.0.0
+- Java 11 upgrade, robots.txt update to stop spidering of vocabularies, graceful handling of SQL error,
+MS Access, Excel with dropdowns, ODS and dBase II exports functionality removal.
+
 ### Version 2.2.0
 - Remove member/collaborative country code lookup, remove dead LDAP functionality, JWT signing key as secret, liveness probe timeout raised.
 
