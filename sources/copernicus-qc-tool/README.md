@@ -21,6 +21,9 @@ Required password values:
 - `postfix.mtpPass`
 ## Releases
 
+### Version 0.1.19 - 24 June 2026
+- update frontend and worker image tags to 2.4.3 [Codex]
+
 ### Version 0.1.18 - 23 June 2026
 - fix [Dobricean Ioan Dorian - [`02bb60a7`](https://github.com/eea/helm-charts/commit/02bb60a7eb9ba65ee9ad7e2eb423e484cd9e6465)]
 

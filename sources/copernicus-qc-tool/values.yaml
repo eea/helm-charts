@@ -118,7 +118,7 @@ frontend:
   replicaCount: 1
   image:
     repository: eeacms/copernicus-qctool-frontend
-    tag: '2.4.0'
+    tag: '2.4.3'
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
@@ -155,7 +155,7 @@ worker:
   replicaCount: 8
   image:
     repository: eeacms/copernicus-qctool-worker
-    tag: '2.4.0'
+    tag: '2.4.3'
     pullPolicy: IfNotPresent
   env:
     BOUNDARY_DIR: /mnt/qc_tool_boundary/boundaries
