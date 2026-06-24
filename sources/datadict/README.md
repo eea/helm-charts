@@ -4,6 +4,9 @@ This chart is configured for production use.
 
 ## Releases
 
+### Version 3.1.0
+- NPE fix.
+
 ### Version 3.0.0
 - Java 11 upgrade, robots.txt update to stop spidering of vocabularies, graceful handling of SQL error,
 MS Access, Excel with dropdowns, ODS and dBase II exports functionality removal.
