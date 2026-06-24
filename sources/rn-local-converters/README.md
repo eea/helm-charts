@@ -20,6 +20,9 @@ Default network policy includes:
 
 ## Releases
 
+### Version 0.1.11 - 24 June 2026
+- Updated appVersion to 3.3.0 [Olimpiu Rob - [`5d5b7e09`](https://github.com/eea/helm-charts/commit/5d5b7e09eecc83ad49cb1df7124918c5a9387a3d)]
+
 ### Version 0.1.10 - 23 June 2026
 - Updated appVersion to 3.2.2 [Olimpiu Rob - [`6c5a2bc3`](https://github.com/eea/helm-charts/commit/6c5a2bc3b5b4d471658c4e80410337b9966454e7)]
 
