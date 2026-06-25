@@ -129,15 +129,55 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}
 
 {{- define "qctool.frontendPublicUrl" -}}
+{{- if .Values.frontend.publicUrl -}}
+{{- .Values.frontend.publicUrl -}}
+{{- else -}}
 {{- printf "https://%s" .Values.ingress.frontend.host -}}
+{{- end -}}
 {{- end -}}
 
 {{- define "qctool.frontendApiUrl" -}}
+{{- if .Values.frontend.apiUrl -}}
+{{- .Values.frontend.apiUrl -}}
+{{- else -}}
 {{- printf "%s/api" (include "qctool.frontendPublicUrl" .) -}}
+{{- end -}}
 {{- end -}}
 
 {{- define "qctool.frontendCsrfTrustedOrigins" -}}
-{{- printf "%s,http://localhost,http://127.0.0.1" (include "qctool.frontendPublicUrl" .) -}}
+{{- if .Values.frontend.csrfTrustedOrigins -}}
+{{- if kindIs "slice" .Values.frontend.csrfTrustedOrigins -}}
+{{- join "," .Values.frontend.csrfTrustedOrigins -}}
+{{- else -}}
+{{- .Values.frontend.csrfTrustedOrigins -}}
+{{- end -}}
+{{- else -}}
+{{- $origins := list (include "qctool.frontendPublicUrl" .) -}}
+{{- range .Values.frontend.csrfTrustedLocalOrigins -}}
+{{- $origins = append $origins . -}}
+{{- end -}}
+{{- join "," $origins -}}
+{{- end -}}
+{{- end -}}
+
+{{- define "qctool.nextcloudPublicUrl" -}}
+{{- if .Values.nextcloud.publicUrl -}}
+{{- .Values.nextcloud.publicUrl -}}
+{{- else -}}
+{{- printf "https://%s" .Values.ingress.nextcloud.host -}}
+{{- end -}}
+{{- end -}}
+
+{{- define "qctool.nextcloudTrustedDomains" -}}
+{{- if .Values.nextcloud.trustedDomains -}}
+{{- if kindIs "slice" .Values.nextcloud.trustedDomains -}}
+{{- join " " .Values.nextcloud.trustedDomains -}}
+{{- else -}}
+{{- .Values.nextcloud.trustedDomains -}}
+{{- end -}}
+{{- else -}}
+{{- .Values.ingress.nextcloud.host -}}
+{{- end -}}
 {{- end -}}
 
 {{/* Sync existing Nextcloud config.php from persistent volumes with Helm values. */}}
@@ -169,21 +209,27 @@ app.kubernetes.io/instance: {{ .Release.Name }}
           }
       };
 
-      $trustedDomain = getenv('NEXTCLOUD_TRUSTED_DOMAIN') ?: '';
-      if ($trustedDomain !== '') {
+      $trustedDomains = preg_split('/[\s,]+/', getenv('NEXTCLOUD_TRUSTED_DOMAINS') ?: '', -1, PREG_SPLIT_NO_EMPTY);
+      if (!empty($trustedDomains)) {
           $domains = isset($CONFIG['trusted_domains']) && is_array($CONFIG['trusted_domains'])
               ? $CONFIG['trusted_domains']
               : [];
-          if (!in_array($trustedDomain, $domains, true)) {
-              $domains[] = $trustedDomain;
-              $changed = true;
+          foreach ($trustedDomains as $trustedDomain) {
+              if (!in_array($trustedDomain, $domains, true)) {
+                  $domains[] = $trustedDomain;
+                  $changed = true;
+              }
           }
           $domains = array_values(array_unique($domains));
           if (($CONFIG['trusted_domains'] ?? null) !== $domains) {
               $CONFIG['trusted_domains'] = $domains;
               $changed = true;
           }
-          $set('overwrite.cli.url', 'https://' . $trustedDomain);
+      }
+
+      $publicUrl = getenv('NEXTCLOUD_PUBLIC_URL') ?: '';
+      if ($publicUrl !== '') {
+          $set('overwrite.cli.url', $publicUrl);
       }
 
       $set('dbhost', getenv('MYSQL_HOST') ?: '');
@@ -211,8 +257,10 @@ app.kubernetes.io/instance: {{ .Release.Name }}
       }
       PHP
   env:
-    - name: NEXTCLOUD_TRUSTED_DOMAIN
-      value: {{ .Values.ingress.nextcloud.host | quote }}
+    - name: NEXTCLOUD_TRUSTED_DOMAINS
+      value: {{ include "qctool.nextcloudTrustedDomains" . | quote }}
+    - name: NEXTCLOUD_PUBLIC_URL
+      value: {{ include "qctool.nextcloudPublicUrl" . | quote }}
     - name: MYSQL_HOST
       value: {{ include "qctool.mariadbServiceName" . | quote }}
     - name: REDIS_HOST

@@ -8,6 +8,8 @@ Notes:
 - `volume-tester` is kept as an optional workload and is disabled by default
 - for `nextcloudAppData` the chart uses the claim name `qc_tool_nextcloud_appdata`, because that is the volume name mounted by the provided stack
 - the default frontend hostname is `dev-qc-copernicus.01dev.eea.europa.eu` and can be changed from `questions.yaml`
+- frontend public/API URLs and CSRF origins can be configured with `frontend.publicUrl`, `frontend.apiUrl`, and `frontend.csrfTrustedOrigins`
+- Nextcloud public URL and trusted domains can be configured with `nextcloud.publicUrl` and `nextcloud.trustedDomains`
 - PostgreSQL is expected to be deployed separately, for example with `plone-postgres`; the frontend connects to the service configured in `links.database`
 - MariaDB exposes the release-specific service and a `db` compatibility alias for existing Nextcloud configs
 - existing Nextcloud `config.php` files are synced with the chart database, Redis, and trusted domain values before startup
@@ -20,6 +22,9 @@ Required password values:
 - `mariadb.database.rootPassword`
 - `postfix.mtpPass`
 ## Releases
+
+### Version 0.1.21 - 25 June 2026
+- expose frontend, CSRF, worker INSPIRE, and Nextcloud URL settings as chart values [Codex]
 
 ### Version 0.1.20 - 24 June 2026
 - fix [Dobricean Ioan Dorian - [`c7a9b5e9`](https://github.com/eea/helm-charts/commit/c7a9b5e9c29896be90283845c40c237b928968a6)]

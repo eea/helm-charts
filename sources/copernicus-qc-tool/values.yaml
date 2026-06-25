@@ -123,6 +123,12 @@ frontend:
   service:
     type: ClusterIP
     port: 8000
+  publicUrl: ''
+  apiUrl: ''
+  csrfTrustedOrigins: ''
+  csrfTrustedLocalOrigins:
+    - http://localhost
+    - http://127.0.0.1
   env:
     BOUNDARY_DIR: /mnt/qc_tool_boundary/boundaries
     CASE_INSENSITIVE_USERNAMES: 'yes'
@@ -157,10 +163,10 @@ worker:
     repository: eeacms/copernicus-qctool-worker
     tag: '2.4.3'
     pullPolicy: IfNotPresent
+  inspireServiceUrl: http://localhost:8080/validator/v2/
   env:
     BOUNDARY_DIR: /mnt/qc_tool_boundary/boundaries
     INCOMING_DIR: /mnt/qc_tool_incoming/incoming
-    INSPIRE_SERVICE_URL: http://localhost:8080/validator/v2/
     WORK_DIR: /mnt/qc_tool_work/work
   extraEnv: {}
   pullJobUrl: ''
@@ -181,6 +187,8 @@ nextcloud:
   service:
     type: ClusterIP
     port: 80
+  publicUrl: ''
+  trustedDomains: ''
   env:
     PHP_MEMORY_LIMIT: 512M
   extraEnv: {}

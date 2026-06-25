@@ -36,7 +36,7 @@ spec:
               value: {{ .Values.timezone | quote }}
             - name: PULL_JOB_URL
               value: {{ include "qctool.workerPullJobUrl" . | quote }}
-            {{- $workerDefaults := dict "API_URL" (include "qctool.frontendApiUrl" .) }}
+            {{- $workerDefaults := dict "API_URL" (include "qctool.frontendApiUrl" .) "INSPIRE_SERVICE_URL" .Values.worker.inspireServiceUrl }}
             {{- $env := mergeOverwrite (deepCopy $workerDefaults) (deepCopy .Values.worker.env) .Values.worker.extraEnv }}
             {{- range $key := keys $env | sortAlpha }}
             - name: {{ $key }}

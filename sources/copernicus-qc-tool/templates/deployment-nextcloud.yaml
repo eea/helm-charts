@@ -54,7 +54,7 @@ spec:
               value: {{ include "qctool.redisServiceName" . | quote }}
             - name: REDIS_HOST_PORT
               value: {{ .Values.redis.service.port | quote }}
-            {{- $nextcloudDefaults := dict "NEXTCLOUD_TRUSTED_DOMAINS" .Values.ingress.nextcloud.host }}
+            {{- $nextcloudDefaults := dict "NEXTCLOUD_TRUSTED_DOMAINS" (include "qctool.nextcloudTrustedDomains" .) }}
             {{- $env := mergeOverwrite (deepCopy $nextcloudDefaults) (deepCopy .Values.nextcloud.env) .Values.nextcloud.extraEnv }}
             {{- range $key := keys $env | sortAlpha }}
             - name: {{ $key }}
