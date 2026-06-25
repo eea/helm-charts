@@ -4,6 +4,9 @@ metadata:
   name: {{ .Release.Name }}-mariadb-global.cnf
 
 data:
+  {{- if .Values.mariadb.config }}
+  {{ .Values.mariadb.config | toYaml | nindent 2 }}  
+  {{- else }}
   global.cnf: |-
     [mysqld]
     # Connection & timeout settings
@@ -27,3 +30,4 @@ data:
     # Query cache (disabled – correct for modern MariaDB)
     query_cache_size = 0
     query_cache_type = 0
+  {{- end }}
