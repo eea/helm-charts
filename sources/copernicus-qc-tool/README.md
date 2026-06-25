@@ -23,6 +23,9 @@ Required password values:
 - `postfix.mtpPass`
 ## Releases
 
+### Version 0.1.22 - 25 June 2026
+- fix [Dobricean Ioan Dorian - [`255c78aa`](https://github.com/eea/helm-charts/commit/255c78aab2f2b2c699766ddcaf010b7e23a6b969)]
+
 ### Version 0.1.21 - 25 June 2026
 - expose frontend, CSRF, worker INSPIRE, and Nextcloud URL settings as chart values [Codex]
 
