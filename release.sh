@@ -30,6 +30,9 @@ fi
 
 ../../increase_version_helm.sh
 
+export HELM_COMMIT_MESSAGE
+export HELM_VERSION_TYPE
+export HELM_UPGRADE_MESSAGE
 
 CI=true ../../update_docs.sh
 
