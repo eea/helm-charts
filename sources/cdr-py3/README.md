@@ -128,6 +128,9 @@ When `ldapMemcachedServers` is empty the env var is omitted entirely.
 
 ## Releases
 
+### Version 0.1.20 - 25 June 2026
+- Updated rn-local-converters to 0.1.12 [Olimpiu Rob - [`3bed6043`](https://github.com/eea/helm-charts/commit/3bed6043b95214aaf82ee33fce91b2d0c4db91a6)]
+
 ### Version 0.1.19 - 24 June 2026
 - Bumped rn-local-converters to 0.1.11 [Olimpiu Rob - [`5c0c3e51`](https://github.com/eea/helm-charts/commit/5c0c3e519288b608406c0932fee05a62008fbf15)]
 
