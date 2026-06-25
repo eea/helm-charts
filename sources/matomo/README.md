@@ -345,6 +345,9 @@ You don't need to change anything on this container, it should work by having th
 
 ## Releases
 
+### Version 3.15.1 - 25 June 2026
+- Add mariadb config in values [valentinab25 - [`ab922852`](https://github.com/eea/helm-charts/commit/ab92285260fa98d2cc96419348e41151708aa9fa)]
+
 ### Version 3.15.0 - 24 June 2026
 - Automated release of [eeacms/matomo:5.11.2](https://github.com/eea/eea.docker.matomo/releases) [EEA Jenkins - [`2fdb7d41`](https://github.com/eea/helm-charts/commit/2fdb7d418341cd0005de5883b400c6969c5c59e4)]
 
