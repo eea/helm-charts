@@ -23,6 +23,9 @@ Required password values:
 - `postfix.mtpPass`
 ## Releases
 
+### Version 0.1.24 - 25 June 2026
+- increase upload size [Dobricean Ioan Dorian - [`bd236237`](https://github.com/eea/helm-charts/commit/bd23623743fa1d94c0416313890c779e3ff255f4)]
+
 ### Version 0.1.23 - 25 June 2026
 - set NGINX ingress upload limit to 10g for frontend and Nextcloud
 
