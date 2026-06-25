@@ -345,6 +345,9 @@ You don't need to change anything on this container, it should work by having th
 
 ## Releases
 
+### Version 3.15.2 - 25 June 2026
+- Upgrade mariadb:10.11.18 [valentinab25 - [`bfb14d69`](https://github.com/eea/helm-charts/commit/bfb14d695cfd802236ebc4d3c9dfe9fa7ad503ba)]
+
 ### Version 3.15.1 - 25 June 2026
 - Add mariadb config in values [valentinab25 - [`ab922852`](https://github.com/eea/helm-charts/commit/ab92285260fa98d2cc96419348e41151708aa9fa)]
 
