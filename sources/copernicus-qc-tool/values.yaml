@@ -18,7 +18,8 @@ ingress:
     enabled: true
     className: nginx
     letsencrypt: '01dev-eea-letsencrypt'
-    annotations: {}
+    annotations:
+      nginx.ingress.kubernetes.io/proxy-body-size: 10g
     host: dev-qc-copernicus.01dev.eea.europa.eu
     tls: true
     certificate: dev-qc-copernicus.01dev.eea.europa.eu-tls
@@ -26,7 +27,8 @@ ingress:
     enabled: true
     className: nginx
     letsencrypt: '01dev-eea-letsencrypt'
-    annotations: {}
+    annotations:
+      nginx.ingress.kubernetes.io/proxy-body-size: 10g
     host: admin-qc-copernicus.eea.europa.eu
     tls: true
     certificate: admin-qc-copernicus.eea.europa.eu-tls
