@@ -1,5 +1,8 @@
 # Releases
 
+### Version 0.5.0 - 26 June 2026
+- Automated release of [eeacms/jenkins-slave-dind:29.6-1254](https://github.com/eea/eea.docker.jenkins.slave-dind/releases) [EEA Jenkins - [`03de933b`](https://github.com/eea/helm-charts/commit/03de933b19fb5c7a3daea071caad2cbb92530aab)]
+
 ### Version 0.4.0 - 15 January 2026
 - Automated release of [eeacms/jenkins-slave-dind:28.1-3.51-3](https://github.com/eea/eea.docker.jenkins.slave-dind/releases) [EEA Jenkins - [`5d3bf374`](https://github.com/eea/helm-charts/commit/5d3bf37498f7f94f31d54ebdd47e946a535ea654)]
 
