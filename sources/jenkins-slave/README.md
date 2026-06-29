@@ -1,5 +1,8 @@
 # Releases
 
+### Version 0.5.1 - 29 June 2026
+- Upgrade docker image to 29.6.1-dind-alpine3.24 [valentinab25 - [`9c080afd`](https://github.com/eea/helm-charts/commit/9c080afd540dd2f34319624f8efd76d60c74bb0e)]
+
 ### Version 0.5.0 - 26 June 2026
 - Automated release of [eeacms/jenkins-slave-dind:29.6-1254](https://github.com/eea/eea.docker.jenkins.slave-dind/releases) [EEA Jenkins - [`03de933b`](https://github.com/eea/helm-charts/commit/03de933b19fb5c7a3daea071caad2cbb92530aab)]
 
