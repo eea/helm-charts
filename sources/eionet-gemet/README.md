@@ -4,6 +4,9 @@ This chart is (almost) configured for production.
 
 ## Releases
 
+### Version 0.6.0 - 30 June 2026
+- Upgrade eeacms/gemet:2.2.3, use bitnamilegacy as a source [valentinab25 - [`30c05cd3`](https://github.com/eea/helm-charts/commit/30c05cd3bef7fb52f0c7b7f1dc9b098ee963f9ce)]
+
 ### Version 0.5.4 - 03 June 2026
 - Use nginx:1.31.1-alpine with configmap [valentinab25 - [`be56fcc1`](https://github.com/eea/helm-charts/commit/be56fcc18358c74e0d55b803f4104e77e78617c3)]
 
