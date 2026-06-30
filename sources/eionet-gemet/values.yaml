@@ -129,6 +129,8 @@ postgresql:
   primary:
     persistence:
       size: 2Gi
+  image:
+    repository: bitnamilegacy/postgresql
 
 mediaserver:
   securityContext: {}
