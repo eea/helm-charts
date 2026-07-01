@@ -72,6 +72,9 @@ When `autoscaling.engine` is set to `keda`, the chart will render the existing S
 
 ## Releases
 
+### Version 0.9.0 - 01 July 2026
+- Automated release of [eeacms/danswer:v3.2.1-eea.0.0.115](https://github.com/eea/danswer/releases) [EEA Jenkins - [`a9b4931a`](https://github.com/eea/helm-charts/commit/a9b4931a3bd909f2e865b9135f64cebfa5dbab93)]
+
 ### Version 0.8.0 - 01 July 2026
 - Automated release of [eeacms/danswer:v3.2.1-eea.0.0.114](https://github.com/eea/danswer/releases) [EEA Jenkins - [`cc7a0327`](https://github.com/eea/helm-charts/commit/cc7a03278a0b92136aaad1c358d4a86908553f3a)]
 
