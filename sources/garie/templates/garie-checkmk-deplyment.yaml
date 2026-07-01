@@ -29,7 +29,7 @@ spec:
           mountPath: /config    
       containers: 
         - name: garie-checkmk
-          image: eeacms/garie-checkmk:0.1.6
+          image: eeacms/garie-checkmk:0.1.7
           env:
             - name: HOST
               value: influxdb
