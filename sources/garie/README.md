@@ -69,6 +69,9 @@ We have the following services that should be exposed in ingress:
 
 # Releases
 
+### Version 0.0.35 - 01 July 2026
+- added safeguard for additional_hosts in checkmk plugin [Mihai Dobrescu - [`9931bcf8`](https://github.com/eea/helm-charts/commit/9931bcf8e94749ef3b249859ccf6c49e0edcaa39)]
+
 ### Version 0.0.34 - 01 July 2026
 - upgrade lighthouse deps version [Mihai Dobrescu - [`4d09c0ba`](https://github.com/eea/helm-charts/commit/4d09c0bafe293b9733719068ab59b1bdf6e537a7)]
 
