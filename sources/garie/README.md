@@ -69,6 +69,9 @@ We have the following services that should be exposed in ingress:
 
 # Releases
 
+### Version 0.0.33 - 01 July 2026
+- fix undefined concat in uptimerobot image [Mihai Dobrescu - [`b4632159`](https://github.com/eea/helm-charts/commit/b463215975639e021c053d4568119b62a48cd3cd)]
+
 ### Version 0.0.32 - 17 June 2026
 - upgrade appVersion [Mihai Dobrescu - [`fb3e021b`](https://github.com/eea/helm-charts/commit/fb3e021bea8a18a78519fe73c0f6b4a5988befe5)]
 
