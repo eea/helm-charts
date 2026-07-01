@@ -6,7 +6,7 @@ set -e
 if [[ $(pwd) == */sources/* ]] && [ -f ../../docs/index.yaml ]; then
        echo "Running update script from sources, will set it from pwd"
        chart=$(pwd)
-       chart=${chart#*sources/}
+       chart=${chart##*sources/}
        cd ../..
 else       
   chart="$1"
