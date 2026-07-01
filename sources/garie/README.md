@@ -69,6 +69,9 @@ We have the following services that should be exposed in ingress:
 
 # Releases
 
+### Version 0.0.34 - 01 July 2026
+- upgrade lighthouse deps version [Mihai Dobrescu - [`4d09c0ba`](https://github.com/eea/helm-charts/commit/4d09c0bafe293b9733719068ab59b1bdf6e537a7)]
+
 ### Version 0.0.33 - 01 July 2026
 - fix undefined concat in uptimerobot image [Mihai Dobrescu - [`b4632159`](https://github.com/eea/helm-charts/commit/b463215975639e021c053d4568119b62a48cd3cd)]
 
