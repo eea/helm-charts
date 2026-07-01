@@ -200,6 +200,47 @@ redmineMigrate:
     limits:
       memory: 1Gi
 
+redmineJobs:
+  enabled: false
+  replicas: 1
+  resources:
+    requests:
+      memory: 1Gi
+    limits:
+      memory: 2Gi
+  environment:
+    ACTIVE_JOB_QUEUE_ADAPTER: solid_queue
+    ASSETS_PRECOMPILE: "0"
+    ASSETS_PRECOMPILE_FORCE: "0"
+    CRON_IN_ASYNC_JOBS_ONLY: "1"
+    FAST_BOOT: "1"
+    MALLOC_ARENA_MAX: "2"
+    MOUNTED_ADDONS_ROOT: /addons/current
+    RAILS_MAX_THREADS: "2"
+    REDMINE_DB_POOL: "8"
+    REDMINE_PLUGINS_MIGRATE: "no"
+    REQUIRE_MOUNTED_ADDONS: "1"
+    RUN_DB_MIGRATE: "0"
+    RUNTIME_BUNDLE_INSTALL: "0"
+    RUNTIME_BUNDLE_LOCAL_INSTALL: "0"
+    START_CRON: "0"
+    START_SERVER: "0"
+    START_SOLID_QUEUE: "1"
+    TASKMAN_DEFAULT_MAILBOX_ENABLED: "0"
+    WAIT_FOR_DB_TABLES: solid_queue_jobs,solid_queue_recurring_tasks
+    WEB_CONCURRENCY: "1"
+  recurring:
+    enabled: true
+    config: ""
+  topologySpreadConstraints:
+    - maxSkew: 1
+      topologyKey: kubernetes.io/hostname
+      whenUnsatisfiable: ScheduleAnyway
+      labelSelector:
+        matchLabels:
+          app.kubernetes.io/name: taskman
+          component: redmine-jobs
+
 solidQueue:
   enabled: true
   scheduler:

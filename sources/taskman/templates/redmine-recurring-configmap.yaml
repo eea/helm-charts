@@ -1,5 +1,6 @@
-{{- if and .Values.solidQueue.enabled .Values.solidQueue.scheduler.enabled }}
-{{- $recurringConfig := .Values.solidQueue.scheduler.recurring.config | default (.Files.Get "files/recurring.yml") }}
+{{- $schedulerEnabled := and (hasKey .Values "solidQueue") (.Values.solidQueue.enabled) ((.Values.solidQueue.scheduler.enabled | default true)) }}
+{{- $legacyEnabled := and (hasKey .Values "redmineJobs") (.Values.redmineJobs.enabled) ((.Values.redmineJobs.recurring.enabled | default true)) }}
+{{- if $legacyEnabled }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -9,5 +10,16 @@ metadata:
     component: redmine-recurring
 data:
   recurring.yml: |
-{{- $recurringConfig | nindent 4 }}
+{{- .Values.redmineJobs.recurring.config | default (.Files.Get "files/recurring.yml") | nindent 4 }}
+{{- else if $schedulerEnabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-redmine-recurring-cm
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: redmine-recurring
+data:
+  recurring.yml: |
+{{- .Values.solidQueue.scheduler.recurring.config | default (.Files.Get "files/recurring.yml") | nindent 4 }}
 {{- end }}
