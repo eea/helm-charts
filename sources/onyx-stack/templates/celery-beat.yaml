@@ -59,6 +59,11 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- $initContainers := include "onyx.hfCache.initContainer" (dict "ctx" . "image" (printf "%s:%s" $backendRepo $backendTag)) }}
+      {{- if $initContainers }}
+      initContainers:
+        {{- $initContainers | nindent 8 }}
+      {{- end }}
       containers:
         - name: celery-beat
           securityContext:
@@ -82,19 +87,7 @@ spec:
                 name: {{ .Values.config.envConfigMapName }}
           env:
             {{- include "onyx.envSecrets" . | nindent 12}}
-          {{- if .Values.hfCache.enabled }}
-          volumeMounts:
-            - name: hf-cache
-              mountPath: {{ .Values.hfCache.mountPath }}
-            {{- with .Values.celery_beat.volumeMounts }}
-            {{- toYaml . | nindent 12 }}
-            {{- end }}
-          {{- else }}
-          {{- with .Values.celery_beat.volumeMounts }}
-          volumeMounts:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
-          {{- end }}
+          {{- include "onyx.renderVolumeMounts" (dict "ctx" . "volumeMounts" .Values.celery_beat.volumeMounts) | nindent 10 }}
           startupProbe:
             {{ .Values.celery_shared.startupProbe | toYaml | nindent 12}}
           readinessProbe:
@@ -117,20 +110,21 @@ spec:
                     python onyx/background/celery/celery_k8s_probe.py
                     --probe liveness
                     --filename /tmp/onyx_k8s_beat_liveness.txt
-      {{- if or .Values.hfCache.enabled .Values.celery_beat.volumes }}
       volumes:
         {{- if .Values.hfCache.enabled }}
         - name: hf-cache
           emptyDir: {}
         {{- end }}
-        {{- if .Values.celery_beat.volumes }}
+        {{- if .Values.tiktokenCache.enabled }}
+        - name: tiktoken-cache
+          emptyDir: {}
+        {{- end }}
         {{- range .Values.celery_beat.volumes }}
         {{- if ne .name "data" }}
         - name: {{ .name }}
           {{- if .emptyDir }}
           emptyDir: {{- toYaml .emptyDir | nindent 12 }}
           {{- end }}
-        {{- end }}
         {{- end }}
         {{- end }}
         - name: data
@@ -140,5 +134,4 @@ spec:
           {{- else }}
           emptyDir: {}
           {{- end }}
-      {{- end }}
 {{- end }}

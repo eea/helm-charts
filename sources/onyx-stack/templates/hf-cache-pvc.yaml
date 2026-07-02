@@ -1,4 +1,4 @@
-{{- if .Values.hfCache.enabled }}
+{{- if and .Values.hfCache.enabled .Values.hfCache.pvc.enabled }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:

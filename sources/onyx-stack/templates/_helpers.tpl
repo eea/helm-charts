@@ -123,8 +123,18 @@ checksum/pginto: {{ include (print $.Template.BasePath "/tooling-pginto-configma
 {{- define "onyx.renderVolumeMounts" -}}
 {{- $pginto := include "onyx.pgInto.volumeMount" .ctx -}}
 {{- $existing := .volumeMounts -}}
-{{- if or $pginto $existing -}}
+{{- $hfEnabled := .ctx.Values.hfCache.enabled -}}
+{{- $ttEnabled := .ctx.Values.tiktokenCache.enabled -}}
+{{- if or $pginto $existing $hfEnabled $ttEnabled -}}
 volumeMounts:
+{{- if $hfEnabled }}
+  - name: hf-cache
+    mountPath: {{ .ctx.Values.hfCache.mountPath }}
+{{- end }}
+{{- if $ttEnabled }}
+  - name: tiktoken-cache
+    mountPath: {{ .ctx.Values.tiktokenCache.mountPath }}
+{{- end }}
 {{- if $pginto }}
 {{ $pginto | nindent 2 }}
 {{- end }}
@@ -137,8 +147,18 @@ volumeMounts:
 {{- define "onyx.renderVolumes" -}}
 {{- $pginto := include "onyx.pgInto.volume" .ctx -}}
 {{- $existing := .volumes -}}
-{{- if or $pginto $existing -}}
+{{- $hfEnabled := .ctx.Values.hfCache.enabled -}}
+{{- $ttEnabled := .ctx.Values.tiktokenCache.enabled -}}
+{{- if or $pginto $existing $hfEnabled $ttEnabled -}}
 volumes:
+{{- if $hfEnabled }}
+  - name: hf-cache
+    emptyDir: {}
+{{- end }}
+{{- if $ttEnabled }}
+  - name: tiktoken-cache
+    emptyDir: {}
+{{- end }}
 {{- if $pginto }}
 {{ $pginto | nindent 2 }}
 {{- end }}
@@ -146,6 +166,56 @@ volumes:
 {{ toYaml $existing | nindent 2 }}
 {{- end }}
 {{- end -}}
+{{- end }}
+
+{{/*
+HF + tiktoken cache init container — copies baked-in model data from the image into
+emptyDirs before the main container starts. Both volumes are mounted at temporary paths
+so the image's own baked-in content stays visible to the init container.
+Call with: (dict "ctx" . "image" "<repo>:<tag>")
+*/}}
+{{- define "onyx.hfCache.initContainer" -}}
+{{- $hfEnabled := .ctx.Values.hfCache.enabled -}}
+{{- $ttEnabled := .ctx.Values.tiktokenCache.enabled -}}
+{{- if or $hfEnabled $ttEnabled }}
+- name: hf-cache-init
+  image: "{{ .image }}"
+  imagePullPolicy: {{ .ctx.Values.global.pullPolicy }}
+  command:
+    - /bin/sh
+    - -c
+    - |
+      {{- if $hfEnabled }}
+      cp -r {{ .ctx.Values.hfCache.mountPath }}/. /hf-cache-target
+      {{- end }}
+      {{- if $ttEnabled }}
+      cp -r {{ .ctx.Values.tiktokenCache.mountPath }}/. /tiktoken-cache-target
+      {{- end }}
+      echo "Cache seeded"
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 1000
+    readOnlyRootFilesystem: true
+    privileged: false
+    capabilities:
+      drop: [ALL]
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 1Gi
+  volumeMounts:
+    {{- if $hfEnabled }}
+    - name: hf-cache
+      mountPath: /hf-cache-target
+    {{- end }}
+    {{- if $ttEnabled }}
+    - name: tiktoken-cache
+      mountPath: /tiktoken-cache-target
+    {{- end }}
+{{- end }}
 {{- end }}
 
 {{/*

@@ -65,6 +65,11 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- $initContainers := include "onyx.hfCache.initContainer" (dict "ctx" . "image" (printf "%s:%s" $backendRepo $backendTag)) }}
+      {{- if $initContainers }}
+      initContainers:
+        {{- $initContainers | nindent 8 }}
+      {{- end }}
       containers:
         - name: api-server
           securityContext:
@@ -104,30 +109,6 @@ spec:
                 name: {{ .Values.config.envConfigMapName }}
           env:
             {{- include "onyx.envSecrets" . | nindent 12}}
-          {{- if .Values.hfCache.enabled }}
-          volumeMounts:
-            - name: hf-cache
-              mountPath: {{ .Values.hfCache.mountPath }}
-            {{- with .Values.api.volumeMounts }}
-            {{- toYaml . | nindent 12 }}
-            {{- end }}
-          {{- else }}
-          {{- $apiVolumeMounts := include "onyx.renderVolumeMounts" (dict "ctx" . "volumeMounts" .Values.api.volumeMounts) }}
-          {{- if $apiVolumeMounts }}
-          {{- $apiVolumeMounts | nindent 10 }}
-          {{- end }}
-          {{- end }}
-      {{- if .Values.hfCache.enabled }}
-      volumes:
-        - name: hf-cache
-          emptyDir: {}
-        {{- with .Values.api.volumes }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
-      {{- else }}
-      {{- $apiVolumes := include "onyx.renderVolumes" (dict "ctx" . "volumes" .Values.api.volumes) }}
-      {{- if $apiVolumes }}
-      {{- $apiVolumes | nindent 6 }}
-      {{- end }}
-      {{- end }}
+          {{- include "onyx.renderVolumeMounts" (dict "ctx" . "volumeMounts" .Values.api.volumeMounts) | nindent 10 }}
+      {{- include "onyx.renderVolumes" (dict "ctx" . "volumes" .Values.api.volumes) | nindent 6 }}
 {{- end }}

@@ -61,6 +61,11 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- $initContainers := include "onyx.hfCache.initContainer" (dict "ctx" . "image" (printf "%s:%s" $backendRepo $backendTag)) }}
+      {{- if $initContainers }}
+      initContainers:
+        {{- $initContainers | nindent 8 }}
+      {{- end }}
       containers:
         - name: celery-worker-user-file-processing
           securityContext:
@@ -85,19 +90,7 @@ spec:
                 name: {{ .Values.config.envConfigMapName }}
           env:
             {{- include "onyx.envSecrets" . | nindent 12}}
-          {{- if .Values.hfCache.enabled }}
-          volumeMounts:
-            - name: hf-cache
-              mountPath: {{ .Values.hfCache.mountPath }}
-            {{- with .Values.celery_worker_user_file_processing.volumeMounts }}
-            {{- toYaml . | nindent 12 }}
-            {{- end }}
-          {{- else }}
-          {{- with .Values.celery_worker_user_file_processing.volumeMounts }}
-          volumeMounts:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
-          {{- end }}
+          {{- include "onyx.renderVolumeMounts" (dict "ctx" . "volumeMounts" .Values.celery_worker_user_file_processing.volumeMounts) | nindent 10 }}
           startupProbe:
             {{ .Values.celery_shared.startupProbe | toYaml | nindent 12}}
           readinessProbe:
@@ -120,17 +113,5 @@ spec:
                     python onyx/background/celery/celery_k8s_probe.py
                     --probe liveness
                     --filename /tmp/onyx_k8s_userfileprocessing_liveness.txt
-      {{- if .Values.hfCache.enabled }}
-      volumes:
-        - name: hf-cache
-          emptyDir: {}
-        {{- with .Values.celery_worker_user_file_processing.volumes }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
-      {{- else }}
-      {{- with .Values.celery_worker_user_file_processing.volumes }}
-      volumes:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- end }}
+      {{- include "onyx.renderVolumes" (dict "ctx" . "volumes" .Values.celery_worker_user_file_processing.volumes) | nindent 6 }}
 {{- end }}

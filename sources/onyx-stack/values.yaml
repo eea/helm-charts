@@ -1919,15 +1919,28 @@ networkPolicy:
     allowFrom: []
 
 # Optional shared HuggingFace cache volume (opt-in)
+tiktokenCache:
+  # Each pod gets its own emptyDir seeded alongside hfCache by the same init container.
+  enabled: true
+  mountPath: "/usr/share/tiktoken_cache"
+
 hfCache:
-  enabled: false
+  # Each pod gets its own emptyDir seeded by an init container that copies
+  # the baked-in model data from the image. No shared PVC required.
+  enabled: true
+  mountPath: "/usr/share/huggingface"
+  # pvc: optional shared RWX PVC for environments with NFS storage (e.g. dev).
+  # When enabled, pods mount the PVC instead of an emptyDir.
+  # Disable for prod/emptyDir deployments.
   pvc:
+    enabled: false
     name: "onyx-hf-cache"
     storageClass: ""
     size: "20Gi"
     accessModes:
       - ReadWriteMany
-  mountPath: "/usr/share/huggingface"
+  # seedJob is only useful when a shared RWX PVC is available (e.g. NFS on dev).
+  # Leave disabled for prod/emptyDir deployments.
   seedJob:
     enabled: false
     backoffLimit: 1
