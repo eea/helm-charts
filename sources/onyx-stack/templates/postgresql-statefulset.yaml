@@ -64,6 +64,10 @@ spec:
               value: {{ .Values.postgresql.simple.database | default "onyx" }}
             - name: PGDATA
               value: /var/lib/postgresql/data/pgdata
+          {{- with .Values.postgresql.simple.args }}
+          args:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           volumeMounts:
             - name: postgresql-data
               mountPath: /var/lib/postgresql/data

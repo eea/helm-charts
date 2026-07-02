@@ -61,6 +61,10 @@ postgresql:
     securityContext:
       runAsNonRoot: false
       runAsUser: 999
+    # Extra arguments passed to the postgres process
+    args:
+      - -c
+      - max_connections=500
   # Database initialization configuration
   # Creates additional databases and users on PostgreSQL startup
   initdb:

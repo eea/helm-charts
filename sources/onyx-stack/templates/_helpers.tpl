@@ -185,11 +185,12 @@ Call with: (dict "ctx" . "image" "<repo>:<tag>")
     - /bin/sh
     - -c
     - |
+      set -e
       {{- if $hfEnabled }}
       cp -r {{ .ctx.Values.hfCache.mountPath }}/. /hf-cache-target
       {{- end }}
       {{- if $ttEnabled }}
-      cp -r {{ .ctx.Values.tiktokenCache.mountPath }}/. /tiktoken-cache-target
+      [ -d {{ .ctx.Values.tiktokenCache.mountPath }} ] && cp -r {{ .ctx.Values.tiktokenCache.mountPath }}/. /tiktoken-cache-target || echo "tiktoken cache not found in image, skipping"
       {{- end }}
       echo "Cache seeded"
   securityContext:
