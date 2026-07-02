@@ -69,6 +69,9 @@ We have the following services that should be exposed in ingress:
 
 # Releases
 
+### Version 0.0.36 - 02 July 2026
+- updated sentry-metrics plugin with matomo token as header instead of get param [Mihai Dobrescu - [`3a09630a`](https://github.com/eea/helm-charts/commit/3a09630a4a8c76f581aaae47322db07f4c6f3337)]
+
 ### Version 0.0.35 - 01 July 2026
 - added safeguard for additional_hosts in checkmk plugin [Mihai Dobrescu - [`9931bcf8`](https://github.com/eea/helm-charts/commit/9931bcf8e94749ef3b249859ccf6c49e0edcaa39)]
 
