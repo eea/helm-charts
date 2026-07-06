@@ -268,6 +268,9 @@ helm delete llm-toolkit
 
 ## Releases
 
+### Version 0.3.2 - 06 July 2026
+- Upgraded appVersion to 3.205.1 and LiteLLM to v1.91.0; lowered default numWorkers to 4 [Silviu - [`bc391bf0`](https://github.com/eea/helm-charts/commit/bc391bf00c75ba09374a855364ec60fd118ea768)]
+
 ### Version 0.3.1 - 18 May 2026
 - litellm: replace args with command to avoid security profile violations while keeping num_workers configurable [Silviu - [`b6f4f4b6`](https://github.com/eea/helm-charts/commit/b6f4f4b66937e7aadd9cc1192666c33ddc081d1a)]
 
