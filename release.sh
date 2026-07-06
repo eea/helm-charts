@@ -26,7 +26,7 @@ export    HELM_VERSION_TYPE="MAJOR"
 
 fi
 
-
+unset CI
 
 ../../increase_version_helm.sh
 
