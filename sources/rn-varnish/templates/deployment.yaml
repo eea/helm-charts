@@ -70,6 +70,10 @@ spec:
             - name: VARNISH_BERESP_TTL
               value: "{{- toYaml . }}"
             {{- end }}
+            {{- with .Values.varnishStaticTTL }}
+            - name: VARNISH_STATIC_TTL
+              value: "{{- toYaml . }}"
+            {{- end }}
             {{- with .Values.varnishBERESPGrace }}
             - name: VARNISH_BERESP_GRACE
               value: "{{- toYaml . }}"

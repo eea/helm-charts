@@ -16,6 +16,7 @@ Varnish for Reportek.
 - `varnishBackendPort` - Port of the backend.
 - `varnishDNSTTL` - TTL for DNS.
 - `varnishBERESPTTL` - TTL for BERESP.
+- `varnishStaticTTL` - TTL for STATIC. Default 6h.
 - `varnishBERESPGrace` - Grace period for BERESP.
 - `varnishBERESPKeep` - Keep period for BERESP.
 - `networkPolicy.enabled` - Enable network policy. Defaults to false.
