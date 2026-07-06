@@ -24,7 +24,7 @@ spec:
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
       initContainers:
       - name: esbootstrap-data-config
-        image: eeacms/esbootstrap-configs:v3.0.121 
+        image: eeacms/esbootstrap-configs:v3.0.129
         imagePullPolicy: {{ .Values.esbootstrap.image.pullPolicy }}
         env:
         - name: github_repo
