@@ -69,6 +69,9 @@ We have the following services that should be exposed in ingress:
 
 # Releases
 
+### Version 0.0.38 - 06 July 2026
+- replace abort controller with promise race in checkmk [Mihai Dobrescu - [`b7e3801b`](https://github.com/eea/helm-charts/commit/b7e3801b6e39f14ea8ef6cbbd0c6458439025249)]
+
 ### Version 0.0.37 - 06 July 2026
 - add timeout for service host lookup in checkmk [Mihai Dobrescu - [`59f25388`](https://github.com/eea/helm-charts/commit/59f2538820d5767297b5abab9bf5e263031e49ed)]
 
