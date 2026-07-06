@@ -81,6 +81,9 @@ rn-varnish: # Assuming you named your rn-varnish subchart "rn-varnish"
 
 ## Releases
 
+### Version 0.6.1 - 06 July 2026
+- Added varnishStaticTTL env [Olimpiu Rob - [`0d057e1f`](https://github.com/eea/helm-charts/commit/0d057e1fe4970ba3e099d9e8c2db04641066d29b)]
+
 ### Version 0.6.0 - 06 July 2026
 - Automated release of [eeacms/reportek-varnish:8.0-1.1](https://github.com/eea/eea.docker.varnish-reportek/releases) [EEA Jenkins - [`85206d91`](https://github.com/eea/helm-charts/commit/85206d91a89be654e581108b9ac22be33f880a94)]
 
