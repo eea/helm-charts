@@ -128,6 +128,9 @@ When `ldapMemcachedServers` is empty the env var is omitted entirely.
 
 ## Releases
 
+### Version 0.1.26 - 06 July 2026
+- Release of dependent chart rn-varnish:0.6.0 [EEA Jenkins - [`d927293d`](https://github.com/eea/helm-charts/commit/d927293d402286823b59a4a4201e1993a5483299)]
+
 ### Version 0.1.25 - 04 July 2026
 - Updated appVersion to z5-1.24 [Olimpiu Rob - [`e19049ff`](https://github.com/eea/helm-charts/commit/e19049ff2e6e3d4e6c3852ba27941f40d87fc8d4)]
 
