@@ -3,6 +3,9 @@
 
 ## Releases
 
+### Version 0.1.5 - 06 July 2026
+- Automated release of [eeacms/esbootstrap-configs:v3.0.129](https://github.com/eea/eea.esbootstrap.configs/releases) [EEA Jenkins - [`9fb95dc0`](https://github.com/eea/helm-charts/commit/9fb95dc01b3802cd7bd36b419ff2b9981ac5e757)]
+
 ### Version 0.1.4 - 24 June 2026
 - Fix directory name in command [valentinab25 - [`8c42cf3b`](https://github.com/eea/helm-charts/commit/8c42cf3bc627594c454d9b62c376fb7598f403d4)]
 
