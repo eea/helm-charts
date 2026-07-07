@@ -192,7 +192,7 @@ questions:
     group: "Kibana Configuration"
     show_if: "kibana.enabled=true"
 
-  - variable: "kibana.service.Type"
+  - variable: "kibana.service.type"
     label: "Kibana service type"
     description: "Choose NodePort if you don't want to use ingress to connect to kibana"
     type: "enum"
@@ -248,7 +248,7 @@ questions:
     default: "1536m"
     group: "Data Nodes"
 
-  - variable: "esworker.resources.requests.memory"
+  - variable: "esworker.resources.limits.memory"
     type: "string"
     required: true
     label: "Memory limit (data nodes)"
@@ -309,7 +309,7 @@ questions:
     group: "Cerebro Configuration"
     show_if: "cerebro.enabled"
 
-  - variable: "cerebro.service.Type"
+  - variable: "cerebro.service.type"
     label: "Cerebro service type"
     description: "Choose NodePort if you don't want to use ingress to connect to cerebro"
     type: "enum"
@@ -492,7 +492,7 @@ questions:
       
 
 
-  - variable: "cerebro.service.Type"
+  - variable: "cerebro.service.type"
     label: "Cerebro service type"
     description: "Choose NodePort if you don't want to use ingress to connect to cerebro"
     type: "enum"
@@ -512,7 +512,7 @@ questions:
     required: true
     group: "Elasticsearch Configuration"
 
-  - variable: "esmaster.clientService.Type"
+  - variable: "esmaster.clientService.type"
     label: "Elastic Master 9200 service type"
     description: "Choose NodePort to expose the port"
     type: "enum"

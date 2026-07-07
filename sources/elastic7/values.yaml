@@ -283,10 +283,6 @@ kibana:
   requestTimeout: "300000"
   # Heap size kibana - used for NodeJs --max-old-space-size setting
   spaceSize: "1024"
-  # Memory reservation for kibana container
-  memReservation: "1024Mi"
-  # Memory limit for kibana container
-  memLimit: "2048Mi"
   # Use ClusterIP if you don't want the Kibana web interface exposed on the server
   service:
     type: ClusterIP
