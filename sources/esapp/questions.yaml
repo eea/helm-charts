@@ -15,7 +15,6 @@ questions:
     required: true
     group: "General"
 
-
   - variable: "esapp.env.APP_CONFIG_DIRNAME"
     label: "ESAPP DIRNAME"
     type: "enum"
@@ -38,6 +37,11 @@ questions:
     type: "string"
     group: "Configuration"
 
+  - variable: "esapp.env.elastic_host"
+    label: "ElasticSearch 9200 service name"
+    required: true
+    type: "string"
+    group: "Configuration"
 
   - variable: "esapp.env.elastic_rwuser"
     label: "ElasticSearch Write User"
