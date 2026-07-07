@@ -23,6 +23,15 @@ spec:
         target:
           type: Utilization
           averageUtilization: {{ .Values.sentry.web.autoscaling.targetCPUUtilizationPercentage }}
+    {{- if .Values.sentry.web.autoscaling.targetMemoryUtilizationPercentage }}
+    - type: ContainerResource
+      containerResource:
+        container: {{ .Chart.Name }}-web
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.sentry.web.autoscaling.targetMemoryUtilizationPercentage }}
+    {{- end }}
   {{- else }}
   metrics:
     - type: Resource
@@ -31,6 +40,14 @@ spec:
         target:
           type: Utilization
           averageUtilization: {{ .Values.sentry.web.autoscaling.targetCPUUtilizationPercentage }}
+    {{- if .Values.sentry.web.autoscaling.targetMemoryUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.sentry.web.autoscaling.targetMemoryUtilizationPercentage }}
+    {{- end }}
   {{- end }}
   {{- if eq (include "sentry.autoscaling.apiVersion" .) "autoscaling/v2" }}
   {{- with .Values.sentry.web.autoscaling.behavior }}

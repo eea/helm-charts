@@ -6,7 +6,7 @@ metadata:
   labels:
     {{- include "sentry.component.labels" (dict "component" "nginx" "ctx" .) | nindent 4 }}
 data:
-  server-block.conf: |
+  server-config.conf: |
     {{ if .Values.relay.enabled }}
     upstream relay {
       server {{ template "sentry.fullname" . }}-relay:{{ template "relay.port" }};
@@ -18,9 +18,9 @@ data:
     }
 
     server {
-      listen {{ template "nginx.port" }};
+      listen 80;
       {{- if .Values.ipv6 }}
-      listen [::]:{{ template "nginx.port" }};
+      listen [::]:80;
       {{- end }}
 
       proxy_redirect off;

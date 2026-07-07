@@ -24,6 +24,15 @@ spec:
         target:
           type: Utilization
           averageUtilization: {{ .Values.vroom.autoscaling.targetCPUUtilizationPercentage }}
+    {{- if .Values.vroom.autoscaling.targetMemoryUtilizationPercentage }}
+    - type: ContainerResource
+      containerResource:
+        container: {{ .Chart.Name }}-vroom
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.vroom.autoscaling.targetMemoryUtilizationPercentage }}
+    {{- end }}
   {{- else }}
   metrics:
     - type: Resource
@@ -32,6 +41,14 @@ spec:
         target:
           type: Utilization
           averageUtilization: {{ .Values.vroom.autoscaling.targetCPUUtilizationPercentage }}
+    {{- if .Values.vroom.autoscaling.targetMemoryUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.vroom.autoscaling.targetMemoryUtilizationPercentage }}
+    {{- end }}
   {{- end }}
   {{- if eq (include "sentry.autoscaling.apiVersion" .) "autoscaling/v2" }}
   {{- with .Values.vroom.autoscaling.behavior }}

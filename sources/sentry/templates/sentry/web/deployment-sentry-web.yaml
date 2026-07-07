@@ -76,6 +76,8 @@ spec:
       securityContext:
 {{ toYaml .Values.sentry.web.securityContext | indent 8 }}
       {{- end }}
+      initContainers:
+{{ include "sentry.initContainer.nodestore-s3" . | indent 6 }}
       containers:
       - name: {{ .Chart.Name }}-web
         image: "{{ template "sentry.image" . }}"
@@ -99,7 +101,10 @@ spec:
         ports:
         - containerPort: {{ template "sentry.port" }}
         env:
+        - name: UWSGI_MAX_FD
+          value: {{ .Values.sentry.web.uwsgiMaxFd|quote }}
 {{ include "sentry.env" . | indent 8 }}
+{{ include "sentry.env.nodestore-s3" . | indent 8 }}
         {{ if .Values.sentry.web.customCA }}
         - name: REQUESTS_CA_BUNDLE
           value: /etc/pki/ca-trust/custom/{{ default "ca.crt" .Values.sentry.web.customCA.item }}
@@ -118,12 +123,14 @@ spec:
           readOnly: true
         - mountPath: {{ .Values.filestore.filesystem.path }}
           name: sentry-data
+{{ include "sentry.volumeMount.replay-filesystem" . | indent 8 }}
+{{ include "sentry.volumeMount.nodestore-s3" . | indent 8 }}
         {{- if and .Values.geodata.volumeName .Values.geodata.accountID }}
         - name: {{ .Values.geodata.volumeName }}
           mountPath: {{ .Values.geodata.mountPath }}
           readOnly: true
         {{- end }}
-        {{- if and (eq .Values.filestore.backend "gcs") .Values.filestore.gcs.secretName }}
+        {{- if include "sentry.gcs.secretName" . }}
         - name: sentry-google-cloud-key
           mountPath: /var/run/secrets/google
         {{ end }}
@@ -134,26 +141,29 @@ spec:
 {{- if .Values.sentry.web.volumeMounts }}
 {{ toYaml .Values.sentry.web.volumeMounts | indent 8 }}
 {{- end }}
+{{- if .Values.global.volumeMounts }}
+{{ toYaml .Values.global.volumeMounts | indent 8 }}
+{{- end }}
         livenessProbe:
-          failureThreshold: {{ .Values.sentry.web.probeFailureThreshold }}
+          failureThreshold: {{ .Values.sentry.web.livenessProbe.failureThreshold }}
           httpGet:
             path: {{ template "sentry.healthCheck.requestPath" }}
             port: {{ template "sentry.port" }}
             scheme: HTTP
-          initialDelaySeconds: {{ .Values.sentry.web.probeInitialDelaySeconds }}
-          periodSeconds: {{ .Values.sentry.web.probePeriodSeconds }}
-          successThreshold: {{ .Values.sentry.web.probeSuccessThreshold }}
-          timeoutSeconds: {{ .Values.sentry.web.probeTimeoutSeconds }}
+          initialDelaySeconds: {{ .Values.sentry.web.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.sentry.web.livenessProbe.periodSeconds }}
+          successThreshold: {{ .Values.sentry.web.livenessProbe.successThreshold }}
+          timeoutSeconds: {{ .Values.sentry.web.livenessProbe.timeoutSeconds }}
         readinessProbe:
-          failureThreshold: {{ .Values.sentry.web.probeFailureThreshold }}
+          failureThreshold: {{ .Values.sentry.web.readinessProbe.failureThreshold }}
           httpGet:
             path: {{ template "sentry.healthCheck.requestPath" }}
             port: {{ template "sentry.port" }}
             scheme: HTTP
-          initialDelaySeconds: {{ .Values.sentry.web.probeInitialDelaySeconds }}
-          periodSeconds: {{ .Values.sentry.web.probePeriodSeconds }}
-          successThreshold: {{ .Values.sentry.web.probeSuccessThreshold }}
-          timeoutSeconds: {{ .Values.sentry.web.probeTimeoutSeconds }}
+          initialDelaySeconds: {{ .Values.sentry.web.readinessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.sentry.web.readinessProbe.periodSeconds }}
+          successThreshold: {{ .Values.sentry.web.readinessProbe.successThreshold }}
+          timeoutSeconds: {{ .Values.sentry.web.readinessProbe.timeoutSeconds }}
         resources:
 {{ toYaml .Values.sentry.web.resources | indent 12 }}
 {{- if .Values.sentry.web.containerSecurityContext }}
@@ -173,6 +183,7 @@ spec:
       - name: config
         configMap:
           name: {{ template "sentry.fullname" . }}-sentry
+{{ include "sentry.volume.nodestore-s3" . | indent 6 }}
       - name: sentry-data
       {{- if and (eq .Values.filestore.backend "filesystem") .Values.filestore.filesystem.persistence.enabled }}
       {{- if .Values.filestore.filesystem.persistence.existingClaim }}
@@ -185,10 +196,11 @@ spec:
       {{- else }}
         emptyDir: {}
       {{ end }}
-      {{- if and (eq .Values.filestore.backend "gcs") .Values.filestore.gcs.secretName }}
+{{ include "sentry.volume.replay-filesystem" . | indent 6 }}
+      {{- if include "sentry.gcs.secretName" . }}
       - name: sentry-google-cloud-key
         secret:
-          secretName: {{ .Values.filestore.gcs.secretName }}
+          secretName: {{ include "sentry.gcs.secretName" . }}
       {{ end }}
       {{- if .Values.sentry.web.customCA }}
       - name: custom-ca

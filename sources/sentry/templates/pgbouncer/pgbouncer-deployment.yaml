@@ -47,13 +47,34 @@ spec:
           - containerPort: 5432
             name: pgbouncer
             protocol: TCP
+{{- if or .Values.pgbouncer.volumeMounts .Values.global.volumeMounts }}
+        volumeMounts:
+{{- end }}
+{{- if .Values.pgbouncer.volumeMounts }}
+{{ toYaml .Values.pgbouncer.volumeMounts | indent 8 }}
+{{- end }}
+{{- if .Values.global.volumeMounts }}
+{{ toYaml .Values.global.volumeMounts | indent 8 }}
+{{- end }}
+{{- if .Values.pgbouncer.sidecars }}
+{{ toYaml .Values.pgbouncer.sidecars | indent 6 }}
+{{- end }}
+{{- if .Values.global.sidecars }}
+{{ toYaml .Values.global.sidecars | indent 6 }}
+{{- end }}
       {{- if .Values.pgbouncer.nodeSelector }}
       nodeSelector:
         {{ toYaml .Values.pgbouncer.nodeSelector | nindent 8 }}
+      {{- else if .Values.global.nodeSelector }}
+      nodeSelector:
+        {{ toYaml .Values.global.nodeSelector | nindent 8 }}
       {{- end }}
       {{- if .Values.pgbouncer.tolerations }}
       tolerations:
         {{ toYaml .Values.pgbouncer.tolerations | nindent 8 }}
+      {{- else if .Values.global.tolerations }}
+      tolerations:
+        {{ toYaml .Values.global.tolerations | nindent 8 }}
       {{- end }}
       {{- if .Values.pgbouncer.affinity }}
       affinity:
@@ -67,4 +88,13 @@ spec:
       priorityClassName: "{{ .Values.pgbouncer.priorityClassName }}"
       {{- end }}
       terminationGracePeriodSeconds: 10
+{{- if or .Values.pgbouncer.volumes .Values.global.volumes }}
+      volumes:
+{{- end }}
+{{- if .Values.pgbouncer.volumes }}
+{{ toYaml .Values.pgbouncer.volumes | indent 6 }}
+{{- end }}
+{{- if .Values.global.volumes }}
+{{ toYaml .Values.global.volumes | indent 6 }}
+{{- end }}
 {{- end }}

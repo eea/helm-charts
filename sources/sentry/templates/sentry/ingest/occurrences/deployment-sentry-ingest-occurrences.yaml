@@ -83,6 +83,8 @@ spec:
       securityContext:
 {{ toYaml .Values.sentry.ingestOccurrences.securityContext | indent 8 }}
       {{- end }}
+      initContainers:
+{{ include "sentry.initContainer.nodestore-s3" . | indent 6 }}
       containers:
       - name: {{ .Chart.Name }}-ingest-occurrences
         image: "{{ template "sentry.image" . }}"
@@ -101,23 +103,34 @@ spec:
           {{- if .Values.sentry.ingestOccurrences.noStrictOffsetReset }}
           - "--no-strict-offset-reset"
           {{- end }}
-          {{- if .Values.sentry.ingestOccurrences.livenessProbe.enabled }}
           - "--healthcheck-file-path"
           - "/tmp/health.txt"
+          {{- if or .Values.sentry.ingestOccurrences.concurrency .Values.sentry.ingestOccurrences.inputBlockSize .Values.sentry.ingestOccurrences.maxBatchSize .Values.sentry.ingestOccurrences.maxBatchTimeMs }}
+          - "--"
           {{- end }}
-        {{- if .Values.sentry.ingestOccurrences.livenessProbe.enabled }}
-        livenessProbe:
-          exec:
-            command:
-              - rm
-              - /tmp/health.txt
-          initialDelaySeconds: {{ .Values.sentry.ingestOccurrences.livenessProbe.initialDelaySeconds }}
-          periodSeconds: {{ .Values.sentry.ingestOccurrences.livenessProbe.periodSeconds }}
-        {{- end }}
+          {{- if .Values.sentry.ingestOccurrences.concurrency }}
+          - "--processes"
+          - "{{ .Values.sentry.ingestOccurrences.concurrency }}"
+          {{- end }}
+          {{- if .Values.sentry.ingestOccurrences.inputBlockSize }}
+          - "--input-block-size"
+          - "{{ .Values.sentry.ingestOccurrences.inputBlockSize }}"
+          {{- end }}
+          {{- if .Values.sentry.ingestOccurrences.maxBatchSize }}
+          - "--max-batch-size"
+          - "{{ .Values.sentry.ingestOccurrences.maxBatchSize }}"
+          {{- end }}
+          {{- if .Values.sentry.ingestOccurrences.maxBatchTimeMs }}
+          - "--max-batch-time-ms"
+          - "{{ .Values.sentry.ingestOccurrences.maxBatchTimeMs }}"
+          {{- end }}
+        {{- include "sentry.startupProbe.execHealthcheckFile" (dict "startupProbe" .Values.sentry.ingestOccurrences.startupProbe "healthcheckFile" "/tmp/health.txt") | nindent 8 }}
+        {{- include "sentry.livenessProbe.execHealthcheckFile" (dict "livenessProbe" .Values.sentry.ingestOccurrences.livenessProbe "healthcheckFile" "/tmp/health.txt") | nindent 8 }}
         env:
         - name: C_FORCE_ROOT
           value: "true"
 {{ include "sentry.env" . | indent 8 }}
+{{ include "sentry.env.nodestore-s3" . | indent 8 }}
 {{- if .Values.sentry.ingestOccurrences.env }}
 {{ toYaml .Values.sentry.ingestOccurrences.env | indent 8 }}
 {{- end }}
@@ -127,12 +140,17 @@ spec:
           readOnly: true
         - mountPath: {{ .Values.filestore.filesystem.path }}
           name: sentry-data
-        {{- if and (eq .Values.filestore.backend "gcs") .Values.filestore.gcs.secretName }}
+{{ include "sentry.volumeMount.replay-filesystem" . | indent 8 }}
+{{ include "sentry.volumeMount.nodestore-s3" . | indent 8 }}
+        {{- if include "sentry.gcs.secretName" . }}
         - name: sentry-google-cloud-key
           mountPath: /var/run/secrets/google
         {{ end }}
 {{- if .Values.sentry.ingestOccurrences.volumeMounts }}
 {{ toYaml .Values.sentry.ingestOccurrences.volumeMounts | indent 8 }}
+{{- end }}
+{{- if .Values.global.volumeMounts }}
+{{ toYaml .Values.global.volumeMounts | indent 8 }}
 {{- end }}
         resources:
 {{ toYaml .Values.sentry.ingestOccurrences.resources | indent 12 }}
@@ -153,6 +171,7 @@ spec:
       - name: config
         configMap:
           name: {{ template "sentry.fullname" . }}-sentry
+{{ include "sentry.volume.nodestore-s3" . | indent 6 }}
       - name: sentry-data
       {{- if and (eq .Values.filestore.backend "filesystem") .Values.filestore.filesystem.persistence.enabled (.Values.filestore.filesystem.persistence.persistentWorkers) }}
       {{- if .Values.filestore.filesystem.persistence.existingClaim }}
@@ -165,10 +184,11 @@ spec:
       {{- else }}
         emptyDir: {}
       {{ end }}
-      {{- if and (eq .Values.filestore.backend "gcs") .Values.filestore.gcs.secretName }}
+{{ include "sentry.volume.replay-filesystem" . | indent 6 }}
+      {{- if include "sentry.gcs.secretName" . }}
       - name: sentry-google-cloud-key
         secret:
-          secretName: {{ .Values.filestore.gcs.secretName }}
+          secretName: {{ include "sentry.gcs.secretName" . }}
       {{ end }}
 {{- if .Values.sentry.ingestOccurrences.volumes }}
 {{ toYaml .Values.sentry.ingestOccurrences.volumes | indent 6 }}

@@ -83,6 +83,8 @@ spec:
       securityContext:
 {{ toYaml .Values.sentry.ingestReplayRecordings.securityContext | indent 8 }}
       {{- end }}
+      initContainers:
+{{ include "sentry.initContainer.nodestore-s3" . | indent 6 }}
       containers:
       - name: {{ .Chart.Name }}-ingest-replay-recordings
         image: "{{ template "sentry.image" . }}"
@@ -101,28 +103,19 @@ spec:
           {{- if .Values.sentry.ingestReplayRecordings.noStrictOffsetReset }}
           - "--no-strict-offset-reset"
           {{- end }}
-          {{- if .Values.sentry.ingestReplayRecordings.livenessProbe.enabled }}
           - "--healthcheck-file-path"
           - "/tmp/health.txt"
-          {{- end }}
           {{- if .Values.sentry.ingestReplayRecordings.maxPollIntervalMs }}
           - "--max-poll-interval-ms"
           - "{{ .Values.sentry.ingestReplayRecordings.maxPollIntervalMs }}"
           {{- end }}
-          - "--"
-        {{- if .Values.sentry.ingestReplayRecordings.livenessProbe.enabled }}
-        livenessProbe:
-          exec:
-            command:
-              - rm
-              - /tmp/health.txt
-          initialDelaySeconds: {{ .Values.sentry.ingestReplayRecordings.livenessProbe.initialDelaySeconds }}
-          periodSeconds: {{ .Values.sentry.ingestReplayRecordings.livenessProbe.periodSeconds }}
-        {{- end }}
+        {{- include "sentry.startupProbe.execHealthcheckFile" (dict "startupProbe" .Values.sentry.ingestReplayRecordings.startupProbe "healthcheckFile" "/tmp/health.txt") | nindent 8 }}
+        {{- include "sentry.livenessProbe.execHealthcheckFile" (dict "livenessProbe" .Values.sentry.ingestReplayRecordings.livenessProbe "healthcheckFile" "/tmp/health.txt") | nindent 8 }}
         env:
         - name: C_FORCE_ROOT
           value: "true"
 {{ include "sentry.env" . | indent 8 }}
+{{ include "sentry.env.nodestore-s3" . | indent 8 }}
 {{- if .Values.sentry.ingestReplayRecordings.env }}
 {{ toYaml .Values.sentry.ingestReplayRecordings.env | indent 8 }}
 {{- end }}
@@ -132,12 +125,17 @@ spec:
           readOnly: true
         - mountPath: {{ .Values.filestore.filesystem.path }}
           name: sentry-data
-        {{- if and (eq .Values.filestore.backend "gcs") .Values.filestore.gcs.secretName }}
+{{ include "sentry.volumeMount.replay-filesystem" . | indent 8 }}
+{{ include "sentry.volumeMount.nodestore-s3" . | indent 8 }}
+        {{- if include "sentry.gcs.secretName" . }}
         - name: sentry-google-cloud-key
           mountPath: /var/run/secrets/google
         {{ end }}
 {{- if .Values.sentry.ingestReplayRecordings.volumeMounts }}
 {{ toYaml .Values.sentry.ingestReplayRecordings.volumeMounts | indent 8 }}
+{{- end }}
+{{- if .Values.global.volumeMounts }}
+{{ toYaml .Values.global.volumeMounts | indent 8 }}
 {{- end }}
         resources:
 {{ toYaml .Values.sentry.ingestReplayRecordings.resources | indent 12 }}
@@ -158,6 +156,7 @@ spec:
       - name: config
         configMap:
           name: {{ template "sentry.fullname" . }}-sentry
+{{ include "sentry.volume.nodestore-s3" . | indent 6 }}
       - name: sentry-data
       {{- if and (eq .Values.filestore.backend "filesystem") .Values.filestore.filesystem.persistence.enabled (.Values.filestore.filesystem.persistence.persistentWorkers) }}
       {{- if .Values.filestore.filesystem.persistence.existingClaim }}
@@ -170,10 +169,11 @@ spec:
       {{- else }}
         emptyDir: {}
       {{ end }}
-      {{- if and (eq .Values.filestore.backend "gcs") .Values.filestore.gcs.secretName }}
+{{ include "sentry.volume.replay-filesystem" . | indent 6 }}
+      {{- if include "sentry.gcs.secretName" . }}
       - name: sentry-google-cloud-key
         secret:
-          secretName: {{ .Values.filestore.gcs.secretName }}
+          secretName: {{ include "sentry.gcs.secretName" . }}
       {{ end }}
 {{- if .Values.sentry.ingestReplayRecordings.volumes }}
 {{ toYaml .Values.sentry.ingestReplayRecordings.volumes | indent 6 }}

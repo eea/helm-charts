@@ -81,6 +81,8 @@ spec:
       securityContext:
 {{ toYaml .Values.sentry.postProcessForwardTransactions.securityContext | indent 8 }}
       {{- end }}
+      initContainers:
+{{ include "sentry.initContainer.nodestore-s3" . | indent 6 }}
       containers:
       - name: {{ .Chart.Name }}-post-process-forward-transactions
         image: "{{ template "sentry.image" . }}"
@@ -102,28 +104,20 @@ spec:
           {{- if .Values.sentry.postProcessForwardTransactions.noStrictOffsetReset }}
           - "--no-strict-offset-reset"
           {{- end }}
-          {{- if .Values.sentry.postProcessForwardTransactions.livenessProbe.enabled }}
           - "--healthcheck-file-path"
           - "/tmp/health.txt"
-          {{- end }}
-          - "--"
           {{- if .Values.sentry.postProcessForwardTransactions.processes }}
+          - "--"
           - "--mode"
           - "multiprocess"
           - "--processes"
           - "{{ .Values.sentry.postProcessForwardTransactions.processes }}"
           {{- end }}
-        {{- if .Values.sentry.postProcessForwardTransactions.livenessProbe.enabled }}
-        livenessProbe:
-          exec:
-            command:
-              - rm
-              - /tmp/health.txt
-          initialDelaySeconds: {{ .Values.sentry.postProcessForwardTransactions.livenessProbe.initialDelaySeconds }}
-          periodSeconds: {{ .Values.sentry.postProcessForwardTransactions.livenessProbe.periodSeconds }}
-        {{- end }}
+        {{- include "sentry.startupProbe.execHealthcheckFile" (dict "startupProbe" .Values.sentry.postProcessForwardTransactions.startupProbe "healthcheckFile" "/tmp/health.txt") | nindent 8 }}
+        {{- include "sentry.livenessProbe.execHealthcheckFile" (dict "livenessProbe" .Values.sentry.postProcessForwardTransactions.livenessProbe "healthcheckFile" "/tmp/health.txt") | nindent 8 }}
         env:
 {{ include "sentry.env" . | indent 8 }}
+{{ include "sentry.env.nodestore-s3" . | indent 8 }}
 {{- if .Values.sentry.postProcessForwardTransactions.env }}
 {{ toYaml .Values.sentry.postProcessForwardTransactions.env | indent 8 }}
 {{- end }}
@@ -133,12 +127,17 @@ spec:
           readOnly: true
         - mountPath: {{ .Values.filestore.filesystem.path }}
           name: sentry-data
-        {{- if and (eq .Values.filestore.backend "gcs") .Values.filestore.gcs.secretName }}
+{{ include "sentry.volumeMount.replay-filesystem" . | indent 8 }}
+{{ include "sentry.volumeMount.nodestore-s3" . | indent 8 }}
+        {{- if include "sentry.gcs.secretName" . }}
         - name: sentry-google-cloud-key
           mountPath: /var/run/secrets/google
         {{ end }}
 {{- if .Values.sentry.postProcessForwardTransactions.volumeMounts }}
 {{ toYaml .Values.sentry.postProcessForwardTransactions.volumeMounts | indent 8 }}
+{{- end }}
+{{- if .Values.global.volumeMounts }}
+{{ toYaml .Values.global.volumeMounts | indent 8 }}
 {{- end }}
         resources:
 {{ toYaml .Values.sentry.postProcessForwardTransactions.resources | indent 12 }}
@@ -159,6 +158,7 @@ spec:
       - name: config
         configMap:
           name: {{ template "sentry.fullname" . }}-sentry
+{{ include "sentry.volume.nodestore-s3" . | indent 6 }}
       - name: sentry-data
       {{- if and (eq .Values.filestore.backend "filesystem") .Values.filestore.filesystem.persistence.enabled (.Values.filestore.filesystem.persistence.persistentWorkers) }}
       {{- if .Values.filestore.filesystem.persistence.existingClaim }}
@@ -171,10 +171,11 @@ spec:
       {{- else }}
         emptyDir: {}
       {{ end }}
-      {{- if and (eq .Values.filestore.backend "gcs") .Values.filestore.gcs.secretName }}
+{{ include "sentry.volume.replay-filesystem" . | indent 6 }}
+      {{- if include "sentry.gcs.secretName" . }}
       - name: sentry-google-cloud-key
         secret:
-          secretName: {{ .Values.filestore.gcs.secretName }}
+          secretName: {{ include "sentry.gcs.secretName" . }}
       {{ end }}
 {{- if .Values.sentry.postProcessForwardTransactions.volumes }}
 {{ toYaml .Values.sentry.postProcessForwardTransactions.volumes | indent 6 }}

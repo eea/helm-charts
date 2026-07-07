@@ -1,6 +1,6 @@
 {{- if .Values.symbolicator.enabled }}
 {{- if .Values.symbolicator.api.usedeployment }}
-{{- if .Values.symbolicator.api.persistence.enabled }}
+{{- if and .Values.symbolicator.api.persistence.enabled (not .Values.symbolicator.api.persistence.existingClaim) }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -22,6 +22,9 @@ spec:
       storage: {{ .Values.symbolicator.api.persistence.size | quote }}
   {{- if and (.Values.symbolicator.api.persistence.lookupVolumeName) (lookup "v1" "PersistentVolumeClaim" .Release.Namespace "sentry-symbolicator-pvc") }}
   volumeName: {{ (lookup "v1" "PersistentVolumeClaim" .Release.Namespace "sentry-symbolicator-pvc").spec.volumeName }}
+  {{- end }}
+  {{- if .Values.symbolicator.api.persistence.storageClassName }}
+  storageClassName: {{ .Values.symbolicator.api.persistence.storageClassName | quote }}
   {{- end }}
 {{- end }}
 {{- end }}
