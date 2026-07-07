@@ -65,7 +65,7 @@ questions:
   - variable: "ide.enabled"
     label: "Enable IDE to modify configuration"
     description: "Only on non-production environments"
-    default: true
+    default: false
     type: "boolean"
     required: true
     group: "Configuration"
@@ -81,6 +81,7 @@ questions:
       - "ClusterIP"
     required: true
     group: "Configuration"
+    show_if: "ide.enabled"
 
   - variable: "ide.env.PASSWORD"
     label: "IDE User Password"
