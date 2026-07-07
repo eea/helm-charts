@@ -3,6 +3,9 @@
 
 ## Releases
 
+### Version 0.1.6 - 07 July 2026
+- Add missing question elastic service [valentinab25 - [`81767a8b`](https://github.com/eea/helm-charts/commit/81767a8b8f232eef83e5dae3438cb8f3fbadfbf1)]
+
 ### Version 0.1.5 - 06 July 2026
 - Automated release of [eeacms/esbootstrap-configs:v3.0.129](https://github.com/eea/eea.esbootstrap.configs/releases) [EEA Jenkins - [`9fb95dc0`](https://github.com/eea/helm-charts/commit/9fb95dc01b3802cd7bd36b419ff2b9981ac5e757)]
 
