@@ -203,6 +203,9 @@ helm install elastic7 ./elastic7 \
 
 ## Releases
 
+### Version 1.0.1 - 07 July 2026
+- Fix variable names [valentinab25 - [`a9fd9f7e`](https://github.com/eea/helm-charts/commit/a9fd9f7e325c5c88ec727b0a5461dc723d1256d7)]
+
 ### Version 1.0.0 - 07 July 2026
 - Refactor questions, values, add security [valentinab25 - [`aa4e2c61`](https://github.com/eea/helm-charts/commit/aa4e2c618f40b2f80521f5d64e8ef26463168f3e)]
 
