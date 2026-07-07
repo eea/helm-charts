@@ -1,7 +1,7 @@
 image:
   repository: eeacms/elastic
   pullPolicy: IfNotPresent
-  tag: "7.17-1.1"
+  tag: ""
 
 imagePullSecrets: []
 nameOverride: ""
@@ -41,27 +41,13 @@ useMonitoring: false
 updateSysctl: false
 # Enable bootstrap memory lock (set to false for most Kubernetes environments)
 bootstrapMemoryLock: false
-# Add Kibana container
-addKibana: true
-# Enable ES port exposure
-esPort: false
-# Enable Cerebro port exposure
-cerebroPort: false
-# Enable Kibana port exposure
-kibanaPort: false
 
+  
 # Heap size for master nodes
 masterHeapSize: "512m"
 # Memory reservation for master nodes
-masterMemReservation: "1536Mi"
-# Memory limit for master nodes
-masterMemLimit: "1536Mi"
-# Heap size for data nodes
 dataHeapSize: "512m"
 # Memory reservation for data nodes
-dataMemReservation: "1536Mi"
-# Memory limit for data nodes
-dataMemLimit: "1536Mi"
 
 sysctlVmMaxMapCount: 262144
 timezone: "Europe/Copenhagen"
@@ -77,14 +63,8 @@ cerebro:
   password: "secret"
   # Used in cookies, generate it with `pwgen  -y 64  | head -n 1` or `openssl rand -base64 32`
   secret: ""
-  # Memory limit for cerebro container
-  memLimit: "512Mi"
-  # Memory reservation for cerebro container
-  memReservation: "512Mi"
-  # Use ClusterIP if you don't want the Cerebro web interface exposed on the server
   service:
     type: ClusterIP
-    port: 9000
   resources:
     requests:
       memory: 512Mi
@@ -117,9 +97,29 @@ cerebro:
       timeoutSeconds: 10
       failureThreshold: 5
       successThreshold: 1
+  ingress:
+    enabled: false
+    tls: true
+    className: "nginx"
+    certificate: "cerebro.01dev.eea.europa.eu-tls"
+    annotations: {}
+    letsencrypt: "01dev-eea-letsencrypt"
+    configuration:
+      proxy-body-size: "256m"
+      proxy-read-timeout: "180s"
+      proxy-send-timeout: "120s"
+    restrictFromInternet: false
+
+securityEnabled: false        
+
+backup:
+  enabled: false
+  size: 100Gi
+  storageClassName: "nfs-client"
+
 
 esmaster:
-  replicaCount: 2
+  replicaCount: 1
   # Enable data role on master nodes (needed if you have only 1 master node)
   enableDataRole: false
   # Note: minimumMasterNodes is deprecated in favor of dynamic discovery.seed_hosts configuration
@@ -141,8 +141,6 @@ esmaster:
     storageClassName: "nfs-client"
   # Elasticsearch superuser password (elastic user) - empty for no authentication, minimum 6 characters
   password: ""
-  backup:
-    enabled: false
   # Health check configuration for Elasticsearch master nodes
   healthChecks:
     # Startup probe configuration
@@ -181,9 +179,15 @@ esmaster:
       failureThreshold: 10
       # Number of successes before marking container as alive
       successThreshold: 1
+  clientService:
+    enabled: true
+    type: NodePort
+    allowAccesFromOutside: false
+
+
 
 esworker:
-  replicaCount: 3 # Number of data nodes in the cluster
+  replicaCount: 2 # Number of data nodes in the cluster
   # This represents es-data from docker-compose
   name: "data"
   resources:
@@ -241,18 +245,22 @@ esworker:
   # Service configuration for Elasticsearch data nodes
   service:
     type: ClusterIP
-    port: 9200
   # Ingress configuration for Elasticsearch data nodes
+  url: "elastic.01dev.eea.europa.eu"
   ingress:
-    enabled: true
-    className: ""
+    enabled: false
+    tls: true
+    className: "nginx"
+    certificate: "elastic.01dev.eea.europa.eu-tls"
     annotations: {}
-    hostname: elasticsearch.example.com
-    tls: []
-    # Example TLS configuration:
-    #  - secretName: elasticsearch-tls
-    #    hosts:
-    #      - elasticsearch.example.com
+    letsencrypt: "01dev-eea-letsencrypt"
+    configuration:
+      proxy-body-size: "256m"
+      proxy-read-timeout: "180s"
+      proxy-send-timeout: "120s"
+    restrictFromInternet: true
+
+
 
 kibana:
   enabled: true
@@ -260,7 +268,7 @@ kibana:
   # kibana_system user password - minimum 6 characters, needs superuser password to not be empty
   password: ""
   # Kibana URL - public facing URL, without / at the end. Leave empty to auto-generate from ingress configuration.
-  url: ""
+  url: "kibana.01dev.eea.europa.eu"
   # Allow anonymous readonly access to kibana
   allowAnonRo: true
   # Anonymous user password (used in background) - minimum 6 characters
@@ -282,17 +290,18 @@ kibana:
   # Use ClusterIP if you don't want the Kibana web interface exposed on the server
   service:
     type: ClusterIP
-    port: 5601
   ingress:
     enabled: true
-    className: ""
+    tls: true
+    className: "nginx"
+    certificate: "kibana.01dev.eea.europa.eu-tls"
     annotations: {}
-    hostname: kibana.example.com
-    tls: []
-    # Example TLS configuration:
-    #  - secretName: kibana-tls
-    #    hosts:
-    #      - kibana.example.com
+    letsencrypt: "01dev-eea-letsencrypt"
+    configuration:
+      proxy-body-size: "256m"
+      proxy-read-timeout: "180s"
+      proxy-send-timeout: "120s"
+    restrictFromInternet: true
   resources:
     requests:
       memory: 1Gi

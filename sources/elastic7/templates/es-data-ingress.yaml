@@ -1,54 +1,55 @@
-{{- if .Values.esworker.ingress.enabled -}}
-{{- $fullName := include "appl.fullname" . -}}
-{{- $svcPort := .Values.esworker.service.port -}}
-{{- if and .Values.esworker.ingress.className (not (hasKey .Values.esworker.ingress.annotations "kubernetes.io/ingress.class")) }}
-  {{- $_ := set .Values.esworker.ingress.annotations "kubernetes.io/ingress.class" .Values.esworker.ingress.className}}
-{{- end }}
-{{- if semverCompare ">=1.19-0" .Capabilities.KubeVersion.GitVersion -}}
+{{- if and .Values.esworker.ingress.enabled .Values.esworker.enabled }}
+
 apiVersion: networking.k8s.io/v1
-{{- else if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
-apiVersion: networking.k8s.io/v1beta1
-{{- else -}}
-apiVersion: extensions/v1beta1
-{{- end }}
 kind: Ingress
 metadata:
-  name: {{ .Release.Name }}-elasticsearch
+  name: {{ include "appl.fullname" . }}-esworker-ingress
   labels:
     {{- include "appl.labels" . | nindent 4 }}
-    component: elasticsearch
-  {{- with .Values.esworker.ingress.annotations }}
+    component: esworker-ingress
   annotations:
-    {{- toYaml . | nindent 4 }}
+  {{- if .Values.esworker.ingress.letsencrypt }}
+    cert-manager.io/cluster-issuer: "{{ .Values.esworker.ingress.letsencrypt }}"
   {{- end }}
-spec:
-  {{- if and .Values.esworker.ingress.className (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion) }}
-  ingressClassName: {{ .Values.esworker.ingress.className }}
-  {{- end }}
-  {{- if .Values.esworker.ingress.tls }}
-  tls:
-    {{- range .Values.esworker.ingress.tls }}
-    - hosts:
-        {{- range .hosts }}
-        - {{ . | quote }}
-        {{- end }}
-      secretName: {{ .secretName }}
+  {{- range $key, $value := .Values.esworker.ingress.configuration }}
+    {{- if ($value) }}
+    nginx.ingress.kubernetes.io/{{ $key }}: {{ $value | quote }}
     {{- end }}
   {{- end }}
+  {{- with .Values.esworker.ingress.annotations }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+
+  {{- if .Values.esworker.ingress.restrictFromInternet }}
+    nginx.ingress.kubernetes.io/whitelist-source-range: |
+      192.168.60.0/22,
+      192.168.64.0/21,
+      10.92.24.0/21,
+      10.50.0.0/16,
+      10.20.30.0/24,
+      10.0.9.0/24,
+      10.50.7.57
+  {{- end }}
+
+spec:
+  ingressClassName: {{ .Values.esworker.ingress.className }}
   rules:
-    - host: {{ $.Values.esworker.ingress.hostname | quote }}
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
-              service:
-                name: {{ $.Release.Name }}-data-ingress
-                port:
-                  number: {{ $svcPort }}
-              {{- else }}
-              serviceName: {{ $.Release.Name }}-data-ingress
-              servicePort: {{ $svcPort }}
-              {{- end }}
+  - host: {{ .Values.esworker.url }}
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name:  {{ .Release.Name }}-esworker
+            port:
+              number: 5601
+  {{- if .Values.esworker.ingress.tls }}
+  tls:
+  - hosts:
+    - {{ .Values.esworker.url }}
+    {{- if .Values.esworker.ingress.certificate }}
+    secretName: {{ .Values.esworker.ingress.certificate }}
+    {{- end  }}
+  {{- end  }}
 {{- end }}

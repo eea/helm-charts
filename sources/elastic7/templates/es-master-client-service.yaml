@@ -1,18 +1,20 @@
-{{- if .Values.esworker.ingress.enabled -}}
+{{- if .Values.esmaster.clientService.enabled }}
+
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Release.Name }}-data-ingress
+  name: {{ .Release.Name }}-client
   labels:
     {{- include "appl.labels" . | nindent 4 }}
-    component: data-ingress
+    component: master
+
 spec:
-  type: ClusterIP
+  type: {{ .Values.esmaster.clientService.type }}
   ports:
   - name: "http"
     port: 9200
     targetPort: 9200
   selector:
     {{- include "appl.selectorLabels" . | nindent 4 }}
-    component: data
+    component: master
 {{- end }}

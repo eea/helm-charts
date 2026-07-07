@@ -238,7 +238,7 @@ data:
     path.data: /usr/share/elasticsearch/data
     path.logs: /usr/share/elasticsearch/logs
     
-    {{- if .Values.esmaster.backup.enabled }}
+    {{- if .Values.backup.enabled }}
     path.repo: ["/backup"]
     {{- end }}
     

@@ -8,13 +8,9 @@ metadata:
     component: cerebro
 
 spec:
-  {{- if .Values.cerebroPort }}
-  type: NodePort
-  {{- else }}
   type: {{ .Values.cerebro.service.type }}
-  {{- end }}
   ports:
-  - port: {{ .Values.cerebro.service.port }}
+  - port: 9000
     targetPort: 9000
   selector:
     {{- include "appl.selectorLabels" . | nindent 4 }}

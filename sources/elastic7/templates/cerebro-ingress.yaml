@@ -1,0 +1,55 @@
+{{- if and .Values.cerebro.ingress.enabled .Values.cerebro.enabled }}
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "appl.fullname" . }}-cerebro-ingress
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: cerebro-ingress
+  annotations:
+  {{- if .Values.cerebro.ingress.letsencrypt }}
+    cert-manager.io/cluster-issuer: "{{ .Values.cerebro.ingress.letsencrypt }}"
+  {{- end }}
+  {{- range $key, $value := .Values.cerebro.ingress.configuration }}
+    {{- if ($value) }}
+    nginx.ingress.kubernetes.io/{{ $key }}: {{ $value | quote }}
+    {{- end }}
+  {{- end }}
+  {{- with .Values.cerebro.ingress.annotations }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+
+  {{- if .Values.cerebro.ingress.restrictFromInternet }}
+    nginx.ingress.kubernetes.io/whitelist-source-range: |
+      192.168.60.0/22,
+      192.168.64.0/21,
+      10.92.24.0/21,
+      10.50.0.0/16,
+      10.20.30.0/24,
+      10.0.9.0/24,
+      10.50.7.57
+  {{- end }}
+
+spec:
+  ingressClassName: {{ .Values.cerebro.ingress.className }}
+  rules:
+  - host: {{ .Values.cerebro.url }}
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name:  {{ .Release.Name }}-cerebro
+            port:
+              number: 9000
+  {{- if .Values.cerebro.ingress.tls }}
+  tls:
+  - hosts:
+    - {{ .Values.cerebro.url }}
+    {{- if .Values.cerebro.ingress.certificate }}
+    secretName: {{ .Values.cerebro.ingress.certificate }}
+    {{- end  }}
+  {{- end  }}
+{{- end }}

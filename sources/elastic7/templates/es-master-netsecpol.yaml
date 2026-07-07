@@ -1,0 +1,32 @@
+{{- if ( default .Values.securityEnabled true) -}}
+{{- if and (.Values.esmaster.clientService.enabled) (.Values.esmaster.clientService.allowAccesFromOutside) }}
+
+
+{{/*
+  Any http port needs access to if from ingress or if you want to test it with a Node Port
+*/}}
+
+
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ .Release.Name }}-esmaster-allow
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+
+
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: esmaster
+
+
+  policyTypes:
+  - Ingress
+  ingress:
+    - ports:
+        - port: 9200
+          protocol: TCP
+{{- end }}
+{{- end }}

@@ -25,9 +25,10 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
-      
-      {{- if .Values.esmaster.password }}
+
       initContainers:
+        
+      {{- if .Values.esmaster.password }}
       - name: config-init
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
         command: ['sh', '-c']
@@ -71,7 +72,21 @@ spec:
         securityContext:
           runAsUser: 0
       {{- end }}
-      
+      {{- if .Values.updateSysctl }}
+      - name: max-map-count-setter
+        image: docker.io/bash:5.2.21
+        resources:
+          limits:
+            cpu: 100m
+            memory: 32Mi
+        securityContext:
+          privileged: true
+          runAsUser: 0
+        command: ['/usr/local/bin/bash', '-e', '-c', 'echo {{ .Values.sysctlVmMaxMapCount}} > /proc/sys/vm/max_map_count']
+      {{- end }}
+     
+
+
       containers:
       - name: {{ .Release.Name }}-master
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -125,7 +140,7 @@ spec:
         - name: xpack.security.transport.ssl.enabled
           value: "false"
         {{- end }}
-        {{- if .Values.esmaster.backup.enabled }}
+        {{- if .Values.backup.enabled }}
         - name: path.repo
           value: "/backup"
         {{- end }}
@@ -176,7 +191,7 @@ spec:
         volumeMounts:
         - mountPath: /usr/share/elasticsearch/data
           name: esworkdata
-        {{- if .Values.esmaster.backup.enabled }}
+        {{- if .Values.backup.enabled }}
         - mountPath: /backup
           name: esbackup
         {{- end }}
@@ -193,10 +208,10 @@ spec:
         emptyDir:
           sizeLimit: {{ .Values.esmaster.persistence.size }}
       {{- end }}
-      {{- if .Values.esmaster.backup.enabled }}
+      {{- if .Values.backup.enabled }}
       - name: esbackup
         persistentVolumeClaim:
-          claimName: {{ .Values.backupVolumeName }}
+          claimName: {{ .Release.Name }}-snapshot-pvc
       {{- end }}
       {{- if .Values.esmaster.password }}
       - name: elasticconfig

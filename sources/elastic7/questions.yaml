@@ -12,11 +12,16 @@ questions:
     default: "es-cluster"
     group: "Elasticsearch Configuration"
 
-  - variable: "hostLabels"
-    description: "Comma separated list of host labels (e.g. key1=value1, key2=value2) to be used for scheduling the services."
-    label: "Schedule on hosts with following host labels"
-    type: "string"
-    group: "Elasticsearch Configuration"
+
+  - variable: "securityEnabled"
+    label: "Enable Network Security"
+    description: |
+      Set true to add network security policies
+    default: false
+    required: true
+    type: boolean
+    group: "Security Configuration"
+
 
   - variable: "useMonitoring"
     label: "Enable ElasticSearch monitoring"
@@ -58,7 +63,7 @@ questions:
     type: boolean
     group: "Elasticsearch Configuration"
 
-  - variable: "addKibana"
+  - variable: "kibana.enabled"
     label: "Add kibana container:"
     description: |
       Set true to add a Kibana container.
@@ -73,162 +78,134 @@ questions:
     label: "Kibana URL (Optional)"
     type: "string"
     group: "Kibana Configuration"
-    show_if: "addKibana=true"
+    show_if: "kibana.enabled=true"
 
-  # Kibana Ingress Configuration
   - variable: "kibana.ingress.enabled"
-    label: "Enable Kibana Ingress"
-    description: "Enable ingress controller for Kibana access"
+    label: "Enable kibana ingress"
     default: true
+    type: "boolean"
     required: true
-    type: boolean
     group: "Kibana Configuration"
-    show_if: "addKibana=true"
+    show_if: "kibana.enabled=true"
 
-  - variable: "kibana.ingress.hostname"
-    description: "Hostname for Kibana ingress (e.g. kibana.company.com)"
-    label: "Kibana Ingress Hostname"
-    type: "string"
-    default: "kibana.example.com"
-    group: "Kibana Configuration"
-    show_if: "addKibana=true&&kibana.ingress.enabled=true"
-
-  - variable: "kibana.ingress.className"
-    description: "Ingress class name (e.g. nginx, traefik)"
-    label: "Kibana Ingress Class"
-    type: "string"
-    default: ""
-    group: "Kibana Configuration"
-    show_if: "addKibana=true&&kibana.ingress.enabled=true"
-
-  - variable: "kibana.ingress.annotations"
-    description: "Additional ingress annotations (YAML format)"
-    label: "Kibana Ingress Annotations"
-    type: "multiline"
-    default: |
-      # Example annotations:
-      # nginx.ingress.kubernetes.io/rewrite-target: /
-      # cert-manager.io/cluster-issuer: letsencrypt-prod
-    group: "Kibana Configuration"
-    show_if: "addKibana=true&&kibana.ingress.enabled=true"
-
-  # TLS Configuration for Kibana Ingress
-  - variable: "kibana.ingress.tls[0].secretName"
-    description: "Secret name containing TLS certificate"
-    label: "TLS Secret Name"
-    type: "string"
-    group: "Kibana Configuration"
-    show_if: "addKibana=true&&kibana.ingress.enabled=true"
-
-  - variable: "kibana.ingress.tls[0].hosts[0]"
-    description: "Hostname for TLS certificate (should match ingress hostname)"
-    label: "TLS Certificate Hostname"
-    type: "string"
-    default: "kibana.example.com"
-    group: "Kibana Configuration"
-    show_if: "addKibana=true&&kibana.ingress.enabled=true"
-
-  # Elasticsearch Ingress Configuration
-  - variable: "esworker.ingress.enabled"
-    label: "Enable Elasticsearch Ingress"
-    description: "Enable ingress controller for Elasticsearch access"
+  - variable: "kibana.ingress.tls"
+    label: "Kibana Enable https"
     default: true
+    type: "boolean"
     required: true
-    type: boolean
-    group: "Elasticsearch Ingress"
+    group: "Kibana Configuration"
+    show_if: "kibana.enabled=true&&kibana.ingress.enabled"
 
-  - variable: "esworker.ingress.hostname"
-    description: "Hostname for Elasticsearch ingress (e.g. elasticsearch.company.com)"
-    label: "Elasticsearch Ingress Hostname"
+  - variable: "kibana.ingress.letsencrypt"
+    label: "Kibana Ingress letsencrypt cluster-issuer"
+    description: "Leave empty when not using letsencrypt"
+    default: "01dev-eea-letsencrypt"
+    group: "Kibana Configuration"
+    show_if: "kibana.enabled=true&&kibana.ingress.enabled&&kibana.ingress.tls"
+
+  - variable: "kibana.ingress.certificate"
+    label: "Kibana Certificate name"
+    description: "Leave blank for default certificate, hostname-tls for letsencrypt"
+    default: "kibana.01dev.eea.europa.eu-tls"
     type: "string"
-    default: "elasticsearch.example.com"
-    group: "Elasticsearch Ingress"
-    show_if: "esworker.ingress.enabled=true"
+    group: "Kibana Configuration"
+    show_if: "kibana.enabled=true&&kibana.ingress.enabled&&kibana.ingress.tls"
 
-  - variable: "esworker.ingress.className"
-    description: "Ingress class name (e.g. nginx, traefik)"
-    label: "Elasticsearch Ingress Class"
+  - variable: "kibana.ingress.configuration.proxy-body-size"
+    label: "Kibana Rancher LB body size"
+    description: "Example 100m"
     type: "string"
-    default: ""
-    group: "Elasticsearch Ingress"
-    show_if: "esworker.ingress.enabled=true"
-
-  - variable: "esworker.ingress.annotations"
-    description: "Additional ingress annotations (YAML format)"
-    label: "Elasticsearch Ingress Annotations"
-    type: "multiline"
-    default: |
-      # Example annotations:
-      # nginx.ingress.kubernetes.io/rewrite-target: /
-      # cert-manager.io/cluster-issuer: letsencrypt-prod
-    group: "Elasticsearch Ingress"
-    show_if: "esworker.ingress.enabled=true"
-
-  # TLS Configuration for Elasticsearch Ingress
-  - variable: "esworker.ingress.tls[0].secretName"
-    description: "Secret name containing TLS certificate"
-    label: "TLS Secret Name"
+    default: "100m"
+    group: "Kibana Configuration"
+    show_if: "kibana.enabled=true&&kibana.ingress.enabled"
+  
+  - variable: "kibana.ingress.configuration.proxy-read-timeout"
+    label: "Kibana Rancher LB read timeout"
+    description: "Maximum response time from upstream server, in seconds, example 60s"
     type: "string"
-    group: "Elasticsearch Ingress"
-    show_if: "esworker.ingress.enabled=true"
+    default: "120s"
+    group: "Kibana Configuration"
+    show_if: "kibana.enabled=true&&kibana.ingress.enabled"
 
-  - variable: "esworker.ingress.tls[0].hosts[0]"
-    description: "Hostname for TLS certificate"
-    label: "TLS Certificate Hostname"
+
+  - variable: "kibana.ingress.configuration.proxy-send-timeout"
+    label: "Kibana Rancher LB send timeout"
+    description: "Timeout before closing the connection"
     type: "string"
-    default: "elasticsearch.example.com"
-    group: "Elasticsearch Ingress"
-    show_if: "esworker.ingress.enabled=true"
-
-  - variable: "esPort"
-    label: "ElasticSearch expose port"
-    description: "Select true to expose it"
-    default: false
+    default: "60s"
+    group: "Kibana Configuration"
+    show_if: "kibana.enabled=true&&kibana.ingress.enabled"
+    
+  - variable: "kibana.ingress.restrictFromInternet"
+    label: "Kibana Restict internet access"
+    description: "If checked, will not be available from the internet, only inside the network"
+    default: true
+    type: "boolean"
     required: true
-    type: boolean
-    group: "Port Configuration"
+    group: "Kibana Configuration"
+    show_if: "kibana.enabled=true&&kibana.ingress.enabled"
 
-  - variable: "cerebroPort"
-    label: "Cerebro client expose port"
-    description: "Select true to expose it"
-    default: false
-    required: true
-    type: boolean
-    group: "Port Configuration"
 
-  - variable: "kibanaPort"
-    label: "Kibana client expose port"
-    description: "Select true to expose it"
-    default: false
-    required: true
-    type: boolean
-    group: "Port Configuration"
-
-  - variable: "esworker.replicaCount"
-    type: "int"
-    required: true
-    label: "# of data nodes"
-    description: "Set the number of data nodes"
-    default: 2
-    group: "Data Nodes"
-
-  - variable: "esmaster.replicaCount"
+  - variable: "kibana.spaceSize"
     type: "string"
     required: true
-    label: "Replica count (master nodes)"
-    description: "Number of replicas for master nodes"
-    default: "1"
-    group: "Master Nodes"
+    label: "Heap size kibana"
+    description: "Used for NodeJs --max-old-space-size setting"
+    default: "1024"
+    group: "Kibana Configuration"
+    show_if: "kibana.enabled=true"
 
-  - variable: "esmaster.enableDataRole"
-    label: "Enable data role on master nodes"
-    description: |
-      Set true to allow master nodes to store data. Recommended for small clusters.
-      Set false for dedicated master nodes in production clusters.
-    default: false
+  - variable: "kibana.resources.requests.memory"
+    type: "string"
     required: true
-    type: boolean
-    group: "Master Nodes"
+    label: "Memory reservation for kibana container"
+    description: "AT LEAST the heap size!"
+    default: "1024m"
+    group: "Kibana Configuration"
+    show_if: "kibana.enabled=true"
+
+  - variable: "kibana.resources.limits.memory"
+    type: "string"
+    required: true
+    label: "Memory limit for kibana container"
+    description: "AT LEAST double the heap size!"
+    default: "2048m"
+    group: "Kibana Configuration"
+    show_if: "kibana.enabled=true"
+
+  - variable: "kibana.autocompleteTimeout"
+    label: "Kibana autocomplete timeout"
+    type: string
+    group: "Kibana Configuration"
+    show_if: "kibana.enabled=true"
+
+  - variable: "kibana.autocompleteTerminateAfter"
+    label: "Kibana autocomplete terminate after"
+    type: string
+    group: "Kibana Configuration"
+    show_if: "kibana.enabled=true"
+
+  - variable: "kibana.requestTimeout"
+    label: "Kibana elasticsearch timeout"
+    type: string
+    default: "300000"
+    group: "Kibana Configuration"
+    show_if: "kibana.enabled=true"
+
+  - variable: "kibana.service.Type"
+    label: "Kibana service type"
+    description: "Choose NodePort if you don't want to use ingress to connect to kibana"
+    type: "enum"
+    options:
+      - "NodePort"
+      - "ClusterIP"
+    required: true
+    default: "ClusterIP"
+    group: "Kibana Configuration"
+    show_if: "kibana.enabled=true"
+
+
+
 
   - variable: "masterHeapSize"
     type: "string"
@@ -238,64 +215,22 @@ questions:
     default: "512m"
     group: "Master Nodes"
 
-  - variable: "masterMemReservation"
+  - variable: "esmaster.resources.requests.memory"
     type: "string"
     required: true
-    label: "Memory reservation (master nodes)"
+    label: "Memory reservation (master node)"
     description: "Memory reservation per elasticsearch container. Recommended - triple the heap size! (master nodes)"
     default: "1536m"
     group: "Master Nodes"
 
-  - variable: "masterMemLimit"
+  - variable: "esmaster.resources.limits.memory"
     type: "string"
     required: true
-    label: "Memory limit (master nodes)"
+    label: "Memory limit (master node)"
     description: "Memory limit per elasticsearch container. Recommended - triple the heap size! (master nodes)"
     default: "1536m"
     group: "Master Nodes"
 
-  # Master Nodes Health Check Configuration (TCP-based)
-  - variable: "esmaster.healthChecks.startup.initialDelaySeconds"
-    label: "Master Startup Probe Initial Delay (seconds)"
-    description: "Initial delay before starting TCP startup probes for master nodes (production-safe: 60s)"
-    type: "int"
-    default: 60
-    group: "Master Nodes"
-
-  - variable: "esmaster.healthChecks.startup.failureThreshold"
-    label: "Master Startup Probe Failure Threshold"
-    description: "Number of TCP probe failures before marking master container as failed to start (production-safe: allows 15+ minutes)"
-    type: "int"
-    default: 60
-    group: "Master Nodes"
-
-  - variable: "esmaster.healthChecks.readiness.initialDelaySeconds"
-    label: "Master Readiness Probe Initial Delay (seconds)"
-    description: "Initial delay before starting TCP readiness probes for master nodes (production-safe: 120s)"
-    type: "int"
-    default: 120
-    group: "Master Nodes"
-
-  - variable: "esmaster.healthChecks.readiness.periodSeconds"
-    label: "Master Readiness Probe Period (seconds)"
-    description: "How often to perform TCP readiness probes for master nodes (production-safe: 45s)"
-    type: "int"
-    default: 45
-    group: "Master Nodes"
-
-  - variable: "esmaster.healthChecks.liveness.initialDelaySeconds"
-    label: "Master Liveness Probe Initial Delay (seconds)"
-    description: "Initial delay before starting TCP liveness probes for master nodes (production-safe: 300s)"
-    type: "int"
-    default: 300
-    group: "Master Nodes"
-
-  - variable: "esmaster.healthChecks.liveness.failureThreshold"
-    label: "Master Liveness Probe Failure Threshold"
-    description: "Number of TCP probe failures before restarting master container (production-safe: allows 15+ minutes)"
-    type: "int"
-    default: 10
-    group: "Master Nodes"
 
   - variable: "dataHeapSize"
     type: "string"
@@ -305,7 +240,7 @@ questions:
     default: "512m"
     group: "Data Nodes"
 
-  - variable: "dataMemReservation"
+  - variable: "esworker.resources.requests.memory"
     type: "string"
     required: true
     label: "Memory reservation (data nodes)"
@@ -313,7 +248,7 @@ questions:
     default: "1536m"
     group: "Data Nodes"
 
-  - variable: "dataMemLimit"
+  - variable: "esworker.resources.requests.memory"
     type: "string"
     required: true
     label: "Memory limit (data nodes)"
@@ -321,91 +256,36 @@ questions:
     default: "1536m"
     group: "Data Nodes"
 
-  # Data Nodes Health Check Configuration (TCP-based)
-  - variable: "esworker.healthChecks.startup.initialDelaySeconds"
-    label: "Data Startup Probe Initial Delay (seconds)"
-    description: "Initial delay before starting TCP startup probes for data nodes (production-safe: 60s)"
-    type: "int"
-    default: 60
-    group: "Data Nodes"
 
-  - variable: "esworker.healthChecks.startup.failureThreshold"
-    label: "Data Startup Probe Failure Threshold"
-    description: "Number of TCP probe failures before marking data container as failed to start (production-safe: allows 15+ minutes)"
-    type: "int"
-    default: 60
-    group: "Data Nodes"
+  - variable: "cerebro.enabled"
+    label: "Add cerebro container:"
+    description: |
+      Set true to add a Cerebro container.
+      If false, Kibana will not be added.
+    default: true
+    required: true
+    type: boolean
+    group: "Cerebro Configuration"
 
-  - variable: "esworker.healthChecks.readiness.initialDelaySeconds"
-    label: "Data Readiness Probe Initial Delay (seconds)"
-    description: "Initial delay before starting TCP readiness probes for data nodes (production-safe: 120s)"
-    type: "int"
-    default: 120
-    group: "Data Nodes"
 
-  - variable: "esworker.healthChecks.readiness.periodSeconds"
-    label: "Data Readiness Probe Period (seconds)"
-    description: "How often to perform TCP readiness probes for data nodes (production-safe: 45s)"
-    type: "int"
-    default: 45
-    group: "Data Nodes"
-
-  - variable: "esworker.healthChecks.liveness.initialDelaySeconds"
-    label: "Data Liveness Probe Initial Delay (seconds)"
-    description: "Initial delay before starting TCP liveness probes for data nodes (production-safe: 300s)"
-    type: "int"
-    default: 300
-    group: "Data Nodes"
-
-  - variable: "esworker.healthChecks.liveness.failureThreshold"
-    label: "Data Liveness Probe Failure Threshold"
-    description: "Number of TCP probe failures before restarting data container (production-safe: allows 15+ minutes)"
-    type: "int"
-    default: 10
-    group: "Data Nodes"
-
-  - variable: "cerebro.memLimit"
+  - variable: "cerebro.resources.limits.memory"
     type: "string"
     required: true
     label: "Memory limit for cerebro container"
     description: "AT LEAST double the heap size!"
     default: "512m"
     group: "Cerebro Configuration"
+    show_if: "cerebro.enabled"
 
-  - variable: "cerebro.memReservation"
+  - variable: "cerebro.resources.requests.memory"
     type: "string"
     required: true
     label: "Memory reservation for cerebro container"
     description: "AT LEAST double the heap size!"
     default: "512m"
     group: "Cerebro Configuration"
+    show_if: "cerebro.enabled"
 
-  - variable: "kibana.spaceSize"
-    type: "string"
-    required: true
-    label: "Heap size kibana"
-    description: "Used for NodeJs --max-old-space-size setting"
-    default: "1024"
-    group: "Kibana Configuration"
-    show_if: "addKibana=true"
-
-  - variable: "kibana.memReservation"
-    type: "string"
-    required: true
-    label: "Memory reservation for kibana container"
-    description: "AT LEAST the heap size!"
-    default: "1024m"
-    group: "Kibana Configuration"
-    show_if: "addKibana=true"
-
-  - variable: "kibana.memLimit"
-    type: "string"
-    required: true
-    label: "Memory limit for kibana container"
-    description: "AT LEAST double the heap size!"
-    default: "2048m"
-    group: "Kibana Configuration"
-    show_if: "addKibana=true"
 
   - variable: "cerebro.user"
     label: "Cerebro username"
@@ -413,47 +293,108 @@ questions:
     type: "string"
     default: "admin"
     group: "Cerebro Configuration"
+    show_if: "cerebro.enabled"
 
   - variable: "cerebro.password"
     label: "Cerebro password"
     type: "password"
     default: "secret"
     group: "Cerebro Configuration"
+    show_if: "cerebro.enabled"
 
   - variable: "cerebro.secret"
     label: "Cerebro secret"
     description: "Used in cookies, generate it with `pwgen  -y 64  | head -n 1` or `openssl rand -base64 32`. Will be randomly generated if not given"
     type: "string"
     group: "Cerebro Configuration"
+    show_if: "cerebro.enabled"
 
-  # Cerebro Health Check Configuration
-  - variable: "cerebro.healthChecks.startup.initialDelaySeconds"
-    label: "Cerebro Startup Probe Initial Delay (seconds)"
-    description: "Initial delay before starting startup probes for Cerebro (production-safe: 45s)"
-    type: "int"
-    default: 45
+  - variable: "cerebro.service.Type"
+    label: "Cerebro service type"
+    description: "Choose NodePort if you don't want to use ingress to connect to cerebro"
+    type: "enum"
+    options:
+      - "NodePort"
+      - "ClusterIP"
+    required: true
+    default: "ClusterIP"
     group: "Cerebro Configuration"
+    show_if: "cerebro.enabled=true"
 
-  - variable: "cerebro.healthChecks.startup.failureThreshold"
-    label: "Cerebro Startup Probe Failure Threshold"
-    description: "Number of failures before marking Cerebro as failed to start (production-safe: allows 10 minutes)"
-    type: "int"
-    default: 40
+  - variable: "cerebro.url"
+    description: "Public facing URL for Cerebro"
+    label: "Cerebro URL (Optional)"
+    type: "string"
     group: "Cerebro Configuration"
+    show_if: "cerebro.enabled=true"
 
-  - variable: "cerebro.healthChecks.readiness.initialDelaySeconds"
-    label: "Cerebro Readiness Probe Initial Delay (seconds)"
-    description: "Initial delay before starting readiness probes for Cerebro (production-safe: 30s)"
-    type: "int"
-    default: 30
+  - variable: "cerebro.ingress.enabled"
+    label: "Enable cerebro ingress"
+    default: true
+    type: "boolean"
+    required: true
     group: "Cerebro Configuration"
+    show_if: "cerebro.enabled=true"
 
-  - variable: "cerebro.healthChecks.liveness.initialDelaySeconds"
-    label: "Cerebro Liveness Probe Initial Delay (seconds)"
-    description: "Initial delay before starting liveness probes for Cerebro (production-safe: 90s)"
-    type: "int"
-    default: 90
+  - variable: "cerebro.ingress.tls"
+    label: "Cerebro Enable https"
+    default: true
+    type: "boolean"
+    required: true
     group: "Cerebro Configuration"
+    show_if: "cerebro.enabled=true&&cerebro.ingress.enabled"
+
+  - variable: "cerebro.ingress.letsencrypt"
+    label: "Cerebro Ingress letsencrypt cluster-issuer"
+    description: "Leave empty when not using letsencrypt"
+    default: "01dev-eea-letsencrypt"
+    group: "Cerebro Configuration"
+    show_if: "cerebro.enabled=true&&cerebro.ingress.enabled&&cerebro.ingress.tls"
+
+  - variable: "cerebro.ingress.certificate"
+    label: "Cerebro Certificate name"
+    description: "Leave blank for default certificate, hostname-tls for letsencrypt"
+    default: "cerebro.01dev.eea.europa.eu-tls"
+    type: "string"
+    group: "Cerebro Configuration"
+    show_if: "cerebro.enabled=true&&cerebro.ingress.enabled&&cerebro.ingress.tls"
+
+  - variable: "cerebro.ingress.configuration.proxy-body-size"
+    label: "Cerebro Rancher LB body size"
+    description: "Example 100m"
+    type: "string"
+    default: "100m"
+    group: "Cerebro Configuration"
+    show_if: "cerebro.enabled=true&&cerebro.ingress.enabled"
+
+  - variable: "cerebro.ingress.configuration.proxy-read-timeout"
+    label: "Cerebro Rancher LB read timeout"
+    description: "Maximum response time from upstream server, in seconds, example 60s"
+    type: "string"
+    default: "120s"
+    group: "Cerebro Configuration"
+    show_if: "cerebro.enabled=true&&cerebro.ingress.enabled"
+
+
+  - variable: "cerebro.ingress.configuration.proxy-send-timeout"
+    label: "Cerebro Rancher LB send timeout"
+    description: "Timeout before closing the connection"
+    type: "string"
+    default: "60s"
+    group: "Cerebro Configuration"
+    show_if: "cerebro.enabled=true&&cerebro.ingress.enabled"
+
+  - variable: "cerebro.ingress.restrictFromInternet"
+    label: "Cerebro Restict internet access"
+    description: "If checked, will not be available from the internet, only inside the network"
+    default: true
+    type: "boolean"
+    required: true
+    group: "Cerebro Configuration"
+    show_if: "cerebro.enabled=true&&cerebro.ingress.enabled"
+
+
+
 
   - variable: "esmaster.password"
     label: "Superuser ( elastic ) password"
@@ -466,6 +407,8 @@ questions:
     label: "kibana user password (kibana_system)"
     type: "password"
     group: "Security Configuration"
+    show_if: "kibana.enabled=true"
+    
 
   - variable: "kibana.allowAnonRo"
     label: "Allow anonymous readonly access to kibana:"
@@ -476,6 +419,7 @@ questions:
     required: true
     type: boolean
     group: "Security Configuration"
+    show_if: "kibana.enabled=true"
 
   - variable: "kibana.anonPassword"
     description: "Minumum 6 characters, if given will be used to configure anonymous access to elasticsearch"
@@ -483,142 +427,185 @@ questions:
     default: "RandomPassword1"
     type: "password"
     group: "Security Configuration"
+    show_if: "kibana.enabled=true"
 
   - variable: "kibana.readOnlyRoleJson"
     description: "Default is empty, will use the value from the kibana image, examples of json - https://www.elastic.co/guide/en/kibana/current/role-management-api-put.html"
     label: "Kibana guest user permission configuration"
     type: "string"
     group: "Security Configuration"
+    show_if: "kibana.enabled=true"
 
-  - variable: "kibana.autocompleteTimeout"
-    label: "Kibana autocomplete timeout"
-    type: string
-    group: "Kibana Configuration"
-    show_if: "addKibana=true"
 
-  - variable: "kibana.autocompleteTerminateAfter"
-    label: "Kibana autocomplete terminate after"
-    type: string
-    group: "Kibana Configuration"
-    show_if: "addKibana=true"
 
-  - variable: "kibana.requestTimeout"
-    label: "Kibana elasticsearch timeout"
-    type: string
-    default: "300000"
-    group: "Kibana Configuration"
-    show_if: "addKibana=true"
-
-  # Kibana Health Check Configuration
-  - variable: "kibana.healthChecks.startup.initialDelaySeconds"
-    label: "Kibana Startup Probe Initial Delay (seconds)"
-    description: "Initial delay before starting startup probes for Kibana (production-safe: 90s)"
-    type: "int"
-    default: 90
-    group: "Kibana Configuration"
-    show_if: "addKibana=true"
-
-  - variable: "kibana.healthChecks.startup.failureThreshold"
-    label: "Kibana Startup Probe Failure Threshold"
-    description: "Number of failures before marking Kibana as failed to start (production-safe: allows up to 20 minutes)"
-    type: "int"
-    default: 80
-    group: "Kibana Configuration"
-    show_if: "addKibana=true"
-
-  - variable: "kibana.healthChecks.readiness.initialDelaySeconds"
-    label: "Kibana Readiness Probe Initial Delay (seconds)"
-    description: "Initial delay before starting readiness probes for Kibana (production-safe: 60s)"
-    type: "int"
-    default: 60
-    group: "Kibana Configuration"
-    show_if: "addKibana=true"
-
-  - variable: "kibana.healthChecks.liveness.initialDelaySeconds"
-    label: "Kibana Liveness Probe Initial Delay (seconds)"
-    description: "Initial delay before starting liveness probes for Kibana (production-safe: 180s)"
-    type: "int"
-    default: 180
-    group: "Kibana Configuration"
-    show_if: "addKibana=true"
-
-  - variable: "timezone"
-    label: "Time zone"
-    description: "Time zone"
-    default: "Europe/Copenhagen"
+  - variable: "backup.enabled"
+    label: "Enabled backup volume"
+    description: "Volume to save snapshots, empty if no backup necessary"
+    default: false
     required: true
+    type: boolean
+    group: "Storage configuration"
+
+
+  - variable: "backup.size"
+    label: "Backup volum size"
+    default: "100Gi"
     type: "string"
-    group: "General Configuration"
+    group: "Storage configuration"
+    show_if: "backup.enabled"  
 
-  - variable: "volumeDriver"
-    label: "Data volumes driver"
-    description: "ElasticSearch data volume driver, choose rancher_ebs only for Amazon"
+  - variable: "backup.storageClassName"
+    label: "Backup storage class name"
     default: "nfs-client"
-    type: "enum"
-    options:
-      - "nfs-client"
-    required: true
-    group: "Volume Configuration"
-
-  - variable: "volumeDriverOpts"
-    label: "Data volume driver options"
-    description: |
-      Specify "driver_opts" key/value pair in the format "optionName: optionValue".
-      E.g. for the `rancher-ebs` driver you should specify the required 'size' option like this: "size: 1".
-      Empty if  driver is not `rancher-ebs`.
-    type: "multiline"
-    group: "Volume Configuration"
-
-  - variable: "volumeConfigDriver"
-    label: "Configuration volume driver"
-    description: "ElasticSearch configuration volume driver, used if security is enabled to store certificates"
-    default: "nfs-client"
-    type: "enum"
-    options:
-      - "nfs-client"
-    required: true
-    group: "Volume Configuration"
-
-  - variable: "volumeConfigDriverOpts"
-    label: "Configuration volume driver options"
-    description: |
-      Specify "driver_opts" key/value pair in the format "optionName: optionValue".
-      E.g. for the `rancher-ebs` driver you should specify the required 'size' option like this: "size: 1".
-      Empty if  driver is not `rancher-ebs`.
-    type: "multiline"
-    group: "Volume Configuration"
-
-  - variable: "backupVolumeName"
-    label: "Backup volume name"
-    description: "Volume name to manually backup ES data, empty if no backup necessary"
     type: "string"
-    group: "Backup Configuration"
+    required: true
+    group: "Storage configuration"
+    show_if: "backup.enabled" 
+      
+  - variable: "esmaster.persistence.size"
+    label: "Master volume size"
+    default: "10Gi"
+    type: "string"
+    required: true
+    group: "Storage configuration"
 
-  - variable: "storageClassName"
-    label: "Backup volumes driver"
-    description: "ElasticSearch data volume driver"
-    default: "nfs-client"
+  - variable: "esmaster.persistence.storageClassName"
+    label: "Master volume class name"
+    default: "nfs-rancher"
+    type: "string"
+    required: true
+    group: "Storage configuration"
+
+  - variable: "esworker.persistence.size"
+    label: "Data volume size"
+    default: "10Gi"
+    type: "string"
+    required: true
+    group: "Storage configuration"
+
+  - variable: "esworker.persistence.storageClassName"
+    label: "Data volume class name"
+    default: "nfs-rancher"
+    type: "string"
+    required: true
+    group: "Storage configuration"
+      
+
+
+  - variable: "cerebro.service.Type"
+    label: "Cerebro service type"
+    description: "Choose NodePort if you don't want to use ingress to connect to cerebro"
     type: "enum"
     options:
-      - "nfs-client"
-    group: "Backup Configuration"
+      - "NodePort"
+      - "ClusterIP"
+    required: true
+    default: "ClusterIP"
+    group: "Cerebro Configuration"
+    show_if: "cerebro.enabled=true"
 
-  - variable: "backupVolumeExternal"
-    label: "Backup volumes environment scoped (external)"
-    description: "ElasticSearch data is environment scoped (externally created by other stack)"
-    default: "yes"
+
+  - variable: "esmaster.clientService.enabled"
+    label: "Enable Master service 9200"
+    default: true
+    type: "boolean"
+    required: true
+    group: "Elasticsearch Configuration"
+
+  - variable: "esmaster.clientService.Type"
+    label: "Elastic Master 9200 service type"
+    description: "Choose NodePort to expose the port"
     type: "enum"
     options:
-      - "yes"
-      - "no"
-    group: "Backup Configuration"
+      - "NodePort"
+      - "ClusterIP"
+    required: true
+    default: "ClusterIP"
+    group: "Elasticsearch Configuration"
+    show_if: "esmaster.clientService.enabled=true"
+    
+  - variable: "esmaster.clientService.allowAccesFromOutside"
+    label: "Enable Master service 9200 outside access"
+    default: false
+    type: "boolean"
+    required: true
+    show_if: "esmaster.clientService.enabled=true"
+    group: "Elasticsearch Configuration"
 
-  - variable: "storageClassNameOpts"
-    label: "Backup volume driver options"
-    description: |
-      Specify "driver_opts" key/value pair in the format "optionName: optionValue".
-      E.g. for the `rancher-ebs` driver you should specify the required 'size' option like this: "size: 1".
-      Empty if  driver is not `rancher-ebs`.
-    type: "multiline"
-    default: ""
-    group: "Backup Configuration"
+
+  - variable: "esworker.url"
+    description: "Public facing URL for ElasticSearch"
+    label: "ElasticSearch URL (Optional)"
+    type: "string"
+    group: "ElasticSearch Configuration"
+
+  - variable: "esworker.ingress.enabled"
+    label: "Enable Elasticsearch ingress"
+    default: true
+    type: "boolean"
+    required: true
+    group: "ElasticSearch Configuration"
+
+  - variable: "esworker.ingress.tls"
+    label: "Enable https on ElasticSearch ingress"
+    default: true
+    type: "boolean"
+    required: true
+    group: "ElasticSearch Configuration"
+    show_if: "esworker.ingress.enabled"
+
+  - variable: "esworker.ingress.letsencrypt"
+    label: "ElasticSearch Ingress letsencrypt cluster-issuer"
+    description: "Leave empty when not using letsencrypt"
+    default: "01dev-eea-letsencrypt"
+    group: "ElasticSearch Configuration"
+    show_if: "esworker.ingress.enabled&&esworker.ingress.tls"
+
+  - variable: "esworker.ingress.certificate"
+    label: "ElasticSearch Certificate name"
+    description: "Leave blank for default certificate, hostname-tls for letsencrypt"
+    default: "elasticsearch.01dev.eea.europa.eu-tls"
+    type: "string"
+    group: "ElasticSearch Configuration"
+    show_if: "esworker.ingress.enabled&&esworker.ingress.tls"
+
+  - variable: "esworker.ingress.configuration.proxy-body-size"
+    label: "ElasticSearch Rancher LB body size"
+    description: "Example 100m"
+    type: "string"
+    default: "100m"
+    group: "ElasticSearch Configuration"
+    show_if: "esworker.ingress.enabled"
+
+  - variable: "esworker.ingress.configuration.proxy-read-timeout"
+    label: "ElasticSearch Rancher LB read timeout"
+    description: "Maximum response time from upstream server, in seconds, example 60s"
+    type: "string"
+    default: "120s"
+    group: "ElasticSearch Configuration"
+    show_if: "esworker.ingress.enabled"
+
+
+  - variable: "esworker.ingress.configuration.proxy-send-timeout"
+    label: "ElasticSearch Rancher LB send timeout"
+    description: "Timeout before closing the connection"
+    type: "string"
+    default: "60s"
+    group: "ElasticSearch Configuration"
+    show_if: "esworker.ingress.enabled"
+
+  - variable: "esworker.ingress.restrictFromInternet"
+    label: "ElasticSearch Restict internet access"
+    description: "If checked, will not be available from the internet, only inside the network"
+    default: true
+    type: "boolean"
+    required: true
+    group: "ElasticSearch Configuration"
+    show_if: "esworker.ingress.enabled"
+
+
+
+
+
+
+
