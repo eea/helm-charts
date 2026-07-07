@@ -27,8 +27,8 @@ dependencies:
     alias: rabbitmq
     condition: rabbitmq.enabled
   - name: nginx
-    repository: oci://registry-1.docker.io/bitnamicharts
-    version: 18.2.5
+    repository: oci://registry-1.docker.io/cloudpirates
+    version: 0.7.0
     condition: nginx.enabled
 maintainers:
   - name: sentry-kubernetes
