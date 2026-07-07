@@ -3,6 +3,9 @@
 
 ## Releases
 
+### Version 0.1.7 - 07 July 2026
+- fix questions [valentinab25 - [`fc55e288`](https://github.com/eea/helm-charts/commit/fc55e2886cb990528b2982fd4ae7b60ce068eb44)]
+
 ### Version 0.1.6 - 07 July 2026
 - Add missing question elastic service [valentinab25 - [`81767a8b`](https://github.com/eea/helm-charts/commit/81767a8b8f232eef83e5dae3438cb8f3fbadfbf1)]
 
