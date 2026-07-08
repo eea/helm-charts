@@ -10,9 +10,10 @@ User must provide Tenable.io linking key and name of scanner for the listing in 
 
 | Version | Date | Comment |
 | ------- | -----| ------- |
+| 1.0.3 | 8 July 2026    | New app version 2.109.2-MASTER-I89-D260706-2235 |
 | 1.0.2 | 6 January 2026 | New app version 2.105.5-MASTER-I89-D260105-2065 |
 | 1.0.1 | 1 October 2025 | New app version 2.102.0-MASTER-I89-D250924-1981 |
 | 1.0.0 | 9 September 2025 | New app version 2.101.5-MASTER-I89-D250904-1960 |
-| 0.1.1 | 19 June 2025 | Added README.md file |
-| 0.1.0 | 18 June 2025 | Initial release using app version 2.33.16-MASTER-I89-D250617-1861 |
+| 0.1.1 | 19 June 2025   | Added README.md file |
+| 0.1.0 | 18 June 2025   | Initial release using app version 2.33.16-MASTER-I89-D250617-1861 |
 
