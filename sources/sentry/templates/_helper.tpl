@@ -56,9 +56,9 @@ livenessProbe:
 startupProbe:
   exec:
     command:
-      - test
-      - -f
-      - {{ $file }}
+      - sh
+      - -c
+      - touch {{ $file }}
 {{- with $probeConfig }}
 {{- toYaml . | nindent 2 }}
 {{- end }}
