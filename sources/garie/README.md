@@ -68,6 +68,9 @@ We have the following services that should be exposed in ingress:
 
 # Releases
 
+### Version 0.0.39 - 08 July 2026
+- remove chronograf from chart [Mihai Dobrescu - [`2fb9f25c`](https://github.com/eea/helm-charts/commit/2fb9f25ce1dea308bf117e703333b28ee91607c0)]
+
 ### Version 0.0.38 - 06 July 2026
 - replace abort controller with promise race in checkmk [Mihai Dobrescu - [`b7e3801b`](https://github.com/eea/helm-charts/commit/b7e3801b6e39f14ea8ef6cbbd0c6458439025249)]
 
