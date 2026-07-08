@@ -19,14 +19,6 @@ postfix:
       certificate: mailtrap.01dev.eea.europa.eu-tls
 
 
-chronograf:
-  resources:
-    limits:
-      memory: 256Mi
-    requests:
-      memory: 256Mi
-  storage: 1Gi
-  storageClassName: nfs-client
 garieCheckmk:
   cmkSecrets: ""
   cmkServers: goldeneye.eea.europa.eu,goldeneye-aws.eea.europa.eu

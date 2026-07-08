@@ -62,7 +62,6 @@ Quicklinks:
 We have the following services that should be exposed in ingress:
 
 - grafana:3000
-- chronograf:8888
 - garie-lighthouse:3000
 - garie-browsertime:3000
 - garie-webscore:3000

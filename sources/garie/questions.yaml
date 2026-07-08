@@ -163,31 +163,6 @@ questions:
         default: local-path
         required: true
 
-  - variable: chronograf.resources.requests.memory
-    group: Chronograf Configuration
-    default: 256Mi
-    description: Memory reservation (requests)
-    type: string
-    required: true
-    subquestions:
-      - variable: chronograf.resources.limits.memory
-        default: 256Mi
-        description: Memory limit
-        type: string
-        required: true
-
-      - variable: chronograf.storage
-        default: 1Gi
-        description: Data volume size
-        type: string
-        required: true
-
-      - variable: chronograf.storageClassName
-        default: local-path
-        description: Storage Class
-        type: string
-        required: true
-
   - variable: garieConfig.config
     label: "Garie Config "
     description: "The JSON configuration for all plugins and URLs"
