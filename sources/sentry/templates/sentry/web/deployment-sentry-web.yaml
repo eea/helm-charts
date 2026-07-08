@@ -77,6 +77,16 @@ spec:
 {{ toYaml .Values.sentry.web.securityContext | indent 8 }}
       {{- end }}
       initContainers:
+      - name: copy-config
+        image: "{{ template "sentry.image" . }}"
+        imagePullPolicy: {{ default "IfNotPresent" .Values.images.sentry.pullPolicy }}
+        command: ["sh", "-c", "cp -rL /etc/sentry-ro/. /etc/sentry/ && chmod -R a+rw /etc/sentry/"]
+        volumeMounts:
+        - mountPath: /etc/sentry-ro
+          name: config
+          readOnly: true
+        - mountPath: /etc/sentry
+          name: config-writable
 {{ include "sentry.initContainer.nodestore-s3" . | indent 6 }}
       containers:
       - name: {{ .Chart.Name }}-web
@@ -119,8 +129,7 @@ spec:
 {{- end }}
         volumeMounts:
         - mountPath: /etc/sentry
-          name: config
-          readOnly: true
+          name: config-writable
         - mountPath: {{ .Values.filestore.filesystem.path }}
           name: sentry-data
 {{ include "sentry.volumeMount.replay-filesystem" . | indent 8 }}
@@ -183,6 +192,8 @@ spec:
       - name: config
         configMap:
           name: {{ template "sentry.fullname" . }}-sentry
+      - name: config-writable
+        emptyDir: {}
 {{ include "sentry.volume.nodestore-s3" . | indent 6 }}
       - name: sentry-data
       {{- if and (eq .Values.filestore.backend "filesystem") .Values.filestore.filesystem.persistence.enabled }}
