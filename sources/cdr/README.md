@@ -65,6 +65,9 @@ To customize the network policies, you should modify the `instance.networkPolicy
 
 ## Releases
 
+### Version 0.81.3 - 08 July 2026
+- Updated rn-varnish to 0.6.2 [Olimpiu Rob - [`f9b9ae26`](https://github.com/eea/helm-charts/commit/f9b9ae26726975b604867273db517406e837ad42)]
+
 ### Version 0.81.2 - 06 July 2026
 - Updated rn-varnish to 0.6.1 [Olimpiu Rob - [`1d7d5f40`](https://github.com/eea/helm-charts/commit/1d7d5f40f4eadc1da6fa980ff9a9d6fb8d9fade3)]
 
