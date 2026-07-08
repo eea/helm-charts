@@ -195,12 +195,7 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- if .Values.postgresql.fullnameOverride -}}
 {{- .Values.postgresql.fullnameOverride | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
-{{- $name := default .Chart.Name .Values.postgresql.nameOverride -}}
-{{- if contains $name .Release.Name -}}
-{{- .Release.Name | trunc 63 | trimSuffix "-" -}}
-{{- else -}}
-{{- printf "%s-%s" .Release.Name "sentry-postgresql" | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
+{{- printf "%s-%s" (include "sentry.fullname" .) "postgresql" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 {{- end -}}
 
@@ -341,7 +336,11 @@ Build full Redis URI, including creds and db when available
 Set ClickHouse host
 */}}
 {{- define "sentry.clickhouse.host" -}}
+{{- if .Values.clickhouse.enabled -}}
+{{ include "sentry.fullname" . }}-clickhouse
+{{- else -}}
 {{ required "A valid .Values.externalClickhouse.host is required" .Values.externalClickhouse.host }}
+{{- end -}}
 {{- end -}}
 
 {{/*
@@ -834,7 +833,7 @@ Set external Postgresql password from existingSecret
   valueFrom:
     secretKeyRef:
       name: {{ default (include "sentry.postgresql.fullname" .) .Values.postgresql.auth.existingSecret }}
-      key: {{ default "postgres-password" .Values.postgresql.auth.secretKeys.adminPasswordKey }}
+      key: {{ default "password" .Values.postgresql.auth.secretKeys.userPasswordKey }}
 {{- else if .Values.externalPostgresql.password }}
 - name: POSTGRES_PASSWORD
   value: {{ .Values.externalPostgresql.password | quote }}
@@ -1226,7 +1225,7 @@ Pgbouncer environment variables
   valueFrom:
     secretKeyRef:
       name: {{ default (include "sentry.postgresql.fullname" .) .Values.postgresql.auth.existingSecret }}
-      key: {{ default "postgres-password" .Values.postgresql.auth.secretKeys.adminPasswordKey }}
+      key: {{ default "password" .Values.postgresql.auth.secretKeys.userPasswordKey }}
 {{- else if .Values.externalPostgresql.password }}
 - name: POSTGRESQL_PASSWORD
   value: {{ .Values.externalPostgresql.password | quote }}

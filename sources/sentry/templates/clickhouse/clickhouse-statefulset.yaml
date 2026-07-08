@@ -40,14 +40,14 @@ spec:
             - name: clickhouse-data
               mountPath: /var/lib/clickhouse
             - name: clickhouse-config
-              mountPath: /etc/clickhouse-server/config.d/config.xml
-              subPath: config.xml
+              mountPath: /etc/clickhouse-server/config.d/sentry.xml
+              subPath: sentry.xml
             - name: clickhouse-metrica
               mountPath: /etc/clickhouse-server/metrica.d/metrica.xml
               subPath: metrica.xml
             - name: clickhouse-users
               mountPath: /etc/clickhouse-server/users.d/users.xml
-              subPath: users.xml
+              subPath: default-password.xml
           livenessProbe:
             tcpSocket:
               port: 9000
@@ -65,9 +65,11 @@ spec:
             failureThreshold: 3
             successThreshold: 1
       volumes:
+        {{- if .Values.clickhouse.clickhouse.existingClaim }}
         - name: clickhouse-data
           persistentVolumeClaim:
             claimName: {{ .Values.clickhouse.clickhouse.existingClaim }}
+        {{- end }}
         - name: clickhouse-config
           configMap:
             name: {{ include "sentry.fullname" . }}-clickhouse-config
@@ -77,4 +79,17 @@ spec:
         - name: clickhouse-users
           configMap:
             name: {{ include "sentry.fullname" . }}-clickhouse-users
+  {{- if not .Values.clickhouse.clickhouse.existingClaim }}
+  volumeClaimTemplates:
+    - metadata:
+        name: clickhouse-data
+      spec:
+        accessModes:
+          {{- range .Values.clickhouse.clickhouse.persistentVolumeClaim.dataPersistentVolume.accessModes }}
+          - {{ . | quote }}
+          {{- end }}
+        resources:
+          requests:
+            storage: {{ .Values.clickhouse.clickhouse.persistentVolumeClaim.dataPersistentVolume.storage }}
+  {{- end }}
 {{- end }}
