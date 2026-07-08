@@ -71,6 +71,9 @@ The OAuth2 client registration is named `eea` in the Spring Security configurati
 
 ## Releases
 
+### Version 0.8.55 - 08 July 2026
+- Update gn46 and add a value to set the maxFileSize setting [Juan Luis Rodriguez Ponce - [`5fd2a8f5`](https://github.com/eea/helm-charts/commit/5fd2a8f565ccb4beadcdd26b418f4b27bd67db33)]
+
 ### Version 0.8.54 - 01 July 2026
 - Update gn46 image to eea-4.9.x-02000e21 [Juan Luis Rodriguez Ponce - [`f32b8624`](https://github.com/eea/helm-charts/commit/f32b86245fd1cae241a738d1f0969b0692f27323)]
 
