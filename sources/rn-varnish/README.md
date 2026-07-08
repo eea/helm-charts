@@ -81,6 +81,9 @@ rn-varnish: # Assuming you named your rn-varnish subchart "rn-varnish"
 
 ## Releases
 
+### Version 0.6.2 - 08 July 2026
+- Allow ingress to varnish port from anywhere in network policy [Olimpiu Rob - [`b4d3160e`](https://github.com/eea/helm-charts/commit/b4d3160e8cc97be7b731ac3510dac8c189981b2f)]
+
 ### Version 0.6.1 - 06 July 2026
 - Added varnishStaticTTL env [Olimpiu Rob - [`0d057e1f`](https://github.com/eea/helm-charts/commit/0d057e1fe4970ba3e099d9e8c2db04641066d29b)]
 
