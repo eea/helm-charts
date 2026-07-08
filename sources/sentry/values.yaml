@@ -3721,6 +3721,9 @@ clickhouse:
   nodeSelector: {}
   # tolerations: []
   clickhouse:
+    image: clickhouse/clickhouse-server
+    imageVersion: "25.3"
+    imagePullPolicy: IfNotPresent
     replicas: "1"
     configmap:
       remote_servers:
