@@ -70,7 +70,9 @@ data:
               eea:
                 issuer-uri: {{ .Values.gn5.oauth2.issuerUri }}
                 user-name-attribute: {{ .Values.gn5.oauth2.userNameAttribute }}
-
+      servlet:
+        multipart:
+          max-file-size: {{ .Values.gn5.maxFileSize }}
     {{- else }}
 
     spring:
@@ -79,7 +81,9 @@ data:
           client:
             registration: {}
             provider: {}
-            
+      servlet:
+        multipart:
+          max-file-size: {{ .Values.gn5.maxFileSize }}
     {{- end }}
 
 
