@@ -10,6 +10,9 @@ This chart deployes the BISE frontend app
 
 ## Releases
 
+### Version 2.20.1 - 10 July 2026
+- Improve Content-Security-Policy headers Refs [#294574](https://taskman.eionet.europa.eu/issues/294574) [Teodor Voicu - [`33fcc319`](https://github.com/eea/helm-charts/commit/33fcc319ed2a6b1d7c726d66cb8c61dbea4c34bb)]
+
 ### Version 2.20.0 - 10 July 2026
 - Automated release of [eeacms/bise-frontend:4.4.0](https://github.com/eea/bise-frontend/releases) [EEA Jenkins - [`291305f3`](https://github.com/eea/helm-charts/commit/291305f3802d75b6557c22145529459a53c2cdbf)]
 
