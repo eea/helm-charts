@@ -67,6 +67,9 @@ This can be used to set the rabbitmq host to be used.
 
 ## Releases
 
+### Version 0.71.1 - 10 July 2026
+- Added affinity and tolerations to redis and added curlFlags and sharedCurlFlags for cron-sync-cronjob [Olimpiu Rob - [`5d16d25d`](https://github.com/eea/helm-charts/commit/5d16d25d96754d1f627ca16c4af35d44f47664d2)]
+
 ### Version 0.71.0 - 01 July 2026
 - Automated release of [eeacms/reportek-bdr:5.9.4-286](https://github.com/eea/eea.docker.reportek.bdr-instance/releases) [EEA Jenkins - [`3e81f931`](https://github.com/eea/helm-charts/commit/3e81f931611b91b4dd6ac698a8fbfe1dc7572203)]
 
