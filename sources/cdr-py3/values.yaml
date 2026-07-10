@@ -248,6 +248,8 @@ webforms:
     # Path exposed on the public ingress (chart adds the rewrite for nginx and PathPrefix for gatewayAPI)
     publicPath: /webforms
     proxyBodySize: "10m"
+    tolerations: []
+    affinity: {}
     # The external service is proxied via an in-cluster nginx pod
     upstream:
       host: webforms.eionet.europa.eu
