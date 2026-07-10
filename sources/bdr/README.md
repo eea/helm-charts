@@ -67,6 +67,9 @@ This can be used to set the rabbitmq host to be used.
 
 ## Releases
 
+### Version 0.71.2 - 10 July 2026
+- Indentation fixes for affinity and tolerations in redis-deployment [Olimpiu Rob - [`855243de`](https://github.com/eea/helm-charts/commit/855243de22169f63568533839a20cb489fe4e6d0)]
+
 ### Version 0.71.1 - 10 July 2026
 - Added affinity and tolerations to redis and added curlFlags and sharedCurlFlags for cron-sync-cronjob [Olimpiu Rob - [`5d16d25d`](https://github.com/eea/helm-charts/commit/5d16d25d96754d1f627ca16c4af35d44f47664d2)]
 
