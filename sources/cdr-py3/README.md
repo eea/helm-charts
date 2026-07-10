@@ -128,6 +128,9 @@ When `ldapMemcachedServers` is empty the env var is omitted entirely.
 
 ## Releases
 
+### Version 0.1.29 - 10 July 2026
+- Added tolerations and affinity for webforms-proxy [Olimpiu Rob - [`0d6c8a5c`](https://github.com/eea/helm-charts/commit/0d6c8a5c89418a2c0a48b41afc3e43385c96e0af)]
+
 ### Version 0.1.28 - 08 July 2026
 - Updated rn-varnish to 0.6.2 [Olimpiu Rob - [`82be4220`](https://github.com/eea/helm-charts/commit/82be42204846f6f0f66be85ad7642087278e69fb)]
 
