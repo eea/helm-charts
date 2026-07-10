@@ -44,7 +44,14 @@ spec:
             - name: TZ
               value: {{ $.Values.timezone | quote }}
             - name: SYNC_CMD
-              value: {{ printf "curl --silent --header \"Authorization: %s\" \"%s\"" $cronjob.token $cronjob.syncURL | quote }}
+              {{- $sharedCurlFlags := default "" $.Values.cron.sharedCurlFlags }}
+              {{- $jobCurlFlags := default "" $cronjob.curlFlags }}
+              {{- $curlFlags := printf "%s %s" $sharedCurlFlags $jobCurlFlags | trim }}
+              {{- if $curlFlags }}
+              value: {{ printf "curl %s --header \"Authorization: %s\" \"%s\"" $curlFlags $cronjob.token $cronjob.syncURL | quote }}
+              {{- else }}
+              value: {{ printf "curl --header \"Authorization: %s\" \"%s\"" $cronjob.token $cronjob.syncURL | quote }}
+              {{- end }}
           {{- with $.Values.cron.sharedCronJobNodeSelector }}
           nodeSelector:
             {{- toYaml . | nindent 12 }}

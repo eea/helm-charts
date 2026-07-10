@@ -44,4 +44,12 @@ spec:
             {{- toYaml .Values.redis.readinessProbe | nindent 12 }}
           resources:
             {{- toYaml .Values.redis.resources | nindent 12 }}
+          {{- with $.Values.redis.affinity }}
+          affinity:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with $.Values.redis.tolerations }}
+          tolerations:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
       restartPolicy: Always
