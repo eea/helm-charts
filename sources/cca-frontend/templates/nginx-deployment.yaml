@@ -34,12 +34,22 @@ spec:
           volumeMounts:
             - name: nginx-config
               mountPath: /etc/nginx/conf.d
+            {{- if and .Values.nginx.basicAuth.username .Values.nginx.basicAuth.password }}
+            - name: nginx-auth
+              mountPath: /etc/nginx/auth
+              readOnly: true
+            {{- end }}
           resources:
             {{- toYaml .Values.nginx.resources | nindent 12 }}
       volumes:
         - name: nginx-config
           configMap:
             name: {{ include "cca-frontend.componentName" (dict "root" . "component" "nginx-config") }}
+        {{- if and .Values.nginx.basicAuth.username .Values.nginx.basicAuth.password }}
+        - name: nginx-auth
+          secret:
+            secretName: {{ include "cca-frontend.componentName" (dict "root" . "component" "nginx-basic-auth") }}
+        {{- end }}
       {{- with .Values.nginx.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

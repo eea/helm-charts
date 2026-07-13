@@ -376,3 +376,17 @@ questions:
     required: true
     default: "3Gi"
     group: "Memory"
+
+  - variable: "nginx.basicAuth.username"
+    label: "Username for /_admin"
+    description: "Set username for /_admin endpoint"
+    type: "string"
+    required: false
+    group: "Nginx"
+
+  - variable: "nginx.basicAuth.password"
+    label: "Password for /_admin"
+    description: "Set password for /_admin endpoint"
+    type: "password"
+    required: false
+    group: "Nginx"

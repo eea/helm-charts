@@ -193,6 +193,9 @@ nginx:
   nodeSelector: {}
   tolerations: []
   affinity: {}
+  basicAuth:
+    username: ""
+    password: ""
 
 debug:
   addonsPath: /app/src/addons
