@@ -28,6 +28,9 @@ database:
 ## Release notes
 
 <dl>
+  <dt>Version 1.2.0</dt>
+  <dd>Java 11 upgrade, dead remote file URL functionality, removed the dependency Eionet portal stylesheets.</dd>
+
   <dt>Version 1.1.0</dt>
   <dd>XForms functionality removal, jackson update.</dd>
 
