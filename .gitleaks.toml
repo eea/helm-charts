@@ -1,0 +1,148 @@
+title = "Betterleaks config"
+
+[extend]
+useDefault = true
+
+[[rules]]
+id = "secret-literal-assignment"
+description = "Secret-like literal assignment in source, YAML, env and config files"
+regex = '''(?i)([A-Za-z0-9_.-]*(?:password|passwd|pwd|api[_-]?key|apikey|access[_-]?key|secret[_-]?access[_-]?key|private[_-]?key|client[_-]?secret|consumer[_-]?key|consumer[_-]?secret|(?:auth|access|refresh|session|api|bearer|id|jwt|csrf|xsrf|oauth)[_-]?token|translate[_-]?auth|translation[_-]?auth|auth[_-]?password|auth[_-]?key|auth[_-]?credentials|database[_-]?url|connection[_-]?string)[A-Za-z0-9_.-]*)[ \t]*[:=][ \t]*["'']?([^"''[:space:]#{}$.][^"''\n#{}]{2,})["'']?'''
+secretGroup = 2
+keywords = [
+  "password",
+  "passwd",
+  "pwd",
+  "api_key",
+  "apikey",
+  "access_key",
+  "private_key",
+  "client_secret",
+  "consumer_key",
+  "consumer_secret",
+  "auth_token",
+  "access_token",
+  "refresh_token",
+  "session_token",
+  "api_token",
+  "bearer_token",
+  "id_token",
+  "jwt_token",
+  "csrf_token",
+  "xsrf_token",
+  "oauth_token",
+  "translate_auth",
+  "translation_auth",
+  "auth_password",
+  "auth_key",
+  "auth_credentials",
+  "database_url",
+  "connection_string"
+]
+tags = ["literal-secret"]
+
+[[rules]]
+id = "env-short-secret-assignment"
+description = "Uppercase env-style PASS/TOKEN/SECRET assignment"
+regex = '''\b((?:PASS|TOKEN|SECRET|[A-Z0-9_]*(?:_PASS|_TOKEN|_SECRET|PASS_|TOKEN_|SECRET_)[A-Z0-9_]*))[ \t]*[:=][ \t]*["'']?([^"''[:space:]#{}$.][^"''\n#{}]{2,})["'']?'''
+secretGroup = 2
+keywords = [
+  "PASS",
+  "TOKEN",
+  "SECRET"
+]
+tags = ["env", "literal-secret"]
+
+[[rules]]
+id = "standalone-sk-token"
+description = "Standalone sk-* token not attached to a secret-like variable name"
+regex = '''(?i)\b(sk-[A-Za-z0-9][A-Za-z0-9_-]{20,})\b'''
+secretGroup = 1
+entropy = 2.5
+keywords = ["sk-"]
+tags = ["standalone-token", "generic"]
+
+[[rules]]
+id = "dotenv-only-jest-setup"
+description = ".env may only contain the committed Jest setup lines"
+path = '''(?i)(^|/)\.env$'''
+regex = '''(?m)^(.+)$'''
+secretGroup = 1
+tags = ["file", "dotenv"]
+[[rules.allowlists]]
+regexTarget = "match"
+regexes = [
+  '''^JEST_USE_SETUP=(ON|OFF) # Jest configuration variables: ON, OFF\r?$''',
+]
+
+[[rules]]
+id = "forbidden-secret-file"
+description = "Forbidden secret-bearing file committed to repository"
+path = '''(?i)(^|/)(\.env\..*|\.npmrc|\.pypirc|id_rsa|id_ed25519|.*\.(pem|key|p12|pfx|jks|kubeconfig))$'''
+regex = '''(?s).{1,}'''
+tags = ["file", "secret-file"]
+
+[[allowlists]]
+description = "Allow Jenkins SonarQube token environment variable reference"
+regexTarget = "match"
+regexes = [
+  '''SONAR_AUTH_TOKEN''',
+]
+
+[[allowlists]]
+description = "Allow Helm chart placeholder and local development default values"
+regexTarget = "match"
+regexes = [
+  '''(?i)[:=][ \t]*["'']?(?:REPLACEME|replaceme|replaceme-with-a-secure-password|changeme|admin|password|secret|zope|zope_456|postgres|plone|airflow|guest|redmine|databasepassword|redis_password|s3_aws_access_key_id|s3_aws_secret_access_key|oauth_client_secret|opensearch_admin_password|db_readonly_password|rotest|rwtest|kibanatest|minioadmin|smtp_pass|from_file|newRootPassword123|RandomPassword1|secure-password|your-secure-master-key|sk-your-langfuse-secret-key)\b''',
+  '''(?i)[:=][ \t]*["'']?(?:\{\{[^"''\n]*\}\}|env\([^"''\n]*\)|os\.environ\.get\([^"''\n]*\))''',
+  '''(?i)[:=][ \t]*["'']?(?:None|""|YWRtaW4=|secretpassword|xxxxx|YOUR_[A-Z0-9_]+)\b''',
+  '''(?i)[:=][ \t]*["'']?(?:CHANGE_THIS|your-[A-Za-z0-9-]+|my[A-Za-z0-9-]+|kibana-user-password|kibanaPassword123|mySecurePassword123|myPasswordKey|test|mailtrap|oauth_cookie_secret|user_auth_secret|Admin123!@#|newMetricsPassword|sentry-password|postgresql-password|xxj31ZMTZzkVA|<SSH-KEY-FROM-R-CLIENT-ABOVE>|\[PASSWORD\]|Q-[0-9a-f-]{36}-0|zM2\?vQ0&mI5>xP2\*1)\b''',
+  '''(?i)(?:password|passwd|secret|token|key)[A-Za-z0-9_.-]*[ \t]*:?=[ \t]*(?:include|index|tpl|os\.getenv|os\.environ\.get|env\(|append|default|randAlphaNum|randAscii|regexReplaceAllLiteral|printf|list|dict|splitList|join|\.Values|\$[A-Za-z_])''',
+  '''(?i)\{\{[^}\n]*(?:password|passwd|secret|token|key)[^}\n]*\}\}''',
+  '''(?i)-u[ \t]+["'']?[^"''\n]*\{\{[^}\n]*\}\}''',
+  '''(?i)--set[^\n]*(?:password|secret|key|token)[^=]*=[A-Za-z0-9_\[\]-]+''',
+  '''(?i)postgresql://\{\{''',
+  '''sk-your-langfuse-secret-key''',
+  '''(?i)passwords?: this is configured''',
+  '''YWRtaW4=''',
+  '''passwordReset:[ \t]*"https://www\.eionet\.europa\.eu/password-reset"''',
+  '''(?i)(adminPassword|rootPassword):[ \t]*"sha"''',
+  '''xxj31ZMTZzkVA''',
+  '''passwordList[ \t]*=''',
+  '''encodedPassword[ \t]*:=[ \t]*\.password''',
+  '''DATABASE_URL:[ \t]*"postgresql://''',
+  '''previous root password''',
+  '''root password:[ \t]*This value''',
+  '''password:[ \t]*This value''',
+  '''on_9B3hXYZ1234567890vll''',
+  '''SSH_AUTH_KEY="<SSH-KEY-FROM-R-CLIENT-ABOVE>"''',
+  '''opensearch_admin_password:[ \t]*"Admin123!@#"''',
+  '''[:=][ \t]*"?Admin123''',
+  '''privateKey:[ \t]*"-----BEGIN RSA PRIVATE KEY-----''',
+  '''# password:[ \t]*redis''',
+  '''password:[ \t]*redis''',
+  '''(?i)sentry_key=[A-Fa-f0-9]{20,}''',
+  '''tableau_token=Sohcuk5wohjuoPheedeifeMooghahqu3''',
+  '''on_9B3hX\*{4}0vll''',
+]
+
+[[allowlists]]
+description = "Allow public CA certificate bundles committed with charts"
+condition = "AND"
+regexTarget = "match"
+paths = [
+  '''^sources/(eionetldap|rn-bdr-ldap)/cacerts\.pem$''',
+]
+regexes = [
+  '''-----BEGIN CERTIFICATE-----''',
+]
+
+[[allowlists]]
+description = "Allow documented example private key in chart README"
+condition = "AND"
+regexTarget = "match"
+paths = [
+  '''^sources/logcentral-graylog6/README\.md$''',
+]
+regexes = [
+  '''-----BEGIN PRIVATE KEY-----''',
+]
