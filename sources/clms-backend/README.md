@@ -10,6 +10,9 @@ This chart deployes the CLMS backend app
 
 ## Releases
 
+### Version 2.33.8 - 15 July 2026
+- minor [Dobricean Ioan Dorian - [`1b85a1be`](https://github.com/eea/helm-charts/commit/1b85a1be9a0b4ab55c242b70e0f7abecf2bd3f1a)]
+
 ### Version 2.33.6 - 10 July 2026
 - fix [Dobricean Ioan Dorian - [`467916ca`](https://github.com/eea/helm-charts/commit/467916ca716e9c1caf02fefd60b15773dd4c039d)]
 
