@@ -71,6 +71,9 @@ The OAuth2 client registration is named `eea` in the Spring Security configurati
 
 ## Releases
 
+### Version 0.8.57 - 15 July 2026
+- Update gn5 image tag to 116bfffc [Juan Luis Rodriguez Ponce - [`4f71bdaf`](https://github.com/eea/helm-charts/commit/4f71bdaff4b9a7934a3ca9ec1863547808e4b594)]
+
 ### Version 0.8.56 - 15 July 2026
 - Update gn5 image to 00837965 [Juan Luis Rodriguez Ponce - [`d9805915`](https://github.com/eea/helm-charts/commit/d9805915e4c2eaee7edd6177d49167cf80ccb9ad)]
 
