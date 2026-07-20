@@ -27,6 +27,9 @@ The stack needs a rancher_crontab stack to start it according to the Run Schedul
 
 ## Releases
 
+### Version 1.18.1 - 20 July 2026
+- fix indentation for jobs history limit in wikiman-cron.yaml [Mihai Dobrescu - [`87d2ac38`](https://github.com/eea/helm-charts/commit/87d2ac3819843a89259647917c0ae997ae6f6ab5)]
+
 ### Version 1.18.0 - 17 July 2026
 - Automated release of [eeacms/redmine-wikiman:2.1.20](https://github.com/eea/eea.docker.redmine-wikiman/releases) [EEA Jenkins - [`3a0d00b2`](https://github.com/eea/helm-charts/commit/3a0d00b245d067efb5203ffcc11dc78f5a6429d8)]
 
