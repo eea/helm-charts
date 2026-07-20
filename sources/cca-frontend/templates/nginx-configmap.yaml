@@ -101,6 +101,11 @@ data:
         proxy_pass http://backend_varnish;
       }
 
+      location ~ ^/_admin/portal_catalog(.*)$ {
+        rewrite ^/_admin/portal_catalog(.*)$ /VirtualHostBase/https/$host:443/{{ include "cca-frontend.virtualHostRoot" . }}/VirtualHostRoot/_vh__admin/portal_catalog$1 break;
+        proxy_pass http://backend_varnish;
+      }
+
       location ~ ^/_admin(.*)$ {
         {{- if and .Values.nginx.basicAuth.username .Values.nginx.basicAuth.password }}
         auth_basic "Restricted Area";
