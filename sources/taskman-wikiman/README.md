@@ -27,6 +27,9 @@ The stack needs a rancher_crontab stack to start it according to the Run Schedul
 
 ## Releases
 
+### Version 1.18.3 - 20 July 2026
+- edit access modes for PVCs [Mihai Dobrescu - [`7a7e284b`](https://github.com/eea/helm-charts/commit/7a7e284b2f9636ea8cd136eb696d3a280761535c)]
+
 ### Version 1.18.1 - 20 July 2026
 - fix indentation for jobs history limit in wikiman-cron.yaml [Mihai Dobrescu - [`87d2ac38`](https://github.com/eea/helm-charts/commit/87d2ac3819843a89259647917c0ae997ae6f6ab5)]
 
