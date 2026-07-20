@@ -11,6 +11,8 @@ spec:
   concurrencyPolicy: Forbid
   jobTemplate:
     spec:
+      successfulJobsHistoryLimit: {{ .Values.wikiman.keepSuccessfulPods }}
+      failedJobsHistoryLimit: {{ .Values.wikiman.keepFailedPods }}
       template:
         spec:
           {{- with .Values.imagePullSecrets }}
@@ -18,8 +20,6 @@ spec:
             {{- toYaml . | nindent 8 }}
           {{- end }}
           serviceAccountName: {{ include "appl.serviceAccountName" . }}
-          successfulJobsHistoryLimit: {{ .Values.wikiman.keepSuccessfulPods }}
-          failedJobsHistoryLimit: {{ .Values.wikiman.keepFailedPods }}
           containers:
           - name: wikiman
             image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
