@@ -43,7 +43,7 @@ spec:
               name: git
 
             resources:
-              {{- toYaml .Values.wikiman.resources | nindent 10 }}
+              {{- toYaml .Values.wikiman.resources | nindent 14 }}
 
             securityContext:
               {{- toYaml .Values.wikiman.securityContext | nindent 16 }}
