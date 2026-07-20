@@ -51649,6 +51649,59 @@ entries:
           image: vespaengine/vespa:8.609.39
       licenses: MIT
     apiVersion: v2
+    appVersion: v4.3.9-eea.0.0.114-dev
+    created: "2026-07-20T16:56:49.801204316Z"
+    dependencies:
+    - condition: vespa.enabled
+      name: vespa
+      repository: https://eea.github.io/helm-charts
+      version: 0.2.27
+    - condition: opensearch.enabled
+      name: opensearch
+      repository: https://opensearch-project.github.io/helm-charts
+      version: 3.4.0
+    - condition: minio.enabled
+      name: minio
+      repository: https://charts.min.io/
+      version: 5.4.0
+    - condition: postfix.enabled
+      name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.2.0
+    - condition: codeInterpreter.enabled
+      name: code-interpreter
+      repository: https://onyx-dot-app.github.io/python-sandbox/
+      version: 0.3.3
+    description: An Onyx derived Helm chart for GPTLab
+    digest: 5530e887611d9db5b907d76e2c497756eeaa2aa6100059fd4d83d604bbd78df0
+    home: https://www.onyx.app/
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/onyx/logo_onyx.png
+    keywords:
+    - gptlab
+    - ai
+    - search
+    - question-answering
+    - onyx
+    name: onyx-stack
+    sources:
+    - https://github.com/onyx-dot-app/onyx
+    type: application
+    urls:
+    - onyx-stack-0.10.0.tgz
+    version: 0.10.0
+  - annotations:
+      category: Productivity
+      images: |
+        - name: webserver
+          image: eeacms/danswer:web-v3.2.1-eea.0.0.115
+        - name: background
+          image: eeacms/danswer:backend-v3.2.1-eea.0.0.115
+        - name: model-server
+          image: eeacms/danswer:model_server-v3.2.1-eea.0.0.115
+        - name: vespa
+          image: vespaengine/vespa:8.609.39
+      licenses: MIT
+    apiVersion: v2
     appVersion: v3.2.1-eea.0.0.115
     created: "2026-07-02T15:03:55.365216+03:00"
     dependencies:
@@ -62960,4 +63013,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2026-07-20T14:18:07.718870242Z"
+generated: "2026-07-20T16:56:49.792681162Z"
