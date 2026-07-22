@@ -25,6 +25,11 @@ links:
 ingress:
   annotations:
     cert-manager.io/cluster-issuer: 01dev-eea-letsencrypt
+  annotationsAdmin: {}
+  annotationsPlusApi: {}
+  annotationsApi: {}
+  annotationsGoogle: {}
+  annotationsOgc: {}
   certificate: key-01dev-letsencrypt
   tls: true
   ratelimitting:

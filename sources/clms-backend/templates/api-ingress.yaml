@@ -13,6 +13,9 @@ metadata:
   {{- with .Values.ingress.annotations }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
+  {{- with .Values.ingress.annotationsPlusApi }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 
 spec:
   ingressClassName: nginx
