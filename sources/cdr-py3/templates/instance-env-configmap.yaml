@@ -41,6 +41,9 @@ data:
   ZEO_SHARED_BLOB_DIR: '{{ if eq (.Values.instance.env.zeoSharedBlobDir | default "off" | toString) "on" }}on{{ else }}off{{ end }}'
   SESSION_MANAGER_TIMEOUT: '{{ .Values.instance.env.sessionManagerTimeout }}'
   SESSION_COOKIE_EXPIRES: '{{ .Values.instance.env.sessionCookieExpires }}'
+  SESSION_COOKIE_SECURE: '{{ .Values.instance.env.sessionCookieSecure }}'
+  SESSION_COOKIE_HTTPONLY: '{{ .Values.instance.env.sessionCookieHttpOnly }}'
+  SESSION_COOKIE_SAMESITE: '{{ .Values.instance.env.sessionCookieSameSite }}'
   LOCAL_CONVERTERS_HOST: '{{ .Values.instance.env.localConvertersHost }}'
   {{- if .Values.instance.env.ldapMemcachedServers }}
   LDAP_MEMCACHED_SERVERS: '{{ .Values.instance.env.ldapMemcachedServers }}'

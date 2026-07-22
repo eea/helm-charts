@@ -447,10 +447,32 @@ questions:
     default: 4
     group: "Advanced Settings"
 
-  - variable: instance.env.beakerSecret
-    label: "Beaker Secret"
+  - variable: instance.env.sessionSecret
+    label: "Session Secret"
     type: password
     default: ""
+    group: "Advanced Settings"
+
+  - variable: instance.env.sessionCookieSecure
+    label: "Secure Session Cookie"
+    type: boolean
+    default: true
+    group: "Advanced Settings"
+
+  - variable: instance.env.sessionCookieHttpOnly
+    label: "HTTPOnly Session Cookie"
+    type: boolean
+    default: true
+    group: "Advanced Settings"
+
+  - variable: instance.env.sessionCookieSameSite
+    label: "Session Cookie SameSite"
+    type: enum
+    options:
+      - "Lax"
+      - "Strict"
+      - "None"
+    default: "Lax"
     group: "Advanced Settings"
 
   - variable: instance.env.deploymentHost
