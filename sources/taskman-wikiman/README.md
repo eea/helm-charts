@@ -27,6 +27,9 @@ The stack needs a rancher_crontab stack to start it according to the Run Schedul
 
 ## Releases
 
+### Version 1.19.2 - 22 July 2026
+- fix accessmode for logs pvc [Mihai Dobrescu - [`5557c238`](https://github.com/eea/helm-charts/commit/5557c238733e83252118b45635cf8fb284d05b52)]
+
 ### Version 1.19.1 - 22 July 2026
 - fix accessmodes [Mihai Dobrescu - [`36b07bff`](https://github.com/eea/helm-charts/commit/36b07bffc690ca32a5c591a779558224b7857ad7)]
 
