@@ -4,6 +4,9 @@ A Nextcloud instance for sharing files.
 
 ## Releases
 
+### Version 0.4.0 - 23 July 2026
+- Nextcloud 33.0.6 [valentinab25 - [`cdd0985d`](https://github.com/eea/helm-charts/commit/cdd0985d059403f95743b903937a1852bf0bb441)]
+
 ### Version 0.3.0 - 23 July 2026
 - Upgrade to 32.0.12-fpm [valentinab25 - [`e517b457`](https://github.com/eea/helm-charts/commit/e517b4571e4fb03c6576ce4f33253d8bbd052506)]
 
