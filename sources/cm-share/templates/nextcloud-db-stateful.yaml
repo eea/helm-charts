@@ -29,7 +29,7 @@ spec:
 
       containers:
       - name: db
-        image: mariadb:10.6.21
+        image: mariadb:10.6.27
         args:
         - --transaction-isolation=READ-COMMITTED
         - --binlog-format=ROW
