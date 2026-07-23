@@ -4,6 +4,9 @@ A Nextcloud instance for sharing files.
 
 ## Releases
 
+### Version 0.4.1 - 23 July 2026
+- Upgrade mariadb, nginx to latest patch [valentinab25 - [`cfdd5f90`](https://github.com/eea/helm-charts/commit/cfdd5f90fe0c86682521ef83972c43179bb5dccd)]
+
 ### Version 0.4.0 - 23 July 2026
 - Nextcloud 33.0.6 [valentinab25 - [`cdd0985d`](https://github.com/eea/helm-charts/commit/cdd0985d059403f95743b903937a1852bf0bb441)]
 
