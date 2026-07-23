@@ -63,6 +63,30 @@ spec:
         - mountPath: /data
           name: {{ .Values.pvcNames.cmshareData }}
 
+        {{- if (.Values.app.livenessProbe) }}
+        livenessProbe:
+          {{- toYaml .Values.app.livenessProbe | nindent 10 }}
+        {{- end }}
+
+        {{- if (.Values.app.startupProbe) }}
+        {{- $startupProbe := deepCopy .Values.app.startupProbe }}
+        {{- if and (hasKey $startupProbe "tcpSocket") (hasKey $startupProbe "httpGet") }}
+        {{- $_ := unset $startupProbe "httpGet" }}
+        {{- end }}
+        startupProbe:
+          {{- toYaml $startupProbe | nindent 10 }}
+        {{- end }}
+
+        {{- if (.Values.app.readinessProbe) }}
+        {{- $readinessProbe := deepCopy .Values.app.readinessProbe }}
+        {{- if and (hasKey $readinessProbe "tcpSocket") (hasKey $readinessProbe "httpGet") }}
+        {{- $_ := unset $readinessProbe "httpGet" }}
+        {{- end }}
+        readinessProbe:
+          {{- toYaml $readinessProbe | nindent 10 }}
+        {{- end }}
+
+
         securityContext:
           {{- toYaml .Values.app.securityContext | nindent 10 }}
 
