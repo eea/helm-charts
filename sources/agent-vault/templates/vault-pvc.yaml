@@ -1,0 +1,18 @@
+{{- if and (not .Values.agentVault.database.enabled) .Values.agentVault.persistence.enabled (not .Values.agentVault.persistence.existingClaim) }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "agent-vault.vault.fullname" . }}-data
+  labels:
+    {{- include "agent-vault.labels" . | nindent 4 }}
+    component: vault
+spec:
+  accessModes:
+    - {{ .Values.agentVault.persistence.accessMode }}
+  resources:
+    requests:
+      storage: {{ .Values.agentVault.persistence.size }}
+  {{- if .Values.agentVault.persistence.storageClassName }}
+  storageClassName: {{ .Values.agentVault.persistence.storageClassName }}
+  {{- end }}
+{{- end }}

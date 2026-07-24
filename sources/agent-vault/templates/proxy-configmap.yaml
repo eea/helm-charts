@@ -1,0 +1,80 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "agent-vault.proxy.fullname" . }}
+  labels:
+    {{- include "agent-vault.labels" . | nindent 4 }}
+    component: proxy
+data:
+  nginx.conf: |
+    worker_processes auto;
+    error_log /var/log/nginx/error.log warn;
+    pid /var/run/nginx.pid;
+
+    events {
+        worker_connections 1024;
+    }
+
+    http {
+        include       /etc/nginx/mime.types;
+        default_type  application/octet-stream;
+
+        log_format main '$remote_addr - $remote_user [$time_local] "$request" '
+                        '$status $body_bytes_sent "$http_referer" '
+                        '"$http_user_agent"';
+        access_log /var/log/nginx/access.log main;
+
+        sendfile on;
+        keepalive_timeout 65;
+
+        server_tokens off;
+
+        include /etc/nginx/conf.d/*.conf;
+    }
+
+  # Templated by the nginx image's docker-entrypoint at container start
+  # (envsubst on files under /etc/nginx/templates/*.template).
+  default.conf.template: |
+    upstream agent_vault {
+        server ${AGENT_VAULT_UPSTREAM};
+        keepalive 16;
+    }
+
+    server {
+        listen ${PORT};
+        server_name _;
+
+        # Local liveness probe; Agent Vault's own /health forwards through normally.
+        location = /healthz {
+            access_log off;
+            default_type text/plain;
+            return 200 "ok\n";
+        }
+
+        # Refuse CONNECT — accepting it would turn this reverse proxy into an open forward proxy.
+        if ($request_method = CONNECT) {
+            return 405;
+        }
+
+        # MITM port is intentionally absent — never add it. See README.
+        location / {
+            proxy_pass http://agent_vault;
+            proxy_http_version 1.1;
+            proxy_set_header Connection "";
+
+            proxy_set_header Host              $host;
+            proxy_set_header X-Real-IP         $remote_addr;
+            proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+
+            # Strip oauth2-proxy-style headers in case future Vault versions trust them.
+            proxy_set_header X-Forwarded-User    "";
+            proxy_set_header X-Auth-Request-User "";
+
+            # Authorization is intentionally NOT stripped — see upstream README
+            # "Why we don't strip Authorization".
+
+            proxy_read_timeout 60s;
+            proxy_send_timeout 60s;
+        }
+    }

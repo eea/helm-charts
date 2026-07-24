@@ -1,0 +1,133 @@
+{{- $multiInstance := or (gt (.Values.agentVault.replicaCount | int) 1) .Values.agentVault.autoscaling.enabled }}
+{{- if and $multiInstance (not .Values.agentVault.database.enabled) }}
+{{- fail "agentVault.replicaCount > 1 (or agentVault.autoscaling.enabled) requires agentVault.database.enabled — the embedded SQLite store is not safe for multiple instances. See docs/self-hosting/postgres.mdx in Infisical/agent-vault." }}
+{{- end }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "agent-vault.vault.fullname" . }}
+  labels:
+    {{- include "agent-vault.labels" . | nindent 4 }}
+    component: vault
+spec:
+  {{- if not .Values.agentVault.autoscaling.enabled }}
+  replicas: {{ .Values.agentVault.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "agent-vault.vault.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "agent-vault.vault.selectorLabels" . | nindent 8 }}
+        {{- with .Values.agentVault.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      {{- with .Values.agentVault.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: agent-vault
+          image: "{{ .Values.agentVault.image.repository }}:{{ .Values.agentVault.image.tag }}"
+          imagePullPolicy: {{ .Values.agentVault.image.pullPolicy }}
+          env:
+            # Public URL of the reverse proxy — drives the av_session cookie's
+            # Secure flag and external links in notification emails.
+            - name: AGENT_VAULT_ADDR
+              value: {{ printf "https://%s" .Values.hostname | quote }}
+            - name: AGENT_VAULT_TRUSTED_PROXIES
+              value: {{ .Values.agentVault.trustedProxies | quote }}
+            - name: AGENT_VAULT_MASTER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "agent-vault.vault.fullname" . }}
+                  key: AGENT_VAULT_MASTER_PASSWORD
+            {{- if .Values.agentVault.database.enabled }}
+            {{- $useExistingSecret := and .Values.agentVault.database.existingSecret (not .Values.postgres.enabled) }}
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ if $useExistingSecret }}{{ .Values.agentVault.database.existingSecret }}{{ else }}{{ include "agent-vault.vault.fullname" . }}{{ end }}
+                  key: {{ if $useExistingSecret }}{{ .Values.agentVault.database.existingSecretKey }}{{ else }}DATABASE_URL{{ end }}
+            {{- end }}
+            {{- if or .Values.smtp.enabled .Values.mailtrap.enabled }}
+            - name: AGENT_VAULT_SMTP_HOST
+              value: {{ if .Values.mailtrap.enabled }}{{ printf "%s-mailtrap" .Release.Name | quote }}{{ else }}{{ required "smtp.host is required when smtp.enabled is true" .Values.smtp.host | quote }}{{ end }}
+            - name: AGENT_VAULT_SMTP_PORT
+              value: {{ if .Values.mailtrap.enabled }}"25"{{ else }}{{ .Values.smtp.port | quote }}{{ end }}
+            {{- if and (not .Values.mailtrap.enabled) .Values.smtp.username }}
+            - name: AGENT_VAULT_SMTP_USERNAME
+              value: {{ .Values.smtp.username | quote }}
+            {{- end }}
+            {{- if and (not .Values.mailtrap.enabled) (or .Values.smtp.password .Values.smtp.existingSecret) }}
+            - name: AGENT_VAULT_SMTP_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ if .Values.smtp.existingSecret }}{{ .Values.smtp.existingSecret }}{{ else }}{{ include "agent-vault.vault.fullname" . }}{{ end }}
+                  key: {{ if .Values.smtp.existingSecret }}{{ .Values.smtp.existingSecretKey }}{{ else }}AGENT_VAULT_SMTP_PASSWORD{{ end }}
+            {{- end }}
+            - name: AGENT_VAULT_SMTP_FROM
+              value: {{ required "smtp.from is required when smtp.enabled or mailtrap.enabled is true" .Values.smtp.from | quote }}
+            - name: AGENT_VAULT_SMTP_FROM_NAME
+              value: {{ .Values.smtp.fromName | quote }}
+            - name: AGENT_VAULT_SMTP_TLS_MODE
+              value: {{ if .Values.mailtrap.enabled }}"none"{{ else }}{{ .Values.smtp.tlsMode | quote }}{{ end }}
+            - name: AGENT_VAULT_SMTP_TLS_SKIP_VERIFY
+              value: {{ .Values.smtp.tlsSkipVerify | quote }}
+            {{- end }}
+          ports:
+            - name: ui
+              containerPort: {{ .Values.agentVault.uiPort }}
+              protocol: TCP
+            - name: mitm
+              containerPort: {{ .Values.agentVault.mitmPort }}
+              protocol: TCP
+          # Pings the configured store (Postgres, or the local SQLite file) —
+          # see docs/self-hosting/postgres.mdx "Operational notes".
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: ui
+            initialDelaySeconds: 3
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: ui
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          {{- if not .Values.agentVault.database.enabled }}
+          volumeMounts:
+            - name: data
+              mountPath: /data
+          {{- end }}
+          resources:
+            {{- toYaml .Values.agentVault.resources | nindent 12 }}
+      {{- if not .Values.agentVault.database.enabled }}
+      volumes:
+        - name: data
+          {{- if .Values.agentVault.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ if .Values.agentVault.persistence.existingClaim }}{{ .Values.agentVault.persistence.existingClaim }}{{ else }}{{ include "agent-vault.vault.fullname" . }}-data{{ end }}
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
+      {{- end }}
+      {{- with .Values.agentVault.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.agentVault.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.agentVault.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

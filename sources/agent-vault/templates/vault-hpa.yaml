@@ -1,0 +1,33 @@
+{{- if .Values.agentVault.autoscaling.enabled }}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "agent-vault.vault.fullname" . }}
+  labels:
+    {{- include "agent-vault.labels" . | nindent 4 }}
+    component: vault
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "agent-vault.vault.fullname" . }}
+  minReplicas: {{ .Values.agentVault.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.agentVault.autoscaling.maxReplicas }}
+  metrics:
+    {{- if .Values.agentVault.autoscaling.targetCPUUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.agentVault.autoscaling.targetCPUUtilizationPercentage }}
+    {{- end }}
+    {{- if .Values.agentVault.autoscaling.targetMemoryUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.agentVault.autoscaling.targetMemoryUtilizationPercentage }}
+    {{- end }}
+{{- end }}

@@ -1,0 +1,22 @@
+apiVersion: v2
+name: agent-vault
+description: Infisical Agent Vault, deployed with a private management API/MITM proxy and a public nginx reverse proxy that exposes only the management UI
+type: application
+version: 0.1.0
+appVersion: "0.39.0"
+keywords:
+  - agent-vault
+  - infisical
+  - secrets
+  - proxy
+home: https://github.com/eea/helm-charts
+sources:
+  - https://github.com/eea/helm-charts
+  - https://github.com/Infisical/agent-vault
+maintainers:
+  - name: EEA
+dependencies:
+  - name: mailtrap
+    version: 1.0.3
+    repository: https://eea.github.io/helm-charts
+    condition: mailtrap.enabled

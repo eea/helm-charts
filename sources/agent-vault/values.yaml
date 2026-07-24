@@ -1,0 +1,225 @@
+# Public hostname the reverse proxy is exposed on.
+# Example: "val-agent-vault.01dev.eea.europa.eu"
+hostname: ""
+
+ingress:
+  enabled: true
+  # "nginx" (default, ingress-nginx) or "traefik". redirectHttps/ipAllowList
+  # below render as the matching controller's annotations for nginx, or as
+  # Traefik Middleware CRDs for traefik.
+  className: nginx
+  annotations: {}
+
+  # Secret name holding the TLS cert for hostname. Either an existing secret,
+  # or the name cert-manager should create/store the cert under when
+  # certManager.enabled is true.
+  certificate: ""
+
+  # Issues the certificate above via cert-manager instead of requiring a
+  # pre-existing TLS secret.
+  certManager:
+    enabled: false
+    # ClusterIssuer name, e.g. "letsencrypt-prod".
+    clusterIssuer: ""
+
+  # Redirects plain HTTP requests on this host to HTTPS (nginx.ingress.kubernetes.io/force-ssl-redirect
+  # for ingress-nginx, a RedirectScheme Middleware for traefik). Only
+  # meaningful once TLS is actually served (ingress.certificate set, directly
+  # or via cert-manager).
+  redirectHttps: true
+
+  # CIDRs allowed to reach the management UI (nginx.ingress.kubernetes.io/whitelist-source-range
+  # for ingress-nginx, an IPAllowList Middleware for traefik). Leave empty to
+  # allow all source IPs (relies on Agent Vault's own login for access
+  # control).
+  ipAllowList: []
+
+# -- Agent Vault (private: management UI/API on uiPort, MITM proxy on mitmPort) --
+agentVault:
+  # Ignored when autoscaling.enabled is true. Values > 1 require
+  # database.enabled — the embedded SQLite store (local /data volume) is not
+  # safe for multiple instances; see docs/self-hosting/postgres.mdx upstream.
+  replicaCount: 1
+
+  # Horizontal scaling. Requires database.enabled (Postgres) — instances are
+  # only stateless, and thus safely scalable, when backed by Postgres instead
+  # of the default embedded SQLite store.
+  autoscaling:
+    enabled: false
+    minReplicas: 2
+    maxReplicas: 5
+    targetCPUUtilizationPercentage: 75
+    targetMemoryUtilizationPercentage: ""
+
+  # PostgreSQL backend. Enabled by default — keeps instances stateless (no
+  # local volume) and ready to scale. See
+  # https://github.com/Infisical/agent-vault/blob/main/docs/self-hosting/postgres.mdx
+  database:
+    enabled: true
+    # postgres://user:password@host:5432/dbname?sslmode=require
+    # Ignored when postgres.enabled is true (the connection string is derived
+    # from postgres.auth.* instead). Otherwise required unless existingSecret
+    # is set.
+    url: ""
+    # Name of an existing Secret holding the connection string, instead of
+    # letting the chart create one from `url` above. Ignored when
+    # postgres.enabled is true.
+    existingSecret: ""
+    existingSecretKey: DATABASE_URL
+
+  image:
+    repository: infisical/agent-vault
+    tag: "0.39.0"
+    pullPolicy: IfNotPresent
+
+  # Port the management UI/API listens on. Reachable only from the nginx-proxy
+  # pods (via Service + NetworkPolicy) — never exposed through Ingress.
+  uiPort: 14321
+
+  # Port the transparent MITM proxy listens on. Agent-facing only, reachable
+  # only from within the cluster network — never exposed through Ingress.
+  mitmPort: 14322
+
+  # Required. Set via --set-string or a values file kept out of git.
+  masterPassword: ""
+
+  # CIDR(s) trusted as sitting in front of Agent Vault (the nginx-proxy pods).
+  # Without this, audit logs record the reverse proxy's IP for every request.
+  # Left empty by default; set to the cluster's pod CIDR or a tighter range.
+  trustedProxies: ""
+
+  podAnnotations: {}
+  podLabels: {}
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+  # Ignored when database.enabled is true — Postgres-backed instances are
+  # stateless and mount no local volume.
+  persistence:
+    enabled: true
+    size: 1Gi
+    storageClassName: ""
+    accessMode: ReadWriteOnce
+    existingClaim: ""
+
+# -- nginx reverse proxy (public: forwards to agentVault.uiPort only) --
+proxy:
+  replicaCount: 1
+
+  image:
+    repository: nginx
+    tag: "1.27-alpine"
+    pullPolicy: IfNotPresent
+
+  port: 8080
+
+  service:
+    type: ClusterIP
+
+  podAnnotations: {}
+  podLabels: {}
+
+  resources:
+    requests:
+      cpu: 25m
+      memory: 32Mi
+    limits:
+      cpu: 200m
+      memory: 128Mi
+
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+# -- Bundled PostgreSQL, deployed from this chart's own templates --
+# When enabled, agentVault.database.url/existingSecret are ignored: the
+# DATABASE_URL is derived from postgres.auth.* and this chart's own Postgres
+# Service. Set postgres.enabled: false and use agentVault.database.url (or
+# existingSecret) instead to point at an externally managed Postgres.
+postgres:
+  enabled: false
+
+  image:
+    repository: postgres
+    tag: "16-alpine"
+    pullPolicy: IfNotPresent
+
+  auth:
+    username: agentvault
+    database: agentvault
+    # Required when postgres.enabled is true. Set via --set-string or a
+    # values file kept out of git.
+    password: ""
+
+  persistence:
+    enabled: true
+    size: 2Gi
+    storageClassName: ""
+    accessMode: ReadWriteOnce
+    existingClaim: ""
+
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 250m
+      memory: 256Mi
+
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+# -- SMTP, for verification codes, vault invites, and notifications --
+# See https://github.com/Infisical/agent-vault/blob/main/docs/self-hosting/environment-variables.mdx
+smtp:
+  enabled: false
+  # Ignored when mailtrap.enabled is true (derived from the mailtrap
+  # dependency's Service instead).
+  host: ""
+  port: 587
+  username: ""
+  # Required unless existingSecret is set. Leave both empty for an
+  # unauthenticated internal relay (e.g. Postfix/mailtrap on port 25).
+  password: ""
+  existingSecret: ""
+  existingSecretKey: AGENT_VAULT_SMTP_PASSWORD
+  from: ""
+  fromName: "Agent Vault"
+  # opportunistic, required, or none. Ignored on port 465 (always implicit TLS).
+  tlsMode: opportunistic
+  tlsSkipVerify: false
+
+# -- Bundled mailtrap (Postfix + web viewer), deployed as a chart dependency --
+# Dev/test-only email catch-all: nothing sent through it is really delivered.
+# When enabled, smtp.host/port are derived automatically (mailtrap.enabled
+# implies smtp.enabled and an unauthenticated relay on port 25) — set
+# smtp.host manually and leave mailtrap.enabled: false to use a real SMTP
+# provider or an external Postfix relay instead.
+mailtrap:
+  enabled: false
+  hostname: ""
+  ingress:
+    enabled: false
+    annotations: {}
+    certificate: ""
+
+# Restrict the agent-vault Service so only proxy pods (and, for uiPort,
+# nothing else) can reach it. Requires a NetworkPolicy-enforcing CNI.
+networkPolicy:
+  enabled: true
+
+imagePullSecrets: []
+
+nameOverride: ""
+fullnameOverride: ""

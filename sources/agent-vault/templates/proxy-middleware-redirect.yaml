@@ -1,0 +1,13 @@
+{{- if and .Values.ingress.enabled .Values.hostname (eq .Values.ingress.className "traefik") .Values.ingress.redirectHttps .Values.ingress.certificate }}
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: {{ include "agent-vault.proxy.fullname" . }}-redirect-https
+  labels:
+    {{- include "agent-vault.labels" . | nindent 4 }}
+    component: proxy
+spec:
+  redirectScheme:
+    scheme: https
+    permanent: true
+{{- end }}

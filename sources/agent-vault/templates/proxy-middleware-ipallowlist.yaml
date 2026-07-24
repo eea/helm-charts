@@ -1,0 +1,13 @@
+{{- if and .Values.ingress.enabled .Values.hostname (eq .Values.ingress.className "traefik") .Values.ingress.ipAllowList }}
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: {{ include "agent-vault.proxy.fullname" . }}-ip-allowlist
+  labels:
+    {{- include "agent-vault.labels" . | nindent 4 }}
+    component: proxy
+spec:
+  ipAllowList:
+    sourceRange:
+      {{- toYaml .Values.ingress.ipAllowList | nindent 6 }}
+{{- end }}

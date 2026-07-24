@@ -1,0 +1,58 @@
+{{- if and .Values.ingress.enabled .Values.hostname -}}
+{{- $isTraefik := eq .Values.ingress.className "traefik" -}}
+{{- $middlewares := list -}}
+{{- if $isTraefik -}}
+{{- if and .Values.ingress.redirectHttps .Values.ingress.certificate -}}
+{{- $middlewares = append $middlewares (printf "%s-%s-redirect-https@kubernetescrd" .Release.Namespace (include "agent-vault.proxy.fullname" .)) -}}
+{{- end -}}
+{{- if .Values.ingress.ipAllowList -}}
+{{- $middlewares = append $middlewares (printf "%s-%s-ip-allowlist@kubernetescrd" .Release.Namespace (include "agent-vault.proxy.fullname" .)) -}}
+{{- end -}}
+{{- end -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "agent-vault.fullname" . }}-ingress
+  labels:
+    {{- include "agent-vault.labels" . | nindent 4 }}
+    component: proxy
+  {{- if or .Values.ingress.certManager.enabled $middlewares (and (not $isTraefik) .Values.ingress.ipAllowList) (and (not $isTraefik) .Values.ingress.redirectHttps .Values.ingress.certificate) .Values.ingress.annotations }}
+  annotations:
+    {{- if .Values.ingress.certManager.enabled }}
+    cert-manager.io/cluster-issuer: {{ required "ingress.certManager.clusterIssuer is required when ingress.certManager.enabled is true" .Values.ingress.certManager.clusterIssuer | quote }}
+    {{- end }}
+    {{- if $middlewares }}
+    traefik.ingress.kubernetes.io/router.middlewares: {{ join "," $middlewares | quote }}
+    {{- end }}
+    {{- if not $isTraefik }}
+    {{- if and .Values.ingress.redirectHttps .Values.ingress.certificate }}
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    {{- end }}
+    {{- if .Values.ingress.ipAllowList }}
+    nginx.ingress.kubernetes.io/whitelist-source-range: {{ join "," .Values.ingress.ipAllowList | quote }}
+    {{- end }}
+    {{- end }}
+    {{- with .Values.ingress.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- end }}
+spec:
+  ingressClassName: {{ .Values.ingress.className }}
+  rules:
+    - host: {{ .Values.hostname }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "agent-vault.proxy.fullname" . }}
+                port:
+                  number: {{ .Values.proxy.port }}
+  {{- if .Values.ingress.certificate }}
+  tls:
+    - hosts:
+        - {{ .Values.hostname }}
+      secretName: {{ .Values.ingress.certificate }}
+  {{- end }}
+{{- end }}

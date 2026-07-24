@@ -1,0 +1,389 @@
+questions:
+  - variable: hostname
+    label: Public hostname
+    description: Public hostname the nginx reverse proxy is exposed on, e.g. val-agent-vault.01dev.eea.europa.eu.
+    type: hostname
+    required: true
+    group: "Ingress settings"
+
+  - variable: ingress.enabled
+    label: Enable Ingress
+    type: boolean
+    default: true
+    required: true
+    group: "Ingress settings"
+
+  - variable: ingress.className
+    label: IngressClass
+    description: "nginx (ingress-nginx) or traefik. Controls whether redirectHttps/ipAllowList below render as ingress-nginx annotations or Traefik Middleware CRDs."
+    type: string
+    default: nginx
+    required: true
+    group: "Ingress settings"
+    show_if: "ingress.enabled=true"
+
+  - variable: ingress.certManager.enabled
+    label: Request certificate via cert-manager
+    description: Adds the cert-manager.io/cluster-issuer annotation so cert-manager issues a Let's Encrypt certificate into the secret named by ingress.certificate.
+    type: boolean
+    default: false
+    required: true
+    group: "Ingress settings"
+    show_if: "ingress.enabled=true"
+
+  - variable: ingress.certManager.clusterIssuer
+    label: cert-manager ClusterIssuer
+    description: e.g. letsencrypt-prod.
+    type: string
+    default: ""
+    group: "Ingress settings"
+    show_if: "ingress.enabled=true&&ingress.certManager.enabled=true"
+
+  - variable: ingress.certificate
+    label: TLS secret name
+    description: Existing Kubernetes secret with the TLS certificate for hostname, or the secret name cert-manager should create when certManager.enabled is true. Leave empty to skip TLS at this Ingress.
+    type: string
+    default: ""
+    group: "Ingress settings"
+    show_if: "ingress.enabled=true"
+
+  - variable: ingress.redirectHttps
+    label: Redirect HTTP to HTTPS
+    description: Requires ingress.certificate to be set.
+    type: boolean
+    default: true
+    required: true
+    group: "Ingress settings"
+    show_if: "ingress.enabled=true"
+
+  - variable: ingress.ipAllowList
+    label: IP allowlist (CIDRs)
+    description: Restricts access to the management UI to these source CIDRs, enforced by a Traefik middleware (and, if networkPolicy.enabled, a best-effort NetworkPolicy). Leave empty to allow all source IPs.
+    type: array
+    default: []
+    group: "Ingress settings"
+    show_if: "ingress.enabled=true"
+
+  - variable: agentVault.masterPassword
+    label: Master password
+    description: Required. Agent Vault's master password, used to encrypt data at rest.
+    type: password
+    required: true
+    group: "Agent Vault settings"
+
+  - variable: agentVault.trustedProxies
+    label: Trusted proxy CIDR(s)
+    description: CIDR(s) the nginx reverse proxy pods run on. Without it, audit logs record the reverse proxy's IP instead of the real client's.
+    type: string
+    default: ""
+    group: "Agent Vault settings"
+
+  - variable: agentVault.image.repository
+    label: Agent Vault image repository
+    type: string
+    default: infisical/agent-vault
+    required: true
+    group: "Agent Vault settings"
+
+  - variable: agentVault.image.tag
+    label: Agent Vault image tag
+    type: string
+    default: "0.39.0"
+    required: true
+    group: "Agent Vault settings"
+
+  - variable: agentVault.persistence.enabled
+    label: Enable persistence
+    description: Store Agent Vault's data directory on a PersistentVolumeClaim.
+    type: boolean
+    default: true
+    required: true
+    group: "Agent Vault settings"
+
+  - variable: agentVault.persistence.size
+    label: Data volume size
+    type: string
+    default: 1Gi
+    required: true
+    group: "Agent Vault settings"
+    show_if: "agentVault.persistence.enabled=true"
+
+  - variable: agentVault.persistence.storageClassName
+    label: Storage class
+    description: Leave empty to use the cluster default storage class.
+    type: storageclass
+    group: "Agent Vault settings"
+    show_if: "agentVault.persistence.enabled=true"
+
+  - variable: agentVault.database.enabled
+    label: Use PostgreSQL backend
+    description: Enabled by default. Required to run more than one Agent Vault instance. Makes instances stateless (CA cert shared via DB, advisory locks for config writes) instead of using the embedded SQLite store.
+    type: boolean
+    default: true
+    required: true
+    group: "Scaling settings"
+
+  - variable: agentVault.database.url
+    label: PostgreSQL connection URL
+    description: "postgres://user:password@host:5432/dbname?sslmode=require. Leave empty if using an existing Secret instead."
+    type: string
+    default: ""
+    group: "Scaling settings"
+    show_if: "agentVault.database.enabled=true"
+
+  - variable: agentVault.replicaCount
+    label: Replica count
+    description: Fixed replica count, used when autoscaling is disabled. Values above 1 require the PostgreSQL backend.
+    type: int
+    default: 1
+    required: true
+    group: "Scaling settings"
+
+  - variable: agentVault.autoscaling.enabled
+    label: Enable autoscaling
+    description: Requires the PostgreSQL backend.
+    type: boolean
+    default: false
+    required: true
+    group: "Scaling settings"
+
+  - variable: agentVault.autoscaling.minReplicas
+    label: Minimum replicas
+    type: int
+    default: 2
+    required: true
+    group: "Scaling settings"
+    show_if: "agentVault.autoscaling.enabled=true"
+
+  - variable: agentVault.autoscaling.maxReplicas
+    label: Maximum replicas
+    type: int
+    default: 5
+    required: true
+    group: "Scaling settings"
+    show_if: "agentVault.autoscaling.enabled=true"
+
+  - variable: agentVault.autoscaling.targetCPUUtilizationPercentage
+    label: Target CPU utilization %
+    type: int
+    default: 75
+    group: "Scaling settings"
+    show_if: "agentVault.autoscaling.enabled=true"
+
+  - variable: postgres.enabled
+    label: Deploy bundled PostgreSQL
+    description: Deploys a PostgreSQL StatefulSet from this chart's own templates as the agentVault.database backend, instead of pointing at an externally managed instance via agentVault.database.url.
+    type: boolean
+    default: false
+    required: true
+    group: "Scaling settings"
+    show_if: "agentVault.database.enabled=true"
+
+  - variable: postgres.auth.username
+    label: PostgreSQL username
+    type: string
+    default: agentvault
+    required: true
+    group: "Scaling settings"
+    show_if: "agentVault.database.enabled=true&&postgres.enabled=true"
+
+  - variable: postgres.auth.database
+    label: PostgreSQL database name
+    type: string
+    default: agentvault
+    required: true
+    group: "Scaling settings"
+    show_if: "agentVault.database.enabled=true&&postgres.enabled=true"
+
+  - variable: postgres.auth.password
+    label: PostgreSQL password
+    type: password
+    required: true
+    group: "Scaling settings"
+    show_if: "agentVault.database.enabled=true&&postgres.enabled=true"
+
+  - variable: postgres.persistence.size
+    label: PostgreSQL data volume size
+    type: string
+    default: 2Gi
+    required: true
+    group: "Scaling settings"
+    show_if: "agentVault.database.enabled=true&&postgres.enabled=true"
+
+  - variable: postgres.persistence.storageClassName
+    label: PostgreSQL storage class
+    description: Leave empty to use the cluster default storage class.
+    type: storageclass
+    group: "Scaling settings"
+    show_if: "agentVault.database.enabled=true&&postgres.enabled=true"
+
+  - variable: proxy.image.tag
+    label: nginx image tag
+    type: string
+    default: "1.27-alpine"
+    required: true
+    group: "Reverse proxy settings"
+
+  - variable: proxy.port
+    label: Reverse proxy listen port
+    type: int
+    default: 8080
+    required: true
+    group: "Reverse proxy settings"
+
+  - variable: agentVault.resources.requests.cpu
+    label: Agent Vault CPU request
+    type: string
+    default: 100m
+    required: true
+    group: "Resource limits"
+
+  - variable: agentVault.resources.requests.memory
+    label: Agent Vault memory request
+    type: string
+    default: 128Mi
+    required: true
+    group: "Resource limits"
+
+  - variable: agentVault.resources.limits.cpu
+    label: Agent Vault CPU limit
+    type: string
+    default: 500m
+    required: true
+    group: "Resource limits"
+
+  - variable: agentVault.resources.limits.memory
+    label: Agent Vault memory limit
+    type: string
+    default: 512Mi
+    required: true
+    group: "Resource limits"
+
+  - variable: proxy.resources.requests.cpu
+    label: Reverse proxy CPU request
+    type: string
+    default: 25m
+    required: true
+    group: "Resource limits"
+
+  - variable: proxy.resources.requests.memory
+    label: Reverse proxy memory request
+    type: string
+    default: 32Mi
+    required: true
+    group: "Resource limits"
+
+  - variable: proxy.resources.limits.cpu
+    label: Reverse proxy CPU limit
+    type: string
+    default: 200m
+    required: true
+    group: "Resource limits"
+
+  - variable: proxy.resources.limits.memory
+    label: Reverse proxy memory limit
+    type: string
+    default: 128Mi
+    required: true
+    group: "Resource limits"
+
+  - variable: smtp.enabled
+    label: Enable SMTP (email verification, invites, notifications)
+    type: boolean
+    default: false
+    required: true
+    group: "SMTP settings"
+
+  - variable: smtp.host
+    label: SMTP host
+    type: string
+    default: ""
+    group: "SMTP settings"
+    show_if: "smtp.enabled=true"
+
+  - variable: smtp.port
+    label: SMTP port
+    description: 465 for implicit TLS, 587 for STARTTLS, 25 for an unauthenticated internal relay.
+    type: int
+    default: 587
+    required: true
+    group: "SMTP settings"
+    show_if: "smtp.enabled=true"
+
+  - variable: smtp.username
+    label: SMTP username
+    description: Leave empty for an unauthenticated internal relay (e.g. Postfix/mailtrap on port 25).
+    type: string
+    default: ""
+    group: "SMTP settings"
+    show_if: "smtp.enabled=true"
+
+  - variable: smtp.password
+    label: SMTP password
+    type: password
+    group: "SMTP settings"
+    show_if: "smtp.enabled=true"
+
+  - variable: smtp.from
+    label: From address
+    type: string
+    default: ""
+    group: "SMTP settings"
+    show_if: "smtp.enabled=true"
+
+  - variable: smtp.fromName
+    label: From display name
+    type: string
+    default: "Agent Vault"
+    group: "SMTP settings"
+    show_if: "smtp.enabled=true"
+
+  - variable: smtp.tlsMode
+    label: TLS mode
+    description: opportunistic, required, or none. Ignored on port 465 (always implicit TLS).
+    type: enum
+    default: opportunistic
+    options:
+      - opportunistic
+      - required
+      - none
+    group: "SMTP settings"
+    show_if: "smtp.enabled=true"
+
+  - variable: mailtrap.enabled
+    label: Deploy a bundled mailtrap (dev/test email catch-all)
+    description: Deploys the mailtrap chart as a dependency and points smtp.host/port at it automatically (unauthenticated relay on port 25). Nothing sent through it is really delivered — dev/test only.
+    type: boolean
+    default: false
+    required: true
+    group: "SMTP settings"
+
+  - variable: mailtrap.hostname
+    label: mailtrap web UI hostname
+    description: Leave empty to keep the mailtrap web UI (viewing captured emails) cluster-internal only.
+    type: hostname
+    default: ""
+    group: "SMTP settings"
+    show_if: "mailtrap.enabled=true"
+
+  - variable: mailtrap.ingress.enabled
+    label: Expose the mailtrap web UI
+    type: boolean
+    default: false
+    group: "SMTP settings"
+    show_if: "mailtrap.enabled=true"
+
+  - variable: mailtrap.ingress.certificate
+    label: mailtrap TLS secret name
+    type: string
+    default: ""
+    group: "SMTP settings"
+    show_if: "mailtrap.enabled=true&&mailtrap.ingress.enabled=true"
+
+  - variable: networkPolicy.enabled
+    label: Restrict Agent Vault with a NetworkPolicy
+    description: Requires a NetworkPolicy-enforcing CNI (e.g. Calico, Cilium). Restricts the management UI to the reverse proxy pods only.
+    type: boolean
+    default: true
+    required: true
+    group: "Security settings"
