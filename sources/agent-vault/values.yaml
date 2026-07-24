@@ -209,6 +209,12 @@ smtp:
 mailtrap:
   enabled: false
   hostname: ""
+  # NOTE: mailtrap's Postfix only accepts mail addressed to its own
+  # hostname/localhost — real recipient domains (e.g. actual user email
+  # addresses) get "454 Relay access denied". Verification/invite emails to
+  # real users will NOT deliver through this. Only useful for test
+  # scenarios where the recipient address is chosen to match mailtrap's own
+  # domain; not a substitute for a real SMTP relay in smtp.* above.
   ingress:
     enabled: false
     annotations: {}
@@ -218,6 +224,25 @@ mailtrap:
 # nothing else) can reach it. Requires a NetworkPolicy-enforcing CNI.
 networkPolicy:
   enabled: true
+
+# Optional external exposure of the MITM proxy (agentVault.mitmPort), for
+# agentic tools running outside the cluster (e.g. a developer's own machine
+# over VPN) rather than as in-cluster pods. Off by default — the MITM proxy
+# is a raw CONNECT-tunnel forward proxy, not a normal HTTP backend, so this
+# uses a LoadBalancer Service (Layer 4, source-IP restricted) rather than
+# the Ingress (Layer 7 HTTP routing, the wrong tool for this and never used
+# for the MITM port regardless of this setting).
+mitmService:
+  enabled: false
+  # CIDRs allowed to reach the LoadBalancer's external IP. Required — an
+  # empty/unset list is refused (would otherwise expose the MITM proxy,
+  # with its bearer-token-in-URL auth, to the entire internet).
+  loadBalancerSourceRanges: []
+  # This cluster's MetalLB pools require an explicit pre-reserved static IP
+  # per Service (no auto-assign) — get one from whoever manages MetalLB
+  # address pools, then set:
+  #   metallb.universe.tf/loadBalancerIPs: "10.50.x.x"
+  annotations: {}
 
 imagePullSecrets: []
 

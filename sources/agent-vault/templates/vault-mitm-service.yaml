@@ -1,0 +1,32 @@
+{{- if .Values.mitmService.enabled }}
+{{- if not .Values.mitmService.loadBalancerSourceRanges }}
+{{- fail "mitmService.loadBalancerSourceRanges is required when mitmService.enabled is true — an unrestricted LoadBalancer would expose the MITM proxy (bearer token in the URL) to the entire internet." }}
+{{- end }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "agent-vault.vault.fullname" . }}-mitm-external
+  labels:
+    {{- include "agent-vault.labels" . | nindent 4 }}
+    component: vault
+  {{- with .Values.mitmService.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  type: LoadBalancer
+  # Preserves the real client source IP all the way to the pod — required
+  # both for audit logs (agentVault.trustedProxies) and for the companion
+  # NetworkPolicy ipBlock rule (vault-networkpolicy.yaml) to actually see
+  # who's connecting, instead of a SNAT'd node IP.
+  externalTrafficPolicy: Local
+  loadBalancerSourceRanges:
+    {{- toYaml .Values.mitmService.loadBalancerSourceRanges | nindent 4 }}
+  selector:
+    {{- include "agent-vault.vault.selectorLabels" . | nindent 4 }}
+  ports:
+    - name: mitm
+      port: {{ .Values.agentVault.mitmPort }}
+      targetPort: mitm
+      protocol: TCP
+{{- end }}

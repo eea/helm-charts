@@ -13,20 +13,31 @@ spec:
   policyTypes:
     - Ingress
   ingress:
-    # Management UI/API: only the nginx-proxy pods may reach it — this is
-    # what keeps a leaked HTTPS_PROXY value useless from outside the cluster.
-    - from:
-        - podSelector:
-            matchLabels:
-              {{- include "agent-vault.proxy.selectorLabels" . | nindent 14 }}
-      ports:
-        - port: ui
-          protocol: TCP
-    # MITM proxy: reachable from any pod in the namespace (agent workloads
-    # call through it), but never routed to by the public Ingress.
+    # Management UI/API and MITM proxy: reachable from any pod in the
+    # namespace — the nginx-proxy pods for browser access to the UI, and
+    # agent workloads directly for both the control API (token
+    # validation/discovery, e.g. `agent-vault run`) and the MITM proxy
+    # itself. Never routed to by the public Ingress (which only targets the
+    # proxy Service), so this stays unreachable from outside the cluster.
     - from:
         - podSelector: {}
       ports:
+        - port: ui
+          protocol: TCP
         - port: mitm
           protocol: TCP
+    {{- if .Values.mitmService.enabled }}
+    # External access via the mitmService LoadBalancer (vault-mitm-service.yaml).
+    # That Service uses externalTrafficPolicy: Local, so the real client IP
+    # reaches the pod — matched here the same way the LoadBalancer's own
+    # loadBalancerSourceRanges already restricts it, as defense in depth.
+    - from:
+        {{- range .Values.mitmService.loadBalancerSourceRanges }}
+        - ipBlock:
+            cidr: {{ if contains "/" . }}{{ . }}{{ else }}{{ . }}/32{{ end }}
+        {{- end }}
+      ports:
+        - port: mitm
+          protocol: TCP
+    {{- end }}
 {{- end }}

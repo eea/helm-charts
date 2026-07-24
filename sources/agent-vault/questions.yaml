@@ -382,8 +382,32 @@ questions:
 
   - variable: networkPolicy.enabled
     label: Restrict Agent Vault with a NetworkPolicy
-    description: Requires a NetworkPolicy-enforcing CNI (e.g. Calico, Cilium). Restricts the management UI to the reverse proxy pods only.
+    description: Requires a NetworkPolicy-enforcing CNI (e.g. Calico, Cilium). Restricts the management UI/MITM proxy to in-namespace pods (and, if mitmService.enabled, the allowed external CIDRs).
     type: boolean
     default: true
     required: true
     group: "Security settings"
+
+  - variable: mitmService.enabled
+    label: Expose the MITM proxy externally (LoadBalancer)
+    description: For agentic tools running outside the cluster (e.g. a developer machine over VPN) rather than as in-cluster pods. Off by default — in-cluster agent pods don't need this.
+    type: boolean
+    default: false
+    required: true
+    group: "Security settings"
+
+  - variable: mitmService.loadBalancerSourceRanges
+    label: MITM proxy allowed source CIDRs
+    description: Required when mitmService.enabled is true. An unrestricted LoadBalancer would expose the MITM proxy (bearer token in the URL) to the entire internet.
+    type: array
+    default: []
+    group: "Security settings"
+    show_if: "mitmService.enabled=true"
+
+  - variable: mitmService.annotations
+    label: MITM Service annotations
+    description: "This cluster's MetalLB pools require an explicit pre-reserved static IP per Service (no auto-assign) — e.g. metallb.universe.tf/loadBalancerIPs: 10.50.x.x. Get one from whoever manages MetalLB address pools first."
+    type: string
+    default: "{}"
+    group: "Security settings"
+    show_if: "mitmService.enabled=true"
