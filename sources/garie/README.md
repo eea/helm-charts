@@ -68,6 +68,9 @@ We have the following services that should be exposed in ingress:
 
 # Releases
 
+### Version 0.0.40 - 27 July 2026
+- fix influxdb memory vars [valentinab25 - [`d3949ae3`](https://github.com/eea/helm-charts/commit/d3949ae3393cc9e2cf747a64803ba6c7c9473fd7)]
+
 ### Version 0.0.39 - 08 July 2026
 - remove chronograf from chart [Mihai Dobrescu - [`2fb9f25c`](https://github.com/eea/helm-charts/commit/2fb9f25ce1dea308bf117e703333b28ee91607c0)]
 
