@@ -108,7 +108,7 @@ questions:
         type: string
         required: true
 
-      - variable: influxdb.resources.requests.memory
+      - variable: influxdb.resources.limits.memory
         default: 3Gi
         description: Memory limit
         type: string
