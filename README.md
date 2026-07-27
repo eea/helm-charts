@@ -120,8 +120,9 @@ The sources for these pages are located at the [GitHub project](https://github.c
 
 ## Secret Scanning
 
-This repository uses the Betterleaks GitHub Action to scan the current
-repository content on every push and pull request. The scan uses the rules in
+This repository uses the Betterleaks GitHub Action to scan the current commit
+on every push and pull request. Only the patch introduced by the checked-out
+commit is scanned, rather than all repository files. The scan uses the rules in
 `.gitleaks.toml` and uploads a `betterleaks-report` artifact when a finding is
 detected.
 
