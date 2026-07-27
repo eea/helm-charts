@@ -70,14 +70,14 @@ spec:
             periodSeconds: {{ .Values.influxdb.livenessProbe.periodSeconds }}
             timeoutSeconds: {{ .Values.influxdb.livenessProbe.timeoutSeconds }}
             failureThreshold: {{ .Values.influxdb.livenessProbe.failureThreshold }}
-          readinessProbe:
-            httpGet:
-              path: /health
+          startupProbe:
+            tcpSocket:
               port: 8086
-            initialDelaySeconds: {{ .Values.influxdb.readinessProbe.initialDelaySeconds }}
-            periodSeconds: {{ .Values.influxdb.readinessProbe.periodSeconds }}
-            timeoutSeconds: {{ .Values.influxdb.readinessProbe.timeoutSeconds }}
-            failureThreshold: {{ .Values.influxdb.readinessProbe.failureThreshold }}
+            periodSeconds: 5
+            timeoutSeconds: 5
+            initialDelaySeconds: 30
+            failureThreshold: 60
+            successThreshold: 1
       volumes:
         - name: influxdb-data
           persistentVolumeClaim:

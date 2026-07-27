@@ -102,13 +102,13 @@ questions:
         type: string
         required: true
 
-      - variable: influxdb.memReservation
+      - variable: influxdb.resources.requests.memory
         default: 3Gi
         description: Memory reservation (requests)
         type: string
         required: true
 
-      - variable: influxdb.memLimit
+      - variable: influxdb.resources.requests.memory
         default: 3Gi
         description: Memory limit
         type: string

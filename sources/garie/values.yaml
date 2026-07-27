@@ -951,11 +951,6 @@ influxdb:
     initialDelaySeconds: 10
     periodSeconds: 10
     timeoutSeconds: 5
-  readinessProbe:
-    failureThreshold: 3
-    initialDelaySeconds: 5
-    periodSeconds: 5
-    timeoutSeconds: 3
   replicas: 1
   resources:
     limits:
