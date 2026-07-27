@@ -20,7 +20,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 1
+          fetch-depth: 2
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
 
       - name: Run Betterleaks
@@ -29,7 +29,7 @@ jobs:
         uses: dortort/betterleaks-action@v0.1.0
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          scan-mode: dir
+          scan-mode: git
           scan-path: .
           config: .gitleaks.toml
           report-format: json
@@ -37,6 +37,7 @@ jobs:
           redact: "true"
           no-color: "true"
           no-banner: "true"
+          extra-args: --log-opts=-1
           fail-on-leak: "true"
 
       - name: Upload Betterleaks report
