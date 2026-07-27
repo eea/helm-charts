@@ -178,23 +178,33 @@ cronjobs:
   zodbpack:
     enabled: true
     schedule: "0 1 * * 0"
+    concurrencyPolicy: Forbid
+    activeDeadlineSeconds: 36000
+    backoffLimit: 1
+    successfulJobsHistoryLimit: 1
+    failedJobsHistoryLimit: 3
     resources:
       limits:
         cpu: 2
-        memory: 2Gi
+        memory: 8Gi
       requests:
         cpu: 1
-        memory: 1Gi
+        memory: 4Gi
   entrasync:
     enabled: true
-    schedule: "0 0 * * *"
+    schedule: "0 * * * *"
+    concurrencyPolicy: Forbid
+    activeDeadlineSeconds: 2700
+    backoffLimit: 1
+    successfulJobsHistoryLimit: 1
+    failedJobsHistoryLimit: 3
     resources:
       limits:
         cpu: 2
-        memory: 2Gi
+        memory: 4Gi
       requests:
         cpu: 1
-        memory: 1Gi
+        memory: 2Gi
 
 # Memcached configuration (external dependency)
 memcached:

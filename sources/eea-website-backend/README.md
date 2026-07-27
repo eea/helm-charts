@@ -10,6 +10,9 @@ This chart deployes the EEA Website Plone 6 backend app
 
 ## Releases
 
+### Version 1.65.1 - 27 July 2026
+- Fix cronjobs (zodbpack, entrasync): add concurrencyPolicy Forbid, activeDeadlineSeconds, backoffLimit 1, restartPolicy Never, job history limits; increase memory (zodbpack 8Gi/4Gi, entrasync 4Gi/2Gi); change entrasync schedule to hourly
+
 ### Version 1.65.0 - 14 July 2026
 - Automated release of [eeacms/eea-website-backend:6.1.14-17](https://github.com/eea/eea-website-backend/releases) [EEA Jenkins - [`bf787cca`](https://github.com/eea/helm-charts/commit/bf787ccae1639cd63400cc2a9286d9dd90741f87)]
 

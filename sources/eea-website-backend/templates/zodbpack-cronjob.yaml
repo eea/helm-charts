@@ -8,8 +8,13 @@ metadata:
     component: zodbpack
 spec:
   schedule: {{ .Values.cronjobs.zodbpack.schedule | quote }}
+  concurrencyPolicy: {{ .Values.cronjobs.zodbpack.concurrencyPolicy | default "Forbid" }}
+  successfulJobsHistoryLimit: {{ .Values.cronjobs.zodbpack.successfulJobsHistoryLimit | default 1 }}
+  failedJobsHistoryLimit: {{ .Values.cronjobs.zodbpack.failedJobsHistoryLimit | default 3 }}
   jobTemplate:
     spec:
+      backoffLimit: {{ .Values.cronjobs.zodbpack.backoffLimit | default 1 }}
+      activeDeadlineSeconds: {{ .Values.cronjobs.zodbpack.activeDeadlineSeconds | default 36000 }}
       template:
         metadata:
           labels:
@@ -21,7 +26,7 @@ spec:
             {{- toYaml . | nindent 12 }}
           {{- end }}
           serviceAccountName: {{ include "appl.serviceAccountName" . }}
-          restartPolicy: OnFailure
+          restartPolicy: Never
           containers:
           - name: zodbpack
             image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"

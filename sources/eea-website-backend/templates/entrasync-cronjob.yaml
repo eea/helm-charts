@@ -8,8 +8,13 @@ metadata:
     component: entrasync
 spec:
   schedule: {{ .Values.cronjobs.entrasync.schedule | quote }}
+  concurrencyPolicy: {{ .Values.cronjobs.entrasync.concurrencyPolicy | default "Forbid" }}
+  successfulJobsHistoryLimit: {{ .Values.cronjobs.entrasync.successfulJobsHistoryLimit | default 1 }}
+  failedJobsHistoryLimit: {{ .Values.cronjobs.entrasync.failedJobsHistoryLimit | default 3 }}
   jobTemplate:
     spec:
+      backoffLimit: {{ .Values.cronjobs.entrasync.backoffLimit | default 1 }}
+      activeDeadlineSeconds: {{ .Values.cronjobs.entrasync.activeDeadlineSeconds | default 2700 }}
       template:
         metadata:
           labels:
@@ -21,7 +26,7 @@ spec:
             {{- toYaml . | nindent 12 }}
           {{- end }}
           serviceAccountName: {{ include "appl.serviceAccountName" . }}
-          restartPolicy: OnFailure
+          restartPolicy: Never
           containers:
           - name: entrasync
             image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
