@@ -70,7 +70,7 @@ spec:
             {{- toYaml .Values.celery_shared.securityContext | nindent 12 }}
           image: "{{ $backendRepo }}:{{ $backendTag }}"
           imagePullPolicy: {{ .Values.global.pullPolicy }}
-          command:
+          args:
             [
               "celery",
               "-A",

@@ -187,7 +187,7 @@ Call with: (dict "ctx" . "image" "<repo>:<tag>")
     - |
       set -e
       {{- if $hfEnabled }}
-      cp -r {{ .ctx.Values.hfCache.mountPath }}/. /hf-cache-target
+      [ -d {{ .ctx.Values.hfCache.mountPath }} ] && cp -r {{ .ctx.Values.hfCache.mountPath }}/. /hf-cache-target || echo "hf cache not found in image, skipping"
       {{- end }}
       {{- if $ttEnabled }}
       [ -d {{ .ctx.Values.tiktokenCache.mountPath }} ] && cp -r {{ .ctx.Values.tiktokenCache.mountPath }}/. /tiktoken-cache-target || echo "tiktoken cache not found in image, skipping"

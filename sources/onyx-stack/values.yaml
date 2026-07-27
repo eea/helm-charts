@@ -1768,8 +1768,13 @@ auth:
     # -- This defines the env var to secret map
     secretKeys:
       USER_AUTH_SECRET: user_auth_secret
-    # -- Secret value. Required when this secret is enabled - generate with: openssl rand -hex 32
-    # If not set, helm install/upgrade will fail when auth.userauth.enabled=true.
+    # -- Keys listed here are auto-generated (openssl rand -hex 32 equivalent) on
+    # first install if left empty, and reused from the existing secret on every
+    # subsequent upgrade so tokens signed with it stay valid.
+    autoGenerate:
+      - user_auth_secret
+    # -- Secret value. Leave empty to auto-generate and persist one automatically.
+    # Set explicitly only if you need a specific known value (e.g. shared across clusters).
     values:
       user_auth_secret: ""
 
