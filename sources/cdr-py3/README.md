@@ -128,6 +128,9 @@ When `ldapMemcachedServers` is empty the env var is omitted entirely.
 
 ## Releases
 
+### Version 0.1.32 - 28 July 2026
+- Updated appVersion to z5-1.26 [Olimpiu Rob - [`a3799524`](https://github.com/eea/helm-charts/commit/a379952435963b0da36f8dc242932caae2dc4fd2)]
+
 ### Version 0.1.31 - 22 July 2026
 - Renamed beakerSecret to sessionSecret, added session cookie opts [Olimpiu Rob - [`be765f99`](https://github.com/eea/helm-charts/commit/be765f993a7f14207c6c659701078e1d60caca68)]
 
