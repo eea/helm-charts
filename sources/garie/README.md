@@ -68,6 +68,9 @@ We have the following services that should be exposed in ingress:
 
 # Releases
 
+### Version 0.0.41 - 28 July 2026
+- fix variable in questions [valentinab25 - [`10f0bd47`](https://github.com/eea/helm-charts/commit/10f0bd4775dbea00533815337aa249d179102783)]
+
 ### Version 0.0.40 - 27 July 2026
 - fix influxdb memory vars [valentinab25 - [`d3949ae3`](https://github.com/eea/helm-charts/commit/d3949ae3393cc9e2cf747a64803ba6c7c9473fd7)]
 
