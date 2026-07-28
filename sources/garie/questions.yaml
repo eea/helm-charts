@@ -305,29 +305,29 @@ questions:
         type: string
         required: true
 
-  - variable: gariUptimeRobot.resources.requests.memory
+  - variable: garieUptimeRobot.resources.requests.memory
     default: 256Mi
     description: Memory reservation (requests)
     type: string
     required: true
     group: Garie UptimeRobot
     subquestions:
-      - variable: gariUptimeRobot.resources.limits.memory
+      - variable: garieUptimeRobot.resources.limits.memory
         default: 256Mi
         description: Memory limit
         type: string
         required: true
-      - variable: gariUptimeRobot.uptimeApiUrl
+      - variable: garieUptimeRobot.uptimeApiUrl
         default: https://api.uptimerobot.com/v2/getMonitors
         description: Uptime Robot API URL
         type: string
         required: true
-      - variable: gariUptimeRobot.uptimeRobotKeys
+      - variable: garieUptimeRobot.uptimeRobotKeys
         default: ""
         description: Uptime Robot Keys
         type: string
         required: true
-      - variable: gariUptimeRobot.intervalDays
+      - variable: garieUptimeRobot.intervalDays
         default: 30
         description: Uptime Robot Interval Days
         type: int
