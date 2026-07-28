@@ -9,7 +9,7 @@ metadata:
     "helm.sh/resource-policy": keep
 spec:
   accessModes:
-  - ReadWriteMany
+  - {{ .Values.persistence.logs.accessMode }}
   resources:
     requests:
       storage: 1Gi

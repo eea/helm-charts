@@ -89,4 +89,35 @@
       type: "string"
       group: "Configuration"
 
+    - variable: "persistence.data.accessMode"
+      label: "Data PVC access mode"
+      type: "enum"
+      required: true
+      options:
+      - "ReadWriteOnce"
+      - "ReadOnlyMany"
+      - "ReadWriteMany"
+      - "ReadWriteOncePod"
+      group: "Persistence"
 
+    - variable: "persistence.logs.accessMode"
+      label: "Logs PVC access mode"
+      type: "enum"
+      required: true
+      options:
+      - "ReadWriteOnce"
+      - "ReadOnlyMany"
+      - "ReadWriteMany"
+      - "ReadWriteOncePod"
+      group: "Persistence"
+
+    - variable: "persistence.git.accessMode"
+      label: "Git PVC access mode"
+      type: "enum"
+      required: true
+      options:
+      - "ReadWriteOnce"
+      - "ReadOnlyMany"
+      - "ReadWriteMany"
+      - "ReadWriteOncePod"
+      group: "Persistence"
