@@ -177,6 +177,13 @@ questions:
     required: false
     default: ""
     group: "Plone configuration"
+  - variable: "plone.environment.INTERNAL_URL_PREFIXES"
+    label: "Internal URL prefixes"
+    description: "Comma separated list of internal backend URL prefixes (e.g. http://backend:8080/bise) that eea.volto.policy should strip from resolveuid links before Plone converts them back to ../resolveuid/<uid>, preventing internal SSR URLs from being persisted in block content."
+    type: "string"
+    required: false
+    default: "http://backend:8080/bise"
+    group: "Plone configuration"
 
   - variable: "plone.environment.STATIC_BANNER_ENABLED_ied"
     label: "Enable Volto Banner"
