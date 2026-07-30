@@ -12,7 +12,7 @@ keywords:
   - question-answering
   - onyx
 type: application
-version: 0.13.0
+version: 0.13.1
 appVersion: "v4.3.9-eea.0.0.117-dev"
 annotations:
   category: Productivity
@@ -32,7 +32,7 @@ dependencies:
     repository: https://eea.github.io/helm-charts
     condition: vespa.enabled
   - name: opensearch
-    version: 3.4.0
+    version: 3.7.0
     repository: https://opensearch-project.github.io/helm-charts
     condition: opensearch.enabled
   - name: minio
@@ -44,6 +44,6 @@ dependencies:
     repository: https://eea.github.io/helm-charts
     condition: postfix.enabled
   - name: code-interpreter
-    version: 0.3.3
+    version: 0.4.5
     repository: https://onyx-dot-app.github.io/python-sandbox/
     condition: codeInterpreter.enabled

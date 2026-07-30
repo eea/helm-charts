@@ -140,7 +140,7 @@ vespa:
           requests:
             storage: 30Gi
         storageClassName: ""
-  enabled: true
+  enabled: false  # Disabled for Onyx 4: OpenSearch is now the vector/document store.
   replicaCount: 1
   image:
     repository: vespa
@@ -235,7 +235,7 @@ opensearch:
 
   image:
     repository: "opensearchproject/opensearch"
-    tag: ""  # Empty uses chart's appVersion (3.4.0).
+    tag: ""  # Empty uses chart's appVersion (3.7.0).
 
   # The security plugin requires OPENSEARCH_INITIAL_ADMIN_PASSWORD for
   # OpenSearch 2.12+.
@@ -993,7 +993,7 @@ celery_worker_docprocessing:
   resources:
     requests:
       cpu: 500m
-      memory: 2Gi
+      memory: 6Gi
     limits:
       cpu: 1000m
       memory: 12Gi
