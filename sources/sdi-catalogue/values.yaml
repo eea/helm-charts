@@ -70,6 +70,12 @@ apache:
   serverAdmin: helpdesk@eea.europa.eu
   limitRequestBody: 42949672960
   proxyTimeout: 21600
+  # Content of the /robots.txt file served at the site root. Leave empty
+  # ('') to not deploy a robots.txt at all. Override per environment, e.g.
+  # set to "User-agent: *\nAllow: /" for sdi.eea.europa.eu.
+  robotsTxt: |
+    User-agent: *
+    Disallow: /
   service:
     type: ClusterIP
     annotations: {}

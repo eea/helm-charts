@@ -27,7 +27,7 @@ spec:
       # Set up ssl.conf and nc.conf
       - name: init-ssl-conf
         image: busybox:1.36
-        command: ['sh', '-c', 'cp /mnt/ssl.conf /usr/local/apache2/conf/extra/ssl.conf && touch /usr/local/apache2/conf/extra/nc.conf']
+        command: ['sh', '-c', 'cp /mnt/ssl.conf /usr/local/apache2/conf/extra/ssl.conf && touch /usr/local/apache2/conf/extra/nc.conf{{ if .Values.apache.robotsTxt }} && cp /mnt/robots.txt /usr/local/apache2/htdocs/robots.txt{{ end }}']
         volumeMounts:
         - mountPath: /usr/local/apache2/conf/extra
           name: sdi-apache-configuration
@@ -35,6 +35,14 @@ spec:
           name: sdi-apache-config
           readOnly: true
           subPath: ssl.conf
+        {{- if .Values.apache.robotsTxt }}
+        - mountPath: /mnt/robots.txt
+          name: sdi-apache-config
+          readOnly: true
+          subPath: robots.txt
+        - mountPath: /usr/local/apache2/htdocs
+          name: sdi-apache-www
+        {{- end }}
 
       containers:
       - name: apache

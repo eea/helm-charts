@@ -4,6 +4,10 @@ metadata:
   name: sdi-apache-config
 
 data:
+  {{- if .Values.apache.robotsTxt }}
+  robots.txt: |
+    {{- .Values.apache.robotsTxt | nindent 4 }}
+  {{- end }}
   ssl.conf: |
     Listen 443
     TraceEnable off
