@@ -3,6 +3,9 @@
 
 ## Releases
 
+### Version 0.1.8 - 31 July 2026
+- Automated release of [eeacms/esbootstrap-configs:v3.0.130](https://github.com/eea/eea.esbootstrap.configs/releases) [EEA Jenkins - [`73b73456`](https://github.com/eea/helm-charts/commit/73b7345603b6f1c8002fa6d97e20d1d27da9168b)]
+
 ### Version 0.1.7 - 07 July 2026
 - fix questions [valentinab25 - [`fc55e288`](https://github.com/eea/helm-charts/commit/fc55e2886cb990528b2982fd4ae7b60ce068eb44)]
 
