@@ -1966,8 +1966,13 @@ auth:
     # -- This defines the env var to secret map
     secretKeys:
       METRICS_AUTH_TOKEN: metrics_auth_token
-    # -- Secret value. Required when this secret is enabled - generate with: openssl rand -hex 32
-    # If not set, helm install/upgrade will fail when auth.metricsAuth.enabled=true.
+    # -- Keys listed here are auto-generated (openssl rand -hex 32 equivalent) on
+    # first install if left empty, and reused from the existing secret on every
+    # subsequent upgrade so scrapers don't need to be reconfigured.
+    autoGenerate:
+      - metrics_auth_token
+    # -- Secret value. Leave empty to auto-generate and persist one automatically.
+    # Set explicitly only if you need a specific known value (e.g. shared across clusters).
     values:
       metrics_auth_token: ""
   # Ed25519 private key for sandbox push auth (only the public key reaches sandbox pods).
