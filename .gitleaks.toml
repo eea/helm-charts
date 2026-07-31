@@ -146,3 +146,16 @@ paths = [
 regexes = [
   '''-----BEGIN PRIVATE KEY-----''',
 ]
+
+[[allowlists]]
+description = "Allow onyx-stack secretKeys mappings (env var -> Secret key name, not a value) and Secret object name references"
+condition = "AND"
+regexTarget = "match"
+paths = [
+  '''^sources/onyx-stack/values\.yaml$''',
+]
+regexes = [
+  '''METRICS_AUTH_TOKEN:[ \t]*metrics_auth_token''',
+  '''ONYX_SANDBOX_PUSH_PRIVATE_KEY:[ \t]*private_key''',
+  '''SANDBOX_PROXY_CA_SECRET:[ \t]*"sandbox-proxy-ca"''',
+]

@@ -5,6 +5,7 @@ metadata:
   labels:
     {{- include "onyx.labels" . | nindent 4 }}
 data:
+  {{- $craftEnabled := eq (include "onyx.craftEnabled" .) "true" }}
   ONYX_VERSION: "{{ .Values.global.version }}"
   INTERNAL_URL: "http://{{ include "onyx.fullname" . }}-api-service:{{ .Values.api.service.servicePort | default .Values.api.service.port | default 8080 }}"
   {{- if .Values.postgresql.enabled }}
@@ -36,7 +37,8 @@ data:
   DISABLE_VECTOR_DB: "true"
   {{- end }}
 {{- range $key, $value := .Values.configMap }}
-{{- if not (empty $value) }}
+{{- $skipCraftProxyKey := and $craftEnabled (or (eq $key "SANDBOX_PROXY_HOST") (eq $key "SANDBOX_PROXY_PORT")) }}
+{{- if and (not (empty $value)) (not $skipCraftProxyKey) }}
   {{ $key }}: "{{ $value }}"
 {{- end }}
 {{- end }}
@@ -45,4 +47,8 @@ data:
   {{- end }}
   {{- if .Values.codeInterpreter.enabled }}
   CODE_INTERPRETER_BASE_URL: "http://{{ .Release.Name }}-code-interpreter:{{ .Values.codeInterpreter.service.port }}"
+  {{- end }}
+  {{- if $craftEnabled }}
+  SANDBOX_PROXY_HOST: "{{ include "onyx.sandboxProxyHost" . }}"
+  SANDBOX_PROXY_PORT: "{{ include "onyx.sandboxProxyPort" . }}"
   {{- end }}

@@ -23,6 +23,21 @@ global:
   # Host for all Onyx components
   host: "0.0.0.0"
 
+# -- Custom (private/internal) CA certificates for outbound TLS.
+# When enabled, every pod that makes outbound TLS connections (api server,
+# celery workers, bots, MCP server, model servers) mounts the referenced
+# Secret/ConfigMap at /usr/local/share/ca-certificates, runs
+# `update-ca-certificates` at startup, and sets REQUESTS_CA_BUNDLE /
+# SSL_CERT_FILE so Python HTTP clients trust the updated bundle.
+# Keys must be PEM certs ending in `.crt`.
+# NOTE: requires the containers to run as root (the chart default);
+# incompatible with runAsNonRoot overrides.
+customCACerts:
+  enabled: false
+  # Exactly one of secretName / configMapName must be set when enabled.
+  secretName: ""
+  configMapName: ""
+
 postgresql:
   enabled: true
   # IMPORTANT: This nameOverride is required for the CloudNativePG operator to find itself.
@@ -969,6 +984,59 @@ celery_worker_heavy:
   tolerations: []
   affinity: {}
 
+# -- Rendered when configMap.ENABLE_CRAFT=true. Runs the `scheduled_tasks` queue that
+# drives sandbox provisioning / lifecycle for the Craft feature.
+celery_worker_scheduled_tasks:
+  extraEnv: []
+  replicaCount: 1
+  # Per-worker log level override. Empty (default) means use the global
+  # LOG_LEVEL env var. Set to INFO/DEBUG/WARNING/etc. to override LOG_LEVEL for
+  # this worker only — this becomes `--loglevel=<value>` on the celery worker
+  # command and takes precedence over LOG_LEVEL inside the worker process.
+  logLevel: ""
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 80
+    targetMemoryUtilizationPercentage: 80
+    # KEDA specific configurations (only used when autoscaling.engine is set to 'keda')
+    pollingInterval: 30  # seconds
+    cooldownPeriod: 300  # seconds
+    failureThreshold: 3  # number of failures before fallback
+    fallbackReplicas: 1  # replicas to maintain on failure
+    # Custom triggers for advanced KEDA configurations
+    customTriggers: []
+  podAnnotations: {}
+  podLabels:
+    scope: onyx-backend-celery
+  deploymentLabels:
+    app: celery-worker-scheduled-tasks
+  resources:
+    requests:
+      cpu: 500m
+      memory: 512Mi
+    limits:
+      cpu: 2000m
+      memory: 2Gi
+  volumes:
+    - name: logs
+      emptyDir: {}
+    - name: tmp
+      emptyDir: {}
+    - name: cache
+      emptyDir: {}
+  volumeMounts:
+    - name: logs
+      mountPath: /var/log/onyx
+    - name: tmp
+      mountPath: /tmp
+    - name: cache
+      mountPath: /.cache
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
 celery_worker_docprocessing:
   replicaCount: 1
   logLevel: INFO
@@ -1596,6 +1664,109 @@ codeInterpreter:
     initialDelaySeconds: 5
     periodSeconds: 5
 
+# -- Craft: per-user sandbox subsystem. Rendered when configMap.ENABLE_CRAFT=true.
+craft:
+  # -- Whether the chart creates the Namespace object named by configMap.SANDBOX_NAMESPACE.
+  # Set to false when SANDBOX_NAMESPACE points at an already-existing namespace (e.g. the
+  # release's own namespace, reused to avoid provisioning a brand-new namespace) or when
+  # your deploy identity lacks cluster-scoped Namespace-create rights (common on Rancher
+  # projects: the deploy identity is only granted RBAC within namespaces already bound to
+  # its project, so a fresh namespace has no grants until a platform admin adds it).
+  createNamespace: true
+  # -- Whether the chart creates the sandbox Role/RoleBinding/ServiceAccount objects
+  # (sandbox-rbac.yaml, sandbox-proxy/rbac.yaml) and the sandbox-pod PodTemplate
+  # (sandbox-podtemplate.yaml). Kubernetes' RBAC self-escalation check refuses to let
+  # ANY identity create a Role granting permissions it doesn't itself already hold
+  # (e.g. `podtemplates: get`) — enforced server-side, not bypassable by chart changes
+  # or client flags — and a constrained identity may separately lack any grant at all
+  # on the podtemplates resource type. If your `helm upgrade` identity is a
+  # constrained, project-scoped account (common on Rancher) that hits either of
+  # these, set this to false and have someone with sufficient cluster rights apply
+  # these objects once out-of-band:
+  #   helm template . --set configMap.ENABLE_CRAFT=true --set craft.rbac.create=true \
+  #     --show-only templates/sandbox-rbac.yaml \
+  #     --show-only templates/sandbox-proxy/rbac.yaml \
+  #     --show-only templates/sandbox-podtemplate.yaml \
+  #     | kubectl apply -f -
+  # After that one-time bootstrap, routine helm upgrades from the constrained identity
+  # can run with craft.rbac.create=false indefinitely (the objects already exist and
+  # don't need to change unless craft.extraBoundServiceAccounts, the sandbox SA names,
+  # or the sandbox pod spec change).
+  rbac:
+    create: true
+  # Extra SAs (release ns) to also grant sandbox RBAC, e.g. a separate worker SA.
+  extraBoundServiceAccounts: []
+  # CIDR(s) of any non-pod cluster DNS listener the sandbox must reach for firewall-init.sh's
+  # proxy-FQDN getent lookup. A NodeLocal DNS cache is a hostNetwork endpoint (its listen IP is
+  # cluster-specific — commonly 169.254.20.10, but configurable), so it is not a CoreDNS pod and
+  # the kube-dns podSelector in the sandbox-egress NetworkPolicy can't match it; without an allow
+  # here its DNS query hits the default-deny and bricks sandbox init. Set this to the actual
+  # listener IP(s), e.g. ["169.254.20.10/32"]. Empty (default) = standard CoreDNS, resolved via
+  # the podSelector alone (no NodeLocal DNS).
+  dnsExtraCIDRs: []
+  # CIDR(s) of the egress proxy when it is NOT a chart-labeled pod. The sandbox-egress NetworkPolicy
+  # selects the proxy by pod label (app.kubernetes.io/component: sandbox-proxy), but
+  # configMap.SANDBOX_PROXY_HOST may be overridden to an external proxy (FQDN/IP) or a Service whose
+  # pods don't carry that label. firewall-init.sh allows whatever the host resolves to, but a
+  # NetworkPolicy can't follow a hostname, so on NP-enforcing clusters such a proxy is dropped and
+  # all sandbox egress breaks. Set this to the proxy CIDR(s), e.g. ["10.0.5.6/32"], on those setups.
+  # Empty (default) = the chart-deployed proxy, covered by the podSelector (incl. the
+  # SANDBOX_PROXY_NAMESPACE shared-proxy path); leave empty unless you point at a non-pod proxy.
+  proxyExtraCIDRs: []
+
+# -- Sandbox Pod scheduling (rendered into the sandbox-pod PodTemplate).
+# Image/resources/ports come from the configMap.SANDBOX_* keys.
+sandboxPod:
+  nodeSelector:
+    onyx.app/workload: sandbox
+  tolerations:
+    - key: workload
+      operator: Equal
+      value: sandbox
+      effect: NoSchedule
+
+# -- Sandbox egress proxy.
+sandboxProxy:
+  # Allow IPv6 (::/0 minus link-local/IMDS) egress from the proxy. OFF by default: the AWS
+  # VPC CNI network-policy agent intermittently fails to program IPv6 ipBlocks into the
+  # egress eBPF map (EINVAL), leaving it empty and fail-closed (proxy pods crash-loop), and
+  # single-stack IPv4 clusters have no IPv6 egress to gate. Enable ONLY on dual-stack
+  # clusters, where an Egress policy without an IPv6 allow silently drops all IPv6 egress.
+  egressAllowIPv6: false
+  replicaCount: 2
+  terminationGracePeriodSeconds: 200
+  progressDeadlineSeconds: 300
+  confdirSizeLimit: 100Mi
+  caSecretName: "sandbox-proxy-ca"
+  caConfigMapName: "sandbox-proxy-ca-bundle"
+  podAnnotations: {}
+  serviceAccount:
+    # Set IRSA annotations here when the sandbox proxy uses IAM-backed services,
+    # such as RDS IAM auth.
+    annotations: {}
+    automount: true
+  # Matches the `onyx` user (uid 1001) baked into the backend image.
+  runAsUser: 1001
+  fsGroup: 1001
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+# NetworkPolicy for the per-sandbox push daemon (port 8731).
+# In prod the strict default is correct: only api_server pods can push.
+# Local-dev enables `allowTelepresenceAmbassador` via values-localdev.yaml so
+# that traffic intercepted from a developer's laptop (which enters the cluster
+# as the telepresence traffic-manager pod) is also permitted.
+sandboxPushPolicy:
+  allowTelepresenceAmbassador: false
+
   nodeSelector: {}
   tolerations: []
   affinity: {}
@@ -1777,6 +1948,39 @@ auth:
     # Set explicitly only if you need a specific known value (e.g. shared across clusters).
     values:
       user_auth_secret: ""
+  metricsAuth:
+    # -- Bearer token guarding the API server's /metrics endpoint. /metrics
+    # returns 401 by default until you either enable this (provide a token) or
+    # explicitly opt out via configMap.DISABLE_METRICS_AUTH="true". When enabled,
+    # scrapers must send the token as `Authorization: Bearer <token>` (Prometheus
+    # scrape config: `authorization`), and the api ServiceMonitor is wired to
+    # send it automatically.
+    enabled: false
+    # -- Only inject the token into pods that serve the protected /metrics (the
+    # API server), not every backend pod. Routes through onyx.envSecretsRestricted.
+    allPods: false
+    # -- Overwrite the default secret name, ignored if existingSecret is defined
+    secretName: 'onyx-metrics-auth'
+    # -- Use a secret specified elsewhere
+    existingSecret: ""
+    # -- This defines the env var to secret map
+    secretKeys:
+      METRICS_AUTH_TOKEN: metrics_auth_token
+    # -- Secret value. Required when this secret is enabled - generate with: openssl rand -hex 32
+    # If not set, helm install/upgrade will fail when auth.metricsAuth.enabled=true.
+    values:
+      metrics_auth_token: ""
+  # Ed25519 private key for sandbox push auth (only the public key reaches sandbox pods).
+  # Generate with: python3 -c "import base64; from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey as K; from cryptography.hazmat.primitives.serialization import *; print(base64.b64encode(K.generate().private_bytes(Encoding.Raw,PrivateFormat.Raw,NoEncryption())).decode())"
+  sandboxPushSecret:
+    enabled: false
+    allPods: false  # Restricted: only injected into pods that provision sandboxes (API server + scheduled-tasks worker)
+    secretName: 'onyx-sandbox-push-secret'
+    existingSecret: ""
+    secretKeys:
+      ONYX_SANDBOX_PUSH_PRIVATE_KEY: private_key
+    values:
+      private_key: ""
 
 configMap:
   # Auth type: "basic" (default), "google_oauth", "oidc", or "saml"
@@ -1872,6 +2076,13 @@ configMap:
   SKIP_USERFILE_THRESHOLD_TENANT_IDS: ""
   MAX_ALLOWED_UPLOAD_SIZE_MB: ""
   DEFAULT_USER_FILE_MAX_UPLOAD_SIZE_MB: ""
+  # Craft sandbox defaults. ENABLE_CRAFT itself is intentionally omitted here
+  # (opt-in) — set it explicitly to "true" to render the Craft resources.
+  SANDBOX_BACKEND: "kubernetes"
+  SANDBOX_NAMESPACE: "onyx-sandboxes"
+  SANDBOX_SERVICE_ACCOUNT_NAME: "sandbox"
+  SANDBOX_PROXY_CA_SECRET: "sandbox-proxy-ca"
+  SANDBOX_PROXY_CA_CONFIGMAP: "sandbox-proxy-ca-bundle"
 
 # Postfix mail relay configuration
 postfix:
