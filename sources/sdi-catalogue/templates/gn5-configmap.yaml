@@ -32,21 +32,26 @@ data:
         url: https://{{ .Values.serverName }}
         
       security:
-        provider: ldap
+        provider: {{ .Values.gn5.security.provider | default "none" }}
         createdUser:
-          group: eea_users
+          group: {{ .Values.gn5.security.createdUser.group | quote }}
+          {{- if .Values.gn5.security.createdUser.profile }}
+          profile: {{ .Values.gn5.security.createdUser.profile | quote }}
+          {{- end }}
+        {{- if eq (.Values.gn5.security.provider | default "none") "ldap" }}
         # Enabled if provider is ldap
         ldap:
-          url: ldaps://ldap.eionet.europa.eu
-          # url: # Empty use embedded LDAP
-          base: o=EIONET,l=Europe
-          user-search-dn: ou=Users
-          user-search-filter: (&(|(objectclass=eionetAccount))(|(uid={0})(|(mailPrimaryAddress={0})(mail={0}))))
+          # Empty url uses the embedded LDAP server
+          url: {{ .Values.gn5.security.ldap.url | quote }}
+          base: {{ .Values.gn5.security.ldap.base | quote }}
+          user-search-dn: {{ .Values.gn5.security.ldap.userSearchDn | quote }}
+          user-search-filter: {{ .Values.gn5.security.ldap.userSearchFilter | quote }}
           attributes:
-            username: uid
-            email: email
-            name: givenName
-            surname: sn
+            username: {{ .Values.gn5.security.ldap.attributes.username | quote }}
+            email: {{ .Values.gn5.security.ldap.attributes.email | quote }}
+            name: {{ .Values.gn5.security.ldap.attributes.name | quote }}
+            surname: {{ .Values.gn5.security.ldap.attributes.surname | quote }}
+        {{- end }}
 
     {{- if .Values.gn5.oauth2.enabled }}
 

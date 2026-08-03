@@ -250,6 +250,28 @@ gn5:
   gn4baseUrl: http://geonetwork
   proxy:
     enabled: false
+  security:
+    # Local authentication provider used by the sign-in form.
+    #   ldap     -> authenticate against the EIONET LDAP directory
+    #   database -> authenticate against the GeoNetwork user table
+    #   none     -> no local provider, only the OAuth2/OIDC providers below
+    provider: ldap
+    createdUser:
+      group: eea_users
+      # Profile given to users created on first login (defaults to Guest when empty)
+      profile: ''
+    # Only used when provider is ldap
+    ldap:
+      # Empty url uses the embedded LDAP server
+      url: ldaps://ldap.eionet.europa.eu
+      base: o=EIONET,l=Europe
+      userSearchDn: ou=Users
+      userSearchFilter: '(&(|(objectclass=eionetAccount))(|(uid={0})(|(mailPrimaryAddress={0})(mail={0}))))'
+      attributes:
+        username: uid
+        email: email
+        name: givenName
+        surname: sn
   oauth2:
     enabled: false
     clientId: ''
