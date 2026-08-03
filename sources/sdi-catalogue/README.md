@@ -109,6 +109,9 @@ The OAuth2 client registration is named `eea` in the Spring Security configurati
 
 ## Releases
 
+### Version 0.9.1 - 03 August 2026
+- Document the new gn5.security.* values in the README [Juan Luis Rodriguez Ponce - [`db8b765b`](https://github.com/eea/helm-charts/commit/db8b765b129d152d9fbb5038b9d9cb0a45c43a76)]
+
 ### Version 0.9.0 - 03 August 2026
 
 - gn5: make the local security provider configurable via gn5.security.* so LDAP can be disabled per environment [Juan Luis Rodriguez Ponce - [`d988bf71`](https://github.com/eea/helm-charts/commit/d988bf71035a27760eec3cc385b1454027a685f3)]
