@@ -14,6 +14,17 @@ Cronjobs have been removed since the update to GN 5/ GN 46 and the new folder st
 | serverUrl | string | <https://sdi.eea.europa.eu:443> | URL of the server. The port is required. |
 | gn5.proxy.enabled | boolean | false | Enable proxy support in GN5 (sets `geonetwork.proxy.enabled`) |
 | gn5.maxFileSize | string | 10GB | Maximum file upload size in GeoNetowrk |
+| gn5.security.provider | string | ldap | Local authentication provider for the GN5 sign-in form: `ldap` (EIONET directory), `database` (GeoNetwork user table) or `none` (only the OAuth2 providers). Sets `geonetwork.security.provider` |
+| gn5.security.createdUser.group | string | eea_users | Group assigned to LDAP users created on first login |
+| gn5.security.createdUser.profile | string | '' | Profile assigned to LDAP users created on first login. Omitted from the config when empty, GN5 then defaults to `Guest` |
+| gn5.security.ldap.url | string | ldaps://ldap.eionet.europa.eu | LDAP server URL. Empty uses the embedded LDAP server. Only used when `gn5.security.provider` is `ldap` |
+| gn5.security.ldap.base | string | o=EIONET,l=Europe | LDAP base DN |
+| gn5.security.ldap.userSearchDn | string | ou=Users | DN, relative to the base, under which users are searched |
+| gn5.security.ldap.userSearchFilter | string | (&(\|(objectclass=eionetAccount))(\|(uid={0})(\|(mailPrimaryAddress={0})(mail={0})))) | LDAP filter used to look up the user, `{0}` is the submitted login |
+| gn5.security.ldap.attributes.username | string | uid | LDAP attribute holding the username |
+| gn5.security.ldap.attributes.email | string | email | LDAP attribute holding the email address |
+| gn5.security.ldap.attributes.name | string | givenName | LDAP attribute holding the first name |
+| gn5.security.ldap.attributes.surname | string | sn | LDAP attribute holding the surname |
 | gn5.oauth2.enabled | boolean | false | Enable OAuth2 authentication for GN5 |
 | gn5.oauth2.clientId | string | '' | OAuth2 client ID |
 | gn5.oauth2.clientSecret | string | '' | OAuth2 client secret (only for helm install via --set-string flag, NOT for values.yaml) |
@@ -30,6 +41,30 @@ Cronjobs have been removed since the update to GN 5/ GN 46 and the new folder st
 | nextcloud.maxUploadSize | string | '16G' | Nextcloud PHP upload limit (upload_max_filesize and post_max_size) |
 | nextcloud.phpMemoryLimit | string | '512M' | Nextcloud PHP memory limit |
 | apache.robotsTxt | string | 'User-agent: *\nDisallow: /' | Content of the /robots.txt file served at the site root. Set to '' to not deploy a robots.txt at all |
+
+## Authentication providers
+
+GN5 combines one *local* provider, selected with `gn5.security.provider`, with the OAuth2/OIDC
+registrations configured under `gn5.oauth2`. The two are independent: changing the local provider
+does not affect the Entra ID button on the sign-in page, and vice versa.
+
+To authenticate against the EIONET directory (the default):
+
+```yaml
+gn5:
+  security:
+    provider: ldap
+    createdUser:
+      group: eea_users
+```
+
+To disable LDAP and rely on Entra ID, keeping local GeoNetwork accounts as a fallback:
+
+```yaml
+gn5:
+  security:
+    provider: database
+```
 
 ## OAuth2 Configuration
 
@@ -75,9 +110,11 @@ The OAuth2 client registration is named `eea` in the Spring Security configurati
 ## Releases
 
 ### Version 0.9.0 - 03 August 2026
+
 - gn5: make the local security provider configurable via gn5.security.* so LDAP can be disabled per environment [Juan Luis Rodriguez Ponce - [`d988bf71`](https://github.com/eea/helm-charts/commit/d988bf71035a27760eec3cc385b1454027a685f3)]
 
 ### Version 0.8.58 - 30 July 2026
+
 - Add configurable robots.txt for the apache frontend [Juan Luis Rodriguez Ponce - [`bd0f600f`](https://github.com/eea/helm-charts/commit/bd0f600f060b2187ce3a275a3c7666f922e4acb8)]
 
 ### Version 0.8.57 - 15 July 2026
