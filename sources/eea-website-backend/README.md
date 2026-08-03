@@ -10,6 +10,9 @@ This chart deployes the EEA Website Plone 6 backend app
 
 ## Releases
 
+### Version 1.65.3 - 03 August 2026
+- make beta default [Dobricean Ioan Dorian - [`92cd94de`](https://github.com/eea/helm-charts/commit/92cd94de586944759b14b1e3a96090a0082e3fec)]
+
 ### Version 1.65.1 - 27 July 2026
 - Fix cronjobs (zodbpack, entrasync): add concurrencyPolicy Forbid, activeDeadlineSeconds, backoffLimit 1, restartPolicy Never, job history limits; increase memory (zodbpack 8Gi/4Gi, entrasync 4Gi/2Gi); change entrasync schedule to hourly
 
