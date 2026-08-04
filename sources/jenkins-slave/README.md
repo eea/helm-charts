@@ -1,5 +1,8 @@
 # Releases
 
+### Version 0.7.1 - 04 August 2026
+- Fix version [valentinab25 - [`ad424825`](https://github.com/eea/helm-charts/commit/ad4248254e82691715a9b22a3215f7630ea7880a)]
+
 ### Version 0.7.0 - 04 August 2026
 - Upgrade to 29.6.1-1254-1 [valentinab25 - [`4a708dd8`](https://github.com/eea/helm-charts/commit/4a708dd821f64c43a08a0b0766fe0ab637631e14)]
 
