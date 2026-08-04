@@ -1,5 +1,8 @@
 # Releases
 
+### Version 0.7.0 - 04 August 2026
+- Upgrade to 29.6.1-1254-1 [valentinab25 - [`4a708dd8`](https://github.com/eea/helm-charts/commit/4a708dd821f64c43a08a0b0766fe0ab637631e14)]
+
 ### Version 0.6.1 - 04 August 2026
 - rollback on docker version after timeouts [valentinab25 - [`7f883a1b`](https://github.com/eea/helm-charts/commit/7f883a1ba43f59eb0a3160db8cee44571b87244f)]
 
