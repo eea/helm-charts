@@ -1,5 +1,8 @@
 # Releases
 
+### Version 0.6.1 - 04 August 2026
+- rollback on docker version after timeouts [valentinab25 - [`7f883a1b`](https://github.com/eea/helm-charts/commit/7f883a1ba43f59eb0a3160db8cee44571b87244f)]
+
 ### Version 0.6.0 - 29 June 2026
 - Automated release of [eeacms/jenkins-slave-dind:29.6.1-1254](https://github.com/eea/eea.docker.jenkins.slave-dind/releases) [EEA Jenkins - [`c21a0852`](https://github.com/eea/helm-charts/commit/c21a08526fbc1dc353663152c049d734a70e08f3)]
 
