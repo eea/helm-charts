@@ -111,7 +111,7 @@ apache:
     repository: eeacms/apache
     tag: "2.4-3.4"
   serviceType: ClusterIP
-  modules: "headers_module proxy_module proxy_http_module rewrite_module"
+  modules: "headers_module rewrite_module"
   redirectConfig: |-
     RewriteRule ^/species/([0-9]+)$ https://biodiversity.europa.eu/species/$1 [R=301,L,NE]
   extraConfig: ""
