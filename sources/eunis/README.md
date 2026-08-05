@@ -28,6 +28,9 @@ You can run `helm test eunis` to verify the system is working correctly.
 
 ## Releases
 
+### Version 3.0.0 - 05 August 2026
+- EUNIS decommissioning [miahi - [`88925411`](https://github.com/eea/helm-charts/commit/88925411f26f6c5b6ef6f752b76570b9530c13cc)]
+
 ### Version 2.2.2 - 1 April 2026
 - remove legacy `redirects` values and keep redirect configuration only under `apache.*`
 
