@@ -94,6 +94,17 @@ ingress:
   #    hosts:
   #      - eunis.eea.europa.eu
 
+oldIngress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts:
+    - host: old-eunis.eea.europa.eu
+      paths:
+        - path: /
+          pathType: Prefix
+  restrictFromInternet: true
+
 apache:
   enabled: false
   image:

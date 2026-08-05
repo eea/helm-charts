@@ -50,6 +50,14 @@ spec:
         {{- end }}
         resources:
           {{- toYaml .Values.apache.resources | nindent 10 }}
+        volumeMounts:
+        - name: {{ .Release.Name }}-files
+          mountPath: /var/local/eunis
+          readOnly: true
+      volumes:
+      - name: {{ .Release.Name }}-files
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-files
       {{- with .Values.apache.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

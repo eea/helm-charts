@@ -31,7 +31,17 @@ data:
 {{ . | trim | nindent 6 }}
 
       {{- end }}
-      ProxyPass / http://{{ include "appl.tomcatServiceName" $ }}:{{ $.Values.service.port }}/
-      ProxyPassReverse / http://{{ include "appl.tomcatServiceName" $ }}:{{ $.Values.service.port }}/
+
+      Alias /images /var/local/eunis/images
+      <Directory "/var/local/eunis/images">
+        Require all granted
+        Options -Indexes
+      </Directory>
+
+      Alias /404.html /var/local/eunis/404.html
+      <Files "/var/local/eunis/404.html">
+        Require all granted
+      </Files>
+      ErrorDocument 404 /404.html
     </VirtualHost>
 {{- end }}
