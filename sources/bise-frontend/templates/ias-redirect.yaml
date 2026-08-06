@@ -1,0 +1,36 @@
+{{- if .Values.iasRedirect.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ias-redirect
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: ied-frontend
+  annotations:
+    nginx.ingress.kubernetes.io/permanent-redirect: {{ .Values.iasRedirect.redirectTo }}
+    {{- with .Values.iasRedirect.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: {{ .Values.iasRedirect.hostname }}
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ .Values.varnish.serviceName }}
+            port:
+              number: {{ .Values.varnish.port }}
+  {{- if .Values.iasRedirect.tls }}
+  tls:
+  - hosts:
+    - {{ .Values.iasRedirect.hostname }}
+    {{- if .Values.iasRedirect.certificate }}
+    secretName: {{ .Values.iasRedirect.certificate }}
+    {{- end  }}
+  {{- end  }}
+{{- end }}

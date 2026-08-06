@@ -45,7 +45,15 @@ ingressredirects:
   certificate: www.dev-biodiversity.01dev.eea.europa.eu-tls
   annotations:
     cert-manager.io/cluster-issuer: 01dev-eea-letsencrypt
-  hostname: www.dev-biodiversity.01dev.eea.europa.eu    
+  hostname: www.dev-biodiversity.01dev.eea.europa.eu
+
+iasRedirect:
+  enabled: true
+  hostname: ias.eea.europa.eu
+  redirectTo: https://biodiversity.europa.eu/resources/invasive-alien-species
+  tls: true
+  certificate:
+  annotations:
 
 
 links:
@@ -59,7 +67,6 @@ volto:
     enabled: false
     minReplicas: 1
     maxReplicas: 6
-    # targetCPUUtilizationPercentage: 80
     targetMemoryUtilizationPercentage: 60
   replicaCount: 1
   resources:
