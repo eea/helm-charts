@@ -32,6 +32,8 @@ data:
 
       {{- end }}
 
+      RewriteRule ^/$ /404-not-found [L]
+
       Alias /images /var/local/eunis/images
       <Directory "/var/local/eunis/images">
         Require all granted
@@ -39,7 +41,7 @@ data:
       </Directory>
 
       Alias /404.html /var/local/eunis/404.html
-      <Files "/var/local/eunis/404.html">
+      <Files "404.html">
         Require all granted
       </Files>
       ErrorDocument 404 /404.html
