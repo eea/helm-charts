@@ -52,9 +52,8 @@ iasRedirect:
   hostname: ias.eea.europa.eu
   redirectTo: https://biodiversity.europa.eu/resources/invasive-alien-species
   tls: true
-  certificate: ias.eea.europa.eu-tls
+  certificate:
   annotations:
-    cert-manager.io/cluster-issuer: 01dev-eea-letsencrypt
 
 
 links:
@@ -68,7 +67,6 @@ volto:
     enabled: false
     minReplicas: 1
     maxReplicas: 6
-    # targetCPUUtilizationPercentage: 80
     targetMemoryUtilizationPercentage: 60
   replicaCount: 1
   resources:
