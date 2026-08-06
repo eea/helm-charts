@@ -28,6 +28,9 @@ You can run `helm test eunis` to verify the system is working correctly.
 
 ## Releases
 
+### Version 3.0.3 - 06 August 2026
+- Fix for ingress not updating URLs [miahi - [`001bc7b7`](https://github.com/eea/helm-charts/commit/001bc7b793ed0a2da4c6252a2a8624096054ceb7)]
+
 ### Version 3.0.2 - 06 August 2026
 - Old EUNIS policy [miahi - [`4bfcd512`](https://github.com/eea/helm-charts/commit/4bfcd512631eaa07ede65700434a12305fa0e3fa)]
 
