@@ -10,6 +10,9 @@ and the broken-links cron job.
 Sensitive values are intentionally left empty in `values.yaml`.
 ## Releases
 
+### Version 0.8.0 - 06 August 2026
+- Automated release of [eeacms/eea.docker.plone-climateadapt:v11.0.33-plone6.1](https://github.com/eea/eea.docker.plone-climateadapt/releases) [EEA Jenkins - [`a116406c`](https://github.com/eea/helm-charts/commit/a116406c264633ca78a680a26110fd5504ff7333)]
+
 ### Version 0.7.0 - 04 August 2026
 - Automated release of [eeacms/eea.docker.plone-climateadapt:v11.0.32-plone6.1](https://github.com/eea/eea.docker.plone-climateadapt/releases) [EEA Jenkins - [`c9dc5aaa`](https://github.com/eea/helm-charts/commit/c9dc5aaa45ea2c5725126cd8852756de2b5e0e9a)]
 
