@@ -84,6 +84,9 @@ ingress:
     #nginx.ingress.kubernetes.io/affinity: cookie
     #nginx.ingress.kubernetes.io/affinity-mode: persistent
     #nginx.ingress.kubernetes.io/session-cookie-name: backend
+  # Scalar override for hosts[0].host, kept separate because Rancher's
+  # question form cannot reliably write to array-index paths on upgrade.
+  host: eunis.eea.europa.eu
   hosts:
     - host: eunis.eea.europa.eu
       paths:
@@ -98,6 +101,7 @@ oldIngress:
   enabled: false
   className: ""
   annotations: {}
+  host: old-eunis.eea.europa.eu
   hosts:
     - host: old-eunis.eea.europa.eu
       paths:

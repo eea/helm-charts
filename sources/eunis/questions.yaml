@@ -7,7 +7,7 @@ questions:
     required: true
     group: "General"
 
-  - variable: "ingress.hosts[0].host"
+  - variable: "ingress.host"
     label: "Server name"
     description: "DNS name exposed by ingress"
     default: "eunis.eea.europa.eu"
@@ -24,7 +24,7 @@ questions:
     required: true
     group: "General"
 
-  - variable: "oldIngress.hosts[0].host"
+  - variable: "oldIngress.host"
     label: "Old-eunis server name"
     description: "DNS name exposed by the legacy ingress"
     default: "old-eunis.eea.europa.eu"

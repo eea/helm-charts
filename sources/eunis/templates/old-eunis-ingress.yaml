@@ -1,4 +1,8 @@
 {{- if .Values.oldIngress.enabled -}}
+{{- $hosts := .Values.oldIngress.hosts -}}
+{{- if and .Values.oldIngress.host $hosts -}}
+{{- $hosts = list (merge (dict "host" .Values.oldIngress.host) (index $hosts 0)) -}}
+{{- end -}}
 {{- if and .Values.oldIngress.className (not (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion)) }}
   {{- if not (hasKey .Values.oldIngress.annotations "kubernetes.io/ingress.class") }}
   {{- $_ := set .Values.oldIngress.annotations "kubernetes.io/ingress.class" .Values.oldIngress.className}}
@@ -36,7 +40,7 @@ spec:
   ingressClassName: {{ .Values.oldIngress.className }}
   {{- end }}
   rules:
-    {{- range .Values.oldIngress.hosts }}
+    {{- range $hosts }}
     - host: {{ .host | quote }}
       http:
         paths:

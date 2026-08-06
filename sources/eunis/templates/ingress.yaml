@@ -1,6 +1,10 @@
 {{- if .Values.ingress.enabled -}}
 {{- $svcName := include "appl.frontServiceName" . -}}
 {{- $svcPort := include "appl.frontServicePort" . -}}
+{{- $hosts := .Values.ingress.hosts -}}
+{{- if and .Values.ingress.host $hosts -}}
+{{- $hosts = list (merge (dict "host" .Values.ingress.host) (index $hosts 0)) -}}
+{{- end -}}
 {{- if and .Values.ingress.className (not (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion)) }}
   {{- if not (hasKey .Values.ingress.annotations "kubernetes.io/ingress.class") }}
   {{- $_ := set .Values.ingress.annotations "kubernetes.io/ingress.class" .Values.ingress.className}}
@@ -37,7 +41,7 @@ spec:
     {{- end }}
   {{- end }}
   rules:
-    {{- range .Values.ingress.hosts }}
+    {{- range $hosts }}
     - host: {{ .host | quote }}
       http:
         paths:
