@@ -28,6 +28,9 @@ You can run `helm test eunis` to verify the system is working correctly.
 
 ## Releases
 
+### Version 3.0.2 - 06 August 2026
+- Old EUNIS policy [miahi - [`4bfcd512`](https://github.com/eea/helm-charts/commit/4bfcd512631eaa07ede65700434a12305fa0e3fa)]
+
 ### Version 3.0.1 - 06 August 2026
 - 404 message also on default page [miahi - [`adaf9d68`](https://github.com/eea/helm-charts/commit/adaf9d6803ec08a8324fc89131d3d6a59c0c3f6d)]
 
