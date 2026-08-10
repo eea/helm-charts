@@ -4,6 +4,9 @@ This chart is configured for production use.
 
 ## Releases
 
+### Version 4.0.1
+- Missing configuration class fix. Dead gelf library.
+
 ### Version 4.0.0
 - Horizontal scalability. Liveness probe update.
 
