@@ -7,7 +7,9 @@ metadata:
     component: tomcat
 
 spec:
+  {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
+  {{- end }}
   selector:
     matchLabels:
       {{- include "appl.selectorLabels" . | nindent 6 }}
@@ -38,12 +40,6 @@ spec:
               containerPort: 8080
               protocol: TCP
           env:
-          - name: logFilePath
-            value: /opt/datadict
-          - name: queryLogRetainAll
-            value: "false"
-          - name: queryLogRetentionDays
-            value: P60D
           - name: JWT_SECRET
             valueFrom:
               secretKeyRef:
@@ -107,7 +103,7 @@ spec:
               path: /
               port: tomcat8080
             periodSeconds: 20
-            timeoutSeconds: 2
+            timeoutSeconds: 5
 
           resources:
             {{- toYaml .Values.resources | nindent 12 }}

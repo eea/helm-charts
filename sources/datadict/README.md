@@ -4,6 +4,9 @@ This chart is configured for production use.
 
 ## Releases
 
+### Version 4.0.0
+- Horizontal scalability. Liveness probe update.
+
 ### Version 3.1.0
 - NPE fix.
 
