@@ -772,7 +772,9 @@ sentry:
     # Recreate if replicas=1, else RollingUpdate (see sentry-kubernetes/charts#2238). Override to force either.
     strategyType: null
     annotations: {}
-    replicas: 1
+    # replicas -- keep in sync with the ingest-events topic's partition count
+    # (kafka.provisioning.topics) - see SCALING INGESTION THROUGHPUT there.
+    replicas: 3
     # concurrency: 4
     env: []
     resources: {}
@@ -821,7 +823,9 @@ sentry:
     # Recreate if replicas=1, else RollingUpdate (see sentry-kubernetes/charts#2238). Override to force either.
     strategyType: null
     annotations: {}
-    replicas: 1
+    # replicas -- keep in sync with the ingest-transactions topic's partition
+    # count (kafka.provisioning.topics) - see SCALING INGESTION THROUGHPUT there.
+    replicas: 3
     # concurrency: 4
     env: []
     resources: {}
@@ -1259,7 +1263,10 @@ sentry:
     # Recreate if replicas=1, else RollingUpdate (see sentry-kubernetes/charts#2238). Override to force either.
     strategyType: null
     annotations: {}
-    replicas: 1
+    # replicas -- keep in sync with the events topic's partition count
+    # (kafka.provisioning.topics) - see SCALING INGESTION THROUGHPUT there.
+    # No autoscaling support for this component; scale by raising this directly.
+    replicas: 3
     env: []
     resources: {}
     #  requests:
@@ -1387,7 +1394,10 @@ sentry:
     # Recreate if replicas=1, else RollingUpdate (see sentry-kubernetes/charts#2238). Override to force either.
     strategyType: null
     annotations: {}
-    replicas: 1
+    # replicas -- keep in sync with the ingest-spans topic's partition count
+    # (kafka.provisioning.topics) - see SCALING INGESTION THROUGHPUT there.
+    # No autoscaling support for this component; scale by raising this directly.
+    replicas: 3
     # concurrency: 4
     env: []
     resources: {}
@@ -3334,8 +3344,9 @@ kafka:
     # Note that snuba component might fail if you set `hooks.snubaInit.kafka.enabled` to `false` and remove the topics from this default topic list.
     topics:
       - name: events
-        ## Number of partitions for this topic
-        # partitions: 1
+        ## Number of partitions for this topic (see SCALING INGESTION THROUGHPUT
+        ## above) - keep in sync with sentry.postProcessForwardErrors.replicas.
+        partitions: 3
         config:
           "message.timestamp.type": LogAppendTime
       - name: event-replacements
@@ -3359,6 +3370,9 @@ kafka:
       - name: outcomes-billing
       - name: outcomes-billing-dlq
       - name: ingest-spans
+        ## Number of partitions for this topic (see SCALING INGESTION THROUGHPUT
+        ## above) - keep in sync with sentry.processSpans.replicas.
+        partitions: 3
       - name: ingest-sessions
       - name: snuba-metrics-commit-log
         config:
@@ -3425,12 +3439,16 @@ kafka:
       - name: ingest-attachments
       - name: ingest-attachments-dlq
       - name: ingest-transactions
+        ## Number of partitions for this topic (see SCALING INGESTION THROUGHPUT
+        ## above) - keep in sync with sentry.ingestConsumerTransactions.replicas.
+        partitions: 3
       - name: ingest-transactions-dlq
       - name: ingest-transactions-backlog
       - name: ingest-events-dlq
       - name: ingest-events
-        ## If the number of exceptions increases, it is recommended to increase the number of partitions for ingest-events
-        # partitions: 1
+        ## Number of partitions for this topic (see SCALING INGESTION THROUGHPUT
+        ## above) - keep in sync with sentry.ingestConsumerEvents.replicas.
+        partitions: 3
       - name: ingest-replay-recordings
       - name: ingest-metrics
       - name: ingest-metrics-dlq
@@ -3905,7 +3923,30 @@ clickhouse:
     image: clickhouse/clickhouse-server
     imageVersion: "25.3"
     imagePullPolicy: IfNotPresent
+    # replicas -- NOTE: this chart's ClickHouse is single-node only (no
+    # remote_servers/macros/distributed-table wiring). Raising this spins up
+    # additional independent, UNCOORDINATED pods behind the same headless
+    # Service, not a real cluster - writes/reads would split unpredictably
+    # across them. Keep at 1 unless you separately wire up ClickHouse
+    # clustering (macros per pod, distributed DDL, Snuba multi-host config).
     replicas: "1"
+    # Without a CPU/memory request the pod can be starved under node
+    # contention; ClickHouse is memory-hungry under merge/query load.
+    resources:
+      requests:
+        cpu: 500m
+        memory: 2Gi
+      limits:
+        cpu: 2000m
+        memory: 4Gi
+    # backgroundPoolSize -- merge/mutation background thread pool size.
+    # Raise on hosts with more cores to keep up with MergeTree compaction.
+    backgroundPoolSize: 16
+    # minBytesForWidePart -- MergeTree parts smaller than this stay "compact"
+    # (single file) instead of "wide" (one file per column). Compact parts
+    # are friendlier to network/NFS-backed storage since ClickHouse's own
+    # background merges create many small parts under write load.
+    minBytesForWidePart: 104857600
     configmap:
       remote_servers:
         internal_replication: true
