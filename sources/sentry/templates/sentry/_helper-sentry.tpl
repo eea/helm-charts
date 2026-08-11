@@ -418,6 +418,7 @@ sentry.conf.py: |-
               "organizations:trace-view-load-more",
               "organizations:trace-tabs-ui",
               "organizations:trace-view-linked-traces",
+              "organizations:trace-spans-format",
           )
           {{- end }}
           {{- if .Values.sentry.features.enableSessionReplay }}

@@ -154,14 +154,8 @@ spec:
 {{- if $root.Values.global.volumeMounts }}
 {{ toYaml $root.Values.global.volumeMounts | indent 8 }}
 {{- end }}
-        livenessProbe:
-          exec:
-            command:
-            - rm
-            - /tmp/health.txt
-          initialDelaySeconds: {{ default 10 $root.Values.sentry.taskWorker.livenessProbe.initialDelaySeconds }}
-          periodSeconds: {{ default 10 $root.Values.sentry.taskWorker.livenessProbe.periodSeconds }}
-          timeoutSeconds: {{ default 5 $root.Values.sentry.taskWorker.livenessProbe.timeoutSeconds }}
+        {{- include "sentry.startupProbe.execHealthcheckFile" (dict "startupProbe" $root.Values.sentry.taskWorker.startupProbe "healthcheckFile" "/tmp/health.txt") | nindent 8 }}
+        {{- include "sentry.livenessProbe.execHealthcheckFile" (dict "livenessProbe" $root.Values.sentry.taskWorker.livenessProbe "healthcheckFile" "/tmp/health.txt") | nindent 8 }}
 {{- if $root.Values.sentry.taskWorker.sidecars }}
 {{ toYaml $root.Values.sentry.taskWorker.sidecars | indent 6 }}
 {{- end }}

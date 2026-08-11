@@ -26,6 +26,10 @@ spec:
         - name: clickhouse
           image: "{{ .Values.clickhouse.clickhouse.image }}:{{ .Values.clickhouse.clickhouse.imageVersion }}"
           imagePullPolicy: {{ .Values.clickhouse.clickhouse.imagePullPolicy | default "IfNotPresent" }}
+          {{- if .Values.clickhouse.clickhouse.resources }}
+          resources:
+            {{- toYaml .Values.clickhouse.clickhouse.resources | nindent 12 }}
+          {{- end }}
           ports:
             - name: http
               containerPort: 8123

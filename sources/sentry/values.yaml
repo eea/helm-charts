@@ -266,8 +266,14 @@ relay:
     env: []
     volumes: []
     volumeMounts: []
+  # http:
+  #   timeout: 5
+  #   connectionTimeout: 3
   # cache:
   #   envelopeBufferSize: 1000
+  #   batchSize: 500
+  # limits:
+  #   queryTimeout: 30
   # logging:
   #   level: info
   #   format: json
@@ -278,6 +284,8 @@ relay:
     #  requestTimeoutMs:
     #  deliveryTimeoutMs:
     #  apiVersionRequestTimeoutMs:
+    #  batchSize: 1048576
+    #  lingerMs: 60000
 
     # additionalKafkaConfig:
     #  - name: compression.type
@@ -489,9 +497,18 @@ sentry:
     priorityClassName: ""
     tolerations: []
     livenessProbe:
+      enabled: true
+      # freshnessSeconds -- how stale /tmp/health.txt may get before the probe fails.
+      # Taskworkers only touch the file when fetching/completing a task, so on quiet
+      # queues GetTask can legitimately block for a while; keep this generous to avoid
+      # restart loops on idle topics (see: Fix startup probe for Kafka consumers on quiet topics).
+      freshnessSeconds: 180
       initialDelaySeconds: 30
-      periodSeconds: 10
+      periodSeconds: 30
+      failureThreshold: 3
       timeoutSeconds: 5
+    startupProbe:
+      enabled: true
     # workers[].resources -- Optional per-worker container resources; merged over taskWorker.resources (worker keys win).
     # workers[].topologySpreadConstraints -- Optional per-worker pod topologySpreadConstraints; overriding taskWorker.topologySpreadConstraints (worker list win).
     workers:
@@ -1491,10 +1508,15 @@ snuba:
       periodSeconds: 3
       successThreshold: 1
       timeoutSeconds: 2
-    resources: {}
-    #  requests:
-    #    cpu: 100m
-    #    memory: 150Mi
+    # Without a CPU request the pod runs BestEffort and can be starved under node
+    # contention, making the /health probe time out and the pod get restarted.
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: 1000m
+        memory: 1Gi
     affinity: {}
     nodeSelector: {}
     securityContext: {}
@@ -3176,6 +3198,21 @@ kafka:
     ## Default number of partitions for topics when unspecified
     ##
     # numPartitions: 1
+    ##
+    ## SCALING INGESTION THROUGHPUT:
+    ## Kafka consumer groups can only have as many actively-working consumers as
+    ## a topic has partitions - extra consumer replicas beyond the partition
+    ## count just sit idle. To scale a hot ingest path (e.g. ingest-events,
+    ## ingest-transactions, ingest-spans), you must raise BOTH together:
+    ##   1. This topic's `partitions:` (see the `topics:` list below), e.g. 6
+    ##   2. The matching consumer's `replicas:` (or `autoscaling.maxReplicas:`
+    ##      if it has an HPA), e.g. sentry.ingestConsumerEvents.replicas
+    ## Raising partitions alone with a single consumer replica changes nothing;
+    ## raising consumer replicas alone with 1 partition just adds idle pods.
+    ## Note: partition count can only be INCREASED on an existing topic, never
+    ## decreased, and only takes effect for NEW topics via this provisioning
+    ## job (`--create --if-not-exists`) - an already-created topic needs a live
+    ## `kafka-topics.sh --alter --topic <name> --partitions <n>` to change.
     # Note that snuba component might fail if you set `hooks.snubaInit.kafka.enabled` to `false` and remove the topics from this default topic list.
     topics:
       - name: events
@@ -3820,6 +3857,21 @@ kafka:
     ## Default number of partitions for topics when unspecified
     ##
     # numPartitions: 1
+    ##
+    ## SCALING INGESTION THROUGHPUT:
+    ## Kafka consumer groups can only have as many actively-working consumers as
+    ## a topic has partitions - extra consumer replicas beyond the partition
+    ## count just sit idle. To scale a hot ingest path (e.g. ingest-events,
+    ## ingest-transactions, ingest-spans), you must raise BOTH together:
+    ##   1. This topic's `partitions:` (see the `topics:` list below), e.g. 6
+    ##   2. The matching consumer's `replicas:` (or `autoscaling.maxReplicas:`
+    ##      if it has an HPA), e.g. sentry.ingestConsumerEvents.replicas
+    ## Raising partitions alone with a single consumer replica changes nothing;
+    ## raising consumer replicas alone with 1 partition just adds idle pods.
+    ## Note: partition count can only be INCREASED on an existing topic, never
+    ## decreased, and only takes effect for NEW topics via this provisioning
+    ## job (`--create --if-not-exists`) - an already-created topic needs a live
+    ## `kafka-topics.sh --alter --topic <name> --partitions <n>` to change.
     # Note that snuba component might fail if you set `hooks.snubaInit.kafka.enabled` to `false` and remove the topics from this default topic list.
     topics:
       - name: events
