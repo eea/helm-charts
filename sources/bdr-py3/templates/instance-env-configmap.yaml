@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "appl.fullname" . }}-instance-env
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    app.kubernetes.io/component: zope
+data:
+  REPORTEK_DEPLOYMENT: {{ .Values.instance.env.reportekDeployment | quote }}
+  USE_BEAKER_SESSION: {{ .Values.instance.env.useBeakerSession | quote }}
+  BEAKER_PATH: {{ .Values.instance.env.beakerPath | quote }}
+  REDIS_URL: {{ .Values.instance.env.redisUrl | quote }}
+  CACHE_PURGING_DOMAIN: {{ .Values.instance.env.cachePurgingDomain | quote }}
+  CACHE_PURGING_ENABLED: {{ .Values.instance.env.cachePurgingEnabled | quote }}
+  CACHE_PURGING_PROXY: {{ .Values.instance.env.cachePurgingProxy | quote }}
+  CACHE_PURGING_PROXY_PORT: {{ .Values.instance.env.cachePurgingProxyPort | quote }}
+  CACHE_PURGING_VHOST: {{ .Values.instance.env.cachePurgingVhost | quote }}
+  CACHE_SETTINGS_ENABLED: {{ .Values.instance.env.cacheSettingsEnabled | quote }}
+  CLAMAV_HOST: {{ .Values.instance.env.clamavHost | quote }}
+  DEPLOYMENT_HOST: {{ .Values.instance.env.deploymentHost | quote }}
+  GRAYLOG: {{ .Values.instance.env.graylog | quote }}
+  GRAYLOG_FACILITY: {{ .Values.instance.env.graylogFacility | quote }}
+  RABBITMQ_ENABLED: {{ .Values.instance.env.rabbitmqEnabled | quote }}
+  RABBITMQ_HOST: {{ .Values.instance.env.rabbitmqHost | quote }}
+  RABBITMQ_PORT: {{ .Values.instance.env.rabbitmqPort | quote }}
+  RABBITMQ_USER: {{ .Values.instance.env.rabbitmqUser | quote }}
+  SENTRY_SITE: {{ .Values.instance.env.sentrySite | quote }}
+  SENTRY_ENVIRONMENT: {{ .Values.instance.env.sentryEnvironment | quote }}
+  SENTRY_RELEASE: {{ printf "%s:%s" (include "appl.chart" .) .Chart.AppVersion | quote }}
+  TZ: {{ .Values.timezone | quote }}
+  ZEO_ADDRESS: {{ .Values.instance.env.zeoAddress | quote }}
+  ZIP_CACHE_ENABLED: {{ .Values.instance.env.zipCacheEnabled | quote }}
+  ZIP_CACHE_PATH: {{ .Values.instance.env.zipCachePath | quote }}
+  ZIP_CACHE_THRESHOLD: {{ .Values.instance.env.zipCacheThreshold | quote }}
+  ZOPE_THREADS: {{ .Values.instance.env.zopeThreads | quote }}
+  ZOPE_DEBUG_MODE: {{ .Values.instance.env.zopeDebugMode | quote }}
+  EVENT_LOG_LEVEL: {{ .Values.instance.env.eventLogLevel | quote }}
+  PYTHONFAULTHANDLER: {{ .Values.instance.env.pythonFaulthandler | quote }}
+  ZEO_CLIENT_CACHE_SIZE: {{ .Values.instance.env.zeoClientCacheSize | quote }}
+  {{- if ne (.Values.instance.env.zeoSharedBlobDir | default "off" | toString) "on" }}
+  ZEO_CLIENT_BLOB_CACHE_SIZE: {{ .Values.instance.env.zeoClientBlobCacheSize | quote }}
+  {{- end }}
+  ZEO_SHARED_BLOB_DIR: '{{ if eq (.Values.instance.env.zeoSharedBlobDir | default "off" | toString) "on" }}on{{ else }}off{{ end }}'
+  SESSION_MANAGER_TIMEOUT: {{ .Values.instance.env.sessionManagerTimeout | quote }}
+  SESSION_COOKIE_EXPIRES: {{ .Values.instance.env.sessionCookieExpires | quote }}
+  SESSION_COOKIE_SECURE: {{ .Values.instance.env.sessionCookieSecure | quote }}
+  SESSION_COOKIE_HTTPONLY: {{ .Values.instance.env.sessionCookieHttpOnly | quote }}
+  SESSION_COOKIE_SAMESITE: {{ .Values.instance.env.sessionCookieSameSite | quote }}
+  LOCAL_CONVERTERS_HOST: {{ .Values.instance.env.localConvertersHost | quote }}
+  {{- if .Values.instance.env.ldapMemcachedServers }}
+  LDAP_MEMCACHED_SERVERS: {{ .Values.instance.env.ldapMemcachedServers | quote }}
+  {{- end }}

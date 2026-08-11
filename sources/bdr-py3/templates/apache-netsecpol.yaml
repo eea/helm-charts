@@ -1,0 +1,68 @@
+{{- if .Values.defaultNetworkPolicyDeny.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "appl.fullname" . }}-apache
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    app.kubernetes.io/component: network-policy
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/component: apache
+
+  policyTypes:
+  - Ingress
+  - Egress
+
+  ingress:
+    # Allow HTTP from anywhere (ingress controller, in-cluster health checks).
+    - ports:
+        - protocol: TCP
+          port: 80
+
+  egress:
+    # Zope instances
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/instance: {{ .Release.Name }}
+              app.kubernetes.io/component: zope
+      ports:
+        - protocol: TCP
+          port: {{ .Values.instance.port }}
+
+    # BDR registry
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/instance: {{ .Release.Name }}
+              app.kubernetes.io/component: bdr-registry
+      ports:
+        - protocol: TCP
+          port: 12300
+
+    # Registry notifications (the sync and async releases share a component
+    # label; the sync one listens on 12301 and the async one on 12300).
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/instance: {{ .Release.Name }}
+              app.kubernetes.io/component: bdr-registry-notifications
+      ports:
+        - protocol: TCP
+          port: 12300
+        - protocol: TCP
+          port: 12301
+
+    # European cache registry (both the main and sync releases)
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/instance: {{ .Release.Name }}
+              app.kubernetes.io/component: european-cache-registry
+      ports:
+        - protocol: TCP
+          port: 5000
+{{- end }}

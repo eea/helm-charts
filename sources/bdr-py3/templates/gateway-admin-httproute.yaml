@@ -1,0 +1,57 @@
+{{- if and .Values.ingress.enabled (eq .Values.ingress.type "gatewayAPI") .Values.ingress.adminPaths }}
+{{- $fullName := include "appl.fullname" . }}
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: {{ $fullName }}-admin
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    app.kubernetes.io/component: gateway-httproute
+spec:
+  hostnames:
+    - {{ .Values.ingress.hostname | quote }}
+  parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: {{ .Values.ingress.gatewayAPI.gatewayName }}
+      {{- with .Values.ingress.gatewayAPI.gatewayNamespace }}
+      namespace: {{ . }}
+      {{- end }}
+      sectionName: {{ .Values.ingress.gatewayAPI.sectionName }}
+  rules:
+    {{- range .Values.ingress.adminPaths }}
+    - matches:
+        - path:
+            type: {{ if eq (.pathType | default "Prefix") "Exact" }}Exact{{ else }}PathPrefix{{ end }}
+            value: {{ .path }}
+      backendRefs:
+        - name: {{ .backendServiceName | default (printf "%s-apache" $fullName) }}
+          port: {{ .backendPort | default 80 }}
+      {{- with $.Values.ingress.proxyReadTimeout }}
+      timeouts:
+        backendRequest: {{ printf "%ss" . | quote }}
+      {{- end }}
+      filters:
+        - type: ExtensionRef
+          extensionRef:
+            group: traefik.io
+            kind: Middleware
+            name: {{ $fullName }}-admin-auth
+        {{- if $.Values.ingress.responseHeaders }}
+        - type: ResponseHeaderModifier
+          responseHeaderModifier:
+            set:
+              {{- range $.Values.ingress.responseHeaders }}
+              - name: {{ .name }}
+                value: {{ .value | quote }}
+              {{- end }}
+        {{- end }}
+        {{- if $.Values.ingress.proxyBodySize }}
+        - type: ExtensionRef
+          extensionRef:
+            group: traefik.io
+            kind: Middleware
+            name: {{ $fullName }}-buffering
+        {{- end }}
+    {{- end }}
+{{- end }}
