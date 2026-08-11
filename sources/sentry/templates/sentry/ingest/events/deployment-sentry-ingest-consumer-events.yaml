@@ -19,6 +19,8 @@ metadata:
   {{- end }}
 spec:
   revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
+  strategy:
+    type: {{ include "sentry.kafkaConsumer.strategyType" (dict "strategyType" .Values.sentry.ingestConsumerEvents.strategyType "replicas" .Values.sentry.ingestConsumerEvents.replicas "autoscaling" .Values.sentry.ingestConsumerEvents.autoscaling) }}
   selector:
     matchLabels:
       app: {{ template "sentry.fullname" . }}
@@ -104,6 +106,10 @@ spec:
           {{- end }}
           - "--healthcheck-file-path"
           - "/tmp/health.txt"
+          {{- if .Values.sentry.ingestConsumerEvents.maxPollIntervalMs }}
+          - "--max-poll-interval-ms"
+          - "{{ .Values.sentry.ingestConsumerEvents.maxPollIntervalMs }}"
+          {{- end }}
           {{- if .Values.sentry.ingestConsumerEvents.logLevel }}
           - "--log-level"
           - "{{ .Values.sentry.ingestConsumerEvents.logLevel }}"

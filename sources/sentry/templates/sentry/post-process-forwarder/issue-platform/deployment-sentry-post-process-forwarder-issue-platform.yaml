@@ -20,6 +20,8 @@ metadata:
   {{- end }}
 spec:
   revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
+  strategy:
+    type: {{ include "sentry.kafkaConsumer.strategyType" (dict "strategyType" .Values.sentry.postProcessForwardIssuePlatform.strategyType "replicas" .Values.sentry.postProcessForwardIssuePlatform.replicas) }}
   selector:
     matchLabels:
         app: sentry
@@ -106,6 +108,10 @@ spec:
           {{- end }}
           - "--healthcheck-file-path"
           - "/tmp/health.txt"
+          {{- if .Values.sentry.postProcessForwardIssuePlatform.maxPollIntervalMs }}
+          - "--max-poll-interval-ms"
+          - "{{ .Values.sentry.postProcessForwardIssuePlatform.maxPollIntervalMs }}"
+          {{- end }}
         {{- include "sentry.startupProbe.execHealthcheckFile" (dict "startupProbe" .Values.sentry.postProcessForwardIssuePlatform.startupProbe "healthcheckFile" "/tmp/health.txt") | nindent 8 }}
         {{- include "sentry.livenessProbe.execHealthcheckFile" (dict "livenessProbe" .Values.sentry.postProcessForwardIssuePlatform.livenessProbe "healthcheckFile" "/tmp/health.txt") | nindent 8 }}
         env:

@@ -83,12 +83,14 @@ spec:
           containerPort: 9125
         - name: metrics
           containerPort: 9102
-{{- if .Values.metrics.volumeMounts }}
+{{- if or .Values.metrics.volumeMounts .Values.global.volumeMounts }}
         volumeMounts:
+{{- if .Values.metrics.volumeMounts }}
 {{ toYaml .Values.metrics.volumeMounts | indent 8 }}
 {{- end }}
 {{- if .Values.global.volumeMounts }}
 {{ toYaml .Values.global.volumeMounts | indent 8 }}
+{{- end }}
 {{- end }}
 {{- if .Values.metrics.livenessProbe.enabled }}
         livenessProbe:

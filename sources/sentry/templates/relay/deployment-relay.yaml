@@ -15,7 +15,7 @@ metadata:
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
     {{- include "sentry.component.labels" (dict "component" "relay" "ctx" .) | nindent 4 }}
-  {{- if .Values.asHook }}
+  {{- if .Values.relay.asHook }}
   {{- /* Add the Helm annotations so that deployment after asHook from true to false works */}}
   annotations:
     meta.helm.sh/release-name: "{{ .Release.Name }}"
@@ -84,9 +84,10 @@ spec:
       {{- end }}
       initContainers:
         {{- if and (not .Values.kafka.enabled) .Values.externalKafka.sasl.existingSecret }}
+        {{- $configRenderImage := default (dict) (default (dict) .Values.relay.configRender).image }}
         - name: {{ .Chart.Name }}-relay-config-render
-          image: "busybox:1.36"
-          imagePullPolicy: IfNotPresent
+          image: "{{ template "relay.configRender.image" . }}"
+          imagePullPolicy: {{ default "IfNotPresent" $configRenderImage.pullPolicy }}
           command:
             - /bin/sh
             - -c

@@ -72,6 +72,13 @@ config.yml: |-
   discord.bot-token: {{ .Values.discord.botToken | quote }}
   {{ end }}
 
+  #############
+  # PagerDuty #
+  #############
+  {{- if and (.Values.pagerduty.appId) (not .Values.pagerduty.existingSecret) }}
+  pagerduty.app-id: {{ .Values.pagerduty.appId | quote }}
+  {{- end }}
+
   #########
   # Redis #
   #########
@@ -362,7 +369,6 @@ sentry.conf.py: |-
   SENTRY_FEATURES = {
     "auth:register": {{ .Values.auth.register | ternary "True" "False" }}
   }
-  SENTRY_FEATURES["projects:sample-events"] = False
   SENTRY_FEATURES.update(
       {
           feature: True
@@ -373,8 +379,6 @@ sentry.conf.py: |-
               {{- if .Values.sentry.features.orgSubdomains }}
               "organizations:org-ingest-subdomains",
               {{- end }}
-              "organizations:discover",
-              "organizations:global-views",
               "organizations:issue-views",
               "organizations:incidents",
               "organizations:integrations-issue-basic",
@@ -383,14 +387,13 @@ sentry.conf.py: |-
               "organizations:sso-basic",
               "organizations:sso-saml2",
               "organizations:advanced-search",
-              "organizations:issue-platform",
-              "organizations:monitors",
-              "organizations:dashboards-mep",
-              "organizations:mep-rollout-flag",
-              "organizations:dashboards-rh-widget",
               "organizations:dynamic-sampling",
+              "organizations:workflow-engine-ui",
+              "organizations:workflow-engine-rule-serializers",
+              "organizations:discover-saved-queries-deprecation",
+              "organizations:expose-migrated-discover-queries",
+              "organizations:performance-transaction-deprecation-banner",
               "projects:custom-inbound-filters",
-              "projects:data-forwarding",
               "projects:discard-groups",
               "projects:plugins",
               "projects:rate-limits",
@@ -405,11 +408,7 @@ sentry.conf.py: |-
               "organizations:visibility-explore-range-high",
               "organizations:transaction-metrics-extraction",
               "organizations:indexed-spans-extraction",
-              "organizations:insights-entry-points",
-              "organizations:insights-initial-modules",
-              "organizations:insights-addon-modules",
               "organizations:insights-modules-use-eap",
-              "organizations:starfish-mobile-appstart",
               "organizations:on-demand-metrics-extraction",
               "projects:span-metrics-extraction",
               "projects:span-metrics-extraction-addons",
@@ -426,15 +425,7 @@ sentry.conf.py: |-
               # Session Replay
               "organizations:session-replay",
               "organizations:session-replay-ui",
-              "organizations:session-replay-issue-emails",
               "organizations:session-replay-recording-scrubbing",
-              "organizations:session-replay-slack-new-issue",
-          )
-          {{- end }}
-          {{- if .Values.sentry.features.enableFeedback }}
-          + (
-              # User Feedback
-              "organizations:user-feedback-ui",
           )
           {{- end }}
           {{- if .Values.sentry.features.enableProfiling }}
@@ -452,19 +443,15 @@ sentry.conf.py: |-
           + (
               # Uptime Monitoring
               "organizations:uptime",
-              "organizations:uptime-create-issues",
           )
           {{- end }}
           + (
               # Logs (OurLogs)
               "organizations:ourlogs-enabled",
               "organizations:ourlogs-ingestion",
-              "organizations:ourlogs-stats",
-              "organizations:ourlogs-replay-ui",
 
               # Metrics (Trace Metrics)
               "organizations:tracemetrics-enabled",
-              "organizations:tracemetrics-alerts",
               "organizations:tracemetrics-ingestion",
               "organizations:tracemetrics-equations-in-alerts",
               "organizations:tracemetrics-equations-in-explore",
@@ -473,9 +460,7 @@ sentry.conf.py: |-
               "organizations:tracemetrics-stats-bytes-ui",
               "organizations:tracemetrics-pii-scrubbing-ui",
 
-              # Chart-only / misc
-              "organizations:related-events",
-              "organizations:reprocessing-v2",
+              # Misc
               "organizations:set-grouping-config",
               "organizations:onboarding",
               "projects:similarity-indexing",
@@ -523,8 +508,12 @@ sentry.conf.py: |-
 
   {{- if eq .Values.filestore.backend "s3" }}
   SENTRY_OPTIONS['filestore.options'] = {
+      {{- if or .Values.filestore.s3.accessKey .Values.filestore.s3.existingSecret }}
       'access_key': os.getenv("S3_ACCESS_KEY_ID", {{ .Values.filestore.s3.accessKey | default "" | quote }}),
+      {{- end }}
+      {{- if or .Values.filestore.s3.secretKey .Values.filestore.s3.existingSecret }}
       'secret_key': os.getenv("S3_SECRET_ACCESS_KEY", {{ .Values.filestore.s3.secretKey | default "" | quote }}),
+      {{- end }}
       {{- if .Values.filestore.s3.bucketName }}
       'bucket_name': {{ .Values.filestore.s3.bucketName | quote }},
       {{- end }}
@@ -571,8 +560,12 @@ sentry.conf.py: |-
   {{- if eq .Values.replay.storage.backend "s3" }}
   {{- $replayS3 := .Values.replay.storage.s3 | default dict }}
   SENTRY_OPTIONS['replay.storage.options'] = {
+      {{- if or $replayS3.accessKey $replayS3.existingSecret }}
       'access_key': os.getenv("REPLAY_S3_ACCESS_KEY_ID", {{ $replayS3.accessKey | default "" | quote }}),
+      {{- end }}
+      {{- if or $replayS3.secretKey $replayS3.existingSecret }}
       'secret_key': os.getenv("REPLAY_S3_SECRET_ACCESS_KEY", {{ $replayS3.secretKey | default "" | quote }}),
+      {{- end }}
       {{- if $replayS3.bucketName }}
       'bucket_name': {{ $replayS3.bucketName | quote }},
       {{- end }}
@@ -624,8 +617,12 @@ sentry.conf.py: |-
   {{- if eq .Values.filestore.profiles.backend "s3" }}
   {{- $profilesS3 := .Values.filestore.profiles.s3 | default dict }}
   SENTRY_OPTIONS['filestore.profiles-options'] = {
+      {{- if or $profilesS3.accessKey $profilesS3.existingSecret }}
       'access_key': os.getenv("PROFILES_S3_ACCESS_KEY_ID", {{ $profilesS3.accessKey | default "" | quote }}),
+      {{- end }}
+      {{- if or $profilesS3.secretKey $profilesS3.existingSecret }}
       'secret_key': os.getenv("PROFILES_S3_SECRET_ACCESS_KEY", {{ $profilesS3.secretKey | default "" | quote }}),
+      {{- end }}
       {{- if $profilesS3.bucketName }}
       'bucket_name': {{ $profilesS3.bucketName | quote }},
       {{- end }}
@@ -699,8 +696,12 @@ sentry.conf.py: |-
       {{- if $nodestoreS3.regionName }}
       "region_name": {{ $nodestoreS3.regionName | quote }},
       {{- end }}
+      {{- if or $nodestoreS3.accessKeyId $nodestoreS3.existingSecret }}
       "aws_access_key_id": os.getenv("NODESTORE_S3_ACCESS_KEY_ID", {{ $nodestoreS3.accessKeyId | default "" | quote }}),
+      {{- end }}
+      {{- if or $nodestoreS3.secretAccessKey $nodestoreS3.existingSecret }}
       "aws_secret_access_key": os.getenv("NODESTORE_S3_SECRET_ACCESS_KEY", {{ $nodestoreS3.secretAccessKey | default "" | quote }}),
+      {{- end }}
   }
   {{- end }}
   {{- end }}
@@ -723,8 +724,6 @@ sentry.conf.py: |-
   #######################
 
   OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
-  if OPENAI_API_KEY:
-    SENTRY_FEATURES["organizations:open-ai-suggestion"] = True
 
   ########################
   # JS SDK Loader Script #
@@ -758,6 +757,13 @@ sentry.conf.py: |-
   SENTRY_OPTIONS['discord.public-key'] = os.environ.get("DISCORD_PUBLIC_KEY")
   SENTRY_OPTIONS['discord.client-secret'] = os.environ.get("DISCORD_CLIENT_SECRET")
   SENTRY_OPTIONS['discord.bot-token'] = os.environ.get("DISCORD_BOT_TOKEN")
+{{- end }}
+
+{{- if .Values.pagerduty.existingSecret }}
+  #############
+  # PAGERDUTY #
+  #############
+  SENTRY_OPTIONS['pagerduty.app-id'] = os.environ.get("PAGERDUTY_APP_ID")
 {{- end }}
 
 {{- if .Values.google.existingSecret }}
