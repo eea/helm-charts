@@ -24,8 +24,11 @@ This chart is configured for production use.
 ## Releases
 
 <dl>
+  <dt>Version 2.0.0</dt>
+  <dd>Java 17, horizontal scalability, apply RpcRouterLoggingFilter to /api/spatial.</dd>
+
   <dt>Version 1.0.1</dt>
-  <dd>ogging filter for rpcrouter.</dd>
+  <dd>Logging filter for rpcrouter.</dd>
 
   <dt>Version 1.0.0</dt>
   <dd>Java 11 upgrade, libs upgrades, remove unused code dependencies, better logging.</dd>
