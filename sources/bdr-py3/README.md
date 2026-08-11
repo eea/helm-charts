@@ -179,5 +179,8 @@ schedule deadlines prevent a hung job from blocking future executions under
 
 ## Releases
 
+### Version 0.1.1 - 11 August 2026
+- Added betterleaks:allow to suppress false positives [Olimpiu Rob - [`df1c2bdb`](https://github.com/eea/helm-charts/commit/df1c2bdb2f4e34f1f492c219bc7949e3f5b0a36a)]
+
 ### Version 0.1.0 - 10 Aug 2026
 - Initial release.
