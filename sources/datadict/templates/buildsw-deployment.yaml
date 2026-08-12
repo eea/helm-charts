@@ -8,7 +8,7 @@ metadata:
     component: buildsw
 
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: 1
   selector:
     matchLabels:
       {{- include "appl.selectorLabels" . | nindent 6 }}
