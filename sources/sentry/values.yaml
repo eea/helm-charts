@@ -1619,8 +1619,12 @@ snuba:
     #     emptyDir:
     #       medium: Memory
 
+  # NOTE: the underlying `snuba consumer --storage spans` command was removed
+  # upstream in favor of the EAP items pipeline (sentry.processSpans ->
+  # eap_items, see snuba-eap-items-consumer). Keep disabled - this consumer
+  # type no longer exists in current Snuba images.
   spansConsumer:
-    enabled: true
+    enabled: false
     annotations: {}
     replicas: 1
     env: []
