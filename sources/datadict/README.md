@@ -4,6 +4,9 @@ This chart is configured for production use.
 
 ## Releases
 
+### Version 4.1.0
+- Java 17 upgrade, probes config.
+
 ### Version 4.0.1
 - Missing configuration class fix. Dead gelf library.
 
