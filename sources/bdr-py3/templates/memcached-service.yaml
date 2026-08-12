@@ -1,0 +1,19 @@
+{{- if .Values.memcached.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "appl.fullname" . }}-memcached
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    app.kubernetes.io/component: memcached
+spec:
+  type: ClusterIP
+  ports:
+    - port: 11211
+      targetPort: memcached
+      protocol: TCP
+      name: memcached
+  selector:
+    {{- include "appl.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: memcached
+{{- end }}

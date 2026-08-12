@@ -1,0 +1,42 @@
+{{- if and .Values.ingress.enabled (eq .Values.ingress.type "nginx") }}
+{{- $fullName := include "appl.fullname" . }}
+{{- $prefix := .Values.ingress.nginx.annotationPrefix -}}
+{{- range .Values.webforms }}
+{{- if .enabled }}
+{{- $backendName := printf "%s-%s-proxy" $fullName .name }}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ $fullName }}-{{ .name }}
+  labels:
+    {{- include "appl.labels" $ | nindent 4 }}
+    app.kubernetes.io/component: ingress-external
+  annotations:
+    {{ $prefix }}/rewrite-target: "/$2"
+    {{ $prefix }}/use-regex: "true"
+    {{ $prefix }}/proxy-body-size: {{ .proxyBodySize | quote }}
+    {{ $prefix }}/proxy-read-timeout: {{ .upstream.readTimeout | quote }}
+    {{ $prefix }}/proxy-send-timeout: {{ .upstream.sendTimeout | quote }}
+spec:
+  ingressClassName: {{ $.Values.ingress.nginx.className }}
+  {{- if $.Values.ingress.tlsSecretName }}
+  tls:
+    - hosts:
+        - {{ $.Values.ingress.hostname | quote }}
+      secretName: {{ $.Values.ingress.tlsSecretName | quote }}
+  {{- end }}
+  rules:
+    - host: {{ $.Values.ingress.hostname | quote }}
+      http:
+        paths:
+          - path: {{ .publicPath }}(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: {{ $backendName }}
+                port:
+                  number: 8080
+{{- end }}
+{{- end }}
+{{- end }}

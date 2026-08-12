@@ -2662,6 +2662,25 @@ entries:
     version: 1.0.0
   ask-copernicus-backend:
   - apiVersion: v2
+    appVersion: 6.0.15-164
+    created: "2026-08-11T23:42:12.57309297Z"
+    dependencies:
+    - name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.2.0
+    description: Ask Copernicus backend - Plone CMS
+    digest: 3f0218c5ef9bfb9da0744e044d8547b194294012484eaf6289168afa7bfd5451
+    home: https://github.com/eea/clms-backend
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/ied-backend/ied.png
+    keywords:
+    - CMS
+    - Plone
+    name: ask-copernicus-backend
+    type: application
+    urls:
+    - ask-copernicus-backend-1.44.0.tgz
+    version: 1.44.0
+  - apiVersion: v2
     appVersion: 6.0.15-163
     created: "2026-08-10T23:51:46.710118071Z"
     dependencies:
@@ -12902,6 +12921,129 @@ entries:
     urls:
     - bdr-0.1.0.tgz
     version: 0.1.0
+  bdr-py3:
+  - apiVersion: v2
+    appVersion: z5-1.5
+    created: "2026-08-11T17:07:54.484936+03:00"
+    dependencies:
+    - alias: zeoserver
+      name: rn-zeoserver
+      repository: https://eea.github.io/helm-charts
+      version: 0.2.0
+    - alias: local-converters
+      condition: local-converters.enabled
+      name: rn-local-converters
+      repository: https://eea.github.io/helm-charts
+      version: 0.1.13
+    - alias: clamav
+      condition: clamav.enabled
+      name: rn-clamav
+      repository: https://eea.github.io/helm-charts
+      version: 1.0.0
+    - alias: ldap
+      name: rn-bdr-ldap
+      repository: https://eea.github.io/helm-charts
+      version: 0.1.2
+    - alias: bdr-registry
+      name: rn-bdr-registry
+      repository: https://eea.github.io/helm-charts
+      version: 0.2.0
+    - name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 15.2.8
+    - condition: postfix.enabled
+      name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.2.0
+    - alias: bdr-registry-notifications
+      name: rn-bdr-registry-notifications
+      repository: https://eea.github.io/helm-charts
+      version: 0.2.1
+    - alias: bdr-registry-notifications-async
+      name: rn-bdr-registry-notifications
+      repository: https://eea.github.io/helm-charts
+      version: 0.2.1
+    - alias: european-registry
+      name: rn-bdr-european-registry
+      repository: https://eea.github.io/helm-charts
+      version: 1.0.4
+    - alias: european-registry-sync
+      name: rn-bdr-european-registry
+      repository: https://eea.github.io/helm-charts
+      version: 1.0.4
+    - alias: apache
+      name: rn-apache
+      repository: https://eea.github.io/helm-charts
+      version: 0.1.8
+    description: A BDR Helm chart for Kubernetes (Python 3 / Zope 5+ stack)
+    digest: f1aed85a0fe1966729e0aeb8cddf1e7fc7089a1c8b4b0d9b481d8a18dd48f12b
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/bdr/logo_eionet.png
+    name: bdr-py3
+    type: application
+    urls:
+    - bdr-py3-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v2
+    appVersion: z5-1.5
+    created: "2026-08-11T16:46:13.256715+03:00"
+    dependencies:
+    - alias: zeoserver
+      name: rn-zeoserver
+      repository: https://eea.github.io/helm-charts
+      version: 0.2.0
+    - alias: local-converters
+      condition: local-converters.enabled
+      name: rn-local-converters
+      repository: https://eea.github.io/helm-charts
+      version: 0.1.13
+    - alias: clamav
+      condition: clamav.enabled
+      name: rn-clamav
+      repository: https://eea.github.io/helm-charts
+      version: 1.0.0
+    - alias: ldap
+      name: rn-bdr-ldap
+      repository: https://eea.github.io/helm-charts
+      version: 0.1.2
+    - alias: bdr-registry
+      name: rn-bdr-registry
+      repository: https://eea.github.io/helm-charts
+      version: 0.2.0
+    - name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 15.2.8
+    - condition: postfix.enabled
+      name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.2.0
+    - alias: bdr-registry-notifications
+      name: rn-bdr-registry-notifications
+      repository: https://eea.github.io/helm-charts
+      version: 0.2.1
+    - alias: bdr-registry-notifications-async
+      name: rn-bdr-registry-notifications
+      repository: https://eea.github.io/helm-charts
+      version: 0.2.1
+    - alias: european-registry
+      name: rn-bdr-european-registry
+      repository: https://eea.github.io/helm-charts
+      version: 1.0.4
+    - alias: european-registry-sync
+      name: rn-bdr-european-registry
+      repository: https://eea.github.io/helm-charts
+      version: 1.0.4
+    - alias: apache
+      name: rn-apache
+      repository: https://eea.github.io/helm-charts
+      version: 0.1.8
+    description: A BDR Helm chart for Kubernetes (Python 3 / Zope 5+ stack)
+    digest: 82fb13aba03967573571366c83561c5a935418db3acfc7b619ea973a1a42815f
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/bdr/logo_eionet.png
+    name: bdr-py3
+    type: application
+    urls:
+    - bdr-py3-0.1.0.tgz
+    version: 0.1.0
   bise-backend:
   - apiVersion: v2
     appVersion: 6.1.4-19
@@ -19377,6 +19519,24 @@ entries:
     version: 1.0.0
   clms-backend:
   - apiVersion: v2
+    appVersion: 6.0.15-164
+    created: "2026-08-11T23:43:42.759873165Z"
+    dependencies:
+    - name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.2.0
+    description: CLMS backend
+    digest: 818ce6b7518d86ea804558e1f64daf733eadd307a0f4521a28e503f08d5dd9fa
+    home: https://github.com/eea/clms-backend
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/clms-backend/ied.png
+    keywords:
+    - CMS
+    name: clms-backend
+    type: application
+    urls:
+    - clms-backend-2.39.0.tgz
+    version: 2.39.0
+  - apiVersion: v2
     appVersion: 6.0.15-163
     created: "2026-08-10T23:52:58.641122778Z"
     dependencies:
@@ -24685,6 +24845,26 @@ entries:
     - datadict-1.1.0.tgz
     version: 1.1.0
   eea-website-backend:
+  - apiVersion: v2
+    appVersion: 6.1.4-31
+    created: "2026-08-11T23:56:07.559791539Z"
+    dependencies:
+    - name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.2.0
+    description: EEA Main Website Plone 6 Backend
+    digest: 507481ef613df6d34f7c9cd6b5c60d48fbefa1d6668f91ef14af0dcdc0ac3839
+    home: https://github.com/eea/eea-website-backend
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/eea-website-backend/eea-website-backend.svg
+    keywords:
+    - CMS
+    - Plone
+    - EEA
+    name: eea-website-backend
+    type: application
+    urls:
+    - eea-website-backend-1.73.0.tgz
+    version: 1.73.0
   - apiVersion: v2
     appVersion: 6.1.4-29
     created: "2026-08-10T00:06:35.387188053Z"
@@ -42359,6 +42539,21 @@ entries:
     version: 1.0.0
   insitu-frontend:
   - apiVersion: v2
+    appVersion: 2.44.0
+    created: "2026-08-11T16:23:21.407640182Z"
+    description: Insitu frontend
+    digest: 16f414ea7cf0c4a0b8b9e72609c1de4dddc600fb5374312005866178e586769c
+    home: https://github.com/eea/insitu-frontend
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/advisory-board-frontend/volto.png
+    keywords:
+    - React
+    - Volto
+    name: insitu-frontend
+    type: application
+    urls:
+    - insitu-frontend-2.43.0.tgz
+    version: 2.43.0
+  - apiVersion: v2
     appVersion: 2.43.0
     created: "2026-07-01T11:42:41.564148936Z"
     description: Insitu frontend
@@ -44789,6 +44984,42 @@ entries:
     version: 1.0.0
   marine-backend:
   - apiVersion: v2
+    appVersion: 6.1.4-39
+    created: "2026-08-12T00:23:21.18652072Z"
+    dependencies:
+    - name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.2.0
+    description: Marine backend
+    digest: 5c28d4d149a477aac7dee45091c88923d2ca1a0e79eb4a5e06c209e3b42fc663
+    home: https://github.com/eea/marine-backend
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/marine-backend/volto.png
+    keywords:
+    - CMS
+    name: marine-backend
+    type: application
+    urls:
+    - marine-backend-1.90.0.tgz
+    version: 1.90.0
+  - apiVersion: v2
+    appVersion: 6.1.4-38.beta.01
+    created: "2026-08-11T10:10:44.533596221Z"
+    dependencies:
+    - name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.2.0
+    description: Marine backend
+    digest: 0367c5bba7ab40f93b50a54f57df99942a6ba0212c00147a6aa96a650ce116f8
+    home: https://github.com/eea/marine-backend
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/marine-backend/volto.png
+    keywords:
+    - CMS
+    name: marine-backend
+    type: application
+    urls:
+    - marine-backend-1.89.1.tgz
+    version: 1.89.1
+  - apiVersion: v2
     appVersion: 6.1.4-38
     created: "2026-08-11T00:46:49.472943023Z"
     dependencies:
@@ -46607,6 +46838,20 @@ entries:
     - marine-backend-1.22.1.tgz
     version: 1.22.1
   marine-frontend:
+  - apiVersion: v2
+    appVersion: 3.26.0-beta.02
+    created: "2026-08-11T13:21:47.940523367Z"
+    description: Wise marine frontend
+    digest: e9bceb0ae4b23542e249ab7af4e8b8e1e69315128c69210e2b2c60debdb39b66
+    home: https://github.com/eea/marine-frontend
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/marine-frontend/volto.png
+    keywords:
+    - CMS
+    name: marine-frontend
+    type: application
+    urls:
+    - marine-frontend-1.48.2.tgz
+    version: 1.48.2
   - apiVersion: v2
     appVersion: 3.26.0-beta.01
     created: "2026-08-10T12:26:57.607117574Z"
@@ -51502,6 +51747,20 @@ entries:
     - metricbeat-0.1.0.tgz
     version: 0.1.0
   msfd-marine-backend:
+  - apiVersion: v2
+    appVersion: 6.1.4-49
+    created: "2026-08-11T09:57:40.385491595Z"
+    description: MSFD Marine backend
+    digest: 66cfdaafbfdcdb8dc72bbe2953cf82d1f0feab50efecb9c308c6849dc5debf38
+    home: https://github.com/eea/marine-backend
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/marine-backend/volto.png
+    keywords:
+    - CMS
+    name: msfd-marine-backend
+    type: application
+    urls:
+    - msfd-marine-backend-0.84.0.tgz
+    version: 0.84.0
   - apiVersion: v2
     appVersion: 6.1.4-48
     created: "2026-08-10T14:36:25.454538832Z"
@@ -65705,4 +65964,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2026-08-11T11:27:30.2454348+03:00"
+generated: "2026-08-12T00:23:21.181429902Z"

@@ -1,0 +1,769 @@
+image:
+  repository: eeacms/reportek-bdr
+  pullPolicy: IfNotPresent
+
+timezone: Europe/Copenhagen
+
+defaultNetworkPolicyDeny:
+  enabled: false
+
+instance:
+  existingSecret: ""
+  replicaCount: 2
+  port: 8080
+  resources:
+    requests:
+      memory: 5Gi
+      cpu: 500m
+    limits:
+      memory: 5Gi
+  livenessProbe:
+    httpGet:
+      path: /ZopeTime
+      port: 8080
+    periodSeconds: 20
+    failureThreshold: 3
+    timeoutSeconds: 6
+  readinessProbe:
+    httpGet:
+      path: /ZopeTime
+      port: 8080
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    failureThreshold: 3
+    timeoutSeconds: 6
+  startupProbe:
+    httpGet:
+      path: /ZopeTime
+      port: 8080
+    periodSeconds: 10
+    failureThreshold: 30
+    timeoutSeconds: 6
+  networkPolicy:
+    enabled: false
+    egress:
+      ipBlockRules: []
+        # - cidr: 10.50.4.0/24  # Example: Legacy service network
+        #   ports:
+        #     - protocol: TCP
+        #       port: 443     # HTTPS
+        #     - protocol: TCP
+        #       port: 80      # HTTP
+      rawRules: []
+        # - to:
+        #     - namespaceSelector:
+        #         matchLabels:
+        #           kubernetes.io/metadata.name: other-namespace
+        #       podSelector:
+        #         matchLabels:
+        #           app.kubernetes.io/name: service-name
+        #   ports:
+        #     - port: 8080
+        #       protocol: TCP
+  env:
+    reportekDeployment: BDR
+    sessionSecret: ""
+    beakerPath: /sessions
+    useBeakerSession: "1"
+    redisUrl: "redis://bdr-py3-valkey:6379/0"
+    sentryDSN: ""
+    sentrySite: "bdr.eionet.europa.eu"
+    sentryEnvironment: "production"
+    zopeThreads: 4
+    zopeDebugMode: "off"
+    eventLogLevel: "INFO"
+    pythonFaulthandler: ""
+    deploymentHost: bdr.eionet.europa.eu
+    cachePurgingDomain: bdr.eionet.europa.eu
+    cachePurgingEnabled: false
+    cachePurgingProxy: http://bdr-py3-apache
+    cachePurgingProxyPort: 8080
+    cachePurgingVhost: true
+    cacheSettingsEnabled: false
+    clamavHost: bdr-py3-clamav
+    graylog: ""
+    graylogFacility: ""
+    rabbitmqEnabled: true
+    rabbitmqHost: ""
+    rabbitmqUser: ""
+    rabbitmqPass: ""
+    rabbitmqPort: 5672
+    zipCacheEnabled: false
+    zipCachePath: /opt/zope/var
+    zipCacheThreshold: "100000000"
+    zeoAddress: bdr-py3-zeoserver:8100
+    localConvertersHost: bdr-py3-local-converters
+    blobStorageCacheVolumeEnabled: false
+    blobStorageCacheVolumeSize: 1Gi
+    zeoClientCacheSize: 128MB
+    zeoClientBlobCacheSize: 512MB
+    # Set to "on" to mount the ZEO server's PVC directly into the instance pod
+    # at /opt/zope/var/blobstorage (subPath: blobstorage) and have Zope read
+    # blobs from the shared filesystem instead of streaming them over ZEO.
+    # Requires zeoserver.accessMode: ReadWriteMany and
+    # blobStorageCacheVolumeEnabled: false. Enforced at template render time.
+    zeoSharedBlobDir: "on"
+    sessionManagerTimeout: 120 # How long till a session expires in minutes
+    sessionCookieExpires: "false" # true = expire on browser close, false = never expire, or seconds
+    sessionCookieSecure: "true"
+    sessionCookieHttpOnly: "true"
+    sessionCookieSameSite: Lax
+    ldapMemcachedServers: "bdr-py3-memcached:11211"
+
+cronzeopack:
+  enabled: false
+  repository: eeacms/reportek.zeoserver
+  tag: "z5-1.0"
+  schedule: "0 3 * * *"
+  resources:
+    requests:
+      memory: 1Gi
+    limits:
+      memory: 1Gi
+
+cronsessionscleanup:
+  enabled: true
+  schedule: "0 4 * * *"
+  resources:
+    requests:
+      memory: 16Mi
+    limits:
+      memory: 16Mi
+
+synccronjobs:
+  - name: sync-fgases
+    enabled: false
+    schedule: "2-59/5 * * * *"
+    tokenSecretKey: sync-fgases
+    token: ""
+    syncURL: ""
+    backoffLimit: 1
+    resources:
+      requests:
+        memory: 16Mi
+      limits:
+        memory: 16Mi
+  - name: sync-ods
+    enabled: false
+    schedule: "3-59/5 * * * *"
+    tokenSecretKey: sync-ods
+    token: ""
+    syncURL: ""
+    backoffLimit: 1
+    resources:
+      requests:
+        memory: 16Mi
+      limits:
+        memory: 16Mi
+  - name: sync-licences
+    enabled: false
+    schedule: "6 0 * * *"
+    tokenSecretKey: sync-licences
+    token: ""
+    syncURL: ""
+    backoffLimit: 5
+    resources:
+      requests:
+        memory: 16Mi
+      limits:
+        memory: 16Mi
+  - name: sync-match
+    enabled: false
+    schedule: "4-59/5 * * * *"
+    tokenSecretKey: sync-match
+    token: ""
+    syncURL: ""
+    backoffLimit: 1
+    resources:
+      requests:
+        memory: 16Mi
+      limits:
+        memory: 16Mi
+  - name: sync-stocks
+    enabled: false
+    schedule: "0 3 * * *"
+    tokenSecretKey: sync-stocks
+    token: ""
+    syncURL: ""
+    backoffLimit: 5
+    resources:
+      requests:
+        memory: 16Mi
+      limits:
+        memory: 16Mi
+  - name: notifications-fetch
+    enabled: false
+    schedule: "15 0 * * *"
+    tokenSecretKey: notifications-fetch
+    token: ""
+    syncURL: ""
+    backoffLimit: 5
+    resources:
+      requests:
+        memory: 16Mi
+      limits:
+        memory: 16Mi
+  - name: sync-auditors
+    enabled: false
+    schedule: "30 * * * *"
+    tokenSecretKey: sync-auditors
+    token: ""
+    syncURL: ""
+    backoffLimit: 5
+    resources:
+      requests:
+        memory: 16Mi
+      limits:
+        memory: 16Mi
+
+zeoserver:
+  image:
+    tag: "z5-1.0"
+  storage: 150Gi
+  accessMode: ReadWriteMany
+  storageName: bdr-py3-storage
+  zeoUid: 1000
+  zeoGid: 1000
+  podSecurityContext:
+    fsGroup: 1000
+    fsGroupChangePolicy: "OnRootMismatch"
+  resources:
+    requests:
+      memory: 1Gi
+
+local-converters:
+  enabled: true
+  resources:
+    requests:
+      memory: 1.5Gi
+      cpu: 300m
+    limits:
+      memory: 1.5Gi
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 2
+    targetMemoryUtilizationPercentage: 80
+
+clamav:
+  enabled: true
+  resources:
+    requests:
+      memory: 3.5Gi
+      cpu: 300m
+    limits:
+      memory: 3.5Gi
+      cpu: 1
+  storage: 1Gi
+  storageName: bdr-py3-clamav-data
+  autoscaling:
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 2
+    targetCPUUtilizationPercentage: 80
+    targetMemoryUtilizationPercentage: 80
+
+rabbitmq:
+  create: false
+  name: rabbitmq
+  externalName: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: "bdr-py3"
+
+serviceAccount:
+  create: false
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+
+securityContext: {}
+
+service:
+  type: ClusterIP
+  port: 8080
+
+cron:
+  enabled: true
+  sharedCronJobImage: curlimages/curl:8.16.0
+  tokenSecretName: ""
+  sharedCurlArgs:
+    - --fail-with-body
+    - --silent
+    - --show-error
+  connectTimeoutSeconds: 10
+  maxTimeSeconds: 300
+  startingDeadlineSeconds: 300
+  activeDeadlineSeconds: 360
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 3
+  sharedCronJobAffinity: {}
+  sharedCronJobNodeSelector: {}
+  sharedCronJobTolerations: []
+
+webforms:
+  - name: webforms
+    enabled: false
+    # Path exposed on the public ingress (chart adds the rewrite for nginx and PathPrefix for gatewayAPI)
+    publicPath: /webforms
+    proxyBodySize: "10m"
+    tolerations: []
+    affinity: {}
+    # The external service is proxied via an in-cluster nginx pod
+    upstream:
+      host: webforms.eionet.europa.eu
+      sslVerify: true
+      readTimeout: "60"
+      sendTimeout: "60"
+      forwardClientIP: true
+      forwardHost: true
+
+ingress:
+  enabled: false
+  type: nginx  # Options: 'nginx' or 'gatewayAPI'
+
+  hostname: bdr.eionet.europa.eu
+  tlsSecretName: ""
+
+  proxyBodySize: "1024m"
+  proxyReadTimeout: "480"
+  proxySendTimeout: "120"
+
+  paths:
+    - path: /
+      pathType: Prefix
+      backendServiceName: bdr-py3-apache
+      backendPort: 80
+
+  # Rendered as a separate nginx Ingress protected with basic auth.
+  adminPaths:
+    - path: /registry/admin
+      pathType: Prefix
+      backendServiceName: bdr-py3-apache
+      backendPort: 80
+    - path: /notifications/admin
+      pathType: Prefix
+      backendServiceName: bdr-py3-apache
+      backendPort: 80
+
+  rateLimit:
+    enabled: false
+    rps: 30
+    burst: 150
+    rpm: 1800
+    connections: 50
+    whitelist: ""
+
+  responseHeaders:
+    - name: X-Frame-Options
+      value: SAMEORIGIN
+    - name: Strict-Transport-Security
+      value: "max-age=15768000"
+    - name: Server
+      value: HTTPS
+    - name: X-Content-Type-Options
+      value: nosniff
+    - name: Referrer-Policy
+      value: strict-origin-when-cross-origin
+    - name: Feature-Policy
+      value: "accelerometer 'none'; ambient-light-sensor 'none'; autoplay 'none'; camera 'none'; encrypted-media 'none'; fullscreen 'self'; geolocation 'none'; gyroscope 'none'; magnetometer 'none'; microphone 'none'; midi 'none'; payment 'none'; picture-in-picture 'none'; speaker 'none'; sync-xhr 'self'; usb 'none'; vr 'none'"
+    - name: X-XSS-Protection
+      value: "1; mode=block"
+    - name: Content-Security-Policy
+      value: "default-src 'self' blob: data: https://*.eea.europa.eu https://*.eionet.europa.eu; connect-src 'self' https://*.openstreetmap.org https://*.eea.europa.eu https://*.eionet.europa.eu http://*.eea.europa.eu; font-src 'self' data: https://cdnjs.cloudflare.com/ https://fonts.gstatic.com/ https://*.eea.europa.eu https://*.eionet.europa.eu; frame-src 'self'  https://ec.europa.eu/  https://*.eea.europa.eu https://*.eionet.europa.eu http://*.eea.europa.eu; img-src http: https: blob: data:; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: data: https://matomo.eea.europa.eu https://openlayers.org/ https://www.google.com/jsapi https://www.google.com/uds/ https://www.gstatic.com/ https://spreadsheets.google.com/ https://docs.google.com/ https://*.eea.europa.eu https://*.eionet.europa.eu http://*.eea.europa.eu https://cdnjs.cloudflare.com https://code.jquery.com; style-src 'self' 'unsafe-inline' https://openlayers.org/ https://www.google.com/uds/ https://ajax.googleapis.com/ https://www.gstatic.com/ https://*.eionet.europa.eu https://*.eea.europa.eu https://cdnjs.cloudflare.com https://code.jquery.com"
+
+  nginx:
+    className: "nginx"
+    annotationPrefix: "nginx.ingress.kubernetes.io"
+    extraAnnotations: {}
+
+  gatewayAPI:
+    gatewayName: traefik-gateway
+    gatewayNamespace: ""
+    sectionName: websecure
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 2
+  targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+memcached:
+  enabled: true
+  image:
+    repository: memcached
+    tag: 1.6.34-alpine
+    pullPolicy: IfNotPresent
+  maxMemory: 64
+  livenessProbe:
+    tcpSocket:
+      port: memcached
+    initialDelaySeconds: 5
+    periodSeconds: 10
+  readinessProbe:
+    tcpSocket:
+      port: memcached
+    initialDelaySeconds: 5
+    periodSeconds: 10
+  resources:
+    requests:
+      cpu: 50m
+      memory: 96Mi
+    limits:
+      cpu: 200m
+      memory: 128Mi
+
+valkey:
+  enabled: true
+  image:
+    repository: valkey/valkey
+    tag: 7.2.5-alpine
+    pullPolicy: IfNotPresent
+  env: []
+  livenessProbe:
+    tcpSocket:
+      port: valkey
+    initialDelaySeconds: 5
+    periodSeconds: 10
+  readinessProbe:
+    tcpSocket:
+      port: valkey
+    initialDelaySeconds: 5
+    periodSeconds: 10
+  persistence:
+    enabled: false
+    size: 2Gi
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi
+
+postgresql:
+  fullnameOverride: "bdr-py3-postgres"
+  image:
+    repository: bitnamilegacy/postgresql
+  auth:
+    existingSecret: ""
+    secretKeys:
+      adminPasswordKey: postgres-password
+      userPasswordKey: password
+      replicationPasswordKey: replication-password # betterleaks:allow -- Secret data key name, not a credential
+    password: ""
+    enablePostgresUser: true
+    postgresPassword: ""
+    database: ""
+    username: ""
+  primary:
+    persistence:
+      size: 8Gi
+    resources:
+      requests:
+        memory: 1Gi
+        cpu: 1
+      limits:
+        memory: 2Gi
+
+postfix:
+  enabled: true
+  fullnameOverride: ""
+  dryrun: false
+  serverName: bdr.eionet.europa.eu
+  mtpPass: ""
+  mtpPort: ""
+  mtpRelay: ""
+  mtpUser: ""
+  mailtrap:
+    httpenabled: false
+
+bdr-registry:
+  adminAllBdrTables: "True"
+  allowedHosts: "['bdr.eionet.europa.eu']"
+  authLdapBaseDn: o=EIONET,l=Europe
+  authLdapBindDn: ""
+  authLdapBindPassword: ""
+  authLdapServerUri: ""
+  bdrApiAuthPassword: ""
+  bdrApiAuthUser: ""
+  bdrApiPortalUrl: https://bdr.eionet.europa.eu/api
+  bdrAuditLogFile: /bdrreg/logs/trace.log
+  bdrEmailFrom: ""
+  bdrHelpdeskEmail: ""
+  bdrReportekOrganisationUrl: ""
+  bdrReverseProxy: "True"
+  bdrServerUrl: https://bdr.eionet.europa.eu/
+  bdrSidemenuUrl: ""
+  databasesEngine: django.db.backends.postgresql_psycopg2
+  databasesHost: ""
+  databasesName: ""
+  databasesPassword: ""
+  databasesUser: ""
+  debug: "False"
+  emailBackend: post_office.EmailBackend
+  emailHost: bdr-py3-postfix
+  emailPort: "25"
+  enableHdvEditing: "True"
+  enableHdvResimEditing: "False"
+  frameCookies: ""
+  frameUrl: ""
+  frameVerifySsl: "False"
+  hdvEmailFrom: ""
+  ldapEditDn: ""
+  ldapEditPassword: ""
+  sentryDsn: ""
+  siteUrl: /registry/
+  staticRoot: /bdrreg/static
+  staticUrl: /registry-static/
+  useSidemenu: "True"
+  useZopeLogin: "True"
+
+bdr-registry-notifications:
+  allowedHosts: "['*']"
+  appReverseProxy: "True"
+  bcc: ""
+  bdrApiPassword: ""
+  bdrApiUser: ""
+  bdrRegistryToken: ""
+  bdrRegistryUrl: ""
+  bdrServerUrl: https://bdr.eionet.europa.eu/
+  bdrSidemenuUrl: ""
+  databasesEngine: django.db.backends.postgresql_psycopg2
+  databasesHost: bdr-py3-postgres
+  databasesName: ""
+  databasesPassword: ""
+  databasesUser: ""
+  debug: "False"
+  djangoCollectStatic: "yes"
+  djangoLoadFixtures: "no"
+  djangoMigrate: "no"
+  ecrAcceptedCompaniesStatus: VALID,REVISION
+  ecrCompanyPath: /undertaking/[domain]/list
+  ecrDomains: FGAS,ODS
+  ecrPersonPath: /user/list
+  ecrRegistryToken: ""
+  ecrRegistryUrl: ""
+  emailBackend: django.core.mail.backends.smtp.EmailBackend
+  emailHost: bdr-py3-postfix
+  emailPort: "25"
+  emailSender: ""
+  frameCookies: ""
+  frameUrl: ""
+  frameVerifySsl: "False"
+  mailHost: bdr-py3-postfix:25
+  notificationsToken: ""
+  redisHost: bdr-py3-valkey
+  redisPort: "6379"
+  sentryDsn: ""
+  siteUrl: /notifications/
+  staticRoot: /var/local/bdr.registry.notifications/static
+  staticUrl: /notifications-static/
+  tz: Europe/Copenhagen
+  useSidemenu: "True"
+  useZopeLayout: "True"
+  useZopeLogin: "True"
+  service:
+    port: 12301
+
+bdr-registry-notifications-async:
+  allowedHosts: "['*']"
+  appReverseProxy: "True"
+  bcc: ""
+  bdrApiPassword: ""
+  bdrApiUser: ""
+  bdrRegistryToken: ""
+  bdrRegistryUrl: ""
+  bdrServerUrl: https://bdr.eionet.europa.eu/
+  bdrSidemenuUrl: ""
+  databasesEngine: django.db.backends.postgresql_psycopg2
+  databasesHost: ""
+  databasesName: ""
+  databasesPassword: ""
+  databasesUser: ""
+  debug: "False"
+  djangoCollectStatic: "no"
+  djangoLoadFixtures: "no"
+  djangoMigrate: "no"
+  ecrAcceptedCompaniesStatus: VALID,REVISION
+  ecrCompanyPath: ""
+  ecrDomains: FGAS,ODS
+  ecrPersonPath: ""
+  ecrRegistryToken: ""
+  ecrRegistryUrl: ""
+  emailBackend: django.core.mail.backends.smtp.EmailBackend
+  emailHost: bdr-py3-postfix
+  emailPort: "25"
+  emailSender: ""
+  frameCookies: ""
+  frameUrl: ""
+  frameVerifySsl: "False"
+  mailHost: bdr-py3-postfix:25
+  notificationsToken: ""
+  redisHost: bdr-py3-valkey
+  redisPort: "6379"
+  sentryDsn: ""
+  siteUrl: /notifications/
+  staticRoot: /var/local/bdr.registry.notifications/static
+  staticUrl: /notifications-static/
+  useSidemenu: "True"
+  useZopeLayout: "True"
+  useZopeLogin: "True"
+  deploymentArgs:
+    - qcluster
+
+european-registry:
+  apiPassword: ""
+  apiToken: ""
+  apiUser: ""
+  autoVerifyAllCompanies: ODS,FGAS
+  autoVerifyNewCompanies: ODS,FGAS
+  baseUrl: ""
+  baseUrlFgas: ""
+  baseUrlOds: ""
+  bdrApiKey: ""
+  bdrApiUrl: ""
+  bdrEndpointPassword: ""
+  bdrEndpointUrl: https://bdr.eionet.europa.eu
+  bdrEndpointUser: ""
+  bdrHelpDeskMail: ""
+  bdrHost: ""
+  dbHost: ""
+  dbName: ""
+  dbPass: ""
+  dbSchema: postgresql
+  dbUser: ""
+  debug: "False"
+  flaskApp: cache_registry/app.py
+  fuzzLimit: "92"
+  httpsVerify: "True"
+  logFile: EEA_double_check.log
+  mailsSenderName: ""
+  mailServer: bdr-py3-postfix
+  mailSuppressSend: "False"
+  manualVerifyAllCompanies: ""
+  postgresAddr: bdr-py3-postgres
+  requestsCaBundle: /etc/ssl/certs/ca-certificates.crt
+  sendMatchingMails: "True"
+  sentryDsn: ""
+  stocksApiToken: ""
+  stocksApiUrl: ""
+  stocksIncludeTestdata: "Yes"
+
+european-registry-sync:
+  apiPassword: ""
+  apiToken: ""
+  apiUser: ""
+  autoVerifyAllCompanies: ODS,FGAS
+  autoVerifyNewCompanies: ODS,FGAS
+  baseUrl: ""
+  baseUrlFgas: ""
+  baseUrlOds: ""
+  bdrApiKey: ""
+  bdrApiUrl: ""
+  bdrEndpointPassword: ""
+  bdrEndpointUrl: https://bdr.eionet.europa.eu
+  bdrEndpointUser: ""
+  bdrHelpDeskMail: ""
+  bdrHost: ""
+  dbHost: ""
+  dbName: ""
+  dbPass: ""
+  dbSchema: postgresql
+  dbUser: ""
+  debug: "False"
+  flaskApp: cache_registry/app.py
+  fuzzLimit: "92"
+  httpsVerify: "True"
+  logFile: EEA_double_check.log
+  mailsSenderName: ""
+  mailServer: bdr-py3-postfix
+  mailSuppressSend: "False"
+  manualVerifyAllCompanies: ""
+  postgresAddr: bdr-py3-postgres
+  requestsCaBundle: /etc/ssl/certs/ca-certificates.crt
+  sendMatchingMails: "True"
+  sentryDsn: ""
+  stocksApiToken: ""
+  stocksApiUrl: ""
+  stocksIncludeTestdata: "Yes"
+
+ldap:
+  storage: 1Gi
+  rootDN: ""
+  rootPW: ""
+  bdrrootDN: ""
+  bdrrootPW: ""
+
+  debugLevel: 16640
+
+  syncreplRid: ""
+
+  syncURL: ""
+  syncDN: ""
+  syncPW: ""
+  syncInterval: "01:00:00:00"
+  ldifSeedURL: ""
+
+apache:
+  adminAuth:
+    # Existing Secret must contain "auth" for nginx and "users" for Traefik.
+    # When empty and admin paths are enabled, htpasswd is required.
+    existingSecret: ""
+    # Generate with: htpasswd -nb admin yourpassword
+    htpasswd: ""
+  serverName: "bdr.eionet.europa.eu"
+  defaultWebformsUrl: "https://webformsbdr.eionet.europa.eu"
+
+  webforms:
+    - endpoint: "odsformsNil"
+      enabled: true
+      webformsURL: ""
+    - endpoint: "odsforms"
+      enabled: true
+      webformsURL: ""
+
+  mailtrap:
+    enabled: false
+    path: "mailtrap"
+    service: ""
+
+  bdrRegistryUrl: ""
+  bdrRegistryNotificationsUrl: ""
+  registriesHealthChecks:
+  - name: "syncfgas-health"
+    enabled: false
+    url: "http://replace.me/log/check_sync/FGAS"
+  - name: "syncods-health"
+    enabled: false
+    url: "http://replace.me/log/check_sync/ODS"
+  zopeBackend: "bdr-py3-instance"
+  mailTrap: "bdr-py3-postfix"
+  timeout: 30
+  proxyTimeout: 30
+  sentryReportUri: ""
+  volumes:
+    - name: bdr-py3-bdr-registry-notifications-static
+      persistentVolumeClaim:
+        claimName: bdr-py3-bdr-registry-notifications-static
+    - name: bdr-py3-bdr-registry-static
+      persistentVolumeClaim:
+        claimName: bdr-py3-bdr-registry-static
+  volumeMounts:
+    - mountPath: /var/local/bdr.registry.notifications/static
+      name: bdr-py3-bdr-registry-notifications-static
+    - mountPath: /bdrreg/static
+      name: bdr-py3-bdr-registry-static
+  resources:
+    limits:
+      memory: 96Mi
+    requests:
+      memory: 64Mi

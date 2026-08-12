@@ -1,0 +1,100 @@
+{{- if .Values.defaultNetworkPolicyDeny.enabled }}
+{{- $fullName := include "appl.fullname" . -}}
+{{- $registries := list
+  (dict "name" "bdr-registry"               "component" "bdr-registry"               "ports" (list 12300))
+  (dict "name" "bdr-registry-notifications" "component" "bdr-registry-notifications" "ports" (list 12300 12301))
+  (dict "name" "european-registry"          "component" "european-cache-registry"    "ports" (list 5000))
+-}}
+{{- range $registry := $registries }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ $fullName }}-{{ $registry.name }}
+  labels:
+    {{- include "appl.labels" $ | nindent 4 }}
+    app.kubernetes.io/component: network-policy
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/instance: {{ $.Release.Name }}
+      app.kubernetes.io/component: {{ $registry.component }}
+
+  policyTypes:
+  - Ingress
+  - Egress
+
+  ingress:
+    # Allow ingress from any pod in this namespace.
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ $.Release.Namespace }}
+      ports:
+        {{- range $port := $registry.ports }}
+        - protocol: TCP
+          port: {{ $port }}
+        {{- end }}
+
+  egress:
+    # PostgreSQL
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/instance: {{ $.Release.Name }}
+              app.kubernetes.io/name: postgresql
+      ports:
+        - protocol: TCP
+          port: 5432
+
+    # LDAP
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/instance: {{ $.Release.Name }}
+              app.kubernetes.io/component: auth
+      ports:
+        - protocol: TCP
+          port: 389
+        - protocol: TCP
+          port: 636
+
+    {{- if $.Values.valkey.enabled }}
+    # Valkey (task queue / cache)
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/instance: {{ $.Release.Name }}
+              app.kubernetes.io/component: valkey
+      ports:
+        - protocol: TCP
+          port: 6379
+    {{- end }}
+
+    {{- if $.Values.postfix.enabled }}
+    # Outbound mail via the in-cluster Postfix relay
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/instance: {{ $.Release.Name }}
+              app.kubernetes.io/name: postfix
+      ports:
+        - protocol: TCP
+          port: 25
+    {{- end }}
+
+    # External APIs over HTTP/HTTPS
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+            except:
+              - 10.0.0.0/8
+              - 172.16.0.0/12
+              - 192.168.0.0/16
+      ports:
+        - protocol: TCP
+          port: 80
+        - protocol: TCP
+          port: 443
+{{- end }}
+{{- end }}

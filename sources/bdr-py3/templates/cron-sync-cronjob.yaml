@@ -1,0 +1,81 @@
+{{- range $cronjob := .Values.synccronjobs }}
+{{- if and $.Values.cron.enabled $cronjob.enabled }}
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "appl.fullname" $ }}-{{ $cronjob.name }}
+  labels:
+    {{- include "appl.labels" $ | nindent 4 }}
+    app.kubernetes.io/component: job
+spec:
+  schedule: {{ $cronjob.schedule | quote }}
+  concurrencyPolicy: Forbid
+  startingDeadlineSeconds: {{ $.Values.cron.startingDeadlineSeconds }}
+  successfulJobsHistoryLimit: {{ $.Values.cron.successfulJobsHistoryLimit }}
+  failedJobsHistoryLimit: {{ $.Values.cron.failedJobsHistoryLimit }}
+  jobTemplate:
+    spec:
+      backoffLimit: {{ $cronjob.backoffLimit }}
+      activeDeadlineSeconds: {{ $.Values.cron.activeDeadlineSeconds }}
+      podFailurePolicy:
+        rules:
+        - action: Count  # Count towards the backoffLimit
+          onExitCodes:
+            operator: NotIn
+            values: [0]  # Any non-zero exit code
+        - action: Count  # Count pod failures towards backoffLimit
+          onPodConditions:
+          - type: DisruptionTarget
+            status: "True"
+      template:
+        spec:
+          {{- with $.Values.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          serviceAccountName: {{ include "appl.serviceAccountName" $ }}
+          containers:
+          - name: {{ include "appl.fullname" $ }}
+            image: {{ $.Values.cron.sharedCronJobImage }}
+            imagePullPolicy: {{ $.Values.image.pullPolicy }}
+            resources:
+              {{- toYaml $cronjob.resources | nindent 14 }}
+            command: ["curl"]
+            args:
+              {{- range $.Values.cron.sharedCurlArgs }}
+              - {{ . | quote }}
+              {{- end }}
+              {{- range (default (list) $cronjob.curlArgs) }}
+              - {{ . | quote }}
+              {{- end }}
+              - "--connect-timeout"
+              - {{ $.Values.cron.connectTimeoutSeconds | quote }}
+              - "--max-time"
+              - {{ $.Values.cron.maxTimeSeconds | quote }}
+              - "--header"
+              - "Authorization: $(SYNC_TOKEN)"
+              - {{ required (printf "synccronjobs[%s].syncURL is required when the job is enabled" $cronjob.name) $cronjob.syncURL | quote }}
+            env:
+            - name: TZ
+              value: {{ $.Values.timezone | quote }}
+            - name: SYNC_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "appl.syncTokenSecretName" $ }}
+                  key: {{ required (printf "synccronjobs[%s].tokenSecretKey is required when the job is enabled" $cronjob.name) $cronjob.tokenSecretKey }}
+          {{- with $.Values.cron.sharedCronJobNodeSelector }}
+          nodeSelector:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with $.Values.cron.sharedCronJobAffinity }}
+          affinity:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with $.Values.cron.sharedCronJobTolerations }}
+          tolerations:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          restartPolicy: Never
+{{- end }}
+{{- end }}
