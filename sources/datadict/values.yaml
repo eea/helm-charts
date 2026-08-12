@@ -152,20 +152,20 @@ startupProbe:
   httpGet:
     path: /
     port: tomcat8080
-    failureThreshold: 18
-    periodSeconds: 10
+  failureThreshold: 18
+  periodSeconds: 10
 
 livenessProbe:
   httpGet:
     path: /services/list
     port: tomcat8080
-    periodSeconds: 30
-    timeoutSeconds: 10
+  periodSeconds: 30
+  timeoutSeconds: 10
 
 readinessProbe:
   httpGet:
     path: /
     port: tomcat8080
-    initialDelaySeconds: 60
-    periodSeconds: 20
-    timeoutSeconds: 5
+  initialDelaySeconds: 60
+  periodSeconds: 20
+  timeoutSeconds: 5
