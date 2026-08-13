@@ -99,7 +99,23 @@ vroom:
   annotations: {}
   args: []
   replicas: 1
-  env: []
+  # Read-path credentials for persistence.bucketString below (s3://...).
+  # vroom uses gocloud.dev/blob, which reads S3 credentials from the
+  # standard AWS SDK env vars rather than the bucket URL itself. Matches
+  # filestore.profiles.s3 (write path, used by vroomrs in taskworker-ingest)
+  # so both sides hit the same bucket. Remove if bucketString is overridden
+  # back to a filesystem path.
+  env:
+  - name: AWS_ACCESS_KEY_ID
+    valueFrom:
+      secretKeyRef:
+        name: sentry-seaweedfs-s3-secret
+        key: admin_access_key_id
+  - name: AWS_SECRET_ACCESS_KEY
+    valueFrom:
+      secretKeyRef:
+        name: sentry-seaweedfs-s3-secret
+        key: admin_secret_access_key
   # HTTP probes: liveness tolerates brief blips; readiness is stricter so Service endpoints drop faster.
   livenessProbe:
     failureThreshold: 5
@@ -147,7 +163,12 @@ vroom:
     existingClaim: ""
     # this will be passed to the SENTRY_BUCKET_PROFILES env var
     # examples: file:///var/vroom/sentry-profiles, s3://my-profiles-bucket, gs://my-profiles-bucket
-    bucketString: "file:///var/vroom/sentry-profiles"
+    #
+    # Matches filestore.profiles.s3 (write path) - same bucket/endpoint, via
+    # gocloud.dev/blob's S3-compatible query param convention. The file://
+    # default only works if vroom and taskworker-ingest share a PVC, which
+    # they don't by default (see filestore.profiles comment above).
+    bucketString: "s3://sentry-profiles?endpoint=http://sentry-seaweedfs-all-in-one:8333&region=us-east-1&disableSSL=true&s3ForcePathStyle=true"
 
   autoscaling:
     enabled: false
@@ -3076,8 +3097,20 @@ filestore:
   ## While filesystem backend is supported (for sharing PVC between vroom and ingest-profiles pods),
   ## it's not recommended for production use due to performance and scalability concerns.
   profiles:
-    # Set to one of filesystem, gcs or s3 as supported by Sentry profiling.
-    backend: filesystem
+    # Default to s3, pointed at the in-namespace SeaweedFS instance
+    # (sentry-seaweedfs-all-in-one). The filesystem default below is
+    # confirmed broken in any multi-pod deployment: taskworker-ingest (the
+    # writer, via vroomrs) and sentry-web (the reader, for flamegraphs)
+    # never share a volume for this path, so writes succeed silently but
+    # are never readable back. S3-compatible storage sidesteps the shared-
+    # volume requirement entirely - no PVC needed on either side.
+    #
+    # If this chart is deployed somewhere without an in-namespace SeaweedFS
+    # (or equivalent S3-compatible store) already running, override back to
+    # "filesystem" AND set filestore.profiles.filesystem.persistence.shareWithVroom
+    # true with vroom.persistence.accessModes including ReadWriteMany - or
+    # point s3.endpointUrl/existingSecret at your own S3-compatible backend.
+    backend: s3
     gcs: {}
     ## Point this at a pre-configured secret containing a service account. The resulting
     ## secret will be mounted at /var/run/secrets/google
@@ -3087,15 +3120,14 @@ filestore:
     #  credentialsFile: credentials.json
     #  bucketName:
     s3:
-    #  existingSecret:
-    #  accessKeyIdRef:
-    #  secretAccessKeyRef:
-    #  accessKey:
-    #  secretKey:
-    #  bucketName:
-    #  endpointUrl:
+      existingSecret: sentry-seaweedfs-s3-secret
+      accessKeyIdRef: admin_access_key_id
+      secretAccessKeyRef: admin_secret_access_key
+      bucketName: sentry-profiles
+      endpointUrl: http://sentry-seaweedfs-all-in-one:8333
+      region_name: us-east-1
+      addressing_style: path
     #  signature_version:
-    #  region_name:
     #  default_acl:
     filesystem:
       ## Not recommended for production. Use only for development or when sharing PVC
@@ -3136,9 +3168,19 @@ filestore:
 
 replay:
   storage:
-    # Leave empty to use the main filestore.
-    # Set to one of filesystem, gcs or s3 to use a separate backend for replays.
-    backend: ""
+    # Default to s3 (same SeaweedFS bucket/instance as filestore.profiles,
+    # under a distinct "replays" prefix). An empty backend here falls back
+    # to filestore.backend, which sounds safe but isn't: ingest-replay-
+    # recordings (the writer) mounts an emptyDir at the same path sentry-web
+    # (the reader) has a real PVC for, so the fallback silently loses data
+    # the same way the unconfigured default did. S3 needs no shared volume
+    # on either side, so this sidesteps that entirely.
+    #
+    # If this chart is deployed somewhere without an in-namespace SeaweedFS
+    # (or equivalent), override to "" (main filestore fallback) only if
+    # ingest-replay-recordings and sentry-web genuinely share a PVC, or
+    # point s3.endpointUrl/existingSecret at your own S3-compatible backend.
+    backend: s3
     filesystem:
       path: /var/lib/sentry/files/replays
       ## Use a separate PVC for replays (optional).
@@ -3159,20 +3201,18 @@ replay:
       # secretName:
       # credentialsFile: credentials.json
     # bucketName:
-    s3: {}
-    #  existingSecret:
-    #  accessKeyIdRef:
-    #  secretAccessKeyRef:
-    #  accessKey:
-    #  secretKey:
-    #  bucketName:
-    #  endpointUrl:
+    s3:
+      existingSecret: sentry-seaweedfs-s3-secret
+      accessKeyIdRef: admin_access_key_id
+      secretAccessKeyRef: admin_secret_access_key
+      bucketName: sentry-profiles
+      endpointUrl: http://sentry-seaweedfs-all-in-one:8333
+      region_name: us-east-1
+      addressing_style: path
+      location: replays
     #  signature_version:
-    #  region_name:
     #  default_acl:
     #  bucket_acl:
-    #  addressing_style:
-    #  location:
 
 ## Node Storage configuration
 ## Sentry uses an abstraction layer called "node storage" to store raw events.
