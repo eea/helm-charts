@@ -83,15 +83,14 @@ resources:
     memory: 512Mi
   limits:
     memory: 1Gi
+    cpu: 200m
 
-# Probably requires that a Metrics Server is deployed and configured
-# Also gives syntax error
 autoscaling:
   enabled: false
   minReplicas: 1
-  maxReplicas: 10
-  # targetCPUUtilizationPercentage: 80
-  targetMemoryUtilizationPercentage: 80
+  maxReplicas: 4
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: null
 
 nodeSelector: {}
 
