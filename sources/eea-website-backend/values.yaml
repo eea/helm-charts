@@ -182,7 +182,7 @@ cronjobs:
     activeDeadlineSeconds: 36000
     backoffLimit: 1
     successfulJobsHistoryLimit: 1
-    failedJobsHistoryLimit: 3
+    failedJobsHistoryLimit: 1
     resources:
       limits:
         cpu: 2
@@ -197,7 +197,7 @@ cronjobs:
     activeDeadlineSeconds: 2700
     backoffLimit: 1
     successfulJobsHistoryLimit: 1
-    failedJobsHistoryLimit: 3
+    failedJobsHistoryLimit: 1
     resources:
       limits:
         cpu: 2
