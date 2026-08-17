@@ -32,7 +32,6 @@ spec:
         env:
         - name: CATALINA_OPTS
           value: >-
-            "-Dlog4j.configurationFile={{ .Values.log4jConfiguration }}"
             "-Ddb.host={{ .Release.Name }}-mariadb"
             "-Ddb.url=jdbc:mysql://{{ .Release.Name }}-mariadb:3306/{{ .Values.mariadb.auth.database }}?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&createDatabaseIfNotExist=true"
             "-Ddb.user={{ .Values.mariadb.auth.username }}"
@@ -56,8 +55,6 @@ spec:
         volumeMounts:
         - mountPath: /opt/uns
           name: {{ .Release.Name }}-configdir
-        - mountPath: /opt/log
-          name: {{ .Release.Name }}-logfile
 
         livenessProbe:
           httpGet:
@@ -81,9 +78,6 @@ spec:
       restartPolicy: Always
 
       volumes:
-      - name: {{ .Release.Name }}-logfile
-        configMap:
-          name: {{ .Release.Name }}-logfile
       - name: {{ .Release.Name }}-configdir
         persistentVolumeClaim:
           claimName: {{ .Release.Name }}-configdir
