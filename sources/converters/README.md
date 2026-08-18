@@ -5,6 +5,9 @@ This chart is configured for production use.
 ## Releases
 
 <dl>
+  <dt>Version 0.3.1</dt>
+  <dd>Job executor logging pattern update.</dd>
+
   <dt>Version 0.3.0</dt>
   <dd>Remove dependency on Eionet portal stylesheets, remove GELF logging, remove heart beat logging meant for other worker.</dd>
 
