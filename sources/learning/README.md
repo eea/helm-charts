@@ -7,6 +7,7 @@ This chart is configured for production, but Ingress is disabled by default.
 
 | Version | Comment |
 | ------- | ------- |
+| Version 1.0.2 - 18  August 2026 | Upgrade Apache to 2.4.68-alpine3.24 |
 | Version 1.0.1 - 26 August 2025 | Upgrade Apache to 2.4.65-alpine3.22 |
 | Version 1.0.0 - 7 May 2025 | Upgrade Apache to 2.4.63-alpine3.21 |
 | Version 0.4.3 - 8 Aug 2024 | Upgrade Apache to 2.4.62-alpine3.20 |
