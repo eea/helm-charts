@@ -10,6 +10,9 @@ set the values in the database section.
 
 ## Releases
 
+### Version 0.5.0
+- Remove dependency on Eionet portal stylesheets, remove GELF logging.
+
 ### Version 0.4.4
 - Libraries upgrades, fix hibernate deprecation warnings.
 
