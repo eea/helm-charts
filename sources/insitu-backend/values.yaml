@@ -25,6 +25,11 @@ ingress:
   certificate: dev-insitu.copernicus.01dev.eea.europa.eu-tls
   tls: enabled
 
+nginx:
+  basicAuth:
+    username: eeaploneadmin
+    password: ""
+
 plone:
   serviceType: ClusterIP
   hostname: dev-insitu.copernicus.01dev.eea.europa.eu
