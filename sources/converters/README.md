@@ -5,6 +5,9 @@ This chart is configured for production use.
 ## Releases
 
 <dl>
+  <dt>Version 0.3.0</dt>
+  <dd>Remove dependency on Eionet portal stylesheets, remove GELF logging, remove heart beat logging meant for other worker.</dd>
+
   <dt>Version 0.2.3</dt>
   <dd>Scheduled task deletes stuck workers from Rancher and database.</dd>
 
