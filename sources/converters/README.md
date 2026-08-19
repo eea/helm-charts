@@ -5,6 +5,9 @@ This chart is configured for production use.
 ## Releases
 
 <dl>
+  <dt>Version 0.3.2</dt>
+  <dd>Tomcat 10MB max post size.</dd>
+
   <dt>Version 0.3.1</dt>
   <dd>Job executor logging pattern update.</dd>
 
