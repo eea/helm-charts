@@ -17,6 +17,9 @@ This chart deployes the PloneSaaS app together with several frontends as Ingress
 
 ## Releases
 
+### Version 2.15.1 - 19 August 2026
+- Pin nginx to bitnamilegacy/nginx:1.27.5 [Claudia Ifrim - [`73359049`](https://github.com/eea/helm-charts/commit/7335904945a6f2c864927b67cd101331961b8d17)]
+
 ### Version 2.14.0 - 10 July 2026
 - Automated release of [eeacms/plonesaas:5.2.13-41](https://github.com/eea/eea.docker.plonesaas/releases) [EEA Jenkins - [`33b71eed`](https://github.com/eea/helm-charts/commit/33b71eedf635752b20e661b6c363fef56fe5de2a)]
 
