@@ -51,6 +51,9 @@ mediaserver:
 # NGINX replaces mediaserver as the latter is too old
 nginx:
   fullnameOverride: mediaserver
+  image:
+    repository: bitnamilegacy/nginx
+    tag: 1.27.5
   serverBlock: |-
     server {
       listen   8080;
