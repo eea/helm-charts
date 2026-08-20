@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 3.47.1 - 20 August 2026
+- Add INTERNAL_URL_PREFIXES env var for eea.volto.policy safety net [Claudia Ifrim - [`4df273f5`](https://github.com/eea/helm-charts/commit/4df273f58329cac575419b476fe8edf4e2795fd9)]
+
 ### Version 3.47.0 - 20 August 2026
 - Automated release of [eeacms/freshwater-backend:6.1.4-49](https://github.com/eea/freshwater-backend/releases) [EEA Jenkins - [`11363bb6`](https://github.com/eea/helm-charts/commit/11363bb6865c8da95aa82eda233e0885d44de5f5)]
 
