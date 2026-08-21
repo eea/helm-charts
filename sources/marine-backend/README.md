@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 1.92.0 - 21 August 2026
+- Automated release of [eeacms/marine-backend:6.1.4-41](https://github.com/eea/marine-backend/releases) [EEA Jenkins - [`9af10ffd`](https://github.com/eea/helm-charts/commit/9af10ffd2214acf90c57b8da368ac726f43603de)]
+
 ### Version 1.91.1 - 20 August 2026
 - Add INTERNAL_URL_PREFIXES env var for eea.volto.policy safety net [Claudia Ifrim - [`c54a3f51`](https://github.com/eea/helm-charts/commit/c54a3f513598bb9edeabcb454a5d7169b83b3c69)]
 
