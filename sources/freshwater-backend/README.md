@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 3.48.0 - 24 August 2026
+- Automated release of [eeacms/freshwater-backend:6.1.4-50](https://github.com/eea/freshwater-backend/releases) [EEA Jenkins - [`ff724b9c`](https://github.com/eea/helm-charts/commit/ff724b9c535eca6a9ad4231aa2c7c17e5e98caed)]
+
 ### Version 3.47.1 - 20 August 2026
 - Add INTERNAL_URL_PREFIXES env var for eea.volto.policy safety net [Claudia Ifrim - [`4df273f5`](https://github.com/eea/helm-charts/commit/4df273f58329cac575419b476fe8edf4e2795fd9)]
 
