@@ -23,6 +23,9 @@ To set the app up for Article 12 do:
 
 ## Releases
 
+### Version 1.0.11 - 24 August 2026
+- Upgraded eeacms/art17-consultation:4.0.13 [Diana Boiangiu - [`ef464cd3`](https://github.com/eea/helm-charts/commit/ef464cd393e226e6c7564e429d05222d1cd3f7bd)]
+
 ### Version 1.0.10 - 13 August 2026
 - Upgraded eeacms/art17-consultation:4.0.12 [Olimpiu Rob - [`3cb6e4ff`](https://github.com/eea/helm-charts/commit/3cb6e4ffea2f9d6318f41695f35d71288554a04d)]
 
