@@ -123,6 +123,16 @@ spec:
         - name: TZ
           value: "{{ .Values.timezone }}"
 
+        {{- if .Values.sentryDsn }}
+        - name: SENTRY_DSN
+          value: "{{ .Values.sentryDsn }}"
+        {{- end }}
+
+        {{- if .Values.sentryEnvironment }}
+        - name: SENTRY_ENVIRONMENT
+          value: "{{ .Values.sentryEnvironment }}"
+        {{- end }}
+
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
         securityContext:

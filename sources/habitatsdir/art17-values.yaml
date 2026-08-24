@@ -2,7 +2,7 @@ image:
   repository: eeacms/art17-consultation
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "4.0.12"
+  tag: "4.0.13"
 
 imagePullSecrets: []
 
@@ -17,6 +17,9 @@ bindName: art17_eu
 flaskApp: "art17/app.py"
 serverName: art17.eionet.europa.eu
 scriptName: /article17
+
+sentryDsn: ""
+sentryEnvironment: ""
 
 # staticPath is used in the nginx configuration
 staticPath: /article17/static
