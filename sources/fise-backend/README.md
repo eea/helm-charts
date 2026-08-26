@@ -10,6 +10,9 @@ This chart deployes the Forest Information System of Europe website backend app
 
 ## Releases
 
+### Version 1.65.1 - 26 August 2026
+- removed the unused RAZZLE_PROXY_ES_DSN_globalsea [Claudia Ifrim - [`48e9e929`](https://github.com/eea/helm-charts/commit/48e9e929305cd77f534b3d095fa9027b70cc8a53)]
+
 ### Version 1.65.0 - 24 August 2026
 - Automated release of [eeacms/fise-backend:6.1.4-21](https://github.com/eea/fise-backend/releases) [EEA Jenkins - [`eecfa1e9`](https://github.com/eea/helm-charts/commit/eecfa1e9a5af0a72b9bc7ee4d91bfd550d09e425)]
 
