@@ -1,0 +1,33 @@
+name: Ping Element notifier
+
+# Wakes the Element notifier whenever a release is packaged. A release always
+# modifies docs/index.yaml, so the paths filter is the trigger. The notifier
+# reconciles all tracked charts against the published versions, so no per-commit
+# detail is needed here - one ping per release push is enough.
+#
+# Setup (one secret + one variable in this repo's Settings):
+#   secret   NOTIFIER_DISPATCH_TOKEN  fine-grained PAT with "contents: write"
+#                                     (or repo scope) on the notifier repo
+#   variable NOTIFIER_REPO            e.g. eea/helm-charts-element-notifier
+
+on:
+  push:
+    branches: [main]
+    paths: ['docs/index.yaml']
+
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dispatch the notifier
+        env:
+          DISPATCH_TOKEN: ${{ secrets.NOTIFIER_DISPATCH_TOKEN }}
+          NOTIFIER_REPO: ${{ vars.NOTIFIER_REPO }}
+        run: |
+          set -euo pipefail
+          curl -fsS -X POST \
+            -H "Authorization: Bearer $DISPATCH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/$NOTIFIER_REPO/dispatches" \
+            -d '{"event_type":"helm-release"}'
+          echo "Dispatched helm-release to $NOTIFIER_REPO"
