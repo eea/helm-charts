@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 3.48.1 - 26 August 2026
+- removed the unused RAZZLE_PROXY_ES_DSN_globalsea [Claudia Ifrim - [`941e9556`](https://github.com/eea/helm-charts/commit/941e95565ca6e6b8092628a90f5b13853532b24a)]
+
 ### Version 3.48.0 - 24 August 2026
 - Automated release of [eeacms/freshwater-backend:6.1.4-50](https://github.com/eea/freshwater-backend/releases) [EEA Jenkins - [`ff724b9c`](https://github.com/eea/helm-charts/commit/ff724b9c535eca6a9ad4231aa2c7c17e5e98caed)]
 
