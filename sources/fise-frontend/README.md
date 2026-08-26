@@ -10,6 +10,9 @@ This chart deployes the Forest Information System of Europe website frontend app
 
 ## Releases
 
+### Version 1.34.1 - 26 August 2026
+- rename RAZZLE_PROXY_ES/QA_DSN env vars to match volto-searchlib 5.x [Claudia Ifrim - [`265d7746`](https://github.com/eea/helm-charts/commit/265d7746653333a2ede9385e006474a180d57678)]
+
 ### Version 1.34.0 - 26 August 2026
 - Automated release of [eeacms/fise-frontend:5.2.0](https://github.com/eea/fise-frontend/releases) [EEA Jenkins - [`c75fd934`](https://github.com/eea/helm-charts/commit/c75fd934adcb13813b79624cf6c9af2e0b8dded8)]
 
