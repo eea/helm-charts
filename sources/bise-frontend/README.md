@@ -10,6 +10,9 @@ This chart deployes the BISE frontend app
 
 ## Releases
 
+### Version 2.25.2 - 27 August 2026
+- Automated release of [eeacms/bise-frontend:4.8.1-beta.01](https://github.com/eea/bise-frontend/releases) [EEA Jenkins - [`15231a9f`](https://github.com/eea/helm-charts/commit/15231a9f42f0c3e86f6b7b3530d00a9a8e8c92b2)]
+
 ### Version 2.25.1 - 26 August 2026
 - rename RAZZLE_PROXY_ES/QA_DSN_globalsearch env vars to match volto-searchlib 5.x [Claudia Ifrim - [`acc435b7`](https://github.com/eea/helm-charts/commit/acc435b7e3cb1d3f6b3ed76e7a0b099387bc1ff0)]
 
