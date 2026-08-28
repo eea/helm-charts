@@ -10,6 +10,9 @@ This chart deployes the Wise Marine frontend app
 
 ## Releases
 
+### Version 1.48.6 - 28 August 2026
+- release RAZZLE_PROXY_ES_DSN/QA_DSN env var changes [laszlocseh - [`5edf6318`](https://github.com/eea/helm-charts/commit/5edf631889953b9cd0af4ac623338c779a0a9cb2)]
+
 ### Version 1.48.5 - 21 August 2026
 - Automated release of [eeacms/marine-frontend:3.26.0-beta.05](https://github.com/eea/marine-frontend/releases) [EEA Jenkins - [`8ab9410d`](https://github.com/eea/helm-charts/commit/8ab9410d02f2aedf5e12ebe585e7391fa8d86d93)]
 
