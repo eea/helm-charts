@@ -10,6 +10,9 @@ and the broken-links cron job.
 Sensitive values are intentionally left empty in `values.yaml`.
 ## Releases
 
+### Version 0.9.17 - 28 August 2026
+- v11.0.55-plone6.1 [GhitaB - [`6b348e7b`](https://github.com/eea/helm-charts/commit/6b348e7b9b7d83d89781e11ccb61e99b5eb72af2)]
+
 ### Version 0.9.16 - 27 August 2026
 - v11.0.54-plone6.1 [GhitaB - [`6da3156c`](https://github.com/eea/helm-charts/commit/6da3156ccadf8d7d8240027c1d8ed201ffb95ab0)]
 
