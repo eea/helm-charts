@@ -4,6 +4,9 @@ A Helm chart for deploying the WISE Freshwater frontend application.
 
 ## Releases
 
+### Version 2.21.5 - 28 August 2026
+- Automated release of [eeacms/freshwater-frontend:2.39.0-beta.05](https://github.com/eea/freshwater-frontend/releases) [EEA Jenkins - [`dd495ce4`](https://github.com/eea/helm-charts/commit/dd495ce4dd6bc56908f53dc4d6afbffb8532ad22)]
+
 ### Version 2.21.4 - 28 August 2026
 - rename RAZZLE_PROXY_ES/QA_DSN_globalsearch env vars to match volto-searchlib 5.x [laszlocseh - [`e05e8ba7`](https://github.com/eea/helm-charts/commit/e05e8ba767c70864fc7deb557d2a432ea5863352)]
 
