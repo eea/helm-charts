@@ -3,6 +3,9 @@
 
 ## Releases
 
+### Version 0.1.10 - 31 August 2026
+- Automated release of [eeacms/esbootstrap-configs:v3.0.131](https://github.com/eea/eea.esbootstrap.configs/releases) [EEA Jenkins - [`eceeaa4f`](https://github.com/eea/helm-charts/commit/eceeaa4fe539355aacd42b07774abd73d6792e75)]
+
 ### Version 0.1.9 - 25 August 2026
 - Add new IP range, fix netsecpol [valentinab25 - [`e5369b39`](https://github.com/eea/helm-charts/commit/e5369b393f15be51dffec4de3f2467c8967bb469)]
 
