@@ -10,7 +10,8 @@ Tenable.io linking key.
 
 | Version | Date | Comment |
 | ------- | -----| ------- |
-| 1.1.8 | 4 August 2026    | Upgrade image to 10.12.3-oracle. |
+| 1.1.9 | 31 August 2026 | Upgrade image to 10.12.4-oracle. |
+| 1.1.8 | 4 August 2026  | Upgrade image to 10.12.3-oracle. |
 | 1.1.7 | 8 July 2026    | Upgrade image to 10.12.1-oracle. |
 | 1.1.6 | 27 April 2026  | Upgrade image to 10.12.0-oracle. |
 | 1.1.5 | 6 January 2026 | Upgrade image to 10.11.1-oracle. |
