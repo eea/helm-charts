@@ -93,6 +93,30 @@ questions:
     required: true
     group: "Plone configuration"
 
+  - variable: "plone.environment.ETRANS_APP"
+    label: "eTranslation application name"
+    type: "string"
+    required: true
+    group: "Plone configuration"
+
+  - variable: "plone.environment.ETRANS_DOMAIN"
+    label: "eTranslation domain"
+    type: "string"
+    required: true
+    group: "Plone configuration"
+
+  - variable: "plone.environment.ETRANS_PASS"
+    label: "eTranslation password"
+    type: "password"
+    required: true
+    group: "Plone configuration"
+
+  - variable: "plone.environment.ETRANS_USERNAME"
+    label: "eTranslation username"
+    type: "string"
+    required: true
+    group: "Plone configuration"
+
   - variable: "plone.environment.MSFDURI"
     label: "MSFD URI"
     type: "string"
