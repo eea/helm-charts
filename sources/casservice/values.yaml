@@ -1,12 +1,10 @@
-# Default values
-
 replicaCount: 1
 
 image:
-  repository: tomcat
+  repository: eeacms/casserver
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "8-jre8"
+  tag: ""
 
 imagePullSecrets: []
 nameOverride: ""
@@ -34,18 +32,16 @@ service:
 ingress:
   enabled: true
   className: "nginx"
-  annotations:
-    nginx.ingress.kubernetes.io/configuration-snippet: |
-      more_set_headers 'X-Frame-Options: SAMEORIGIN';
+  annotations: {}
   hosts:
-    - host: ssotest.eionet.europa.eu
+    - host: "sso.example.com"
       paths:
         - path: /
           pathType: Prefix
   tls:
     - secretName: ""
       hosts:
-        - ssotest.eionet.europa.eu
+        - "sso.example.com"
 
 resources:
   requests:
@@ -58,4 +54,29 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+# When CAS is launched without values, it will generate keys and write them
+# to standard out. You then copy paste them into your overrides file.
+cas:
+  server:
+    name: https://sso.example.com
+    prefix: https://sso.example.com/cas
+  adminPagesSecurity:
+    ip: 127\.0\.0\.1
+  shibAttributeResolver:
+    resources: file:/etc/cas/config/attribute-resolver.xml
+
+  tgc:
+    encryptionKey: ''
+    signingKey: ''
+
+  webflow:
+    signing:
+      key: ''
+      keySize: ''
+    encryption:
+      key: ''
+      keySize: ''
+    alg: AES
+
 

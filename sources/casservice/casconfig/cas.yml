@@ -1,0 +1,13 @@
+
+cas:
+  server:
+    name: https://{{ .Values.casServerName }}
+    prefix: https://{{ .Values.casServerName }}
+  adminPagesSecurity:
+    ip: 127\.0\.0\.1
+  shibAttributeResolver:
+    resources: file:/etc/cas/config/attribute-resolver.xml
+  {{- toYaml .Values.cas | nindent 2 }}
+
+
+

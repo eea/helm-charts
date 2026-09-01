@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-cas
+
+data:
+  application.yml: |
+    {{- .Files.Get "casconfig/application.yml" | nindent 4 }}
+  attribute-resolver.xml: |
+    {{- .Files.Get "casconfig/attribute-resolver.xml" | nindent 4 }}
+  cas.yml: |
+    cas:
+      {{- toYaml .Values.cas | nindent 6 }}
+  log4j2.xml: |
+    {{- .Files.Get "casconfig/log4j2.xml" | nindent 4 }}
+

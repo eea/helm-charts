@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Specify the refresh internal in seconds. -->
+<Configuration monitorInterval="5" packages="org.apereo.cas.logging">
+    <Properties>
+        <!-- 
+        Default log directory is the current directory but that can be overridden with -Dcas.log.dir=<logdir>
+        Or you can change this property to a new default
+        -->
+        <Property name="cas.log.dir" >/tmp</Property>
+        <!-- To see more CAS specific logging, adjust this property to info or debug or run server with -Dcas.log.level=debug -->
+        <Property name="cas.log.level" >warn</Property>
+    </Properties>
+    <Appenders>
+        <Console name="console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d %p [%c] - &lt;%m&gt;%n"/>
+        </Console>
+
+        <CasAppender name="casConsole">
+            <AppenderRef ref="console" />
+        </CasAppender>
+    </Appenders>
+    <Loggers>
+        <!-- If adding a Logger with level set higher than warn, make category as selective as possible -->
+        <!-- Loggers inherit appenders from Root Logger unless additivity is false -->
+        <AsyncLogger name="org.apereo" level="${sys:cas.log.level}" includeLocation="true"/>
+        <AsyncLogger name="org.apereo.services.persondir" level="${sys:cas.log.level}" includeLocation="true"/>
+        <AsyncLogger name="org.apereo.cas.web.flow" level="info" includeLocation="true"/>
+        <AsyncLogger name="org.apache" level="warn" />
+        <AsyncLogger name="org.apache.http" level="error" />
+        <AsyncLogger name="org.springframework" level="warn" />
+        <AsyncLogger name="org.springframework.cloud.server" level="warn" />
+        <AsyncLogger name="org.springframework.cloud.client" level="warn" />
+        <AsyncLogger name="org.springframework.cloud.bus" level="warn" />
+        <AsyncLogger name="org.springframework.aop" level="warn" />
+        <AsyncLogger name="org.springframework.boot" level="warn" />
+        <AsyncLogger name="org.springframework.boot.actuate.autoconfigure" level="warn" />
+        <AsyncLogger name="org.springframework.webflow" level="warn" />
+        <AsyncLogger name="org.springframework.session" level="warn" />
+        <AsyncLogger name="org.springframework.amqp" level="error" />
+        <AsyncLogger name="org.springframework.integration" level="warn" />
+        <AsyncLogger name="org.springframework.messaging" level="warn" />
+        <AsyncLogger name="org.springframework.web" level="warn" />
+        <AsyncLogger name="org.springframework.orm.jpa" level="warn" />
+        <AsyncLogger name="org.springframework.scheduling" level="warn" />
+        <AsyncLogger name="org.springframework.context.annotation" level="error" />
+        <AsyncLogger name="org.springframework.boot.devtools" level="error" />
+        <AsyncLogger name="org.springframework.web.socket" level="warn" />
+        <AsyncLogger name="org.thymeleaf" level="warn" />
+        <AsyncLogger name="org.pac4j" level="warn" />
+        <AsyncLogger name="org.opensaml" level="warn"/>
+        <AsyncLogger name="net.sf.ehcache" level="warn" />
+        <AsyncLogger name="com.couchbase" level="warn" includeLocation="true"/>
+        <AsyncLogger name="com.ryantenney.metrics" level="warn" />
+        <AsyncLogger name="net.jradius" level="warn" />
+        <AsyncLogger name="org.openid4java" level="warn" />
+        <AsyncLogger name="org.ldaptive" level="warn" />
+        <AsyncLogger name="com.hazelcast" level="warn" />
+        <AsyncLogger name="org.jasig.spring" level="warn" />
+
+        <!-- All Loggers inherit appenders specified here, unless additivity="false" on the Logger -->
+        <AsyncRoot level="warn">
+            <AppenderRef ref="casConsole"/>
+        </AsyncRoot>
+    </Loggers>
+</Configuration>
