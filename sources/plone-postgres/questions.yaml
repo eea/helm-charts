@@ -129,11 +129,10 @@
 
   - variable: "postgres.exposeService.IP"
     label: "Expose postgres server on LB IP:"
-	description: "For this to work, you need to ask the SysAdmins for an IP"
+    description: "For this to work, you need to ask the SysAdmins for an IP"
     type: string
     group: "General"
     show_if: "postgres.exposeService.enabled=true && postgres.exposeService.type=LoadBalancer"
-
 
 
   - variable: "memcached.enabled"
