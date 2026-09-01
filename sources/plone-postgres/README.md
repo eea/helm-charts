@@ -4,6 +4,9 @@ Postgres for plone Apps.
 
 ## Releases
 
+### Version 1.0.13 - 01 September 2026
+- Add external service [valentinab25 - [`b59dbadc`](https://github.com/eea/helm-charts/commit/b59dbadcc029ed7b1c3df93d3c19a3673e94440d)]
+
 ### Version 1.0.10 - 18 September 2025
 - Cleanup unused postgres-admin.yaml [Alin Voinea - [`55acc49d`](https://github.com/eea/helm-charts/commit/55acc49d9bdd304296b3662617b5e02ed7ddee40)]
 
