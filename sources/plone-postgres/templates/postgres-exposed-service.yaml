@@ -1,0 +1,31 @@
+{{- if .Values.postgres.exposeService.enabled -}}
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-postgres-exposed
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: postgres
+  {{- if eq .Values.postgres.exposeService.type "LoadBalancer" }}    
+  annotations:
+    metallb.universe.tf/loadBalancerIPs: {{ .Values.postgres.exposeService.IP }}
+  {{- end }}  
+spec:
+  type: {{ .Values.postgres.exposeService.type }}
+  {{- if and (eq .Values.postgres.exposeService.type "LoadBalancer") .Values.postgres.exposeService.IP }}
+  loadBalancerIP: {{ .Values.postgres.exposeService.IP }}
+  {{- end }}
+  ports:
+  - port: 5432
+    targetPort: 5432
+    protocol: TCP
+    {{- if and (eq .Values.postgres.exposeService.type "NodePort") .Values.postgres.exposeService.nodePort }}
+    nodePort: {{ .Values.postgres.exposeService.nodePort }}
+    {{- end }}
+
+  selector:
+    {{- include "appl.selectorLabels" . | nindent 4 }}
+    component: postgres
+
+{{- end }}

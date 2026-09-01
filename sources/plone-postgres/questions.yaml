@@ -103,6 +103,39 @@
       # @daily postgres /postgresql.restore/database-backup.sh datafs
     group: "Database configuration"
 
+  - variable: "postgres.exposeService.enabled"
+    label: "Expose server externally"
+    type: "boolean"
+    required: true
+	default: false
+    group: "General"
+  - variable: "postgres.exposeService.type"
+    label: "Expose server, service type"
+    type: "enum"
+    options:
+      - "NodePort"
+      - "LoadBalancer"
+    default: "LoadBalancer"
+    required: true
+    group: "General"
+    show_if: "postgres.exposeService.enabled=true"
+
+  - variable: "postgres.exposeService.nodePort"
+    label: "Expose postgres server on Node Port:"
+    type: string
+    default: 32321
+    group: "General"
+    show_if: "postgres.exposeService.enabled=true && postgres.exposeService.type=NodePort"
+
+  - variable: "postgres.exposeService.IP"
+    label: "Expose postgres server on LB IP:"
+	description: "For this to work, you need to ask the SysAdmins for an IP"
+    type: string
+    group: "General"
+    show_if: "postgres.exposeService.enabled=true && postgres.exposeService.type=LoadBalancer"
+
+
+
   - variable: "memcached.enabled"
     label: "Create memcached"
     type: "boolean"

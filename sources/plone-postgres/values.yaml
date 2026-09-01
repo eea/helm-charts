@@ -50,6 +50,14 @@ postgres:
   podAnnotations: {}
   podSecurityContext: {}
   securityContext: {}
+  serviceName: master
+  serviceType: ClusterIp
+  exposeService:
+    enabled: false
+    type: LoadBalancer
+    name: exposed-postgres
+    IP: 10.10.10.10
+    nodePort: 32321
   env:
     SuperUser:
       Name: "postgres"
