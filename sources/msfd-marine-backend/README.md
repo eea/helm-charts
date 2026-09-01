@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 0.89.3 - 01 September 2026
+- Add eTranslation v2 env variables [laszlocseh - [`69dcb26f`](https://github.com/eea/helm-charts/commit/69dcb26f262dd892f08c095ff7a1e53b8978016c)]
+
 ### Version 0.89.2 - 01 September 2026
 - Automated release of [eeacms/msfd-backend:6.1.4-54.beta.02](https://github.com/eea/msfd-backend/releases) [EEA Jenkins - [`911eb79c`](https://github.com/eea/helm-charts/commit/911eb79ccbda00697f329464d47eee3d0e381752)]
 
