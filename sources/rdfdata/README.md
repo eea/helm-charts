@@ -8,6 +8,9 @@ There is a script that runs every Saturday to download new Eurostat files and cr
 ## Releases
 
 <dl>
+  <dt>Version 1.0.6 - 02 Sept. 2026</dt>
+  <dd>Upgrade Apache to version 2.4.68-alpine3.24.</dd>
+
   <dt>Version 1.0.5</dt>
   <dd>Upgrade Apache to version 2.4.63-alpine3.21.</dd>
 
