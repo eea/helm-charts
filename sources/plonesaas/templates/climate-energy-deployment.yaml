@@ -43,14 +43,14 @@ spec:
 
         livenessProbe:
           httpGet:
-            path: /ok
+            path: /
             port: webui
           periodSeconds: 15
           timeoutSeconds: 2
 
         startupProbe:
           httpGet:
-            path: /ok
+            path: /
             port: webui
           failureThreshold: 12
           periodSeconds: 10
