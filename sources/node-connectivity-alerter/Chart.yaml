@@ -1,0 +1,22 @@
+apiVersion: v2
+name: node-connectivity-alerter
+description: Wrapper around the upstream Goldpinger chart (decentralized node-to-node pod-network probing).
+type: application
+version: 0.0.0
+appVersion: "3.11.2"
+keywords:
+  - kubernetes
+  - networking
+  - connectivity
+  - goldpinger
+  - monitoring
+  - prometheus
+  - alerting
+sources:
+  - https://github.com/bloomberg/goldpinger
+maintainers:
+  - name: EEA Team
+dependencies:
+  - name: goldpinger
+    version: 1.1.2
+    repository: https://bloomberg.github.io/goldpinger

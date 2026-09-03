@@ -1,0 +1,81 @@
+questions:
+  - variable: "goldpinger.serviceMonitor.selector.release"
+    label: "Prometheus selector (ServiceMonitor)"
+    description: "Label so your Prometheus scrapes Goldpinger. kube-prometheus-stack usually needs its release name here. Find it: kubectl get prometheus -A -o yaml | grep -A3 serviceMonitorSelector. Leave blank if your Prometheus selects all ServiceMonitors."
+    type: "string"
+    default: "kube-prometheus-stack"
+    group: "Monitoring"
+
+  - variable: "monitoring.additionalLabels.release"
+    label: "Prometheus selector (PrometheusRule)"
+    description: "Label so your Prometheus loads the alerting rule. Usually the SAME value as the ServiceMonitor selector above. Find it: kubectl get prometheus -A -o yaml | grep -A3 ruleSelector. Leave blank if your Prometheus selects all rules."
+    type: "string"
+    default: "kube-prometheus-stack"
+    group: "Monitoring"
+
+  - variable: "goldpinger.serviceMonitor.interval"
+    label: "Scrape interval"
+    description: "How often Prometheus scrapes Goldpinger, e.g. 30s."
+    type: "string"
+    default: "30s"
+    group: "Monitoring"
+
+  - variable: "monitoring.prometheusRule.enabled"
+    label: "Create alerting rule"
+    description: "Create the PrometheusRule that fires when a node loses pod-network connectivity."
+    type: "boolean"
+    default: true
+    group: "Alerting"
+
+  - variable: "monitoring.prometheusRule.severity"
+    label: "Alert severity"
+    description: "Sets the alert's severity label. Your alertmanager-configs route warning/critical to Matrix and drop info."
+    type: "enum"
+    options:
+      - "warning"
+      - "critical"
+      - "info"
+    default: "warning"
+    group: "Alerting"
+
+  - variable: "monitoring.prometheusRule.minPeers"
+    label: "Quorum (min failing peers)"
+    description: "How many other nodes must fail to reach a target before alerting. Rules out one flaky prober. 2 is a good start."
+    type: "int"
+    default: 2
+    group: "Alerting"
+
+  - variable: "monitoring.prometheusRule.for"
+    label: "Debounce (for)"
+    description: "How long the condition must hold before the alert fires, e.g. 3m."
+    type: "string"
+    default: "3m"
+    group: "Alerting"
+
+  - variable: "monitoring.prometheusRule.window"
+    label: "Rate window"
+    description: "Window used to decide 'no successful pings', e.g. 2m."
+    type: "string"
+    default: "2m"
+    group: "Alerting"
+
+  - variable: "monitoring.prometheusRule.expr"
+    label: "Custom PromQL (advanced)"
+    description: "Override the whole alert expression if your Goldpinger version uses different metric names. Leave blank to use the default built from the values above."
+    type: "string"
+    default: ""
+    group: "Alerting"
+
+  - variable: "goldpinger.image.tag"
+    label: "Goldpinger image tag (advanced)"
+    description: "Override the Goldpinger image tag. Leave blank to use the version bundled with this chart (v3.11.2)."
+    type: "string"
+    default: ""
+    group: "Goldpinger"
+
+  - variable: "goldpinger.rbac.clusterscoped"
+    label: "Cluster-scoped RBAC"
+    description: "Goldpinger only lists pods in its own namespace, so namespaced RBAC is enough. Enable only if your setup needs a ClusterRole."
+    type: "boolean"
+    default: false
+    group: "Goldpinger"

@@ -1,0 +1,26 @@
+goldpinger:
+  tolerations:
+    - operator: Exists
+  rbac:
+    create: true
+    clusterscoped: false
+  serviceMonitor:
+    enabled: true
+    interval: 30s
+    selector:
+      release: kube-prometheus-stack
+  prometheusRule:
+    enabled: false
+
+monitoring:
+  additionalLabels:
+    release: kube-prometheus-stack
+
+  prometheusRule:
+    enabled: true
+    alertName: NodeConnectivityLost
+    severity: warning
+    for: 3m
+    window: 2m
+    minPeers: 2
+    expr: ""

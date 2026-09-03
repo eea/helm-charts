@@ -1,0 +1,28 @@
+{{- if .Values.monitoring.prometheusRule.enabled }}
+{{- $r := .Values.monitoring.prometheusRule }}
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: {{ include "node-connectivity-alerter.fullname" . }}
+  labels:
+    {{- include "node-connectivity-alerter.labels" . | nindent 4 }}
+    {{- with .Values.monitoring.additionalLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  groups:
+    - name: node-connectivity
+      rules:
+        - alert: {{ $r.alertName }}
+          expr: >-
+            {{ $r.expr | default (printf "count by (namespace, host_ip, pod_ip) (rate(goldpinger_peers_response_time_s_count[%s]) == 0) >= %d" $r.window (int $r.minPeers)) }}
+          for: {{ $r.for }}
+          labels:
+            severity: {{ $r.severity }}
+          annotations:
+            summary: "Pod-network connectivity lost to node {{`{{ $labels.host_ip }}`}}"
+            description: >-
+              {{`{{ $value }}`}} node(s) can no longer reach {{`{{ $labels.host_ip }}`}}
+              ({{`{{ $labels.pod_ip }}`}}) over the pod network (Goldpinger HTTP/TCP probe).
+              The node may look healthy while its overlay traffic is silently failing.
+{{- end }}
