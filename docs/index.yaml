@@ -57000,6 +57000,34 @@ entries:
     urls:
     - nlp-service-0.1.0.tgz
     version: 0.1.0
+  node-connectivity-alerter:
+  - apiVersion: v2
+    appVersion: 3.11.2
+    created: "2026-09-03T17:19:26.294336767+03:00"
+    dependencies:
+    - name: goldpinger
+      repository: https://bloomberg.github.io/goldpinger
+      version: 1.1.2
+    description: Wrapper around the upstream Goldpinger chart (decentralized node-to-node
+      pod-network probing).
+    digest: f8b8e83030f0cd57ccda48e1e31fddff5ded0958f439506b253b95baa408755d
+    keywords:
+    - kubernetes
+    - networking
+    - connectivity
+    - goldpinger
+    - monitoring
+    - prometheus
+    - alerting
+    maintainers:
+    - name: EEA Team
+    name: node-connectivity-alerter
+    sources:
+    - https://github.com/bloomberg/goldpinger
+    type: application
+    urls:
+    - node-connectivity-alerter-0.1.0.tgz
+    version: 0.1.0
   onyx-demo:
   - annotations:
       category: Productivity
@@ -69255,4 +69283,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2026-09-03T14:15:15.37288509Z"
+generated: "2026-09-03T17:19:26.293570927+03:00"
