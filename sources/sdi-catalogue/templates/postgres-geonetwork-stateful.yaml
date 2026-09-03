@@ -61,11 +61,34 @@ spec:
           readOnly: true
           subPath: ca-bundle.crt
 
+        # Readiness gates Service membership: while pg_isready fails the pod is
+        # removed from the postgres-geonetwork endpoints instead of accepting
+        # connections that can only be refused.
+        readinessProbe:
+          exec:
+            command:
+            - pg_isready
+            - -h
+            - 127.0.0.1
+            - -p
+            - "5432"
+            - -U
+            - {{ .Values.geonetworkdb.username | quote }}
+            - -d
+            - {{ .Values.geonetworkdb.database | quote }}
+          initialDelaySeconds: 15
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        # Liveness stays deliberately forgiving. It only catches a genuinely
+        # dead postmaster, so a busy database is never killed mid-query.
         livenessProbe:
           tcpSocket:
             port: 5432
           initialDelaySeconds: 15
           periodSeconds: 20
+          timeoutSeconds: 5
+          failureThreshold: 6
 
       restartPolicy: Always
       volumes:
