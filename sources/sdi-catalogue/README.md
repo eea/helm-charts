@@ -109,6 +109,9 @@ The OAuth2 client registration is named `eea` in the Spring Security configurati
 
 ## Releases
 
+### Version 0.10.0 - 03 September 2026
+- Add pg_isready readiness probe to postgres-geonetwork and relax liveness probe thresholds [Juan Luis Rodriguez Ponce - [`77bc8f5d`](https://github.com/eea/helm-charts/commit/77bc8f5d9677b20bfe55919aa615451f0126ffa9)]
+
 ### Version 0.9.1 - 03 August 2026
 - Document the new gn5.security.* values in the README [Juan Luis Rodriguez Ponce - [`db8b765b`](https://github.com/eea/helm-charts/commit/db8b765b129d152d9fbb5038b9d9cb0a45c43a76)]
 
