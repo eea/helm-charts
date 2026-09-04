@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 0.90.1 - 04 September 2026
+- chore: Refs [#305742](https://taskman.eionet.europa.eu/issues/305742) - reduce kept failed cronjob pods from 5 to 1 [Claudia Ifrim - [`049b0d5a`](https://github.com/eea/helm-charts/commit/049b0d5abf6f6de98e59141e52e2da252c558c16)]
+
 ### Version 0.90.0 - 02 September 2026
 - Automated release of [eeacms/msfd-backend:6.1.4-55](https://github.com/eea/msfd-backend/releases) [EEA Jenkins - [`3564c34b`](https://github.com/eea/helm-charts/commit/3564c34bbe003d8290756acccc9029e6abe805ca)]
 
