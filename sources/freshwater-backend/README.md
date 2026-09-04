@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 3.48.2 - 04 September 2026
+- chore: Refs [#305742](https://taskman.eionet.europa.eu/issues/305742) - reduce kept failed cronjob pods from 5 to 1 [Claudia Ifrim - [`c7223a44`](https://github.com/eea/helm-charts/commit/c7223a44ef54e952b69043f21645adab737c649d)]
+
 ### Version 3.48.1 - 26 August 2026
 - removed the unused RAZZLE_PROXY_ES_DSN_globalsea [Claudia Ifrim - [`941e9556`](https://github.com/eea/helm-charts/commit/941e95565ca6e6b8092628a90f5b13853532b24a)]
 
