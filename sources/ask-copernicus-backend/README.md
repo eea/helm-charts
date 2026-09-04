@@ -1,5 +1,8 @@
 ## Releases
 
+### Version 1.46.0 - 04 September 2026
+- Automated release of [eeacms/clms-backend:6.0.15-166](https://github.com/eea/clms-backend/releases) [EEA Jenkins - [`01febcd8`](https://github.com/eea/helm-charts/commit/01febcd860fbe6fe50b889a66c32ef65aecba58b)]
+
 ### Version 1.45.0 - 03 September 2026
 - Automated release of [eeacms/clms-backend:6.0.15-165](https://github.com/eea/clms-backend/releases) [EEA Jenkins - [`79db8794`](https://github.com/eea/helm-charts/commit/79db8794446e869b769cbfbc10d59f7da7045664)]
 
