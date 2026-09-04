@@ -28,11 +28,24 @@ fi
 
 unset CI
 
-../../increase_version_helm.sh
+while [ -z "$HELM_UPGRADE_MESSAGE" ] ; do
+
+          echo "Write HELM_UPGRADE_MESSAGE message"
+          read HELM_UPGRADE_MESSAGE
+          echo "Message is $HELM_UPGRADE_MESSAGE"
+          echo "Ok? anything else to re-write the message"
+          read y
+          if [ -n "$y" ]; then
+              unset HELM_UPGRADE_MESSAGE
+          fi
+done
 
 export HELM_COMMIT_MESSAGE
 export HELM_VERSION_TYPE
 export HELM_UPGRADE_MESSAGE
+
+
+../../increase_version_helm.sh
 
 CI=true ../../update_docs.sh
 

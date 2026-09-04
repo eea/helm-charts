@@ -183,6 +183,7 @@ echo "Updated README.md with:"
 git diff README.md
 
 export HELM_NEWVERSION
-
+export HELM_COMMIT_MESSAGE
+export HELM_UPGRADE_MESSAGE
 
 
