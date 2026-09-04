@@ -2,8 +2,15 @@ goldpinger:
   tolerations:
     - operator: Exists
   rbac:
-    create: true
-    clusterscoped: false
+    create: false
+    clusterscoped: true
+  serviceAccount:
+    create: false
+    name: default
+  extraEnv:
+    - name: HOSTS_TO_RESOLVE
+      value: "goldpinger-peers:8080"
+
   serviceMonitor:
     enabled: true
     interval: 30s

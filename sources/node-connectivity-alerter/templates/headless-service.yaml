@@ -1,0 +1,21 @@
+# Headless Service: its DNS name resolves to ALL Goldpinger pod IPs, so Goldpinger
+# can discover peers via DNS (HOSTS_TO_RESOLVE) with no Kubernetes API access.
+# Fixed name so HOSTS_TO_RESOLVE only depends on the namespace:
+#   goldpinger-peers.<namespace>.svc.cluster.local:8080
+apiVersion: v1
+kind: Service
+metadata:
+  name: goldpinger-peers
+  labels:
+    {{- include "node-connectivity-alerter.labels" . | nindent 4 }}
+spec:
+  clusterIP: None
+  publishNotReadyAddresses: false
+  selector:
+    app.kubernetes.io/name: goldpinger
+    app.kubernetes.io/instance: {{ .Release.Name }}
+  ports:
+    - name: http
+      port: {{ .Values.goldpinger.port | default 8080 }}
+      targetPort: {{ .Values.goldpinger.port | default 8080 }}
+      protocol: TCP

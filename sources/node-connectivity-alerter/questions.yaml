@@ -1,4 +1,11 @@
 questions:
+  - variable: "goldpinger.serviceMonitor.enabled"
+    label: "Create ServiceMonitor"
+    description: "Create the ServiceMonitor so Prometheus scrapes Goldpinger's metrics. Turn off if you can't create ServiceMonitor CRDs yet (you'll get probing but no metrics/alerts)."
+    type: "boolean"
+    default: true
+    group: "Monitoring"
+
   - variable: "goldpinger.serviceMonitor.selector.release"
     label: "Prometheus selector (ServiceMonitor)"
     description: "Label so your Prometheus scrapes Goldpinger. kube-prometheus-stack usually needs its release name here. Find it: kubectl get prometheus -A -o yaml | grep -A3 serviceMonitorSelector. Leave blank if your Prometheus selects all ServiceMonitors."
@@ -71,11 +78,4 @@ questions:
     description: "Override the Goldpinger image tag. Leave blank to use the version bundled with this chart (v3.11.2)."
     type: "string"
     default: ""
-    group: "Goldpinger"
-
-  - variable: "goldpinger.rbac.clusterscoped"
-    label: "Cluster-scoped RBAC"
-    description: "Goldpinger only lists pods in its own namespace, so namespaced RBAC is enough. Enable only if your setup needs a ClusterRole."
-    type: "boolean"
-    default: false
     group: "Goldpinger"
