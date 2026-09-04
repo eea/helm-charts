@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 1.97.0 - 04 September 2026
+- Automated release of [eeacms/marine-backend:6.1.4-45.demo.01](https://github.com/eea/marine-backend/releases) [EEA Jenkins - [`28a5ee85`](https://github.com/eea/helm-charts/commit/28a5ee853a2a5cfba883d67e5028993c6c0a9a37)]
+
 ### Version 1.96.1 - 04 September 2026
 - chore: Refs [#305742](https://taskman.eionet.europa.eu/issues/305742) - reduce kept failed cronjob pods from 5 to 1 [Claudia Ifrim - [`9ad28aa1`](https://github.com/eea/helm-charts/commit/9ad28aa12c78f076274aef3bed2153087e7b15e3)]
 
