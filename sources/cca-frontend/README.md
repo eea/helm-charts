@@ -7,6 +7,9 @@ and adds the Apache routing layer used by the existing Rancher stack. Secrets
 and tokens are intentionally left empty in `values.yaml`.
 ## Releases
 
+### Version 0.55.0 - 04 septembrie 2026
+- Upgrade to latest volto-cca-policy which includes volto-eea-chatbot 4.x branch [Tiberiu Ichim - [`0cda8899`](https://github.com/eea/helm-charts/commit/0cda88995d2e93d6a68bcb01d43d01ee3ef878c7)]
+
 ### Version 0.54.0 - 01 September 2026
 - Automated release of [eeacms/cca-frontend:4.15.0](https://github.com/eea/cca-frontend/releases) [EEA Jenkins - [`577f0423`](https://github.com/eea/helm-charts/commit/577f0423c9eb668f54cda51a214ddce4becfb4ff)]
 
