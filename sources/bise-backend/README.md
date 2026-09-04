@@ -10,6 +10,9 @@ This chart deployes the BISE backend app
 
 ## Releases
 
+### Version 1.74.1 - 04 September 2026
+- chore: Refs [#305742](https://taskman.eionet.europa.eu/issues/305742) - reduce kept failed cronjob pods from 5 to 1 [Claudia Ifrim - [`60c0f84b`](https://github.com/eea/helm-charts/commit/60c0f84bf636a56d2f745f5625faef04b216ac1a)]
+
 ### Version 1.74.0 - 20 August 2026
 - Automated release of [eeacms/bise-backend:6.1.4-22](https://github.com/eea/bise-backend/releases) [EEA Jenkins - [`8ddf4bcd`](https://github.com/eea/helm-charts/commit/8ddf4bcdef12b1b52565eaf530f4cd3fdf223909)]
 
