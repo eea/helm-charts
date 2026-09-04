@@ -176,6 +176,9 @@ kubectl logs -l app.kubernetes.io/component=graylog-master
 See `values.yaml` for complete configuration options.
 ## Releases
 
+### Version 0.1.14 - 04 September 2026
+- Add datadir and bindir configuration [valentinab25 - [`f4df78b8`](https://github.com/eea/helm-charts/commit/f4df78b8fa98f74a07b27a80c2ec5c092043f0e7)]
+
 ### Version 0.1.13 - 06 May 2026
 - remove default protocol [valentinab25 - [`70c81aff`](https://github.com/eea/helm-charts/commit/70c81affd3bbad5839e69b69ddb9fbf196edb8a9)]
 
