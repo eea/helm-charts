@@ -146,7 +146,7 @@ entrasync:
   enabled: false
   schedule: "0 0 3 * *"
   keepSuccessfulPods: 3
-  keepFailedPods: 5
+  keepFailedPods: 1
   resources:
     limits:
       cpu: 2
@@ -165,7 +165,7 @@ zodbpack:
   enabled: false
   schedule: "0 0 3 * *"
   keepSuccessfulPods: 3
-  keepFailedPods: 5
+  keepFailedPods: 1
   resources:
     limits:
       cpu: 2
