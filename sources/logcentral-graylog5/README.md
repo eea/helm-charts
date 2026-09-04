@@ -1,6 +1,6 @@
 # Logcentral Graylog 5
 
-This Helm chart deploys Graylog 5.2.12 centralized logging solution based on the Docker Compose template for Rancher 1.
+This Helm chart deploys Graylog 6.0 centralized logging solution based on the Docker Compose template for Rancher 1.
 
 ## Components
 

@@ -68,7 +68,7 @@ graylogMaster:
   enabled: true
   image:
     repository: "graylog/graylog"
-    tag: "5.2.12"
+    tag: "6.0"
     pullPolicy: IfNotPresent
 
   replicas: 1
@@ -131,7 +131,7 @@ graylogClient:
   enabled: true
   image:
     repository: "graylog/graylog"
-    tag: "5.2.12"
+    tag: "6.0"
     pullPolicy: IfNotPresent
 
   replicas: 3
