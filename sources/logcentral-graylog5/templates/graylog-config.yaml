@@ -256,6 +256,9 @@ data:
     # Start server with --statistics flag to see buffer utilization.
     # Must be a power of 2. (512, 1024, 2048, ...)
     #outputbuffer_ring_size = 65536
+
+    bin_dir = /usr/share/graylog/bin
+    data_dir = /usr/share/graylog/data
 ---
 {{- end }}
 {{- if .Values.graylogClient.enabled }}
@@ -516,4 +519,8 @@ data:
     # Start server with --statistics flag to see buffer utilization.
     # Must be a power of 2. (512, 1024, 2048, ...)
     #outputbuffer_ring_size = 65536
+
+    bin_dir = /usr/share/graylog/bin
+    data_dir = /usr/share/graylog/data
+    
 {{- end }}
