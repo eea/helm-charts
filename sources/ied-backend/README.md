@@ -10,6 +10,9 @@ This chart deployes the European Industrial Emissions Portal backend app
 
 ## Releases
 
+### Version 2.39.1 - 04 September 2026
+- chore: Refs [#305742](https://taskman.eionet.europa.eu/issues/305742) - reduce kept failed cronjob pods from 5 to 1 [Claudia Ifrim - [`3ed8dc68`](https://github.com/eea/helm-charts/commit/3ed8dc68fe7e59e06b3bc4658da84ffd607bd079)]
+
 ### Version 2.39.0 - 19 August 2026
 - Automated release of [eeacms/ied-backend:6.20.0](https://github.com/eea/ied-backend/releases) [EEA Jenkins - [`b8052338`](https://github.com/eea/helm-charts/commit/b8052338f4f0cc4f967a3bd0bbf19162fe4835e3)]
 
