@@ -176,6 +176,9 @@ kubectl logs -l app.kubernetes.io/component=graylog-master
 See `values.yaml` for complete configuration options.
 ## Releases
 
+### Version 1.1.0 - 04 September 2026
+- Upgrade to 6.3.15 [valentinab25 - [`1c33a022`](https://github.com/eea/helm-charts/commit/1c33a022245235305e3faedba515f2d810236779)]
+
 ### Version 1.0.1 - 04 September 2026
 - fix configuration [valentinab25 - [`24342dee`](https://github.com/eea/helm-charts/commit/24342deec13f58802b4ade9eeb1c8ad2a15880bb)]
 
