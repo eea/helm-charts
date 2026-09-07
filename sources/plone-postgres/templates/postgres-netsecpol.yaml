@@ -30,8 +30,7 @@ spec:
   ingress:  
   - from:
     - podSelector:
-        matchLabels:
-          {{- include "appl.selectorLabels" . | nindent 10 }}
+        matchExpressions:
     ports:
     - protocol: TCP
       port: 5432
