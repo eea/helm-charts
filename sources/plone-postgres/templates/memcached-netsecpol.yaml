@@ -1,0 +1,48 @@
+{{- if ( default .Values.securityEnabled true) -}}
+{{- if .Values.memcached.enabled -}}
+
+{{/*
+  By default, allow only access from pods in the same namespace to port 11211
+  No egress
+*/}}
+
+
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ .Release.Name }}-memcached-allow
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+
+
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: memcached
+
+
+  policyTypes:
+  - Ingress
+  - Egress
+
+  egress: []
+
+  ingress:
+    - ports:
+        - port: 11211
+          protocol: TCP
+      {{- if .Values.security.allowAnyAccess }}
+          {{/*
+              Allows access from anyone on port
+          */}}
+      {{- else if .Values.security.allowAnyNamespace }}
+      from:
+        - namespaceSelector: {}
+      {{- else }}
+      from:
+        - podSelector:
+            matchExpressions:
+      {{- end}}
+{{- end }}
+{{- end }}
