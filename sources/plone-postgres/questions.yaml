@@ -4,10 +4,10 @@
     type: enum
     default: ""
     options:
-      - "17.5-1"
+      - "17.11-1"
       - "16.9-1"
       - "15.13-1"
-      - "14.18-1"
+      - "14.24-3"
       - "13.21-1"
       - "12.22-1"
       - "11.19-4.1"
@@ -109,6 +109,7 @@
     required: true
     default: false
     group: "General"
+
   - variable: "postgres.exposeService.type"
     label: "Expose server, service type"
     type: "enum"
