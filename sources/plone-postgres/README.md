@@ -4,6 +4,9 @@ Postgres for plone Apps.
 
 ## Releases
 
+### Version 1.1.0 - 07 September 2026
+- Upgrade versions of postgres [valentinab25 - [`67588a58`](https://github.com/eea/helm-charts/commit/67588a58b13f03df49084fed494d930ac7f33686)]
+
 ### Version 1.0.15 - 01 September 2026
 - Fix spacing [valentinab25 - [`5f247aff`](https://github.com/eea/helm-charts/commit/5f247affcf2122462975b2eba3d9cf99c048fc68)]
 
