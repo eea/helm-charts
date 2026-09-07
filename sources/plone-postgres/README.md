@@ -4,6 +4,9 @@ Postgres for plone Apps.
 
 ## Releases
 
+### Version 1.1.5 - 07 September 2026
+- Add memcached netsecpol, question for servicename [valentinab25 - [`4b734c51`](https://github.com/eea/helm-charts/commit/4b734c51060d76329132a4d204d5d761096dc6c7)]
+
 ### Version 1.1.4 - 07 September 2026
 - Add question for service name [valentinab25 - [`5efdf6d2`](https://github.com/eea/helm-charts/commit/5efdf6d2efab2e4f6b35a23b6c195fbb02a62bc6)]
 
