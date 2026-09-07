@@ -135,6 +135,26 @@
     group: "General"
     show_if: "postgres.exposeService.enabled=true && postgres.exposeService.type=LoadBalancer"
 
+  - variable: "securityEnabled"
+    label: "Enable security - add network security policy"
+    type: "boolean"
+    required: true
+    default: true
+    group: "General"
+  - variable: "security.allowAnyNamespace"
+    label: "Allow access from any internal namespace - used in DEV/PRE"
+    type: "boolean"
+    required: true
+    default: false
+    group: "General"
+    show_if: "securityEnabled"
+  - variable: "security.allowAnyAccess"
+    label: "Allow access from anyone on port - DO NOT USE IN PRODUCTION"
+    type: "boolean"
+    required: true
+    default: false
+    group: "General"
+    show_if: "securityEnabled"
 
   - variable: "memcached.enabled"
     label: "Create memcached"

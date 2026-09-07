@@ -141,6 +141,12 @@ memcached:
     timeoutSeconds: 3
     successThreshold: 1
 
+
+securityEnabled: true
+security:
+  allowAnyNamespace: false
+  allowAnyAccess: false
+
 memcachedflush:
   schedule: "0 3 * * *"
   securityContext: {}

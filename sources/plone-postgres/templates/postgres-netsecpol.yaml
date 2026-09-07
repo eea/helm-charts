@@ -27,11 +27,20 @@ spec:
 
   egress: []
 
-  ingress:  
-  - from:
-    - podSelector:
-        matchExpressions:
-    ports:
-    - protocol: TCP
-      port: 5432
+  ingress:
+    - ports:
+        - port: 5432
+          protocol: TCP
+      {{- if .Values.security.allowAnyAccess }}
+          {{/*
+              Allows access from anyone on port
+          */}}
+      {{- else if .Values.security.allowAnyNamespace }}
+      from:
+        - namespaceSelector: {}
+      {{- else }}
+      from:
+        - podSelector:
+            matchExpressions:
+      {{- end}}
 {{- end }}
