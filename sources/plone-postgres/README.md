@@ -4,6 +4,9 @@ Postgres for plone Apps.
 
 ## Releases
 
+### Version 1.1.1 - 07 September 2026
+- Fix default variable [valentinab25 - [`67594885`](https://github.com/eea/helm-charts/commit/67594885896b03777bb9e408dd37eec7e49dd7e0)]
+
 ### Version 1.1.0 - 07 September 2026
 - Upgrade versions of postgres [valentinab25 - [`67588a58`](https://github.com/eea/helm-charts/commit/67588a58b13f03df49084fed494d930ac7f33686)]
 
