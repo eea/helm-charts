@@ -1,0 +1,11 @@
+# Default values
+role:
+  name: "goldpinger-pods-list"
+  rules:
+    - apiGroups: [""]
+      resources: ["pods"]
+      verbs: ["list"]
+
+roleBinding:
+  name: "goldpinger-pods-list"
+  serviceAccountName: "goldpinger"
