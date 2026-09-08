@@ -54,7 +54,14 @@ spec:
             - name: http
               containerPort: {{ .Values.service.port }}
               protocol: TCP
+          {{- with .Values.envFrom }}
+          envFrom:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           env:
+            - name: UWSGI_PORT
+              value: {{ .Values.service.port | quote }}
+            {{- if .Values.inlineEnv }}
             - name: ALLOWED_HOSTS
               value: {{ .Values.allowedHosts | quote }}
             - name: APP_REVERSE_PROXY
@@ -139,10 +146,9 @@ spec:
               value: {{ .Values.useZopeLayout | quote }}
             - name: USE_ZOPE_LOGIN
               value: {{ .Values.useZopeLogin | quote }}
-            - name: UWSGI_PORT
-              value: {{ .Values.service.port | quote }}
             - name: POSTGRES_ADDR
               value: {{ .Values.databasesHost | quote }}
+            {{- end }}
           {{- if not .Values.debugTail }}
           {{- if .Values.deploymentArgs }}
           livenessProbe:
