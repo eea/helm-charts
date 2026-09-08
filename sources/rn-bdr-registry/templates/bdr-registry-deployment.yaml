@@ -47,7 +47,14 @@ spec:
             - name: http
               containerPort: {{ .Values.service.port }}
               protocol: TCP
+          {{- with .Values.envFrom }}
+          envFrom:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           env:
+            - name: BDR_REG_PORT
+              value: {{ .Values.service.port | quote }}
+            {{- if .Values.inlineEnv }}
             - name: TZ
               value: {{ .Values.timezone }}
             - name: ADMIN_ALL_BDR_TABLES
@@ -74,8 +81,6 @@ spec:
               value: {{ .Values.bdrEmailFrom | quote }}
             - name: BDR_HELPDESK_EMAIL
               value: {{ .Values.bdrHelpdeskEmail | quote }}
-            - name: BDR_REG_PORT
-              value: {{ .Values.service.port | quote }}
             - name: BDR_REPORTEK_ORGANISATION_URL
               value: {{ .Values.bdrReportekOrganisationUrl | quote }}
             - name: BDR_REVERSE_PROXY
@@ -132,6 +137,7 @@ spec:
               value: {{ .Values.useZopeLogin | quote }}
             - name: POSTGRES_ADDR
               value: {{ .Values.databasesHost | quote }}
+            {{- end }}
           {{- if not .Values.debugTail }}
           livenessProbe:
             {{- toYaml .Values.livenessProbe | nindent 12 }}

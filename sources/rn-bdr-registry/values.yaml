@@ -12,6 +12,15 @@ fullnameOverride: ""
 
 # Set this to true to tail keeping the container running
 debugTail: false
+
+# Extra envFrom sources (ConfigMap/Secret refs) merged into the container.
+# Later entries win over earlier ones.
+envFrom: []
+# Render the per-key application settings below as inline env vars.
+# Set to false when configuration is supplied entirely via envFrom --
+# inline env always wins over envFrom, so leaving this true would mask
+# the ConfigMap/Secret values (including this file's own defaults).
+inlineEnv: true
 timezone: Europe/Copenhagen
 adminAllBdrTables: ""
 allowedHosts: ""
