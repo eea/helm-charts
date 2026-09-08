@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 0.1.3 - 08 September 2026
+- edit default values and questions [Mihai Dobrescu - [`971b93c6`](https://github.com/eea/helm-charts/commit/971b93c68d08ef9a6117925868d6b4b8b991b98a)]
+
 ### Version 0.1.2 - 07 September 2026
 - restore RBAC-based pod listing [Mihai Dobrescu - [`219fbdd3`](https://github.com/eea/helm-charts/commit/219fbdd35afc2a1db42d63ea913308dbe56ef623)]
 
