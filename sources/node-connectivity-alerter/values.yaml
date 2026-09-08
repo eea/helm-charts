@@ -2,8 +2,11 @@ goldpinger:
   tolerations:
     - operator: Exists
   rbac:
+    create: false
+    clusterscoped: true
+  serviceAccount:
     create: true
-    clusterscoped: false
+    name: goldpinger
   serviceMonitor:
     enabled: true
     interval: 30s

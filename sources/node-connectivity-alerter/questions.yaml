@@ -73,9 +73,9 @@ questions:
     default: ""
     group: "Goldpinger"
 
-  - variable: "goldpinger.rbac.clusterscoped"
-    label: "Cluster-scoped RBAC"
-    description: "Goldpinger only lists pods in its own namespace, so namespaced RBAC is enough. Enable only if your setup needs a ClusterRole."
-    type: "boolean"
-    default: false
+  - variable: "goldpinger.serviceAccount.name"
+    label: "ServiceAccount name"
+    description: "Name of the ServiceAccount Goldpinger runs as. Must match the ServiceAccount that the goldpinger-rbac chart grants pods:list to. Leave as 'goldpinger' unless you changed it there."
+    type: "string"
+    default: "goldpinger"
     group: "Goldpinger"
