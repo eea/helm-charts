@@ -47,7 +47,14 @@ spec:
             - name: http
               containerPort: {{ .Values.service.port }}
               protocol: TCP
+          {{- with .Values.envFrom }}
+          envFrom:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           env:
+            - name: PORT
+              value: {{ .Values.service.port | quote }}
+            {{- if .Values.inlineEnv }}
             - name: TZ
               value: {{ .Values.timezone }}
             - name: API_PASSWORD
@@ -122,8 +129,7 @@ spec:
               value: {{ .Values.stocksApiUrl | quote }}
             - name: STOCKS_INCLUDE_TESTDATA
               value: {{ .Values.stocksIncludeTestdata | quote }}
-            - name: PORT
-              value: {{ .Values.service.port | quote }}
+            {{- end }}
           {{- if not .Values.debugTail }}
           livenessProbe:
             {{- toYaml .Values.livenessProbe | nindent 12 }}
