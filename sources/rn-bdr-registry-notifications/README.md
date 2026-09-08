@@ -46,6 +46,9 @@ controller such as External Secrets or SealedSecrets.
 
 ## Releases
 
+### Version 0.2.2 - 08 September 2026
+- Added support for envFrom to be used in parent charts [Olimpiu Rob - [`fa9d9fe7`](https://github.com/eea/helm-charts/commit/fa9d9fe72628fe477b56add9251ed6eae0a93670)]
+
 ### Version 0.2.1 - 15 April 2025
 - Updated appVersion to 1.4.5 [Diana Boiangiu - [`68a4c5f`](https://github.com/eea/helm-charts/commit/68a4c5f96e785a8ed6188bc3f5892fcf6de37939)]
 
