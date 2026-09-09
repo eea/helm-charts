@@ -1,5 +1,47 @@
 # Changelog
 
+## [33.8.0](https://github.com/sentry-kubernetes/charts/compare/sentry-v33.7.0...sentry-v33.8.0) (2026-08-24)
+
+
+### Features
+
+* **ci:** publish helm charts as OCI artifacts to GHCR ([#2292](https://github.com/sentry-kubernetes/charts/issues/2292)) ([339aae7](https://github.com/sentry-kubernetes/charts/commit/339aae7426ad1d23cf88ae367c7847e2d78bd4da))
+
+## [33.7.0](https://github.com/sentry-kubernetes/charts/compare/sentry-v33.6.0...sentry-v33.7.0) (2026-08-21)
+
+
+### Features
+
+* taskbroker postgresql store ([#2286](https://github.com/sentry-kubernetes/charts/issues/2286)) ([2f057a7](https://github.com/sentry-kubernetes/charts/commit/2f057a7bd90ad6d1534914fa4d5d9626d39f9d33))
+
+## [33.6.0](https://github.com/sentry-kubernetes/charts/compare/sentry-v33.5.0...sentry-v33.6.0) (2026-08-20)
+
+
+### Features
+
+* charts/sentry: source S3 and integration credentials from a Secret ([#2279](https://github.com/sentry-kubernetes/charts/issues/2279)) ([87bb399](https://github.com/sentry-kubernetes/charts/commit/87bb399c31f7f6e5b8c9bf14505e88dea01c520a))
+
+## [33.5.0](https://github.com/sentry-kubernetes/charts/compare/sentry-v33.4.0...sentry-v33.5.0) (2026-08-19)
+
+
+### Features
+
+* charts/sentry: add existingSecret support for GeoIP credentials ([#2284](https://github.com/sentry-kubernetes/charts/issues/2284)) ([b9d3d6d](https://github.com/sentry-kubernetes/charts/commit/b9d3d6d4b4e231b0c3ce4b0406820e00cf69b4fa))
+
+## [33.4.0](https://github.com/sentry-kubernetes/charts/compare/sentry-v33.3.1...sentry-v33.4.0) (2026-08-18)
+
+
+### Features
+
+* upgrade to sentry v26.8.0 ([#2281](https://github.com/sentry-kubernetes/charts/issues/2281)) ([86be27f](https://github.com/sentry-kubernetes/charts/commit/86be27faee920e0e662e17926301adc22b02c501))
+
+## [33.3.1](https://github.com/sentry-kubernetes/charts/compare/sentry-v33.3.0...sentry-v33.3.1) (2026-08-18)
+
+
+### Bug Fixes
+
+* **sentry:** update clickhouse cleanup cronjob template ([#2270](https://github.com/sentry-kubernetes/charts/issues/2270)) ([74e9fc8](https://github.com/sentry-kubernetes/charts/commit/74e9fc861eeb3f63a38140bfb061a3b486c3f25d))
+
 ## [33.3.0](https://github.com/sentry-kubernetes/charts/compare/sentry-v33.2.0...sentry-v33.3.0) (2026-08-10)
 
 
