@@ -1,0 +1,61 @@
+{{- $c := .Values.registries.common -}}
+{{- $e := .Values.registries.europeanRegistry -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "appl.fullname" . }}-european-registry-env
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    app.kubernetes.io/component: european-cache-registry
+data:
+  {{/* shared with the other registry applications */}}
+  TZ: {{ .Values.timezone | quote }}
+  DEBUG: {{ $c.debug | quote }}
+  DB_HOST: {{ $c.postgresHost | quote }}
+  POSTGRES_ADDR: {{ $c.postgresHost | quote }}
+  MAIL_SERVER: {{ $c.mailHost | quote }}
+  {{/* specific to the european cache registry */}}
+  API_USER: {{ $e.config.apiUser | quote }}
+  AUTO_VERIFY_ALL_COMPANIES: {{ $e.config.autoVerifyAllCompanies | quote }}
+  AUTO_VERIFY_NEW_COMPANIES: {{ $e.config.autoVerifyNewCompanies | quote }}
+  BASE_URL: {{ $e.config.baseUrl | quote }}
+  BASE_URL_FGAS: {{ $e.config.baseUrlFgas | quote }}
+  BASE_URL_ODS: {{ $e.config.baseUrlOds | quote }}
+  BDR_API_URL: {{ $e.config.bdrApiUrl | quote }}
+  BDR_ENDPOINT_URL: {{ $e.config.bdrEndpointUrl | quote }}
+  BDR_ENDPOINT_USER: {{ $e.config.bdrEndpointUser | quote }}
+  BDR_HELPDESK_MAIL: {{ $e.config.bdrHelpDeskMail | quote }}
+  BDR_HOST: {{ $e.config.bdrHost | quote }}
+  DB_NAME: {{ $e.config.dbName | quote }}
+  DB_SCHEMA: {{ $e.config.dbSchema | quote }}
+  DB_USER: {{ $e.config.dbUser | quote }}
+  FLASK_APP: {{ $e.config.flaskApp | quote }}
+  FUZZ_LIMIT: {{ $e.config.fuzzLimit | quote }}
+  HTTPS_VERIFY: {{ $e.config.httpsVerify | quote }}
+  LOG_FILE: {{ $e.config.logFile | quote }}
+  MAILS_SENDER_NAME: {{ $e.config.mailsSenderName | quote }}
+  MAIL_SUPPRESS_SEND: {{ $e.config.mailSuppressSend | quote }}
+  MANUAL_VERIFY_ALL_COMPANIES: {{ $e.config.manualVerifyAllCompanies | quote }}
+  REQUESTS_CA_BUNDLE: {{ $e.config.requestsCaBundle | quote }}
+  SEND_MATCHING_MAILS: {{ $e.config.sendMatchingMails | quote }}
+  STOCKS_API_URL: {{ $e.config.stocksApiUrl | quote }}
+  STOCKS_INCLUDE_TESTDATA: {{ $e.config.stocksIncludeTestdata | quote }}
+{{- if $e.createSecret }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ include "appl.fullname" . }}-european-registry-secrets
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    app.kubernetes.io/component: european-cache-registry
+type: Opaque
+stringData:
+  API_PASSWORD: {{ $e.secrets.apiPassword | quote }}
+  API_TOKEN: {{ $e.secrets.apiToken | quote }}
+  BDR_API_KEY: {{ $e.secrets.bdrApiKey | quote }}
+  BDR_ENDPOINT_PASSWORD: {{ $e.secrets.bdrEndpointPassword | quote }}
+  DB_PASS: {{ $e.secrets.dbPass | quote }}
+  SENTRY_DSN: {{ $e.secrets.sentryDsn | quote }}
+  STOCKS_API_TOKEN: {{ $e.secrets.stocksApiToken | quote }}
+{{- end }}

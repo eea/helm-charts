@@ -226,46 +226,106 @@ questions:
     default: ""
     group: "BDR auxiliary components"
 
-  - variable: bdr-registry.bdrServerUrl
-    label: "BDR Registry Server URL"
+  - variable: registries.common.bdrServerUrl
+    label: "Registries BDR Server URL"
+    description: "Shared by bdr-registry and the notifications releases."
     type: string
     default: "https://bdr.eionet.europa.eu/"
     group: "BDR auxiliary components"
 
-  - variable: bdr-registry.databasesHost
-    label: "BDR Registry Database Host"
+  - variable: registries.common.postgresHost
+    label: "Registries Database Host"
+    description: "Shared by bdr-registry, notifications and the european cache registry."
     type: string
-    default: ""
+    default: "bdr-py3-postgres"
     group: "BDR auxiliary components"
 
-  - variable: bdr-registry.databasesPassword
-    label: "BDR Registry Database Password"
-    type: password
-    default: ""
-    group: "BDR auxiliary components"
-
-  - variable: bdr-registry.bdrApiAuthUser
+  - variable: registries.bdrRegistry.config.bdrApiAuthUser
     label: "BDR Registry API User"
     type: string
     default: ""
     group: "BDR auxiliary components"
 
-  - variable: bdr-registry.bdrApiAuthPassword
+  - variable: registries.bdrRegistry.secrets.bdrApiAuthPassword
     label: "BDR Registry API Password"
     type: password
     default: ""
     group: "BDR auxiliary components"
 
-  - variable: european-registry.bdrEndpointUrl
+  - variable: registries.bdrRegistry.secrets.databasesPassword
+    label: "BDR Registry Database Password"
+    type: password
+    default: ""
+    group: "BDR auxiliary components"
+
+  - variable: registries.europeanRegistry.config.bdrEndpointUrl
     label: "European Registry BDR Endpoint"
     type: string
     default: "https://bdr.eionet.europa.eu"
     group: "BDR auxiliary components"
 
-  - variable: european-registry.apiToken
+  - variable: registries.europeanRegistry.secrets.apiToken
     label: "European Registry API Token"
     type: password
     default: ""
+    group: "BDR auxiliary components"
+
+  - variable: registries.notifications.secrets.databasesPassword
+    label: "Notifications Database Password"
+    type: password
+    default: ""
+    group: "BDR auxiliary components"
+
+  - variable: registries.europeanRegistry.secrets.dbPass
+    label: "European Registry Database Password"
+    type: password
+    default: ""
+    group: "BDR auxiliary components"
+
+  - variable: registries.notifications.secrets.bdrApiPassword
+    label: "Notifications BDR API Password"
+    description: "Paired with registries.notifications.config.bdrApiUser."
+    type: password
+    default: ""
+    group: "BDR auxiliary components"
+
+  - variable: registries.notifications.secrets.bdrRegistryToken
+    label: "Notifications BDR Registry Token"
+    type: password
+    default: ""
+    group: "BDR auxiliary components"
+
+  - variable: registries.notifications.secrets.ecrRegistryToken
+    label: "Notifications ECR Registry Token"
+    type: password
+    default: ""
+    group: "BDR auxiliary components"
+
+  - variable: registries.notifications.secrets.notificationsToken
+    label: "Notifications Token"
+    type: password
+    default: ""
+    group: "BDR auxiliary components"
+
+  - variable: registries.bdrRegistry.createSecret
+    label: "Render the bdr-registry Secret"
+    description: "Uncheck to supply bdr-py3-bdr-registry-secrets yourself (External Secrets, SealedSecrets). The Secret name is unchanged either way."
+    type: boolean
+    default: true
+    group: "BDR auxiliary components"
+
+  - variable: registries.notifications.createSecret
+    label: "Render the notifications Secret"
+    description: "Uncheck to supply bdr-py3-notifications-secrets yourself."
+    type: boolean
+    default: true
+    group: "BDR auxiliary components"
+
+  - variable: registries.europeanRegistry.createSecret
+    label: "Render the european registry Secret"
+    description: "Uncheck to supply bdr-py3-european-registry-secrets yourself."
+    type: boolean
+    default: true
     group: "BDR auxiliary components"
 
   - variable: apache.serverName

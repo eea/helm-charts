@@ -1,0 +1,65 @@
+{{- $c := .Values.registries.common -}}
+{{- $r := .Values.registries.bdrRegistry -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "appl.fullname" . }}-bdr-registry-env
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    app.kubernetes.io/component: bdr-registry
+data:
+  {{/* shared with the other registry applications */}}
+  TZ: {{ .Values.timezone | quote }}
+  DEBUG: {{ $c.debug | quote }}
+  DATABASES_HOST: {{ $c.postgresHost | quote }}
+  POSTGRES_ADDR: {{ $c.postgresHost | quote }}
+  EMAIL_HOST: {{ $c.mailHost | quote }}
+  EMAIL_PORT: {{ $c.mailPort | quote }}
+  BDR_SERVER_URL: {{ $c.bdrServerUrl | quote }}
+  {{/* specific to bdr-registry */}}
+  ADMIN_ALL_BDR_TABLES: {{ $r.config.adminAllBdrTables | quote }}
+  ALLOWED_HOSTS: {{ $r.config.allowedHosts | quote }}
+  AUTH_LDAP_BASE_DN: {{ $r.config.authLdapBaseDn | quote }}
+  AUTH_LDAP_BIND_DN: {{ $r.config.authLdapBindDn | quote }}
+  AUTH_LDAP_SERVER_URI: {{ $r.config.authLdapServerUri | quote }}
+  BDR_API_AUTH_USER: {{ $r.config.bdrApiAuthUser | quote }}
+  BDR_API_PORTAL_URL: {{ $r.config.bdrApiPortalUrl | quote }}
+  BDR_AUDIT_LOG_FILE: {{ $r.config.bdrAuditLogFile | quote }}
+  BDR_EMAIL_FROM: {{ $r.config.bdrEmailFrom | quote }}
+  BDR_HELPDESK_EMAIL: {{ $r.config.bdrHelpdeskEmail | quote }}
+  BDR_REPORTEK_ORGANISATION_URL: {{ $r.config.bdrReportekOrganisationUrl | quote }}
+  BDR_REVERSE_PROXY: {{ $r.config.bdrReverseProxy | quote }}
+  BDR_SIDEMENU_URL: {{ $r.config.bdrSidemenuUrl | quote }}
+  DATABASES_ENGINE: {{ $r.config.databasesEngine | quote }}
+  DATABASES_NAME: {{ $r.config.databasesName | quote }}
+  DATABASES_USER: {{ $r.config.databasesUser | quote }}
+  EMAIL_BACKEND: {{ $r.config.emailBackend | quote }}
+  ENABLE_HDV_EDITING: {{ $r.config.enableHdvEditing | quote }}
+  ENABLE_HDV_RESIM_EDITING: {{ $r.config.enableHdvResimEditing | quote }}
+  FRAME_COOKIES: {{ $r.config.frameCookies | quote }}
+  FRAME_URL: {{ $r.config.frameUrl | quote }}
+  FRAME_VERIFY_SSL: {{ $r.config.frameVerifySsl | quote }}
+  HDV_EMAIL_FROM: {{ $r.config.hdvEmailFrom | quote }}
+  LDAP_EDIT_DN: {{ $r.config.ldapEditDn | quote }}
+  SITE_URL: {{ $r.config.siteUrl | quote }}
+  STATIC_ROOT: {{ $r.config.staticRoot | quote }}
+  STATIC_URL: {{ $r.config.staticUrl | quote }}
+  USE_SIDEMENU: {{ $r.config.useSidemenu | quote }}
+  USE_ZOPE_LOGIN: {{ $r.config.useZopeLogin | quote }}
+{{- if $r.createSecret }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ include "appl.fullname" . }}-bdr-registry-secrets
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    app.kubernetes.io/component: bdr-registry
+type: Opaque
+stringData:
+  AUTH_LDAP_BIND_PASSWORD: {{ $r.secrets.authLdapBindPassword | quote }}
+  BDR_API_AUTH_PASSWORD: {{ $r.secrets.bdrApiAuthPassword | quote }}
+  DATABASES_PASSWORD: {{ $r.secrets.databasesPassword | quote }}
+  LDAP_EDIT_PASSWORD: {{ $r.secrets.ldapEditPassword | quote }}
+  SENTRY_DSN: {{ $r.secrets.sentryDsn | quote }}
+{{- end }}

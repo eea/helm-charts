@@ -1,0 +1,85 @@
+{{- $c := .Values.registries.common -}}
+{{- $n := .Values.registries.notifications -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "appl.fullname" . }}-notifications-env
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    app.kubernetes.io/component: bdr-registry-notifications
+data:
+  {{/* shared with the other registry applications */}}
+  TZ: {{ .Values.timezone | quote }}
+  DEBUG: {{ $c.debug | quote }}
+  DATABASES_HOST: {{ $c.postgresHost | quote }}
+  POSTGRES_ADDR: {{ $c.postgresHost | quote }}
+  EMAIL_HOST: {{ $c.mailHost | quote }}
+  EMAIL_PORT: {{ $c.mailPort | quote }}
+  MAIL_HOST: {{ printf "%s:%s" $c.mailHost ($c.mailPort | toString) | quote }}
+  BDR_SERVER_URL: {{ $c.bdrServerUrl | quote }}
+  {{/* specific to the notifications application */}}
+  ALLOWED_HOSTS: {{ $n.config.allowedHosts | quote }}
+  APP_REVERSE_PROXY: {{ $n.config.appReverseProxy | quote }}
+  BCC: {{ $n.config.bcc | quote }}
+  BDR_API_USER: {{ $n.config.bdrApiUser | quote }}
+  BDR_SIDEMENU_URL: {{ $n.config.bdrSidemenuUrl | quote }}
+  DATABASES_ENGINE: {{ $n.config.databasesEngine | quote }}
+  DATABASES_NAME: {{ $n.config.databasesName | quote }}
+  DATABASES_USER: {{ $n.config.databasesUser | quote }}
+  DJANGO_COLLECT_STATIC: {{ $n.config.djangoCollectStatic | quote }}
+  DJANGO_LOAD_FIXTURES: {{ $n.config.djangoLoadFixtures | quote }}
+  DJANGO_MIGRATE: {{ $n.config.djangoMigrate | quote }}
+  ECR_ACCEPTED_COMPANIES_STATUS: {{ $n.config.ecrAcceptedCompaniesStatus | quote }}
+  ECR_COMPANY_PATH: {{ $n.config.ecrCompanyPath | quote }}
+  ECR_DOMAINS: {{ $n.config.ecrDomains | quote }}
+  ECR_PERSON_PATH: {{ $n.config.ecrPersonPath | quote }}
+  ECR_REGISTRY_URL: {{ $n.config.ecrRegistryUrl | quote }}
+  EMAIL_BACKEND: {{ $n.config.emailBackend | quote }}
+  EMAIL_SENDER: {{ $n.config.emailSender | quote }}
+  FRAME_COOKIES: {{ $n.config.frameCookies | quote }}
+  FRAME_URL: {{ $n.config.frameUrl | quote }}
+  FRAME_VERIFY_SSL: {{ $n.config.frameVerifySsl | quote }}
+  REDIS_HOST: {{ $n.config.redisHost | quote }}
+  REDIS_PORT: {{ $n.config.redisPort | quote }}
+  SITE_URL: {{ $n.config.siteUrl | quote }}
+  STATIC_ROOT: {{ $n.config.staticRoot | quote }}
+  STATIC_URL: {{ $n.config.staticUrl | quote }}
+  USE_SIDEMENU: {{ $n.config.useSidemenu | quote }}
+  USE_ZOPE_LAYOUT: {{ $n.config.useZopeLayout | quote }}
+  USE_ZOPE_LOGIN: {{ $n.config.useZopeLogin | quote }}
+{{- if $n.createSecret }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ include "appl.fullname" . }}-notifications-secrets
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    app.kubernetes.io/component: bdr-registry-notifications
+type: Opaque
+stringData:
+  BDR_API_PASSWORD: {{ $n.secrets.bdrApiPassword | quote }}
+  BDR_REGISTRY_TOKEN: {{ $n.secrets.bdrRegistryToken | quote }}
+  DATABASES_PASSWORD: {{ $n.secrets.databasesPassword | quote }}
+  ECR_REGISTRY_TOKEN: {{ $n.secrets.ecrRegistryToken | quote }}
+  NOTIFICATIONS_TOKEN: {{ $n.secrets.notificationsToken | quote }}
+  SENTRY_DSN: {{ $n.secrets.sentryDsn | quote }}
+{{- end }}
+{{- with $n.async.config }}
+---
+{{/*
+Layered last in the -async release's envFrom, so these win over the shared
+notifications ConfigMap above.
+*/}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "appl.fullname" $ }}-notifications-async-env
+  labels:
+    {{- include "appl.labels" $ | nindent 4 }}
+    app.kubernetes.io/component: bdr-registry-notifications-async
+data:
+  {{- range $k, $v := . }}
+  {{ $k }}: {{ $v | quote }}
+  {{- end }}
+{{- end }}

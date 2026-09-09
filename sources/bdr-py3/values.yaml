@@ -161,7 +161,7 @@ synccronjobs:
     tokenSecretKey: sync-licences
     token: ""
     syncURL: ""
-    backoffLimit: 5
+    backoffLimit: 3
     resources:
       requests:
         memory: 16Mi
@@ -185,7 +185,7 @@ synccronjobs:
     tokenSecretKey: sync-stocks
     token: ""
     syncURL: ""
-    backoffLimit: 5
+    backoffLimit: 3
     resources:
       requests:
         memory: 16Mi
@@ -197,7 +197,7 @@ synccronjobs:
     tokenSecretKey: notifications-fetch
     token: ""
     syncURL: ""
-    backoffLimit: 5
+    backoffLimit: 3
     resources:
       requests:
         memory: 16Mi
@@ -209,7 +209,7 @@ synccronjobs:
     tokenSecretKey: sync-auditors
     token: ""
     syncURL: ""
-    backoffLimit: 5
+    backoffLimit: 3
     resources:
       requests:
         memory: 16Mi
@@ -300,7 +300,7 @@ cron:
   startingDeadlineSeconds: 300
   activeDeadlineSeconds: 360
   successfulJobsHistoryLimit: 1
-  failedJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 2
   sharedCronJobAffinity: {}
   sharedCronJobNodeSelector: {}
   sharedCronJobTolerations: []
@@ -486,215 +486,235 @@ postfix:
   mailtrap:
     httpenabled: false
 
+registries:
+  common:
+    postgresHost: bdr-py3-postgres
+    mailHost: bdr-py3-postfix
+    mailPort: "25"
+    bdrServerUrl: https://bdr.eionet.europa.eu/
+    debug: "False"
+
+  bdrRegistry:
+    createSecret: true
+    config:
+      adminAllBdrTables: "True"
+      allowedHosts: "['bdr.eionet.europa.eu']"
+      authLdapBaseDn: o=EIONET,l=Europe
+      authLdapBindDn: ""
+      authLdapServerUri: ""
+      bdrApiAuthUser: ""
+      bdrApiPortalUrl: https://bdr.eionet.europa.eu/api
+      bdrAuditLogFile: /bdrreg/logs/trace.log
+      bdrEmailFrom: ""
+      bdrHelpdeskEmail: ""
+      bdrReportekOrganisationUrl: ""
+      bdrReverseProxy: "True"
+      bdrSidemenuUrl: ""
+      databasesEngine: django.db.backends.postgresql_psycopg2
+      databasesName: ""
+      databasesUser: ""
+      emailBackend: post_office.EmailBackend
+      enableHdvEditing: "True"
+      enableHdvResimEditing: "False"
+      frameCookies: ""
+      frameUrl: ""
+      frameVerifySsl: "False"
+      hdvEmailFrom: ""
+      ldapEditDn: ""
+      siteUrl: /registry/
+      staticRoot: /bdrreg/static
+      staticUrl: /registry-static/
+      useSidemenu: "True"
+      useZopeLogin: "True"
+    secrets:
+      authLdapBindPassword: ""
+      bdrApiAuthPassword: ""
+      databasesPassword: ""
+      ldapEditPassword: ""
+      sentryDsn: ""
+
+  notifications:
+    createSecret: true
+    config:
+      allowedHosts: "['*']"
+      appReverseProxy: "True"
+      bcc: ""
+      bdrApiUser: ""
+      bdrSidemenuUrl: ""
+      databasesEngine: django.db.backends.postgresql_psycopg2
+      databasesName: ""
+      databasesUser: ""
+      djangoCollectStatic: "yes"
+      djangoLoadFixtures: "no"
+      djangoMigrate: "no"
+      ecrAcceptedCompaniesStatus: VALID,REVISION
+      ecrCompanyPath: /undertaking/[domain]/list
+      ecrDomains: FGAS,ODS
+      ecrPersonPath: /user/list
+      ecrRegistryUrl: ""
+      emailBackend: django.core.mail.backends.smtp.EmailBackend
+      emailSender: ""
+      frameCookies: ""
+      frameUrl: ""
+      frameVerifySsl: "False"
+      redisHost: bdr-py3-valkey
+      redisPort: "6379"
+      siteUrl: /notifications/
+      staticRoot: /var/local/bdr.registry.notifications/static
+      staticUrl: /notifications-static/
+      useSidemenu: "True"
+      useZopeLayout: "True"
+      useZopeLogin: "True"
+    secrets:
+      bdrApiPassword: ""
+      bdrRegistryToken: ""
+      databasesPassword: ""
+      ecrRegistryToken: ""
+      notificationsToken: ""
+      sentryDsn: ""
+    async:
+      config:
+        DJANGO_COLLECT_STATIC: "no"
+
+  europeanRegistry:
+    createSecret: true
+    config:
+      apiUser: ""
+      autoVerifyAllCompanies: ODS,FGAS
+      autoVerifyNewCompanies: ODS,FGAS
+      baseUrl: ""
+      baseUrlFgas: ""
+      baseUrlOds: ""
+      bdrApiUrl: ""
+      bdrEndpointUrl: https://bdr.eionet.europa.eu
+      bdrEndpointUser: ""
+      bdrHelpDeskMail: ""
+      bdrHost: ""
+      dbName: ""
+      dbSchema: postgresql
+      dbUser: ""
+      flaskApp: cache_registry/app.py
+      fuzzLimit: "92"
+      httpsVerify: "True"
+      logFile: EEA_double_check.log
+      mailsSenderName: ""
+      mailSuppressSend: "False"
+      manualVerifyAllCompanies: ""
+      requestsCaBundle: /etc/ssl/certs/ca-certificates.crt
+      sendMatchingMails: "True"
+      stocksApiUrl: ""
+      stocksIncludeTestdata: "Yes"
+    secrets:
+      apiPassword: ""
+      apiToken: ""
+      bdrApiKey: ""
+      bdrEndpointPassword: ""
+      dbPass: ""
+      sentryDsn: ""
+      stocksApiToken: ""
+
 bdr-registry:
-  adminAllBdrTables: "True"
-  allowedHosts: "['bdr.eionet.europa.eu']"
-  authLdapBaseDn: o=EIONET,l=Europe
-  authLdapBindDn: ""
-  authLdapBindPassword: ""
-  authLdapServerUri: ""
-  bdrApiAuthPassword: ""
-  bdrApiAuthUser: ""
-  bdrApiPortalUrl: https://bdr.eionet.europa.eu/api
-  bdrAuditLogFile: /bdrreg/logs/trace.log
-  bdrEmailFrom: ""
-  bdrHelpdeskEmail: ""
-  bdrReportekOrganisationUrl: ""
-  bdrReverseProxy: "True"
-  bdrServerUrl: https://bdr.eionet.europa.eu/
-  bdrSidemenuUrl: ""
-  databasesEngine: django.db.backends.postgresql_psycopg2
-  databasesHost: ""
-  databasesName: ""
-  databasesPassword: ""
-  databasesUser: ""
-  debug: "False"
-  emailBackend: post_office.EmailBackend
-  emailHost: bdr-py3-postfix
-  emailPort: "25"
-  enableHdvEditing: "True"
-  enableHdvResimEditing: "False"
-  frameCookies: ""
-  frameUrl: ""
-  frameVerifySsl: "False"
-  hdvEmailFrom: ""
-  ldapEditDn: ""
-  ldapEditPassword: ""
-  sentryDsn: ""
-  siteUrl: /registry/
-  staticRoot: /bdrreg/static
-  staticUrl: /registry-static/
-  useSidemenu: "True"
-  useZopeLogin: "True"
+  inlineEnv: false
+  envFrom:
+    - configMapRef:
+        name: bdr-py3-bdr-registry-env
+    - secretRef:
+        name: bdr-py3-bdr-registry-secrets
+  resources:
+    requests:
+      memory: 512Mi
+    limits:
+      memory: 512Mi
 
 bdr-registry-notifications:
-  allowedHosts: "['*']"
-  appReverseProxy: "True"
-  bcc: ""
-  bdrApiPassword: ""
-  bdrApiUser: ""
-  bdrRegistryToken: ""
-  bdrRegistryUrl: ""
-  bdrServerUrl: https://bdr.eionet.europa.eu/
-  bdrSidemenuUrl: ""
-  databasesEngine: django.db.backends.postgresql_psycopg2
-  databasesHost: bdr-py3-postgres
-  databasesName: ""
-  databasesPassword: ""
-  databasesUser: ""
-  debug: "False"
-  djangoCollectStatic: "yes"
-  djangoLoadFixtures: "no"
-  djangoMigrate: "no"
-  ecrAcceptedCompaniesStatus: VALID,REVISION
-  ecrCompanyPath: /undertaking/[domain]/list
-  ecrDomains: FGAS,ODS
-  ecrPersonPath: /user/list
-  ecrRegistryToken: ""
-  ecrRegistryUrl: ""
-  emailBackend: django.core.mail.backends.smtp.EmailBackend
-  emailHost: bdr-py3-postfix
-  emailPort: "25"
-  emailSender: ""
-  frameCookies: ""
-  frameUrl: ""
-  frameVerifySsl: "False"
-  mailHost: bdr-py3-postfix:25
-  notificationsToken: ""
-  redisHost: bdr-py3-valkey
-  redisPort: "6379"
-  sentryDsn: ""
-  siteUrl: /notifications/
-  staticRoot: /var/local/bdr.registry.notifications/static
-  staticUrl: /notifications-static/
-  tz: Europe/Copenhagen
-  useSidemenu: "True"
-  useZopeLayout: "True"
-  useZopeLogin: "True"
+  inlineEnv: false
+  envFrom:
+    - configMapRef:
+        name: bdr-py3-notifications-env
+    - secretRef:
+        name: bdr-py3-notifications-secrets
   service:
     port: 12301
+  resources:
+    requests:
+      memory: 512Mi
+    limits:
+      memory: 512Mi
 
 bdr-registry-notifications-async:
-  allowedHosts: "['*']"
-  appReverseProxy: "True"
-  bcc: ""
-  bdrApiPassword: ""
-  bdrApiUser: ""
-  bdrRegistryToken: ""
-  bdrRegistryUrl: ""
-  bdrServerUrl: https://bdr.eionet.europa.eu/
-  bdrSidemenuUrl: ""
-  databasesEngine: django.db.backends.postgresql_psycopg2
-  databasesHost: ""
-  databasesName: ""
-  databasesPassword: ""
-  databasesUser: ""
-  debug: "False"
-  djangoCollectStatic: "no"
-  djangoLoadFixtures: "no"
-  djangoMigrate: "no"
-  ecrAcceptedCompaniesStatus: VALID,REVISION
-  ecrCompanyPath: ""
-  ecrDomains: FGAS,ODS
-  ecrPersonPath: ""
-  ecrRegistryToken: ""
-  ecrRegistryUrl: ""
-  emailBackend: django.core.mail.backends.smtp.EmailBackend
-  emailHost: bdr-py3-postfix
-  emailPort: "25"
-  emailSender: ""
-  frameCookies: ""
-  frameUrl: ""
-  frameVerifySsl: "False"
-  mailHost: bdr-py3-postfix:25
-  notificationsToken: ""
-  redisHost: bdr-py3-valkey
-  redisPort: "6379"
-  sentryDsn: ""
-  siteUrl: /notifications/
-  staticRoot: /var/local/bdr.registry.notifications/static
-  staticUrl: /notifications-static/
-  useSidemenu: "True"
-  useZopeLayout: "True"
-  useZopeLogin: "True"
+  inlineEnv: false
+  envFrom:
+    - configMapRef:
+        name: bdr-py3-notifications-env
+    - secretRef:
+        name: bdr-py3-notifications-secrets
+    - configMapRef:
+        name: bdr-py3-notifications-async-env
   deploymentArgs:
     - qcluster
+  service:
+    port: 12301
+  resources:
+    requests:
+      memory: 4Gi
+    limits:
+      memory: 4Gi
 
 european-registry:
-  apiPassword: ""
-  apiToken: ""
-  apiUser: ""
-  autoVerifyAllCompanies: ODS,FGAS
-  autoVerifyNewCompanies: ODS,FGAS
-  baseUrl: ""
-  baseUrlFgas: ""
-  baseUrlOds: ""
-  bdrApiKey: ""
-  bdrApiUrl: ""
-  bdrEndpointPassword: ""
-  bdrEndpointUrl: https://bdr.eionet.europa.eu
-  bdrEndpointUser: ""
-  bdrHelpDeskMail: ""
-  bdrHost: ""
-  dbHost: ""
-  dbName: ""
-  dbPass: ""
-  dbSchema: postgresql
-  dbUser: ""
-  debug: "False"
-  flaskApp: cache_registry/app.py
-  fuzzLimit: "92"
-  httpsVerify: "True"
-  logFile: EEA_double_check.log
-  mailsSenderName: ""
-  mailServer: bdr-py3-postfix
-  mailSuppressSend: "False"
-  manualVerifyAllCompanies: ""
-  postgresAddr: bdr-py3-postgres
-  requestsCaBundle: /etc/ssl/certs/ca-certificates.crt
-  sendMatchingMails: "True"
-  sentryDsn: ""
-  stocksApiToken: ""
-  stocksApiUrl: ""
-  stocksIncludeTestdata: "Yes"
+  inlineEnv: false
+  envFrom:
+    - configMapRef:
+        name: bdr-py3-european-registry-env
+    - secretRef:
+        name: bdr-py3-european-registry-secrets
+  readinessProbe:
+    tcpSocket:
+      port: http
+    initialDelaySeconds: 15
+    periodSeconds: 10
+  livenessProbe:
+    tcpSocket:
+      port: http
+    initialDelaySeconds: 15
+    periodSeconds: 10
+  resources:
+    requests:
+      memory: 2Gi
+    limits:
+      memory: 2Gi
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 2
+    targetMemoryUtilizationPercentage: 80
 
 european-registry-sync:
-  apiPassword: ""
-  apiToken: ""
-  apiUser: ""
-  autoVerifyAllCompanies: ODS,FGAS
-  autoVerifyNewCompanies: ODS,FGAS
-  baseUrl: ""
-  baseUrlFgas: ""
-  baseUrlOds: ""
-  bdrApiKey: ""
-  bdrApiUrl: ""
-  bdrEndpointPassword: ""
-  bdrEndpointUrl: https://bdr.eionet.europa.eu
-  bdrEndpointUser: ""
-  bdrHelpDeskMail: ""
-  bdrHost: ""
-  dbHost: ""
-  dbName: ""
-  dbPass: ""
-  dbSchema: postgresql
-  dbUser: ""
-  debug: "False"
-  flaskApp: cache_registry/app.py
-  fuzzLimit: "92"
-  httpsVerify: "True"
-  logFile: EEA_double_check.log
-  mailsSenderName: ""
-  mailServer: bdr-py3-postfix
-  mailSuppressSend: "False"
-  manualVerifyAllCompanies: ""
-  postgresAddr: bdr-py3-postgres
-  requestsCaBundle: /etc/ssl/certs/ca-certificates.crt
-  sendMatchingMails: "True"
-  sentryDsn: ""
-  stocksApiToken: ""
-  stocksApiUrl: ""
-  stocksIncludeTestdata: "Yes"
+  inlineEnv: false
+  envFrom:
+    - configMapRef:
+        name: bdr-py3-european-registry-env
+    - secretRef:
+        name: bdr-py3-european-registry-secrets
+  readinessProbe:
+    tcpSocket:
+      port: http
+    initialDelaySeconds: 15
+    periodSeconds: 10
+  livenessProbe:
+    tcpSocket:
+      port: http
+    initialDelaySeconds: 15
+    periodSeconds: 10
+  resources:
+    requests:
+      memory: 2Gi
+    limits:
+      memory: 2Gi
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 2
+    targetMemoryUtilizationPercentage: 80
 
 ldap:
   storage: 1Gi
