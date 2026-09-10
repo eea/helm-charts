@@ -1,3 +1,12 @@
 test.yaml
 local/
 ci/prod-05prod-values.yaml
+
+# Deployment / environment value overrides (may contain credentials) -
+# never tracked; supply them out-of-band to `helm upgrade -f`.
+value-*.yaml
+value-*.yml
+values-*.yaml
+values-*.yml
+*-values.yaml
+*-values.yml
