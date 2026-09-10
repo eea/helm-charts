@@ -13007,6 +13007,67 @@ entries:
   bdr-py3:
   - apiVersion: v2
     appVersion: z5-1.12
+    created: "2026-09-10T13:29:16.818289+03:00"
+    dependencies:
+    - alias: zeoserver
+      name: rn-zeoserver
+      repository: https://eea.github.io/helm-charts
+      version: 0.2.0
+    - alias: local-converters
+      condition: local-converters.enabled
+      name: rn-local-converters
+      repository: https://eea.github.io/helm-charts
+      version: 0.1.13
+    - alias: clamav
+      condition: clamav.enabled
+      name: rn-clamav
+      repository: https://eea.github.io/helm-charts
+      version: 1.0.0
+    - alias: ldap
+      name: rn-bdr-ldap
+      repository: https://eea.github.io/helm-charts
+      version: 0.1.2
+    - alias: bdr-registry
+      name: rn-bdr-registry
+      repository: https://eea.github.io/helm-charts
+      version: 0.2.1
+    - name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 15.2.8
+    - condition: postfix.enabled
+      name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.2.0
+    - alias: bdr-registry-notifications
+      name: rn-bdr-registry-notifications
+      repository: https://eea.github.io/helm-charts
+      version: 0.2.2
+    - alias: bdr-registry-notifications-async
+      name: rn-bdr-registry-notifications
+      repository: https://eea.github.io/helm-charts
+      version: 0.2.2
+    - alias: european-registry
+      name: rn-bdr-european-registry
+      repository: https://eea.github.io/helm-charts
+      version: 1.0.5
+    - alias: european-registry-sync
+      name: rn-bdr-european-registry
+      repository: https://eea.github.io/helm-charts
+      version: 1.0.5
+    - alias: apache
+      name: rn-apache
+      repository: https://eea.github.io/helm-charts
+      version: 0.1.8
+    description: A BDR Helm chart for Kubernetes (Python 3 / Zope 5+ stack)
+    digest: 35b857670b39b7eb9b778545563e8d303ae8bc4b1e26a7663527c2b24b95ade3
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/bdr/logo_eionet.png
+    name: bdr-py3
+    type: application
+    urls:
+    - bdr-py3-0.1.10.tgz
+    version: 0.1.10
+  - apiVersion: v2
+    appVersion: z5-1.12
     created: "2026-09-09T15:50:20.084502+03:00"
     dependencies:
     - alias: zeoserver
@@ -70347,4 +70408,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2026-09-10T07:45:35.392788661Z"
+generated: "2026-09-10T13:29:16.810478+03:00"
