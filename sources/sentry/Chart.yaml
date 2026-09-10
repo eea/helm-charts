@@ -30,6 +30,10 @@ dependencies:
     repository: oci://registry-1.docker.io/cloudpirates
     version: 0.7.0
     condition: nginx.enabled
+  - name: seaweedfs
+    repository: https://seaweedfs.github.io/seaweedfs/helm
+    version: 4.17.0
+    condition: seaweedfs.enabled
 maintainers:
   - name: sentry-kubernetes
 icon: https://raw.githubusercontent.com/sentry-kubernetes/charts/refs/heads/develop/docs/logo.png

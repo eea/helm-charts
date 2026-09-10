@@ -3922,3 +3922,46 @@ rabbitmq:
       path: "/metrics/per-object"  # https://www.rabbitmq.com/docs/prometheus
       labels:
         release: "prometheus-operator"  # helm release of kube-prometheus-stack
+
+# SeaweedFS — S3-compatible object storage, used as the backend for
+# filestore.profiles.s3 / replay.storage.s3 / nodestore.s3 when those are
+# pointed at an in-cluster S3. Disabled by default; enable it and wire the
+# sentry-side s3 settings at `existingSecret: <fullname>-s3-secret`.
+#
+# IMPORTANT: when adopting an already-running SeaweedFS whose
+# `<fullname>-s3-secret` already holds live credentials, set
+# `s3.existingConfigSecret` (and `allInOne.s3.existingConfigSecret`) to that
+# secret's name so the subchart does NOT re-create it with fresh keys and
+# invalidate every stored object.
+seaweedfs:
+  enabled: false
+  global:
+    createClusterRole: false
+  # all-in-one: master + volume + filer + S3 in a single pod. The only mode
+  # this chart wires up; the standalone master/volume/filer/sftp components
+  # stay off.
+  master:
+    enabled: false
+  volume:
+    enabled: false
+  filer:
+    enabled: false
+  s3:
+    enabled: false
+    enableAuth: false
+    # Name of an existing Secret carrying `seaweedfs_s3_config` (+ the
+    # admin_/read_ access-key pairs). Set this to adopt a running instance
+    # without rotating its credentials.
+    existingConfigSecret: null
+  allInOne:
+    enabled: false
+    updateStrategy:
+      type: Recreate
+    data:
+      type: persistentVolumeClaim
+      size: 20Gi
+    s3:
+      enabled: false
+      enableAuth: false
+      existingConfigSecret: null
+    resources: {}
