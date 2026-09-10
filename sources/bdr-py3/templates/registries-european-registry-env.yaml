@@ -10,11 +10,11 @@ metadata:
 data:
   {{/* shared with the other registry applications */}}
   TZ: {{ .Values.timezone | quote }}
-  DEBUG: {{ $c.debug | quote }}
   DB_HOST: {{ $c.postgresHost | quote }}
   POSTGRES_ADDR: {{ $c.postgresHost | quote }}
   MAIL_SERVER: {{ $c.mailHost | quote }}
   {{/* specific to the european cache registry */}}
+  DEBUG: {{ $e.config.debug | quote }}
   API_USER: {{ $e.config.apiUser | quote }}
   AUTO_VERIFY_ALL_COMPANIES: {{ $e.config.autoVerifyAllCompanies | quote }}
   AUTO_VERIFY_NEW_COMPANIES: {{ $e.config.autoVerifyNewCompanies | quote }}

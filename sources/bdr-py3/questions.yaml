@@ -307,6 +307,56 @@ questions:
     default: ""
     group: "BDR auxiliary components"
 
+  - variable: registries.bdrRegistry.config.databasesName
+    label: "BDR Registry Database Name"
+    type: string
+    default: ""
+    group: "BDR auxiliary components"
+
+  - variable: registries.notifications.config.databasesName
+    label: "Notifications Database Name"
+    type: string
+    default: ""
+    group: "BDR auxiliary components"
+
+  - variable: registries.europeanRegistry.config.dbName
+    label: "European Registry Database Name"
+    type: string
+    default: ""
+    group: "BDR auxiliary components"
+
+  - variable: registries.bdrRegistry.config.databasesUser
+    label: "BDR Registry Database User"
+    type: string
+    default: ""
+    group: "BDR auxiliary components"
+
+  - variable: registries.notifications.config.databasesUser
+    label: "Notifications Database User"
+    type: string
+    default: ""
+    group: "BDR auxiliary components"
+
+  - variable: registries.europeanRegistry.config.dbUser
+    label: "European Registry Database User"
+    type: string
+    default: ""
+    group: "BDR auxiliary components"
+
+  - variable: registries.bdrRegistry.secrets.authLdapBindPassword
+    label: "BDR Registry LDAP Bind Password"
+    description: "Paired with registries.bdrRegistry.config.authLdapBindDn. Registry login fails when empty."
+    type: password
+    default: ""
+    group: "BDR auxiliary components"
+
+  - variable: registries.bdrRegistry.secrets.ldapEditPassword
+    label: "BDR Registry LDAP Edit Password"
+    description: "Paired with registries.bdrRegistry.config.ldapEditDn."
+    type: password
+    default: ""
+    group: "BDR auxiliary components"
+
   - variable: registries.bdrRegistry.createSecret
     label: "Render the bdr-registry Secret"
     description: "Uncheck to supply bdr-py3-bdr-registry-secrets yourself (External Secrets, SealedSecrets). The Secret name is unchanged either way."

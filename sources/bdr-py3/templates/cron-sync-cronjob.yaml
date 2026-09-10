@@ -16,7 +16,9 @@ spec:
   failedJobsHistoryLimit: {{ $.Values.cron.failedJobsHistoryLimit }}
   jobTemplate:
     spec:
-      backoffLimit: {{ $cronjob.backoffLimit }}
+      {{- $backoffLimit := $cronjob.backoffLimit }}
+      {{- if kindIs "invalid" $backoffLimit }}{{ $backoffLimit = $.Values.cron.sharedBackoffLimit }}{{ end }}
+      backoffLimit: {{ $backoffLimit }}
       activeDeadlineSeconds: {{ $.Values.cron.activeDeadlineSeconds }}
       podFailurePolicy:
         rules:
@@ -40,7 +42,7 @@ spec:
             image: {{ $.Values.cron.sharedCronJobImage }}
             imagePullPolicy: {{ $.Values.image.pullPolicy }}
             resources:
-              {{- toYaml $cronjob.resources | nindent 14 }}
+              {{- toYaml ($cronjob.resources | default $.Values.cron.sharedResources) | nindent 14 }}
             command: ["curl"]
             args:
               {{- range $.Values.cron.sharedCurlArgs }}

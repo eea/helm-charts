@@ -10,13 +10,13 @@ metadata:
 data:
   {{/* shared with the other registry applications */}}
   TZ: {{ .Values.timezone | quote }}
-  DEBUG: {{ $c.debug | quote }}
   DATABASES_HOST: {{ $c.postgresHost | quote }}
   POSTGRES_ADDR: {{ $c.postgresHost | quote }}
   EMAIL_HOST: {{ $c.mailHost | quote }}
   EMAIL_PORT: {{ $c.mailPort | quote }}
   BDR_SERVER_URL: {{ $c.bdrServerUrl | quote }}
   {{/* specific to bdr-registry */}}
+  DEBUG: {{ $r.config.debug | quote }}
   ADMIN_ALL_BDR_TABLES: {{ $r.config.adminAllBdrTables | quote }}
   ALLOWED_HOSTS: {{ $r.config.allowedHosts | quote }}
   AUTH_LDAP_BASE_DN: {{ $r.config.authLdapBaseDn | quote }}

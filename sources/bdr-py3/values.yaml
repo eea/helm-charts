@@ -42,14 +42,16 @@ instance:
   networkPolicy:
     enabled: false
     egress:
-      ipBlockRules: []
+      ipBlockRules:
+        []
         # - cidr: 10.50.4.0/24  # Example: Legacy service network
         #   ports:
         #     - protocol: TCP
         #       port: 443     # HTTPS
         #     - protocol: TCP
         #       port: 80      # HTTP
-      rawRules: []
+      rawRules:
+        []
         # - to:
         #     - namespaceSelector:
         #         matchLabels:
@@ -138,11 +140,6 @@ synccronjobs:
     token: ""
     syncURL: ""
     backoffLimit: 1
-    resources:
-      requests:
-        memory: 16Mi
-      limits:
-        memory: 16Mi
   - name: sync-ods
     enabled: false
     schedule: "3-59/5 * * * *"
@@ -150,23 +147,13 @@ synccronjobs:
     token: ""
     syncURL: ""
     backoffLimit: 1
-    resources:
-      requests:
-        memory: 16Mi
-      limits:
-        memory: 16Mi
   - name: sync-licences
     enabled: false
     schedule: "6 0 * * *"
     tokenSecretKey: sync-licences
     token: ""
     syncURL: ""
-    backoffLimit: 3
-    resources:
-      requests:
-        memory: 16Mi
-      limits:
-        memory: 16Mi
+    backoffLimit: 5
   - name: sync-match
     enabled: false
     schedule: "4-59/5 * * * *"
@@ -174,47 +161,27 @@ synccronjobs:
     token: ""
     syncURL: ""
     backoffLimit: 1
-    resources:
-      requests:
-        memory: 16Mi
-      limits:
-        memory: 16Mi
   - name: sync-stocks
     enabled: false
     schedule: "0 3 * * *"
     tokenSecretKey: sync-stocks
     token: ""
     syncURL: ""
-    backoffLimit: 3
-    resources:
-      requests:
-        memory: 16Mi
-      limits:
-        memory: 16Mi
+    backoffLimit: 5
   - name: notifications-fetch
     enabled: false
     schedule: "15 0 * * *"
     tokenSecretKey: notifications-fetch
     token: ""
     syncURL: ""
-    backoffLimit: 3
-    resources:
-      requests:
-        memory: 16Mi
-      limits:
-        memory: 16Mi
+    backoffLimit: 5
   - name: sync-auditors
     enabled: false
     schedule: "30 * * * *"
     tokenSecretKey: sync-auditors
     token: ""
     syncURL: ""
-    backoffLimit: 3
-    resources:
-      requests:
-        memory: 16Mi
-      limits:
-        memory: 16Mi
+    backoffLimit: 5
 
 zeoserver:
   image:
@@ -290,6 +257,14 @@ service:
 cron:
   enabled: true
   sharedCronJobImage: curlimages/curl:8.16.0
+  sharedBackoffLimit: 5
+  # Default resources for the sync CronJobs. Override per job by setting
+  # `resources` on an entry in `synccronjobs`.
+  sharedResources:
+    requests:
+      memory: 16Mi
+    limits:
+      memory: 16Mi
   tokenSecretName: ""
   sharedCurlArgs:
     - --fail-with-body
@@ -300,7 +275,7 @@ cron:
   startingDeadlineSeconds: 300
   activeDeadlineSeconds: 360
   successfulJobsHistoryLimit: 1
-  failedJobsHistoryLimit: 2
+  failedJobsHistoryLimit: 3
   sharedCronJobAffinity: {}
   sharedCronJobNodeSelector: {}
   sharedCronJobTolerations: []
@@ -324,7 +299,7 @@ webforms:
 
 ingress:
   enabled: false
-  type: nginx  # Options: 'nginx' or 'gatewayAPI'
+  type: nginx # Options: 'nginx' or 'gatewayAPI'
 
   hostname: bdr.eionet.europa.eu
   tlsSecretName: ""
@@ -486,17 +461,36 @@ postfix:
   mailtrap:
     httpenabled: false
 
+# ---------------------------------------------------------------------------
+# Registry applications (bdr-registry, notifications, european cache registry)
+#
+# Settings live here, not under the sub-chart keys, because this chart renders
+# them into one ConfigMap + Secret per application. The sub-charts consume
+# those via envFrom and have their inline env rendering switched off
+# (inlineEnv: false) -- inline env always beats envFrom, and the sub-charts
+# ship non-empty defaults of their own (postgres, postfix, https://replace.me/)
+# that would otherwise silently win.
+#
+# Paired releases share their application's ConfigMap/Secret:
+#   european-registry + european-registry-sync -> -european-registry-env
+#   bdr-registry-notifications + -async        -> -notifications-env
+# ---------------------------------------------------------------------------
 registries:
+  # Written once here, rendered into each application's own ConfigMap under
+  # the env var name that application expects (DATABASES_HOST vs DB_HOST etc).
   common:
     postgresHost: bdr-py3-postgres
     mailHost: bdr-py3-postfix
     mailPort: "25"
     bdrServerUrl: https://bdr.eionet.europa.eu/
-    debug: "False"
 
   bdrRegistry:
+    # false = this chart does not render the Secret; supply
+    # bdr-py3-bdr-registry-secrets yourself (External Secrets, SealedSecrets).
+    # The name is fixed either way, so envFrom below does not change.
     createSecret: true
     config:
+      debug: "False"
       adminAllBdrTables: "True"
       allowedHosts: "['bdr.eionet.europa.eu']"
       authLdapBaseDn: o=EIONET,l=Europe
@@ -536,6 +530,7 @@ registries:
   notifications:
     createSecret: true
     config:
+      debug: "False"
       allowedHosts: "['*']"
       appReverseProxy: "True"
       bcc: ""
@@ -573,12 +568,16 @@ registries:
       notificationsToken: ""
       sentryDsn: ""
     async:
+      # Rendered into -notifications-async-env and layered last in the -async
+      # release's envFrom, so these override the shared values above.
+      # Keys use ENV VAR names. Empty this map to make -async fully identical.
       config:
         DJANGO_COLLECT_STATIC: "no"
 
   europeanRegistry:
     createSecret: true
     config:
+      debug: "False"
       apiUser: ""
       autoVerifyAllCompanies: ODS,FGAS
       autoVerifyNewCompanies: ODS,FGAS
@@ -613,6 +612,10 @@ registries:
       sentryDsn: ""
       stocksApiToken: ""
 
+# --- sub-chart wiring -------------------------------------------------------
+# Each release only points at the ConfigMap/Secret it consumes. envFrom is
+# ordered: later entries win over earlier ones.
+
 bdr-registry:
   inlineEnv: false
   envFrom:
@@ -620,11 +623,6 @@ bdr-registry:
         name: bdr-py3-bdr-registry-env
     - secretRef:
         name: bdr-py3-bdr-registry-secrets
-  resources:
-    requests:
-      memory: 512Mi
-    limits:
-      memory: 512Mi
 
 bdr-registry-notifications:
   inlineEnv: false
@@ -635,11 +633,6 @@ bdr-registry-notifications:
         name: bdr-py3-notifications-secrets
   service:
     port: 12301
-  resources:
-    requests:
-      memory: 512Mi
-    limits:
-      memory: 512Mi
 
 bdr-registry-notifications-async:
   inlineEnv: false
@@ -652,13 +645,6 @@ bdr-registry-notifications-async:
         name: bdr-py3-notifications-async-env
   deploymentArgs:
     - qcluster
-  service:
-    port: 12301
-  resources:
-    requests:
-      memory: 4Gi
-    limits:
-      memory: 4Gi
 
 european-registry:
   inlineEnv: false
@@ -667,26 +653,6 @@ european-registry:
         name: bdr-py3-european-registry-env
     - secretRef:
         name: bdr-py3-european-registry-secrets
-  readinessProbe:
-    tcpSocket:
-      port: http
-    initialDelaySeconds: 15
-    periodSeconds: 10
-  livenessProbe:
-    tcpSocket:
-      port: http
-    initialDelaySeconds: 15
-    periodSeconds: 10
-  resources:
-    requests:
-      memory: 2Gi
-    limits:
-      memory: 2Gi
-  autoscaling:
-    enabled: false
-    minReplicas: 1
-    maxReplicas: 2
-    targetMemoryUtilizationPercentage: 80
 
 european-registry-sync:
   inlineEnv: false
@@ -695,26 +661,6 @@ european-registry-sync:
         name: bdr-py3-european-registry-env
     - secretRef:
         name: bdr-py3-european-registry-secrets
-  readinessProbe:
-    tcpSocket:
-      port: http
-    initialDelaySeconds: 15
-    periodSeconds: 10
-  livenessProbe:
-    tcpSocket:
-      port: http
-    initialDelaySeconds: 15
-    periodSeconds: 10
-  resources:
-    requests:
-      memory: 2Gi
-    limits:
-      memory: 2Gi
-  autoscaling:
-    enabled: false
-    minReplicas: 1
-    maxReplicas: 2
-    targetMemoryUtilizationPercentage: 80
 
 ldap:
   storage: 1Gi
@@ -759,12 +705,12 @@ apache:
   bdrRegistryUrl: ""
   bdrRegistryNotificationsUrl: ""
   registriesHealthChecks:
-  - name: "syncfgas-health"
-    enabled: false
-    url: "http://replace.me/log/check_sync/FGAS"
-  - name: "syncods-health"
-    enabled: false
-    url: "http://replace.me/log/check_sync/ODS"
+    - name: "syncfgas-health"
+      enabled: false
+      url: "http://replace.me/log/check_sync/FGAS"
+    - name: "syncods-health"
+      enabled: false
+      url: "http://replace.me/log/check_sync/ODS"
   zopeBackend: "bdr-py3-instance"
   mailTrap: "bdr-py3-postfix"
   timeout: 30

@@ -10,7 +10,6 @@ metadata:
 data:
   {{/* shared with the other registry applications */}}
   TZ: {{ .Values.timezone | quote }}
-  DEBUG: {{ $c.debug | quote }}
   DATABASES_HOST: {{ $c.postgresHost | quote }}
   POSTGRES_ADDR: {{ $c.postgresHost | quote }}
   EMAIL_HOST: {{ $c.mailHost | quote }}
@@ -18,6 +17,7 @@ data:
   MAIL_HOST: {{ printf "%s:%s" $c.mailHost ($c.mailPort | toString) | quote }}
   BDR_SERVER_URL: {{ $c.bdrServerUrl | quote }}
   {{/* specific to the notifications application */}}
+  DEBUG: {{ $n.config.debug | quote }}
   ALLOWED_HOSTS: {{ $n.config.allowedHosts | quote }}
   APP_REVERSE_PROXY: {{ $n.config.appReverseProxy | quote }}
   BCC: {{ $n.config.bcc | quote }}
