@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 0.93.2 - 10 September 2026
+- trigger new release [laszlocseh - [`a9d1e414`](https://github.com/eea/helm-charts/commit/a9d1e4147e455c633388ade8ba5f74c016db6315)]
+
 ### Version 0.93.0 - 10 September 2026
 - Automated release of [eeacms/msfd-backend:6.1.4-58](https://github.com/eea/msfd-backend/releases) [EEA Jenkins - [`027ec0c4`](https://github.com/eea/helm-charts/commit/027ec0c41d51a5786c36287bd0a137f190c770fa)]
 
