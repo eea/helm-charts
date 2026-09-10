@@ -66622,6 +66622,51 @@ entries:
     version: 0.1.0
   sentry:
   - apiVersion: v2
+    appVersion: 26.8.0
+    created: "2026-09-10T17:38:43.475421+03:00"
+    dependencies:
+    - name: memcached
+      repository: oci://registry-1.docker.io/cloudpirates
+      version: 0.9.3
+    - condition: redis.enabled
+      name: redis
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 17.11.3
+    - condition: kafka.enabled
+      name: kafka
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 29.3.14
+    - condition: zookeeper.enabled
+      name: zookeeper
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 11.4.11
+    - alias: rabbitmq
+      condition: rabbitmq.enabled
+      name: rabbitmq
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 11.16.2
+    - condition: nginx.enabled
+      name: nginx
+      repository: oci://registry-1.docker.io/cloudpirates
+      version: 0.7.0
+    - condition: seaweedfs.enabled
+      name: seaweedfs
+      repository: https://seaweedfs.github.io/seaweedfs/helm
+      version: 4.17.0
+    description: A Helm chart for Kubernetes
+    digest: 47250513df099978041bf5808413c41374db68cb3e8b99c323ec03e11d29ee3a
+    home: https://github.com/sentry-kubernetes/charts
+    icon: https://raw.githubusercontent.com/sentry-kubernetes/charts/refs/heads/develop/docs/logo.png
+    maintainers:
+    - name: sentry-kubernetes
+    name: sentry
+    sources:
+    - https://github.com/sentry-kubernetes/charts/tree/develop/charts/sentry
+    type: application
+    urls:
+    - sentry-33.8.0.tgz
+    version: 33.8.0
+  - apiVersion: v2
     appVersion: 25.9.0
     created: "2026-01-14T13:04:46.172004+01:00"
     dependencies:
@@ -70483,4 +70528,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2026-09-10T13:46:51.243071716Z"
+generated: "2026-09-10T17:38:43.455822+03:00"
