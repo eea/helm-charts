@@ -1,14 +1,6 @@
 {{/* vim: set filetype=mustache: */}}
 
-{{- define "sentry.prefix" -}}
-    {{- if .Values.prefix -}}
-        {{.Values.prefix}}-
-    {{- else -}}
-    {{- end -}}
-{{- end -}}
-
-{{- define "nginx.port" -}}{{ default "8080" .Values.nginx.containerPort }}{{- end -}}
-{{- define "relay.port" -}}3000{{- end -}}
+{{- define "relay.port" -}}{{ default 3000 .Values.relay.service.port }}{{- end -}}
 {{- define "relay.healthCheck.readinessRequestPath" -}}/api/relay/healthcheck/ready/{{- end -}}
 {{- define "relay.healthCheck.livenessRequestPath" -}}/api/relay/healthcheck/live/{{- end -}}
 {{- define "sentry.port" -}}9000{{- end -}}
@@ -17,6 +9,77 @@
 {{- define "snuba.port" -}}1218{{- end -}}
 {{- define "symbolicator.port" -}}3021{{- end -}}
 {{- define "vroom.port" -}}8085{{- end -}}
+
+{{/*
+  livenessProbe block for kafka-consumer / worker deployments that expose a
+  file-based healthcheck via `--healthcheck-file-path` / `--health-check-file`.
+
+  Arguments (dict):
+    livenessProbe:   the workload's .Values.<x>.livenessProbe value
+    healthcheckFile: file path (default: /tmp/health.txt)
+    freshnessSeconds: liveness treshold since last touch of healthcheckFile (default: 60)
+*/}}
+{{- define "sentry.livenessProbe.execHealthcheckFile" -}}
+{{- $probe := .livenessProbe -}}
+{{- if $probe.enabled -}}
+{{- $probeConfig := omit $probe "enabled" "freshnessSeconds" -}}
+{{- $file := default "/tmp/health.txt" .healthcheckFile -}}
+{{- $fresh := default 60 $probe.freshnessSeconds -}}
+livenessProbe:
+  exec:
+    command:
+      - sh
+      - -c
+      - 'test $(($(date +%s) - $(stat -c %Y {{ $file }} 2>/dev/null || echo 0))) -lt {{ $fresh }}'
+{{- with $probeConfig }}
+{{- toYaml . | nindent 2 }}
+{{- end }}
+{{- end -}}
+{{- end -}}
+
+{{/*
+  Recreate when replicas=1 (single-partition consumer, sentry-kubernetes/charts#2238),
+  else RollingUpdate. Explicit strategyType always wins.
+  Args: strategyType, replicas, autoscaling (all from .Values.<x>).
+*/}}
+{{- define "sentry.kafkaConsumer.strategyType" -}}
+{{- $autoscaling := .autoscaling | default dict -}}
+{{- if .strategyType -}}
+{{- .strategyType -}}
+{{- else if and (eq (.replicas | int) 1) (not $autoscaling.enabled) -}}
+Recreate
+{{- else -}}
+RollingUpdate
+{{- end -}}
+{{- end -}}
+
+{{/*
+  startupProbe block for kafka-consumer / worker deployments.
+  Absorbs cold-start latency so liveness can't fire during startup.
+
+  Arguments (dict):
+    startupProbe:    the workload's .Values.<x>.startupProbe value (may be unset)
+    healthcheckFile: file path (default: /tmp/health.txt)
+*/}}
+{{- define "sentry.startupProbe.execHealthcheckFile" -}}
+{{- $probe := .startupProbe | default (dict) -}}
+{{- $enabled := true -}}
+{{- if hasKey $probe "enabled" -}}{{- $enabled = $probe.enabled -}}{{- end -}}
+{{- if $enabled -}}
+{{- $defaults := dict "periodSeconds" 5 "failureThreshold" 60 -}}
+{{- $probeConfig := omit (merge (deepCopy $probe) $defaults) "enabled" -}}
+{{- $file := default "/tmp/health.txt" .healthcheckFile -}}
+startupProbe:
+  exec:
+    command:
+      - sh
+      - -c
+      - touch {{ $file }}
+{{- with $probeConfig }}
+{{- toYaml . | nindent 2 }}
+{{- end }}
+{{- end -}}
+{{- end -}}
 
 {{- define "relay.image" -}}
 {{- default "ghcr.io/getsentry/relay" .Values.images.relay.repository -}}
@@ -41,9 +104,17 @@
 {{- end -}}
 
 {{- define "dbCheck.image" -}}
-{{- default "subfuzion/netcat" .Values.hooks.dbCheck.image.repository -}}
+{{- default "busybox" .Values.hooks.dbCheck.image.repository -}}
 :
-{{- default "latest" .Values.hooks.dbCheck.image.tag -}}
+{{- default "1.38.0" .Values.hooks.dbCheck.image.tag -}}
+{{- end -}}
+
+{{- define "relay.configRender.image" -}}
+{{- $configRender := default (dict) .Values.relay.configRender -}}
+{{- $image := default (dict) $configRender.image -}}
+{{- default "busybox" $image.repository -}}
+:
+{{- default "1.36" $image.tag -}}
 {{- end -}}
 
 {{- define "vroom.image" -}}
@@ -56,6 +127,42 @@
 {{- default "ghcr.io/getsentry/uptime-checker" .Values.images.uptimeChecker.repository -}}
 :
 {{- default .Chart.AppVersion .Values.images.uptimeChecker.tag -}}
+{{- end -}}
+
+{{- define "taskbroker.image" -}}
+{{- default "ghcr.io/getsentry/taskbroker" .Values.images.taskbroker.repository -}}
+:
+{{- default .Chart.AppVersion .Values.images.taskbroker.tag -}}
+{{- end -}}
+
+{{- define "launchpad.image" -}}
+{{- default "ghcr.io/getsentry/launchpad" .Values.images.launchpad.repository -}}
+:
+{{- default .Chart.AppVersion .Values.images.launchpad.tag -}}
+{{- end -}}
+
+{{- define "launchpad.secretName" -}}
+{{- default (printf "%s-launchpad-secret" (include "sentry.fullname" .)) .Values.launchpadTaskWorker.existingSecret -}}
+{{- end -}}
+
+{{- define "launchpad.secretKey" -}}
+{{- default "rpc-shared-secret" .Values.launchpadTaskWorker.existingSecretKey -}}
+{{- end -}}
+
+{{- define "launchpad.enabled" -}}
+{{- if and (has "feature-complete" .Values.profiles) .Values.launchpadTaskWorker.enabled .Values.sentry.taskBroker.enabled -}}true{{- end -}}
+{{- end -}}
+
+{{/*
+GeoIP credentials: the updater Job is enabled by either a plaintext accountID or an
+externally-managed Secret, and reads whichever Secret is in play via envFrom.
+*/}}
+{{- define "sentry.geodata.enabled" -}}
+{{- if or .Values.geodata.accountID .Values.geodata.existingSecret -}}true{{- end -}}
+{{- end -}}
+
+{{- define "sentry.geodata.secretName" -}}
+{{- default (printf "%s-geoip-env" (include "sentry.fullname" .)) .Values.geodata.existingSecret -}}
 {{- end -}}
 
 {{/*
@@ -92,64 +199,32 @@ If release name contains chart name it will be used as a full name.
 
 
 {{/*
-Get KubeVersion removing pre-release information.
+Resolve ingress controller style for path rules.
 */}}
-{{- define "sentry.kubeVersion" -}}
-  {{- default .Capabilities.KubeVersion.Version (regexFind "v[0-9]+\\.[0-9]+\\.[0-9]+" .Capabilities.KubeVersion.Version) -}}
-{{- end -}}
-
-{{/*
-Return the appropriate apiVersion for ingress.
-*/}}
-{{- define "sentry.ingress.apiVersion" -}}
-  {{- if and (.Capabilities.APIVersions.Has "networking.k8s.io/v1") (semverCompare ">= 1.19.x" (include "sentry.kubeVersion" .)) -}}
-      {{- print "networking.k8s.io/v1" -}}
-  {{- else if .Capabilities.APIVersions.Has "networking.k8s.io/v1beta1" -}}
-    {{- print "networking.k8s.io/v1beta1" -}}
+{{- define "sentry.ingress.controller" -}}
+  {{- $style := default "" .Values.ingress.regexPathStyle -}}
+  {{- if $style -}}
+    {{- if or (eq $style "alb") (eq $style "aws-alb") -}}
+      {{- print "alb" -}}
+    {{- else if or (eq $style "gce") (eq $style "gke") (eq $style "gce-internal") -}}
+      {{- print "gce" -}}
+    {{- else -}}
+      {{- $style -}}
+    {{- end -}}
+  {{- else if .Values.ingress.ingressClassName -}}
+    {{- $class := .Values.ingress.ingressClassName -}}
+    {{- if or (eq $class "alb") (eq $class "aws-alb") -}}
+      {{- print "alb" -}}
+    {{- else if or (eq $class "gce") (eq $class "gke") (eq $class "gce-internal") -}}
+      {{- print "gce" -}}
+    {{- else if eq $class "traefik" -}}
+      {{- print "traefik" -}}
+    {{- else -}}
+      {{- print "nginx" -}}
+    {{- end -}}
   {{- else -}}
-    {{- print "extensions/v1beta1" -}}
+    {{- print "nginx" -}}
   {{- end -}}
-{{- end -}}
-
-{{/*
-Return if ingress is stable.
-*/}}
-{{- define "sentry.ingress.isStable" -}}
-  {{- eq (include "sentry.ingress.apiVersion" .) "networking.k8s.io/v1" -}}
-{{- end -}}
-
-{{/*
-Return the appropriate batch apiVersion for cronjobs.
-batch/v1beta1 will no longer be served in v1.25
-See more at https://kubernetes.io/docs/reference/using-api/deprecation-guide/#cronjob-v125
-*/}}
-{{- define "sentry.batch.apiVersion" -}}
-  {{- if and (.Capabilities.APIVersions.Has "batch/v1") (semverCompare ">= 1.21.x" (include "sentry.kubeVersion" .)) -}}
-      {{- print "batch/v1" -}}
-  {{- else if .Capabilities.APIVersions.Has "batch/v1beta1" -}}
-    {{- print "batch/v1beta1" -}}
-  {{- end -}}
-{{- end -}}
-
-{{/*
-Return if batch is stable.
-*/}}
-{{- define "sentry.batch.isStable" -}}
-  {{- eq (include "sentry.batch.apiVersion" .) "batch/v1" -}}
-{{- end -}}
-
-{{/*
-Return if ingress supports ingressClassName.
-*/}}
-{{- define "sentry.ingress.supportsIngressClassName" -}}
-  {{- or (eq (include "sentry.ingress.isStable" .) "true") (and (eq (include "sentry.ingress.apiVersion" .) "networking.k8s.io/v1beta1") (semverCompare ">= 1.18.x" (include "sentry.kubeVersion" .))) -}}
-{{- end -}}
-
-{{/*
-Return if ingress supports pathType.
-*/}}
-{{- define "sentry.ingress.supportsPathType" -}}
-  {{- or (eq (include "sentry.ingress.isStable" .) "true") (and (eq (include "sentry.ingress.apiVersion" .) "networking.k8s.io/v1beta1") (semverCompare ">= 1.18.x" (include "sentry.kubeVersion" .))) -}}
 {{- end -}}
 
 {{/*
@@ -160,7 +235,7 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- if .Values.postgresql.fullnameOverride -}}
 {{- .Values.postgresql.fullnameOverride | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
-{{- printf "%s-postgresql" (include "sentry.fullname" .) | trunc 63 | trimSuffix "-" -}}
+{{- printf "%s-%s" (include "sentry.fullname" .) "postgresql" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 {{- end -}}
 
@@ -177,29 +252,8 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- end -}}
 {{- end -}}
 
-{{- define "sentry.rabbitmq.fullname" -}}
-{{- printf "%s-%s" .Release.Name "rabbitmq" | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
-{{- define "sentry.clickhouse.fullname" -}}
-{{- printf "%s-%s" .Release.Name "clickhouse" | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
 {{- define "sentry.kafka.fullname" -}}
 {{- printf "%s-%s" .Release.Name "kafka" | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
-{{- define "sentry.zookeeper.fullname" -}}
-{{- if .Values.kafka.zookeeper.fullnameOverride -}}
-{{- .Values.kafka.zookeeper.fullnameOverride | trunc 63 | trimSuffix "-" -}}
-{{- else -}}
-{{- $name := default .Chart.Name .Values.kafka.zookeeper.nameOverride -}}
-{{- if contains $name .Release.Name -}}
-{{- .Release.Name | trunc 63 | trimSuffix "-" -}}
-{{- else -}}
-{{- printf "%s-%s" .Release.Name "zookeeper" | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-{{- end -}}
 {{- end -}}
 
 {{/*
@@ -212,18 +266,6 @@ Set postgres host
 {{ required "A valid .Values.externalPostgresql.host is required" .Values.externalPostgresql.host }}
 {{- end -}}
 {{- end -}}
-
-{{/*
-Set postgres secret
-*/}}
-{{- define "sentry.postgresql.secret" -}}
-{{- if .Values.postgresql.enabled -}}
-{{- template "sentry.postgresql.fullname" . -}}
-{{- else -}}
-{{- template "sentry.fullname" . -}}
-{{- end -}}
-{{- end -}}
-
 {{/*
 Set postgres port
 */}}
@@ -267,18 +309,6 @@ Set redis host
 {{ required "A valid .Values.externalRedis.host is required" .Values.externalRedis.host }}
 {{- end -}}
 {{- end -}}
-
-{{/*
-Set redis secret
-*/}}
-{{- define "sentry.redis.secret" -}}
-{{- if .Values.redis.enabled -}}
-{{- template "sentry.redis.fullname" . -}}
-{{- else -}}
-{{- template "sentry.fullname" . -}}
-{{- end -}}
-{{- end -}}
-
 {{/*
 Set redis port
 */}}
@@ -342,24 +372,12 @@ Build full Redis URI, including creds and db when available
 {{- end -}}
 {{- end -}}
 
-
-{{/*
-Create the name of the service account to use
-*/}}
-{{- define "sentry.serviceAccountName" -}}
-{{- if .Values.serviceAccount.create -}}
-    {{ default (include "sentry.fullname" .) .Values.serviceAccount.name }}
-{{- else -}}
-    {{ default "default" .Values.serviceAccount.name }}
-{{- end -}}
-{{- end -}}
-
 {{/*
 Set ClickHouse host
 */}}
 {{- define "sentry.clickhouse.host" -}}
 {{- if .Values.clickhouse.enabled -}}
-{{- template "sentry.clickhouse.fullname" . -}}
+{{ include "sentry.fullname" . }}-clickhouse
 {{- else -}}
 {{ required "A valid .Values.externalClickhouse.host is required" .Values.externalClickhouse.host }}
 {{- end -}}
@@ -369,91 +387,56 @@ Set ClickHouse host
 Set ClickHouse port
 */}}
 {{- define "sentry.clickhouse.port" -}}
-{{- if .Values.clickhouse.enabled -}}
-{{- default 9000 .Values.clickhouse.clickhouse.tcp_port }}
-{{- else -}}
 {{ required "A valid .Values.externalClickhouse.tcpPort is required" .Values.externalClickhouse.tcpPort }}
-{{- end -}}
 {{- end -}}
 
 {{/*
 Set ClickHouse HTTP port
 */}}
 {{- define "sentry.clickhouse.http_port" -}}
-{{- if .Values.clickhouse.enabled -}}
-{{- default 8123 .Values.clickhouse.clickhouse.http_port }}
-{{- else -}}
 {{ required "A valid .Values.externalClickhouse.httpPort is required" .Values.externalClickhouse.httpPort }}
-{{- end -}}
 {{- end -}}
 
 {{/*
 Set ClickHouse Database
 */}}
 {{- define "sentry.clickhouse.database" -}}
-{{- if .Values.clickhouse.enabled -}}
-default
-{{- else -}}
 {{ required "A valid .Values.externalClickhouse.database is required" .Values.externalClickhouse.database }}
-{{- end -}}
 {{- end -}}
 
 {{/*
 Set ClickHouse User
 */}}
 {{- define "sentry.clickhouse.username" -}}
-{{- if .Values.clickhouse.enabled -}}
-  {{- if .Values.clickhouse.clickhouse.configmap.users.enabled -}}
-{{ (index .Values.clickhouse.clickhouse.configmap.users.user 0).name }}
-  {{- else -}}
-default
-  {{- end -}}
-{{- else -}}
 {{ required "A valid .Values.externalClickhouse.username is required" .Values.externalClickhouse.username }}
-{{- end -}}
 {{- end -}}
 
 {{/*
 Set ClickHouse Password
 */}}
 {{- define "sentry.clickhouse.password" -}}
-{{- if .Values.clickhouse.enabled -}}
-  {{- if .Values.clickhouse.clickhouse.configmap.users.enabled -}}
-{{ (index .Values.clickhouse.clickhouse.configmap.users.user 0).config.password }}
-  {{- else -}}
-  {{- end -}}
-{{- else -}}
 {{ .Values.externalClickhouse.password }}
-{{- end -}}
 {{- end -}}
 
 {{/*
 Set ClickHouse cluster name
 */}}
 {{- define "sentry.clickhouse.cluster.name" -}}
-{{- if .Values.clickhouse.enabled -}}
-{{ .Release.Name | printf "%s-clickhouse" }}
-{{- else -}}
 {{ required "A valid .Values.externalClickhouse.clusterName is required" .Values.externalClickhouse.clusterName }}
-{{- end -}}
 {{- end -}}
 
 {{/*
 Set ClickHouse distributed cluster name
 */}}
 {{- define "sentry.clickhouse.distributed.cluster.name" -}}
-{{- if .Values.clickhouse.enabled -}}
-{{ .Release.Name | printf "%s-clickhouse" }}
-{{- else -}}
 {{ default .Values.externalClickhouse.clusterName .Values.externalClickhouse.distributedClusterName }}
-{{- end -}}
 {{- end -}}
 
 {{/*
 Set ClickHouse secure setting
 */}}
 {{- define "sentry.clickhouse.secure" -}}
-{{- if and (.Values.externalClickhouse.enabled) (.Values.externalClickhouse.secure) -}}
+{{- if .Values.externalClickhouse.secure -}}
 True
 {{- end -}}
 {{- end -}}
@@ -462,7 +445,7 @@ True
 Set ClickHouse ca_certs setting
 */}}
 {{- define "sentry.clickhouse.ca_certs" -}}
-{{- if and (.Values.externalClickhouse.enabled) (.Values.externalClickhouse.ca_certs) -}}
+{{- if .Values.externalClickhouse.ca_certs -}}
 {{ .Values.externalClickhouse.ca_certs }}
 {{- end -}}
 {{- end -}}
@@ -471,7 +454,7 @@ Set ClickHouse ca_certs setting
 Set ClickHouse verify ca setting
 */}}
 {{- define "sentry.clickhouse.verify" -}}
-{{- if and (.Values.externalClickhouse.enabled) (.Values.externalClickhouse.verify) -}}
+{{- if .Values.externalClickhouse.verify -}}
 True
 {{- end -}}
 {{- end -}}
@@ -622,17 +605,6 @@ Set Senty socket.timeout for Kafka
 {{- end -}}
 
 {{/*
-Set RabbitMQ host
-*/}}
-{{- define "sentry.rabbitmq.host" -}}
-{{- if .Values.rabbitmq.enabled -}}
-{{- default "sentry-rabbitmq-ha"  (include "sentry.rabbitmq.fullname" .) -}}
-{{- else -}}
-{{ .Values.rabbitmq.host }}
-{{- end -}}
-{{- end -}}
-
-{{/*
 Common Snuba environment variables
 */}}
 {{- define "sentry.snuba.env" -}}
@@ -640,6 +612,23 @@ Common Snuba environment variables
   value: /etc/snuba/settings.py
 - name: DEFAULT_BROKERS
   value: {{ include "sentry.kafka.bootstrap_servers_string" . | quote }}
+{{- if and (not .Values.kafka.enabled) .Values.externalKafka.sasl.existingSecret }}
+- name: KAFKA_SASL_MECHANISM
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Values.externalKafka.sasl.existingSecret }}
+      key: {{ default "mechanism" .Values.externalKafka.sasl.existingSecretKeys.mechanism }}
+- name: KAFKA_SASL_USERNAME
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Values.externalKafka.sasl.existingSecret }}
+      key: {{ default "username" .Values.externalKafka.sasl.existingSecretKeys.username }}
+- name: KAFKA_SASL_PASSWORD
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Values.externalKafka.sasl.existingSecret }}
+      key: {{ default "password" .Values.externalKafka.sasl.existingSecretKeys.password }}
+{{- else }}
 {{- $sentryKafkaSaslMechanism := include "sentry.kafka.sasl_mechanism" . -}}
 {{- if not (eq "None" $sentryKafkaSaslMechanism) }}
 - name: KAFKA_SASL_MECHANISM
@@ -654,6 +643,7 @@ Common Snuba environment variables
 {{- if not (eq "None" $sentryKafkaSaslPassword) }}
 - name: KAFKA_SASL_PASSWORD
   value: {{ $sentryKafkaSaslPassword | quote }}
+{{- end }}
 {{- end }}
 - name: KAFKA_SECURITY_PROTOCOL
   value: {{ include "sentry.kafka.security_protocol" . | quote }}
@@ -709,9 +699,79 @@ Set external Clickhouse password from existingSecret
 - name: SENTRY_KAFKA_BROKERS_OCCURRENCES
   value: {{ include "sentry.kafka.bootstrap_servers_string" . | quote }}
 - name: SENTRY_BUCKET_PROFILES
-  value: "file:///var/vroom/sentry-profiles"
+  value: {{ .Values.vroom.persistence.bucketString | quote }}
 - name: SENTRY_SNUBA_HOST
   value: http://{{ template "sentry.fullname" . }}-snuba:{{ template "snuba.port" . }}
+{{- end -}}
+
+{{/*
+TaskBroker Kafka cluster address/auth via TASKBROKER_KAFKA_CLUSTERS__DEFAULT__*.
+Topic maps (including hyphenated names) live in the mounted config.yml ConfigMap.
+See: https://github.com/getsentry/taskbroker/blob/main/docs/kafka-config-migration.md
+*/}}
+{{- define "sentry.taskbroker.kafka.env" -}}
+- name: TASKBROKER_KAFKA_CLUSTERS__DEFAULT__ADDRESS
+  value: {{ include "sentry.kafka.bootstrap_servers_string" . | quote }}
+{{ if not .Values.kafka.enabled -}}
+{{- $securityProtocol := include "sentry.kafka.security_protocol" . }}
+- name: TASKBROKER_KAFKA_CLUSTERS__DEFAULT__SECURITY_PROTOCOL
+  value: {{ $securityProtocol | quote }}
+{{- if regexMatch "^SASL_" $securityProtocol }}
+{{- if .Values.externalKafka.sasl.existingSecret }}
+- name: TASKBROKER_KAFKA_CLUSTERS__DEFAULT__SASL_MECHANISM
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Values.externalKafka.sasl.existingSecret }}
+      key: {{ default "mechanism" .Values.externalKafka.sasl.existingSecretKeys.mechanism }}
+- name: TASKBROKER_KAFKA_CLUSTERS__DEFAULT__SASL_USERNAME
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Values.externalKafka.sasl.existingSecret }}
+      key: {{ default "username" .Values.externalKafka.sasl.existingSecretKeys.username }}
+- name: TASKBROKER_KAFKA_CLUSTERS__DEFAULT__SASL_PASSWORD
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Values.externalKafka.sasl.existingSecret }}
+      key: {{ default "password" .Values.externalKafka.sasl.existingSecretKeys.password }}
+{{- else }}
+{{- $saslMechanism := include "sentry.kafka.sasl_mechanism" . -}}
+{{- $saslUsername := include "sentry.kafka.sasl_username" . -}}
+{{- $saslPassword := include "sentry.kafka.sasl_password" . -}}
+{{- if not (eq "None" $saslMechanism) }}
+- name: TASKBROKER_KAFKA_CLUSTERS__DEFAULT__SASL_MECHANISM
+  value: {{ $saslMechanism | quote }}
+{{- end }}
+{{- if not (eq "None" $saslUsername) }}
+- name: TASKBROKER_KAFKA_CLUSTERS__DEFAULT__SASL_USERNAME
+  value: {{ $saslUsername | quote }}
+{{- end }}
+{{- if not (eq "None" $saslPassword) }}
+- name: TASKBROKER_KAFKA_CLUSTERS__DEFAULT__SASL_PASSWORD
+  value: {{ $saslPassword | quote }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end -}}
+
+{{- define "launchpadTaskWorker.env" -}}
+- name: LAUNCHPAD_WORKER_RPC_HOST
+  value: {{ printf "%s-taskbroker-default:50051" (include "sentry.fullname" .) | quote }}
+- name: LAUNCHPAD_WORKER_CONCURRENCY
+  value: {{ .Values.launchpadTaskWorker.concurrency | quote }}
+- name: LAUNCHPAD_WORKER_HEALTH_CHECK_FILE_PATH
+  value: "/tmp/health.txt"
+- name: KAFKA_BOOTSTRAP_SERVERS
+  value: {{ include "sentry.kafka.bootstrap_servers_string" . | quote }}
+- name: SENTRY_BASE_URL
+  value: {{ printf "http://%s-web:%s" (include "sentry.fullname" .) (include "sentry.port" .) | quote }}
+- name: LAUNCHPAD_ENV
+  value: "self-hosted"
+- name: LAUNCHPAD_RPC_SHARED_SECRET
+  valueFrom:
+    secretKeyRef:
+      name: {{ include "launchpad.secretName" . }}
+      key: {{ include "launchpad.secretKey" . }}
 {{- end -}}
 
 {{- define "uptimeChecker.env" -}}
@@ -733,6 +793,120 @@ Set external Clickhouse password from existingSecret
 {{- end }}
 - name: UPTIME_CHECKER_REDIS_HOST
   value: {{ include "sentry.redis.uri" . | quote }}
+{{- end -}}
+
+{{/*
+Sentry-fleet credentials that the chart manages itself.
+
+Only plaintext values appear here. When a credential is supplied through an
+existingSecret, sentry.env references that Secret directly and the key is
+omitted, so the two paths are never both active for the same credential.
+
+Consumed by templates/sentry/secret-sentry-env.yaml and, through
+sentry.config.checksum, by the pod annotations that roll workloads when a
+plaintext credential is rotated.
+*/}}
+{{- define "sentry.credentials.sentryEnv.data" -}}
+{{- if and (eq (default "" .Values.filestore.backend) "s3") (not .Values.filestore.s3.existingSecret) }}
+{{- with .Values.filestore.s3.accessKey }}
+S3_ACCESS_KEY_ID: {{ . | b64enc | quote }}
+{{- end }}
+{{- with .Values.filestore.s3.secretKey }}
+S3_SECRET_ACCESS_KEY: {{ . | b64enc | quote }}
+{{- end }}
+{{- end }}
+{{- $replayS3 := .Values.replay.storage.s3 | default dict }}
+{{- if and (eq (default "" .Values.replay.storage.backend) "s3") (not $replayS3.existingSecret) }}
+{{- with $replayS3.accessKey }}
+REPLAY_S3_ACCESS_KEY_ID: {{ . | b64enc | quote }}
+{{- end }}
+{{- with $replayS3.secretKey }}
+REPLAY_S3_SECRET_ACCESS_KEY: {{ . | b64enc | quote }}
+{{- end }}
+{{- end }}
+{{- $profilesS3 := .Values.filestore.profiles.s3 | default dict }}
+{{- if and (eq (default "" .Values.filestore.profiles.backend) "s3") (not $profilesS3.existingSecret) }}
+{{- with $profilesS3.accessKey }}
+PROFILES_S3_ACCESS_KEY_ID: {{ . | b64enc | quote }}
+{{- end }}
+{{- with $profilesS3.secretKey }}
+PROFILES_S3_SECRET_ACCESS_KEY: {{ . | b64enc | quote }}
+{{- end }}
+{{- end }}
+{{- $nodestoreS3 := .Values.nodestore.s3 | default dict }}
+{{- if and (eq (default "" .Values.nodestore.backend) "s3") (not $nodestoreS3.existingSecret) }}
+{{- with $nodestoreS3.accessKeyId }}
+NODESTORE_S3_ACCESS_KEY_ID: {{ . | b64enc | quote }}
+{{- end }}
+{{- with $nodestoreS3.secretAccessKey }}
+NODESTORE_S3_SECRET_ACCESS_KEY: {{ . | b64enc | quote }}
+{{- end }}
+{{- end }}
+{{- if not .Values.github.existingSecret }}
+{{- with .Values.github.privateKey }}
+GITHUB_APP_PRIVATE_KEY: {{ . | b64enc | quote }}
+{{- end }}
+{{- with .Values.github.webhookSecret }}
+GITHUB_APP_WEBHOOK_SECRET: {{ . | b64enc | quote }}
+{{- end }}
+{{- with .Values.github.clientId }}
+GITHUB_APP_CLIENT_ID: {{ . | b64enc | quote }}
+{{- end }}
+{{- with .Values.github.clientSecret }}
+GITHUB_APP_CLIENT_SECRET: {{ . | b64enc | quote }}
+{{- end }}
+{{- end }}
+{{- if and (not .Values.google.existingSecret) .Values.google.clientId .Values.google.clientSecret }}
+GOOGLE_AUTH_CLIENT_ID: {{ .Values.google.clientId | b64enc | quote }}
+GOOGLE_AUTH_CLIENT_SECRET: {{ .Values.google.clientSecret | b64enc | quote }}
+{{- end }}
+{{- if and (not .Values.slack.existingSecret) .Values.slack.clientId .Values.slack.clientSecret .Values.slack.signingSecret }}
+SLACK_CLIENT_ID: {{ .Values.slack.clientId | b64enc | quote }}
+SLACK_CLIENT_SECRET: {{ .Values.slack.clientSecret | b64enc | quote }}
+SLACK_SIGNING_SECRET: {{ .Values.slack.signingSecret | b64enc | quote }}
+{{- end }}
+{{- if and (not .Values.discord.existingSecret) .Values.discord.applicationId .Values.discord.publicKey .Values.discord.clientSecret .Values.discord.botToken }}
+DISCORD_APPLICATION_ID: {{ .Values.discord.applicationId | b64enc | quote }}
+DISCORD_PUBLIC_KEY: {{ .Values.discord.publicKey | b64enc | quote }}
+DISCORD_CLIENT_SECRET: {{ .Values.discord.clientSecret | b64enc | quote }}
+DISCORD_BOT_TOKEN: {{ .Values.discord.botToken | b64enc | quote }}
+{{- end }}
+{{- end -}}
+
+{{/*
+Whether the chart manages any Sentry-fleet credential itself. Guards both the
+generated Secret and the envFrom that consumes it, so an envFrom can never
+reference a Secret that was not rendered.
+*/}}
+{{- define "sentry.credentials.sentryEnv.enabled" -}}
+{{- if (include "sentry.credentials.sentryEnv.data" . | trim) }}true{{ end }}
+{{- end -}}
+
+{{/*
+envFrom entry for the chart-managed Sentry credential Secret. The reference is
+optional because every consumer of these variables already treats them as
+absent-by-default: the SENTRY_OPTIONS guards omit the option entirely and the
+S3 reads fall back to an empty string. Tolerating an absent Secret therefore
+degrades to the same "not configured" path rather than blocking pod startup,
+which also lets pre-upgrade hooks run before the Secret is applied.
+*/}}
+{{- define "sentry.envFrom" -}}
+{{- if (include "sentry.credentials.sentryEnv.enabled" .) -}}
+envFrom:
+  - secretRef:
+      name: {{ template "sentry.fullname" . }}-sentry-env
+      optional: true
+{{- end -}}
+{{- end -}}
+
+{{/*
+Rollout trigger for the Sentry fleet. Hashes the ConfigMap content together
+with the generated Secret data, so rotating a plaintext credential that now
+lives in the Secret still restarts pods. Reduces to sha256(config) when no
+credential is chart-managed.
+*/}}
+{{- define "sentry.config.checksum" -}}
+{{- printf "%s%s" (include "sentry.config" .) (include "sentry.credentials.sentryEnv.data" . | trim) | sha256sum -}}
 {{- end -}}
 
 {{/*
@@ -758,14 +932,35 @@ Common Sentry environment variables
 {{- end }}
 
 {{/*
+Set Kafka SASL credentials from existingSecret
+*/}}
+{{- if and (not .Values.kafka.enabled) .Values.externalKafka.sasl.existingSecret }}
+- name: KAFKA_SASL_MECHANISM
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Values.externalKafka.sasl.existingSecret }}
+      key: {{ default "mechanism" .Values.externalKafka.sasl.existingSecretKeys.mechanism }}
+- name: KAFKA_SASL_USERNAME
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Values.externalKafka.sasl.existingSecret }}
+      key: {{ default "username" .Values.externalKafka.sasl.existingSecretKeys.username }}
+- name: KAFKA_SASL_PASSWORD
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Values.externalKafka.sasl.existingSecret }}
+      key: {{ default "password" .Values.externalKafka.sasl.existingSecretKeys.password }}
+{{- end }}
+
+{{/*
 Set external Postgresql password from existingSecret
 */}}
 {{- if .Values.postgresql.enabled }}
 - name: POSTGRES_PASSWORD
   valueFrom:
     secretKeyRef:
-      name: {{ default (printf "%s-postgresql" (include "sentry.fullname" .)) .Values.postgresql.auth.existingSecret }}
-      key: {{ default "postgres-password" .Values.postgresql.auth.secretKeys.adminPasswordKey }}
+      name: {{ default (include "sentry.postgresql.fullname" .) .Values.postgresql.auth.existingSecret }}
+      key: {{ default "password" .Values.postgresql.auth.secretKeys.userPasswordKey }}
 {{- else if .Values.externalPostgresql.password }}
 - name: POSTGRES_PASSWORD
   value: {{ .Values.externalPostgresql.password | quote }}
@@ -860,6 +1055,54 @@ Set S3
 {{- end }}
 
 {{/*
+Set Replay S3
+*/}}
+{{- if and (eq .Values.replay.storage.backend "s3") .Values.replay.storage.s3.existingSecret }}
+- name: REPLAY_S3_ACCESS_KEY_ID
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Values.replay.storage.s3.existingSecret }}
+      key: {{ default "s3-access-key-id" .Values.replay.storage.s3.accessKeyIdRef }}
+- name: REPLAY_S3_SECRET_ACCESS_KEY
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Values.replay.storage.s3.existingSecret }}
+      key: {{ default "s3-secret-access-key" .Values.replay.storage.s3.secretAccessKeyRef }}
+{{- end }}
+
+{{/*
+Set Profiles S3
+*/}}
+{{- if and (eq .Values.filestore.profiles.backend "s3") (.Values.filestore.profiles.s3) (.Values.filestore.profiles.s3.existingSecret) }}
+- name: PROFILES_S3_ACCESS_KEY_ID
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Values.filestore.profiles.s3.existingSecret }}
+      key: {{ default "s3-access-key-id" .Values.filestore.profiles.s3.accessKeyIdRef }}
+- name: PROFILES_S3_SECRET_ACCESS_KEY
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Values.filestore.profiles.s3.existingSecret }}
+      key: {{ default "s3-secret-access-key" .Values.filestore.profiles.s3.secretAccessKeyRef }}
+{{- end }}
+
+{{/*
+Set Nodestore S3
+*/}}
+{{- if and (eq .Values.nodestore.backend "s3") (.Values.nodestore.s3) (.Values.nodestore.s3.existingSecret) }}
+- name: NODESTORE_S3_ACCESS_KEY_ID
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Values.nodestore.s3.existingSecret }}
+      key: {{ default "s3-access-key-id" .Values.nodestore.s3.accessKeyIdRef }}
+- name: NODESTORE_S3_SECRET_ACCESS_KEY
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Values.nodestore.s3.existingSecret }}
+      key: {{ default "s3-secret-access-key" .Values.nodestore.s3.secretAccessKeyRef }}
+{{- end }}
+
+{{/*
 Set redis password
 */}}
 {{- if .Values.redis.enabled }}
@@ -906,9 +1149,11 @@ Set redis password
 {{/*
 Set google application
 */}}
-{{- if and (eq .Values.filestore.backend "gcs") .Values.filestore.gcs.secretName }}
+{{- $gcsSecretName := include "sentry.gcs.secretName" . -}}
+{{- $gcsCredentialsFile := include "sentry.gcs.credentialsFile" . -}}
+{{- if and $gcsSecretName $gcsCredentialsFile }}
 - name: GOOGLE_APPLICATION_CREDENTIALS
-  value: /var/run/secrets/google/{{ .Values.filestore.gcs.credentialsFile }}
+  value: /var/run/secrets/google/{{ $gcsCredentialsFile }}
 {{- end }}
 
 {{/*
@@ -973,6 +1218,17 @@ Set discord
 {{- end }}
 
 {{/*
+Set pagerduty
+*/}}
+{{- if .Values.pagerduty.existingSecret }}
+- name: PAGERDUTY_APP_ID
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Values.pagerduty.existingSecret }}
+      key: {{ default "app-id" .Values.pagerduty.existingSecretAppId }}
+{{- end }}
+
+{{/*
 Set github app
 */}}
 {{- if and .Values.github.existingSecret }}
@@ -996,6 +1252,20 @@ Set github app
     secretKeyRef:
       name: {{ .Values.github.existingSecret }}
       key: {{ default "client-secret" .Values.github.existingSecretClientSecretKey }}
+{{- if .Values.github.existingSecretAppIdKey }}
+- name: GITHUB_APP_ID
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Values.github.existingSecret }}
+      key: {{ .Values.github.existingSecretAppIdKey }}
+{{- end }}
+{{- if .Values.github.existingSecretAppNameKey }}
+- name: GITHUB_APP_NAME
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Values.github.existingSecret }}
+      key: {{ .Values.github.existingSecretAppNameKey }}
+{{- end }}
 {{- end }}
 
 {{/*
@@ -1023,6 +1293,25 @@ Set openai api
     secretKeyRef:
       name: {{ .Values.openai.existingSecret }}
       key: {{ default "api-token" .Values.openai.existingSecretKey }}
+{{- end }}
+
+{{/*
+Set JS SDK Loader assets setup
+*/}}
+{{- if .Values.sentry.jsSdk.setupAssets }}
+- name: SETUP_JS_SDK_ASSETS
+  value: "1"
+{{- end }}
+
+{{/*
+Launchpad RPC shared secret (required by Sentry web and launchpad-taskworker)
+*/}}
+{{- if eq (include "launchpad.enabled" .) "true" }}
+- name: LAUNCHPAD_RPC_SHARED_SECRET
+  valueFrom:
+    secretKeyRef:
+      name: {{ include "launchpad.secretName" . }}
+      key: {{ include "launchpad.secretKey" . }}
 {{- end }}
 {{- end -}}
 
@@ -1073,8 +1362,8 @@ Pgbouncer environment variables
 - name: POSTGRESQL_PASSWORD
   valueFrom:
     secretKeyRef:
-      name: {{ default (printf "%s-postgresql" (include "sentry.fullname" .)) .Values.postgresql.auth.existingSecret }}
-      key: {{ default "postgres-password" .Values.postgresql.auth.secretKeys.adminPasswordKey }}
+      name: {{ default (include "sentry.postgresql.fullname" .) .Values.postgresql.auth.existingSecret }}
+      key: {{ default "password" .Values.postgresql.auth.secretKeys.userPasswordKey }}
 {{- else if .Values.externalPostgresql.password }}
 - name: POSTGRESQL_PASSWORD
   value: {{ .Values.externalPostgresql.password | quote }}
@@ -1095,6 +1384,57 @@ Pgbouncer environment variables
 - name: POSTGRESQL_USERNAME
   value: {{ include "sentry.postgresql.username" . | quote }}
 {{- end }}
+{{- end -}}
+
+{{/*
+GCS settings for filestore/replay/profiles storage.
+*/}}
+{{- define "sentry.gcs.sharedValue" -}}
+{{- $ctx := .ctx -}}
+{{- $field := .field -}}
+{{- $filestoreGcs := default dict $ctx.Values.filestore.gcs -}}
+{{- $replayGcs := default dict $ctx.Values.replay.storage.gcs -}}
+{{- $profilesGcs := default dict $ctx.Values.filestore.profiles.gcs -}}
+
+{{- /* Collect all GCS-backed field configs as a list of (backend, value, name) tuples */ -}}
+{{- $sources := list
+  (dict "backend" $ctx.Values.filestore.backend          "value" (default "" (index $filestoreGcs $field)) "name" (printf "filestore.gcs.%s" $field))
+  (dict "backend" $ctx.Values.replay.storage.backend     "value" (default "" (index $replayGcs $field))    "name" (printf "replay.storage.gcs.%s" $field))
+  (dict "backend" $ctx.Values.filestore.profiles.backend "value" (default "" (index $profilesGcs $field))  "name" (printf "filestore.profiles.gcs.%s" $field))
+-}}
+
+{{- /* Filter to only active GCS sources */ -}}
+{{- $gcsSources := list -}}
+{{- range $sources -}}
+  {{- if eq .backend "gcs" -}}
+    {{- $gcsSources = append $gcsSources . -}}
+  {{- end -}}
+{{- end -}}
+
+{{- /* Cross-check all pairs: if both have a value set, they must match */ -}}
+{{- range $i, $a := $gcsSources -}}
+  {{- range $j, $b := $gcsSources -}}
+    {{- if and (gt $j $i) $a.value $b.value (ne $a.value $b.value) -}}
+      {{- fail (printf "When using GCS for multiple backends, %s and %s must match." $a.name $b.name) -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- /* Return the first non-empty value found among active GCS sources */ -}}
+{{- range $gcsSources -}}
+  {{- if .value -}}
+    {{- .value -}}
+    {{- break -}}
+  {{- end -}}
+{{- end -}}
+{{- end -}}
+
+{{- define "sentry.gcs.secretName" -}}
+{{- include "sentry.gcs.sharedValue" (dict "ctx" . "field" "secretName") -}}
+{{- end -}}
+
+{{- define "sentry.gcs.credentialsFile" -}}
+{{- include "sentry.gcs.sharedValue" (dict "ctx" . "field" "credentialsFile") -}}
 {{- end -}}
 
 {{/*
@@ -1138,3 +1478,16 @@ app.kubernetes.io/name: {{ include "sentry.name" .ctx }}
 app.kubernetes.io/instance: {{ .ctx.Release.Name }}
 app.kubernetes.io/component: {{ .component }}
 {{- end }}
+
+{{/*
+Return the appropriate apiVersion for Gateway API HTTPRoute.
+Returns empty string if Gateway API is not available in the cluster.
+Gateway API v1 is GA since Kubernetes 1.29.
+*/}}
+{{- define "sentry.route.apiVersion" -}}
+{{- if .Capabilities.APIVersions.Has "gateway.networking.k8s.io/v1" -}}
+{{- print "gateway.networking.k8s.io/v1" -}}
+{{- else if .Capabilities.APIVersions.Has "gateway.networking.k8s.io/v1beta1" -}}
+{{- print "gateway.networking.k8s.io/v1beta1" -}}
+{{- end -}}
+{{- end -}}

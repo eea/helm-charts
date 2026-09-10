@@ -17,22 +17,42 @@ config.yml: |-
     {{- end }}
     port: {{ template "relay.port" }}
 
-    {{- if .Values.relay.cache }}
-    {{- if .Values.relay.cache.envelopeBufferSize }}
-    cache:
-      envelope_buffer_size: {{ int64 .Values.relay.cache.envelopeBufferSize | quote }}
+  {{- if .Values.relay.http }}
+  http:
+    {{- if .Values.relay.http.timeout }}
+    timeout: {{ int .Values.relay.http.timeout }}
     {{- end }}
+    {{- if .Values.relay.http.connectionTimeout }}
+    connection_timeout: {{ int .Values.relay.http.connectionTimeout }}
     {{- end }}
+  {{- end }}
 
-    {{- if .Values.relay.logging }}
-    logging:
-      {{- if .Values.relay.logging.level }}
-      level: {{ .Values.relay.logging.level }}
-      {{- end }}
-      {{- if .Values.relay.logging.format }}
-      format: {{ .Values.relay.logging.format }}
-      {{- end }}
+  {{- if .Values.relay.cache }}
+  cache:
+    {{- if .Values.relay.cache.envelopeBufferSize }}
+    envelope_buffer_size: {{ int64 .Values.relay.cache.envelopeBufferSize | quote }}
     {{- end }}
+    {{- if .Values.relay.cache.batchSize }}
+    batch_size: {{ int .Values.relay.cache.batchSize }}
+    {{- end }}
+  {{- end }}
+
+  {{- if .Values.relay.limits }}
+  limits:
+    {{- if .Values.relay.limits.queryTimeout }}
+    query_timeout: {{ int .Values.relay.limits.queryTimeout }}
+    {{- end }}
+  {{- end }}
+
+  {{- if .Values.relay.logging }}
+  logging:
+    {{- if .Values.relay.logging.level }}
+    level: {{ .Values.relay.logging.level }}
+    {{- end }}
+    {{- if .Values.relay.logging.format }}
+    format: {{ .Values.relay.logging.format }}
+    {{- end }}
+  {{- end }}
 
   processing:
     enabled: true
@@ -63,6 +83,22 @@ config.yml: |-
       - name: "api.version.request.timeout.ms"
         value: {{ int64 .Values.relay.processing.kafkaConfig.apiVersionRequestTimeoutMs | quote }}
       {{- end }}
+      {{- if .Values.relay.processing.kafkaConfig.batchSize }}
+      - name: "batch.size"
+        value: {{ int64 .Values.relay.processing.kafkaConfig.batchSize | quote }}
+      {{- end }}
+      {{- if .Values.relay.processing.kafkaConfig.lingerMs }}
+      - name: "linger.ms"
+        value: {{ int64 .Values.relay.processing.kafkaConfig.lingerMs | quote }}
+      {{- end }}
+      {{- if and (not .Values.kafka.enabled) .Values.externalKafka.sasl.existingSecret }}
+      - name: "sasl.mechanism"
+        value: "${KAFKA_SASL_MECHANISM}"
+      - name: "sasl.username"
+        value: "${KAFKA_SASL_USERNAME}"
+      - name: "sasl.password"
+        value: "${KAFKA_SASL_PASSWORD}"
+      {{- else }}
       {{- $sentryKafkaSaslMechanism := include "sentry.kafka.sasl_mechanism" . -}}
       {{- if not (eq "None" $sentryKafkaSaslMechanism) }}
       - name: "sasl.mechanism"
@@ -77,6 +113,7 @@ config.yml: |-
       {{- if not (eq "None" $sentryKafkaSaslPassword) }}
       - name: "sasl.password"
         value: {{ $sentryKafkaSaslPassword | quote }}
+      {{- end }}
       {{- end }}
       {{- $sentryKafkaSecurityProtocol := include "sentry.kafka.security_protocol" . -}}
       {{- if not (eq "plaintext" $sentryKafkaSecurityProtocol) }}
@@ -98,7 +135,8 @@ config.yml: |-
     {{- if ((.Values.kafkaTopicOverrides).prefix) }}
     topics:
       metrics_sessions: "{{ default "" .Values.kafkaTopicOverrides.prefix }}ingest-metrics"
-      events: "{{ default "" .Values.kafkaTopicOverrides.prefix }}ingest-attachments"
+      attachments: "{{ default "" .Values.kafkaTopicOverrides.prefix }}ingest-attachments"
+      events: "{{ default "" .Values.kafkaTopicOverrides.prefix }}ingest-events"
       transactions: "{{ default "" .Values.kafkaTopicOverrides.prefix }}ingest-transactions"
       outcomes: "{{ default "" .Values.kafkaTopicOverrides.prefix }}outcomes"
       outcomes_billing: "{{ default "" .Values.kafkaTopicOverrides.prefix }}ingest-outcomes"
@@ -107,10 +145,11 @@ config.yml: |-
       replay_events: "{{ default "" .Values.kafkaTopicOverrides.prefix }}ingest-replay-events"
       replay_recordings: "{{ default "" .Values.kafkaTopicOverrides.prefix }}ingest-replay-recordings"
       monitors: "{{ default "" .Values.kafkaTopicOverrides.prefix }}ingest-monitors"
-      spans: "{{ default "" .Values.kafkaTopicOverrides.prefix }}snuba-spans"
+      spans: "{{ default "" .Values.kafkaTopicOverrides.prefix }}ingest-spans"
       metrics_summaries: "{{ default "" .Values.kafkaTopicOverrides.prefix }}snuba-metrics-summaries"
       cogs: "{{ default "" .Values.kafkaTopicOverrides.prefix }}shared-resources-usage"
       feedback: "{{ default "" .Values.kafkaTopicOverrides.prefix }}ingest-feedback-events"
+      items: "{{ default "" .Values.kafkaTopicOverrides.prefix }}snuba-items"
     {{- else }}
     topics:
       metrics_sessions: "ingest-metrics"

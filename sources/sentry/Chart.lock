@@ -1,7 +1,7 @@
 dependencies:
 - name: memcached
-  repository: oci://registry-1.docker.io/bitnamicharts
-  version: 7.5.2
+  repository: oci://registry-1.docker.io/cloudpirates
+  version: 0.9.3
 - name: redis
   repository: oci://registry-1.docker.io/bitnamicharts
   version: 17.11.3
@@ -15,7 +15,10 @@ dependencies:
   repository: oci://registry-1.docker.io/bitnamicharts
   version: 11.16.2
 - name: nginx
-  repository: oci://registry-1.docker.io/bitnamicharts
-  version: 18.2.5
-digest: sha256:f4ae1d406d83d89558596a994ae26eeeff568c5a956aebc7533ea552da392034
-generated: "2025-11-20T09:54:50.606214+02:00"
+  repository: oci://registry-1.docker.io/cloudpirates
+  version: 0.7.0
+- name: seaweedfs
+  repository: https://seaweedfs.github.io/seaweedfs/helm
+  version: 4.17.0
+digest: sha256:c36710084d7c01120ed8a832dfcfc8615a296888c91c07ba5b7afcd5d0b2e94e
+generated: "2026-09-10T15:35:41.794744+03:00"

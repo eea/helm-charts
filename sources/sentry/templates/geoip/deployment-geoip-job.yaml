@@ -1,4 +1,4 @@
-{{- if .Values.geodata.accountID }}
+{{- if include "sentry.geodata.enabled" . }}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -17,6 +17,20 @@ spec:
       {{- if .Values.serviceAccount.enabled }}
       serviceAccountName: {{ .Values.serviceAccount.name }}-geoip
       {{- end }}
+      {{- if .Values.geodata.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.geodata.nodeSelector | indent 8 }}
+      {{- else if .Values.global.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.global.nodeSelector | indent 8 }}
+      {{- end }}
+      {{- if .Values.geodata.tolerations }}
+      tolerations:
+{{ toYaml .Values.geodata.tolerations | indent 8 }}
+      {{- else if .Values.global.tolerations }}
+      tolerations:
+{{ toYaml .Values.global.tolerations | indent 8 }}
+      {{- end }}
       initContainers:
         - name: init-create-geoip-dir
           image: busybox
@@ -29,7 +43,7 @@ spec:
           command: ['sh', '-c', 'echo -e "AccountID $(echo $GEOIPUPDATE_ACCOUNT_ID)\nLicenseKey $(echo $GEOIPUPDATE_LICENSE_KEY)\nEditionIDs $(echo $GEOIPUPDATE_EDITION_IDS)" > /usr/share/GeoIP/GeoIP.conf']
           envFrom:
             - secretRef:
-                name: {{ template "sentry.fullname" . }}-geoip-env
+                name: {{ include "sentry.geodata.secretName" . }}
           volumeMounts:
             - name: {{ .Values.geodata.volumeName }}
               mountPath: {{ .Values.geodata.mountPath }}
@@ -38,13 +52,28 @@ spec:
           image: ghcr.io/maxmind/geoipupdate:v7.0.1
           envFrom:
             - secretRef:
-                name: {{ template "sentry.fullname" . }}-geoip-env
+                name: {{ include "sentry.geodata.secretName" . }}
           volumeMounts:
             - name: {{ .Values.geodata.volumeName }}
               mountPath: {{ .Values.geodata.mountPath }}
+{{- if .Values.global.volumeMounts }}
+{{ toYaml .Values.global.volumeMounts | indent 12 }}
+{{- end }}
+{{- if .Values.geodata.sidecars }}
+{{ toYaml .Values.geodata.sidecars | indent 8 }}
+{{- end }}
+{{- if .Values.global.sidecars }}
+{{ toYaml .Values.global.sidecars | indent 8 }}
+{{- end }}
       volumes:
       - name: {{ .Values.geodata.volumeName }}
         persistentVolumeClaim:
           claimName: data-sentry-geoip
+{{- if .Values.geodata.volumes }}
+{{ toYaml .Values.geodata.volumes | indent 6 }}
+{{- end }}
+{{- if .Values.global.volumes }}
+{{ toYaml .Values.global.volumes | indent 6 }}
+{{- end }}
       restartPolicy: OnFailure
 {{- end }}

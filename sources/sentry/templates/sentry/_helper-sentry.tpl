@@ -30,74 +30,40 @@ config.yml: |-
   {{- with .Values.github.appName }}
   github-app.name: {{ . | quote }}
   {{- end }}
-  {{- if not .Values.github.existingSecret }}
-    {{- with .Values.github.privateKey }}
-  github-app.private-key: {{- . | toYaml | indent 2 }}
-    {{- end }}
-    {{- with .Values.github.webhookSecret }}
-  github-app.webhook-secret: {{ . | quote }}
-    {{- end }}
-    {{- with .Values.github.clientId }}
-  github-app.client-id: {{ . | quote }}
-    {{- end }}
-    {{- with .Values.github.clientSecret }}
-  github-app.client-secret: {{ . | quote }}
-    {{- end }}
-  {{- end }}
 
   ##########
   # Google #
   ##########
-  {{- if and (.Values.google.clientId) (.Values.google.clientSecret) (not .Values.google.existingSecret) }}
-  auth-google.client-id: {{ .Values.google.clientId | quote }}
-  auth-google.client-secret: {{ .Values.google.clientSecret | quote }}
-  {{- end }}
 
   #########
   # Slack #
   #########
-  {{- if and (.Values.slack.clientId) (.Values.slack.clientSecret) (.Values.slack.signingSecret) (not .Values.slack.existingSecret) }}
-  slack.client-id: {{ .Values.slack.clientId | quote }}
-  slack.client-secret: {{ .Values.slack.clientSecret | quote }}
-  slack.signing-secret: {{ .Values.slack.signingSecret | quote }}
-  {{ end }}
 
   ###########
   # Discord #
   ###########
-  {{- if and (.Values.discord.applicationId) (.Values.discord.publicKey) (.Values.discord.clientSecret) (.Values.discord.botToken) (not .Values.discord.existingSecret) }}
-  discord.application-id: {{ .Values.discord.applicationId | quote }}
-  discord.public-key: {{ .Values.discord.publicKey | quote }}
-  discord.client-secret: {{ .Values.discord.clientSecret | quote }}
-  discord.bot-token: {{ .Values.discord.botToken | quote }}
-  {{ end }}
+
+  #############
+  # PagerDuty #
+  #############
+  {{- if and (.Values.pagerduty.appId) (not .Values.pagerduty.existingSecret) }}
+  pagerduty.app-id: {{ .Values.pagerduty.appId | quote }}
+  {{- end }}
 
   #########
   # Redis #
   #########
   # This is configured in the sentry.conf.py as that has support for environment variables.
 
-  ################
-  # File storage #
-  ################
-  # Uploaded media uses these `filestore` settings. The available
-  # backends are either `filesystem` or `s3`.
-  filestore.backend: {{ .Values.filestore.backend | quote }}
-  {{- if eq .Values.filestore.backend "filesystem" }}
-  filestore.options:
-    location: {{ .Values.filestore.filesystem.path | quote }}
-  {{ end }}
-  {{- if eq .Values.filestore.backend "gcs" }}
-  filestore.options:
-    bucket_name: {{ .Values.filestore.gcs.bucketName | quote }}
-  {{ end }}
+  {{- if .Values.config.taskbrokerRoutingYml }}
+  {{ .Values.config.taskbrokerRoutingYml | toYaml | nindent 2 }}
+  {{- end }}
 
   {{- if .Values.config.configYml }}
   {{ .Values.config.configYml | toYaml | nindent 2 }}
   {{- end }}
 sentry.conf.py: |-
   from sentry.conf.server import *  # NOQA
-  from distutils.util import strtobool
 
   BYTE_MULTIPLIER = 1024
   UNITS = ("K", "M", "G")
@@ -106,39 +72,37 @@ sentry.conf.py: |-
       power = UNITS.index(unit) + 1
       return float(text[:-1])*(BYTE_MULTIPLIER**power)
 
-  {{- if .Values.sourcemaps.enabled }}
   CACHES = {
       "default": {
-          "BACKEND": "django.core.cache.backends.memcached.PyMemcacheCache",
+          "BACKEND": "sentry.cache.backends.reconnectingmemcache.ReconnectingMemcache",
           "LOCATION": [
               "{{ template "sentry.fullname" . }}-memcached:11211"
           ],
           "TIMEOUT": 3600,
-          "OPTIONS": {"ignore_exc": True}
+          "OPTIONS": {"ignore_exc": True, "reconnect_age": 300}
       }
   }
-  {{- end }}
 
-  # Update the existing DATABASES dict instead of creating a new one
-  # This ensures sentry.conf.server.DATABASES is modified in-place
-  DATABASES["default"].update({
-      "ENGINE": "sentry.db.postgres",
-      "NAME": os.environ.get("POSTGRES_NAME", ""),
-      "USER": os.environ.get("POSTGRES_USER", ""),
-      "PASSWORD": os.environ.get("POSTGRES_PASSWORD", ""),
-      "HOST": os.environ.get("POSTGRES_HOST", ""),
-      "PORT": os.environ.get("POSTGRES_PORT", ""),
-      {{- if .Values.postgresql.enabled }}
-      "CONN_MAX_AGE": {{ .Values.postgresql.connMaxAge }},
-      {{- else }}
-      "CONN_MAX_AGE": {{ .Values.externalPostgresql.connMaxAge }},
-      {{- end }}
-  })
-  {{- if .Values.externalPostgresql.sslMode }}
-  DATABASES["default"]["OPTIONS"] = {
-      'sslmode': '{{ .Values.externalPostgresql.sslMode }}',
+  DATABASES = {
+      "default": {
+          "ENGINE": "sentry.db.postgres",
+          "NAME": os.environ.get("POSTGRES_NAME", ""),
+          "USER": os.environ.get("POSTGRES_USER", ""),
+          "PASSWORD": os.environ.get("POSTGRES_PASSWORD", ""),
+          "HOST": os.environ.get("POSTGRES_HOST", ""),
+          "PORT": os.environ.get("POSTGRES_PORT", ""),
+          {{- if .Values.postgresql.enabled }}
+          "CONN_MAX_AGE": {{ .Values.postgresql.connMaxAge }},
+          {{- else }}
+          "CONN_MAX_AGE": {{ .Values.externalPostgresql.connMaxAge }},
+          {{- end }}
+          {{- if .Values.externalPostgresql.sslMode }}
+          'OPTIONS': {
+              'sslmode': '{{ .Values.externalPostgresql.sslMode }}',
+          },
+          {{- end }}
+      }
   }
-  {{- end }}
 
   {{- if .Values.geodata.path }}
   GEOIP_PATH_MMDB = {{ .Values.geodata.path | quote }}
@@ -196,37 +160,6 @@ sentry.conf.py: |-
     }
   }
 
-  #########
-  # Queue #
-  #########
-
-  # See https://docs.getsentry.com/on-premise/server/queue/ for more
-  # information on configuring your queue broker and workers. Sentry relies
-  # on a Python framework called Celery to manage queues.
-
-  {{- if or (.Values.rabbitmq.enabled) (.Values.rabbitmq.host) }}
-  BROKER_URL = os.environ.get("BROKER_URL", "amqp://{{ .Values.rabbitmq.auth.username }}:{{ .Values.rabbitmq.auth.password }}@{{ template "sentry.rabbitmq.host" . }}:5672/{{ .Values.rabbitmq.vhost }}")
-  {{- else if $redisPass }}
-  BROKER_URL = os.environ.get("BROKER_URL", "{{ $redisProto }}://:{{ $redisPass }}@{{ $redisHost }}:{{ $redisPort }}/{{ $redisDb }}")
-  {{- else if and (not .Values.externalRedis.existingSecret) (not .Values.redis.auth.existingSecret)}}
-  BROKER_URL = os.environ.get("BROKER_URL", "{{ $redisProto }}://{{ $redisHost }}:{{ $redisPort }}/{{ $redisDb }}")
-  {{- end }}
-
-  #########
-  # Cache #
-  #########
-
-  # Sentry currently utilizes two separate mechanisms. While CACHES is not a
-  # requirement, it will optimize several high throughput patterns.
-
-  # CACHES = {
-  #     "default": {
-  #         "BACKEND": "django.core.cache.backends.memcached.MemcachedCache",
-  #         "LOCATION": ["memcached:11211"],
-  #         "TIMEOUT": 3600,
-  #     }
-  # }
-
   # A primary cache is required for things such as processing events
   SENTRY_CACHE = "sentry.cache.redis.RedisCache"
 
@@ -239,6 +172,11 @@ sentry.conf.py: |-
           "compression.type": {{ $sentryKafkaCompressionType | quote }},
       {{- end }}
           "socket.timeout.ms": {{ include "sentry.kafka.socket_timeout_ms" . }},
+      {{- if and (not .Values.kafka.enabled) .Values.externalKafka.sasl.existingSecret }}
+          "sasl.mechanism": os.getenv("KAFKA_SASL_MECHANISM", ""),
+          "sasl.username": os.getenv("KAFKA_SASL_USERNAME", ""),
+          "sasl.password": os.getenv("KAFKA_SASL_PASSWORD", ""),
+      {{- else }}
       {{- $sentryKafkaSaslMechanism := include "sentry.kafka.sasl_mechanism" . -}}
       {{- if not (eq "None" $sentryKafkaSaslMechanism) }}
           "sasl.mechanism": {{ $sentryKafkaSaslMechanism | quote }},
@@ -250,6 +188,7 @@ sentry.conf.py: |-
       {{- $sentryKafkaSaslPassword := include "sentry.kafka.sasl_password" . -}}
       {{- if not (eq "None" $sentryKafkaSaslPassword) }}
           "sasl.password": {{ $sentryKafkaSaslPassword | quote }},
+      {{- end }}
       {{- end }}
       {{- $sentryKafkaSecurityProtocol := include "sentry.kafka.security_protocol" . -}}
       {{- if not (eq "plaintext" $sentryKafkaSecurityProtocol) }}
@@ -359,6 +298,7 @@ sentry.conf.py: |-
       "http-chunked-input": {{ .Values.config.web.httpChunkedInput | ternary "True" "False" }},
       # the number of web workers
       'workers': {{ .Values.config.web.workers | int }},
+      'threads': {{ .Values.config.web.threads | int }},
       # Turn off memory reporting
       "memory-report": {{ .Values.config.web.memoryReport | ternary "True" "False" }},
       # Some stuff so uwsgi will cycle workers sensibly
@@ -400,19 +340,17 @@ sentry.conf.py: |-
   SENTRY_FEATURES = {
     "auth:register": {{ .Values.auth.register | ternary "True" "False" }}
   }
-  SENTRY_FEATURES["projects:sample-events"] = False
   SENTRY_FEATURES.update(
       {
           feature: True
           for feature in (
               {{- if not .Values.sentry.singleOrganization }}
               "organizations:create",
-              {{ end -}}
+              {{- end }}
               {{- if .Values.sentry.features.orgSubdomains }}
               "organizations:org-ingest-subdomains",
-              {{ end -}}
-              "organizations:discover",
-              "organizations:global-views",
+              {{- end }}
+              "organizations:issue-views",
               "organizations:incidents",
               "organizations:integrations-issue-basic",
               "organizations:integrations-issue-sync",
@@ -420,14 +358,13 @@ sentry.conf.py: |-
               "organizations:sso-basic",
               "organizations:sso-saml2",
               "organizations:advanced-search",
-              "organizations:issue-platform",
-              "organizations:monitors",
-              "organizations:dashboards-mep",
-              "organizations:mep-rollout-flag",
-              "organizations:dashboards-rh-widget",
               "organizations:dynamic-sampling",
+              "organizations:workflow-engine-ui",
+              "organizations:workflow-engine-rule-serializers",
+              "organizations:discover-saved-queries-deprecation",
+              "organizations:expose-migrated-discover-queries",
+              "organizations:performance-transaction-deprecation-banner",
               "projects:custom-inbound-filters",
-              "projects:data-forwarding",
               "projects:discard-groups",
               "projects:plugins",
               "projects:rate-limits",
@@ -435,79 +372,79 @@ sentry.conf.py: |-
           )
           {{- if .Values.sentry.features.enableSpan }}
           + (
-              # Performance/Tracing/Spans related flags
+              # Performance/Tracing/Spans
               "organizations:performance-view",
+              "organizations:span-stats",
               "organizations:visibility-explore-view",
+              "organizations:visibility-explore-range-high",
               "organizations:transaction-metrics-extraction",
               "organizations:indexed-spans-extraction",
-              "organizations:insights-entry-points",
-              "organizations:insights-initial-modules",
-              "organizations:insights-addon-modules",
-              "organizations:standalone-span-ingestion",
-              "organizations:starfish-mobile-appstart",
+              "organizations:insights-modules-use-eap",
+              "organizations:on-demand-metrics-extraction",
               "projects:span-metrics-extraction",
               "projects:span-metrics-extraction-addons",
-              
-              # flags added in this chart
+
+              # extra trace UI flags from chart
               "organizations:trace-view-load-more",
               "organizations:trace-tabs-ui",
               "organizations:trace-view-linked-traces",
-              "organizations:span-stats",
-              "organizations:visibility-explore-range-high",
+              "organizations:trace-spans-format",
           )
           {{- end }}
-          {{- if .Values.sentry.features.enableSessionReplay}}
+          {{- if .Values.sentry.features.enableSessionReplay }}
           + (
-              # Session Replay related flags
+              # Session Replay
               "organizations:session-replay",
-              
-              # flags added in this chart
               "organizations:session-replay-ui",
-              "organizations:session-replay-issue-emails",
               "organizations:session-replay-recording-scrubbing",
-              "organizations:session-replay-slack-new-issue",
-          )
-          {{- end }}
-          {{- if .Values.sentry.features.enableFeedback }}
-          + (
-              # User Feedback related flags
-              "organizations:user-feedback-ui",
           )
           {{- end }}
           {{- if .Values.sentry.features.enableProfiling }}
           + (
-              # Profiling related flags
+              # Profiling
               "organizations:profiling",
               "organizations:profiling-view",
-              # Continuous Profiling related flags
+
+              # Continuous Profiling
               "organizations:continuous-profiling",
               "organizations:continuous-profiling-stats",
           )
           {{- end }}
           {{- if .Values.sentry.features.enableUptime }}
           + (
-              # Uptime Monitoring related flags
+              # Uptime Monitoring
               "organizations:uptime",
-              "organizations:uptime-create-issues",
           )
           {{- end }}
           + (
-              # Flags enabled in this chart but not present in https://github.com/getsentry/self-hosted/blob/master/sentry/sentry.conf.example.py
-              "organizations:related-events",
-              "organizations:reprocessing-v2",
+              # Logs (OurLogs)
+              "organizations:ourlogs-enabled",
+              "organizations:ourlogs-ingestion",
+
+              # Metrics (Trace Metrics)
+              "organizations:tracemetrics-enabled",
+              "organizations:tracemetrics-ingestion",
+              "organizations:tracemetrics-equations-in-alerts",
+              "organizations:tracemetrics-equations-in-explore",
+              "organizations:tracemetrics-multi-metric-selection-in-dashboards",
+              "organizations:tracemetrics-units-ui",
+              "organizations:tracemetrics-stats-bytes-ui",
+              "organizations:tracemetrics-pii-scrubbing-ui",
+
+              # Misc
               "organizations:set-grouping-config",
               "organizations:onboarding",
               "projects:similarity-indexing",
               "projects:similarity-view",
           )
+          {{- if .Values.sentry.customFeatures }}
           + (
               # Custom features from values
-              {{- if .Values.sentry.customFeatures }}
               {{- range $CustomFeature := .Values.sentry.customFeatures }}
-              "{{ $CustomFeature}}",
-              {{- end }}
+              "{{ $CustomFeature }}",
               {{- end }}
           )
+          {{- end }}
       }
   )
 
@@ -515,21 +452,39 @@ sentry.conf.py: |-
   # Email Configuration #
   #######################
   SENTRY_OPTIONS['mail.backend'] = os.getenv("SENTRY_EMAIL_BACKEND", {{ .Values.mail.backend | quote }})
-  SENTRY_OPTIONS['mail.use-tls'] = bool(strtobool(os.getenv("SENTRY_EMAIL_USE_TLS", {{ .Values.mail.useTls | quote }})))
-  SENTRY_OPTIONS['mail.use-ssl'] = bool(strtobool(os.getenv("SENTRY_EMAIL_USE_SSL", {{ .Values.mail.useSsl | quote }})))
+  SENTRY_OPTIONS['mail.use-tls'] = os.getenv("SENTRY_EMAIL_USE_TLS", {{ .Values.mail.useTls | quote }}).lower() in ("true", "1", "yes")
+  SENTRY_OPTIONS['mail.use-ssl'] = os.getenv("SENTRY_EMAIL_USE_SSL", {{ .Values.mail.useSsl | quote }}).lower() in ("true", "1", "yes")
   SENTRY_OPTIONS['mail.username'] = os.getenv("SENTRY_EMAIL_USERNAME", {{ .Values.mail.username | quote }})
   SENTRY_OPTIONS['mail.password'] = os.getenv("SENTRY_EMAIL_PASSWORD", "")
   SENTRY_OPTIONS['mail.port'] = int(os.getenv("SENTRY_EMAIL_PORT", {{ .Values.mail.port | quote }}))
   SENTRY_OPTIONS['mail.host'] = os.getenv("SENTRY_EMAIL_HOST", {{ .Values.mail.host | quote }})
   SENTRY_OPTIONS['mail.from'] = os.getenv("SENTRY_EMAIL_FROM", {{ .Values.mail.from | quote }})
 
-  #######################
-  # Filestore S3 Configuration #
-  #######################
+  ################
+  # File storage #
+  ################
+  SENTRY_OPTIONS['filestore.backend'] = {{ .Values.filestore.backend | quote }}
+
+  {{- if eq .Values.filestore.backend "filesystem" }}
+  SENTRY_OPTIONS['filestore.options'] = {
+      'location': {{ .Values.filestore.filesystem.path | quote }},
+  }
+  {{- end }}
+
+  {{- if eq .Values.filestore.backend "gcs" }}
+  SENTRY_OPTIONS['filestore.options'] = {
+      'bucket_name': {{ .Values.filestore.gcs.bucketName | quote }},
+  }
+  {{- end }}
+
   {{- if eq .Values.filestore.backend "s3" }}
   SENTRY_OPTIONS['filestore.options'] = {
-      'access_key': os.getenv("S3_ACCESS_KEY_ID", {{ .Values.filestore.s3.accessKey | default "" | quote }}),
-      'secret_key': os.getenv("S3_SECRET_ACCESS_KEY", {{ .Values.filestore.s3.secretKey | default "" | quote }}),
+      {{- if or .Values.filestore.s3.accessKey .Values.filestore.s3.existingSecret }}
+      'access_key': os.getenv("S3_ACCESS_KEY_ID", ""),
+      {{- end }}
+      {{- if or .Values.filestore.s3.secretKey .Values.filestore.s3.existingSecret }}
+      'secret_key': os.getenv("S3_SECRET_ACCESS_KEY", ""),
+      {{- end }}
       {{- if .Values.filestore.s3.bucketName }}
       'bucket_name': {{ .Values.filestore.s3.bucketName | quote }},
       {{- end }}
@@ -545,7 +500,7 @@ sentry.conf.py: |-
       {{- if .Values.filestore.s3.default_acl }}
       'default_acl': {{ .Values.filestore.s3.default_acl | quote }},
       {{- end }}
-      #add comfig params for s3
+      #add config params for s3
       {{- if .Values.filestore.s3.addressing_style }}
       'addressing_style': {{ .Values.filestore.s3.addressing_style | quote }},
       {{- end }}
@@ -553,6 +508,173 @@ sentry.conf.py: |-
       'location': {{ .Values.filestore.s3.location | quote }},
       {{- end }}
   }
+  {{- end }}
+
+  ##################
+  # Replay Storage #
+  ##################
+  {{- if .Values.replay.storage.backend }}
+  SENTRY_OPTIONS['replay.storage.backend'] = {{ .Values.replay.storage.backend | quote }}
+
+  {{- if eq .Values.replay.storage.backend "filesystem" }}
+  SENTRY_OPTIONS['replay.storage.options'] = {
+      'location': {{ .Values.replay.storage.filesystem.path | quote }},
+  }
+  {{- end }}
+
+  {{- if eq .Values.replay.storage.backend "gcs" }}
+  SENTRY_OPTIONS['replay.storage.options'] = {
+      'bucket_name': {{ .Values.replay.storage.gcs.bucketName | quote }},
+  }
+  {{- end }}
+
+  {{- if eq .Values.replay.storage.backend "s3" }}
+  {{- $replayS3 := .Values.replay.storage.s3 | default dict }}
+  SENTRY_OPTIONS['replay.storage.options'] = {
+      {{- if or $replayS3.accessKey $replayS3.existingSecret }}
+      'access_key': os.getenv("REPLAY_S3_ACCESS_KEY_ID", ""),
+      {{- end }}
+      {{- if or $replayS3.secretKey $replayS3.existingSecret }}
+      'secret_key': os.getenv("REPLAY_S3_SECRET_ACCESS_KEY", ""),
+      {{- end }}
+      {{- if $replayS3.bucketName }}
+      'bucket_name': {{ $replayS3.bucketName | quote }},
+      {{- end }}
+      {{- if $replayS3.endpointUrl }}
+      'endpoint_url': {{ $replayS3.endpointUrl | quote }},
+      {{- end }}
+      {{- if $replayS3.signature_version }}
+      'signature_version': {{ $replayS3.signature_version | quote }},
+      {{- end }}
+      {{- if $replayS3.region_name }}
+      'region_name': {{ $replayS3.region_name | quote }},
+      {{- end }}
+      {{- if $replayS3.default_acl }}
+      'default_acl': {{ $replayS3.default_acl | quote }},
+      {{- end }}
+      {{- if $replayS3.bucket_acl }}
+      'bucket_acl': {{ $replayS3.bucket_acl | quote }},
+      {{- end }}
+      {{- if $replayS3.addressing_style }}
+      'addressing_style': {{ $replayS3.addressing_style | quote }},
+      {{- end }}
+      {{- if $replayS3.location }}
+      'location': {{ $replayS3.location | quote }},
+      {{- end }}
+  }
+  {{- end }}
+  {{- end }}
+
+  ###################
+  # Profiling Store #
+  ###################
+  # The profiling team has been working on vroomrs, and it's now doing the heavy lifting.
+  # The ingest-profiles container now processes profiles immediately via vroomrs and writes
+  # them directly to your bucket. This streamlines the pipeline.
+  #
+  # NOTE: It's recommended to use an object storage backend for profiles storage
+  # (for example S3-compatible storage or GCS).
+  # While filesystem backend is supported (for sharing PVC between vroom and ingest-profiles),
+  # it's not recommended for production use.
+  {{- if .Values.filestore.profiles.backend }}
+  SENTRY_OPTIONS['filestore.profiles-backend'] = {{ .Values.filestore.profiles.backend | quote }}
+
+  {{- if eq .Values.filestore.profiles.backend "gcs" }}
+  SENTRY_OPTIONS['filestore.profiles-options'] = {
+      'bucket_name': {{ .Values.filestore.profiles.gcs.bucketName | quote }},
+  }
+  {{- end }}
+
+  {{- if eq .Values.filestore.profiles.backend "s3" }}
+  {{- $profilesS3 := .Values.filestore.profiles.s3 | default dict }}
+  SENTRY_OPTIONS['filestore.profiles-options'] = {
+      {{- if or $profilesS3.accessKey $profilesS3.existingSecret }}
+      'access_key': os.getenv("PROFILES_S3_ACCESS_KEY_ID", ""),
+      {{- end }}
+      {{- if or $profilesS3.secretKey $profilesS3.existingSecret }}
+      'secret_key': os.getenv("PROFILES_S3_SECRET_ACCESS_KEY", ""),
+      {{- end }}
+      {{- if $profilesS3.bucketName }}
+      'bucket_name': {{ $profilesS3.bucketName | quote }},
+      {{- end }}
+      {{- if $profilesS3.endpointUrl }}
+      'endpoint_url': {{ $profilesS3.endpointUrl | quote }},
+      {{- end }}
+      {{- if $profilesS3.signature_version }}
+      'signature_version': {{ $profilesS3.signature_version | quote }},
+      {{- end }}
+      {{- if $profilesS3.region_name }}
+      'region_name': {{ $profilesS3.region_name | quote }},
+      {{- end }}
+      {{- if $profilesS3.default_acl }}
+      'default_acl': {{ $profilesS3.default_acl | quote }},
+      {{- end }}
+      {{- if $profilesS3.bucket_acl }}
+      'bucket_acl': {{ $profilesS3.bucket_acl | quote }},
+      {{- end }}
+      {{- if $profilesS3.addressing_style }}
+      'addressing_style': {{ $profilesS3.addressing_style | quote }},
+      {{- end }}
+  }
+  {{- end }}
+
+  {{- if eq .Values.filestore.profiles.backend "filesystem" }}
+  SENTRY_OPTIONS['filestore.profiles-options'] = {
+      'location': {{ .Values.filestore.profiles.filesystem.path | quote }},
+  }
+  {{- end }}
+  {{- end }}
+
+  {{- if .Values.nodestore.backend }}
+  {{- if eq .Values.nodestore.backend "s3" }}
+  ################
+  # Node Storage #
+  ################
+
+  # Sentry uses an abstraction layer called "node storage" to store raw events.
+  # Previously, it used PostgreSQL as the backend, but this didn't scale for
+  # high-throughput environments. Read more about this in the documentation:
+  # https://develop.sentry.dev/backend/application-domains/nodestore/
+  #
+  # Through this setting, you can use the provided blob storage or
+  # your own S3-compatible API from your infrastructure.
+  # Other backend implementations for node storage developed by the community
+  # are available in public GitHub repositories.
+  {{- $nodestoreS3 := .Values.nodestore.s3 | default dict }}
+  SENTRY_NODESTORE = "sentry_nodestore_s3.S3PassthroughDjangoNodeStorage"
+  SENTRY_NODESTORE_OPTIONS = {
+      {{- if $nodestoreS3.deleteThrough }}
+      "delete_through": {{ $nodestoreS3.deleteThrough }},
+      {{- end }}
+      {{- if $nodestoreS3.writeThrough }}
+      "write_through": {{ $nodestoreS3.writeThrough }},
+      {{- end }}
+      {{- if $nodestoreS3.readThrough }}
+      "read_through": {{ $nodestoreS3.readThrough }},
+      {{- end }}
+      {{- if $nodestoreS3.compression }}
+      "compression": {{ $nodestoreS3.compression }},
+      {{- end }}
+      {{- if $nodestoreS3.endpointUrl }}
+      "endpoint_url": {{ $nodestoreS3.endpointUrl | quote }},
+      {{- end }}
+      {{- if $nodestoreS3.bucketPath }}
+      "bucket_path": {{ $nodestoreS3.bucketPath | quote }},
+      {{- end }}
+      {{- if $nodestoreS3.bucketName }}
+      "bucket_name": {{ $nodestoreS3.bucketName | quote }},
+      {{- end }}
+      {{- if $nodestoreS3.regionName }}
+      "region_name": {{ $nodestoreS3.regionName | quote }},
+      {{- end }}
+      {{- if or $nodestoreS3.accessKeyId $nodestoreS3.existingSecret }}
+      "aws_access_key_id": os.getenv("NODESTORE_S3_ACCESS_KEY_ID", ""),
+      {{- end }}
+      {{- if or $nodestoreS3.secretAccessKey $nodestoreS3.existingSecret }}
+      "aws_secret_access_key": os.getenv("NODESTORE_S3_SECRET_ACCESS_KEY", ""),
+      {{- end }}
+  }
+  {{- end }}
   {{- end }}
 
   #########################
@@ -568,19 +690,18 @@ sentry.conf.py: |-
   SENTRY_RELAY_WHITELIST_PK = []
   SENTRY_RELAY_OPEN_REGISTRATION = True
 
-  #########
-  # Tasks #
-  #########
-  # Disable taskworker and continue using celery.
-  SENTRY_OPTIONS["taskworker.enabled"] = False
-
   #######################
   # OpenAi Suggestions #
   #######################
 
   OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
-  if OPENAI_API_KEY:
-    SENTRY_FEATURES["organizations:open-ai-suggestion"] = True
+
+  ########################
+  # JS SDK Loader Script #
+  ########################
+  {{- if .Values.sentry.jsSdk.setupAssets }}
+  JS_SDK_LOADER_DEFAULT_SDK_URL = {{ .Values.sentry.jsSdk.defaultSdkUrl | quote }}
+  {{- end }}
 
 {{- if .Values.metrics.enabled }}
   SENTRY_METRICS_BACKEND = 'sentry.metrics.statsd.StatsdMetricsBackend'
@@ -590,7 +711,7 @@ sentry.conf.py: |-
   }
 {{- end }}
 
-{{- if .Values.slack.existingSecret }}
+{{- if or .Values.slack.existingSecret (and .Values.slack.clientId .Values.slack.clientSecret .Values.slack.signingSecret) }}
   #########
   # SLACK #
   #########
@@ -599,7 +720,7 @@ sentry.conf.py: |-
   SENTRY_OPTIONS['slack.signing-secret'] = os.environ.get("SLACK_SIGNING_SECRET")
 {{- end }}
 
-{{- if .Values.discord.existingSecret }}
+{{- if or .Values.discord.existingSecret (and .Values.discord.applicationId .Values.discord.publicKey .Values.discord.clientSecret .Values.discord.botToken) }}
   ###########
   # DISCORD #
   ###########
@@ -609,7 +730,14 @@ sentry.conf.py: |-
   SENTRY_OPTIONS['discord.bot-token'] = os.environ.get("DISCORD_BOT_TOKEN")
 {{- end }}
 
-{{- if .Values.google.existingSecret }}
+{{- if .Values.pagerduty.existingSecret }}
+  #############
+  # PAGERDUTY #
+  #############
+  SENTRY_OPTIONS['pagerduty.app-id'] = os.environ.get("PAGERDUTY_APP_ID")
+{{- end }}
+
+{{- if or .Values.google.existingSecret (and .Values.google.clientId .Values.google.clientSecret) }}
   #########
   # GOOGLE #
   #########
@@ -617,14 +745,116 @@ sentry.conf.py: |-
   SENTRY_OPTIONS['auth-google.client-secret'] = os.environ.get("GOOGLE_AUTH_CLIENT_SECRET")
 {{- end }}
 
-{{- if .Values.github.existingSecret }}
+{{- if or .Values.github.existingSecret .Values.github.privateKey .Values.github.webhookSecret .Values.github.clientId .Values.github.clientSecret }}
   ##########
   # Github #
   ##########
+  {{- if and .Values.github.existingSecret .Values.github.existingSecretAppIdKey }}
+  # GitHub App ID must be an integer (Sentry 26.x+)
+  _github_app_id = os.environ.get("GITHUB_APP_ID")
+  if _github_app_id:
+      SENTRY_OPTIONS['github-app.id'] = int(_github_app_id)
+  {{- end }}
+  {{- if and .Values.github.existingSecret .Values.github.existingSecretAppNameKey }}
+  SENTRY_OPTIONS['github-app.name'] = os.environ.get("GITHUB_APP_NAME")
+  {{- end }}
+  {{- if or .Values.github.existingSecret .Values.github.privateKey }}
   SENTRY_OPTIONS['github-app.private-key'] = os.environ.get("GITHUB_APP_PRIVATE_KEY")
+  {{- end }}
+  {{- if or .Values.github.existingSecret .Values.github.webhookSecret }}
   SENTRY_OPTIONS['github-app.webhook-secret'] = os.environ.get("GITHUB_APP_WEBHOOK_SECRET")
+  {{- end }}
+  {{- if or .Values.github.existingSecret .Values.github.clientId }}
   SENTRY_OPTIONS['github-app.client-id'] = os.environ.get("GITHUB_APP_CLIENT_ID")
+  {{- end }}
+  {{- if or .Values.github.existingSecret .Values.github.clientSecret }}
   SENTRY_OPTIONS['github-app.client-secret'] = os.environ.get("GITHUB_APP_CLIENT_SECRET")
+  {{- end }}
 {{- end }}
   {{ .Values.config.sentryConfPy | nindent 2 }}
+{{- end -}}
+
+{{/*
+Init container for installing sentry-nodestore-s3 package
+*/}}
+{{- define "sentry.initContainer.nodestore-s3" -}}
+{{- if and .Values.nodestore.backend .Values.nodestore.installViaInitContainer }}
+- name: install-nodestore-s3
+  image: "{{ template "sentry.image" . }}"
+  imagePullPolicy: {{ default "IfNotPresent" .Values.images.sentry.pullPolicy }}
+  command:
+    - sh
+    - -c
+    - |
+      pip install --target=/sentry-plugins https://github.com/getsentry/sentry-nodestore-s3/archive/main.zip
+  volumeMounts:
+    - name: sentry-plugins
+      mountPath: /sentry-plugins
+  {{- if .Values.nodestore.initContainer.env }}
+  env:
+  {{- toYaml .Values.nodestore.initContainer.env | nindent 4 }}
+  {{- end }}
+{{- end }}
+{{- end -}}
+
+{{/*
+Volume definition for sentry plugins
+*/}}
+{{- define "sentry.volume.nodestore-s3" -}}
+{{- if and .Values.nodestore.backend .Values.nodestore.installViaInitContainer }}
+- name: sentry-plugins
+  emptyDir: {}
+{{- end }}
+{{- end -}}
+
+{{/*
+Volume mount for sentry plugins
+*/}}
+{{- define "sentry.volumeMount.nodestore-s3" -}}
+{{- if and .Values.nodestore.backend .Values.nodestore.installViaInitContainer }}
+- name: sentry-plugins
+  mountPath: /sentry-plugins
+{{- end }}
+{{- end -}}
+
+{{/*
+Volume definition for replay filesystem storage
+*/}}
+{{- define "sentry.volume.replay-filesystem" -}}
+{{- if and (eq .Values.replay.storage.backend "filesystem") .Values.replay.storage.filesystem.persistence.enabled }}
+- name: sentry-replay-data
+  {{- if .Values.replay.storage.filesystem.persistence.existingClaim }}
+  persistentVolumeClaim:
+    claimName: {{ .Values.replay.storage.filesystem.persistence.existingClaim }}
+  {{- else }}
+  persistentVolumeClaim:
+    claimName: {{ template "sentry.fullname" . }}-replay-data
+  {{- end }}
+{{- end }}
+{{- end -}}
+
+{{/*
+Volume mount for replay filesystem storage
+*/}}
+{{- define "sentry.volumeMount.replay-filesystem" -}}
+{{- if and (eq .Values.replay.storage.backend "filesystem") .Values.replay.storage.filesystem.persistence.enabled }}
+- name: sentry-replay-data
+  mountPath: {{ .Values.replay.storage.filesystem.path }}
+{{- end }}
+{{- end -}}
+
+{{/*
+Environment variable for Python path to include plugins
+*/}}
+{{- define "sentry.env.nodestore-s3" -}}
+{{- if .Values.nodestore.backend }}
+{{- if .Values.nodestore.installViaInitContainer }}
+- name: PYTHONPATH
+  value: "/sentry-plugins"
+{{- end }}
+{{- if .Values.nodestore.s3.setAwsChecksumCalculationVar }}
+- name: AWS_REQUEST_CHECKSUM_CALCULATION
+  value: when_required
+{{- end }}
+{{- end }}
 {{- end -}}

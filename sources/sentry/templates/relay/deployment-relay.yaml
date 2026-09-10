@@ -15,7 +15,7 @@ metadata:
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
     {{- include "sentry.component.labels" (dict "component" "relay" "ctx" .) | nindent 4 }}
-  {{- if .Values.asHook }}
+  {{- if .Values.relay.asHook }}
   {{- /* Add the Helm annotations so that deployment after asHook from true to false works */}}
   annotations:
     meta.helm.sh/release-name: "{{ .Release.Name }}"
@@ -33,6 +33,8 @@ spec:
   replicas: {{ .Values.relay.replicas }}
 {{- end }}
   revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
+  strategy:
+    type: {{ .Values.relay.strategyType | default "RollingUpdate" }}
   template:
     metadata:
       annotations:
@@ -81,6 +83,49 @@ spec:
 {{ toYaml .Values.relay.securityContext | indent 8 }}
       {{- end }}
       initContainers:
+        {{- if and (not .Values.kafka.enabled) .Values.externalKafka.sasl.existingSecret }}
+        {{- $configRenderImage := default (dict) (default (dict) .Values.relay.configRender).image }}
+        - name: {{ .Chart.Name }}-relay-config-render
+          image: "{{ template "relay.configRender.image" . }}"
+          imagePullPolicy: {{ default "IfNotPresent" $configRenderImage.pullPolicy }}
+          command:
+            - /bin/sh
+            - -c
+            - |
+              esc() { printf '%s' "$1" | sed 's/[&|\\]/\\&/g'; }
+              ESC_MECH=$(esc "$KAFKA_SASL_MECHANISM")
+              ESC_USER=$(esc "$KAFKA_SASL_USERNAME")
+              ESC_PASS=$(esc "$KAFKA_SASL_PASSWORD")
+              sed "s|\${KAFKA_SASL_MECHANISM}|${ESC_MECH}|g; s|\${KAFKA_SASL_USERNAME}|${ESC_USER}|g; s|\${KAFKA_SASL_PASSWORD}|${ESC_PASS}|g" /config-template/config.yml > /rendered-config/config.yml
+          env:
+            - name: KAFKA_SASL_MECHANISM
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.externalKafka.sasl.existingSecret }}
+                  key: {{ default "mechanism" .Values.externalKafka.sasl.existingSecretKeys.mechanism }}
+            - name: KAFKA_SASL_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.externalKafka.sasl.existingSecret }}
+                  key: {{ default "username" .Values.externalKafka.sasl.existingSecretKeys.username }}
+            - name: KAFKA_SASL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.externalKafka.sasl.existingSecret }}
+                  key: {{ default "password" .Values.externalKafka.sasl.existingSecretKeys.password }}
+          volumeMounts:
+            - name: config
+              mountPath: /config-template
+              readOnly: true
+            - name: rendered-config
+              mountPath: /rendered-config
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
+            limits:
+              memory: 32Mi
+        {{- end }}
         - name: {{ .Chart.Name }}-relay-init
           image: "{{ template "relay.image" . }}"
           imagePullPolicy: {{ default "IfNotPresent" .Values.images.sentry.pullPolicy }}
@@ -114,10 +159,17 @@ spec:
           volumeMounts:
             - name: credentials
               mountPath: /work/.relay
+            {{- if and (not .Values.kafka.enabled) .Values.externalKafka.sasl.existingSecret }}
+            - name: rendered-config
+              mountPath: /work/.relay/config.yml
+              subPath: config.yml
+              readOnly: true
+            {{- else }}
             - name: config
               mountPath: /work/.relay/config.yml
               subPath: config.yml
               readOnly: true
+            {{- end }}
 {{- if .Values.relay.init.volumeMounts }}
 {{ toYaml .Values.relay.init.volumeMounts | indent 12 }}
 {{- end }}
@@ -156,11 +208,18 @@ spec:
         volumeMounts:
           - name: credentials
             mountPath: /work/.relay
+          {{- if and (not .Values.kafka.enabled) .Values.externalKafka.sasl.existingSecret }}
+          - name: rendered-config
+            mountPath: /work/.relay/config.yml
+            subPath: config.yml
+            readOnly: true
+          {{- else }}
           - name: config
             mountPath: /work/.relay/config.yml
             subPath: config.yml
             readOnly: true
-          {{- if and .Values.geodata.volumeName .Values.geodata.accountID }}
+          {{- end }}
+          {{- if and .Values.geodata.volumeName (include "sentry.geodata.enabled" .) }}
           - name: {{ .Values.geodata.volumeName }}
             mountPath: {{ .Values.geodata.mountPath }}
             readOnly: true
@@ -168,26 +227,29 @@ spec:
 {{- if .Values.relay.volumeMounts }}
 {{ toYaml .Values.relay.volumeMounts | indent 10 }}
 {{- end }}
+{{- if .Values.global.volumeMounts }}
+{{ toYaml .Values.global.volumeMounts | indent 10 }}
+{{- end }}
         livenessProbe:
-          failureThreshold: {{ .Values.relay.probeFailureThreshold }}
+          failureThreshold: {{ .Values.relay.livenessProbe.failureThreshold }}
           httpGet:
             path: {{ template "relay.healthCheck.livenessRequestPath" }}
             port: {{ template "relay.port" }}
             scheme: HTTP
-          initialDelaySeconds: {{ .Values.relay.probeInitialDelaySeconds }}
-          periodSeconds: {{ .Values.relay.probePeriodSeconds }}
-          successThreshold: {{ .Values.relay.probeSuccessThreshold }}
-          timeoutSeconds: {{ .Values.relay.probeTimeoutSeconds }}
+          initialDelaySeconds: {{ .Values.relay.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.relay.livenessProbe.periodSeconds }}
+          successThreshold: {{ .Values.relay.livenessProbe.successThreshold }}
+          timeoutSeconds: {{ .Values.relay.livenessProbe.timeoutSeconds }}
         readinessProbe:
-          failureThreshold: {{ .Values.relay.probeFailureThreshold }}
+          failureThreshold: {{ .Values.relay.readinessProbe.failureThreshold }}
           httpGet:
             path: {{ template "relay.healthCheck.readinessRequestPath" }}
             port: {{ template "relay.port" }}
             scheme: HTTP
-          initialDelaySeconds: {{ .Values.relay.probeInitialDelaySeconds }}
-          periodSeconds: {{ .Values.relay.probePeriodSeconds }}
-          successThreshold: {{ .Values.relay.probeSuccessThreshold }}
-          timeoutSeconds: {{ .Values.relay.probeTimeoutSeconds }}
+          initialDelaySeconds: {{ .Values.relay.readinessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.relay.readinessProbe.periodSeconds }}
+          successThreshold: {{ .Values.relay.readinessProbe.successThreshold }}
+          timeoutSeconds: {{ .Values.relay.readinessProbe.timeoutSeconds }}
         resources:
 {{ toYaml .Values.relay.resources | indent 12 }}
 {{- if .Values.relay.containerSecurityContext }}
@@ -210,7 +272,11 @@ spec:
           defaultMode: 0644
       - name: credentials
         emptyDir: {}
-      {{- if and .Values.geodata.volumeName .Values.geodata.accountID }}
+      {{- if and (not .Values.kafka.enabled) .Values.externalKafka.sasl.existingSecret }}
+      - name: rendered-config
+        emptyDir: {}
+      {{- end }}
+      {{- if and .Values.geodata.volumeName (include "sentry.geodata.enabled" .) }}
       - name: {{ .Values.geodata.volumeName }}
         persistentVolumeClaim:
           claimName: data-sentry-geoip

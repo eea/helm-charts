@@ -59,7 +59,7 @@ spec:
       tolerations:
 {{ toYaml .Values.global.tolerations | indent 8 }}
       {{- end }}
-      restartPolicy: Never
+      restartPolicy: {{ .Values.hooks.restartPolicy | default "Never" }}
       {{- if .Values.images.snuba.imagePullSecrets }}
       imagePullSecrets:
 {{ toYaml .Values.images.snuba.imagePullSecrets | indent 8 }}
@@ -109,6 +109,9 @@ spec:
           readOnly: true
 {{- if .Values.hooks.snubaInit.volumeMounts }}
 {{ toYaml .Values.hooks.snubaInit.volumeMounts | indent 8 }}
+{{- end }}
+{{- if .Values.global.volumeMounts }}
+{{ toYaml .Values.global.volumeMounts | indent 8 }}
 {{- end }}
         resources:
 {{ toYaml .Values.hooks.snubaInit.resources | indent 10 }}

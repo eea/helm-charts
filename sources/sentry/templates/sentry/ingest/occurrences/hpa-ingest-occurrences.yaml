@@ -1,0 +1,60 @@
+{{- if has "feature-complete" .Values.profiles }}
+{{- if and .Values.sentry.ingestOccurrences.enabled .Values.sentry.ingestOccurrences.autoscaling.enabled }}
+apiVersion: {{ template "sentry.autoscaling.apiVersion" . }}
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ template "sentry.fullname" . }}-sentry-ingest-occurrences
+  labels:
+    {{- include "sentry.component.labels" (dict "component" "ingest-occurrences" "ctx" .) | nindent 4 }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ template "sentry.fullname" . }}-ingest-occurrences
+  minReplicas: {{ .Values.sentry.ingestOccurrences.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.sentry.ingestOccurrences.autoscaling.maxReplicas }}
+  {{- if eq (include "sentry.autoscaling.apiVersion" .) "autoscaling/v1" }}
+  targetCPUUtilizationPercentage: {{ .Values.sentry.ingestOccurrences.autoscaling.targetCPUUtilizationPercentage }}
+  {{- else if semverCompare ">=1.27-0" .Capabilities.KubeVersion.GitVersion }}
+  metrics:
+    - type: ContainerResource
+      containerResource:
+        container: {{ .Chart.Name }}-ingest-occurrences
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.sentry.ingestOccurrences.autoscaling.targetCPUUtilizationPercentage }}
+    {{- if .Values.sentry.ingestOccurrences.autoscaling.targetMemoryUtilizationPercentage }}
+    - type: ContainerResource
+      containerResource:
+        container: {{ .Chart.Name }}-ingest-occurrences
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.sentry.ingestOccurrences.autoscaling.targetMemoryUtilizationPercentage }}
+    {{- end }}
+  {{- else }}
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.sentry.ingestOccurrences.autoscaling.targetCPUUtilizationPercentage }}
+    {{- if .Values.sentry.ingestOccurrences.autoscaling.targetMemoryUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.sentry.ingestOccurrences.autoscaling.targetMemoryUtilizationPercentage }}
+    {{- end }}
+  {{- end }}
+  {{- if eq (include "sentry.autoscaling.apiVersion" .) "autoscaling/v2" }}
+  {{- with .Values.sentry.ingestOccurrences.autoscaling.behavior }}
+  behavior:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- end }}
+{{- end }}
+{{- end }}

@@ -2,14 +2,13 @@ apiVersion: v2
 name: sentry
 description: A Helm chart for Kubernetes
 type: application
-version: 27.7.0
+version: 33.8.0
 # renovate image=ghcr.io/getsentry/sentry
-appVersion: 25.9.0
+appVersion: 26.8.0
 dependencies:
   - name: memcached
-    repository: oci://registry-1.docker.io/bitnamicharts
-    version: 7.5.2
-    condition: sourcemaps.enabled
+    repository: oci://registry-1.docker.io/cloudpirates
+    version: 0.9.3
   - name: redis
     repository: oci://registry-1.docker.io/bitnamicharts
     version: 17.11.3
@@ -28,9 +27,13 @@ dependencies:
     alias: rabbitmq
     condition: rabbitmq.enabled
   - name: nginx
-    repository: oci://registry-1.docker.io/bitnamicharts
-    version: 18.2.5
+    repository: oci://registry-1.docker.io/cloudpirates
+    version: 0.7.0
     condition: nginx.enabled
+  - name: seaweedfs
+    repository: https://seaweedfs.github.io/seaweedfs/helm
+    version: 4.17.0
+    condition: seaweedfs.enabled
 maintainers:
   - name: sentry-kubernetes
 icon: https://raw.githubusercontent.com/sentry-kubernetes/charts/refs/heads/develop/docs/logo.png

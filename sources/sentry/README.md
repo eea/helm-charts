@@ -1,15 +1,42 @@
 # Install
 
+## External Services
+
+This chart relies on several external services for data storage and message brokering. While bundled versions are provided for testing and development, **production deployments should use external services**.
+
+Currently, using an **external ClickHouse is a requirement** as the bundled version is deprecated.
+
+Please refer to the [External Services Documentation](docs/external-services.md) for detailed setup instructions.
+
 ## Add repo
 
 ```
 helm repo add sentry https://sentry-kubernetes.github.io/charts
 ```
 
-## Without overrides
+Charts are also published as OCI artifacts on GHCR:
 
 ```
-helm install sentry sentry/sentry --wait --timeout=1000s
+helm install sentry oci://ghcr.io/sentry-kubernetes/charts/sentry --version <chart-version>
+```
+
+## Quick install
+
+You must provide an admin password (or reference an existing secret). For a quick test:
+
+```
+helm install sentry sentry/sentry --wait --timeout=1000s \
+  --set user.password=CHANGE_ME
+```
+
+For production, create a Kubernetes secret and reference it via `user.existingSecret`:
+
+```
+kubectl create secret generic sentry-admin-password \
+  --from-literal=admin-password='CHANGE_ME'
+
+helm install sentry sentry/sentry --wait --timeout=1000s \
+  --set user.existingSecret=sentry-admin-password
 ```
 
 ## With your own values file
@@ -33,24 +60,6 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 |-----|------|---------|-------------|
 | asHook | bool | `true` |  |
 | auth.register | bool | `true` |  |
-| clickhouse.clickhouse.configmap.remote_servers.internal_replication | bool | `true` |  |
-| clickhouse.clickhouse.configmap.remote_servers.replica.backup.enabled | bool | `false` |  |
-| clickhouse.clickhouse.configmap.users.enabled | bool | `false` |  |
-| clickhouse.clickhouse.configmap.users.user[0].config.networks[0] | string | `"::/0"` |  |
-| clickhouse.clickhouse.configmap.users.user[0].config.password | string | `""` |  |
-| clickhouse.clickhouse.configmap.users.user[0].config.profile | string | `"default"` |  |
-| clickhouse.clickhouse.configmap.users.user[0].config.quota | string | `"default"` |  |
-| clickhouse.clickhouse.configmap.users.user[0].name | string | `"default"` |  |
-| clickhouse.clickhouse.configmap.zookeeper_servers.config[0].hostTemplate | string | `"{{ .Release.Name }}-zookeeper-clickhouse"` |  |
-| clickhouse.clickhouse.configmap.zookeeper_servers.config[0].index | string | `"clickhouse"` |  |
-| clickhouse.clickhouse.configmap.zookeeper_servers.config[0].port | string | `"2181"` |  |
-| clickhouse.clickhouse.configmap.zookeeper_servers.enabled | bool | `true` |  |
-| clickhouse.clickhouse.persistentVolumeClaim.dataPersistentVolume.accessModes[0] | string | `"ReadWriteOnce"` |  |
-| clickhouse.clickhouse.persistentVolumeClaim.dataPersistentVolume.enabled | bool | `true` |  |
-| clickhouse.clickhouse.persistentVolumeClaim.dataPersistentVolume.storage | string | `"30Gi"` |  |
-| clickhouse.clickhouse.persistentVolumeClaim.enabled | bool | `true` |  |
-| clickhouse.clickhouse.replicas | string | `"1"` |  |
-| clickhouse.enabled | bool | `true` |  |
 | clickhouse.nodeSelector | object | `{}` |  |
 | config.configYml | object | `{}` |  |
 | config.relay | string | `"# No YAML relay config given\n"` |  |
@@ -61,13 +70,16 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | config.web.maxRequestsDelta | int | `500` |  |
 | config.web.maxWorkerLifetime | int | `86400` |  |
 | discord | object | `{}` |  |
+| externalClickhouse.ca_certs | string | `""` | Path to a custom ClickHouse CA certificate bundle mounted in Snuba containers |
 | externalClickhouse.database | string | `"default"` |  |
 | externalClickhouse.host | string | `"clickhouse"` |  |
 | externalClickhouse.httpPort | int | `8123` |  |
 | externalClickhouse.password | string | `""` |  |
+| externalClickhouse.secure | bool | `false` | Use TLS for ClickHouse connections |
 | externalClickhouse.singleNode | bool | `true` |  |
 | externalClickhouse.tcpPort | int | `9000` |  |
 | externalClickhouse.username | string | `"default"` |  |
+| externalClickhouse.verify | bool | `false` | Verify the ClickHouse TLS certificate. When false, the cleanup client accepts invalid certificates |
 | externalKafka.cluster | list | `[]` | Multi hosts and ports of external Kafka |
 | externalKafka.host | string | `"kafka-confluent"` | Hostname or IP address of external Kafka |
 | externalKafka.port | int | `9092` | Port for external Kafka |
@@ -93,8 +105,44 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | filestore.filesystem.persistence.size | string | `"10Gi"` |  |
 | filestore.gcs | object | `{}` |  |
 | filestore.s3 | object | `{}` |  |
+| filestore.profiles.backend | string | `"filesystem"` | Profiles storage backend (filesystem, gcs or s3). Recommended: object storage backend |
+| filestore.profiles.gcs.secretName | string | `nil` | GCS service-account secret name for profiles storage. Must match filestore/replay GCS secret when shared in Sentry pods |
+| filestore.profiles.gcs.credentialsFile | string | `nil` | Credentials filename inside the GCS secret for profiles storage. Must match filestore/replay GCS credentialsFile when shared in Sentry pods |
+| filestore.profiles.gcs.bucketName | string | `nil` | GCS bucket name for profiles storage |
+| filestore.profiles.s3.existingSecret | string | `nil` | Existing secret containing S3 credentials |
+| filestore.profiles.s3.accessKeyIdRef | string | `nil` | Key in existingSecret for access key ID |
+| filestore.profiles.s3.secretAccessKeyRef | string | `nil` | Key in existingSecret for secret access key |
+| filestore.profiles.s3.access_key | string | `nil` | S3 access key (plain text) |
+| filestore.profiles.s3.secret_key | string | `nil` | S3 secret key (plain text) |
+| filestore.profiles.s3.bucket_name | string | `nil` | S3 bucket name for profiles |
+| filestore.profiles.s3.endpoint_url | string | `nil` | S3 endpoint URL (for S3-compatible services like MinIO, SeaweedFS) |
+| filestore.profiles.s3.signature_version | string | `nil` | S3 signature version (e.g. s3v4) |
+| filestore.profiles.s3.region_name | string | `nil` | S3 region name |
+| filestore.profiles.s3.default_acl | string | `nil` | Default ACL for S3 objects |
+| filestore.profiles.s3.bucket_acl | string | `nil` | Bucket ACL for S3 |
+| filestore.profiles.s3.addressing_style | string | `nil` | S3 addressing style (path or virtual) |
+| filestore.profiles.filesystem.path | string | `"/var/lib/sentry/files/profiles"` | Path for filesystem profiles storage |
+| filestore.profiles.filesystem.persistence.enabled | bool | `true` | Enable persistence for profiles filesystem storage |
+| filestore.profiles.filesystem.persistence.shareWithVroom | bool | `false` | Share PVC with vroom deployment (requires ReadWriteMany on vroom.persistence.accessModes). NOT recommended for production |
+| filestore.profiles.filesystem.persistence.accessModes[0] | string | `"ReadWriteOnce"` | Access mode for profiles PVC (use ReadWriteMany when shareWithVroom is true) |
+| filestore.profiles.filesystem.persistence.size | string | `"10Gi"` | Size of profiles PVC |
+| filestore.profiles.filesystem.persistence.existingClaim | string | `""` | Use existing PVC for profiles storage |
+| filestore.profiles.filesystem.persistence.lookupVolumeName | bool | `true` | Lookup and use existing volume name |
+| filestore.profiles.filesystem.persistence.storageClassName | string | `nil` | Storage class for profiles PVC |
+| nodestore.backend | string | `""` | Node storage backend. Set to "s3" to enable S3-based node storage. Requires sentry-nodestore-s3 package (automatically installed via init containers) |
+| nodestore.s3.existingSecret | string | `nil` | Existing secret containing S3 credentials for nodestore |
+| nodestore.s3.accessKeyIdRef | string | `nil` | Key in existingSecret for access key ID |
+| nodestore.s3.secretAccessKeyRef | string | `nil` | Key in existingSecret for secret access key |
+| nodestore.s3.accessKeyId | string | `nil` | S3 access key ID (plain text) |
+| nodestore.s3.secretAccessKey | string | `nil` | S3 secret access key (plain text) |
+| nodestore.s3.bucketName | string | `nil` | S3 bucket name for nodestore |
+| nodestore.s3.bucketPath | string | `nil` | S3 bucket path for nodestore |
+| nodestore.s3.endpointUrl | string | `nil` | S3 endpoint URL (for S3-compatible services like MinIO, SeaweedFS) |
+| nodestore.s3.regionName | string | `nil` | S3 region name for nodestore |
+| nodestore.s3.compression | bool | `nil` | Enable compression for nodestore |
 | geodata.accountID | string | `""` |  |
 | geodata.editionIDs | string | `""` |  |
+| geodata.existingSecret | string | `""` | Name of an externally-managed Secret holding the GeoIP credentials. If unset, the chart generates and manages this Secret itself. The Secret must contain the keys `GEOIPUPDATE_ACCOUNT_ID`, `GEOIPUPDATE_LICENSE_KEY` and `GEOIPUPDATE_EDITION_IDS`, which are loaded with `envFrom` and therefore cannot be renamed. If set, `accountID`, `licenseKey` and `editionIDs` above are ignored and the chart-managed Secret is not created. |
 | geodata.licenseKey | string | `""` |  |
 | geodata.mountPath | string | `""` |  |
 | geodata.path | string | `""` |  |
@@ -104,6 +152,7 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | global.nodeSelector | object | `{}` |  |
 | global.sidecars | list | `[]` |  |
 | global.tolerations | list | `[]` |  |
+| global.volumeMounts | list | `[]` |  |
 | global.volumes | list | `[]` |  |
 | google | object | `{}` |  |
 | hooks.activeDeadlineSeconds | int | `600` |  |
@@ -123,7 +172,7 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | hooks.dbInit.env | list | `[]` |  |
 | hooks.dbInit.nodeSelector | object | `{}` |  |
 | hooks.dbInit.podAnnotations | object | `{}` |  |
-| hooks.dbInit.resources.limits.memory | string | `"2048Mi"` |  |
+| hooks.dbInit.resources.limits.memory | string | `"2560Mi"` |  |
 | hooks.dbInit.resources.requests.cpu | string | `"300m"` |  |
 | hooks.dbInit.resources.requests.memory | string | `"2048Mi"` |  |
 | hooks.dbInit.sidecars | list | `[]` |  |
@@ -131,6 +180,7 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | hooks.enabled | bool | `true` |  |
 | hooks.preUpgrade | bool | `false` |  |
 | hooks.removeOnSuccess | bool | `true` |  |
+| hooks.restartPolicy | string | `"Never"` |  |
 | hooks.shareProcessNamespace | bool | `false` |  |
 | hooks.snubaInit.affinity | object | `{}` |  |
 | hooks.snubaInit.enabled | bool | `true` |  |
@@ -142,14 +192,22 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | hooks.snubaInit.resources.requests.cpu | string | `"700m"` |  |
 | hooks.snubaInit.resources.requests.memory | string | `"1Gi"` |  |
 | hooks.snubaMigrate.enabled | bool | `true` |  |
+| hooks.taskbrokerMigrate.resources.limits.cpu | string | `"2000m"` |  |
+| hooks.taskbrokerMigrate.resources.limits.memory | string | `"1Gi"` |  |
+| hooks.taskbrokerMigrate.resources.requests.cpu | string | `"700m"` |  |
+| hooks.taskbrokerMigrate.resources.requests.memory | string | `"1Gi"` |  |
 | images.relay.imagePullSecrets | list | `[]` |  |
 | images.sentry.imagePullSecrets | list | `[]` |  |
 | images.snuba.imagePullSecrets | list | `[]` |  |
 | images.symbolicator.imagePullSecrets | list | `[]` |  |
 | images.vroom.imagePullSecrets | list | `[]` |  |
-| ingress.alb.httpRedirect | bool | `false` |  |
-| ingress.enabled | bool | `true` |  |
-| ingress.regexPathStyle | string | `"nginx"` |  |
+| images.launchpad.imagePullSecrets | list | `[]` |  |
+| ingress.annotations | object | `{"nginx.ingress.kubernetes.io/use-regex":"true","nginx.ingress.kubernetes.io/proxy-buffers-number":"4","nginx.ingress.kubernetes.io/proxy-buffer-size":"128k","nginx.ingress.kubernetes.io/proxy-busy-buffers-size":"256k"}` | Default ingress annotations (override per controller) |
+| ingress.enabled | bool | `false` |  |
+| ingress.ingressClassName | string | `"nginx"` |  |
+| ingress.pathRules | object | `{"nginx":[...],"traefik":[...],"alb":[...],"gce":[...]}` | Controller-specific path rules (see values.yaml for defaults) |
+| ingress.pathType | string | `"ImplementationSpecific"` |  |
+| ingress.regexPathStyle | string | `""` | Controller style for path rules (auto from ingressClassName if empty) |
 | ipv6 | bool | `false` |  |
 | kafka.controller.nodeSelector | object | `{}` |  |
 | kafka.controller.replicaCount | int | `3` |  |
@@ -263,7 +321,6 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | kafka.sasl.client.users | list | `[]` | List of usernames for client communications when SASL is enabled, first user will be used if enabled |
 | kafka.sasl.client.passwords | list | `[]` | List of passwords for client communications when SASL is enabled, must match the number of client.users, first password will be used if enabled |
 | kafka.sasl.enabledMechanisms | string | `"PLAIN,SCRAM-SHA-256,SCRAM-SHA-512"` | Comma-separated list of allowed SASL mechanisms when SASL listeners are configured |
-| kafka.zookeeper.enabled | bool | `false` |  |
 | mail.backend | string | `"dummy"` |  |
 | mail.from | string | `""` |  |
 | mail.host | string | `""` |  |
@@ -272,16 +329,12 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | mail.useSsl | bool | `false` |  |
 | mail.useTls | bool | `false` |  |
 | mail.username | string | `""` |  |
-| memcached.args[0] | string | `"memcached"` |  |
-| memcached.args[1] | string | `"-u memcached"` |  |
-| memcached.args[2] | string | `"-p 11211"` |  |
-| memcached.args[3] | string | `"-v"` |  |
-| memcached.args[4] | string | `"-m $(MEMCACHED_MEMORY_LIMIT)"` |  |
-| memcached.args[5] | string | `"-I $(MEMCACHED_MAX_ITEM_SIZE)"` |  |
-| memcached.extraEnvVarsCM | string | `"sentry-memcached"` |  |
-| memcached.maxItemSize | string | `"26214400"` |  |
-| memcached.memoryLimit | string | `"2048"` |  |
+| memcached.config.extraArgs[0] | string | `"-I"` |  |
+| memcached.config.extraArgs[1] | string | `"26214400"` |  |
+| memcached.config.memoryLimit | int | `2048` |  |
+| memcached.config.verbosity | int | `1` |  |
 | memcached.nodeSelector | object | `{}` |  |
+| memcached.tolerations | list | `[]` |  |
 | metrics.affinity | object | `{}` |  |
 | metrics.containerSecurityContext | object | `{}` |  |
 | metrics.enabled | bool | `false` |  |
@@ -297,9 +350,9 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | metrics.nodeSelector | object | `{}` |  |
 | metrics.podAnnotations | object | `{}` |  |
 | metrics.readinessProbe.enabled | bool | `true` |  |
-| metrics.readinessProbe.failureThreshold | int | `3` |  |
+| metrics.readinessProbe.failureThreshold | int | `2` |  |
 | metrics.readinessProbe.initialDelaySeconds | int | `30` |  |
-| metrics.readinessProbe.periodSeconds | int | `5` |  |
+| metrics.readinessProbe.periodSeconds | int | `3` |  |
 | metrics.readinessProbe.successThreshold | int | `1` |  |
 | metrics.readinessProbe.timeoutSeconds | int | `2` |  |
 | metrics.resources | object | `{}` |  |
@@ -323,16 +376,11 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | nginx.customReadinessProbe.successThreshold | int | `1` |  |
 | nginx.customReadinessProbe.tcpSocket.port | string | `"http"` |  |
 | nginx.customReadinessProbe.timeoutSeconds | int | `3` |  |
-| nginx.enabled | bool | `true` |  |
-| nginx.existingServerBlockConfigmap | string | `"{{ template \"sentry.fullname\" . }}"` |  |
+| nginx.enabled | bool | `false` |  |
+| nginx.existingServerConfigConfigmap | string | `"{{ template \"sentry.fullname\" . }}"` |  |
 | nginx.extraLocationSnippet | bool | `false` |  |
-| nginx.metrics.serviceMonitor | object | `{}` |  |
-| nginx.nodeSelector | object | `{}` |  |
-| nginx.replicaCount | int | `1` |  |
-| nginx.resources | object | `{}` |  |
-| nginx.service.ports.http | int | `80` |  |
-| nginx.service.type | string | `"ClusterIP"` |  |
 | openai | object | `{}` |  |
+| pagerduty | object | `{}` |  |
 | pgbouncer.affinity | object | `{}` |  |
 | pgbouncer.authType | string | `"md5"` |  |
 | pgbouncer.enabled | bool | `false` |  |
@@ -368,28 +416,6 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | postgresql.replication.numSynchronousReplicas | int | `1` |  |
 | postgresql.replication.readReplicas | int | `2` |  |
 | postgresql.replication.synchronousCommit | string | `"on"` |  |
-| prefix | string | `nil` |  |
-| rabbitmq.auth.erlangCookie | string | `"pHgpy3Q6adTskzAT6bLHCFqFTF7lMxhA"` |  |
-| rabbitmq.auth.password | string | `"guest"` |  |
-| rabbitmq.auth.username | string | `"guest"` |  |
-| rabbitmq.clustering.forceBoot | bool | `true` |  |
-| rabbitmq.clustering.rebalance | bool | `true` |  |
-| rabbitmq.enabled | bool | `true` |  |
-| rabbitmq.extraConfiguration | string | `"load_definitions = /app/load_definition.json\n"` |  |
-| rabbitmq.extraSecrets.load-definition."load_definition.json" | string | `"{\n  \"users\": [\n    {\n      \"name\": \"{{ .Values.auth.username }}\",\n      \"password\": \"{{ .Values.auth.password }}\",\n      \"tags\": \"administrator\"\n    }\n  ],\n  \"permissions\": [{\n    \"user\": \"{{ .Values.auth.username }}\",\n    \"vhost\": \"/\",\n    \"configure\": \".*\",\n    \"write\": \".*\",\n    \"read\": \".*\"\n  }],\n  \"policies\": [\n    {\n      \"name\": \"ha-all\",\n      \"pattern\": \".*\",\n      \"vhost\": \"/\",\n      \"definition\": {\n        \"ha-mode\": \"all\",\n        \"ha-sync-mode\": \"automatic\",\n        \"ha-sync-batch-size\": 1\n      }\n    }\n  ],\n  \"vhosts\": [\n    {\n      \"name\": \"/\"\n    }\n  ]\n}\n"` |  |
-| rabbitmq.loadDefinition.enabled | bool | `true` |  |
-| rabbitmq.loadDefinition.existingSecret | string | `"load-definition"` |  |
-| rabbitmq.memoryHighWatermark | object | `{}` |  |
-| rabbitmq.metrics.enabled | bool | `false` |  |
-| rabbitmq.metrics.serviceMonitor.enabled | bool | `false` |  |
-| rabbitmq.metrics.serviceMonitor.labels.release | string | `"prometheus-operator"` |  |
-| rabbitmq.metrics.serviceMonitor.path | string | `"/metrics/per-object"` |  |
-| rabbitmq.nameOverride | string | `""` |  |
-| rabbitmq.pdb.create | bool | `true` |  |
-| rabbitmq.persistence.enabled | bool | `true` |  |
-| rabbitmq.replicaCount | int | `1` |  |
-| rabbitmq.resources | object | `{}` |  |
-| rabbitmq.vhost | string | `"/"` |  |
 | redis.auth.enabled | bool | `false` |  |
 | redis.auth.sentinel | bool | `false` |  |
 | redis.enabled | bool | `true` |  |
@@ -399,23 +425,32 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | redis.replica.nodeSelector | object | `{}` |  |
 | redis.replica.replicaCount | int | `1` |  |
 | relay.affinity | object | `{}` |  |
+| relay.asHook | bool | `true` | Deploy relay as a Helm hook. Set to false for rolling updates instead of delete-and-recreate on upgrades |
 | relay.autoscaling.enabled | bool | `false` |  |
 | relay.autoscaling.maxReplicas | int | `5` |  |
 | relay.autoscaling.minReplicas | int | `2` |  |
 | relay.autoscaling.targetCPUUtilizationPercentage | int | `50` |  |
+| relay.configRender.image.pullPolicy | string | `"IfNotPresent"` |  |
+| relay.configRender.image.repository | string | `"busybox"` |  |
+| relay.configRender.image.tag | string | `"1.36"` |  |
 | relay.containerSecurityContext | object | `{}` |  |
 | relay.customResponseHeaders | list | `[]` |  |
 | relay.enabled | bool | `true` |  |
 | relay.env | list | `[]` |  |
 | relay.init.resources | object | `{}` |  |
 | relay.mode | string | `"managed"` |  |
+| relay.livenessProbe.failureThreshold | int | `5` |  |
+| relay.livenessProbe.initialDelaySeconds | int | `10` |  |
+| relay.livenessProbe.periodSeconds | int | `10` |  |
+| relay.livenessProbe.successThreshold | int | `1` |  |
+| relay.livenessProbe.timeoutSeconds | int | `2` |  |
 | relay.nodeSelector | object | `{}` |  |
-| relay.probeFailureThreshold | int | `5` |  |
-| relay.probeInitialDelaySeconds | int | `10` |  |
-| relay.probePeriodSeconds | int | `10` |  |
-| relay.probeSuccessThreshold | int | `1` |  |
-| relay.probeTimeoutSeconds | int | `2` |  |
 | relay.processing.kafkaConfig.messageMaxBytes | int | `50000000` |  |
+| relay.readinessProbe.failureThreshold | int | `2` |  |
+| relay.readinessProbe.initialDelaySeconds | int | `10` |  |
+| relay.readinessProbe.periodSeconds | int | `3` |  |
+| relay.readinessProbe.successThreshold | int | `1` |  |
+| relay.readinessProbe.timeoutSeconds | int | `2` |  |
 | relay.replicas | int | `1` |  |
 | relay.resources | object | `{}` |  |
 | relay.securityContext | object | `{}` |  |
@@ -425,25 +460,24 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | relay.topologySpreadConstraints | list | `[]` |  |
 | relay.volumeMounts | list | `[]` |  |
 | relay.volumes | list | `[]` |  |
+| route.httpRedirect.annotations | object | `{}` | Annotations for the HTTP redirect HTTPRoute |
+| route.httpRedirect.apiVersion | string | `"gateway.networking.k8s.io/v1"` | API version for HTTPRoute (auto-detected if not set) |
+| route.httpRedirect.enabled | bool | `false` | Enable HTTP to HTTPS redirect HTTPRoute |
+| route.httpRedirect.hostnames | list | `[]` | Hostnames (inherits from main route if empty) |
+| route.httpRedirect.kind | string | `"HTTPRoute"` | Route kind |
+| route.httpRedirect.labels | object | `{}` | Labels for the HTTP redirect HTTPRoute |
+| route.httpRedirect.parentRefs | list | `[]` | Parent Gateway references for HTTP listener |
+| route.httpRedirect.statusCode | int | `301` | HTTP redirect status code (301=permanent, 302=temporary) |
+| route.main.additionalRules | list | `[]` | Additional custom rules to prepend |
+| route.main.annotations | object | `{}` | Annotations for the HTTPRoute |
+| route.main.apiVersion | string | `"gateway.networking.k8s.io/v1"` | API version for HTTPRoute (auto-detected if not set) |
+| route.main.enabled | bool | `false` | Enable Gateway API HTTPRoute |
+| route.main.filters | list | `[]` | Filters applied to all backend requests |
+| route.main.hostnames | list | `[]` | Hostnames for the HTTPRoute |
+| route.main.kind | string | `"HTTPRoute"` | Route kind (HTTPRoute, GRPCRoute, etc.) |
+| route.main.labels | object | `{}` | Labels for the HTTPRoute |
+| route.main.parentRefs | list | `[]` | Parent Gateway references (required when enabled) |
 | revisionHistoryLimit | int | `10` |  |
-| sentry.billingMetricsConsumer.affinity | object | `{}` |  |
-| sentry.billingMetricsConsumer.autoscaling.enabled | bool | `false` |  |
-| sentry.billingMetricsConsumer.autoscaling.maxReplicas | int | `3` |  |
-| sentry.billingMetricsConsumer.autoscaling.minReplicas | int | `1` |  |
-| sentry.billingMetricsConsumer.autoscaling.targetCPUUtilizationPercentage | int | `50` |  |
-| sentry.billingMetricsConsumer.containerSecurityContext | object | `{}` |  |
-| sentry.billingMetricsConsumer.enabled | bool | `true` |  |
-| sentry.billingMetricsConsumer.env | list | `[]` |  |
-| sentry.billingMetricsConsumer.livenessProbe.enabled | bool | `true` |  |
-| sentry.billingMetricsConsumer.livenessProbe.initialDelaySeconds | int | `5` |  |
-| sentry.billingMetricsConsumer.livenessProbe.periodSeconds | int | `320` |  |
-| sentry.billingMetricsConsumer.nodeSelector | object | `{}` |  |
-| sentry.billingMetricsConsumer.replicas | int | `1` |  |
-| sentry.billingMetricsConsumer.resources | object | `{}` |  |
-| sentry.billingMetricsConsumer.securityContext | object | `{}` |  |
-| sentry.billingMetricsConsumer.sidecars | list | `[]` |  |
-| sentry.billingMetricsConsumer.topologySpreadConstraints | list | `[]` |  |
-| sentry.billingMetricsConsumer.volumes | list | `[]` |  |
 | sentry.cleanup.activeDeadlineSeconds | int | `100` |  |
 | sentry.cleanup.concurrency | int | `1` |  |
 | sentry.cleanup.concurrencyPolicy | string | `"Allow"` |  |
@@ -456,15 +490,6 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | sentry.cleanup.sidecars | list | `[]` |  |
 | sentry.cleanup.successfulJobsHistoryLimit | int | `5` |  |
 | sentry.cleanup.volumes | list | `[]` |  |
-| sentry.cron.affinity | object | `{}` |  |
-| sentry.cron.enabled | bool | `true` |  |
-| sentry.cron.env | list | `[]` |  |
-| sentry.cron.nodeSelector | object | `{}` |  |
-| sentry.cron.replicas | int | `1` |  |
-| sentry.cron.resources | object | `{}` |  |
-| sentry.cron.sidecars | list | `[]` |  |
-| sentry.cron.topologySpreadConstraints | list | `[]` |  |
-| sentry.cron.volumes | list | `[]` |  |
 | sentry.features.enableFeedback | bool | `false` |  |
 | sentry.features.enableProfiling | bool | `false` |  |
 | sentry.features.enableSessionReplay | bool | `true` |  |
@@ -482,6 +507,7 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | sentry.genericMetricsConsumer.livenessProbe.enabled | bool | `true` |  |
 | sentry.genericMetricsConsumer.livenessProbe.initialDelaySeconds | int | `5` |  |
 | sentry.genericMetricsConsumer.livenessProbe.periodSeconds | int | `320` |  |
+| sentry.genericMetricsConsumer.maxPollIntervalMs | int | `300000` | Kafka `--max-poll-interval-ms` (self-hosted `SENTRY_KAFKA_MAX_POLL_INTERVAL_MS`). Set `null` to omit the flag. |
 | sentry.genericMetricsConsumer.nodeSelector | object | `{}` |  |
 | sentry.genericMetricsConsumer.replicas | int | `1` |  |
 | sentry.genericMetricsConsumer.resources | object | `{}` |  |
@@ -500,6 +526,7 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | sentry.ingestConsumerAttachments.livenessProbe.enabled | bool | `true` |  |
 | sentry.ingestConsumerAttachments.livenessProbe.initialDelaySeconds | int | `5` |  |
 | sentry.ingestConsumerAttachments.livenessProbe.periodSeconds | int | `320` |  |
+| sentry.ingestConsumerAttachments.maxPollIntervalMs | int | `300000` | Kafka `--max-poll-interval-ms` (self-hosted `SENTRY_KAFKA_MAX_POLL_INTERVAL_MS`). Set `null` to omit the flag. |
 | sentry.ingestConsumerAttachments.nodeSelector | object | `{}` |  |
 | sentry.ingestConsumerAttachments.replicas | int | `1` |  |
 | sentry.ingestConsumerAttachments.resources | object | `{}` |  |
@@ -518,6 +545,7 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | sentry.ingestConsumerEvents.livenessProbe.enabled | bool | `true` |  |
 | sentry.ingestConsumerEvents.livenessProbe.initialDelaySeconds | int | `5` |  |
 | sentry.ingestConsumerEvents.livenessProbe.periodSeconds | int | `320` |  |
+| sentry.ingestConsumerEvents.maxPollIntervalMs | int | `300000` | Kafka `--max-poll-interval-ms` (self-hosted `SENTRY_KAFKA_MAX_POLL_INTERVAL_MS`). Set `null` to omit the flag. |
 | sentry.ingestConsumerEvents.nodeSelector | object | `{}` |  |
 | sentry.ingestConsumerEvents.replicas | int | `1` |  |
 | sentry.ingestConsumerEvents.resources | object | `{}` |  |
@@ -536,6 +564,7 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | sentry.ingestConsumerTransactions.livenessProbe.enabled | bool | `true` |  |
 | sentry.ingestConsumerTransactions.livenessProbe.initialDelaySeconds | int | `5` |  |
 | sentry.ingestConsumerTransactions.livenessProbe.periodSeconds | int | `320` |  |
+| sentry.ingestConsumerTransactions.maxPollIntervalMs | int | `300000` | Kafka `--max-poll-interval-ms` (self-hosted `SENTRY_KAFKA_MAX_POLL_INTERVAL_MS`). Set `null` to omit the flag. |
 | sentry.ingestConsumerTransactions.nodeSelector | object | `{}` |  |
 | sentry.ingestConsumerTransactions.replicas | int | `1` |  |
 | sentry.ingestConsumerTransactions.resources | object | `{}` |  |
@@ -554,6 +583,7 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | sentry.ingestFeedback.livenessProbe.enabled | bool | `true` |  |
 | sentry.ingestFeedback.livenessProbe.initialDelaySeconds | int | `5` |  |
 | sentry.ingestFeedback.livenessProbe.periodSeconds | int | `320` |  |
+| sentry.ingestFeedback.maxPollIntervalMs | int | `300000` | Kafka `--max-poll-interval-ms` (self-hosted `SENTRY_KAFKA_MAX_POLL_INTERVAL_MS`). Set `null` to omit the flag. |
 | sentry.ingestFeedback.nodeSelector | object | `{}` |  |
 | sentry.ingestFeedback.replicas | int | `1` |  |
 | sentry.ingestFeedback.resources | object | `{}` |  |
@@ -572,6 +602,7 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | sentry.ingestMonitors.livenessProbe.enabled | bool | `true` |  |
 | sentry.ingestMonitors.livenessProbe.initialDelaySeconds | int | `5` |  |
 | sentry.ingestMonitors.livenessProbe.periodSeconds | int | `320` |  |
+| sentry.ingestMonitors.maxPollIntervalMs | int | `300000` | Kafka `--max-poll-interval-ms` (self-hosted `SENTRY_KAFKA_MAX_POLL_INTERVAL_MS`). Set `null` to omit the flag. |
 | sentry.ingestMonitors.nodeSelector | object | `{}` |  |
 | sentry.ingestMonitors.replicas | int | `1` |  |
 | sentry.ingestMonitors.resources | object | `{}` |  |
@@ -590,6 +621,7 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | sentry.ingestOccurrences.livenessProbe.enabled | bool | `true` |  |
 | sentry.ingestOccurrences.livenessProbe.initialDelaySeconds | int | `5` |  |
 | sentry.ingestOccurrences.livenessProbe.periodSeconds | int | `320` |  |
+| sentry.ingestOccurrences.maxPollIntervalMs | int | `300000` | Kafka `--max-poll-interval-ms` (self-hosted `SENTRY_KAFKA_MAX_POLL_INTERVAL_MS`). Set `null` to omit the flag. |
 | sentry.ingestOccurrences.nodeSelector | object | `{}` |  |
 | sentry.ingestOccurrences.replicas | int | `1` |  |
 | sentry.ingestOccurrences.resources | object | `{}` |  |
@@ -597,41 +629,6 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | sentry.ingestOccurrences.sidecars | list | `[]` |  |
 | sentry.ingestOccurrences.topologySpreadConstraints | list | `[]` |  |
 | sentry.ingestOccurrences.volumes | list | `[]` |  |
-| sentry.ingestProfiles.affinity | object | `{}` |  |
-| sentry.ingestProfiles.autoscaling.enabled | bool | `false` |  |
-| sentry.ingestProfiles.autoscaling.maxReplicas | int | `3` |  |
-| sentry.ingestProfiles.autoscaling.minReplicas | int | `1` |  |
-| sentry.ingestProfiles.autoscaling.targetCPUUtilizationPercentage | int | `50` |  |
-| sentry.ingestProfiles.containerSecurityContext | object | `{}` |  |
-| sentry.ingestProfiles.env | list | `[]` |  |
-| sentry.ingestProfiles.livenessProbe.enabled | bool | `true` |  |
-| sentry.ingestProfiles.livenessProbe.initialDelaySeconds | int | `5` |  |
-| sentry.ingestProfiles.livenessProbe.periodSeconds | int | `320` |  |
-| sentry.ingestProfiles.nodeSelector | object | `{}` |  |
-| sentry.ingestProfiles.replicas | int | `1` |  |
-| sentry.ingestProfiles.resources | object | `{}` |  |
-| sentry.ingestProfiles.securityContext | object | `{}` |  |
-| sentry.ingestProfiles.sidecars | list | `[]` |  |
-| sentry.ingestProfiles.topologySpreadConstraints | list | `[]` |  |
-| sentry.ingestProfiles.volumes | list | `[]` |  |
-| sentry.ingestReplayRecordings.affinity | object | `{}` |  |
-| sentry.ingestReplayRecordings.autoscaling.enabled | bool | `false` |  |
-| sentry.ingestReplayRecordings.autoscaling.maxReplicas | int | `3` |  |
-| sentry.ingestReplayRecordings.autoscaling.minReplicas | int | `1` |  |
-| sentry.ingestReplayRecordings.autoscaling.targetCPUUtilizationPercentage | int | `50` |  |
-| sentry.ingestReplayRecordings.containerSecurityContext | object | `{}` |  |
-| sentry.ingestReplayRecordings.enabled | bool | `true` |  |
-| sentry.ingestReplayRecordings.env | list | `[]` |  |
-| sentry.ingestReplayRecordings.livenessProbe.enabled | bool | `true` |  |
-| sentry.ingestReplayRecordings.livenessProbe.initialDelaySeconds | int | `5` |  |
-| sentry.ingestReplayRecordings.livenessProbe.periodSeconds | int | `320` |  |
-| sentry.ingestReplayRecordings.nodeSelector | object | `{}` |  |
-| sentry.ingestReplayRecordings.replicas | int | `1` |  |
-| sentry.ingestReplayRecordings.resources | object | `{}` |  |
-| sentry.ingestReplayRecordings.securityContext | object | `{}` |  |
-| sentry.ingestReplayRecordings.sidecars | list | `[]` |  |
-| sentry.ingestReplayRecordings.topologySpreadConstraints | list | `[]` |  |
-| sentry.ingestReplayRecordings.volumes | list | `[]` |  |
 | sentry.kafka.compression.type | string | `""` | Compression type for Kafka messages |
 | sentry.kafka.message.max.bytes | int | `50000000` | Maximum message size for Kafka |
 | sentry.kafka.socket.timeout.ms | int | `1000` | Socket timeout for Kafka connections |
@@ -646,6 +643,7 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | sentry.metricsConsumer.livenessProbe.enabled | bool | `true` |  |
 | sentry.metricsConsumer.livenessProbe.initialDelaySeconds | int | `5` |  |
 | sentry.metricsConsumer.livenessProbe.periodSeconds | int | `320` |  |
+| sentry.metricsConsumer.maxPollIntervalMs | int | `300000` | Kafka `--max-poll-interval-ms` (self-hosted `SENTRY_KAFKA_MAX_POLL_INTERVAL_MS`). Set `null` to omit the flag. |
 | sentry.metricsConsumer.nodeSelector | object | `{}` |  |
 | sentry.metricsConsumer.replicas | int | `1` |  |
 | sentry.metricsConsumer.resources | object | `{}` |  |
@@ -653,6 +651,8 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | sentry.metricsConsumer.sidecars | list | `[]` |  |
 | sentry.metricsConsumer.topologySpreadConstraints | list | `[]` |  |
 | sentry.metricsConsumer.volumes | list | `[]` |  |
+| sentry.monitorsClockTasks.maxPollIntervalMs | int | `300000` | Kafka `--max-poll-interval-ms` (self-hosted `SENTRY_KAFKA_MAX_POLL_INTERVAL_MS`). Set `null` to omit the flag. |
+| sentry.monitorsClockTick.maxPollIntervalMs | int | `300000` | Kafka `--max-poll-interval-ms` (self-hosted `SENTRY_KAFKA_MAX_POLL_INTERVAL_MS`). Set `null` to omit the flag. |
 | sentry.postProcessForwardErrors.affinity | object | `{}` |  |
 | sentry.postProcessForwardErrors.containerSecurityContext | object | `{}` |  |
 | sentry.postProcessForwardErrors.enabled | bool | `true` |  |
@@ -660,6 +660,7 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | sentry.postProcessForwardErrors.livenessProbe.enabled | bool | `true` |  |
 | sentry.postProcessForwardErrors.livenessProbe.initialDelaySeconds | int | `5` |  |
 | sentry.postProcessForwardErrors.livenessProbe.periodSeconds | int | `320` |  |
+| sentry.postProcessForwardErrors.maxPollIntervalMs | int | `300000` | Kafka `--max-poll-interval-ms` (self-hosted `SENTRY_KAFKA_MAX_POLL_INTERVAL_MS`). Set `null` to omit the flag. |
 | sentry.postProcessForwardErrors.nodeSelector | object | `{}` |  |
 | sentry.postProcessForwardErrors.replicas | int | `1` |  |
 | sentry.postProcessForwardErrors.resources | object | `{}` |  |
@@ -674,6 +675,7 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | sentry.postProcessForwardIssuePlatform.livenessProbe.enabled | bool | `true` |  |
 | sentry.postProcessForwardIssuePlatform.livenessProbe.initialDelaySeconds | int | `5` |  |
 | sentry.postProcessForwardIssuePlatform.livenessProbe.periodSeconds | int | `320` |  |
+| sentry.postProcessForwardIssuePlatform.maxPollIntervalMs | int | `300000` | Kafka `--max-poll-interval-ms` (self-hosted `SENTRY_KAFKA_MAX_POLL_INTERVAL_MS`). Set `null` to omit the flag. |
 | sentry.postProcessForwardIssuePlatform.nodeSelector | object | `{}` |  |
 | sentry.postProcessForwardIssuePlatform.replicas | int | `1` |  |
 | sentry.postProcessForwardIssuePlatform.resources | object | `{}` |  |
@@ -688,6 +690,7 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | sentry.postProcessForwardTransactions.livenessProbe.enabled | bool | `true` |  |
 | sentry.postProcessForwardTransactions.livenessProbe.initialDelaySeconds | int | `5` |  |
 | sentry.postProcessForwardTransactions.livenessProbe.periodSeconds | int | `320` |  |
+| sentry.postProcessForwardTransactions.maxPollIntervalMs | int | `300000` | Kafka `--max-poll-interval-ms` (self-hosted `SENTRY_KAFKA_MAX_POLL_INTERVAL_MS`). Set `null` to omit the flag. |
 | sentry.postProcessForwardTransactions.nodeSelector | object | `{}` |  |
 | sentry.postProcessForwardTransactions.replicas | int | `1` |  |
 | sentry.postProcessForwardTransactions.resources | object | `{}` |  |
@@ -695,63 +698,84 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | sentry.postProcessForwardTransactions.sidecars | list | `[]` |  |
 | sentry.postProcessForwardTransactions.topologySpreadConstraints | list | `[]` |  |
 | sentry.postProcessForwardTransactions.volumes | list | `[]` |  |
+| sentry.processSegments.maxPollIntervalMs | int | `300000` | Kafka `--max-poll-interval-ms` (self-hosted `SENTRY_KAFKA_MAX_POLL_INTERVAL_MS`). Set `null` to omit the flag. |
+| sentry.processSpans.maxPollIntervalMs | int | `300000` | Kafka `--max-poll-interval-ms` (self-hosted `SENTRY_KAFKA_MAX_POLL_INTERVAL_MS`). Set `null` to omit the flag. |
 | sentry.singleOrganization | bool | `true` |  |
-| sentry.subscriptionConsumerEvents.affinity | object | `{}` |  |
-| sentry.subscriptionConsumerEvents.containerSecurityContext | object | `{}` |  |
-| sentry.subscriptionConsumerEvents.enabled | bool | `true` |  |
-| sentry.subscriptionConsumerEvents.env | list | `[]` |  |
-| sentry.subscriptionConsumerEvents.livenessProbe.enabled | bool | `true` |  |
-| sentry.subscriptionConsumerEvents.livenessProbe.initialDelaySeconds | int | `5` |  |
-| sentry.subscriptionConsumerEvents.livenessProbe.periodSeconds | int | `320` |  |
-| sentry.subscriptionConsumerEvents.nodeSelector | object | `{}` |  |
-| sentry.subscriptionConsumerEvents.replicas | int | `1` |  |
-| sentry.subscriptionConsumerEvents.resources | object | `{}` |  |
-| sentry.subscriptionConsumerEvents.securityContext | object | `{}` |  |
-| sentry.subscriptionConsumerEvents.sidecars | list | `[]` |  |
-| sentry.subscriptionConsumerEvents.topologySpreadConstraints | list | `[]` |  |
-| sentry.subscriptionConsumerEvents.volumes | list | `[]` |  |
-| sentry.subscriptionConsumerGenericMetrics.affinity | object | `{}` |  |
-| sentry.subscriptionConsumerGenericMetrics.containerSecurityContext | object | `{}` |  |
-| sentry.subscriptionConsumerGenericMetrics.enabled | bool | `true` |  |
-| sentry.subscriptionConsumerGenericMetrics.env | list | `[]` |  |
-| sentry.subscriptionConsumerGenericMetrics.livenessProbe.enabled | bool | `true` |  |
-| sentry.subscriptionConsumerGenericMetrics.livenessProbe.initialDelaySeconds | int | `5` |  |
-| sentry.subscriptionConsumerGenericMetrics.livenessProbe.periodSeconds | int | `320` |  |
-| sentry.subscriptionConsumerGenericMetrics.nodeSelector | object | `{}` |  |
-| sentry.subscriptionConsumerGenericMetrics.replicas | int | `1` |  |
-| sentry.subscriptionConsumerGenericMetrics.resources | object | `{}` |  |
-| sentry.subscriptionConsumerGenericMetrics.securityContext | object | `{}` |  |
-| sentry.subscriptionConsumerGenericMetrics.sidecars | list | `[]` |  |
-| sentry.subscriptionConsumerGenericMetrics.topologySpreadConstraints | list | `[]` |  |
-| sentry.subscriptionConsumerGenericMetrics.volumes | list | `[]` |  |
-| sentry.subscriptionConsumerMetrics.affinity | object | `{}` |  |
-| sentry.subscriptionConsumerMetrics.containerSecurityContext | object | `{}` |  |
-| sentry.subscriptionConsumerMetrics.enabled | bool | `true` |  |
-| sentry.subscriptionConsumerMetrics.env | list | `[]` |  |
-| sentry.subscriptionConsumerMetrics.livenessProbe.enabled | bool | `true` |  |
-| sentry.subscriptionConsumerMetrics.livenessProbe.initialDelaySeconds | int | `5` |  |
-| sentry.subscriptionConsumerMetrics.livenessProbe.periodSeconds | int | `320` |  |
-| sentry.subscriptionConsumerMetrics.nodeSelector | object | `{}` |  |
-| sentry.subscriptionConsumerMetrics.replicas | int | `1` |  |
-| sentry.subscriptionConsumerMetrics.resources | object | `{}` |  |
-| sentry.subscriptionConsumerMetrics.securityContext | object | `{}` |  |
-| sentry.subscriptionConsumerMetrics.sidecars | list | `[]` |  |
-| sentry.subscriptionConsumerMetrics.topologySpreadConstraints | list | `[]` |  |
-| sentry.subscriptionConsumerMetrics.volumes | list | `[]` |  |
-| sentry.subscriptionConsumerTransactions.affinity | object | `{}` |  |
-| sentry.subscriptionConsumerTransactions.containerSecurityContext | object | `{}` |  |
-| sentry.subscriptionConsumerTransactions.enabled | bool | `true` |  |
-| sentry.subscriptionConsumerTransactions.env | list | `[]` |  |
-| sentry.subscriptionConsumerTransactions.livenessProbe.enabled | bool | `true` |  |
-| sentry.subscriptionConsumerTransactions.livenessProbe.initialDelaySeconds | int | `5` |  |
-| sentry.subscriptionConsumerTransactions.livenessProbe.periodSeconds | int | `320` |  |
-| sentry.subscriptionConsumerTransactions.nodeSelector | object | `{}` |  |
-| sentry.subscriptionConsumerTransactions.replicas | int | `1` |  |
-| sentry.subscriptionConsumerTransactions.resources | object | `{}` |  |
-| sentry.subscriptionConsumerTransactions.securityContext | object | `{}` |  |
-| sentry.subscriptionConsumerTransactions.sidecars | list | `[]` |  |
-| sentry.subscriptionConsumerTransactions.topologySpreadConstraints | list | `[]` |  |
-| sentry.subscriptionConsumerTransactions.volumes | list | `[]` |  |
+| sentry.taskBroker.affinity | object | `{}` | |
+| sentry.taskBroker.brokers | list | (see `values.yaml`) | One broker StatefulSet per item. Required per broker: `name`, `kafkaDeadletterTopic`, `kafkaRetryTopic`, `kafkaTopics` (YAML map mounted at `/etc/taskbroker/config.yml`; hyphenated topic names need YAML, not env). Optional: `store.adapter` (`sqlite` \| `postgres`, inherits `sentry.taskBroker.store.adapter`), `persistence.enabled` (inherits `sentry.taskBroker.persistence.enabled`; independent of adapter), `kafkaSessionTimeoutMs` (defaults to `60000`), `replicas`, `resources` (merged with `sentry.taskBroker.resources`), `topologySpreadConstraints` (overrides `sentry.taskBroker.topologySpreadConstraints`). Replaces legacy `topic` / `consumerGroup`. See [taskbroker Kafka config migration](https://github.com/getsentry/taskbroker/blob/main/docs/kafka-config-migration.md). |
+| sentry.taskBroker.containerSecurityContext | object | `{}` | |
+| sentry.taskBroker.enabled | bool | `true` | |
+| sentry.taskBroker.env | list | `[]` | |
+| sentry.taskBroker.hooks.skipMigrateJob | bool | `false` | Skip the Helm taskbroker migrate Job. Required if `hooks.enabled` is false and any broker uses the postgres adapter. |
+| sentry.taskBroker.nodeSelector | object | `{}` | |
+| sentry.taskBroker.persistence.accessMode | string | `"ReadWriteOnce"` | |
+| sentry.taskBroker.persistence.enabled | bool | `true` | Independent of `store.adapter`. Postgres with a PVC is unused disk, not an error. Turning this off on an existing StatefulSet cannot remove `volumeClaimTemplates`. |
+| sentry.taskBroker.persistence.size | string | `"1Gi"` | |
+| sentry.taskBroker.persistence.storageClass | string | `""` | |
+| sentry.taskBroker.priorityClassName | string | `""` | |
+| sentry.taskBroker.replicas | int | `1` | |
+| sentry.taskBroker.resources | object | `{}` | Default container resources for task broker pods; merged with each broker’s `resources` in `sentry.taskBroker.brokers`. |
+| sentry.taskBroker.securityContext | object | `{}` | |
+| sentry.taskBroker.sidecars | list | `[]` | |
+| sentry.taskBroker.store.adapter | string | `"sqlite"` | `sqlite` or `postgres`. Per-broker override: `brokers[].store.adapter`. |
+| sentry.taskBroker.store.postgres.database | string | `"taskbroker"` | Dedicated taskbroker database. Do not reuse the Sentry or Snuba databases. |
+| sentry.taskBroker.store.postgres.defaultDatabase | string | `""` | libpq database for `CREATE DATABASE` existence check. Empty uses `sentry.postgresql.database` (typically `sentry`, not `postgres`). |
+| sentry.taskBroker.store.postgres.ddlExistingSecret | string | `""` | Optional secret for the DDL user password. Defaults to `existingSecret` / `password`. |
+| sentry.taskBroker.store.postgres.ddlExistingSecretKey | string | `"postgresql-password"` | |
+| sentry.taskBroker.store.postgres.ddlUser | string | `""` | DDL username. Empty uses `store.postgres.user`. |
+| sentry.taskBroker.store.postgres.existingSecret | string | `""` | Secret for `TASKBROKER_STORE__PG__PASSWORD`. Required (or `password`) when postgres adapter and `postgresql.enabled=false`. |
+| sentry.taskBroker.store.postgres.existingSecretKey | string | `"postgresql-password"` | |
+| sentry.taskBroker.store.postgres.host | string | `""` | Postgres primary host. Required when `postgresql.enabled=false`. Must not be PgBouncer / a transaction-mode pooler. When `postgresql.enabled=true`, defaults to the in-cluster primary (not pgbouncer). |
+| sentry.taskBroker.store.postgres.maxConnections | int | `64` | Documentation only. The binary hardcodes 64+64 connections per replica. |
+| sentry.taskBroker.store.postgres.minConnections | int | `64` | Documentation only. The binary ignores this. |
+| sentry.taskBroker.store.postgres.password | string | `""` | Injected as env, never written to the ConfigMap. Prefer `existingSecret` in production. |
+| sentry.taskBroker.store.postgres.port | int | `5432` | Always emitted as an integer. |
+| sentry.taskBroker.store.postgres.queryParams | string | `""` | Extra libpq query string, e.g. `sslmode=require`. |
+| sentry.taskBroker.store.postgres.user | string | `""` | Empty inherits `sentry.postgresql.username` (bundled Postgres or `externalPostgresql.username`). |
+| sentry.taskBroker.tolerations | list | `[]` | |
+| sentry.taskBroker.topologySpreadConstraints | list | `[]` | Default pod topologySpreadConstraints for task broker pods; overridden by each broker’s `topologySpreadConstraints` in `sentry.taskBroker.brokers`. |
+| sentry.taskBroker.volumeMounts | list | `[]` | |
+| sentry.taskBroker.volumes | list | `[]` | |
+| sentry.taskWorker.affinity | object | `{}` | |
+| sentry.taskWorker.autoscaling.enabled | bool | `false` | |
+| sentry.taskWorker.autoscaling.maxReplicas | int | `5` | |
+| sentry.taskWorker.autoscaling.minReplicas | int | `1` | |
+| sentry.taskWorker.autoscaling.targetCPUUtilizationPercentage | int | `50` | |
+| sentry.taskWorker.concurrency | int | `4` | |
+| sentry.taskWorker.containerSecurityContext | object | `{}` | |
+| sentry.taskWorker.enabled | bool | `true` | |
+| sentry.taskWorker.env | list | `[]` | |
+| sentry.taskWorker.livenessProbe.initialDelaySeconds | int | `10` | |
+| sentry.taskWorker.livenessProbe.periodSeconds | int | `10` | |
+| sentry.taskWorker.livenessProbe.timeoutSeconds | int | `5` | |
+| sentry.taskWorker.nodeSelector | object | `{}` | |
+| sentry.taskWorker.priorityClassName | string | `""` | |
+| sentry.taskWorker.replicas | int | `1` | |
+| sentry.taskWorker.resources | object | `{}` | Default container resources for task worker pods; merged with each worker’s `resources` in `sentry.taskWorker.workers`. |
+| sentry.taskWorker.securityContext | object | `{}` | |
+| sentry.taskWorker.sidecars | list | `[]` | |
+| sentry.taskWorker.tolerations | list | `[]` | |
+| sentry.taskWorker.topologySpreadConstraints | list | `[]` | Default pod topologySpreadConstraints for task worker pods; overriden by each worker’s `topologySpreadConstraints` in `sentry.taskWorker.workers`. |
+| sentry.taskWorker.volumeMounts | list | `[]` | |
+| sentry.taskWorker.volumes | list | `[]` | |
+| sentry.taskWorker.workers | list | (see `values.yaml`) | One task worker Deployment per item (`name`, `brokerName`, `brokerReplicas`, `replicas`, `concurrency`, optional `resources` merged with `sentry.taskWorker.resources`, optional `autoscaling` overriding `sentry.taskWorker.autoscaling`, optional `topologySpreadConstraints` overriding `sentry.taskWorker.topologySpreadConstraints`). |
+| launchpadTaskWorker.enabled | bool | `true` | Deploy Launchpad taskworker (mobile build processing). Requires `feature-complete` profile and `sentry.taskBroker.enabled`. |
+| launchpadTaskWorker.existingSecret | string | `""` | Name of an externally-managed Secret holding the launchpad RPC shared secret. If unset, the chart generates and manages this Secret itself. |
+| launchpadTaskWorker.existingSecretKey | string | `"rpc-shared-secret"` | Key within `existingSecret` (or the chart-managed Secret) holding the RPC shared secret value. |
+| launchpadTaskWorker.replicas | int | `1` |  |
+| launchpadTaskWorker.concurrency | int | `4` | Parallel Launchpad worker processes (`LAUNCHPAD_WORKER_CONCURRENCY`). |
+| launchpadTaskWorker.env | list | `[]` | Extra environment variables for the Launchpad taskworker container. |
+| launchpadTaskWorker.resources | object | `{}` |  |
+| launchpadTaskWorker.affinity | object | `{}` |  |
+| launchpadTaskWorker.nodeSelector | object | `{}` |  |
+| launchpadTaskWorker.securityContext | object | `{}` |  |
+| launchpadTaskWorker.containerSecurityContext | object | `{}` |  |
+| launchpadTaskWorker.tolerations | list | `[]` |  |
+| launchpadTaskWorker.podLabels | object | `{}` |  |
+| launchpadTaskWorker.livenessProbe.initialDelaySeconds | int | `30` |  |
+| launchpadTaskWorker.livenessProbe.periodSeconds | int | `10` |  |
+| launchpadTaskWorker.livenessProbe.timeoutSeconds | int | `5` |  |
+| sentry.uptimeResults.maxPollIntervalMs | int | `300000` | Kafka `--max-poll-interval-ms` (self-hosted `SENTRY_KAFKA_MAX_POLL_INTERVAL_MS`). Set `null` to omit the flag. |
 | sentry.web.affinity | object | `{}` |  |
 | sentry.web.autoscaling.enabled | bool | `false` |  |
 | sentry.web.autoscaling.maxReplicas | int | `5` |  |
@@ -762,12 +786,17 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | sentry.web.enabled | bool | `true` |  |
 | sentry.web.env | list | `[]` |  |
 | sentry.web.existingSecretEnv | string | `""` |  |
+| sentry.web.livenessProbe.failureThreshold | int | `5` |  |
+| sentry.web.livenessProbe.initialDelaySeconds | int | `10` |  |
+| sentry.web.livenessProbe.periodSeconds | int | `10` |  |
+| sentry.web.livenessProbe.successThreshold | int | `1` |  |
+| sentry.web.livenessProbe.timeoutSeconds | int | `2` |  |
 | sentry.web.nodeSelector | object | `{}` |  |
-| sentry.web.probeFailureThreshold | int | `5` |  |
-| sentry.web.probeInitialDelaySeconds | int | `10` |  |
-| sentry.web.probePeriodSeconds | int | `10` |  |
-| sentry.web.probeSuccessThreshold | int | `1` |  |
-| sentry.web.probeTimeoutSeconds | int | `2` |  |
+| sentry.web.readinessProbe.failureThreshold | int | `2` |  |
+| sentry.web.readinessProbe.initialDelaySeconds | int | `10` |  |
+| sentry.web.readinessProbe.periodSeconds | int | `3` |  |
+| sentry.web.readinessProbe.successThreshold | int | `1` |  |
+| sentry.web.readinessProbe.timeoutSeconds | int | `2` |  |
 | sentry.web.replicas | int | `1` |  |
 | sentry.web.resources | object | `{}` |  |
 | sentry.web.securityContext | object | `{}` |  |
@@ -778,63 +807,6 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | sentry.web.topologySpreadConstraints | list | `[]` |  |
 | sentry.web.volumeMounts | list | `[]` |  |
 | sentry.web.volumes | list | `[]` |  |
-| sentry.worker.affinity | object | `{}` |  |
-| sentry.worker.autoscaling.enabled | bool | `false` |  |
-| sentry.worker.autoscaling.maxReplicas | int | `5` |  |
-| sentry.worker.autoscaling.minReplicas | int | `2` |  |
-| sentry.worker.autoscaling.targetCPUUtilizationPercentage | int | `50` |  |
-| sentry.worker.enabled | bool | `true` |  |
-| sentry.worker.env | list | `[]` |  |
-| sentry.worker.existingSecretEnv | string | `""` |  |
-| sentry.worker.livenessProbe.enabled | bool | `true` |  |
-| sentry.worker.livenessProbe.failureThreshold | int | `3` |  |
-| sentry.worker.livenessProbe.periodSeconds | int | `60` |  |
-| sentry.worker.livenessProbe.timeoutSeconds | int | `10` |  |
-| sentry.worker.nodeSelector | object | `{}` |  |
-| sentry.worker.replicas | int | `1` |  |
-| sentry.worker.resources | object | `{}` |  |
-| sentry.worker.sidecars | list | `[]` |  |
-| sentry.worker.topologySpreadConstraints | list | `[]` |  |
-| sentry.worker.volumeMounts | list | `[]` |  |
-| sentry.worker.volumes | list | `[]` |  |
-| sentry.workerEvents.affinity | object | `{}` |  |
-| sentry.workerEvents.autoscaling.enabled | bool | `false` |  |
-| sentry.workerEvents.autoscaling.maxReplicas | int | `5` |  |
-| sentry.workerEvents.autoscaling.minReplicas | int | `2` |  |
-| sentry.workerEvents.autoscaling.targetCPUUtilizationPercentage | int | `50` |  |
-| sentry.workerEvents.enabled | bool | `false` |  |
-| sentry.workerEvents.env | list | `[]` |  |
-| sentry.workerEvents.livenessProbe.enabled | bool | `false` |  |
-| sentry.workerEvents.livenessProbe.failureThreshold | int | `3` |  |
-| sentry.workerEvents.livenessProbe.periodSeconds | int | `60` |  |
-| sentry.workerEvents.livenessProbe.timeoutSeconds | int | `10` |  |
-| sentry.workerEvents.nodeSelector | object | `{}` |  |
-| sentry.workerEvents.queues | string | `"events.save_event,post_process_errors"` |  |
-| sentry.workerEvents.replicas | int | `1` |  |
-| sentry.workerEvents.resources | object | `{}` |  |
-| sentry.workerEvents.sidecars | list | `[]` |  |
-| sentry.workerEvents.topologySpreadConstraints | list | `[]` |  |
-| sentry.workerEvents.volumeMounts | list | `[]` |  |
-| sentry.workerEvents.volumes | list | `[]` |  |
-| sentry.workerTransactions.affinity | object | `{}` |  |
-| sentry.workerTransactions.autoscaling.enabled | bool | `false` |  |
-| sentry.workerTransactions.autoscaling.maxReplicas | int | `5` |  |
-| sentry.workerTransactions.autoscaling.minReplicas | int | `2` |  |
-| sentry.workerTransactions.autoscaling.targetCPUUtilizationPercentage | int | `50` |  |
-| sentry.workerTransactions.enabled | bool | `false` |  |
-| sentry.workerTransactions.env | list | `[]` |  |
-| sentry.workerTransactions.livenessProbe.enabled | bool | `false` |  |
-| sentry.workerTransactions.livenessProbe.failureThreshold | int | `3` |  |
-| sentry.workerTransactions.livenessProbe.periodSeconds | int | `60` |  |
-| sentry.workerTransactions.livenessProbe.timeoutSeconds | int | `10` |  |
-| sentry.workerTransactions.nodeSelector | object | `{}` |  |
-| sentry.workerTransactions.queues | string | `"events.save_event_transaction,post_process_transactions"` |  |
-| sentry.workerTransactions.replicas | int | `1` |  |
-| sentry.workerTransactions.resources | object | `{}` |  |
-| sentry.workerTransactions.sidecars | list | `[]` |  |
-| sentry.workerTransactions.topologySpreadConstraints | list | `[]` |  |
-| sentry.workerTransactions.volumeMounts | list | `[]` |  |
-| sentry.workerTransactions.volumes | list | `[]` |  |
 | service.annotations | object | `{}` |  |
 | service.externalPort | int | `9000` |  |
 | service.name | string | `"sentry"` |  |
@@ -853,10 +825,17 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | snuba.api.containerSecurityContext | object | `{}` |  |
 | snuba.api.enabled | bool | `true` |  |
 | snuba.api.env | list | `[]` |  |
-| snuba.api.liveness.timeoutSeconds | int | `2` |  |
+| snuba.api.livenessProbe.failureThreshold | int | `5` |  |
+| snuba.api.livenessProbe.initialDelaySeconds | int | `10` |  |
+| snuba.api.livenessProbe.periodSeconds | int | `10` |  |
+| snuba.api.livenessProbe.successThreshold | int | `1` |  |
+| snuba.api.livenessProbe.timeoutSeconds | int | `2` |  |
 | snuba.api.nodeSelector | object | `{}` |  |
-| snuba.api.probeInitialDelaySeconds | int | `10` |  |
-| snuba.api.readiness.timeoutSeconds | int | `2` |  |
+| snuba.api.readinessProbe.failureThreshold | int | `2` |  |
+| snuba.api.readinessProbe.initialDelaySeconds | int | `10` |  |
+| snuba.api.readinessProbe.periodSeconds | int | `3` |  |
+| snuba.api.readinessProbe.successThreshold | int | `1` |  |
+| snuba.api.readinessProbe.timeoutSeconds | int | `2` |  |
 | snuba.api.replicas | int | `1` |  |
 | snuba.api.resources | object | `{}` |  |
 | snuba.api.securityContext | object | `{}` |  |
@@ -873,12 +852,14 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | snuba.consumer.livenessProbe.initialDelaySeconds | int | `5` |  |
 | snuba.consumer.livenessProbe.periodSeconds | int | `320` |  |
 | snuba.consumer.maxBatchTimeMs | int | `750` |  |
+| snuba.consumer.maxPollIntervalMs | int | `300000` | Kafka `--max-poll-interval-ms` (self-hosted `SENTRY_KAFKA_MAX_POLL_INTERVAL_MS`). Set `null` to omit the flag. |
 | snuba.consumer.nodeSelector | object | `{}` |  |
 | snuba.consumer.replicas | int | `1` |  |
 | snuba.consumer.resources | object | `{}` |  |
 | snuba.consumer.securityContext | object | `{}` |  |
 | snuba.consumer.topologySpreadConstraints | list | `[]` |  |
 | snuba.dbInitJob.env | list | `[]` |  |
+| snuba.eapItemsConsumer.maxPollIntervalMs | int | `300000` | Kafka `--max-poll-interval-ms` (self-hosted `SENTRY_KAFKA_MAX_POLL_INTERVAL_MS`). Set `null` to omit the flag. |
 | snuba.genericMetricsCountersConsumer.affinity | object | `{}` |  |
 | snuba.genericMetricsCountersConsumer.containerSecurityContext | object | `{}` |  |
 | snuba.genericMetricsCountersConsumer.enabled | bool | `true` |  |
@@ -887,37 +868,12 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | snuba.genericMetricsCountersConsumer.livenessProbe.initialDelaySeconds | int | `5` |  |
 | snuba.genericMetricsCountersConsumer.livenessProbe.periodSeconds | int | `320` |  |
 | snuba.genericMetricsCountersConsumer.maxBatchTimeMs | int | `750` |  |
+| snuba.genericMetricsCountersConsumer.maxPollIntervalMs | int | `300000` | Kafka `--max-poll-interval-ms` (self-hosted `SENTRY_KAFKA_MAX_POLL_INTERVAL_MS`). Set `null` to omit the flag. |
 | snuba.genericMetricsCountersConsumer.nodeSelector | object | `{}` |  |
 | snuba.genericMetricsCountersConsumer.replicas | int | `1` |  |
 | snuba.genericMetricsCountersConsumer.resources | object | `{}` |  |
 | snuba.genericMetricsCountersConsumer.securityContext | object | `{}` |  |
 | snuba.genericMetricsCountersConsumer.topologySpreadConstraints | list | `[]` |  |
-| snuba.genericMetricsDistributionConsumer.affinity | object | `{}` |  |
-| snuba.genericMetricsDistributionConsumer.containerSecurityContext | object | `{}` |  |
-| snuba.genericMetricsDistributionConsumer.enabled | bool | `true` |  |
-| snuba.genericMetricsDistributionConsumer.env | list | `[]` |  |
-| snuba.genericMetricsDistributionConsumer.livenessProbe.enabled | bool | `true` |  |
-| snuba.genericMetricsDistributionConsumer.livenessProbe.initialDelaySeconds | int | `5` |  |
-| snuba.genericMetricsDistributionConsumer.livenessProbe.periodSeconds | int | `320` |  |
-| snuba.genericMetricsDistributionConsumer.maxBatchTimeMs | int | `750` |  |
-| snuba.genericMetricsDistributionConsumer.nodeSelector | object | `{}` |  |
-| snuba.genericMetricsDistributionConsumer.replicas | int | `1` |  |
-| snuba.genericMetricsDistributionConsumer.resources | object | `{}` |  |
-| snuba.genericMetricsDistributionConsumer.securityContext | object | `{}` |  |
-| snuba.genericMetricsDistributionConsumer.topologySpreadConstraints | list | `[]` |  |
-| snuba.genericMetricsSetsConsumer.affinity | object | `{}` |  |
-| snuba.genericMetricsSetsConsumer.containerSecurityContext | object | `{}` |  |
-| snuba.genericMetricsSetsConsumer.enabled | bool | `true` |  |
-| snuba.genericMetricsSetsConsumer.env | list | `[]` |  |
-| snuba.genericMetricsSetsConsumer.livenessProbe.enabled | bool | `true` |  |
-| snuba.genericMetricsSetsConsumer.livenessProbe.initialDelaySeconds | int | `5` |  |
-| snuba.genericMetricsSetsConsumer.livenessProbe.periodSeconds | int | `320` |  |
-| snuba.genericMetricsSetsConsumer.maxBatchTimeMs | int | `750` |  |
-| snuba.genericMetricsSetsConsumer.nodeSelector | object | `{}` |  |
-| snuba.genericMetricsSetsConsumer.replicas | int | `1` |  |
-| snuba.genericMetricsSetsConsumer.resources | object | `{}` |  |
-| snuba.genericMetricsSetsConsumer.securityContext | object | `{}` |  |
-| snuba.genericMetricsSetsConsumer.topologySpreadConstraints | list | `[]` |  |
 | snuba.groupAttributesConsumer.affinity | object | `{}` |  |
 | snuba.groupAttributesConsumer.containerSecurityContext | object | `{}` |  |
 | snuba.groupAttributesConsumer.enabled | bool | `true` |  |
@@ -926,6 +882,7 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | snuba.groupAttributesConsumer.livenessProbe.initialDelaySeconds | int | `5` |  |
 | snuba.groupAttributesConsumer.livenessProbe.periodSeconds | int | `320` |  |
 | snuba.groupAttributesConsumer.maxBatchTimeMs | int | `750` |  |
+| snuba.groupAttributesConsumer.maxPollIntervalMs | int | `300000` | Kafka `--max-poll-interval-ms` (self-hosted `SENTRY_KAFKA_MAX_POLL_INTERVAL_MS`). Set `null` to omit the flag. |
 | snuba.groupAttributesConsumer.nodeSelector | object | `{}` |  |
 | snuba.groupAttributesConsumer.replicas | int | `1` |  |
 | snuba.groupAttributesConsumer.resources | object | `{}` |  |
@@ -939,6 +896,7 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | snuba.issueOccurrenceConsumer.livenessProbe.initialDelaySeconds | int | `5` |  |
 | snuba.issueOccurrenceConsumer.livenessProbe.periodSeconds | int | `320` |  |
 | snuba.issueOccurrenceConsumer.maxBatchTimeMs | int | `750` |  |
+| snuba.issueOccurrenceConsumer.maxPollIntervalMs | int | `300000` | Kafka `--max-poll-interval-ms` (self-hosted `SENTRY_KAFKA_MAX_POLL_INTERVAL_MS`). Set `null` to omit the flag. |
 | snuba.issueOccurrenceConsumer.nodeSelector | object | `{}` |  |
 | snuba.issueOccurrenceConsumer.replicas | int | `1` |  |
 | snuba.issueOccurrenceConsumer.resources | object | `{}` |  |
@@ -952,12 +910,24 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | snuba.metricsConsumer.livenessProbe.initialDelaySeconds | int | `5` |  |
 | snuba.metricsConsumer.livenessProbe.periodSeconds | int | `320` |  |
 | snuba.metricsConsumer.maxBatchTimeMs | int | `750` |  |
+| snuba.metricsConsumer.maxPollIntervalMs | int | `300000` | Kafka `--max-poll-interval-ms` (self-hosted `SENTRY_KAFKA_MAX_POLL_INTERVAL_MS`). Set `null` to omit the flag. |
 | snuba.metricsConsumer.nodeSelector | object | `{}` |  |
 | snuba.metricsConsumer.replicas | int | `1` |  |
 | snuba.metricsConsumer.resources | object | `{}` |  |
 | snuba.metricsConsumer.securityContext | object | `{}` |  |
 | snuba.metricsConsumer.topologySpreadConstraints | list | `[]` |  |
 | snuba.migrateJob.env | list | `[]` |  |
+| snuba.outcomesAcceptedConsumer.affinity | object | `{}` |  |
+| snuba.outcomesAcceptedConsumer.containerSecurityContext | object | `{}` |  |
+| snuba.outcomesAcceptedConsumer.enabled | bool | `true` |  |
+| snuba.outcomesAcceptedConsumer.env | list | `[]` |  |
+| snuba.outcomesAcceptedConsumer.maxBatchTimeMs | int | `750` |  |
+| snuba.outcomesAcceptedConsumer.maxPollIntervalMs | int | `300000` | Kafka `--max-poll-interval-ms` (self-hosted `SENTRY_KAFKA_MAX_POLL_INTERVAL_MS`). Set `null` to omit the flag. |
+| snuba.outcomesAcceptedConsumer.nodeSelector | object | `{}` |  |
+| snuba.outcomesAcceptedConsumer.replicas | int | `1` |  |
+| snuba.outcomesAcceptedConsumer.resources | object | `{}` |  |
+| snuba.outcomesAcceptedConsumer.securityContext | object | `{}` |  |
+| snuba.outcomesAcceptedConsumer.topologySpreadConstraints | list | `[]` |  |
 | snuba.outcomesBillingConsumer.affinity | object | `{}` |  |
 | snuba.outcomesBillingConsumer.containerSecurityContext | object | `{}` |  |
 | snuba.outcomesBillingConsumer.enabled | bool | `true` |  |
@@ -967,6 +937,7 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | snuba.outcomesBillingConsumer.livenessProbe.periodSeconds | int | `320` |  |
 | snuba.outcomesBillingConsumer.maxBatchSize | string | `"3"` |  |
 | snuba.outcomesBillingConsumer.maxBatchTimeMs | int | `750` |  |
+| snuba.outcomesBillingConsumer.maxPollIntervalMs | int | `300000` | Kafka `--max-poll-interval-ms` (self-hosted `SENTRY_KAFKA_MAX_POLL_INTERVAL_MS`). Set `null` to omit the flag. |
 | snuba.outcomesBillingConsumer.nodeSelector | object | `{}` |  |
 | snuba.outcomesBillingConsumer.replicas | int | `1` |  |
 | snuba.outcomesBillingConsumer.resources | object | `{}` |  |
@@ -980,11 +951,13 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | snuba.outcomesConsumer.livenessProbe.initialDelaySeconds | int | `5` |  |
 | snuba.outcomesConsumer.livenessProbe.periodSeconds | int | `320` |  |
 | snuba.outcomesConsumer.maxBatchSize | string | `"3"` |  |
+| snuba.outcomesConsumer.maxPollIntervalMs | int | `300000` | Kafka `--max-poll-interval-ms` (self-hosted `SENTRY_KAFKA_MAX_POLL_INTERVAL_MS`). Set `null` to omit the flag. |
 | snuba.outcomesConsumer.nodeSelector | object | `{}` |  |
 | snuba.outcomesConsumer.replicas | int | `1` |  |
 | snuba.outcomesConsumer.resources | object | `{}` |  |
 | snuba.outcomesConsumer.securityContext | object | `{}` |  |
 | snuba.outcomesConsumer.topologySpreadConstraints | list | `[]` |  |
+| snuba.profilingChunksConsumer.maxPollIntervalMs | int | `300000` | Kafka `--max-poll-interval-ms` (self-hosted `SENTRY_KAFKA_MAX_POLL_INTERVAL_MS`). Set `null` to omit the flag. |
 | snuba.profilingFunctionsConsumer.affinity | object | `{}` |  |
 | snuba.profilingFunctionsConsumer.containerSecurityContext | object | `{}` |  |
 | snuba.profilingFunctionsConsumer.env | list | `[]` |  |
@@ -992,6 +965,7 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | snuba.profilingFunctionsConsumer.livenessProbe.initialDelaySeconds | int | `5` |  |
 | snuba.profilingFunctionsConsumer.livenessProbe.periodSeconds | int | `320` |  |
 | snuba.profilingFunctionsConsumer.maxBatchTimeMs | int | `750` |  |
+| snuba.profilingFunctionsConsumer.maxPollIntervalMs | int | `300000` | Kafka `--max-poll-interval-ms` (self-hosted `SENTRY_KAFKA_MAX_POLL_INTERVAL_MS`). Set `null` to omit the flag. |
 | snuba.profilingFunctionsConsumer.nodeSelector | object | `{}` |  |
 | snuba.profilingFunctionsConsumer.replicas | int | `1` |  |
 | snuba.profilingFunctionsConsumer.resources | object | `{}` |  |
@@ -1005,6 +979,7 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | snuba.profilingProfilesConsumer.livenessProbe.initialDelaySeconds | int | `5` |  |
 | snuba.profilingProfilesConsumer.livenessProbe.periodSeconds | int | `320` |  |
 | snuba.profilingProfilesConsumer.maxBatchTimeMs | int | `750` |  |
+| snuba.profilingProfilesConsumer.maxPollIntervalMs | int | `300000` | Kafka `--max-poll-interval-ms` (self-hosted `SENTRY_KAFKA_MAX_POLL_INTERVAL_MS`). Set `null` to omit the flag. |
 | snuba.profilingProfilesConsumer.nodeSelector | object | `{}` |  |
 | snuba.profilingProfilesConsumer.replicas | int | `1` |  |
 | snuba.profilingProfilesConsumer.resources | object | `{}` |  |
@@ -1028,25 +1003,13 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | snuba.replaysConsumer.livenessProbe.initialDelaySeconds | int | `5` |  |
 | snuba.replaysConsumer.livenessProbe.periodSeconds | int | `320` |  |
 | snuba.replaysConsumer.maxBatchTimeMs | int | `750` |  |
+| snuba.replaysConsumer.maxPollIntervalMs | int | `300000` | Kafka `--max-poll-interval-ms` (self-hosted `SENTRY_KAFKA_MAX_POLL_INTERVAL_MS`). Set `null` to omit the flag. |
 | snuba.replaysConsumer.nodeSelector | object | `{}` |  |
 | snuba.replaysConsumer.replicas | int | `1` |  |
 | snuba.replaysConsumer.resources | object | `{}` |  |
 | snuba.replaysConsumer.securityContext | object | `{}` |  |
 | snuba.replaysConsumer.topologySpreadConstraints | list | `[]` |  |
 | snuba.rustConsumer | bool | `false` |  |
-| snuba.spansConsumer.affinity | object | `{}` |  |
-| snuba.spansConsumer.containerSecurityContext | object | `{}` |  |
-| snuba.spansConsumer.enabled | bool | `true` |  |
-| snuba.spansConsumer.env | list | `[]` |  |
-| snuba.spansConsumer.livenessProbe.enabled | bool | `true` |  |
-| snuba.spansConsumer.livenessProbe.initialDelaySeconds | int | `5` |  |
-| snuba.spansConsumer.livenessProbe.periodSeconds | int | `320` |  |
-| snuba.spansConsumer.maxBatchTimeMs | int | `750` |  |
-| snuba.spansConsumer.nodeSelector | object | `{}` |  |
-| snuba.spansConsumer.replicas | int | `1` |  |
-| snuba.spansConsumer.resources | object | `{}` |  |
-| snuba.spansConsumer.securityContext | object | `{}` |  |
-| snuba.spansConsumer.topologySpreadConstraints | list | `[]` |  |
 | snuba.subscriptionConsumerEvents.affinity | object | `{}` |  |
 | snuba.subscriptionConsumerEvents.containerSecurityContext | object | `{}` |  |
 | snuba.subscriptionConsumerEvents.enabled | bool | `true` |  |
@@ -1058,6 +1021,7 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | snuba.subscriptionConsumerEvents.replicas | int | `1` |  |
 | snuba.subscriptionConsumerEvents.resources | object | `{}` |  |
 | snuba.subscriptionConsumerEvents.securityContext | object | `{}` |  |
+| snuba.subscriptionConsumerEvents.strategyType | string | `nil` | Recreate if replicas=1, else RollingUpdate |
 | snuba.subscriptionConsumerEvents.topologySpreadConstraints | list | `[]` |  |
 | snuba.subscriptionConsumerMetrics.affinity | object | `{}` |  |
 | snuba.subscriptionConsumerMetrics.containerSecurityContext | object | `{}` |  |
@@ -1070,6 +1034,7 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | snuba.subscriptionConsumerMetrics.replicas | int | `1` |  |
 | snuba.subscriptionConsumerMetrics.resources | object | `{}` |  |
 | snuba.subscriptionConsumerMetrics.securityContext | object | `{}` |  |
+| snuba.subscriptionConsumerMetrics.strategyType | string | `nil` | Recreate if replicas=1, else RollingUpdate |
 | snuba.subscriptionConsumerMetrics.topologySpreadConstraints | list | `[]` |  |
 | snuba.subscriptionConsumerTransactions.affinity | object | `{}` |  |
 | snuba.subscriptionConsumerTransactions.containerSecurityContext | object | `{}` |  |
@@ -1082,6 +1047,7 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | snuba.subscriptionConsumerTransactions.replicas | int | `1` |  |
 | snuba.subscriptionConsumerTransactions.resources | object | `{}` |  |
 | snuba.subscriptionConsumerTransactions.securityContext | object | `{}` |  |
+| snuba.subscriptionConsumerTransactions.strategyType | string | `nil` | Recreate if replicas=1, else RollingUpdate |
 | snuba.subscriptionConsumerTransactions.topologySpreadConstraints | list | `[]` |  |
 | snuba.transactionsConsumer.affinity | object | `{}` |  |
 | snuba.transactionsConsumer.containerSecurityContext | object | `{}` |  |
@@ -1091,12 +1057,12 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | snuba.transactionsConsumer.livenessProbe.initialDelaySeconds | int | `5` |  |
 | snuba.transactionsConsumer.livenessProbe.periodSeconds | int | `320` |  |
 | snuba.transactionsConsumer.maxBatchTimeMs | int | `750` |  |
+| snuba.transactionsConsumer.maxPollIntervalMs | int | `300000` | Kafka `--max-poll-interval-ms` (self-hosted `SENTRY_KAFKA_MAX_POLL_INTERVAL_MS`). Set `null` to omit the flag. |
 | snuba.transactionsConsumer.nodeSelector | object | `{}` |  |
 | snuba.transactionsConsumer.replicas | int | `1` |  |
 | snuba.transactionsConsumer.resources | object | `{}` |  |
 | snuba.transactionsConsumer.securityContext | object | `{}` |  |
 | snuba.transactionsConsumer.topologySpreadConstraints | list | `[]` |  |
-| sourcemaps.enabled | bool | `false` |  |
 | symbolicator.api.affinity | object | `{}` |  |
 | symbolicator.api.autoscaling.enabled | bool | `false` |  |
 | symbolicator.api.autoscaling.maxReplicas | int | `5` |  |
@@ -1105,11 +1071,20 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | symbolicator.api.config | string | `"# See: https://getsentry.github.io/symbolicator/#configuration\ncache_dir: \"/data\"\nbind: \"0.0.0.0:3021\"\nlogging:\n  level: \"warn\"\nmetrics:\n  statsd: null\n  prefix: \"symbolicator\"\nsentry_dsn: null\nconnect_to_reserved_ips: true\n# caches:\n#   downloaded:\n#     max_unused_for: 1w\n#     retry_misses_after: 5m\n#     retry_malformed_after: 5m\n#   derived:\n#     max_unused_for: 1w\n#     retry_misses_after: 5m\n#     retry_malformed_after: 5m\n#   diagnostics:\n#     retention: 1w"` |  |
 | symbolicator.api.containerSecurityContext | object | `{}` |  |
 | symbolicator.api.env | list | `[]` |  |
+| symbolicator.api.livenessProbe.failureThreshold | int | `5` |  |
+| symbolicator.api.livenessProbe.initialDelaySeconds | int | `10` |  |
+| symbolicator.api.livenessProbe.periodSeconds | int | `10` |  |
+| symbolicator.api.livenessProbe.successThreshold | int | `1` |  |
+| symbolicator.api.livenessProbe.timeoutSeconds | int | `2` |  |
 | symbolicator.api.nodeSelector | object | `{}` |  |
 | symbolicator.api.persistence.accessModes[0] | string | `"ReadWriteOnce"` |  |
 | symbolicator.api.persistence.enabled | bool | `true` |  |
 | symbolicator.api.persistence.size | string | `"10Gi"` |  |
-| symbolicator.api.probeInitialDelaySeconds | int | `10` |  |
+| symbolicator.api.readinessProbe.failureThreshold | int | `2` |  |
+| symbolicator.api.readinessProbe.initialDelaySeconds | int | `10` |  |
+| symbolicator.api.readinessProbe.periodSeconds | int | `3` |  |
+| symbolicator.api.readinessProbe.successThreshold | int | `1` |  |
+| symbolicator.api.readinessProbe.timeoutSeconds | int | `2` |  |
 | symbolicator.api.replicas | int | `1` |  |
 | symbolicator.api.resources | object | `{}` |  |
 | symbolicator.api.securityContext | object | `{}` |  |
@@ -1122,7 +1097,7 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | system.url | string | `""` |  |
 | user.create | bool | `true` |  |
 | user.email | string | `"admin@sentry.local"` |  |
-| user.password | string | `"aaaa"` |  |
+| user.password | string | `""` | Plaintext admin password. Required if `user.create` is true and `user.existingSecret` is not set. Using `user.existingSecret` is strongly recommended for production. |
 | vroom.affinity | object | `{}` |  |
 | vroom.autoscaling.enabled | bool | `false` |  |
 | vroom.autoscaling.maxReplicas | int | `5` |  |
@@ -1130,12 +1105,17 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | vroom.autoscaling.targetCPUUtilizationPercentage | int | `50` |  |
 | vroom.containerSecurityContext | object | `{}` |  |
 | vroom.env | list | `[]` |  |
+| vroom.livenessProbe.failureThreshold | int | `5` |  |
+| vroom.livenessProbe.initialDelaySeconds | int | `10` |  |
+| vroom.livenessProbe.periodSeconds | int | `10` |  |
+| vroom.livenessProbe.successThreshold | int | `1` |  |
+| vroom.livenessProbe.timeoutSeconds | int | `2` |  |
 | vroom.nodeSelector | object | `{}` |  |
-| vroom.probeFailureThreshold | int | `5` |  |
-| vroom.probeInitialDelaySeconds | int | `10` |  |
-| vroom.probePeriodSeconds | int | `10` |  |
-| vroom.probeSuccessThreshold | int | `1` |  |
-| vroom.probeTimeoutSeconds | int | `2` |  |
+| vroom.readinessProbe.failureThreshold | int | `2` |  |
+| vroom.readinessProbe.initialDelaySeconds | int | `10` |  |
+| vroom.readinessProbe.periodSeconds | int | `3` |  |
+| vroom.readinessProbe.successThreshold | int | `1` |  |
+| vroom.readinessProbe.timeoutSeconds | int | `2` |  |
 | vroom.replicas | int | `1` |  |
 | vroom.resources | object | `{}` |  |
 | vroom.securityContext | object | `{}` |  |
@@ -1143,20 +1123,148 @@ Note: this table is incomplete, so have a look at the values.yaml in case you mi
 | vroom.sidecars | list | `[]` |  |
 | vroom.volumeMounts | list | `[]` |  |
 | vroom.volumes | list | `[]` |  |
-| zookeeper.enabled | bool | `true` |  |
-| zookeeper.nameOverride | string | `"zookeeper-clickhouse"` |  |
-| zookeeper.nodeSelector | object | `{}` |  |
-| zookeeper.replicaCount | int | `1` |  |
+| vroom.persistence.enabled | bool | `true` | Enable persistence for vroom (uses PVC if true, emptyDir if false) |
+| vroom.persistence.lookupVolumeName | bool | `true` | Lookup and use existing volume name |
+| vroom.persistence.accessModes[0] | string | `"ReadWriteOnce"` | Access mode for vroom PVC. Use ReadWriteMany if sharing with ingest-profiles (filestore.profiles.filesystem.persistence.shareWithVroom) |
+| vroom.persistence.size | string | `"10Gi"` | Size of vroom PVC |
+| vroom.persistence.storageClassName | string | `nil` | Storage class for vroom PVC |
 
-## NGINX and/or Ingress
+## Routing
 
-By default, NGINX is enabled to allow sending the incoming requests to [Sentry Relay](https://getsentry.github.io/relay/) or the Django backend depending on the path. When Sentry is meant to be exposed outside of the Kubernetes cluster, it is recommended to disable NGINX and let the Ingress do the same. It's recommended to go with the go to Ingress Controller, [NGINX Ingress](https://kubernetes.github.io/ingress-nginx/) but others should work as well.
+This chart supports **four mutually exclusive** exposure modes. **Enable exactly one**.
+All routing options are **disabled by default**, so you must choose and enable one:
+
+- Gateway API HTTPRoute (`route.main.enabled`)
+- Traefik IngressRoute (`traefikIngressRoute.enabled`)
+- Kubernetes Ingress (`ingress.enabled`)
+- In-cluster nginx reverse proxy Service (`nginx.enabled`)
+
+**Important:** Do **not** enable more than one of `ingress.enabled`, `route.main.enabled`, `traefikIngressRoute.enabled`, or `nginx.enabled`.
+In particular, running Kubernetes Ingress / Gateway API / Traefik **in front of** the in-cluster nginx (proxy chaining) is **discouraged**: it adds an extra hop, increases latency, and can reduce throughput.
+
+Sentry does not support subpath deployments; all routes assume the application is served at `/`.
+
+### Gateway API (HTTPRoute)
+
+The chart also supports [Kubernetes Gateway API](https://gateway-api.sigs.k8s.io/) HTTPRoute as an alternative to traditional Ingress.
+
+Ingestion endpoints (`/api/*`) are routed to Relay, while UI and other API endpoints go to the web service (`/api/store` goes to Relay).
+
+```yaml
+route:
+  main:
+    enabled: true
+    hostnames:
+      - sentry.example.com
+    parentRefs:
+      - name: my-gateway
+        namespace: default
+```
+
+With HTTP to HTTPS redirect:
+
+```yaml
+route:
+  main:
+    enabled: true
+    hostnames:
+      - sentry.example.com
+    parentRefs:
+      - name: my-gateway
+        sectionName: https
+  httpRedirect:
+    enabled: true
+    parentRefs:
+      - name: my-gateway
+        sectionName: http
+```
+
+### Traefik IngressRoute
+
+If you run Traefik, you can enable the bundled `IngressRoute` resources instead of standard Ingress.
+
+The Traefik routes use `traefikIngressRoute.hostname` (defaults to `ingress.hostname`).
+
+```yaml
+traefikIngressRoute:
+  enabled: true
+  hostname: sentry.example.com
+  tls:
+    secretName: sentry-tls
+
+```
+
+### Kubernetes Ingress (nginx, traefik, AWS ALB, GCE)
+
+Routing rules are defined by `ingress.pathRules`, keyed by controller style. The controller style is selected by `ingress.ingressClassName`; for custom class names, set `ingress.regexPathStyle` to one of `nginx`, `traefik`, `alb`, or `gce`.
+
+Defaults target nginx-ingress. If you override `ingress.annotations`, keep `nginx.ingress.kubernetes.io/use-regex: "true"` for nginx.
+If you need per-path annotations or extra routing rules, create additional Ingress objects via `extraManifests`.
+
+For AWS ALB HTTPS redirect, set these annotations in `ingress.annotations`:
+
+```yaml
+ingress:
+  annotations:
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
+    alb.ingress.kubernetes.io/ssl-redirect: '443'
+```
+
+If you are using `additionalHostNames`, the `nginx.ingress.kubernetes.io/upstream-vhost` annotation might also come in handy.
+It sets the `Host` header to the value you provide to avoid CSRF issues.
+
+#### Letsencrypt on NGINX Ingress Controller
+
+```yaml
+ingress:
+  enabled: true
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  hostname: fqdn
+  ingressClassName: "nginx"
+  tls:
+    - secretName: sentry-tls
+      hosts:
+        - fqdn
+```
+
+
+### NGINX service
+
+If you prefer a single in-cluster Service as the HTTP entrypoint (for example to attach a `LoadBalancer` directly, or to use nginx `location` snippets), you can enable the bundled nginx reverse proxy based on the CloudPirates `nginx` chart dependency.
+
+```yaml
+
+nginx:
+  enabled: true
+  # Optional: add extra nginx locations/snippets
+  # extraLocationSnippet: |
+  #   location /admin {
+  #     allow 1.2.3.4;
+  #     deny all;
+  #     proxy_pass http://sentry;
+  #   }
+```
+
+Notes:
+
+- When `nginx.enabled=true`, the chart creates an nginx config ConfigMap (see `templates/routing/nginx-config.yaml`) that proxies to `sentry-web` and, when enabled, to `relay` for ingestion endpoints.
+- Expose the `*-nginx` Service by configuring the nginx chart values (for example `nginx.service.type=LoadBalancer`).
+- Using an additional router in front of this in-cluster nginx is discouraged (see warning above).
+
 
 ## Sentry secret key
 
 If no `sentry.existingSecret` value is specified, for your security, the [`system.secret-key`](https://develop.sentry.dev/config/#general) is generated for you on the first installation and stored in a kubernetes secret.
 
 If `sentry.existingSecret` / `sentry.existingSecretKey` values are provided, those secrets will be used.
+
+
+## Launchpad RPC shared secret
+
+If no `launchpadTaskWorker.existingSecret` value is specified, the RPC shared secret used between `sentry-web` and the Launchpad taskworker is generated for you on the first installation and stored in a kubernetes secret.
+
+If `launchpadTaskWorker.existingSecret` / `launchpadTaskWorker.existingSecretKey` values are provided, that externally-managed secret will be used instead.
 
 
 ## Symbolicator and or JavaScript source maps
@@ -1188,14 +1296,178 @@ Its also important having `connect_to_reserved_ips: true` in the symbolicator co
 
 #### Source Maps
 
-To get javascript source map processing working, you need to activate sourcemaps, which in turn activates the memcached dependency:
-
-```yaml
-sourcemaps:
-  enabled: true
-```
+To get javascript source map processing working, the Django cache (memcached) is enabled by default, which is also used by 60+ Sentry components for caching.
 
 For details on the background see this blog post: https://engblog.yext.com/post/sentry-js-source-maps
+
+## External storage (filestore, replays, profiles)
+
+Sentry can offload blobs to filesystem or bucket storage. See the Sentry docs for details and backend-specific caveats:
+https://develop.sentry.dev/self-hosted/production-enhancements/external-storage/
+
+### Filestore (attachments, sourcemaps, and default replays)
+
+Set `filestore.backend` to one of `filesystem`, `s3`, or `gcs`:
+
+```yaml
+filestore:
+  backend: gcs
+  gcs:
+    bucketName: sentry-filestore
+    secretName: sentry-gcs
+    credentialsFile: credentials.json
+```
+
+### Replays storage (optional separate backend)
+
+By default, replays use the main filestore. To store replays separately, set `replay.storage.backend` to `filesystem`, `s3`, or `gcs`.
+
+Filesystem example (keep the path inside a mounted volume or add your own volume mounts):
+
+```yaml
+replay:
+  storage:
+    backend: filesystem
+    filesystem:
+      path: /var/lib/sentry/files/replays
+```
+
+Filesystem with a separate PVC (different from filestore):
+
+```yaml
+replay:
+  storage:
+    backend: filesystem
+    filesystem:
+      path: /var/lib/sentry/replays
+      persistence:
+        enabled: true
+        size: 20Gi
+```
+
+S3 example:
+
+```yaml
+replay:
+  storage:
+    backend: s3
+    s3:
+      bucketName: sentry-replays
+      endpointUrl: https://s3.example.com
+      region_name: auto
+      signature_version: s3v4
+      default_acl: private
+      bucket_acl: private
+```
+
+GCS example:
+
+```yaml
+replay:
+  storage:
+    backend: gcs
+    gcs:
+      bucketName: sentry-replays
+      secretName: sentry-gcs
+      credentialsFile: credentials.json
+```
+
+When using GCS for both filestore and replays, `replay.storage.gcs.secretName` and
+`replay.storage.gcs.credentialsFile` must match `filestore.gcs.*`.
+
+### Profiles storage (vroom)
+
+Profiling uses `filestore.profiles`. Supported backends are `filesystem`, `gcs` and `s3` (object storage is recommended for production).
+
+- Keep `vroom.persistence.bucketString` and `filestore.profiles.*` pointed at the same bucket/prefix.
+- For `filesystem` backend, if `filestore.profiles.filesystem.persistence.shareWithVroom=true`, set `vroom.persistence.accessModes` to include `ReadWriteMany`.
+- For `gcs` backend, Sentry pods mount a single GCS credentials secret. If `filestore.backend` or `replay.storage.backend` is also set to `gcs`, the corresponding `secretName` and `credentialsFile` must match `filestore.profiles.gcs.*`.
+- Configure vroom credentials yourself via `vroom.env`, `vroom.volumeMounts`, and `vroom.volumes`.
+
+S3 example:
+
+```yaml
+filestore:
+  profiles:
+    backend: s3
+    s3:
+      existingSecret: sentry-profiles-s3
+      bucketName: sentry-profiles
+vroom:
+  persistence:
+    bucketString: "s3://sentry-profiles"
+  env:
+    - name: AWS_ACCESS_KEY_ID
+      valueFrom:
+        secretKeyRef:
+          name: sentry-profiles-s3
+          key: s3-access-key-id
+    - name: AWS_SECRET_ACCESS_KEY
+      valueFrom:
+        secretKeyRef:
+          name: sentry-profiles-s3
+          key: s3-secret-access-key
+```
+
+GCS example:
+
+```yaml
+filestore:
+  profiles:
+    backend: gcs
+    gcs:
+      bucketName: sentry-profiles
+      secretName: sentry-storage-creds
+      credentialsFile: credentials.json
+vroom:
+  persistence:
+    enabled: false
+    bucketString: "gs://sentry-profiles"
+  env:
+    - name: GOOGLE_APPLICATION_CREDENTIALS
+      value: /var/run/secrets/google/credentials.json
+  volumeMounts:
+    - mountPath: /var/run/secrets/google
+      name: sentry-google-cloud-key
+  volumes:
+    - name: sentry-google-cloud-key
+      secret:
+        secretName: sentry-storage-creds
+```
+
+### Retention and lifecycle policies
+
+- For S3 or GCS, all buckets except the **main filestore** should have a lifecycle policy to delete objects after your retention period (match `sentry.cleanup.days` / `SENTRY_EVENT_RETENTION_DAYS`).
+- For the main filestore bucket, you may configure a lifecycle rule to delete objects under `eventattachments/` after retention; other filestore paths should remain indefinitely.
+
+## Nodestore (raw events)
+
+Sentry stores raw event payloads in the nodestore. This chart supports an S3-compatible nodestore backend.
+When enabled, the `sentry-nodestore-s3` package is installed automatically via init containers.
+
+Example:
+
+```yaml
+nodestore:
+  backend: s3
+  s3:
+    bucketName: sentry-nodestore
+    bucketPath: nodestore
+    endpointUrl: https://s3.example.com
+    regionName: us-east-1
+```
+
+You can also supply credentials via an existing secret:
+
+```yaml
+nodestore:
+  backend: s3
+  s3:
+    existingSecret: nodestore-s3-credentials
+    accessKeyIdRef: s3-access-key-id
+    secretAccessKeyRef: s3-secret-access-key
+    bucketName: sentry-nodestore
+```
 
 
 ## Geolocation
@@ -1267,6 +1539,27 @@ geodata:
   path: "/usr/share/GeoIP/GeoLite2-City.mmdb"
 ```
 
+If you would rather not put the MaxMind credentials in your values file, create the Secret yourself and reference it with `geodata.existingSecret`:
+
+```yaml
+geodata:
+  existingSecret: my-geoip-secret
+  volumeName: geoip
+  mountPath: /usr/share/GeoIP
+  path: /usr/share/GeoIP/GeoLite2-City.mmdb
+```
+
+The Secret is consumed with `envFrom`, so it must use these exact keys:
+
+```yaml
+stringData:
+  GEOIPUPDATE_ACCOUNT_ID: "..."
+  GEOIPUPDATE_LICENSE_KEY: "..."
+  GEOIPUPDATE_EDITION_IDS: "..."
+```
+
+When `existingSecret` is set, `geodata.accountID`, `geodata.licenseKey` and `geodata.editionIDs` are ignored and the chart-managed Secret is not created. Because the GeoIP updater runs as a `post-install,post-upgrade` Helm hook, a Secret that is missing or has misspelled keys will fail the install or upgrade rather than degrading quietly.
+
 ## External Kafka configuration
 
 You can either provide a single host, which is there by default in `values.yaml`, like this:
@@ -1291,6 +1584,28 @@ externalKafka:
       port: 9093
     - host: "kafka-confluent-3"
       port: 9094
+```
+
+## Taskbroker store
+
+Taskbroker uses SQLite by default. Switch a broker to PostgreSQL with `sentry.taskBroker.store.adapter` or `brokers[].store.adapter`.
+
+Use a dedicated `taskbroker` database and a real primary (`postgres-rw`). Do not use PgBouncer or a transaction-mode pooler, and do not reuse the Sentry or Snuba databases. With external Postgres, set `store.postgres.host` yourself — the chart will not take `externalPostgresql.host` (that is often a pooler).
+
+Each postgres replica opens 128 connections (hardcoded). Raise `max_connections` before enabling; CNPG's default (~100) is too low. Switching adapters does not migrate in-flight SQLite tasks.
+
+```yaml
+sentry:
+  taskBroker:
+    store:
+      postgres:
+        host: postgres-rw
+        existingSecret: sentry-postgresql-secret
+        existingSecretKey: password
+    brokers:
+      - name: ingest
+        store:
+          adapter: postgres
 ```
 
 ## External Postgres configuration
@@ -1338,3 +1653,5 @@ externalPostgresql:
 
 - [AWS + Terraform](docs/usage-aws-terraform.md)
 - [DigitalOcean](docs/usage-digitalocean.md)
+- [External Services](docs/external-services.md)
+

@@ -20,6 +20,8 @@ metadata:
   {{- end }}
 spec:
   revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
+  strategy:
+    type: {{ include "sentry.kafkaConsumer.strategyType" (dict "strategyType" .Values.snuba.transactionsConsumer.strategyType "replicas" .Values.snuba.transactionsConsumer.replicas) }}
   selector:
     matchLabels:
       app: {{ template "sentry.fullname" . }}
@@ -126,19 +128,14 @@ spec:
           {{- if .Values.snuba.transactionsConsumer.noStrictOffsetReset }}
           - "--no-strict-offset-reset"
           {{- end }}
-          {{- if .Values.snuba.transactionsConsumer.livenessProbe.enabled }}
           - "--health-check-file"
           - "/tmp/health.txt"
+          {{- if .Values.snuba.transactionsConsumer.maxPollIntervalMs }}
+          - "--max-poll-interval-ms"
+          - "{{ .Values.snuba.transactionsConsumer.maxPollIntervalMs }}"
           {{- end }}
-        {{- if .Values.snuba.transactionsConsumer.livenessProbe.enabled }}
-        livenessProbe:
-          exec:
-            command:
-              - rm
-              - /tmp/health.txt
-          initialDelaySeconds: {{ .Values.snuba.transactionsConsumer.livenessProbe.initialDelaySeconds }}
-          periodSeconds: {{ .Values.snuba.transactionsConsumer.livenessProbe.periodSeconds }}
-        {{- end }}
+        {{- include "sentry.startupProbe.execHealthcheckFile" (dict "startupProbe" .Values.snuba.transactionsConsumer.startupProbe "healthcheckFile" "/tmp/health.txt") | nindent 8 }}
+        {{- include "sentry.livenessProbe.execHealthcheckFile" (dict "livenessProbe" .Values.snuba.transactionsConsumer.livenessProbe "healthcheckFile" "/tmp/health.txt") | nindent 8 }}
         ports:
         - containerPort: {{ template "snuba.port" }}
         env:
@@ -155,6 +152,9 @@ spec:
           readOnly: true
 {{- if .Values.snuba.transactionsConsumer.volumeMounts }}
 {{ toYaml .Values.snuba.transactionsConsumer.volumeMounts | indent 8 }}
+{{- end }}
+{{- if .Values.global.volumeMounts }}
+{{ toYaml .Values.global.volumeMounts | indent 8 }}
 {{- end }}
         resources:
 {{ toYaml .Values.snuba.transactionsConsumer.resources | indent 12 }}

@@ -1,0 +1,25 @@
+{{- if .Values.clickhouse.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "sentry.fullname" . }}-clickhouse-metrica
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ include "sentry.fullname" . }}-clickhouse
+    chart: {{ include "sentry.chart" . }}
+    release: {{ .Release.Name }}
+data:
+  metrica.xml: |
+    <yandex>
+    {{- if and .Values.clickhouse.clickhouse.configmap.zookeeper_servers.enabled (not .Values.clickhouse.singleNode) }}
+      <zookeeper>
+      {{- range .Values.clickhouse.clickhouse.configmap.zookeeper_servers.config }}
+        <node>
+          <host>{{ tpl .hostTemplate $ }}</host>
+          <port>{{ .port }}</port>
+        </node>
+      {{- end }}
+      </zookeeper>
+    {{- end }}
+    </yandex>
+{{- end }}

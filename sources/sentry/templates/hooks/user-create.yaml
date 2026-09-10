@@ -1,4 +1,7 @@
 {{- if and .Values.user.create .Values.hooks.enabled -}}
+{{- if and (not .Values.user.password) (not .Values.user.existingSecret) -}}
+{{- fail "\n\nERROR: Sentry admin password is not set.\nWhen `user.create` is true, you must set ONE of:\n  - `user.existingSecret` (recommended): name of a Kubernetes Secret containing the admin password\n  - `user.password`: plaintext password (NOT recommended for production)\nSee values.yaml under `user:` for examples.\n" -}}
+{{- end -}}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -20,18 +23,15 @@ spec:
     metadata:
       name: {{ template "sentry.fullname" . }}-user-create
       annotations:
-        checksum/configmap.yaml: {{ include "sentry.config" . | sha256sum }}
-        {{- if .Values.sentry.worker.annotations }}
-{{ toYaml .Values.sentry.worker.annotations | indent 8 }}
-        {{- end }}
+        checksum/configmap.yaml: {{ include "sentry.config.checksum" . }}
         {{- if .Values.hooks.dbInit.podAnnotations }}
 {{ toYaml .Values.hooks.dbInit.podAnnotations | indent 8 }}
         {{- end }}
       labels:
         app: sentry
         release: "{{ .Release.Name }}"
-        {{- if .Values.sentry.worker.podLabels }}
-{{ toYaml .Values.sentry.worker.podLabels | indent 8 }}
+        {{- if .Values.hooks.dbInit.podLabels }}
+{{ toYaml .Values.hooks.dbInit.podLabels | indent 8 }}
         {{- end }}
     spec:
       {{- if .Values.hooks.dbInit.affinity }}
@@ -45,7 +45,7 @@ spec:
       nodeSelector:
 {{ toYaml .Values.global.nodeSelector | indent 8 }}
       {{- end }}
-      restartPolicy: Never
+      restartPolicy: {{ .Values.hooks.restartPolicy | default "Never" }}
       {{- if .Values.hooks.dbInit.tolerations }}
       tolerations:
 {{ toYaml .Values.hooks.dbInit.tolerations | indent 8 }}
@@ -73,6 +73,8 @@ spec:
 {{ toYaml .Values.hooks.securityContext | indent 8 }}
       {{- end }}
       {{- end }}
+      initContainers:
+{{ include "sentry.initContainer.nodestore-s3" . | indent 6 }}
       containers:
       - name: user-create-job
         image: "{{ template "sentry.image" . }}"
@@ -87,14 +89,16 @@ spec:
               --no-input \
               --superuser \
               --email "{{ .Values.user.email }}" \
-              --password "$ADMIN_PASSWORD" || true; \
-            if [ $? -eq 0 ] || [ $? -eq 3 ]; then \
-              exit 0; \
-            else \
-              exit 1; \
+              --password "$ADMIN_PASSWORD"
+            exit_code=$?
+            if [ $exit_code -eq 0 ] || [ $exit_code -eq 3 ]; then
+              exit 0
+            else
+              exit $exit_code
             fi
         env:
 {{ include "sentry.env" . | indent 8 }}
+{{ include "sentry.env.nodestore-s3" . | indent 8 }}
         {{- if .Values.user.existingSecret }}
         - name: ADMIN_PASSWORD
           valueFrom:
@@ -108,12 +112,17 @@ spec:
         {{- if .Values.hooks.dbInit.env }}
 {{ toYaml .Values.hooks.dbInit.env | indent 8 }}
         {{- end }}
+        {{- with include "sentry.envFrom" . }}{{ . | nindent 8 }}{{- end }}
         volumeMounts:
         - mountPath: /etc/sentry
           name: config
           readOnly: true
+{{ include "sentry.volumeMount.nodestore-s3" . | indent 8 }}
 {{- if .Values.hooks.dbInit.volumeMounts }}
 {{ toYaml .Values.hooks.dbInit.volumeMounts | indent 8 }}
+{{- end }}
+{{- if .Values.global.volumeMounts }}
+{{ toYaml .Values.global.volumeMounts | indent 8 }}
 {{- end }}
         resources:
 {{ toYaml .Values.hooks.dbInit.resources | indent 10 }}
@@ -131,6 +140,7 @@ spec:
       - name: config
         configMap:
           name: {{ template "sentry.fullname" . }}-sentry
+{{ include "sentry.volume.nodestore-s3" . | indent 6 }}
 {{- if .Values.hooks.dbInit.volumes }}
 {{ toYaml .Values.hooks.dbInit.volumes | indent 6 }}
 {{- end }}

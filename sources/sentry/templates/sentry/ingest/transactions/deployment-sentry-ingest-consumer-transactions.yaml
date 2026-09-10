@@ -20,6 +20,8 @@ metadata:
   {{- end }}
 spec:
   revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
+  strategy:
+    type: {{ include "sentry.kafkaConsumer.strategyType" (dict "strategyType" .Values.sentry.ingestConsumerTransactions.strategyType "replicas" .Values.sentry.ingestConsumerTransactions.replicas "autoscaling" .Values.sentry.ingestConsumerTransactions.autoscaling) }}
   selector:
     matchLabels:
       app: {{ template "sentry.fullname" . }}
@@ -33,7 +35,7 @@ spec:
       annotations:
         checksum/configYml: {{ .Values.config.configYml | toYaml | toString | sha256sum }}
         checksum/sentryConfPy: {{ .Values.config.sentryConfPy | sha256sum }}
-        checksum/config.yaml: {{ include "sentry.config" . | sha256sum }}
+        checksum/config.yaml: {{ include "sentry.config.checksum" . }}
         {{- if .Values.sentry.ingestConsumerTransactions.annotations }}
 {{ toYaml .Values.sentry.ingestConsumerTransactions.annotations | indent 8 }}
         {{- end }}
@@ -83,6 +85,8 @@ spec:
       securityContext:
 {{ toYaml .Values.sentry.ingestConsumerTransactions.securityContext | indent 8 }}
       {{- end }}
+      initContainers:
+{{ include "sentry.initContainer.nodestore-s3" . | indent 6 }}
       containers:
       - name: {{ .Chart.Name }}-ingest-consumer-transactions
         image: "{{ template "sentry.image" . }}"
@@ -101,15 +105,19 @@ spec:
           {{- if .Values.sentry.ingestConsumerTransactions.noStrictOffsetReset }}
           - "--no-strict-offset-reset"
           {{- end }}
-          {{- if .Values.sentry.ingestConsumerTransactions.livenessProbe.enabled }}
           - "--healthcheck-file-path"
           - "/tmp/health.txt"
+          {{- if .Values.sentry.ingestConsumerTransactions.maxPollIntervalMs }}
+          - "--max-poll-interval-ms"
+          - "{{ .Values.sentry.ingestConsumerTransactions.maxPollIntervalMs }}"
           {{- end }}
           {{- if .Values.sentry.ingestConsumerTransactions.logLevel }}
           - "--log-level"
           - "{{ .Values.sentry.ingestConsumerTransactions.logLevel }}"
           {{- end }}
+          {{- if or .Values.sentry.ingestConsumerTransactions.maxBatchSize .Values.sentry.ingestConsumerTransactions.inputBlockSize .Values.sentry.ingestConsumerTransactions.maxBatchTimeMs .Values.sentry.ingestConsumerTransactions.concurrency }}
           - "--"
+          {{- end }}
           {{- if .Values.sentry.ingestConsumerTransactions.maxBatchSize }}
           - "--max-batch-size"
           - "{{ .Values.sentry.ingestConsumerTransactions.maxBatchSize }}"
@@ -126,34 +134,34 @@ spec:
           - "--processes"
           - "{{ .Values.sentry.ingestConsumerTransactions.concurrency }}"
           {{- end }}
-        {{- if .Values.sentry.ingestConsumerTransactions.livenessProbe.enabled }}
-        livenessProbe:
-          exec:
-            command:
-              - rm
-              - /tmp/health.txt
-          initialDelaySeconds: {{ .Values.sentry.ingestConsumerTransactions.livenessProbe.initialDelaySeconds }}
-          periodSeconds: {{ .Values.sentry.ingestConsumerTransactions.livenessProbe.periodSeconds }}
-        {{- end }}
+        {{- include "sentry.startupProbe.execHealthcheckFile" (dict "startupProbe" .Values.sentry.ingestConsumerTransactions.startupProbe "healthcheckFile" "/tmp/health.txt") | nindent 8 }}
+        {{- include "sentry.livenessProbe.execHealthcheckFile" (dict "livenessProbe" .Values.sentry.ingestConsumerTransactions.livenessProbe "healthcheckFile" "/tmp/health.txt") | nindent 8 }}
         env:
         - name: C_FORCE_ROOT
           value: "true"
 {{ include "sentry.env" . | indent 8 }}
+{{ include "sentry.env.nodestore-s3" . | indent 8 }}
 {{- if .Values.sentry.ingestConsumerTransactions.env }}
 {{ toYaml .Values.sentry.ingestConsumerTransactions.env | indent 8 }}
 {{- end }}
+        {{- with include "sentry.envFrom" . }}{{ . | nindent 8 }}{{- end }}
         volumeMounts:
         - mountPath: /etc/sentry
           name: config
           readOnly: true
         - mountPath: {{ .Values.filestore.filesystem.path }}
           name: sentry-data
-        {{- if and (eq .Values.filestore.backend "gcs") .Values.filestore.gcs.secretName }}
+{{ include "sentry.volumeMount.replay-filesystem" . | indent 8 }}
+{{ include "sentry.volumeMount.nodestore-s3" . | indent 8 }}
+        {{- if include "sentry.gcs.secretName" . }}
         - name: sentry-google-cloud-key
           mountPath: /var/run/secrets/google
         {{ end }}
 {{- if .Values.sentry.ingestConsumerTransactions.volumeMounts }}
 {{ toYaml .Values.sentry.ingestConsumerTransactions.volumeMounts | indent 8 }}
+{{- end }}
+{{- if .Values.global.volumeMounts }}
+{{ toYaml .Values.global.volumeMounts | indent 8 }}
 {{- end }}
         resources:
 {{ toYaml .Values.sentry.ingestConsumerTransactions.resources | indent 12 }}
@@ -174,6 +182,7 @@ spec:
       - name: config
         configMap:
           name: {{ template "sentry.fullname" . }}-sentry
+{{ include "sentry.volume.nodestore-s3" . | indent 6 }}
       - name: sentry-data
       {{- if and (eq .Values.filestore.backend "filesystem") .Values.filestore.filesystem.persistence.enabled (.Values.filestore.filesystem.persistence.persistentWorkers) }}
       {{- if .Values.filestore.filesystem.persistence.existingClaim }}
@@ -186,10 +195,11 @@ spec:
       {{- else }}
         emptyDir: {}
       {{ end }}
-      {{- if and (eq .Values.filestore.backend "gcs") .Values.filestore.gcs.secretName }}
+{{ include "sentry.volume.replay-filesystem" . | indent 6 }}
+      {{- if include "sentry.gcs.secretName" . }}
       - name: sentry-google-cloud-key
         secret:
-          secretName: {{ .Values.filestore.gcs.secretName }}
+          secretName: {{ include "sentry.gcs.secretName" . }}
       {{ end }}
 {{- if .Values.sentry.ingestConsumerTransactions.volumes }}
 {{ toYaml .Values.sentry.ingestConsumerTransactions.volumes | indent 6 }}

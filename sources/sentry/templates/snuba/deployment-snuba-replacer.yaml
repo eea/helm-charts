@@ -106,10 +106,11 @@ spec:
           {{- if .Values.snuba.replacer.queuedMinMessages }}
           - "--queued-min-messages"
           - "{{ .Values.snuba.replacer.queuedMinMessages }}"
-          {{- if .Values.snuba.replacer.noStrictOffsetReset }}
-          - "--no-strict-offset-reset"
-          {{- end }}
         {{- end }}
+          {{- if .Values.snuba.replacer.maxPollIntervalMs }}
+          - "--max-poll-interval-ms"
+          - "{{ .Values.snuba.replacer.maxPollIntervalMs }}"
+          {{- end }}
         ports:
         - containerPort: {{ template "snuba.port" }}
         env:
@@ -126,6 +127,9 @@ spec:
           readOnly: true
 {{- if .Values.snuba.replacer.volumeMounts }}
 {{ toYaml .Values.snuba.replacer.volumeMounts | indent 8 }}
+{{- end }}
+{{- if .Values.global.volumeMounts }}
+{{ toYaml .Values.global.volumeMounts | indent 8 }}
 {{- end }}
         resources:
 {{ toYaml .Values.snuba.replacer.resources | indent 12 }}

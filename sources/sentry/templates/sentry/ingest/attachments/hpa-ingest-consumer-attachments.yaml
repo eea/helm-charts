@@ -23,6 +23,15 @@ spec:
         target:
           type: Utilization
           averageUtilization: {{ .Values.sentry.ingestConsumerAttachments.autoscaling.targetCPUUtilizationPercentage }}
+    {{- if .Values.sentry.ingestConsumerAttachments.autoscaling.targetMemoryUtilizationPercentage }}
+    - type: ContainerResource
+      containerResource:
+        container: {{ .Chart.Name }}-ingest-consumer-attachments
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.sentry.ingestConsumerAttachments.autoscaling.targetMemoryUtilizationPercentage }}
+    {{- end }}
   {{- else }}
   metrics:
     - type: Resource
@@ -31,6 +40,14 @@ spec:
         target:
           type: Utilization
           averageUtilization: {{ .Values.sentry.ingestConsumerAttachments.autoscaling.targetCPUUtilizationPercentage }}
+    {{- if .Values.sentry.ingestConsumerAttachments.autoscaling.targetMemoryUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.sentry.ingestConsumerAttachments.autoscaling.targetMemoryUtilizationPercentage }}
+    {{- end }}
   {{- end }}
   {{- if eq (include "sentry.autoscaling.apiVersion" .) "autoscaling/v2" }}
   {{- with .Values.sentry.ingestConsumerAttachments.autoscaling.behavior }}

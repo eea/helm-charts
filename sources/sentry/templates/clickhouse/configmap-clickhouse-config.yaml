@@ -1,0 +1,32 @@
+{{- if .Values.clickhouse.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "sentry.fullname" . }}-clickhouse-config
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ include "sentry.fullname" . }}-clickhouse
+    chart: {{ include "sentry.chart" . }}
+    release: {{ .Release.Name }}
+data:
+  sentry.xml: |
+    <clickhouse>
+      <logger><console>1</console></logger>
+      <max_server_memory_usage_to_ram_ratio>0.8</max_server_memory_usage_to_ram_ratio>
+      {{- if .Values.clickhouse.clickhouse.backgroundPoolSize }}
+      <background_pool_size>{{ .Values.clickhouse.clickhouse.backgroundPoolSize }}</background_pool_size>
+      {{- end }}
+      <merge_tree>
+        <enable_mixed_granularity_parts>1</enable_mixed_granularity_parts>
+        <max_suspicious_broken_parts>10000</max_suspicious_broken_parts>
+        {{- if .Values.clickhouse.clickhouse.minBytesForWidePart }}
+        <min_bytes_for_wide_part>{{ int64 .Values.clickhouse.clickhouse.minBytesForWidePart }}</min_bytes_for_wide_part>
+        {{- end }}
+      </merge_tree>
+      <profiles>
+        <default>
+          <allow_experimental_json_type>1</allow_experimental_json_type>
+        </default>
+      </profiles>
+    </clickhouse>
+{{- end }}

@@ -54,6 +54,13 @@ spec:
       nodeSelector:
 {{ toYaml .Values.global.nodeSelector | indent 8 }}
       {{- end }}
+      {{- if .Values.dnsPolicy }}
+      dnsPolicy: {{ .Values.dnsPolicy | quote }}
+      {{- end }}
+      {{- if .Values.dnsConfig }}
+      dnsConfig:
+{{ toYaml .Values.dnsConfig | indent 8 }}
+      {{- end }}
       {{- if .Values.vroom.tolerations }}
       tolerations:
 {{ toYaml .Values.vroom.tolerations | indent 8 }}
@@ -92,30 +99,33 @@ spec:
 {{- end }}
         volumeMounts:
         - name: vroom-storage
-          mountPath: /var/vroom/sentry-profiles
+          mountPath: {{ .Values.filestore.profiles.filesystem.path }}
 {{- if .Values.vroom.volumeMounts }}
 {{ toYaml .Values.vroom.volumeMounts | indent 8 }}
 {{- end }}
+{{- if .Values.global.volumeMounts }}
+{{ toYaml .Values.global.volumeMounts | indent 8 }}
+{{- end }}
         livenessProbe:
-          failureThreshold: {{ .Values.vroom.probeFailureThreshold }}
+          failureThreshold: {{ .Values.vroom.livenessProbe.failureThreshold }}
           httpGet:
             path: /health
             port: {{ template "vroom.port" }}
             scheme: HTTP
-          initialDelaySeconds: {{ .Values.vroom.probeInitialDelaySeconds }}
-          periodSeconds: {{ .Values.vroom.probePeriodSeconds }}
-          successThreshold: {{ .Values.vroom.probeSuccessThreshold }}
-          timeoutSeconds: {{ .Values.vroom.probeTimeoutSeconds }}
+          initialDelaySeconds: {{ .Values.vroom.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.vroom.livenessProbe.periodSeconds }}
+          successThreshold: {{ .Values.vroom.livenessProbe.successThreshold }}
+          timeoutSeconds: {{ .Values.vroom.livenessProbe.timeoutSeconds }}
         readinessProbe:
-          failureThreshold: {{ .Values.vroom.probeFailureThreshold }}
+          failureThreshold: {{ .Values.vroom.readinessProbe.failureThreshold }}
           httpGet:
             path: /health
             port: {{ template "vroom.port" }}
             scheme: HTTP
-          initialDelaySeconds: {{ .Values.vroom.probeInitialDelaySeconds }}
-          periodSeconds: {{ .Values.vroom.probePeriodSeconds }}
-          successThreshold: {{ .Values.vroom.probeSuccessThreshold }}
-          timeoutSeconds: {{ .Values.vroom.probeTimeoutSeconds }}
+          initialDelaySeconds: {{ .Values.vroom.readinessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.vroom.readinessProbe.periodSeconds }}
+          successThreshold: {{ .Values.vroom.readinessProbe.successThreshold }}
+          timeoutSeconds: {{ .Values.vroom.readinessProbe.timeoutSeconds }}
         resources:
 {{ toYaml .Values.vroom.resources | indent 12 }}
 {{- if .Values.vroom.containerSecurityContext }}
@@ -135,7 +145,11 @@ spec:
       {{- if .Values.vroom.persistence.enabled }}
       - name: vroom-storage
         persistentVolumeClaim:
+          {{- if .Values.vroom.persistence.existingClaim }}
+          claimName: {{ .Values.vroom.persistence.existingClaim }}
+          {{- else }}
           claimName: sentry-vroom-pvc
+          {{- end }}
       {{- else }}
       - name: vroom-storage
         emptyDir: {}
