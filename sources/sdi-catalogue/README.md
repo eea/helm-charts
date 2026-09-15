@@ -41,6 +41,7 @@ Cronjobs have been removed since the update to GN 5/ GN 46 and the new folder st
 | nextcloud.maxUploadSize | string | '16G' | Nextcloud PHP upload limit (upload_max_filesize and post_max_size) |
 | nextcloud.phpMemoryLimit | string | '512M' | Nextcloud PHP memory limit |
 | apache.robotsTxt | string | 'User-agent: *\nDisallow: /' | Content of the /robots.txt file served at the site root. Set to '' to not deploy a robots.txt at all |
+| validator.enabled | boolean | true | Enable the INSPIRE validator (Deployment, Service, ConfigMap, PVC and the `/validator` Apache proxy path) |
 
 ## Authentication providers
 
@@ -110,24 +111,31 @@ The OAuth2 client registration is named `eea` in the Spring Security configurati
 ## Releases
 
 ### Version 0.10.5 - 15 September 2026
+
 - Bump gn46 to geonetwork-eea eea-4.9.x@51ba92c6 [Juan Luis Rodriguez Ponce - [`a342df09`](https://github.com/eea/helm-charts/commit/a342df09ddd43b6d50bad4d8781461ef4bd31fe8)]
 
 ### Version 0.10.4 - 15 September 2026
+
 - Fix Nextcloud init container race on fresh PVCs and missing X-Forwarded-Proto header on the /catalogue proxy [Juan Luis Rodriguez Ponce - [`6ddb603c`](https://github.com/eea/helm-charts/commit/6ddb603c2634d6b3c7290674a7960b16df72df7c)]
 
 ### Version 0.10.3 - 14 September 2026
+
 - Fix gn5 image, revert to build with removed missing application-gn4.yml import [Juan Luis Rodriguez Ponce - [`181558cd`](https://github.com/eea/helm-charts/commit/181558cd53eabdc92f0fca93b555ca7cca103330)]
 
 ### Version 0.10.2 - 14 September 2026
+
 - Update gn46 image to eea-4.9.x-defaf423 [Juan Luis Rodriguez Ponce - [`e4d71241c`](https://github.com/eea/helm-charts/commit/e4d71241c0b0bdefa3aa795fd890ecf2d614a2ae)]
 
 ### Version 0.10.1 - 04 September 2026
+
 - Update gn5 image tag to 459c2cc5 [Juan Luis Rodriguez Ponce - [`58a73b9d`](https://github.com/eea/helm-charts/commit/58a73b9d70a1308747a282699990f85d4de69464)]
 
 ### Version 0.10.0 - 03 September 2026
+
 - Add pg_isready readiness probe to postgres-geonetwork and relax liveness probe thresholds [Juan Luis Rodriguez Ponce - [`77bc8f5d`](https://github.com/eea/helm-charts/commit/77bc8f5d9677b20bfe55919aa615451f0126ffa9)]
 
 ### Version 0.9.1 - 03 August 2026
+
 - Document the new gn5.security.* values in the README [Juan Luis Rodriguez Ponce - [`db8b765b`](https://github.com/eea/helm-charts/commit/db8b765b129d152d9fbb5038b9d9cb0a45c43a76)]
 
 ### Version 0.9.0 - 03 August 2026

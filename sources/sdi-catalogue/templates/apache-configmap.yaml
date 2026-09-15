@@ -134,6 +134,7 @@ data:
 
 
 
+        {{- if .Values.validator.enabled }}
         <Location /validator>
             RequestHeader set X-Forwarded-Prefix "/validator"
             RequestHeader set X-Forwarded-Proto "https"
@@ -141,6 +142,7 @@ data:
             ProxyPass http://validator:8080/validator
             ProxyPassReverse http://validator:8080/validator
         </Location>
+        {{- end }}
 
         ProxyPreserveHost On
         RewriteEngine On
