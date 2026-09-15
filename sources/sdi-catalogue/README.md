@@ -109,6 +109,9 @@ The OAuth2 client registration is named `eea` in the Spring Security configurati
 
 ## Releases
 
+### Version 0.10.4 - 15 September 2026
+- Fix Nextcloud init container race on fresh PVCs and missing X-Forwarded-Proto header on the /catalogue proxy [Juan Luis Rodriguez Ponce - [`6ddb603c`](https://github.com/eea/helm-charts/commit/6ddb603c2634d6b3c7290674a7960b16df72df7c)]
+
 ### Version 0.10.3 - 14 September 2026
 - Fix gn5 image, revert to build with removed missing application-gn4.yml import [Juan Luis Rodriguez Ponce - [`181558cd`](https://github.com/eea/helm-charts/commit/181558cd53eabdc92f0fca93b555ca7cca103330)]
 
