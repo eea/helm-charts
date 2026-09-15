@@ -29,7 +29,7 @@ spec:
       initContainers:
         - args:
             - >-
-              ln -sf /etc/nextcloud/config/config.php /var/www/html/config/k8s.config.php
+              mkdir -p /var/www/html/config && ln -sf /etc/nextcloud/config/config.php /var/www/html/config/k8s.config.php
           command:
             - /bin/sh
             - '-c'

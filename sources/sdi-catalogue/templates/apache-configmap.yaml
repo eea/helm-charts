@@ -127,6 +127,7 @@ data:
 
             ## Reverse proxy configuration
             ProxyPreserveHost On
+            RequestHeader set X-Forwarded-Proto "https"
             ProxyPass http://gn5:8080{{ .Values.gn46.webapp_context }}
             ProxyPassReverse http://gn5:8080{{ .Values.gn46.webapp_context }}
         </Location>
