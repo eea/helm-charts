@@ -5,6 +5,9 @@ This chart is configured for production use.
 ## Releases
 
 <dl>
+  <dt>Version 1.0.0</dt>
+  <dd>FME Flow REST API V4 migration.</dd>
+
   <dt>Version 0.3.2</dt>
   <dd>Tomcat 10MB max post size.</dd>
 
