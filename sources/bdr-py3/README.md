@@ -179,6 +179,9 @@ schedule deadlines prevent a hung job from blocking future executions under
 
 ## Releases
 
+### Version 0.1.12 - 17 September 2026
+- Updated appVersion to z5-1.14 [Olimpiu Rob - [`6f116498`](https://github.com/eea/helm-charts/commit/6f1164981c3bc9e0587bfe32b767471b6bfbfe4f)]
+
 ### Version 0.1.11 - 15 September 2026
 - Updated appVersion to z5-1.13 [Olimpiu Rob - [`a05bec36`](https://github.com/eea/helm-charts/commit/a05bec36e67cc69004660d3d6eac96ef7b45245e)]
 
