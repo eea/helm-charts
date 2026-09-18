@@ -10,6 +10,9 @@ This chart deployes the COPERNICUS IN-SITU COMPONENT website backend app
 
 ## Releases
 
+### Version 6.66.0 - 18 September 2026
+- Automated release of [eeacms/insitu-backend:6.1.4-22](https://github.com/eea/insitu-backend/releases) [EEA Jenkins - [`c0584aaf`](https://github.com/eea/helm-charts/commit/c0584aafd74335526ef44cb32aa74c67c05bc279)]
+
 ### Version 6.65.0 - 20 August 2026
 - Automated release of [eeacms/insitu-backend:6.1.4-21](https://github.com/eea/insitu-backend/releases) [EEA Jenkins - [`a6b0c3f6`](https://github.com/eea/helm-charts/commit/a6b0c3f6b66d134b83aea5662ba8174f4d63373e)]
 
