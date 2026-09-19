@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 3.49.0 - 19 September 2026
+- Automated release of [eeacms/freshwater-backend:6.1.4-51](https://github.com/eea/freshwater-backend/releases) [EEA Jenkins - [`6f87e609`](https://github.com/eea/helm-charts/commit/6f87e60927e0b9fc8818ea74fe75faf0c3a61a74)]
+
 ### Version 3.48.2 - 04 September 2026
 - chore: Refs [#305742](https://taskman.eionet.europa.eu/issues/305742) - reduce kept failed cronjob pods from 5 to 1 [Claudia Ifrim - [`c7223a44`](https://github.com/eea/helm-charts/commit/c7223a44ef54e952b69043f21645adab737c649d)]
 
