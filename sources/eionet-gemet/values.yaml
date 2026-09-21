@@ -84,7 +84,7 @@ ingress:
   hosts:
     - host: www.eionet.europa.eu
       paths:
-        - path: /
+        - path: /gemet
           pathType: Prefix
           backend:
             service:
@@ -94,7 +94,7 @@ ingress:
 
     - host: eionet.europa.eu
       paths:
-        - path: /
+        - path: /gemet
           pathType: Prefix
           backend:
             service:
@@ -155,3 +155,34 @@ webserver:
   tolerations: []
   affinity: {}
 
+
+ploneingress:
+  enabled: false
+  className: "nginx"
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /VirtualHostBase/https/www.eionet.europa.eu:443/Eionet/VirtualHostRoot/$1
+  hosts:
+    - host: www.eionet.europa.eu
+      paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: plonesaas
+              port:
+                number: 6081
+
+    - host: eionet.europa.eu
+      paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: plonesaas
+              port:
+                number: 6081
+  tls:
+    - hosts:
+        - www.eionet.europa.eu
+        - eionet.europa.eu
+ 
