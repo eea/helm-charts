@@ -13,7 +13,7 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  ingressClassName: nginx
+  ingressClassName: {{ .Values.ploneingress.className }}
   {{- if .Values.ploneingress.tls }}
   tls:
     {{- range .Values.ploneingress.tls }}

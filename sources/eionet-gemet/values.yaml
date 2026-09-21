@@ -159,8 +159,7 @@ webserver:
 ploneingress:
   enabled: false
   className: "nginx"
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /VirtualHostBase/https/www.eionet.europa.eu:443/Eionet/VirtualHostRoot/$1
+  annotations: {}
   hosts:
     - host: www.eionet.europa.eu
       paths:

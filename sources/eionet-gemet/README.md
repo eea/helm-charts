@@ -4,7 +4,7 @@ This chart is (almost) configured for production.
 
 ## Releases
 
-### Version 0.7.1 - 21 September 2026
+### Version 0.7.2 - 21 September 2026
 - Fix in name of Ingress.
 
 ### Version 0.7.0 - 21 September 2026
