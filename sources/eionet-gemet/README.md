@@ -4,8 +4,14 @@ This chart is (almost) configured for production.
 
 ## Releases
 
+### Version 1.0.0 - 22 September 2026
+- Moved the Eionet portal part into its own chart.
+
 ### Version 0.7.2 - 21 September 2026
 - Fix in name of Ingress.
+
+### Version 0.7.1 - 21 September 2026
+- Redirection didn't work
 
 ### Version 0.7.0 - 21 September 2026
 - Split Ingress into GEMET and Plone

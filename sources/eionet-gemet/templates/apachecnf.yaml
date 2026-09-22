@@ -18,12 +18,6 @@ data:
         ServerName www.eionet.europa.eu
         ServerSignature Off
 
-        #Header set X-Content-Type-Options nosniff
-        #Header set Referrer-Policy strict-origin-when-cross-origin
-        #Header set Permissions-Policy "accelerometer=(), autoplay=(), camera=(), encrypted-media=(), fullscreen=(self), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), midi=(), payment=(), picture-in-picture=(), sync-xhr=(self), usb=()"
-        #Header set Expect-CT 'max-age=604800, report-uri="https://sentry.eea.europa.eu/api/22/security/?sentry_key=c2d7a7ca8deb46909d3bfc1bd468eb3d"'
-        #Header set X-Xss-Protection 1
-        #Header set Strict-Transport-Security 'max-age=15768000;'
         Header set Server HTTPS
 
         RewriteEngine on
@@ -38,8 +32,5 @@ data:
         RewriteRule /gemet/exports/(.*) http://mediaserver:80/gemet/exports/$1 [P,L]
         RewriteRule /gemet/gemet.rdf.gz http://mediaserver:80/gemet/gemet.rdf.gz [P,L]
         RewriteRule /gemet(.*) http://gemet:8888$1 [P,L]
-
-        # zope
-        RewriteRule ^/(.*)  http://plonesaas:6081/VirtualHostBase/https/www.eionet.europa.eu:443/Eionet/VirtualHostRoot/$1 [P,L]
     </VirtualHost>
 

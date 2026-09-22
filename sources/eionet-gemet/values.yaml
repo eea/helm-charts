@@ -39,10 +39,6 @@ service:
   type: ClusterIP
   port: 8443
 
-externalBackend:
-  enabled: true
-  name: kvm-prod4-f01.eea.europa.eu
-
 async:
   securityContext: {}
   resources:
@@ -155,33 +151,3 @@ webserver:
   tolerations: []
   affinity: {}
 
-
-ploneingress:
-  enabled: false
-  className: "nginx"
-  annotations: {}
-  hosts:
-    - host: www.eionet.europa.eu
-      paths:
-        - path: /
-          pathType: Prefix
-          backend:
-            service:
-              name: plonesaas
-              port:
-                number: 6081
-
-    - host: eionet.europa.eu
-      paths:
-        - path: /
-          pathType: Prefix
-          backend:
-            service:
-              name: plonesaas
-              port:
-                number: 6081
-  tls:
-    - hosts:
-        - www.eionet.europa.eu
-        - eionet.europa.eu
- 
