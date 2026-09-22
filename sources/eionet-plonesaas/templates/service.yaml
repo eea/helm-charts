@@ -1,0 +1,14 @@
+{{- if .Values.externalBackend.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "appl.fullname" . }}
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: plonesaas
+
+spec:
+  type: {{ .Values.service.type }}
+  # Should be  plonesaas.eea.europa.eu
+  externalName: {{ .Values.externalBackend.name }}
+{{- end }}

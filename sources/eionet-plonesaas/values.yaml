@@ -1,0 +1,36 @@
+
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: false
+  annotations: {}
+  name: ""
+
+service:
+  type: ExternalName
+  port: 6081
+
+externalBackend:
+  enabled: true
+  name: kvm-prod4-f01.eea.europa.eu
+
+ingress:
+  enabled: false
+  className: "nginx"
+  annotations:
+    nginx.ingress.kubernetes.io/from-to-www-redirect: 'true'
+    nginx.ingress.kubernetes.io/use-regex: 'true'
+    nginx.ingress.kubernetes.io/configuration-snippet: >
+      rewrite ^/(.*)$
+      /VirtualHostBase/https/www.eionet.europa.eu:443/Eionet/VirtualHostRoot/$1
+      break;
+  hosts:
+    - host: www.eionet.europa.eu
+      paths:
+        - path: /(.*)
+          pathType: ImplementationSpecific
+  tls:
+    - hosts:
+        - www.eionet.europa.eu
+ 
