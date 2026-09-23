@@ -59403,6 +59403,59 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: v4.3.9-eea.0.0.118-dev
+    created: "2026-09-23T17:11:03.005275+03:00"
+    dependencies:
+    - condition: vespa.enabled
+      name: vespa
+      repository: https://eea.github.io/helm-charts
+      version: 0.2.27
+    - condition: opensearch.enabled
+      name: opensearch
+      repository: https://opensearch-project.github.io/helm-charts
+      version: 3.7.0
+    - condition: minio.enabled
+      name: minio
+      repository: https://charts.min.io/
+      version: 5.4.0
+    - condition: postfix.enabled
+      name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.2.0
+    - condition: codeInterpreter.enabled
+      name: code-interpreter
+      repository: https://onyx-dot-app.github.io/python-sandbox/
+      version: 0.4.5
+    description: An Onyx derived Helm chart for GPTLab
+    digest: 38cb78f0fe0e4dd1b2894b562473497bc5c6d0f90e3ed66739a27324efeeed3f
+    home: https://www.onyx.app/
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/onyx/logo_onyx.png
+    keywords:
+    - gptlab
+    - ai
+    - search
+    - question-answering
+    - onyx
+    name: onyx-stack
+    sources:
+    - https://github.com/onyx-dot-app/onyx
+    type: application
+    urls:
+    - onyx-stack-0.32.1.tgz
+    version: 0.32.1
+  - annotations:
+      category: Productivity
+      images: |
+        - name: webserver
+          image: eeacms/danswer:web-v3.2.1-eea.0.0.115
+        - name: background
+          image: eeacms/danswer:backend-v3.2.1-eea.0.0.115
+        - name: model-server
+          image: eeacms/danswer:model_server-v3.2.1-eea.0.0.115
+        - name: vespa
+          image: vespaengine/vespa:8.609.39
+      licenses: MIT
+    apiVersion: v2
+    appVersion: v4.3.9-eea.0.0.118-dev
     created: "2026-09-11T13:17:42.521909436Z"
     dependencies:
     - condition: vespa.enabled
@@ -71912,4 +71965,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2026-09-23T11:40:43.451820473Z"
+generated: "2026-09-23T17:11:02.999018+03:00"
