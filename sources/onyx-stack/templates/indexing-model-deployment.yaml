@@ -63,7 +63,7 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- $initContainers := include "onyx.hfCache.initContainer" (dict "ctx" . "image" (printf "%s:%s" $modelRepo $modelTag)) }}
+      {{- $initContainers := include "onyx.hfCache.initContainer" (dict "ctx" . "image" (printf "%s:%s" $modelRepo $modelTag) "caches" .Values.indexCapability.caches) }}
       {{- if $initContainers }}
       initContainers:
         {{- $initContainers | nindent 8 }}
@@ -84,6 +84,7 @@ spec:
           - name: INDEXING_ONLY
             value: "{{ default "True" .Values.indexCapability.indexingOnly }}"
           {{- include "onyx.envSecrets" . | nindent 10}}
+          {{- include "onyx.caches.env" (dict "ctx" . "caches" .Values.indexCapability.caches) | nindent 10 }}
         {{- if .Values.indexCapability.securityContext }}
         securityContext:
           {{- toYaml .Values.indexCapability.securityContext | nindent 10 }}
@@ -92,7 +93,7 @@ spec:
         resources:
           {{- toYaml .Values.indexCapability.resources | nindent 10 }}
         {{- end }}
-        {{- include "onyx.renderVolumeMounts" (dict "ctx" . "volumeMounts" .Values.indexCapability.volumeMounts) | nindent 8 }}
+        {{- include "onyx.renderVolumeMounts" (dict "ctx" . "volumeMounts" .Values.indexCapability.volumeMounts "caches" .Values.indexCapability.caches) | nindent 8 }}
         {{- with .Values.indexCapability.startupProbe }}
         startupProbe:
           {{- toYaml . | nindent 10 }}
@@ -105,6 +106,6 @@ spec:
         livenessProbe:
           {{- toYaml . | nindent 10 }}
         {{- end }}
-      {{- include "onyx.renderVolumes" (dict "ctx" . "volumes" .Values.indexCapability.volumes) | nindent 6 }}
+      {{- include "onyx.renderVolumes" (dict "ctx" . "volumes" .Values.indexCapability.volumes "caches" .Values.indexCapability.caches) | nindent 6 }}
 
 {{- end }}

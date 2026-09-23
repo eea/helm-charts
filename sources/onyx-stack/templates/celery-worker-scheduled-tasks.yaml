@@ -61,7 +61,7 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- $initContainers := include "onyx.hfCache.initContainer" (dict "ctx" . "image" (printf "%s:%s" $backendRepo $backendTag)) }}
+      {{- $initContainers := include "onyx.hfCache.initContainer" (dict "ctx" . "image" (printf "%s:%s" $backendRepo $backendTag) "caches" .Values.celery_worker_scheduled_tasks.caches) }}
       {{- if $initContainers }}
       initContainers:
         {{- $initContainers | nindent 8 }}
@@ -105,6 +105,7 @@ spec:
                 name: {{ .Values.config.envConfigMapName }}
           env:
             {{- include "onyx.envSecrets" . | nindent 12}}
+            {{- include "onyx.caches.env" (dict "ctx" . "caches" .Values.celery_worker_scheduled_tasks.caches) | nindent 12 }}
             {{- /* The scheduled-tasks worker provisions + drives sandboxes headlessly
                    (run_scheduled_task → ensure_sandbox_running), signing push-daemon
                    requests with ONYX_SANDBOX_PUSH_PRIVATE_KEY. With the default
@@ -118,7 +119,7 @@ spec:
             {{- with .Values.celery_worker_scheduled_tasks.extraEnv }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
-          {{- with include "onyx.volumeMountsWithCA" (dict "ctx" . "volumeMounts" .Values.celery_worker_scheduled_tasks.volumeMounts) }}
+          {{- with include "onyx.volumeMountsWithCA" (dict "ctx" . "volumeMounts" .Values.celery_worker_scheduled_tasks.volumeMounts "caches" .Values.celery_worker_scheduled_tasks.caches) }}
           {{- . | nindent 10 }}
           {{- end }}
           startupProbe:
@@ -143,7 +144,7 @@ spec:
                     python onyx/background/celery/celery_k8s_probe.py
                     --probe liveness
                     --filename /tmp/onyx_k8s_scheduledtasks_liveness.txt
-      {{- with include "onyx.volumesWithCA" (dict "ctx" . "volumes" .Values.celery_worker_scheduled_tasks.volumes) }}
+      {{- with include "onyx.volumesWithCA" (dict "ctx" . "volumes" .Values.celery_worker_scheduled_tasks.volumes "caches" .Values.celery_worker_scheduled_tasks.caches) }}
       {{- . | nindent 6 }}
       {{- end }}
 {{- end }}

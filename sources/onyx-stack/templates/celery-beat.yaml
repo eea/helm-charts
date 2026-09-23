@@ -59,7 +59,7 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- $initContainers := include "onyx.hfCache.initContainer" (dict "ctx" . "image" (printf "%s:%s" $backendRepo $backendTag)) }}
+      {{- $initContainers := include "onyx.hfCache.initContainer" (dict "ctx" . "image" (printf "%s:%s" $backendRepo $backendTag) "caches" .Values.celery_beat.caches) }}
       {{- if $initContainers }}
       initContainers:
         {{- $initContainers | nindent 8 }}
@@ -87,7 +87,8 @@ spec:
                 name: {{ .Values.config.envConfigMapName }}
           env:
             {{- include "onyx.envSecrets" . | nindent 12}}
-          {{- include "onyx.renderVolumeMounts" (dict "ctx" . "volumeMounts" .Values.celery_beat.volumeMounts) | nindent 10 }}
+            {{- include "onyx.caches.env" (dict "ctx" . "caches" .Values.celery_beat.caches) | nindent 12 }}
+          {{- include "onyx.renderVolumeMounts" (dict "ctx" . "volumeMounts" .Values.celery_beat.volumeMounts "caches" .Values.celery_beat.caches) | nindent 10 }}
           startupProbe:
             {{ .Values.celery_shared.startupProbe | toYaml | nindent 12}}
           readinessProbe:
@@ -111,14 +112,7 @@ spec:
                     --probe liveness
                     --filename /tmp/onyx_k8s_beat_liveness.txt
       volumes:
-        {{- if .Values.hfCache.enabled }}
-        - name: hf-cache
-          emptyDir: {}
-        {{- end }}
-        {{- if .Values.tiktokenCache.enabled }}
-        - name: tiktoken-cache
-          emptyDir: {}
-        {{- end }}
+        {{- include "onyx.caches.volumes" (dict "ctx" . "caches" .Values.celery_beat.caches) | nindent 8 }}
         {{- range .Values.celery_beat.volumes }}
         {{- if ne .name "data" }}
         - name: {{ .name }}

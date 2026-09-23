@@ -61,7 +61,7 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- $initContainers := include "onyx.hfCache.initContainer" (dict "ctx" . "image" (printf "%s:%s" $backendRepo $backendTag)) }}
+      {{- $initContainers := include "onyx.hfCache.initContainer" (dict "ctx" . "image" (printf "%s:%s" $backendRepo $backendTag) "caches" .Values.celery_worker_docprocessing.caches) }}
       {{- if $initContainers }}
       initContainers:
         {{- $initContainers | nindent 8 }}
@@ -99,7 +99,8 @@ spec:
             - name: ENABLE_MULTIPASS_INDEXING
               value: "{{ .Values.celery_worker_docprocessing.enableMiniChunk }}"
             {{- include "onyx.envSecrets" . | nindent 12}}
-          {{- include "onyx.renderVolumeMounts" (dict "ctx" . "volumeMounts" .Values.celery_worker_docprocessing.volumeMounts) | nindent 10 }}
+            {{- include "onyx.caches.env" (dict "ctx" . "caches" .Values.celery_worker_docprocessing.caches) | nindent 12 }}
+          {{- include "onyx.renderVolumeMounts" (dict "ctx" . "volumeMounts" .Values.celery_worker_docprocessing.volumeMounts "caches" .Values.celery_worker_docprocessing.caches) | nindent 10 }}
           startupProbe:
             {{ .Values.celery_shared.startupProbe | toYaml | nindent 12}}
           readinessProbe:
@@ -122,5 +123,5 @@ spec:
                     python onyx/background/celery/celery_k8s_probe.py
                     --probe liveness
                     --filename /tmp/onyx_k8s_docprocessing_liveness.txt
-      {{- include "onyx.renderVolumes" (dict "ctx" . "volumes" .Values.celery_worker_docprocessing.volumes) | nindent 6 }}
+      {{- include "onyx.renderVolumes" (dict "ctx" . "volumes" .Values.celery_worker_docprocessing.volumes "caches" .Values.celery_worker_docprocessing.caches) | nindent 6 }}
 {{- end }}

@@ -58,6 +58,11 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- $initContainers := include "onyx.hfCache.initContainer" (dict "ctx" . "image" (printf "%s:%s" $backendRepo $backendTag) "caches" .Values.slackbot.caches) }}
+      {{- if $initContainers }}
+      initContainers:
+        {{- $initContainers | nindent 8 }}
+      {{- end }}
       containers:
         - name: slackbot
           securityContext:
@@ -72,12 +77,7 @@ spec:
                 name: {{ .Values.config.envConfigMapName }}
           env:
             {{- include "onyx.envSecrets" . | nindent 12}}
-          {{- with .Values.slackbot.volumeMounts }}
-          volumeMounts:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
-      {{- with .Values.slackbot.volumes }}
-      volumes:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+            {{- include "onyx.caches.env" (dict "ctx" . "caches" .Values.slackbot.caches) | nindent 12 }}
+          {{- include "onyx.renderVolumeMounts" (dict "ctx" . "volumeMounts" .Values.slackbot.volumeMounts "caches" .Values.slackbot.caches) | nindent 10 }}
+      {{- include "onyx.renderVolumes" (dict "ctx" . "volumes" .Values.slackbot.volumes "caches" .Values.slackbot.caches) | nindent 6 }}
 {{- end }}

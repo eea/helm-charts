@@ -142,44 +142,67 @@ checksum/pginto: {{ include (print $.Template.BasePath "/tooling-pginto-configma
 {{- end }}
 {{- end }}
 
+{{/*
+Resolve which data caches (HF, tiktoken, NLTK) a component uses. Mount paths are
+defined once under hfCache/tiktokenCache/nltkCache so they stay aligned across all
+pods; each component opts in or out through its own `caches` block. A cache is on
+when it is enabled globally and the component does not set `caches.<name>: false`.
+Call with: (dict "ctx" . "caches" .Values.<component>.caches)
+Returns JSON: {"hf": bool, "tiktoken": bool, "nltk": bool, "xdgCacheHome": string}
+*/}}
+{{- define "onyx.caches.resolve" -}}
+{{- $v := .ctx.Values -}}
+{{- $c := .caches | default dict -}}
+{{- $nltk := $v.nltkCache | default dict -}}
+{{- $r := dict -}}
+{{- $_ := set $r "hf" (and (eq (toString $v.hfCache.enabled) "true") (ne (toString (index $c "hf")) "false")) -}}
+{{- $_ := set $r "tiktoken" (and (eq (toString $v.tiktokenCache.enabled) "true") (ne (toString (index $c "tiktoken")) "false")) -}}
+{{- $_ := set $r "nltk" (and (eq (toString $nltk.enabled) "true") (ne (toString (index $c "nltk")) "false")) -}}
+{{- $_ := set $r "xdgCacheHome" (index $c "xdgCacheHome" | default "") -}}
+{{- $r | toJson -}}
+{{- end }}
+
+{{/*
+Env vars pointing each library at the component's cache directories.
+Call with: (dict "ctx" . "caches" .Values.<component>.caches)
+*/}}
+{{- define "onyx.caches.env" -}}
+{{- $r := include "onyx.caches.resolve" . | fromJson -}}
+{{- if $r.hf }}
+- name: HF_HOME
+  value: {{ .ctx.Values.hfCache.mountPath | quote }}
+{{- end }}
+{{- if $r.tiktoken }}
+- name: TIKTOKEN_CACHE_DIR
+  value: {{ .ctx.Values.tiktokenCache.mountPath | quote }}
+{{- end }}
+{{- if $r.nltk }}
+- name: NLTK_DATA
+  value: {{ .ctx.Values.nltkCache.mountPath | quote }}
+{{- end }}
+{{- with $r.xdgCacheHome }}
+- name: XDG_CACHE_HOME
+  value: {{ . | quote }}
+{{- end }}
+{{- end }}
+
 {{- define "onyx.renderVolumeMounts" -}}
 {{- $pginto := include "onyx.pgInto.volumeMount" .ctx -}}
 {{- $existing := .volumeMounts -}}
-{{- $hfEnabled := .ctx.Values.hfCache.enabled -}}
-{{- $ttEnabled := .ctx.Values.tiktokenCache.enabled -}}
-{{- if or $pginto $existing $hfEnabled $ttEnabled -}}
+{{- $r := include "onyx.caches.resolve" . | fromJson -}}
+{{- if or $pginto $existing $r.hf $r.tiktoken $r.nltk -}}
 volumeMounts:
-{{- if $hfEnabled }}
+{{- if $r.hf }}
   - name: hf-cache
     mountPath: {{ .ctx.Values.hfCache.mountPath }}
 {{- end }}
-{{- if $ttEnabled }}
+{{- if $r.tiktoken }}
   - name: tiktoken-cache
     mountPath: {{ .ctx.Values.tiktokenCache.mountPath }}
 {{- end }}
-{{- if $pginto }}
-{{ $pginto | nindent 2 }}
-{{- end }}
-{{- if $existing }}
-{{ toYaml $existing | nindent 2 }}
-{{- end }}
-{{- end -}}
-{{- end }}
-
-{{- define "onyx.renderVolumes" -}}
-{{- $pginto := include "onyx.pgInto.volume" .ctx -}}
-{{- $existing := .volumes -}}
-{{- $hfEnabled := .ctx.Values.hfCache.enabled -}}
-{{- $ttEnabled := .ctx.Values.tiktokenCache.enabled -}}
-{{- if or $pginto $existing $hfEnabled $ttEnabled -}}
-volumes:
-{{- if $hfEnabled }}
-  - name: hf-cache
-    emptyDir: {}
-{{- end }}
-{{- if $ttEnabled }}
-  - name: tiktoken-cache
-    emptyDir: {}
+{{- if $r.nltk }}
+  - name: nltk-cache
+    mountPath: {{ .ctx.Values.nltkCache.mountPath }}
 {{- end }}
 {{- if $pginto }}
 {{ $pginto | nindent 2 }}
@@ -191,15 +214,52 @@ volumes:
 {{- end }}
 
 {{/*
-HF + tiktoken cache init container — copies baked-in model data from the image into
-emptyDirs before the main container starts. Both volumes are mounted at temporary paths
-so the image's own baked-in content stays visible to the init container.
-Call with: (dict "ctx" . "image" "<repo>:<tag>")
+Cache emptyDir volumes only; used by templates that render their own volume list.
+Call with: (dict "ctx" . "caches" .Values.<component>.caches)
+*/}}
+{{- define "onyx.caches.volumes" -}}
+{{- $r := include "onyx.caches.resolve" . | fromJson -}}
+{{- if $r.hf }}
+- name: hf-cache
+  emptyDir: {}
+{{- end }}
+{{- if $r.tiktoken }}
+- name: tiktoken-cache
+  emptyDir: {}
+{{- end }}
+{{- if $r.nltk }}
+- name: nltk-cache
+  emptyDir: {}
+{{- end }}
+{{- end }}
+
+{{- define "onyx.renderVolumes" -}}
+{{- $pginto := include "onyx.pgInto.volume" .ctx -}}
+{{- $existing := .volumes -}}
+{{- $cacheVols := include "onyx.caches.volumes" . -}}
+{{- if or $pginto $existing $cacheVols -}}
+volumes:
+{{- if $cacheVols }}
+{{- $cacheVols | nindent 2 }}
+{{- end }}
+{{- if $pginto }}
+{{ $pginto | nindent 2 }}
+{{- end }}
+{{- if $existing }}
+{{ toYaml $existing | nindent 2 }}
+{{- end }}
+{{- end -}}
+{{- end }}
+
+{{/*
+Cache init container — copies baked-in HF/tiktoken/NLTK data from the image into
+the component's emptyDirs before the main container starts. Volumes are mounted at
+temporary paths so the image's own baked-in content stays visible to the init container.
+Call with: (dict "ctx" . "image" "<repo>:<tag>" "caches" .Values.<component>.caches)
 */}}
 {{- define "onyx.hfCache.initContainer" -}}
-{{- $hfEnabled := .ctx.Values.hfCache.enabled -}}
-{{- $ttEnabled := .ctx.Values.tiktokenCache.enabled -}}
-{{- if or $hfEnabled $ttEnabled }}
+{{- $r := include "onyx.caches.resolve" . | fromJson -}}
+{{- if or $r.hf $r.tiktoken $r.nltk }}
 - name: hf-cache-init
   image: "{{ .image }}"
   imagePullPolicy: {{ .ctx.Values.global.pullPolicy }}
@@ -208,11 +268,14 @@ Call with: (dict "ctx" . "image" "<repo>:<tag>")
     - -c
     - |
       set -e
-      {{- if $hfEnabled }}
+      {{- if $r.hf }}
       [ -d {{ .ctx.Values.hfCache.mountPath }} ] && cp -r {{ .ctx.Values.hfCache.mountPath }}/. /hf-cache-target || echo "hf cache not found in image, skipping"
       {{- end }}
-      {{- if $ttEnabled }}
+      {{- if $r.tiktoken }}
       [ -d {{ .ctx.Values.tiktokenCache.mountPath }} ] && cp -r {{ .ctx.Values.tiktokenCache.mountPath }}/. /tiktoken-cache-target || echo "tiktoken cache not found in image, skipping"
+      {{- end }}
+      {{- if $r.nltk }}
+      [ -d {{ .ctx.Values.nltkCache.mountPath }} ] && cp -r {{ .ctx.Values.nltkCache.mountPath }}/. /nltk-cache-target || echo "nltk data not found in image, skipping"
       {{- end }}
       echo "Cache seeded"
   securityContext:
@@ -230,13 +293,17 @@ Call with: (dict "ctx" . "image" "<repo>:<tag>")
       cpu: 500m
       memory: 1Gi
   volumeMounts:
-    {{- if $hfEnabled }}
+    {{- if $r.hf }}
     - name: hf-cache
       mountPath: /hf-cache-target
     {{- end }}
-    {{- if $ttEnabled }}
+    {{- if $r.tiktoken }}
     - name: tiktoken-cache
       mountPath: /tiktoken-cache-target
+    {{- end }}
+    {{- if $r.nltk }}
+    - name: nltk-cache
+      mountPath: /nltk-cache-target
     {{- end }}
 {{- end }}
 {{- end }}
@@ -375,7 +442,7 @@ volumeMounts:
 
 {{/*
 Render a volumes block combining pod-specific volumes (plus this chart's own
-pginto/HF/tiktoken volumes, via onyx.renderVolumes) with the custom CA volume.
+pginto/HF/tiktoken/NLTK cache volumes, via onyx.renderVolumes) with the custom CA volume.
 Usage: include "onyx.volumesWithCA" (dict "ctx" . "volumes" <list>)
 */}}
 {{- define "onyx.volumesWithCA" -}}

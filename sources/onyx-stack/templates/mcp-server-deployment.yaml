@@ -51,6 +51,11 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- $initContainers := include "onyx.hfCache.initContainer" (dict "ctx" . "image" (printf "%s:%s" .Values.mcpServer.image.repository (.Values.mcpServer.image.tag | default .Values.global.version)) "caches" .Values.mcpServer.caches) }}
+      {{- if $initContainers }}
+      initContainers:
+        {{- $initContainers | nindent 8 }}
+      {{- end }}
       containers:
         - name: mcp-server
           securityContext:
@@ -99,13 +104,8 @@ spec:
             - name: API_SERVER_URL_OVERRIDE_FOR_HTTP_REQUESTS
               value: "http://{{ include "onyx.fullname" . }}-api-service:{{ .Values.api.service.servicePort }}"
             {{- include "onyx.envSecrets" . | nindent 12 }}
-          {{- with .Values.mcpServer.volumeMounts }}
-          volumeMounts:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
-      {{- with .Values.mcpServer.volumes }}
-      volumes:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+            {{- include "onyx.caches.env" (dict "ctx" . "caches" .Values.mcpServer.caches) | nindent 12 }}
+          {{- include "onyx.renderVolumeMounts" (dict "ctx" . "volumeMounts" .Values.mcpServer.volumeMounts "caches" .Values.mcpServer.caches) | nindent 10 }}
+      {{- include "onyx.renderVolumes" (dict "ctx" . "volumes" .Values.mcpServer.volumes "caches" .Values.mcpServer.caches) | nindent 6 }}
 {{- end }}
 

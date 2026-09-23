@@ -65,7 +65,7 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- $initContainers := include "onyx.hfCache.initContainer" (dict "ctx" . "image" (printf "%s:%s" $backendRepo $backendTag)) }}
+      {{- $initContainers := include "onyx.hfCache.initContainer" (dict "ctx" . "image" (printf "%s:%s" $backendRepo $backendTag) "caches" .Values.api.caches) }}
       {{- if $initContainers }}
       initContainers:
         {{- $initContainers | nindent 8 }}
@@ -109,6 +109,7 @@ spec:
                 name: {{ .Values.config.envConfigMapName }}
           env:
             {{- include "onyx.envSecrets" . | nindent 12}}
-          {{- include "onyx.renderVolumeMounts" (dict "ctx" . "volumeMounts" .Values.api.volumeMounts) | nindent 10 }}
-      {{- include "onyx.renderVolumes" (dict "ctx" . "volumes" .Values.api.volumes) | nindent 6 }}
+            {{- include "onyx.caches.env" (dict "ctx" . "caches" .Values.api.caches) | nindent 12 }}
+          {{- include "onyx.renderVolumeMounts" (dict "ctx" . "volumeMounts" .Values.api.volumeMounts "caches" .Values.api.caches) | nindent 10 }}
+      {{- include "onyx.renderVolumes" (dict "ctx" . "volumes" .Values.api.volumes "caches" .Values.api.caches) | nindent 6 }}
 {{- end }}
