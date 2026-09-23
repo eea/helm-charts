@@ -110,6 +110,9 @@ The OAuth2 client registration is named `eea` in the Spring Security configurati
 
 ## Releases
 
+### Version 0.10.7 - 23 September 2026
+- Update gn46 to eea-4.9.x-62680a24 [Juan Luis Rodriguez Ponce - [`5b00a4c8`](https://github.com/eea/helm-charts/commit/5b00a4c8cfbc166c38f7e94543529bec0e0c15a6)]
+
 ### Version 0.10.6 - 15 September 2026
 - Add validator.enabled switch to enable/disable the INSPIRE validator [Juan Luis Rodriguez Ponce - [`5e316417`](https://github.com/eea/helm-charts/commit/5e3164173ce6154d8d4d55390e183daf67b7f7c5)]
 
