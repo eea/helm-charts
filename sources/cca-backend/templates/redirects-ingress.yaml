@@ -20,6 +20,9 @@ metadata:
       if ($uri ~ "^/mission(/.*)?$") {
         return 301 https://{{ $host }}/en/mission$is_args$args;
       }
+      if ($uri ~ "^/({{ $languages }})/mission(/.*)?$") {
+          return 301 https://mission-adaptation-portal.ec.europa.eu/about/eu-mission-adaptation-climate-change_en;
+      }
       if ($uri ~ "^/eu-adaptation-policy(/.*)?$") {
         return 301 https://{{ $host }}/en/eu-adaptation-policy$is_args$args;
       }
