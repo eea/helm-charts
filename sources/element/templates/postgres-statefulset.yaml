@@ -108,7 +108,7 @@ spec:
         accessModes:
           - ReadWriteOnce
         {{- if .Values.db.storageClassName }}
-        storageClass: "{{ .Values.db.storageClassName }}"
+        storageClassName: "{{ .Values.db.storageClassName }}"
         {{- end }}
         resources:
           requests:

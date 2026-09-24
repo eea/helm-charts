@@ -1,0 +1,11 @@
+{{- if .Values.federation.wellKnownServer }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: federation-well-known
+  labels:
+    {{- include "element.labels" . | nindent 4 }}
+    component: federation
+data:
+  server: '{{ .Values.federation.wellKnownServer }}'
+{{- end }}

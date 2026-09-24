@@ -75,6 +75,26 @@ coturn:
     pullPolicy: IfNotPresent
     repository: coturn/coturn
     tag: "4.6.2"
+  # TURN-over-TLS on 5349 (ALPN "turn"). Requires a TLS secret
+  # (tls.crt/tls.key valid for the TURN hostname, e.g. the
+  # *.eea.europa.eu wildcard) in the release namespace.
+  tls:
+    enabled: false
+    secretName: matrix-turn-tls
+  # Restrict TURN relay to a single peer IP (--allowed-peer-ip).
+  # Empty (default) = no peer restriction. The upstream placeholder
+  # 10.0.0.1 broke all real relays (403 Forbidden on CreatePermission).
+  allowedPeerIp: ""
+  # External IP advertised as the relay address (--external-ip).
+  # Set to the LoadBalancer IP in front of coturn; without it coturn
+  # advertises its pod IP, which remote peers cannot reach.
+  externalIp: ""
+  # Relay port range (--min-port/--max-port). Both must be set (>0)
+  # for the flags to be rendered; the range must be exposed on the
+  # LoadBalancer forwarding to coturn. 0 (default) = coturn default
+  # ephemeral range.
+  relayPortMin: 0
+  relayPortMax: 0
   resources: {}
   podAnnotations: {}
   podLabels: {}
@@ -148,6 +168,11 @@ federation:
     pullPolicy: IfNotPresent
     repository: eeacms/matrix-federation
     tag: "latest"
+  # Override /.well-known/matrix/server (single-line JSON string).
+  # The image replaces its /tmp/server template with this content at boot,
+  # so e.g. '{"m.server": "matrix.example.org:443"}' makes peers discover
+  # the federation endpoint on port 443.
+  wellKnownServer: ""
   nameOverride: ""
   fullnameOverride: ""
   resources:

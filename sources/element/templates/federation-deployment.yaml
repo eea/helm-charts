@@ -48,6 +48,13 @@ spec:
               value: "https://{{ .Values.identity.serverName }}/"
             - name: MATRIX_URL
               value: "https://{{ .Values.matrix.serverName }}/"
+          {{- if .Values.federation.wellKnownServer }}
+
+          volumeMounts:
+            - name: well-known
+              mountPath: /usr/share/nginx/html/.well-known/matrix/server
+              subPath: server
+          {{- end }}
 
           ports:
             - name: http
@@ -83,4 +90,10 @@ spec:
       {{- with .Values.federation.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if .Values.federation.wellKnownServer }}
+      volumes:
+        - name: well-known
+          configMap:
+            name: federation-well-known
       {{- end }}

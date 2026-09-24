@@ -11,10 +11,12 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
+  {{- if .Values.element.ingress.certificateName }}
   tls:
     - hosts:
         - "{{ .Values.element.serverName }}"
       secretName: '{{ .Values.element.ingress.certificateName }}'
+  {{- end }}
   rules:
     - host: "{{ .Values.element.serverName }}"
       http:
@@ -39,10 +41,12 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
+  {{- if .Values.identity.ingress.certificateName }}
   tls:
     - hosts:
         - "{{ .Values.identity.serverName }}"
       secretName: '{{ .Values.identity.ingress.certificateName }}'
+  {{- end }}
   rules:
     - host: "{{ .Values.identity.serverName }}"
       http:
@@ -67,10 +71,12 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
+  {{- if .Values.matrix.ingress.certificateName }}
   tls:
     - hosts:
         - "{{ .Values.matrix.serverName }}"
       secretName: '{{ .Values.matrix.ingress.certificateName }}'
+  {{- end }}
   rules:
     - host: "{{ .Values.matrix.serverName }}"
       http:
@@ -111,10 +117,12 @@ metadata:
     nginx.ingress.kubernetes.io/configuration-snippet: |-
       more_set_headers 'Content-Type application/json';
 spec:
+  {{- if .Values.matrix.ingress.certificateName }}
   tls:
     - hosts:
         - "{{ .Values.matrix.serverName }}"
       secretName: '{{ .Values.matrix.ingress.certificateName }}'
+  {{- end }}
   rules:
     - host: "{{ .Values.matrix.serverName }}"
       http:

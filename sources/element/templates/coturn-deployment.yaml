@@ -60,13 +60,27 @@ spec:
           args:
             - -n
             - --use-auth-secret
-            - --allowed-peer-ip=10.0.0.1
+            {{- if .Values.coturn.allowedPeerIp }}
+            - --allowed-peer-ip={{ .Values.coturn.allowedPeerIp }}
+            {{- end }}
+            {{- if .Values.coturn.externalIp }}
+            - --external-ip={{ .Values.coturn.externalIp }}
+            {{- end }}
+            {{- if .Values.coturn.relayPortMin }}
+            - --min-port={{ .Values.coturn.relayPortMin }}
+            - --max-port={{ .Values.coturn.relayPortMax }}
+            {{- end }}
             - --no-tcp-relay
             - --user-quota=12
             - --total-quota=1200
             - --log-file=stdout
             - --static-auth-secret="{{ .Values.turnkey }}"
             - --realm="{{ .Values.turnRealm }}"
+          {{- if .Values.coturn.tls.enabled }}
+            - --tls-listening=5349
+            - --cert=/etc/coturn-tls/tls.crt
+            - --pkey=/etc/coturn-tls/tls.key
+          {{- end }}
 
           ports:
             - containerPort: 3478
@@ -77,6 +91,12 @@ spec:
               protocol: UDP
             - containerPort: 5349
               protocol: UDP
+          {{- if .Values.coturn.tls.enabled }}
+          volumeMounts:
+            - name: coturn-tls
+              mountPath: /etc/coturn-tls
+              readOnly: true
+          {{- end }}
 
           {{- with .Values.coturn.livenessProbe }}
           livenessProbe:
@@ -107,4 +127,11 @@ spec:
       {{- with .Values.coturn.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if .Values.coturn.tls.enabled }}
+      volumes:
+        - name: coturn-tls
+          secret:
+            secretName: {{ .Values.coturn.tls.secretName }}
+            defaultMode: 256
       {{- end }}
