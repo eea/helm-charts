@@ -35,7 +35,7 @@ spec:
         - name: zeo
           securityContext:
             {{- toYaml .Values.zeo.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          image: "{{ .Values.image.repository }}:{{ .Values.zeo.imageTag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
           - zeo
