@@ -10,6 +10,9 @@ This chart deployes the BISE backend app
 
 ## Releases
 
+### Version 1.78.0 - 26 September 2026
+- Automated release of [eeacms/bise-backend:6.1.4-26](https://github.com/eea/bise-backend/releases) [EEA Jenkins - [`bbc7b0f5`](https://github.com/eea/helm-charts/commit/bbc7b0f5b14190f15bff4a0e593243b64a2082d5)]
+
 ### Version 1.77.0 - 18 September 2026
 - Automated release of [eeacms/bise-backend:6.1.4-25](https://github.com/eea/bise-backend/releases) [EEA Jenkins - [`af9cd55b`](https://github.com/eea/helm-charts/commit/af9cd55bab9abcd223bd3eee2f877d604b4d31f9)]
 
