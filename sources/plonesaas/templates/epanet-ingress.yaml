@@ -7,9 +7,10 @@ metadata:
     {{- include "appl.labels" . | nindent 4 }}
     component: epanet
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /VirtualHostBase/https/{{ .Values.epanet.hostname }}:443/epanet/VirtualHostRoot/$1
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      rewrite ^/$ https://www.eea.europa.eu/en/epanet permanent;
+      rewrite ^/(.*)$ https://www.eea.europa.eu/en/epanet/$1 permanent;
     nginx.ingress.kubernetes.io/use-regex: "true"
-    nginx.ingress.kubernetes.io/proxy-body-size: 100m
     {{- with .Values.epanet.annotations }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
