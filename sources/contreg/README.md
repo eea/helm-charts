@@ -16,6 +16,8 @@ This chart is configured for production use.
 ## Releases
 
 <dl>
+  <dt>Version 1.0.0</dt>
+  <dd>Java 17 upgrade, libraries upgrades, rpc router deactivation, remove dependency on Eionet portal stylesheets.</dd>
 
   <dt>Version 0.3.5</dt>
   <dd>Security upgrades, tomcat upgrade, sonarqube upgrade, sentry removal, SourcePageNotFoundException, NPE fixes</dd>
