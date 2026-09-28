@@ -190,8 +190,8 @@ varnish:
   serviceType: ClusterIP
   serviceName: backend-varnish
   image:
-    repository: tiberiuichim/plone-varnish
-    tag: "7.7-1.4"
+    repository: eeacms/plone-varnish
+    tag: "7.7-1.2"
     pullPolicy: Always
   backend: backend-plone
   port: 8080
