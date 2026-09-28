@@ -16,6 +16,9 @@ This chart is configured for production use.
 ## Releases
 
 <dl>
+  <dt>Version 1.0.1</dt>
+  <dd>Container name fix.</dd>
+
   <dt>Version 1.0.0</dt>
   <dd>Java 17 upgrade, libraries upgrades, rpc router deactivation, remove dependency on Eionet portal stylesheets.</dd>
 
