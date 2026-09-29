@@ -28586,6 +28586,26 @@ entries:
     urls:
     - datadict-1.1.0.tgz
     version: 1.1.0
+  eea-query-intent:
+  - apiVersion: v2
+    appVersion: "1.0"
+    created: "2026-09-29T16:59:25.337978662+03:00"
+    description: Multilingual query-intent classifier for the EEA website. Decides
+      which search queries are genuine questions, exploratory requests, or factual
+      claims that warrant an AI-generated answer, and which are plain keyword searches.
+    digest: e8ee0ae1ac01c933c09e3b4f0173142bfa84fc639aa17df14607421d552b2f15
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/eea-query-intent/eea-query-intent.png
+    keywords:
+    - EEA Website
+    - search
+    - query
+    name: eea-query-intent
+    sources:
+    - https://github.com/eea/helm-charts/sources
+    type: application
+    urls:
+    - eea-query-intent-0.0.2.tgz
+    version: 0.0.2
   eea-website-backend:
   - apiVersion: v2
     appVersion: 6.1.4-51.beta-2
@@ -72844,4 +72864,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2026-09-29T13:56:01.285668856Z"
+generated: "2026-09-29T16:59:25.335813702+03:00"
