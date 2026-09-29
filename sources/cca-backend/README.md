@@ -10,6 +10,9 @@ and the broken-links cron job.
 Sensitive values are intentionally left empty in `values.yaml`.
 ## Releases
 
+### Version 0.10.0 - 29 septembrie 2026
+- Link to frontend for images/download paths [Tiberiu Ichim - [`0da16d43`](https://github.com/eea/helm-charts/commit/0da16d43112e63a58953b5b48d0b4ec6eb87953b)]
+
 ### Version 0.9.35 - 28 September 2026
 - Use eeacms/plone-varnish 7.7-1.2 [GhitaB - [`63fcc56e`](https://github.com/eea/helm-charts/commit/63fcc56e7a1d66bfc27d0c096c067aeebade9915)]
 
