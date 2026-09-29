@@ -125,9 +125,14 @@ data:
         proxy_pass http://backend_varnish;
       }
 
-      location ~ ^/(.*)/@@images(.*)$ {
-        rewrite ^/(.*)/@@images(.*)$ /VirtualHostBase/https/$host:443/{{ include "cca-frontend.virtualHostRoot" . }}/VirtualHostRoot/$1/@@images$2 break;
-        proxy_pass http://backend_varnish;
+      # Serve classic image/download endpoints through Volto. Volto's Express
+      # middleware (volto-cca-policy) proxies them to the Plone API with the
+      # user's auth_token sent as a Bearer header, so logged-in users can load
+      # images of protected content in <img> tags. (Classic Plone URLs never
+      # read the auth_token cookie; they only honor __ac or a Bearer header.)
+      # The path is passed through unchanged — no VirtualHostBase rewrite.
+      location ~ ^/(.*)/@@(images|download)(/.*)?$ {
+        proxy_pass http://varnish_frontend;
       }
 
       location / {
