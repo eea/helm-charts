@@ -20,6 +20,10 @@ links:
   createPostgresService: false
   database: postgres.database
   memcached: memcached.database
+  # Frontend nginx service (separate release, same namespace). Used by the
+  # cca-images ingress to route @@images/@@download through Volto, whose
+  # Express middleware authenticates them with the user's auth_token.
+  frontend: frontend-nginx.cca
 
 ingress:
   enabled: true

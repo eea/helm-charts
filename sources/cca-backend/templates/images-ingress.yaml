@@ -8,7 +8,6 @@ metadata:
     component: cca-images
   annotations:
     nginx.ingress.kubernetes.io/configuration-snippet: |
-      rewrite ^/(.*)/@@images(.*)$ /VirtualHostBase/https/{{ .Values.plone.hostname }}:443/{{ .Values.plone.site }}/VirtualHostRoot/$1/@@images$2 break;
 {{ include "cca-backend.ingressCommonConfigurationSnippet" . | indent 6 }}
 {{ include "cca-backend.ingressSecurityHeaders" . | indent 6 }}
     nginx.ingress.kubernetes.io/use-regex: "true"
@@ -22,13 +21,27 @@ spec:
     - host: {{ .Values.plone.hostname }}
       http:
         paths:
+          # Route classic image/download endpoints to the FRONTEND (Volto), not
+          # the backend. Volto's Express middleware (volto-cca-policy) proxies
+          # them to the Plone API with the user's auth_token sent as a Bearer
+          # header, so logged-in users can load images of protected content in
+          # <img> tags. (Classic Plone URLs never read the auth_token cookie.)
+          # No VirtualHostBase rewrite here: the path is passed through to the
+          # frontend nginx, which forwards it to Volto unchanged.
           - path: /(.*)/@@images(.*)
             pathType: ImplementationSpecific
             backend:
               service:
-                name: {{ .Values.varnish.serviceName }}
+                name: {{ .Values.links.frontend }}
                 port:
-                  number: {{ .Values.varnish.port }}
+                  number: 80
+          - path: /(.*)/@@download(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: {{ .Values.links.frontend }}
+                port:
+                  number: 80
   {{- if .Values.ingress.tls }}
   tls:
     - hosts:
