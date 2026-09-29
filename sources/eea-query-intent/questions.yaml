@@ -51,7 +51,7 @@ questions:
   - variable: "ingress.certificate"
     label: "Certificate name"
     description: "Leave blank for default certificate, hostname-tls for letsencrypt"
-    default: "sonarqube.eea.europa.eu-tls"
+    default: "eea-query-intent.01dev.eea.europa.eu-tls"
     type: "string"
     show_if: "ingress.tls"
     group: "General"
