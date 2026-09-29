@@ -23,7 +23,9 @@ links:
   # Frontend nginx service (separate release, same namespace). Used by the
   # cca-images ingress to route @@images/@@download through Volto, whose
   # Express middleware authenticates them with the user's auth_token.
-  frontend: frontend-nginx.cca
+  # Must be a bare in-namespace service name (no .release suffix) — an
+  # Ingress backend cannot reference a cross-namespace FQDN.
+  frontend: frontend-nginx
 
 ingress:
   enabled: true
