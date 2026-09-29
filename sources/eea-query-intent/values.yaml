@@ -1,0 +1,58 @@
+image:
+  repository: eeacms/eea-query-intenet
+  pullPolicy: IfNotPresent
+  tag: ""
+
+networkSecurity:
+  enabled: false
+
+timezone: Europe/Copenhagen
+
+ingress:
+  enabled: true
+  className: ""
+  annotations: {}
+  letsencrypt: "01dev-eea-letsencrypt"
+  configuration:
+    proxy-body-size: "256m"
+    proxy-read-timeout: "180s"
+    proxy-send-timeout: "120s"
+  tls: true
+  certificate: ""
+  url: "eea-query-intent.eea.europa.eu"
+
+
+imagePullSecrets: []
+
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: false
+  annotations: {}
+  name: ""
+
+
+# Enter the names of the Persistent Volume Claims.
+# They will be mounted under /mnt
+mounts: []
+
+resources:
+  limits:
+    memory: 2024Mi
+  requests:
+    memory: 2024Mi
+
+
+
+podAnnotations: {}
+
+podSecurityContext: {}
+
+securityContext: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

@@ -1,0 +1,63 @@
+# Rsync
+
+This helm chart deploys a rsync server and/or rsync client
+
+Based on [www-sync](https://github.com/eea/eea.rancher.catalog/tree/master/infra-templates/www-sync)
+
+Using [eeacms/rsync](https://github.com/eea/eea.docker.rsync) docker image
+
+
+
+## Mounting persistent volumes
+
+The `mounts` value is a comma separated list of Persistent Volume Claims that will be mounted
+under /mnt. The volume claims must exist already.
+
+## Rsync Server 
+
+Enable server, choose how to expose it and under what port, add ssh keys
+
+
+## Rsync client
+
+Enable client, add crontab with rsync jobs, if needed
+
+
+## Releases
+
+### Version 1.4.0 - 04 September 2026
+- Automated release of [eeacms/rsync:3.1](https://github.com/eea/eea.docker.rsync/releases) [EEA Jenkins - [`8b6dc224`](https://github.com/eea/helm-charts/commit/8b6dc224737af187662ffb4a211df645f8d7974a)]
+
+### Version 1.3.2 - 28 January 2026
+- chore: remove unused code [EEA Jenkins - [`8c1b15f8`](https://github.com/eea/helm-charts/commit/8c1b15f8eb2141c44a67e3f33799efc4d9d2f01c)]
+
+### Version 1.3.1 - 22 January 2026
+- Allow Network Access to server port 22 [EEA Jenkins - [`da8e09d1`](https://github.com/eea/helm-charts/commit/da8e09d1ac9f63c1d2cdd53c0a7b8c7a9895ffb0)]
+
+### Version 1.3.0 - 26 September 2025
+- Automated release of [eeacms/rsync:3.0](https://github.com/eea/eea.docker.rsync/releases) [EEA Jenkins - [`80a842c8`](https://github.com/eea/helm-charts/commit/80a842c881b52cae58c039f382d5ff45d13be950)]
+
+### Version 1.2.0 - 28 August 2025
+- Automated release of [eeacms/rsync:2.9](https://github.com/eea/eea.docker.rsync/releases) [EEA Jenkins - [`c023c994`](https://github.com/eea/helm-charts/commit/c023c9944e3c3d38ca261a2546495f0fef608279)]
+
+### Version 1.1.0 - 21 August 2025
+- Automated release of [eeacms/rsync:2.8](https://github.com/eea/eea.docker.rsync/releases) [EEA Jenkins - [`9bafcf6e`](https://github.com/eea/helm-charts/commit/9bafcf6e2b2973e1e51866ea376abf76215d371f)]
+
+### Version 1.0.6 - 13 August 2025
+- Fix questions [valentinab25 - [`e81ab175`](https://github.com/eea/helm-charts/commit/e81ab17530ea0c12e7a1c17fa792cc1b935c0c99)]
+
+### Version 1.0.5 - 05 August 2025
+- Fix variable name [valentinab25 - [`73ce98ca`](https://github.com/eea/helm-charts/commit/73ce98ca658ea0cca79d6d9e65186bccd542e536)]
+
+### Version 1.0.4 - 05 August 2025
+- Fix enabled server service [valentinab25 - [`b3ef8b8f`](https://github.com/eea/helm-charts/commit/b3ef8b8f93ef0823fd7f0962c6b9450be475830a)]
+
+### Version 1.0.3 - 30 July 2025
+- Add NodePort/LB variables [valentinab25 - [`246cbe24`](https://github.com/eea/helm-charts/commit/246cbe24fef1e7d3ef8be8e0b69be9947fa30608)]
+
+### Version 1.0.2 - 08 July 2025
+- Use 2.7 version [valentinab25 - [`97b52fd3`](https://github.com/eea/helm-charts/commit/97b52fd319e4e970ba477f24003e2094726cd148)]
+
+### Version 1.0.1 - 07 July 2025
+- Fix questions [valentinab25 - [`0dd9368d`](https://github.com/eea/helm-charts/commit/0dd9368d1da562cfde72a36307288739183fa663)]
+
