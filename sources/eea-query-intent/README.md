@@ -8,6 +8,9 @@ Using [eeacms/eea-query-intent](https://hub.docker.com/repository/docker/eeacms/
 
 ## Releases
 
+### Version 0.0.8 - 29 September 2026
+- fix letsencrypt [valentinab25 - [`611279c1`](https://github.com/eea/helm-charts/commit/611279c1dffe421e5078cac98d27c108a31df46c)]
+
 ### Version 0.0.7 - 29 September 2026
 - fix name [valentinab25 - [`88999040`](https://github.com/eea/helm-charts/commit/88999040618bb0a4ccb8e96f7eb0eca7030d574e)]
 
