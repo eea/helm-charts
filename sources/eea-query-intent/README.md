@@ -8,6 +8,9 @@ Using [eeacms/eea-query-intent](https://hub.docker.com/repository/docker/eeacms/
 
 ## Releases
 
+### Version 0.0.10 - 29 September 2026
+- add readiness [valentinab25 - [`a08252d0`](https://github.com/eea/helm-charts/commit/a08252d0d862c06ae3d395e89e7223048bc18c2a)]
+
 ### Version 0.0.9 - 29 September 2026
 - fix indent [valentinab25 - [`4d4ba6fa`](https://github.com/eea/helm-charts/commit/4d4ba6fa474d07a4fc57e9fa5699084dce87e9f0)]
 
