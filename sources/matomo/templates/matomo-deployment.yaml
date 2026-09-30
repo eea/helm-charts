@@ -62,6 +62,8 @@ spec:
               value: {{ .Values.matomo.environment.PHP_MAX_EXECUTION_TIME | quote }}
             - name: PHP_MAX_INPUT_TIME
               value: {{ .Values.matomo.environment.PHP_MAX_INPUT_TIME | quote }}    
+            - name: MATOMO_URL
+              value: {{ include "appl.url" . | quote }}
           volumeMounts:
             - name: matomo-html
               mountPath: /var/www/html

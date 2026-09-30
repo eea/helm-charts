@@ -23,6 +23,15 @@ If release name contains chart name it will be used as a full name.
 {{- end }}
 {{- end }}
 
+
+{{/*
+Matomo public URL, with https when ingress TLS is enabled.
+*/}}
+{{- define "appl.url" -}}
+{{- if .Values.ingress.tls }}https{{ else }}http{{ end }}://{{ .Values.matomo.hostname }}/
+{{- end }}
+
+
 {{/*
 Create chart name and version as used by the chart label.
 */}}
