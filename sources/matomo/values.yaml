@@ -118,7 +118,50 @@ matomo:
     timeoutSeconds: 10
     failureThreshold: 5
     successThreshold: 1
-
+  fpmlivenessProbe:
+    exec:
+      command:
+        - sh
+        - '-c'
+        - |
+          out=$(SCRIPT_NAME=/matomo.php \
+                SCRIPT_FILENAME=/var/www/html/matomo.php \
+                REQUEST_METHOD=GET \
+                timeout 10 cgi-fcgi -bind -connect 127.0.0.1:9000 2>&1) || exit 1
+          printf '%s\n' "$out" | grep -qiE '^Status: *[45][0-9]{2}' && exit 1
+          exit 0
+    failureThreshold: 3
+    initialDelaySeconds: 10
+    periodSeconds: 20
+    successThreshold: 1
+    timeoutSeconds: 10
+  fpmreadinessProbe:
+    exec:
+      command:
+        - sh
+        - '-c'
+        - |
+          out=$(SCRIPT_NAME=/index.php \
+                SCRIPT_FILENAME=/var/www/html/index.php \
+                QUERY_STRING='module=Login&action=login&normal' \
+                REQUEST_METHOD=GET \
+                timeout 10 cgi-fcgi -bind -connect 127.0.0.1:9000 < /dev/null) || exit 1
+          printf '%s\n' "$out" | grep -qiE '^Status: *[45][0-9]{2}' && exit 1
+          printf '%s\n' "$out" | grep -q 'Sign In' || exit 1
+          exit 0
+    failureThreshold: 3
+    initialDelaySeconds: 15
+    periodSeconds: 15
+    successThreshold: 1
+    timeoutSeconds: 10
+  fpmstartupProbe:
+    failureThreshold: 50
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    successThreshold: 1
+    tcpSocket:
+      port: 9000
+    timeoutSeconds: 10
 
 matomocronArchive:
   - environment:
