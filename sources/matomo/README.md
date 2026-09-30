@@ -345,6 +345,9 @@ You don't need to change anything on this container, it should work by having th
 
 ## Releases
 
+### Version 3.16.2 - 30 September 2026
+- fix tracking plugin [valentinab25 - [`cf261c5d`](https://github.com/eea/helm-charts/commit/cf261c5d9e0bca680ff7eae5d8336d44ab489d68)]
+
 ### Version 3.16.1 - 30 September 2026
 - Add fpm healthchecks [valentinab25 - [`551ab2a7`](https://github.com/eea/helm-charts/commit/551ab2a7574f8ab51e91e4de9b566e4e64e9abdd)]
 
