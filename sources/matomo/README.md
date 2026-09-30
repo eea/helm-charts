@@ -345,6 +345,9 @@ You don't need to change anything on this container, it should work by having th
 
 ## Releases
 
+### Version 3.16.1 - 30 September 2026
+- Add fpm healthchecks [valentinab25 - [`551ab2a7`](https://github.com/eea/helm-charts/commit/551ab2a7574f8ab51e91e4de9b566e4e64e9abdd)]
+
 ### Version 3.16.0 - 25 September 2026
 - Automated release of [eeacms/matomo:5.14.0](https://github.com/eea/eea.docker.matomo/releases) [EEA Jenkins - [`39dcf04d`](https://github.com/eea/helm-charts/commit/39dcf04dda2636bb4abaf96f5ba847ac22924b53)]
 
