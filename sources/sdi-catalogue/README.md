@@ -110,6 +110,9 @@ The OAuth2 client registration is named `eea` in the Spring Security configurati
 
 ## Releases
 
+### Version 0.11.0 - 01 October 2026
+- Remove old nextcloud-db mysql server [Juan Luis Rodriguez Ponce - [`43807ef9`](https://github.com/eea/helm-charts/commit/43807ef98715c51eec2a159db1f214a77753b6c2)]
+
 ### Version 0.10.8 - 01 October 2026
 - Update gn46 to eea-4.9.x-c7dcc38a [Juan Luis Rodriguez Ponce - [`6fe2c76f`](https://github.com/eea/helm-charts/commit/6fe2c76ffa9fbd144c2970332fe95c988948ebcf)]
 
