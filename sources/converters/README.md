@@ -5,6 +5,9 @@ This chart is configured for production use.
 ## Releases
 
 <dl>
+  <dt>Version 1.1.0</dt>
+  <dd>Job executor Java 17 upgrade.</dd>
+
   <dt>Version 1.0.0</dt>
   <dd>FME Flow REST API V4 migration.</dd>
 
