@@ -658,6 +658,25 @@ litellm:
     # -- TLS configuration for the ingress
     tls: []
 
+  # -- API-only ingress for the public AI Gateway endpoint (LLM inference paths only)
+  aigatewayIngress:
+    # -- Set to `true` to enable the AI Gateway (API-only) ingress
+    enabled: false
+    # -- The class name for the ingress resource
+    className: ""
+    # -- Annotations for the ingress resource
+    annotations: {}
+    # -- The host for the ingress resource
+    host: ""
+    # -- Paths exposed through this ingress; everything else returns 404
+    paths: []
+    # - path: /v1/chat/completions
+    #   pathType: Exact
+    # - path: /v1/models
+    #   pathType: Exact
+    # -- TLS configuration for the ingress
+    tls: []
+
   # Horizontal Pod Autoscaler configuration for LiteLLM
   autoscaling:
     # -- Set to `true` to enable HPA for the LiteLLM pods

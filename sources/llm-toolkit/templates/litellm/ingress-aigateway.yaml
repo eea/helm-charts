@@ -1,0 +1,44 @@
+{{- if and .Values.litellm.enabled .Values.litellm.aigatewayIngress.enabled -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "appl.fullname" . }}-aigateway
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    app.kubernetes.io/component: litellm
+  {{- with .Values.litellm.aigatewayIngress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- with .Values.litellm.aigatewayIngress.className }}
+  ingressClassName: {{ . }}
+  {{- end }}
+  {{- if .Values.litellm.aigatewayIngress.tls }}
+  tls:
+    {{- range .Values.litellm.aigatewayIngress.tls }}
+    - hosts:
+        {{- range .hosts }}
+        - {{ . | quote }}
+        {{- end }}
+      {{- if .secretName }}
+      secretName: {{ .secretName }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
+  rules:
+    - host: {{ .Values.litellm.aigatewayIngress.host | quote }}
+      http:
+        paths:
+          {{- range .Values.litellm.aigatewayIngress.paths }}
+          - path: {{ .path }}
+            {{- with .pathType }}
+            pathType: {{ . }}
+            {{- end }}
+            backend:
+              service:
+                name: {{ include "appl.fullname" $ }}-litellm
+                port:
+                  number: {{ $.Values.litellm.service.port }}
+          {{- end }}
+{{- end }}

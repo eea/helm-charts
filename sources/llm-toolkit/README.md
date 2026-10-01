@@ -258,6 +258,38 @@ litellm:
             pathType: Prefix
 ```
 
+### AI Gateway (API-only) ingress
+
+An optional second ingress exposes only the LLM inference paths on a dedicated host.
+Everything not explicitly listed returns 404 (admin UI, `/key/*`, `/v1/model/info`, ...):
+
+```yaml
+litellm:
+  aigatewayIngress:
+    enabled: true
+    className: nginx
+    host: aigateway.your-domain.com
+    annotations:
+      nginx.ingress.kubernetes.io/proxy-body-size: 10m
+      nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
+      nginx.ingress.kubernetes.io/proxy-send-timeout: "300"
+      nginx.ingress.kubernetes.io/whitelist-source-range: 10.0.0.0/8
+    paths:
+      - path: /v1/chat/completions
+        pathType: Exact
+      - path: /v1/embeddings
+        pathType: Exact
+      - path: /v1/models
+        pathType: Exact
+      - path: /health/liveliness
+        pathType: Exact
+      - path: /health/readiness
+        pathType: Exact
+    tls:
+      - hosts:
+          - aigateway.your-domain.com
+```
+
 ## Uninstalling the Chart
 
 To uninstall/delete the `llm-toolkit` deployment:
@@ -267,6 +299,9 @@ helm delete llm-toolkit
 ```
 
 ## Releases
+
+### Version 0.4.0 - 01 October 2026
+- Added optional AI Gateway (API-only) ingress for LiteLLM (`litellm.aigatewayIngress`) exposing exact inference paths on a dedicated host
 
 ### Version 0.3.2 - 06 July 2026
 - Upgraded appVersion to 3.205.1 and LiteLLM to v1.91.0; lowered default numWorkers to 4 [Silviu - [`bc391bf0`](https://github.com/eea/helm-charts/commit/bc391bf00c75ba09374a855364ec60fd118ea768)]
