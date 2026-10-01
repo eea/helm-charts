@@ -277,11 +277,45 @@ litellm:
     paths:
       - path: /v1/chat/completions
         pathType: Exact
-      - path: /v1/embeddings
+      - path: /v1/completions
+        pathType: Exact
+      - path: /v1/messages
+        pathType: Exact
+      - path: /v1/messages/count_tokens
         pathType: Exact
       - path: /v1/models
+        pathType: Prefix
+      - path: /v1/responses
+        pathType: Prefix
+      - path: /v1/embeddings
+        pathType: Exact
+      - path: /v1/rerank
+        pathType: Exact
+      - path: /v1/moderations
+        pathType: Exact
+      - path: /v1/ocr
+        pathType: Exact
+      - path: /v1/audio/speech
+        pathType: Exact
+      - path: /v1/audio/transcriptions
+        pathType: Exact
+      - path: /v1/images/generations
+        pathType: Exact
+      - path: /v1/images/edits
+        pathType: Exact
+      - path: /v1/batches
+        pathType: Prefix
+      - path: /v1/files
+        pathType: Prefix
+      - path: /v1/model/info
+        pathType: Exact
+      - path: /v1/model/deprecations
+        pathType: Exact
+      - path: /health
         pathType: Exact
       - path: /health/liveliness
+        pathType: Exact
+      - path: /health/liveness
         pathType: Exact
       - path: /health/readiness
         pathType: Exact
@@ -302,6 +336,7 @@ helm delete llm-toolkit
 
 ### Version 0.4.0 - 01 October 2026
 - Added optional AI Gateway (API-only) ingress for LiteLLM (`litellm.aigatewayIngress`) exposing exact inference paths on a dedicated host
+- Pinned MinIO image to `onyxdotapp/minio:RELEASE.2025-07-23T15-54-02Z-cpuv1` (digest `7330be2e`)
 
 ### Version 0.3.2 - 06 July 2026
 - Upgraded appVersion to 3.205.1 and LiteLLM to v1.91.0; lowered default numWorkers to 4 [Silviu - [`bc391bf0`](https://github.com/eea/helm-charts/commit/bc391bf00c75ba09374a855364ec60fd118ea768)]
