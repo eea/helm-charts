@@ -50,11 +50,11 @@ spec:
         command:
         - /cron.sh
         env:
-        - name: MYSQL_DATABASE
+        - name: POSTGRES_DB
           value: {{ .Values.nextclouddb.database }}
-        - name: MYSQL_PASSWORD
+        - name: POSTGRES_PASSWORD
           value: {{ .Values.nextclouddb.password }}
-        - name: MYSQL_USER
+        - name: POSTGRES_USER
           value: {{ .Values.nextclouddb.user }}
         - name: NEXTCLOUD_ADMIN_PASSWORD
           value: {{ .Values.nextcloud.adminPassword }}

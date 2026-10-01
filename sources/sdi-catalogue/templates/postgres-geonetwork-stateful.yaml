@@ -60,6 +60,9 @@ spec:
           name: ca-certificates
           readOnly: true
           subPath: ca-bundle.crt
+        - mountPath: /docker-entrypoint-initdb.d
+          name: postgres-geonetwork-initdb
+          readOnly: true
 
         # Readiness gates Service membership: while pg_isready fails the pod is
         # removed from the postgres-geonetwork endpoints instead of accepting
@@ -102,6 +105,11 @@ spec:
           defaultMode: 0444
           optional: false
           name: {{ .Release.Name }}-cacrts
+      - name: postgres-geonetwork-initdb
+        configMap:
+          defaultMode: 0444
+          optional: false
+          name: postgres-geonetwork-initdb
 
   volumeClaimTemplates:
   - metadata:

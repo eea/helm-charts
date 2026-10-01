@@ -134,19 +134,12 @@ nextcloud:
   phpMemoryLimit: 512M
 
 nextclouddb:
-  dbtype: mysql
+  dbtype: pgsql
   database: ncdb
-  host: 'nextcloud-db'
-  port: 3306
+  host: 'postgres-geonetwork'
+  port: 5432
   user: ''
   password: ''
-  rootPW: ''
-  resources:
-    requests:
-      memory: 5Gi
-    limits:
-      memory: 5Gi
-  storage: 4Gi
 
 nextcloudCron:
   resources:
