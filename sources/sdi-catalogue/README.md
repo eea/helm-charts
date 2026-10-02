@@ -114,6 +114,9 @@ The OAuth2 client registration is named `eea` in the Spring Security configurati
 
 ## Releases
 
+### Version 0.12.1 - 02 October 2026
+- Allow overriding the Elasticsearch and Kibana images from values.yaml, document image values in README and drop empty gn5 oauth2 block [Juan Luis Rodriguez Ponce - [`c109efe8`](https://github.com/eea/helm-charts/commit/c109efe81c9ea92a737e8fafe5e688da499282a2)]
+
 ### Version 0.12.0 - 02 October 2026
 
 - Allow overriding the gn5 and gn46 images from values.yaml [Juan Luis Rodriguez Ponce - [`52ba5efc`](https://github.com/eea/helm-charts/commit/52ba5efc1896234b99d5e92e966b6d6d8151ab4c)]
