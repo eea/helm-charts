@@ -1,3 +1,4 @@
+{{- if .Values.ogcapi.enabled -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -230,3 +231,4 @@ data:
         swagger:
           v2:
             path: {{ .Values.publicCatalogue.webapp_context }}/api/openapi/v2/api-docs
+{{- end }}

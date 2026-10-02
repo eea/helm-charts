@@ -160,6 +160,8 @@ nextcloudRedis:
       memory: 512Mi
 
 ogcapi:
+  # Set to false to not deploy the OGC API Records microservice
+  # (deployment, service and configmap).
   enabled: true
   resources: {}
 
