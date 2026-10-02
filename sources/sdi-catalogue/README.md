@@ -114,6 +114,9 @@ The OAuth2 client registration is named `eea` in the Spring Security configurati
 
 ## Releases
 
+### Version 0.12.2 - 02 October 2026
+- Point the elasticsearch-es02 discovery seed at the elasticsearch node so both nodes can form a cluster whichever one is elected master [Juan Luis Rodriguez Ponce - [`bb3e421f`](https://github.com/eea/helm-charts/commit/bb3e421f4675393233b6c19b4eb4ae5f5e3a302c)]
+
 ### Version 0.12.1 - 02 October 2026
 - Allow overriding the Elasticsearch and Kibana images from values.yaml, document image values in README and drop empty gn5 oauth2 block [Juan Luis Rodriguez Ponce - [`c109efe8`](https://github.com/eea/helm-charts/commit/c109efe81c9ea92a737e8fafe5e688da499282a2)]
 
