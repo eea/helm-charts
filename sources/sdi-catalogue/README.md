@@ -114,6 +114,9 @@ The OAuth2 client registration is named `eea` in the Spring Security configurati
 
 ## Releases
 
+### Version 0.12.4 - 02 October 2026
+- Set GN5_BASE_URL and GN4_PROXY_BASE_URL on gn5 so OGC API Records links use the public site URL instead of localhost:7979 [Juan Luis Rodriguez Ponce - [`70ee5c09`](https://github.com/eea/helm-charts/commit/70ee5c097e0254367dea194cc5915d920647afed)]
+
 ### Version 0.12.3 - 02 October 2026
 - Also skip the ogcapi configmap when ogcapi.enabled is false, and document the flag in values.yaml [Juan Luis Rodriguez Ponce - [`8240d169`](https://github.com/eea/helm-charts/commit/8240d169984ee7457c80c7a6e21649eb9145d6ba)]
 
