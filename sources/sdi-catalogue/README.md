@@ -114,6 +114,9 @@ The OAuth2 client registration is named `eea` in the Spring Security configurati
 
 ## Releases
 
+### Version 0.12.3 - 02 October 2026
+- Also skip the ogcapi configmap when ogcapi.enabled is false, and document the flag in values.yaml [Juan Luis Rodriguez Ponce - [`8240d169`](https://github.com/eea/helm-charts/commit/8240d169984ee7457c80c7a6e21649eb9145d6ba)]
+
 ### Version 0.12.2 - 02 October 2026
 - Point the elasticsearch-es02 discovery seed at the elasticsearch node so both nodes can form a cluster whichever one is elected master [Juan Luis Rodriguez Ponce - [`bb3e421f`](https://github.com/eea/helm-charts/commit/bb3e421f4675393233b6c19b4eb4ae5f5e3a302c)]
 
