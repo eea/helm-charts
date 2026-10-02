@@ -215,6 +215,7 @@ validator:
 
 
 gn5:
+  # image: eeacms/eea-geonetwork5:f422d582  # defaults to the tag in gn5-deployment.yaml
   enabled: true
   webapp_context: /catalogue
   maxFileSize: 10GB
@@ -286,6 +287,7 @@ gn5:
       memory: 4Gi  
 
 gn46:
+  # image: eeacms/eea-geonetwork:eea-4.9.x-c7dcc38a  # defaults to the tag in gn46-deployment.yaml
   webapp_context: /catalogue
   geonetwork_dir: /catalogue-data
   geonetwork_data_dir: /var/local/gis_sdi/cataloguestore/metadata_data
