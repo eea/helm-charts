@@ -311,4 +311,17 @@ gn46:
   dashboardproxy_targeturi: http://kibana:5601
   security_type: gn5
   external_host: galliwasp.eea.europa.eu
+  # Store record attachments and thumbnails with OpenDAL (needs an image built
+  # with -Pdatastorage-opendal). Disabled keeps them in geonetwork_data_dir.
+  opendal:
+    enabled: false
+    scheme: s3
+    # Folder inside the bucket. Use a different one per environment.
+    root: /
+    bucket: ''
+    region: ''
+    # Leave empty for AWS, set it for other S3 compatible services
+    endpoint: ''
+    # Pre-created secret with the access-key-id and secret-access-key keys
+    existingSecret: ''
 

@@ -14,6 +14,13 @@ Cronjobs have been removed since the update to GN 5/ GN 46 and the new folder st
 | serverUrl | string | <https://sdi.eea.europa.eu:443> | URL of the server. The port is required. |
 | gn5.image | string | 'eeacms/eea-geonetwork5:f422d582' | GN5 Docker image. Unset uses the default in `gn5-deployment.yaml` |
 | gn46.image | string | 'eeacms/eea-geonetwork:eea-4.9.x-c7dcc38a' | GN46 Docker image. Unset uses the default in `gn46-deployment.yaml` |
+| gn46.opendal.enabled | boolean | false | Store GN46 record attachments and thumbnails with OpenDAL instead of `gn46.geonetwork_data_dir`. Needs an image that includes the OpenDAL data storage (eea-4.13.x from `8cb89f79` on) |
+| gn46.opendal.scheme | string | 's3' | OpenDAL service (`s3`, `fs`, `webdav`, ...) |
+| gn46.opendal.root | string | '/' | Folder inside the bucket. Use a different one per environment when they share a bucket |
+| gn46.opendal.bucket | string | '' | Bucket name |
+| gn46.opendal.region | string | '' | Bucket region, for example `eu-west-1` |
+| gn46.opendal.endpoint | string | '' | Service endpoint. Leave empty for AWS, set it for other S3 compatible services |
+| gn46.opendal.existingSecret | string | '' | Pre-created secret with the `access-key-id` and `secret-access-key` keys |
 | elasticsearch.image | string | 'docker.elastic.co/elasticsearch/elasticsearch:8.14.3' | Elasticsearch Docker image, used by both `elasticsearch` and `elasticsearch-es02` |
 | kibana.image | string | 'docker.elastic.co/kibana/kibana:8.14.3' | Kibana Docker image |
 | gn5.proxy.enabled | boolean | false | Enable proxy support in GN5 (sets `geonetwork.proxy.enabled`) |
@@ -111,6 +118,34 @@ helm install sdi-catalogue eea-charts/sdi-catalogue \
 **Important**: Never commit the `clientSecret` value to your values.yaml file or version control.
 
 The OAuth2 client registration is named `eea` in the Spring Security configuration.
+
+## GN46 S3 storage (OpenDAL)
+
+GN46 can keep record attachments and thumbnails in an S3 bucket through the
+[OpenDAL data storage](https://github.com/geonetwork/core-geonetwork/blob/main/datastorages/opendal/README.md).
+Create a secret with the bucket keys first:
+
+```bash
+kubectl create secret generic gn46-s3 \
+  --from-literal=access-key-id="your-access-key-id" \
+  --from-literal=secret-access-key="your-secret-access-key"
+```
+
+Then enable it in values.yaml:
+
+```yaml
+gn46:
+  opendal:
+    enabled: true
+    bucket: "your-bucket"
+    region: "eu-west-1"
+    root: "/datahub-dev"
+    existingSecret: "gn46-s3"
+```
+
+Existing files in `gn46.geonetwork_data_dir` are not copied to the bucket, sync them before
+enabling it. The attachments API under `/catalogue` is served by GN5, which still uses its
+own filesystem store.
 
 ## Releases
 
