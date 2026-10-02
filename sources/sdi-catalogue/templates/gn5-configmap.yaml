@@ -81,11 +81,6 @@ data:
     {{- else }}
 
     spring:
-      security:
-        oauth2:
-          client:
-            registration: {}
-            provider: {}
       servlet:
         multipart:
           max-file-size: {{ .Values.gn5.maxFileSize }}

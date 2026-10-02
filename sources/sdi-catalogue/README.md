@@ -12,6 +12,10 @@ Cronjobs have been removed since the update to GN 5/ GN 46 and the new folder st
 | ----- | ------ | --------- | ------------- |
 | serverName | string | sdi.eea.europa.eu | Name of the server |
 | serverUrl | string | <https://sdi.eea.europa.eu:443> | URL of the server. The port is required. |
+| gn5.image | string | 'eeacms/eea-geonetwork5:f422d582' | GN5 Docker image. Unset uses the default in `gn5-deployment.yaml` |
+| gn46.image | string | 'eeacms/eea-geonetwork:eea-4.9.x-c7dcc38a' | GN46 Docker image. Unset uses the default in `gn46-deployment.yaml` |
+| elasticsearch.image | string | 'docker.elastic.co/elasticsearch/elasticsearch:8.14.3' | Elasticsearch Docker image, used by both `elasticsearch` and `elasticsearch-es02` |
+| kibana.image | string | 'docker.elastic.co/kibana/kibana:8.14.3' | Kibana Docker image |
 | gn5.proxy.enabled | boolean | false | Enable proxy support in GN5 (sets `geonetwork.proxy.enabled`) |
 | gn5.maxFileSize | string | 10GB | Maximum file upload size in GeoNetowrk |
 | gn5.security.provider | string | ldap | Local authentication provider for the GN5 sign-in form: `ldap` (EIONET directory), `database` (GeoNetwork user table) or `none` (only the OAuth2 providers). Sets `geonetwork.security.provider` |
@@ -111,18 +115,23 @@ The OAuth2 client registration is named `eea` in the Spring Security configurati
 ## Releases
 
 ### Version 0.12.0 - 02 October 2026
+
 - Allow overriding the gn5 and gn46 images from values.yaml [Juan Luis Rodriguez Ponce - [`52ba5efc`](https://github.com/eea/helm-charts/commit/52ba5efc1896234b99d5e92e966b6d6d8151ab4c)]
 
 ### Version 0.11.0 - 01 October 2026
+
 - Remove old nextcloud-db mysql server [Juan Luis Rodriguez Ponce - [`43807ef9`](https://github.com/eea/helm-charts/commit/43807ef98715c51eec2a159db1f214a77753b6c2)]
 
 ### Version 0.10.8 - 01 October 2026
+
 - Update gn46 to eea-4.9.x-c7dcc38a [Juan Luis Rodriguez Ponce - [`6fe2c76f`](https://github.com/eea/helm-charts/commit/6fe2c76ffa9fbd144c2970332fe95c988948ebcf)]
 
 ### Version 0.10.7 - 23 September 2026
+
 - Update gn46 to eea-4.9.x-62680a24 [Juan Luis Rodriguez Ponce - [`5b00a4c8`](https://github.com/eea/helm-charts/commit/5b00a4c8cfbc166c38f7e94543529bec0e0c15a6)]
 
 ### Version 0.10.6 - 15 September 2026
+
 - Add validator.enabled switch to enable/disable the INSPIRE validator [Juan Luis Rodriguez Ponce - [`5e316417`](https://github.com/eea/helm-charts/commit/5e3164173ce6154d8d4d55390e183daf67b7f7c5)]
 
 ### Version 0.10.5 - 15 September 2026

@@ -87,6 +87,7 @@ postgres:
 
 
 elasticsearch:
+  # image: docker.elastic.co/elasticsearch/elasticsearch:8.14.3  # defaults to the tag in elasticsearch-deployment.yaml and elasticsearch-es02-deployment.yaml
   password: changeme
   sysctlImage:
     enabled: true
@@ -112,6 +113,7 @@ geonetworkdb:
   storage: 4Gi
 
 kibana:
+  # image: docker.elastic.co/kibana/kibana:8.14.3  # defaults to the tag in kibana-deployment.yaml
   resources: {}
   csp_strict: false
 
