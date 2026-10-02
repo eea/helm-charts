@@ -110,6 +110,9 @@ The OAuth2 client registration is named `eea` in the Spring Security configurati
 
 ## Releases
 
+### Version 0.12.0 - 02 October 2026
+- Allow overriding the gn5 and gn46 images from values.yaml [Juan Luis Rodriguez Ponce - [`52ba5efc`](https://github.com/eea/helm-charts/commit/52ba5efc1896234b99d5e92e966b6d6d8151ab4c)]
+
 ### Version 0.11.0 - 01 October 2026
 - Remove old nextcloud-db mysql server [Juan Luis Rodriguez Ponce - [`43807ef9`](https://github.com/eea/helm-charts/commit/43807ef98715c51eec2a159db1f214a77753b6c2)]
 
