@@ -336,7 +336,6 @@ helm delete llm-toolkit
 
 ### Version 0.4.0 - 01 October 2026
 - Added optional AI Gateway (API-only) ingress for LiteLLM (`litellm.aigatewayIngress`) exposing exact inference paths on a dedicated host
-- Pinned MinIO image to `onyxdotapp/minio:RELEASE.2025-07-23T15-54-02Z-cpuv1` (digest `7330be2e`)
 
 ### Version 0.3.2 - 06 July 2026
 - Upgraded appVersion to 3.205.1 and LiteLLM to v1.91.0; lowered default numWorkers to 4 [Silviu - [`bc391bf0`](https://github.com/eea/helm-charts/commit/bc391bf00c75ba09374a855364ec60fd118ea768)]
