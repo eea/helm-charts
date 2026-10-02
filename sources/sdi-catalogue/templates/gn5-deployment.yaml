@@ -32,6 +32,12 @@ spec:
         env:
         - name: SERVER_PORT
           value: "{{ .Values.gn5.server.port }}"
+        # Public base URLs used by OGC API Records to build its links
+        # (defaults to http://localhost:7979/geonetwork otherwise).
+        - name: GN5_BASE_URL
+          value: "https://{{ .Values.serverName }}{{ .Values.gn5.webapp_context }}"
+        - name: GN4_PROXY_BASE_URL
+          value: "https://{{ .Values.serverName }}{{ .Values.gn5.webapp_context }}"
         - name: SPRING_DATASOURCE_URL
           value: jdbc:postgresql://{{ .Values.gn5.database.host }}:{{ .Values.gn5.database.port }}/{{ .Values.gn5.database.dbname }}
         - name: SPRING_DATASOURCE_USERNAME
