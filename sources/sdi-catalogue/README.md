@@ -149,6 +149,9 @@ own filesystem store.
 
 ## Releases
 
+### Version 0.13.0 - 02 October 2026
+- Add optional gn46.opendal values to store GN46 attachments in S3 with OpenDAL [Juan Luis Rodriguez Ponce - [`8d9bd879`](https://github.com/eea/helm-charts/commit/8d9bd879a641a9a02a1e8310277ac0966498edab)]
+
 ### Version 0.12.4 - 02 October 2026
 - Set GN5_BASE_URL and GN4_PROXY_BASE_URL on gn5 so OGC API Records links use the public site URL instead of localhost:7979 [Juan Luis Rodriguez Ponce - [`70ee5c09`](https://github.com/eea/helm-charts/commit/70ee5c097e0254367dea194cc5915d920647afed)]
 
