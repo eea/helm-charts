@@ -123,6 +123,54 @@ volto:
     failureThreshold: 4
     successThreshold: 2
 
+ragFactsCheck:
+  enabled: true
+  image:
+    repository: eeacms/rag-facts-check
+    pullPolicy: Always
+    tag: "latest"
+  replicaCount: 1
+  resources:
+    limits:
+      memory: 1Gi
+    requests:
+      memory: 512Mi
+  environment:
+    LLM_API_BASE: ""
+    LLM_API_KEY: ""
+    LLM_MODEL: ""
+    LLM_TEMPERATURE: "0.1"
+  livenessProbe:
+    httpGet:
+      path: /health
+      port: http
+    periodSeconds: 20
+    timeoutSeconds: 10
+    initialDelaySeconds: 15
+    failureThreshold: 6
+    successThreshold: 1
+  startupProbe:
+    httpGet:
+      path: /health
+      port: http
+    periodSeconds: 5
+    timeoutSeconds: 10
+    initialDelaySeconds: 10
+    failureThreshold: 12
+    successThreshold: 1
+  readinessProbe:
+    httpGet:
+      path: /health
+      port: http
+    periodSeconds: 15
+    timeoutSeconds: 10
+    initialDelaySeconds: 15
+    failureThreshold: 4
+    successThreshold: 2
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
 debug:
   enabled: true
   serviceName: frontend-debug

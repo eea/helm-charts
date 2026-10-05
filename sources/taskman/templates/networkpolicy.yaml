@@ -89,6 +89,41 @@ spec:
     ports:
     - protocol: TCP
       port: 80
+{{- if .Values.drawio.enabled }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ .Release.Name }}-allow-ingress-controller-to-drawio
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: networkpolicy
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: drawio
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: {{ .Values.networkPolicy.ingressController.namespace | quote }}
+{{- if or .Values.networkPolicy.ingressController.nameLabel .Values.networkPolicy.ingressController.componentLabel }}
+      podSelector:
+        matchLabels:
+{{- if .Values.networkPolicy.ingressController.nameLabel }}
+          app.kubernetes.io/name: {{ .Values.networkPolicy.ingressController.nameLabel | quote }}
+{{- end }}
+{{- if .Values.networkPolicy.ingressController.componentLabel }}
+          app.kubernetes.io/component: {{ .Values.networkPolicy.ingressController.componentLabel | quote }}
+{{- end }}
+{{- end }}
+    ports:
+    - protocol: TCP
+      port: 8080
+{{- end }}
 {{- if .Values.networkPolicy.redmineExtraEgress }}
 ---
 apiVersion: networking.k8s.io/v1

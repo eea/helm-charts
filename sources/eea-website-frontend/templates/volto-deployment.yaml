@@ -40,6 +40,10 @@ spec:
           value: "{{ .Values.image.tag | default .Chart.AppVersion }}"
         - name: TZ
           value: "{{ .Values.timezone }}"
+        {{- if .Values.ragFactsCheck.enabled }}
+        - name: RAG_FACT_CHECKER_URL
+          value: "http://rag-facts-check:8000"
+        {{- end }}
         {{- range $key, $value := .Values.volto.environment }}
         {{- if and ($value) (ne $key "RAZZLE_FRONTEND_VERSION") (ne $key "RAZZLE_FRONTEND_NAME") }}
         - name: {{ $key }}

@@ -160,7 +160,7 @@ env:
 
 # tmpfs emptyDir for writable logs path
 tmpfsVolumeMount:
-  enabled: true
+  enabled: false
   mountPath: /opt/vespa/var/logs
   sizeLimit: "1Gi"
 
