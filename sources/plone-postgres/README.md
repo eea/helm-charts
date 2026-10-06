@@ -4,6 +4,9 @@ Postgres for plone Apps.
 
 ## Releases
 
+### Version 1.1.6 - 06 October 2026
+- fix loadbalancer configuration [valentinab25 - [`5a58c3cc`](https://github.com/eea/helm-charts/commit/5a58c3cccf7ecb2cfb3f98bf0c0e28050b5e32e3)]
+
 ### Version 1.1.5 - 07 September 2026
 - Add memcached netsecpol, question for servicename [valentinab25 - [`4b734c51`](https://github.com/eea/helm-charts/commit/4b734c51060d76329132a4d204d5d761096dc6c7)]
 
