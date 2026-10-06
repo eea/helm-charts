@@ -6,7 +6,6 @@ image:
 networkSecurity:
   enabled: false
 
-timezone: Europe/Copenhagen
 
 ingress:
   enabled: true
@@ -32,6 +31,8 @@ serviceAccount:
   annotations: {}
   name: ""
 
+environment:
+  TZ: "Europe/Copenhagen"
 
 livenessProbe:
   httpGet:

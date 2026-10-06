@@ -32,8 +32,13 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           env:
-          - name: TZ
-            value: "{{ .Values.timezone }}"
+          {{- range $key, $value := .Values.environment }}
+          {{- if ($value)  }}
+          - name: {{ $key }}
+            value: {{ $value | quote }}
+          {{- end }}
+          {{- end }}
+
  
           {{- if (.Values.livenessProbe) }}
           livenessProbe:
