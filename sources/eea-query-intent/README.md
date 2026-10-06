@@ -8,6 +8,9 @@ Using [eeacms/eea-query-intent](https://hub.docker.com/repository/docker/eeacms/
 
 ## Releases
 
+### Version 0.0.11 - 06 October 2026
+- add environment vars [valentinab25 - [`1aa229c4`](https://github.com/eea/helm-charts/commit/1aa229c4585b2fbc4db3279f7fc20a5354ab99e9)]
+
 ### Version 0.0.10 - 29 September 2026
 - add readiness [valentinab25 - [`a08252d0`](https://github.com/eea/helm-charts/commit/a08252d0d862c06ae3d395e89e7223048bc18c2a)]
 
