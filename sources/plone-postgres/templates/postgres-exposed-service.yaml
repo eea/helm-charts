@@ -9,13 +9,10 @@ metadata:
     component: postgres
   {{- if eq .Values.postgres.exposeService.type "LoadBalancer" }}    
   annotations:
-    metallb.universe.tf/loadBalancerIPs: {{ .Values.postgres.exposeService.IP }}
+    metallb.io/loadBalancerIPs: {{ .Values.postgres.exposeService.IP }}
   {{- end }}  
 spec:
   type: {{ .Values.postgres.exposeService.type }}
-  {{- if and (eq .Values.postgres.exposeService.type "LoadBalancer") .Values.postgres.exposeService.IP }}
-  loadBalancerIP: {{ .Values.postgres.exposeService.IP }}
-  {{- end }}
   ports:
   - port: 5432
     targetPort: 5432
