@@ -1,11 +1,4 @@
 questions:
-  - variable: "ingress.url"
-    label: "Url"
-    description: "DNS name for this deployment"
-    default: "eea-query-intent.eea.europa.eu"
-    type: "string"
-    required: true
-    group: "General"
 
   - variable: "securityEnabled"
     label: "Enable Security"
@@ -13,6 +6,22 @@ questions:
     type: "boolean"
     required: true
     group: "General"
+  
+  - variable: "ingress.enabled"
+    label: "Enable Ingress"
+    default: true
+    type: "boolean"
+    required: true
+    group: "General"
+
+  - variable: "ingress.url"
+    label: "Url"
+    description: "DNS name for this deployment"
+    default: "eea-query-intent.eea.europa.eu"
+    type: "string"
+    required: true
+    group: "General"
+    show_if: "ingress.enabled"
 
   - variable: "ingress.tls"
     label: "Enable https"
@@ -20,12 +29,14 @@ questions:
     type: "boolean"
     required: true
     group: "General"
+    show_if: "ingress.enabled"
 
   - variable: "ingress.letsencrypt"
     label: "Ingress letsencrypt cluster-issuer"
     description: "Leave empty when not using letsencrypt"
     default: "01dev-eea-letsencrypt"
     group: "General"
+    show_if: "ingress.enabled"
 
   - variable: "ingress.configuration.proxy-body-size"
     label: "Rancher LB body size"
@@ -33,6 +44,7 @@ questions:
     type: "string"
     default: "100m"
     group: "General"
+    show_if: "ingress.enabled"
 
   - variable: "ingress.configuration.proxy-read-timeout"
     label: "Rancher LB read timeout"
@@ -40,6 +52,7 @@ questions:
     type: "string"
     default: "120s"
     group: "General"
+    show_if: "ingress.enabled"
 
   - variable: "ingress.configuration.proxy-send-timeout"
     label: "Rancher LB send timeout"
@@ -47,13 +60,14 @@ questions:
     type: "string"
     default: "60s"
     group: "General"
+    show_if: "ingress.enabled"
 
   - variable: "ingress.certificate"
     label: "Certificate name"
     description: "Leave blank for default certificate, hostname-tls for letsencrypt"
     default: "eea-query-intent.01dev.eea.europa.eu-tls"
     type: "string"
-    show_if: "ingress.tls"
+    show_if: "ingress.tls=true && ingress.enabled=true"
     group: "General"
 
 
