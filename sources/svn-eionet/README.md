@@ -3,6 +3,9 @@
 This chart is configured for production.
 
 <dl>
+  <dt>Version 1.1.1 - 6 Oct 2026</dt>
+  <dd>Update base layer to AlmaLinux 10-kitten-20261002.</dd>
+
   <dt>Version 1.1.0 - 18 May 2026</dt>
   <dd>Upgrade base layer to AlmaLinux 10.</dd>
 
