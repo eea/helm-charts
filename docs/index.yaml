@@ -51268,6 +51268,25 @@ entries:
     version: 0.1.3
   logcentral-opensearch1:
   - apiVersion: v2
+    appVersion: 2.19.6
+    created: "2026-10-06T15:40:22.911929514+03:00"
+    dependencies:
+    - alias: opensearch-master
+      name: opensearch
+      repository: https://opensearch-project.github.io/helm-charts
+      version: 2.38.0
+    - alias: opensearch-data
+      name: opensearch
+      repository: https://opensearch-project.github.io/helm-charts
+      version: 2.38.0
+    description: A Helm chart for OpenSearch
+    digest: 588b71ebf03ffa038c6fdcc2532e0f9b3e493960d9b7721280888c3f1aeb316e
+    name: logcentral-opensearch1
+    type: application
+    urls:
+    - logcentral-opensearch1-3.1.0.tgz
+    version: 3.1.0
+  - apiVersion: v2
     appVersion: 1.3.20
     created: "2026-09-04T12:06:35.959437744+03:00"
     dependencies:
@@ -74291,4 +74310,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2026-10-06T14:53:57.164210308+03:00"
+generated: "2026-10-06T15:40:22.910131258+03:00"
