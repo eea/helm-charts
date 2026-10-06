@@ -4,6 +4,9 @@ This Helm chart deploys Opensearch 1 for the Graylog centralized logging solutio
 
 ## Releases
 
+### Version 3.1.1 - 06 October 2026
+- fix warning [valentinab25 - [`bb8f9042`](https://github.com/eea/helm-charts/commit/bb8f9042961eabc186ebbe939dbd55ecee23ff14)]
+
 ### Version 3.1.0 - 06 October 2026
 - Upgrade to v2 [valentinab25 - [`670ddccb`](https://github.com/eea/helm-charts/commit/670ddccbdfe36735f76f024a03da16748a6fc7f0)]
 
