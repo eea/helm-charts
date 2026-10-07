@@ -51,7 +51,7 @@ spec:
           - name: dd.url
             value: "{{ .Values.ddUrl }}/"
           - name: env.converters.url
-            value: "https://{{ .Values.hostname }}/"
+            value: "{{ .Values.convertersUrl }}/"
           - name: converters.restapi.token
             value: {{ .Values.convertersRestApiToken }}
           - name: dd.restapi.token
