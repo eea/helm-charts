@@ -495,6 +495,9 @@ grunt
 
 ## Releases
 
+### Version 0.41.0 - 07 October 2026
+- Automated release of [eeacms/redmine:6.1.5-1.3](https://github.com/eea/eea.docker.redmine/releases) [EEA Jenkins - [`2142f946`](https://github.com/eea/helm-charts/commit/2142f946376483fdcd5da3eeee30d34940e7396c)]
+
 ### Version 0.40.1 - 07 October 2026
 - remove duplicate netsecpols [valentinab25 - [`dc9d845f`](https://github.com/eea/helm-charts/commit/dc9d845f724008775af3b1905deead933d973587)]
 
