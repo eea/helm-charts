@@ -1,0 +1,32 @@
+{{- if .Values.litellm.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "appl.fullname" . }}-litellm-config
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    app.kubernetes.io/component: litellm
+data:
+  llmguard_config.yaml: |
+    {{- $models := .Values.litellm.models | default list }}
+    {{- if .Values.litellm.edenai.enabled }}
+    {{- $edenaiParams := dict "model" .Values.litellm.edenai.model "api_key" "os.environ/EDENAI_API_KEY" }}
+    {{- if .Values.litellm.edenai.apiBase }}
+    {{- $edenaiParams = set $edenaiParams "api_base" .Values.litellm.edenai.apiBase }}
+    {{- end }}
+    {{- $models = append $models (dict "model_name" .Values.litellm.edenai.modelName "litellm_params" $edenaiParams) }}
+    {{- end }}
+    guardrails:
+      - guardrail_name: "EEA-pre-guard_noerror"
+        litellm_params:
+          guardrail: eea_guardrail.eeaGuardrail_noerror
+          mode: "pre_call"
+      - guardrail_name: "EEA-pre-guard"
+        litellm_params:
+          guardrail: eea_guardrail.eeaGuardrail
+          mode: "pre_call"
+    {{- if $models }}
+    model_list:
+      {{- toYaml $models | nindent 6 }}
+    {{- end }}
+{{- end }}

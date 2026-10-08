@@ -590,10 +590,36 @@ litellm:
     # -- The pull policy to use for the LiteLLM pods
     pullPolicy: IfNotPresent
     # -- The image tag to use for the LiteLLM pods
-    tag: "v1.91.0"
+    tag: "v1.104.0-stable"
 
   # -- Number of worker processes for LiteLLM
   numWorkers: 4
+
+  # -- Extra model deployments rendered into the LiteLLM config (model_list)
+  # Each entry is a standard LiteLLM model_list item, e.g.:
+  # models:
+  #   - model_name: gpt-mini-latest
+  #     litellm_params:
+  #       model: edenai/openai/gpt-mini-latest
+  #       api_key: os.environ/EDENAI_API_KEY
+  models: []
+
+  # -- Eden AI provider (https://docs.litellm.ai/docs/providers/edenai).
+  # When enabled, a model deployment is appended to the config and the
+  # EDENAI_API_KEY env is wired from a Kubernetes secret.
+  edenai:
+    # -- Set to `true` to expose the Eden AI model through the gateway
+    enabled: false
+    # -- Name clients use to request the model (e.g. in `model` field)
+    modelName: edenai
+    # -- Eden AI model id, format `edenai/<provider>/<model>` (e.g. `edenai/openai/gpt-mini-latest`)
+    model: edenai/openai/gpt-mini-latest
+    # -- Optional Eden AI base URL, e.g. `https://api.eu.edenai.run/v3` for the EU endpoint
+    apiBase: ""
+    # -- Secret holding the Eden AI API key; defaults to `<fullname>-litellm-edenai`
+    apiKeySecretName: ""
+    # -- Key inside the secret holding the API key
+    apiKeySecretKey: api-key
 
   llmGuardPlugin:
     enabled: false

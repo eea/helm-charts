@@ -72,6 +72,9 @@ spec:
         - name: init-script
           configMap:
             name: {{ include "appl.fullname" . }}-litellm-postgres-init
+        - name: litellm-config
+          configMap:
+            name: {{ include "appl.fullname" . }}-litellm-config
         {{- if .Values.litellm.llmGuardPlugin.enabled }}
         - name: llmguard-plugin
           persistentVolumeClaim:
@@ -93,8 +96,8 @@ spec:
             - sh
             - -c
             - |
-              echo "=== Starting LiteLLM v1.83.3 ==="
-              exec litellm --port 4000 --num_workers {{ .Values.litellm.numWorkers | default 6 }} --config /app/litellm/llmguard-plugin/plugin/plugin/llmguard_config.yaml
+              echo "=== Starting LiteLLM {{ .Values.litellm.image.tag | default .Chart.AppVersion }} ==="
+              exec litellm --port 4000 --num_workers {{ .Values.litellm.numWorkers | default 6 }} --config /app/litellm/config/llmguard_config.yaml
           env:
             - name: PORT
               value: {{ .Values.litellm.service.port | quote }}
@@ -123,6 +126,17 @@ spec:
                   optional: true
             - name: LITELLM_SALT_KEY
               value: {{ .Values.litellm.saltKey | quote }}
+            {{- if .Values.litellm.edenai.enabled }}
+            - name: EDENAI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.litellm.edenai.apiKeySecretName | default (printf "%s-litellm-edenai" (include "appl.fullname" .)) }}
+                  key: {{ .Values.litellm.edenai.apiKeySecretKey | default "api-key" }}
+            {{- end }}
+            {{- if and .Values.litellm.edenai.enabled .Values.litellm.edenai.apiBase }}
+            - name: EDENAI_API_BASE
+              value: {{ .Values.litellm.edenai.apiBase | quote }}
+            {{- end }}
             - name: LLM_GUARD_API_URL
               value: {{ .Values.litellm.llmGuardApiUrl | quote }}
             - name: LLM_GUARD_RESPONSE_PROMPT
@@ -163,8 +177,9 @@ spec:
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          {{- if or .Values.litellm.llmGuardPlugin.enabled .Values.litellm.volumeMounts }}
           volumeMounts:
+            - name: litellm-config
+              mountPath: /app/litellm/config
             {{- if .Values.litellm.llmGuardPlugin.enabled }}
             - name: llmguard-plugin
               mountPath: /app/litellm/llmguard-plugin/plugin
@@ -172,7 +187,6 @@ spec:
             {{- with .Values.litellm.volumeMounts }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
-          {{- end }}
 
       {{- with .Values.litellm.nodeSelector }}
       nodeSelector:

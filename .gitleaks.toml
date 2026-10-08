@@ -148,6 +148,18 @@ regexes = [
 ]
 
 [[allowlists]]
+description = "Allow llm-toolkit values doc examples (os.environ reference and Secret key name, not secret values)"
+condition = "AND"
+regexTarget = "match"
+paths = [
+  '''^sources/llm-toolkit/values\.yaml$''',
+]
+regexes = [
+  '''api_key:[ \t]*os\.environ/EDENAI_API_KEY''',
+  '''apiKeySecretKey:[ \t]*api-key''',
+]
+
+[[allowlists]]
 description = "Allow onyx-stack secretKeys mappings (env var -> Secret key name, not a value) and Secret object name references"
 condition = "AND"
 regexTarget = "match"
