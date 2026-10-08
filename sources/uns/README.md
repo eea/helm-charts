@@ -10,6 +10,9 @@ set the values in the database section.
 
 ## Releases
 
+### Version 1.0.0
+- Java 17 upgrade.
+
 ### Version 0.5.0
 - Remove dependency on Eionet portal stylesheets, remove GELF logging.
 
