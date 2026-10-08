@@ -495,6 +495,27 @@ grunt
 
 ## Releases
 
+### Version 0.46.0 - 07 October 2026
+- Automated release of [eeacms/redmine:6.1.5-1.9](https://github.com/eea/eea.docker.redmine/releases) [EEA Jenkins - [`4ed7b904`](https://github.com/eea/helm-charts/commit/4ed7b904a647b2d72ee68c92b568d36aaafd6282)]
+
+### Version 0.45.0 - 07 October 2026
+- Automated release of [eeacms/redmine:6.1.5-1.8](https://github.com/eea/eea.docker.redmine/releases) [EEA Jenkins - [`a271152e`](https://github.com/eea/helm-charts/commit/a271152e0eeefcb3eff5a0b0904744afac64895f)]
+
+### Version 0.44.0 - 07 October 2026
+- Automated release of [eeacms/redmine:6.1.5-1.7](https://github.com/eea/eea.docker.redmine/releases) [EEA Jenkins - [`81402922`](https://github.com/eea/helm-charts/commit/81402922c69a9509191c8ac9883ff7037f2d25d6)]
+
+### Version 0.43.0 - 07 October 2026
+- Automated release of [eeacms/redmine:6.1.5-1.6](https://github.com/eea/eea.docker.redmine/releases) [EEA Jenkins - [`e2d49da7`](https://github.com/eea/helm-charts/commit/e2d49da72a0bef9af2f41de930540768b5cda2e1)]
+
+### Version 0.42.0 - 07 October 2026
+- Automated release of [eeacms/redmine:6.1.5-1.5](https://github.com/eea/eea.docker.redmine/releases) [EEA Jenkins - [`771275eb`](https://github.com/eea/helm-charts/commit/771275eba7c651a8588e5a6f9750a9bfb693b5a2)]
+
+### Version 0.41.0 - 07 October 2026
+- Automated release of [eeacms/redmine:6.1.5-1.3](https://github.com/eea/eea.docker.redmine/releases) [EEA Jenkins - [`2142f946`](https://github.com/eea/helm-charts/commit/2142f946376483fdcd5da3eeee30d34940e7396c)]
+
+### Version 0.40.1 - 07 October 2026
+- remove duplicate netsecpols [valentinab25 - [`dc9d845f`](https://github.com/eea/helm-charts/commit/dc9d845f724008775af3b1905deead933d973587)]
+
 ### Version 0.40.0 - 06 October 2026
 - Automated release of [eeacms/redmine:6.1.5-1.2](https://github.com/eea/eea.docker.redmine/releases) [EEA Jenkins - [`7f2e4125`](https://github.com/eea/helm-charts/commit/7f2e412526f6f5fcbe32dd4e6df7a155b6a2e5b5)]
 
