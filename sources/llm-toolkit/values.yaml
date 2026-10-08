@@ -162,7 +162,15 @@ langfuse:
       annotations: {}
 
     # -- Resources for the langfuse web pods. Defaults to the global resources
-    resources: {}
+    # Note: the web pod needs >=2Gi to start on v3.225.x (Next.js 16); a lower
+    # limit combined with a large NODE_OPTIONS max-old-space-size gets OOMKilled.
+    resources:
+      requests:
+        cpu: "100m"
+        memory: "1Gi"
+      limits:
+        cpu: "500m"
+        memory: "2Gi"
 
     # -- Number of replicas to use if HPA is not enabled. Defaults to the global replicas
     replicas: null
@@ -590,7 +598,7 @@ litellm:
     # -- The pull policy to use for the LiteLLM pods
     pullPolicy: IfNotPresent
     # -- The image tag to use for the LiteLLM pods
-    tag: "v1.104.0-stable"
+    tag: "v1.104.2"
 
   # -- Number of worker processes for LiteLLM
   numWorkers: 4

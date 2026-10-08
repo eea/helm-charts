@@ -97,7 +97,11 @@ spec:
             - -c
             - |
               echo "=== Starting LiteLLM {{ .Values.litellm.image.tag | default .Chart.AppVersion }} ==="
+              {{- if .Values.litellm.llmGuardPlugin.enabled }}
+              exec litellm --port 4000 --num_workers {{ .Values.litellm.numWorkers | default 6 }} --config /app/litellm/llmguard-plugin/plugin/plugin/llmguard_config.yaml
+              {{- else }}
               exec litellm --port 4000 --num_workers {{ .Values.litellm.numWorkers | default 6 }} --config /app/litellm/config/llmguard_config.yaml
+              {{- end }}
           env:
             - name: PORT
               value: {{ .Values.litellm.service.port | quote }}
@@ -178,11 +182,15 @@ spec:
             {{- toYaml . | nindent 12 }}
           {{- end }}
           volumeMounts:
-            - name: litellm-config
-              mountPath: /app/litellm/config
             {{- if .Values.litellm.llmGuardPlugin.enabled }}
             - name: llmguard-plugin
               mountPath: /app/litellm/llmguard-plugin/plugin
+            - name: litellm-config
+              mountPath: /app/litellm/llmguard-plugin/plugin/plugin/llmguard_config.yaml
+              subPath: llmguard_config.yaml
+            {{- else }}
+            - name: litellm-config
+              mountPath: /app/litellm/config
             {{- end }}
             {{- with .Values.litellm.volumeMounts }}
             {{- toYaml . | nindent 12 }}
