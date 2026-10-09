@@ -97,10 +97,10 @@ langfuse:
   resources:
     requests:
       cpu: "100m"
-      memory: "256Mi"
+      memory: "1Gi"
     limits:
-      cpu: "500m"
-      memory: "512Mi"
+      cpu: "1"
+      memory: "5Gi"
 
   serviceAccount:
     # -- Whether to create a service account for all langfuse deployments
@@ -169,8 +169,8 @@ langfuse:
         cpu: "100m"
         memory: "1Gi"
       limits:
-        cpu: "500m"
-        memory: "2Gi"
+        cpu: "1"
+        memory: "5Gi"
 
     # -- Number of replicas to use if HPA is not enabled. Defaults to the global replicas
     replicas: null
@@ -241,7 +241,13 @@ langfuse:
       labels: {}
 
     # -- Resources for the langfuse worker pods. Defaults to the global resources
-    resources: {}
+    resources:
+      requests:
+        cpu: "100m"
+        memory: "1Gi"
+      limits:
+        cpu: "1"
+        memory: "5Gi"
 
     # -- Number of replicas to use if HPA is not enabled. Defaults to the global replicas
     replicas: null
@@ -725,13 +731,15 @@ litellm:
     targetMemoryUtilizationPercentage: 80
 
   # -- Resources for the LiteLLM pods
+  # Sized for num_workers >= 4 with message logging enabled; scale memory up
+  # with traffic (usage grows with buffered request/response logs).
   resources:
     requests:
-      cpu: "100m"
-      memory: "128Mi"
-    limits:
       cpu: "500m"
       memory: "1Gi"
+    limits:
+      cpu: "4"
+      memory: "8Gi"
   # -- Pod annotations for LiteLLM
   podAnnotations: {}
   # -- Pod labels for LiteLLM
