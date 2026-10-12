@@ -203,6 +203,11 @@
     description: "LLMGW Token"
     type: "password"
     group: "Danswer configuration"
+  - variable: "volto.environment.RAG_FACT_CHECKER_URL"
+    label: "Fact-checker URL"
+    description: "rag-facts-check base URL, e.g. http://rag-facts-check:8000 - bare origin, no trailing path. Cluster-internal only: no credential is sent and the service has no auth."
+    type: "string"
+    group: "Danswer configuration"
 
   - variable: "volto.environment.RAZZLE_PROXY_ES_DSN_datahub"
     label: "Datahub Elasticsearch DSN"

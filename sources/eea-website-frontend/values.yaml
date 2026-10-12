@@ -69,6 +69,11 @@ volto:
     DANSWER_API_KEY:
     ONYX_URL:
     ONYX_API_KEY:
+    # rag-facts-check (claim verification). Bare origin, no trailing path - the Volto
+    # add-on appends /halloumi/generate. Cluster-internal only: the proxy sends no
+    # credential and the service has no auth. Left empty, the add-on falls back to
+    # http://localhost:8000 and fact-checks fail with "Fact-checker unavailable".
+    RAG_FACT_CHECKER_URL:
     QUERY_INTENT_SERVICE_URL:
     SENTRY_URL:
     SENTRY_AUTH_TOKEN:
