@@ -112,3 +112,7 @@ Each host section includes collection health (up) per probe, followed by probe s
 Includes the supplied values.yaml and examples/values-02test.yaml unchanged. tcp_connect explicitly uses IPv4 without IPv6 fallback. The reusable https_internal module uses IPv4, follows redirects and disables TLS certificate trust and hostname verification; it tests HTTPS reachability and a successful HTTP response rather than certificate validity. http_2xx retains certificate validation.
 
 The 02test targets include NeuVector HTTPS on 8443, Metrics Server /readyz over HTTPS, ICMP to 8.8.8.8 and TCP to google.com:443, alongside API TCP and internal DNS. The optional Google HTTPS entry remains commented out. No new ICMP permissions or restart schedule is enabled.
+
+## Questions configuration update (0.1.7)
+
+Removed offending questions section regarding node selectors

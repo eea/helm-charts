@@ -29,11 +29,6 @@ questions:
     type: string
     default: ""
     group: Monitoring
-  - variable: nodeSelector.kubernetes.io/os
-    label: Node OS selector
-    type: string
-    default: linux
-    group: Scheduling
   - variable: resources.requests.cpu
     label: CPU request
     type: string
