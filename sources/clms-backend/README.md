@@ -10,6 +10,9 @@ This chart deployes the CLMS backend app
 
 ## Releases
 
+### Version 2.46.1 - 13 October 2026
+- Add deny on contact-info urls [valentinab25 - [`1ceb4cb3`](https://github.com/eea/helm-charts/commit/1ceb4cb3ca311919008b292d263d9fd5e1e8683d)]
+
 ### Version 2.46.0 - 29 September 2026
 - Automated release of [eeacms/clms-backend:6.0.15-171](https://github.com/eea/clms-backend/releases) [EEA Jenkins - [`8552598d`](https://github.com/eea/helm-charts/commit/8552598debd8836b12ba7bd718d8859a1ac0939d)]
 
