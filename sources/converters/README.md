@@ -5,6 +5,10 @@ This chart is configured for production use.
 ## Releases
 
 <dl>
+  <dt>Version 1.1.1</dt>
+  <dd>ODS conversion removal, deprecated code removal, set result file content to failed
+  when reaching maximum retries of job execution.</dd>
+
   <dt>Version 1.1.0</dt>
   <dd>Job executor Java 17 upgrade.</dd>
 
