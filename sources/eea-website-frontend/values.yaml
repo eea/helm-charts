@@ -70,9 +70,11 @@ volto:
     ONYX_URL:
     ONYX_API_KEY:
     # rag-facts-check (claim verification). Bare origin, no trailing path - the Volto
-    # add-on appends /halloumi/generate. Cluster-internal only: the proxy sends no
-    # credential and the service has no auth. Left empty, the add-on falls back to
-    # http://localhost:8000 and fact-checks fail with "Fact-checker unavailable".
+    # add-on appends /halloumi/generate. With ragFactsCheck.enabled below, the
+    # in-cluster value is http://rag-facts-check:8000. Cluster-internal only: the
+    # proxy sends no credential and the service has no auth. Left empty, the add-on
+    # falls back to http://localhost:8000 and fact-checks fail with
+    # "Fact-checker unavailable".
     RAG_FACT_CHECKER_URL:
     QUERY_INTENT_SERVICE_URL:
     SENTRY_URL:
@@ -141,10 +143,33 @@ ragFactsCheck:
     requests:
       memory: 512Mi
   environment:
-    LLM_API_BASE: ""
+    # OpenAI-compatible base URL of the LLM gateway (llm-toolkit / LiteLLM). The
+    # checker appends no path of its own, so include /v1.
+    LLM_API_BASE: "https://llmgw.eea.europa.eu/v1"
+    # Never commit a key. Empty here, supplied per environment (Rancher form or
+    # --set); the deployment template skips empty values, so nothing is rendered.
     LLM_API_KEY: ""
-    LLM_MODEL: ""
+    # Model alias served by the gateway, not the upstream model id - see
+    # llm-toolkit's edenai deployment (model: edenai/openai/gpt-mini-latest).
+    LLM_MODEL: "edenai"
     LLM_TEMPERATURE: "0.1"
+    LLM_MAX_TOKENS: "1024"
+    # Seconds per judge call. Keep it under the probe timeouts below.
+    LLM_TIMEOUT: "120"
+    # 1 turns chain-of-thought off, roughly halving judge latency on reasoning
+    # models. Endpoint-specific variants go in LLM_EXTRA_BODY.
+    LLM_DISABLE_REASONING: "1"
+    # Raw JSON merged into every request; wins over LLM_DISABLE_REASONING on
+    # conflicting keys. Empty = unused.
+    LLM_EXTRA_BODY: ""
+    # Evidence budget in characters. A document that fits inside MAX_DOCS_CHARS is
+    # passed whole; MAX_CHARS_PER_DOC only applies when the corpus overflows the
+    # total, so one huge source cannot starve the others. Matches the code defaults.
+    CHECKER_MAX_DOCS_CHARS: "100000"
+    CHECKER_MAX_CHARS_PER_DOC: "10000"
+    # Only the Volto SSR proxy calls this service, server-side, so no browser origin
+    # is required. Empty keeps the server's own default (allow all).
+    CORS_ORIGINS: ""
   livenessProbe:
     httpGet:
       path: /health
