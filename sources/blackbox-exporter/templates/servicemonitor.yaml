@@ -1,0 +1,42 @@
+{{- if .Values.serviceMonitor.enabled }}
+{{- if not (.Capabilities.APIVersions.Has "monitoring.coreos.com/v1/ServiceMonitor") }}
+{{- fail "ServiceMonitor CRD is missing. Install Prometheus Operator or disable serviceMonitor.enabled" }}
+{{- end }}
+{{- range $index, $target := .Values.serviceMonitor.targets }}
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "bb.fullname" $ }}-{{ $target.name | trunc 30 | trimSuffix "-" }}-{{ $index }}
+  labels:
+    {{- include "bb.labels" $ | nindent 4 }}
+    {{- with $.Values.serviceMonitor.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  namespaceSelector:
+    matchNames:
+      - {{ $.Release.Namespace }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "bb.name" $ }}
+      app.kubernetes.io/instance: {{ $.Release.Name }}
+  endpoints:
+    - port: http
+      path: /probe
+      interval: {{ $.Values.serviceMonitor.interval | quote }}
+      scrapeTimeout: {{ $.Values.serviceMonitor.scrapeTimeout | quote }}
+      params:
+        module: [{{ $target.module | quote }}]
+        target: [{{ $target.address | quote }}]
+      relabelings:
+        - sourceLabels: [__meta_kubernetes_pod_node_name]
+          targetLabel: source_node
+        - targetLabel: probe_name
+          replacement: {{ $target.name | quote }}
+        - targetLabel: probe_target
+          replacement: {{ $target.address | quote }}
+        - targetLabel: probe_module
+          replacement: {{ $target.module | quote }}
+{{- end }}
+{{- end }}

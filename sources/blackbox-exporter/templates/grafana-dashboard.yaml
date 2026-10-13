@@ -1,0 +1,15 @@
+{{- if .Values.grafanaDashboard.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "bb.fullname" . }}-dashboard
+  namespace: {{ default .Release.Namespace .Values.grafanaDashboard.namespace }}
+  labels:
+    {{- include "bb.labels" . | nindent 4 }}
+    {{- with .Values.grafanaDashboard.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+data:
+  blackbox.json: |-
+    {{- .Files.Get "dashboards/blackbox.json" | replace "__EXPORTER_NAMESPACE__" .Release.Namespace | replace "\"__DATASOURCE_UID__\"" (toJson .Values.grafanaDashboard.datasourceUid) | nindent 4 }}
+{{- end }}

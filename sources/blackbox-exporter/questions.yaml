@@ -1,0 +1,51 @@
+questions:
+  - variable: image.repository
+    label: Exporter image repository
+    type: string
+    default: quay.io/prometheus/blackbox-exporter
+    group: Image
+  - variable: image.tag
+    label: Image tag (blank uses chart appVersion)
+    type: string
+    default: ""
+    group: Image
+  - variable: serviceMonitor.enabled
+    label: Enable ServiceMonitor (requires Prometheus Operator CRD)
+    type: boolean
+    default: false
+    group: Monitoring
+  - variable: serviceMonitor.interval
+    label: Probe interval
+    type: string
+    default: 30s
+    group: Monitoring
+  - variable: serviceMonitor.scrapeTimeout
+    label: Probe scrape timeout
+    type: string
+    default: 10s
+    group: Monitoring
+  - variable: serviceMonitor.labels.release
+    label: Prometheus release selector label (set to match your Prometheus installation)
+    type: string
+    default: ""
+    group: Monitoring
+  - variable: nodeSelector.kubernetes.io/os
+    label: Node OS selector
+    type: string
+    default: linux
+    group: Scheduling
+  - variable: resources.requests.cpu
+    label: CPU request
+    type: string
+    default: 20m
+    group: Resources
+  - variable: resources.requests.memory
+    label: Memory request
+    type: string
+    default: 32Mi
+    group: Resources
+  - variable: resources.limits.memory
+    label: Memory limit
+    type: string
+    default: 128Mi
+    group: Resources

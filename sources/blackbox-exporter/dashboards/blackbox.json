@@ -1,0 +1,379 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [],
+  "panels": [
+    {
+      "id": 3,
+      "type": "row",
+      "title": "${host:text}",
+      "collapsed": false,
+      "repeat": "host",
+      "panels": [],
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "__DATASOURCE_UID__"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed"
+          },
+          "custom": {
+            "axisPlacement": "auto",
+            "fillOpacity": 70,
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineWidth": 0,
+            "spanNulls": false
+          },
+          "mappings": [
+            {
+              "options": {
+                "0": {
+                  "color": "dark-red",
+                  "index": 1,
+                  "text": "Scrape failed"
+                },
+                "1": {
+                  "color": "green",
+                  "index": 0,
+                  "text": "Collected"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 24,
+        "x": 0,
+        "y": 1
+      },
+      "id": 4,
+      "options": {
+        "alignValue": "left",
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "mergeValues": true,
+        "rowHeight": 0.9,
+        "showValue": "auto",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "__DATASOURCE_UID__"
+          },
+          "editorMode": "code",
+          "expr": "min by (source_node, probe_name) (up{namespace=\"__EXPORTER_NAMESPACE__\",source_node=~\"${host}\",probe_name=~\"${probe}\",probe_name!=\"\"})",
+          "legendFormat": "{{probe_name}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Probe collection health",
+      "type": "state-timeline",
+      "description": "Prometheus collection of each /probe endpoint: Collected means a scrape succeeded, not that the tested service passed. Scrape failed means no valid probe result was collected. A target removed from discovery leaves a gap; this is not an expected-node inventory."
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "__DATASOURCE_UID__"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed"
+          },
+          "custom": {
+            "axisPlacement": "auto",
+            "fillOpacity": 70,
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineWidth": 0,
+            "spanNulls": false
+          },
+          "mappings": [
+            {
+              "options": {
+                "0": {
+                  "color": "dark-red",
+                  "index": 1,
+                  "text": "Failure"
+                },
+                "1": {
+                  "color": "green",
+                  "index": 0,
+                  "text": "Success"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 6
+      },
+      "id": 1,
+      "options": {
+        "alignValue": "left",
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "mergeValues": true,
+        "rowHeight": 0.9,
+        "showValue": "auto",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "__DATASOURCE_UID__"
+          },
+          "editorMode": "code",
+          "expr": "min by (source_node, probe_name) (\n  probe_success{namespace=\"__EXPORTER_NAMESPACE__\",source_node=~\"${host}\",probe_name=~\"${probe}\"}\n  and on (namespace, source_node, probe_name, pod, instance)\n  (up{namespace=\"__EXPORTER_NAMESPACE__\",source_node=~\"${host}\",probe_name=~\"${probe}\",probe_name!=\"\"} == 1)\n)",
+          "legendFormat": "{{probe_name}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Probe status",
+      "type": "state-timeline",
+      "description": "One series per host and probe across pod replacements. Minimum status during overlaps. Results are shown only for successfully scraped targets; failed collection leaves a gap. Changing a probe name still creates a new row."
+    },
+    {
+      "id": 2,
+      "type": "timeseries",
+      "title": "Probe duration",
+      "description": "One series per host and probe across pod replacements. Maximum duration during overlaps, including failed probes. Results are shown only for successfully scraped targets; gaps remain gaps.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "__DATASOURCE_UID__"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 14
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "min": 0,
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "lineWidth": 2,
+            "fillOpacity": 5,
+            "showPoints": "never",
+            "spanNulls": false,
+            "axisPlacement": "auto",
+            "axisLabel": "Duration",
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "__DATASOURCE_UID__"
+          },
+          "editorMode": "code",
+          "expr": "max by (source_node, probe_name) (\n  probe_duration_seconds{namespace=\"__EXPORTER_NAMESPACE__\",source_node=~\"${host}\",probe_name=~\"${probe}\"}\n  and on (namespace, source_node, probe_name, pod, instance)\n  (up{namespace=\"__EXPORTER_NAMESPACE__\",source_node=~\"${host}\",probe_name=~\"${probe}\",probe_name!=\"\"} == 1)\n)",
+          "legendFormat": "{{probe_name}}",
+          "range": true,
+          "refId": "A"
+        }
+      ]
+    }
+  ],
+  "preload": false,
+  "schemaVersion": 42,
+  "tags": [
+    "eea",
+    "blackbox",
+    "network"
+  ],
+  "templating": {
+    "list": [
+      {
+        "name": "host",
+        "label": "Host",
+        "type": "query",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "__DATASOURCE_UID__"
+        },
+        "definition": "label_values(up{namespace=\"__EXPORTER_NAMESPACE__\",probe_name!=\"\"}, source_node)",
+        "query": {
+          "query": "label_values(up{namespace=\"__EXPORTER_NAMESPACE__\",probe_name!=\"\"}, source_node)",
+          "refId": "StandardVariableQuery"
+        },
+        "refresh": 2,
+        "sort": 1,
+        "multi": true,
+        "includeAll": true,
+        "allValue": null,
+        "current": {
+          "text": "All",
+          "value": "$__all"
+        },
+        "options": [],
+        "regex": "/(?<value>(?<text>[^.]+).*)/",
+        "hide": 0,
+        "skipUrlSync": false
+      },
+      {
+        "name": "probe",
+        "label": "Probe",
+        "type": "query",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "__DATASOURCE_UID__"
+        },
+        "definition": "label_values(up{namespace=\"__EXPORTER_NAMESPACE__\",probe_name!=\"\",source_node=~\"${host}\"}, probe_name)",
+        "query": {
+          "query": "label_values(up{namespace=\"__EXPORTER_NAMESPACE__\",probe_name!=\"\",source_node=~\"${host}\"}, probe_name)",
+          "refId": "StandardVariableQuery"
+        },
+        "refresh": 2,
+        "sort": 1,
+        "multi": true,
+        "includeAll": true,
+        "allValue": null,
+        "current": {
+          "text": "All",
+          "value": "$__all"
+        },
+        "options": [],
+        "regex": "",
+        "hide": 0,
+        "skipUrlSync": false
+      }
+    ]
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "Blackbox",
+  "uid": "advg98r",
+  "version": 1,
+  "refresh": "30s"
+}

@@ -1,0 +1,92 @@
+image:
+  repository: quay.io/prometheus/blackbox-exporter
+  tag: "" # defaults to v<appVersion>
+  pullPolicy: IfNotPresent
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+service:
+  port: 9115
+serviceMonitor:
+  enabled: false
+  interval: 30s
+  scrapeTimeout: 10s
+  labels: {}
+  # These targets are probed by EACH DaemonSet pod, preserving the source node label.
+  targets: []
+  # - name: kubernetes-api
+  #   address: kubernetes.default.svc:443
+  #   module: tcp_connect
+  # - name: public-https
+  #   address: https://example.org/
+  #   module: http_2xx
+  # - name: dns
+  #   address: kube-dns.kube-system.svc.cluster.local:53
+  #   module: dns_kubernetes
+  # Do not put credentials or sensitive URLs in targets.
+config:
+  modules:
+    http_2xx:
+      prober: http
+      timeout: 5s
+      http:
+        preferred_ip_protocol: ip4
+    https_internal:
+      prober: http
+      timeout: 5s
+      http:
+        preferred_ip_protocol: ip4
+        ip_protocol_fallback: false
+        follow_redirects: true
+        tls_config:
+          insecure_skip_verify: true
+    icmp_ipv4:
+      prober: icmp
+      timeout: 5s
+      icmp:
+        preferred_ip_protocol: ip4
+        ip_protocol_fallback: false
+    tcp_connect:
+      prober: tcp
+      timeout: 5s
+      tcp:
+        preferred_ip_protocol: ip4
+        ip_protocol_fallback: false
+    dns_kubernetes:
+      prober: dns
+      timeout: 5s
+      dns:
+        query_name: kubernetes.default.svc.cluster.local
+        query_type: A
+        preferred_ip_protocol: ip4
+nodeSelector: {}
+tolerations: []
+affinity: {}
+resources:
+  requests:
+    cpu: 20m
+    memory: 32Mi
+  limits:
+    memory: 128Mi
+podAnnotations: {}
+podLabels: {}
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 65534
+  runAsGroup: 65534
+  readOnlyRootFilesystem: true
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop: [ALL]
+  seccompProfile:
+    type: RuntimeDefault
+# ICMP targets may need NET_RAW unless the container group is allowed by ping_group_range.
+# Defining the ICMP module alone does not run probes or grant capabilities.
+
+# Optional Grafana dashboard; namespace must already exist.
+grafanaDashboard:
+  enabled: false
+  namespace: "" # defaults to the Helm release namespace
+  datasourceUid: prometheus
+  labels:
+    grafana_dashboard: "1"
