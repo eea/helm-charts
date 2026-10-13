@@ -24,6 +24,9 @@ This chart is configured for production use.
 ## Releases
 
 <dl>
+  <dt>Version 2.1.0</dt>
+  <dd>XML/RPC and SOAP services removal.</dd>
+
   <dt>Version 2.0.0</dt>
   <dd>Java 17, horizontal scalability, apply RpcRouterLoggingFilter to /api/spatial.</dd>
 
