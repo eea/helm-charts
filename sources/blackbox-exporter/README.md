@@ -116,3 +116,7 @@ The 02test targets include NeuVector HTTPS on 8443, Metrics Server /readyz over 
 ## Questions configuration update (0.1.7)
 
 Removed offending questions section regarding node selectors
+
+## Grafana dashboard enabled (0.1.8)
+
+Grafana dashboard is now enabled by default

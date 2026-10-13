@@ -85,8 +85,8 @@ securityContext:
 
 # Optional Grafana dashboard; namespace must already exist.
 grafanaDashboard:
-  enabled: false
-  namespace: "" # defaults to the Helm release namespace
+  enabled: true
+  namespace: "cattle-dashboards" # defaults to the Helm release namespace
   datasourceUid: prometheus
   labels:
     grafana_dashboard: "1"
