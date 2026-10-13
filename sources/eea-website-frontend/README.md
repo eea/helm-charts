@@ -11,6 +11,9 @@ This chart deploys the EEA Main Website frontend app
 
 ## Releases
 
+### Version 3.27.29 - 13 octombrie 2026
+- Plug rag-facts-check env vars [Tiberiu Ichim - [`849aee941`](https://github.com/eea/helm-charts/commit/849aee94188a7efa7dcb9b4df278888fb8ac9ffc)]
+
 ### Version 3.27.28 - 12 octombrie 2026
 - Add rag-facts-check base URL [Tiberiu Ichim - [`70084c93b`](https://github.com/eea/helm-charts/commit/70084c93bd9b0b5696fe5fe9a6f97a6051121cb8)]
 
