@@ -12,7 +12,7 @@ questions:
   - variable: serviceMonitor.enabled
     label: Enable ServiceMonitor (requires Prometheus Operator CRD)
     type: boolean
-    default: false
+    default: true
     group: Monitoring
   - variable: serviceMonitor.interval
     label: Probe interval

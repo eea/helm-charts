@@ -131,3 +131,8 @@ The main view shows full-width probe status and duration panels for each selecte
 
 Added an icon for the chart and a screen capture for the Readme file
 
+## Service monitor is now enabled by dfault, with 2 targets (0.1.11)
+
+Enabled the service monitor with predefined targets for Kubernetes API and internal DNS.
+
+

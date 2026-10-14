@@ -8,21 +8,21 @@ fullnameOverride: ""
 service:
   port: 9115
 serviceMonitor:
-  enabled: false
+  enabled: true
   interval: 30s
   scrapeTimeout: 10s
   labels: {}
   # These targets are probed by EACH DaemonSet pod, preserving the source node label.
-  targets: []
-  # - name: kubernetes-api
-  #   address: kubernetes.default.svc:443
-  #   module: tcp_connect
+  targets:
+    - address: kubernetes.default.svc:443
+      module: tcp_connect
+      name: api-service
+    - address: rke2-coredns-rke2-coredns.kube-system.svc.cluster.local:53
+      module: dns_kubernetes
+      name: internal-dns
   # - name: public-https
   #   address: https://example.org/
   #   module: http_2xx
-  # - name: dns
-  #   address: kube-dns.kube-system.svc.cluster.local:53
-  #   module: dns_kubernetes
   # Do not put credentials or sensitive URLs in targets.
 config:
   modules:
