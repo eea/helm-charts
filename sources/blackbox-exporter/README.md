@@ -120,3 +120,7 @@ Removed offending questions section regarding node selectors
 ## Grafana dashboard enabled (0.1.8)
 
 Grafana dashboard is now enabled by default
+
+## Dashboard layout (0.1.9)
+
+The main view shows full-width probe status and duration panels for each selected host. Collection-health timelines are available in the collapsed Collection diagnostics row at the bottom; expand it when investigating missing results. The diagnostics contain one repeated panel per selected host and follow the Host and Probe filters. Query logic, value mappings and gap handling remain unchanged.

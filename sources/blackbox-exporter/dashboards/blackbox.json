@@ -63,102 +63,6 @@
                 "0": {
                   "color": "dark-red",
                   "index": 1,
-                  "text": "Scrape failed"
-                },
-                "1": {
-                  "color": "green",
-                  "index": 0,
-                  "text": "Collected"
-                }
-              },
-              "type": "value"
-            }
-          ],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "red",
-                "value": null
-              },
-              {
-                "color": "green",
-                "value": 1
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 5,
-        "w": 24,
-        "x": 0,
-        "y": 1
-      },
-      "id": 4,
-      "options": {
-        "alignValue": "left",
-        "legend": {
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "mergeValues": true,
-        "rowHeight": 0.9,
-        "showValue": "auto",
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "12.3.1",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "__DATASOURCE_UID__"
-          },
-          "editorMode": "code",
-          "expr": "min by (source_node, probe_name) (up{namespace=\"__EXPORTER_NAMESPACE__\",source_node=~\"${host}\",probe_name=~\"${probe}\",probe_name!=\"\"})",
-          "legendFormat": "{{probe_name}}",
-          "range": true,
-          "refId": "A"
-        }
-      ],
-      "title": "Probe collection health",
-      "type": "state-timeline",
-      "description": "Prometheus collection of each /probe endpoint: Collected means a scrape succeeded, not that the tested service passed. Scrape failed means no valid probe result was collected. A target removed from discovery leaves a gap; this is not an expected-node inventory."
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "__DATASOURCE_UID__"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "fixed"
-          },
-          "custom": {
-            "axisPlacement": "auto",
-            "fillOpacity": 70,
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineWidth": 0,
-            "spanNulls": false
-          },
-          "mappings": [
-            {
-              "options": {
-                "0": {
-                  "color": "dark-red",
-                  "index": 1,
                   "text": "Failure"
                 },
                 "1": {
@@ -190,7 +94,7 @@
         "h": 8,
         "w": 24,
         "x": 0,
-        "y": 6
+        "y": 1
       },
       "id": 1,
       "options": {
@@ -240,7 +144,7 @@
         "h": 8,
         "w": 24,
         "x": 0,
-        "y": 14
+        "y": 9
       },
       "fieldConfig": {
         "defaults": {
@@ -299,6 +203,118 @@
           "refId": "A"
         }
       ]
+    },
+    {
+      "id": 5,
+      "type": "row",
+      "title": "Collection diagnostics",
+      "collapsed": true,
+      "panels": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "__DATASOURCE_UID__"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "fixed"
+              },
+              "custom": {
+                "axisPlacement": "auto",
+                "fillOpacity": 70,
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineWidth": 0,
+                "spanNulls": false
+              },
+              "mappings": [
+                {
+                  "options": {
+                    "0": {
+                      "color": "dark-red",
+                      "index": 1,
+                      "text": "Scrape failed"
+                    },
+                    "1": {
+                      "color": "green",
+                      "index": 0,
+                      "text": "Collected"
+                    }
+                  },
+                  "type": "value"
+                }
+              ],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "green",
+                    "value": 1
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 5,
+            "w": 24,
+            "x": 0,
+            "y": 18
+          },
+          "id": 4,
+          "options": {
+            "alignValue": "left",
+            "legend": {
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "mergeValues": true,
+            "rowHeight": 0.9,
+            "showValue": "auto",
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "12.3.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "__DATASOURCE_UID__"
+              },
+              "editorMode": "code",
+              "expr": "min by (source_node, probe_name) (up{namespace=\"__EXPORTER_NAMESPACE__\",source_node=~\"${host}\",probe_name=~\"${probe}\",probe_name!=\"\"})",
+              "legendFormat": "{{probe_name}}",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "Probe collection health \u2014 ${host:text}",
+          "type": "state-timeline",
+          "description": "Prometheus collection of each /probe endpoint: Collected means a scrape succeeded, not that the tested service passed. Scrape failed means no valid probe result was collected. A target removed from discovery leaves a gap; this is not an expected-node inventory.",
+          "repeat": "host",
+          "repeatDirection": "v"
+        }
+      ],
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 17
+      }
     }
   ],
   "preload": false,
