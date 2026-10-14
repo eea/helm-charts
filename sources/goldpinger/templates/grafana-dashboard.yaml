@@ -1,0 +1,15 @@
+{{- if .Values.grafanaDashboard.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "gp.fullname" . }}-dashboard
+  namespace: {{ default .Release.Namespace .Values.grafanaDashboard.namespace }}
+  labels:
+    {{- include "gp.labels" . | nindent 4 }}
+    {{- with .Values.grafanaDashboard.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+data:
+  {{ include "gp.fullname" . }}.json: |-
+    {{- .Files.Get "dashboards/goldpinger.json" | replace "__RELEASE_NAMESPACE__" .Release.Namespace | replace "__JOB__" (include "gp.fullname" .) | replace "__RELEASE__" .Release.Name | replace "\"__DATASOURCE_UID__\"" (toJson .Values.grafanaDashboard.datasourceUid) | replace "\"__DASHBOARD_UID__\"" (toJson (include "gp.dashboardUid" .)) | nindent 4 }}
+{{- end }}

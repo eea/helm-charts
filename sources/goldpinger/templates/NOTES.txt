@@ -1,0 +1,17 @@
+EEA Goldpinger runs on eligible Linux nodes in {{ .Release.Namespace }}.
+Discovery is restricted to that namespace and this Helm release.
+Service account: {{ include "gp.serviceAccount" . }}
+{{ if .Values.rbac.create }}RBAC: list pods only, in {{ .Release.Namespace }}.{{ else }}RBAC creation is disabled; ensure the selected service account has namespace-scoped list-pods access.{{ end }}
+
+{{ if .Values.rancherNavLink.enabled }}Access the connectivity graph from the {{ .Values.rancherNavLink.label }} link in the Rancher cluster sidebar.
+{{ else }}Access the connectivity graph:
+  kubectl -n {{ .Release.Namespace }} port-forward service/{{ include "gp.fullname" . }} 8080:{{ .Values.service.port }}
+Then open http://localhost:8080/ (add your --kubeconfig argument to kubectl).{{ end }}
+
+Verify node coverage:
+  kubectl -n {{ .Release.Namespace }} get daemonset {{ include "gp.fullname" . }}
+  kubectl -n {{ .Release.Namespace }} get pods -l app.kubernetes.io/instance={{ .Release.Name }} -o wide
+
+{{ if .Values.ingress.enabled }}Ingress: {{ if .Values.ingress.tls.enabled }}https{{ else }}http{{ end }}://{{ .Values.ingress.host }}/
+The Goldpinger UI has no built-in authentication. Protect it at the ingress.{{ end }}
+{{ if .Values.grafanaDashboard.enabled }}Grafana dashboard: EEA Goldpinger - {{ .Release.Name }} (namespace {{ default .Release.Namespace .Values.grafanaDashboard.namespace }}).{{ end }}

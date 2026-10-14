@@ -1,0 +1,40 @@
+{{- if .Values.serviceAccount.create }}
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ include "gp.serviceAccount" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "gp.labels" . | nindent 4 }}
+automountServiceAccountToken: true
+{{- end }}
+{{- if .Values.rbac.create }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ include "gp.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "gp.labels" . | nindent 4 }}
+rules:
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ include "gp.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "gp.labels" . | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ include "gp.fullname" . }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "gp.serviceAccount" . }}
+    namespace: {{ .Release.Namespace }}
+{{- end }}

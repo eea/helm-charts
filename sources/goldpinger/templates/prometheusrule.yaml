@@ -1,0 +1,49 @@
+{{- if .Values.prometheusRule.enabled }}
+{{- if not .Values.serviceMonitor.enabled }}
+{{- fail "prometheusRule.enabled requires serviceMonitor.enabled" }}
+{{- end }}
+{{- if not (.Capabilities.APIVersions.Has "monitoring.coreos.com/v1/PrometheusRule") }}
+{{- fail "PrometheusRule CRD is missing: install Rancher Monitoring/Prometheus Operator or disable prometheusRule.enabled" }}
+{{- end }}
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: {{ include "gp.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "gp.labels" . | nindent 4 }}
+    {{- with .Values.prometheusRule.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  groups:
+    - name: {{ include "gp.fullname" . }}
+      rules:
+        - alert: EEAGoldpingerUnhealthyPeers
+          expr: >-
+            max by (namespace, source_node, goldpinger_instance) (goldpinger_nodes_health_total{namespace={{ .Release.Namespace | quote }},job={{ include "gp.fullname" . | quote }},status="unhealthy"}) > 0
+          for: {{ .Values.prometheusRule.for }}
+          labels:
+            severity: {{ .Values.prometheusRule.severity | quote }}
+          annotations:
+            summary: Goldpinger reports unhealthy peers
+            description: 'Goldpinger on {{ "{{ $labels.source_node }}" }} in {{ "{{ $labels.namespace }}" }} reports unhealthy peers. Inspect its connectivity graph; peer HTTP checks and configured external target checks can affect health.'
+        - alert: EEAGoldpingerScrapeFailed
+          expr: >-
+            up{namespace={{ .Release.Namespace | quote }},job={{ include "gp.fullname" . | quote }}} == 0
+          for: {{ .Values.prometheusRule.for }}
+          labels:
+            severity: {{ .Values.prometheusRule.severity | quote }}
+          annotations:
+            summary: Goldpinger metrics cannot be scraped
+            description: 'Prometheus cannot scrape Goldpinger on {{ "{{ $labels.source_node }}" }} in {{ "{{ $labels.namespace }}" }}. Check the pod, service endpoints and connectivity.'
+        - alert: EEAGoldpingerDiscoveryErrors
+          expr: >-
+            sum by (namespace, source_node, goldpinger_instance) (increase(goldpinger_errors_total{namespace={{ .Release.Namespace | quote }},job={{ include "gp.fullname" . | quote }},type="kubernetes_api"}[5m])) > 0
+          for: {{ .Values.prometheusRule.for }}
+          labels:
+            severity: {{ .Values.prometheusRule.severity | quote }}
+          annotations:
+            summary: Goldpinger cannot reliably discover peers
+            description: 'Goldpinger on {{ "{{ $labels.source_node }}" }} has repeated Kubernetes API errors. Check API connectivity, namespace and service-account RBAC; missing peers can otherwise look healthy.'
+{{- end }}

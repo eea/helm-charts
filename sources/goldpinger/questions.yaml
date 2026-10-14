@@ -1,0 +1,146 @@
+categories:
+- Monitoring
+questions:
+- variable: serviceMonitor.enabled
+  label: Enable Prometheus scraping
+  type: boolean
+  default: false
+  group: Monitoring
+  description: Requires Rancher Monitoring or Prometheus Operator.
+- variable: serviceMonitor.interval
+  label: Scrape interval
+  type: string
+  default: 30s
+  group: Monitoring
+  description: ''
+- variable: prometheusRule.enabled
+  label: Enable alert rules
+  type: boolean
+  default: false
+  group: Monitoring
+  description: Requires ServiceMonitor; check Prometheus label selectors.
+- variable: grafanaDashboard.enabled
+  label: Provision Grafana dashboard
+  type: boolean
+  default: false
+  group: Monitoring
+  description: ''
+- variable: grafanaDashboard.namespace
+  label: Dashboard namespace
+  type: string
+  default: ''
+  group: Monitoring
+  description: Blank uses installation namespace; Rancher commonly watches cattle-dashboards.
+- variable: grafanaDashboard.datasourceUid
+  label: Prometheus datasource UID
+  type: string
+  default: prometheus
+  group: Monitoring
+  description: ''
+- variable: goldpinger.refreshInterval
+  label: Peer check interval (seconds)
+  type: int
+  default: 30
+  group: Checks
+  description: ''
+- variable: goldpinger.pingNumber
+  label: Peers to check (0 = all)
+  type: int
+  default: 0
+  group: Checks
+  description: ''
+- variable: goldpinger.udp.enabled
+  label: Enable UDP packet-loss checks
+  type: boolean
+  default: false
+  group: Checks
+  description: ''
+- variable: goldpinger.displayNodeName
+  label: Show node names in graph
+  type: boolean
+  default: true
+  group: Checks
+  description: ''
+- variable: resources.requests.cpu
+  label: CPU request per node
+  type: string
+  default: 20m
+  group: Resources
+  description: ''
+- variable: resources.requests.memory
+  label: Memory request per node
+  type: string
+  default: 64Mi
+  group: Resources
+  description: ''
+- variable: resources.limits.memory
+  label: Memory limit per node
+  type: string
+  default: 256Mi
+  group: Resources
+  description: ''
+- variable: ingress.enabled
+  label: Enable web ingress
+  type: boolean
+  default: false
+  group: Web interface
+  description: No built-in authentication; configure ingress authentication separately.
+- variable: ingress.host
+  label: Ingress hostname
+  type: string
+  default: ''
+  group: Web interface
+  description: ''
+- variable: ingress.className
+  label: Ingress class
+  type: string
+  default: nginx
+  group: Web interface
+  description: ''
+- variable: ingress.tls.enabled
+  label: Enable TLS
+  type: boolean
+  default: false
+  group: Web interface
+  description: ''
+- variable: ingress.tls.secretName
+  label: TLS secret name
+  type: string
+  default: ''
+  group: Web interface
+  description: ''
+- variable: rbac.create
+  label: Create namespace-only RBAC
+  type: boolean
+  default: true
+  group: Permissions
+  description: ''
+- variable: serviceAccount.create
+  label: Create service account
+  type: boolean
+  default: true
+  group: Permissions
+  description: ''
+- variable: serviceAccount.name
+  label: Service account name
+  type: string
+  default: ''
+  group: Permissions
+  description: Required when using an existing account.
+- variable: rancherNavLink.enabled
+  label: Add Rancher sidebar link
+  type: boolean
+  default: false
+  group: Web interface
+  description: Requires Rancher's NavLink CRD; opens the internal service through Rancher's authenticated proxy.
+- variable: rancherNavLink.label
+  label: Sidebar link label
+  type: string
+  default: Goldpinger
+  group: Web interface
+- variable: rancherNavLink.group
+  label: Sidebar group
+  type: string
+  default: ''
+  group: Web interface
+  description: Blank creates a standalone link. A named group creates a custom section.

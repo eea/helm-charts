@@ -1,0 +1,168 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: {{ include "gp.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "gp.labels" . | nindent 4 }}
+spec:
+  updateStrategy:
+    {{- toYaml .Values.updateStrategy | nindent 4 }}
+  selector:
+    matchLabels:
+      {{- include "gp.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- include "gp.selectorLabels" . | nindent 8 }}
+      annotations:
+        {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+    spec:
+      serviceAccountName: {{ include "gp.serviceAccount" . }}
+      automountServiceAccountToken: true
+      hostNetwork: false
+      dnsPolicy: ClusterFirst
+      {{- with .Values.priorityClassName }}
+      priorityClassName: {{ . | quote }}
+      {{- end }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: goldpinger
+          image: {{ printf "%s:%s" .Values.image.repository (default .Chart.AppVersion .Values.image.tag) | quote }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          env:
+            - name: HOST
+              value: "0.0.0.0"
+            - name: PORT
+              value: {{ .Values.goldpinger.port | quote }}
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: LABEL_SELECTOR
+              value: {{ printf "app.kubernetes.io/name=%s,app.kubernetes.io/instance=%s" (include "gp.name" .) .Release.Name | quote }}
+            - name: HOSTNAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: DISPLAY_NODENAME
+              value: {{ .Values.goldpinger.displayNodeName | quote }}
+            - name: USE_HOST_IP
+              value: "false"
+            - name: IP_VERSIONS
+              value: "4"
+            - name: REFRESH_INTERVAL
+              value: {{ .Values.goldpinger.refreshInterval | quote }}
+            - name: PING_NUMBER
+              value: {{ .Values.goldpinger.pingNumber | quote }}
+            - name: PING_TIMEOUT
+              value: {{ .Values.goldpinger.pingTimeout | quote }}
+            - name: CHECK_TIMEOUT
+              value: {{ .Values.goldpinger.checkTimeout | quote }}
+            - name: CHECK_ALL_TIMEOUT
+              value: {{ .Values.goldpinger.checkAllTimeout | quote }}
+            - name: DNS_TARGETS_TIMEOUT
+              value: {{ .Values.goldpinger.dnsTimeout | quote }}
+            - name: TCP_TARGETS_TIMEOUT
+              value: {{ .Values.goldpinger.tcpTimeout | quote }}
+            - name: HTTP_TARGETS_TIMEOUT
+              value: {{ .Values.goldpinger.httpTimeout | quote }}
+            {{- if .Values.goldpinger.dnsTargets }}
+            - name: HOSTS_TO_RESOLVE
+              value: {{ join " " .Values.goldpinger.dnsTargets | quote }}
+            {{- end }}
+            {{- if .Values.goldpinger.tcpTargets }}
+            - name: TCP_TARGETS
+              value: {{ join " " .Values.goldpinger.tcpTargets | quote }}
+            {{- end }}
+            {{- if .Values.goldpinger.httpTargets }}
+            - name: HTTP_TARGETS
+              value: {{ join " " .Values.goldpinger.httpTargets | quote }}
+            {{- end }}
+            - name: UDP_ENABLED
+              value: {{ .Values.goldpinger.udp.enabled | quote }}
+            {{- if .Values.goldpinger.udp.enabled }}
+            - name: UDP_PORT
+              value: {{ .Values.goldpinger.udp.port | quote }}
+            - name: UDP_PACKET_COUNT
+              value: {{ .Values.goldpinger.udp.packetCount | quote }}
+            - name: UDP_PACKET_SIZE
+              value: {{ .Values.goldpinger.udp.packetSize | quote }}
+            - name: UDP_TIMEOUT
+              value: {{ .Values.goldpinger.udp.timeout | quote }}
+            {{- end }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.goldpinger.port }}
+              protocol: TCP
+            {{- if .Values.goldpinger.udp.enabled }}
+            - name: udp-probe
+              containerPort: {{ .Values.goldpinger.udp.port }}
+              protocol: UDP
+            {{- end }}
+          # Check local HTTP serving, not peer health: network failures must not
+          # restart the diagnostic agent or remove it from Service endpoints.
+          startupProbe:
+            httpGet:
+              path: /
+              port: http
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 30
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: config
+              mountPath: /config
+              readOnly: true
+      volumes:
+        - name: config
+          configMap:
+            name: {{ include "gp.fullname" . }}-config
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

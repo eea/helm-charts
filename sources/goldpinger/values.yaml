@@ -1,0 +1,111 @@
+# Standalone defaults require no Prometheus Operator or Grafana.
+nameOverride: ""
+fullnameOverride: ""
+image:
+  repository: docker.io/bloomberg/goldpinger
+  tag: "" # defaults to <appVersion>
+  pullPolicy: IfNotPresent
+imagePullSecrets: []
+# RBAC is always namespace-scoped; no ClusterRole/ClusterRoleBinding is created.
+rbac:
+  create: true
+serviceAccount:
+  create: true
+  name: "" # existing account name is required when create=false
+service:
+  port: 8080
+# Each instance tests peers using their pod IPs, without host networking.
+goldpinger:
+  port: 8080
+  refreshInterval: 30 # seconds; must be >0
+  pingNumber: 0 # 0 = all peers; lower coverage can be selected for large clusters
+  displayNodeName: true
+  pingTimeout: 1s
+  checkTimeout: 5s
+  checkAllTimeout: 15s
+  dnsTargets: [] # hostnames, separated by spaces in the generated environment
+  tcpTargets: [] # host:port, e.g. kubernetes.default.svc:443
+  httpTargets: [] # HTTP(S) URLs; Goldpinger requires HTTP 200
+  dnsTimeout: 2s
+  tcpTimeout: 2s
+  httpTimeout: 5s
+  udp:
+    enabled: false
+    port: 6969
+    packetCount: 10
+    packetSize: 64
+    timeout: 1s
+nodeSelector:
+  kubernetes.io/os: linux
+# Include RKE2 control-plane/etcd nodes; add your custom taints as necessary.
+# Set tolerations: [] to use only nodes without these NoSchedule taints.
+tolerations:
+  - key: node-role.kubernetes.io/control-plane
+    operator: Exists
+    effect: NoSchedule
+  - key: node-role.kubernetes.io/master
+    operator: Exists
+    effect: NoSchedule
+  - key: node-role.kubernetes.io/etcd
+    operator: Exists
+    effect: NoSchedule
+affinity: {}
+priorityClassName: ""
+updateStrategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxUnavailable: 1
+resources:
+  requests:
+    cpu: 20m
+    memory: 64Mi
+  limits:
+    memory: 256Mi
+podAnnotations: {}
+podLabels: {}
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 1000
+  seccompProfile:
+    type: RuntimeDefault
+securityContext:
+  readOnlyRootFilesystem: true
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop: [ALL]
+# UI has no built-in authentication. Default access is through port-forward.
+# Configure authentication on the ingress controller before enabling ingress.
+ingress:
+  enabled: false
+  className: nginx
+  annotations: {}
+  host: ""
+  tls:
+    enabled: false
+    secretName: ""
+serviceMonitor:
+  enabled: false
+  interval: 30s
+  scrapeTimeout: 10s
+  labels: {} # must match Prometheus serviceMonitorSelector
+prometheusRule:
+  enabled: false # requires serviceMonitor.enabled and the PrometheusRule CRD
+  labels: {} # must match Prometheus ruleSelector
+  for: 5m
+  severity: warning
+grafanaDashboard:
+  enabled: false
+  namespace: "" # blank = installation namespace; Rancher example uses cattle-dashboards
+  datasourceUid: prometheus
+  uid: "" # blank = stable UID derived from release name + namespace
+  labels:
+    grafana_dashboard: "1"
+
+# Rancher cluster sidebar link via the authenticated Kubernetes service proxy.
+# Requires Rancher's existing navlinks.ui.cattle.io CRD; no CRD is installed.
+rancherNavLink:
+  enabled: false
+  label: Goldpinger
+  group: "" # blank = standalone sidebar link
+  target: _blank

@@ -1,0 +1,25 @@
+{{- if .Values.rancherNavLink.enabled }}
+{{- if not (.Capabilities.APIVersions.Has "ui.cattle.io/v1/NavLink") }}
+{{- fail "NavLink CRD is missing: verify navlinks.ui.cattle.io is available in this cluster or set rancherNavLink.enabled=false" }}
+{{- end }}
+apiVersion: ui.cattle.io/v1
+kind: NavLink
+metadata:
+  name: {{ printf "%s-%s" (include "gp.fullname" . | trunc 44 | trimSuffix "-") (printf "%s/%s" .Release.Namespace .Release.Name | sha256sum | trunc 16) }}
+  labels:
+    {{- include "gp.labels" . | nindent 4 }}
+spec:
+  label: {{ .Values.rancherNavLink.label | quote }}
+  sideLabel: {{ .Values.rancherNavLink.label | quote }}
+  description: Goldpinger live pod-network connectivity graph
+  {{- with .Values.rancherNavLink.group }}
+  group: {{ . | quote }}
+  {{- end }}
+  target: {{ .Values.rancherNavLink.target | quote }}
+  toService:
+    namespace: {{ .Release.Namespace | quote }}
+    name: {{ include "gp.fullname" . | quote }}
+    scheme: http
+    port: {{ .Values.service.port | quote }}
+    path: "/"
+{{- end }}
