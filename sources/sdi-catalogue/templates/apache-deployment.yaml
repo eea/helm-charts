@@ -13,6 +13,9 @@ spec:
       component: apache
   template:
     metadata:
+      annotations:
+        # ssl.conf is copied from the ConfigMap at startup, so restart Apache when it changes
+        checksum/config: {{ include (print $.Template.BasePath "/apache-configmap.yaml") . | sha256sum }}
       labels:
         {{- include "appl.selectorLabels" . | nindent 8 }}
         component: apache

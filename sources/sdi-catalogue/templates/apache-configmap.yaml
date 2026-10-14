@@ -118,7 +118,6 @@ data:
 
         </Location>
 
-        Redirect /internal-catalogue /catalogue
         RewriteEngine On
         RewriteRule ^/catalogue/srv/(.*)/csw-(.*) /catalogue/$2/eng/csw  [L,R]
 
@@ -228,5 +227,19 @@ data:
         </Location>
 
         IncludeOptional conf/extra/extra-mime-types.conf
+
+        {{- if .Values.datahub.enabled }}
+        # Datahub UI at the site root, catching everything not handled above.
+        # The <Location> ProxyPass blocks and the [P] RewriteRules take
+        # precedence over these global ProxyPass rules. Exclude what Apache
+        # serves itself (htdocs and mod_status).
+        ProxyPass /robots.txt !
+        # Record thumbnails in htdocs/public/catalogue-graphic-overview,
+        # linked from catalogue metadata.
+        ProxyPass /public !
+        ProxyPass /server-status !
+        ProxyPass / http://datahub:8080/
+        ProxyPassReverse / http://datahub:8080/
+        {{- end }}
     </VirtualHost>
 

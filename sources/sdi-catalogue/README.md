@@ -53,6 +53,9 @@ Cronjobs have been removed since the update to GN 5/ GN 46 and the new folder st
 | nextcloud.phpMemoryLimit | string | '512M' | Nextcloud PHP memory limit |
 | apache.robotsTxt | string | 'User-agent: *\nDisallow: /' | Content of the /robots.txt file served at the site root. Set to '' to not deploy a robots.txt at all |
 | validator.enabled | boolean | true | Enable the INSPIRE validator (Deployment, Service, ConfigMap, PVC and the `/validator` Apache proxy path) |
+| datahub.enabled | boolean | false | Serve the Datahub UI at the site root (Deployment, Service and an Apache catch-all `ProxyPass /`). Leave it off where the root must keep serving the old site, such as sdi.eea.europa.eu |
+| datahub.image | string | '' | Datahub Docker image. Required when `datahub.enabled` is true |
+| datahub.resources | object | 32Mi request, 128Mi limit | Datahub container resources |
 
 ## Authentication providers
 

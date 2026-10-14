@@ -1,0 +1,19 @@
+{{- if .Values.datahub.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: datahub
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: datahub
+
+spec:
+  type: ClusterIP
+  ports:
+  - name: "8080"
+    port: 8080
+    targetPort: 8080
+  selector:
+    {{- include "appl.selectorLabels" . | nindent 4 }}
+    component: datahub
+{{- end }}

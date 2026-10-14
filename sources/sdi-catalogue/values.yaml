@@ -217,6 +217,16 @@ validator:
   enabled: true
   resources: {}
 
+datahub:
+  enabled: false
+  # Required when enabled, e.g. eeacms/eea-datahub:<commit>
+  image: ''
+  resources:
+    requests:
+      memory: 32Mi
+    limits:
+      memory: 128Mi
+
 
 gn5:
   # image: eeacms/eea-geonetwork5:f422d582  # defaults to the tag in gn5-deployment.yaml
