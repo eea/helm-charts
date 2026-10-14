@@ -378,6 +378,13 @@
         "group",
         "target"
       ]
+    },
+    "global": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Global Helm values, including metadata supplied by Rancher. This chart does not consume these values."
     }
   }
 }
+
+
