@@ -28,6 +28,9 @@ database:
 ## Release notes
 
 <dl>
+  <dt>Version 1.3.1</dt>
+  <dd>Remove db driver from deployment CATALINA_OPTS.</dd>
+
   <dt>Version 1.3.0</dt>
   <dd>Java 17 upgrade.</dd>
 

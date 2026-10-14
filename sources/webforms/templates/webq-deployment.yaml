@@ -41,7 +41,6 @@ spec:
             "-Dcas.service={{ .Values.casService }}"
             "-Djava.security.egd=file:/dev/./urandom"
             "-Ddb.url=jdbc:mysql://{{ .Release.Name }}-db-0.{{ .Release.Name }}-db:3306/{{ .Values.database.database }}?maxAllowedPacket=32212254720"
-            "-Ddb.driver=com.mysql.jdbc.Driver"
             "-Ddb.username={{ .Values.database.username }}"
             "-Ddb.password={{ .Values.database.password }}"
             "-Dconverters.api.url={{ .Values.convertersApi }}"
