@@ -152,6 +152,9 @@ own filesystem store.
 
 ## Releases
 
+### Version 0.14.0 - 14 October 2026
+- Add optional datahub UI served at the site root (datahub.enabled), restart Apache when its config changes and drop the /internal-catalogue redirect. Refs [#309613](https://taskman.eionet.europa.eu/issues/309613) [Juan Luis Rodriguez Ponce - [`b41e95aa8`](https://github.com/eea/helm-charts/commit/b41e95aa85c13d198fd559b3d2d4144c6ef89e88)]
+
 ### Version 0.13.0 - 02 October 2026
 - Add optional gn46.opendal values to store GN46 attachments in S3 with OpenDAL [Juan Luis Rodriguez Ponce - [`8d9bd879`](https://github.com/eea/helm-charts/commit/8d9bd879a641a9a02a1e8310277ac0966498edab)]
 
