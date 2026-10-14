@@ -8,6 +8,8 @@ The examples folder provides some pre-defined tests which you can use - or defin
 
 # EEA Blackbox Exporter Helm chart
 
+![Blackbox dashboard showing per-worker probe status and duration](blackbox-capture.png)
+
 ## Architecture
 
 - DaemonSet: one exporter pod per eligible node, pod network (not hostNetwork).
@@ -124,3 +126,8 @@ Grafana dashboard is now enabled by default
 ## Dashboard layout (0.1.9)
 
 The main view shows full-width probe status and duration panels for each selected host. Collection-health timelines are available in the collapsed Collection diagnostics row at the bottom; expand it when investigating missing results. The diagnostics contain one repeated panel per selected host and follow the Host and Probe filters. Query logic, value mappings and gap handling remain unchanged.
+
+## Images for chart and Readme (0.1.10)
+
+Added an icon for the chart and a screen capture for the Readme file
+
