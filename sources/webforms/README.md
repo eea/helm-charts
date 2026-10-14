@@ -28,6 +28,9 @@ database:
 ## Release notes
 
 <dl>
+  <dt>Version 1.3.0</dt>
+  <dd>Java 17 upgrade.</dd>
+
   <dt>Version 1.2.0</dt>
   <dd>Java 11 upgrade, dead remote file URL functionality, removed the dependency Eionet portal stylesheets.</dd>
 
