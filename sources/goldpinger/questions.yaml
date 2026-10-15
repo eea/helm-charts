@@ -144,3 +144,10 @@ questions:
   default: ''
   group: Web interface
   description: Blank creates a standalone link. A named group creates a custom section.
+
+- variable: goldpinger.graphOnly
+  label: Show graph only
+  type: boolean
+  default: true
+  group: Web interface
+  description: Show the connectivity graph and Reload button. Disable to restore Data, Heatmap, Raw and Metrics navigation. This changes presentation only, not API access.

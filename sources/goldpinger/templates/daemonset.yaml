@@ -23,6 +23,9 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
         checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        {{- if .Values.goldpinger.graphOnly }}
+        checksum/graph-ui: {{ .Files.Get "files/graph-only.html" | sha256sum }}
+        {{- end }}
     spec:
       serviceAccountName: {{ include "gp.serviceAccount" . }}
       automountServiceAccountToken: true
@@ -147,10 +150,21 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
+            {{- if .Values.goldpinger.graphOnly }}
+            - name: graph-ui
+              mountPath: /static/index.html
+              subPath: index.html
+              readOnly: true
+            {{- end }}
             - name: config
               mountPath: /config
               readOnly: true
       volumes:
+        {{- if .Values.goldpinger.graphOnly }}
+        - name: graph-ui
+          configMap:
+            name: {{ include "gp.fullname" . }}-graph-ui
+        {{- end }}
         - name: config
           configMap:
             name: {{ include "gp.fullname" . }}-config

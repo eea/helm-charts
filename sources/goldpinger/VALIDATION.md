@@ -34,3 +34,10 @@ Prepared on 14 October 2026.
 ## Limits
 
 No EEA cluster was accessed and no release was installed during preparation. The local binary smoke test ran under the execution environment's current UID; UID 1000 execution was not available there. The manifest configures non-root UID/GID 1000, consistent with upstream's non-root deployment. Real pod admission, CNI connectivity, taint coverage, resource usage, Grafana rendering/sidecar pickup, Prometheus selectors and Alertmanager delivery need to be checked on the chosen test cluster. Optional UDP was validated in the manifests, not through a live cluster network.
+
+## Version 0.1.4 checks
+
+- Helm strict lint and render checks passed with graph-only mode enabled and disabled, including Rancher global values and NavLink enabled.
+- Graph-only mode renders the page ConfigMap, read-only single-file mount and page checksum. Disabling the mode removes all three. The default service account and namespace-only discovery RBAC remain unchanged.
+- The page removes the navigation links while preserving Reload, graph code and relative API/static asset paths. Inline JavaScript passed syntax validation.
+- Browser rendering and the ConfigMap mount require verification after installation in the target cluster; no live cluster was accessed for this change.

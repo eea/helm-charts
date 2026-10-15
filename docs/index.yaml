@@ -29482,6 +29482,29 @@ entries:
       catalog.cattle.io/namespace: eea-monitoring
     apiVersion: v2
     appVersion: 3.11.5
+    created: "2026-10-15T12:41:56.365367282+02:00"
+    description: Per-node Kubernetes pod-network connectivity monitoring with namespace-scoped
+      discovery.
+    digest: 2454a42cb92767a55115b8c70f5a1a9b3ba17380989a5fb7490dd1a677ab9e91
+    home: https://github.com/bloomberg/goldpinger
+    keywords:
+    - monitoring
+    - networking
+    - goldpinger
+    - rke2
+    kubeVersion: '>=1.25.0-0'
+    name: eea-goldpinger
+    sources:
+    - https://github.com/bloomberg/goldpinger
+    type: application
+    urls:
+    - eea-goldpinger-0.1.4.tgz
+    version: 0.1.4
+  - annotations:
+      catalog.cattle.io/display-name: EEA Goldpinger
+      catalog.cattle.io/namespace: eea-monitoring
+    apiVersion: v2
+    appVersion: 3.11.5
     created: "2026-10-14T16:13:36.714620192+02:00"
     description: Per-node Kubernetes pod-network connectivity monitoring with namespace-scoped
       discovery.
@@ -75480,4 +75503,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2026-10-14T16:13:36.713518993+02:00"
+generated: "2026-10-15T12:41:56.36433766+02:00"

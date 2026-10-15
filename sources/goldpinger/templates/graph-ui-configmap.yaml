@@ -1,0 +1,12 @@
+{{- if .Values.goldpinger.graphOnly }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "gp.fullname" . }}-graph-ui
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "gp.labels" . | nindent 4 }}
+data:
+  index.html: |-
+    {{- .Files.Get "files/graph-only.html" | nindent 4 }}
+{{- end }}

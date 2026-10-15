@@ -2,7 +2,7 @@
 
 Goldpinger monitors connectivity between Kubernetes pods running on different nodes. This chart deploys one non-root agent on each eligible Linux node, a ClusterIP service for its connectivity graph, and a dedicated service account with namespace-only permission to list pods. It complements Blackbox Exporter: Goldpinger shows the network between per-node agents, while Blackbox checks configured destinations.
 
-Chart version: **0.1.2**. Application image: **docker.io/bloomberg/goldpinger:3.11.5**.
+Application image: **docker.io/bloomberg/goldpinger:3.11.5**.
 
 ## Install on a test cluster
 
@@ -161,3 +161,13 @@ See `VALIDATION.md` for the checks performed on this package and their limits. I
 - EEA separately managed RBAC: <https://github.com/eea/helm-charts/tree/main/sources/goldpinger-rbac>
 
 This chart is an EEA-oriented deployment package, not the upstream Bloomberg chart. No upstream application source is modified or bundled.
+
+## Graph-only interface
+
+`goldpinger.graphOnly` defaults to `true` and appears as **Show graph only** in Rancher's installation/upgrade form. It keeps the connectivity graph, Goldpinger title and Reload button and removes the Data, Heatmap, Raw and Metrics navigation. Node interactions and existing diagnostic error handling are retained. The page refreshes on demand using Reload; it does not add automatic refresh.
+
+Set `goldpinger.graphOnly: false` to restore the full upstream page. This changes presentation only: API endpoints and their service-proxy permissions remain unchanged.
+
+The customized page is derived from Goldpinger 3.11.5's Apache-2.0-licensed `static/index.html`, retaining its license header. Helm mounts it read-only at `/static/index.html` using a ConfigMap; the official image and its other static assets remain in use. Page changes trigger a DaemonSet rollout through a checksum annotation. Changing the option also updates pod mounts, so the switch takes effect after rollout. Review this page when upgrading the Goldpinger application image.
+
+## Option to only enable the goldpinger connectivity graph in the UI (0.1.4)

@@ -16,6 +16,7 @@ service:
   port: 8080
 # Each instance tests peers using their pod IPs, without host networking.
 goldpinger:
+  graphOnly: true # simplified UI with graph and Reload; false restores the full upstream UI
   port: 8080
   refreshInterval: 30 # seconds; must be >0
   pingNumber: 0 # 0 = all peers; lower coverage can be selected for large clusters
