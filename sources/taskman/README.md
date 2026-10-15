@@ -495,6 +495,9 @@ grunt
 
 ## Releases
 
+### Version 0.48.0 - 15 October 2026
+- Addons sync hook: PROPFIND share probe, incremental downloads, outage skip policy (Refs [#306861](https://taskman.eionet.europa.eu/issues/306861)) [Silviu - [`7de7d6f13`](https://github.com/eea/helm-charts/commit/7de7d6f13edb9a77818c15ff2eaed13053f8d368)]
+
 ### Version 0.47.0 - 15 October 2026
 - Automated release of [eeacms/redmine:6.1.5-1.10](https://github.com/eea/eea.docker.redmine/releases) [EEA Jenkins - [`0b81d4509`](https://github.com/eea/helm-charts/commit/0b81d450956f27d88a9e1c4ef9dc39da84c257c4)]
 
