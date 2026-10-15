@@ -11,6 +11,9 @@ This chart deploys the EEA Main Website frontend app
 
 ## Releases
 
+### Version 3.29.2 - 15 October 2026
+- Automated release of [eeacms/eea-website-frontend:6.11.0-beta.2](https://github.com/eea/eea-website-frontend/releases) [EEA Jenkins - [`5e359b3dc`](https://github.com/eea/helm-charts/commit/5e359b3dc28039feb36ed5e04bf3addd4ce8d825)]
+
 ### Version 3.29.1 - 14 October 2026
 - Automated release of [eeacms/eea-website-frontend:6.11.0-beta.1](https://github.com/eea/eea-website-frontend/releases) [EEA Jenkins - [`42392e601`](https://github.com/eea/helm-charts/commit/42392e601ec6572be81d3c60f3420f1a44494f4f)]
 
