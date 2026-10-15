@@ -97,7 +97,7 @@ prometheusRule:
   severity: warning
 grafanaDashboard:
   enabled: false
-  namespace: "" # blank = installation namespace; Rancher example uses cattle-dashboards
+  namespace: cattle-dashboards # must exist and be watched by Grafana; blank = installation namespace
   datasourceUid: prometheus
   uid: "" # blank = stable UID derived from release name + namespace
   labels:

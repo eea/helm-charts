@@ -28,9 +28,9 @@ questions:
 - variable: grafanaDashboard.namespace
   label: Dashboard namespace
   type: string
-  default: ''
+  default: cattle-dashboards
   group: Monitoring
-  description: Blank uses installation namespace; Rancher commonly watches cattle-dashboards.
+  description: Must exist and be watched by Grafana. Blank uses the installation namespace.
 - variable: grafanaDashboard.datasourceUid
   label: Prometheus datasource UID
   type: string

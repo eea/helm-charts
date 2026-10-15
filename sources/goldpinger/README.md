@@ -171,3 +171,5 @@ Set `goldpinger.graphOnly: false` to restore the full upstream page. This change
 The customized page is derived from Goldpinger 3.11.5's Apache-2.0-licensed `static/index.html`, retaining its license header. Helm mounts it read-only at `/static/index.html` using a ConfigMap; the official image and its other static assets remain in use. Page changes trigger a DaemonSet rollout through a checksum annotation. Changing the option also updates pod mounts, so the switch takes effect after rollout. Review this page when upgrading the Goldpinger application image.
 
 ## Option to only enable the goldpinger connectivity graph in the UI (0.1.4)
+
+## Default namespace supplied for the goldpinger Grafana dashboard (0.1.5)
