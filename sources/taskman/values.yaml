@@ -174,10 +174,21 @@ redmine:
 
 addonsSync:
   enabled: true
-  syncMode: full  # "full" = wipe+re-download all; "additive" = preserve non-manifest plugins
+  syncMode: full  # "full" = sync manifest entries; "additive" = also preserve non-manifest plugins
   source: "share"
   skipIfPresent: "0"
   backoffLimit: 3
+  # Hard wall-clock bound for the whole hook job (fail fast instead of hanging the upgrade).
+  activeDeadlineSeconds: 600
+  # "propfind" = snapshot the whole share with WebDAV PROPFIND (2 requests, ~2s) and
+  #   sync only archives whose etag/size changed; "legacy" = per-archive HEAD probing.
+  #   Falls back to "legacy" automatically when the image has no share_meta_probe.rb.
+  probeMode: "propfind"
+  # What to do when the probe cannot reach the share (rc=1):
+  #   "skip-if-populated" = continue the upgrade when every addon volume is already
+  #   populated, fail otherwise; "fail" = always fail the hook. A missing pinned
+  #   archive (rc=2) always fails, regardless of this setting.
+  onProbeFailure: "skip-if-populated"
   resources:
     requests:
       memory: 128Mi

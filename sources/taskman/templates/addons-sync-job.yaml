@@ -15,6 +15,7 @@ metadata:
     "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
 spec:
   backoffLimit: {{ $addonsSync.backoffLimit | default 3 }}
+  activeDeadlineSeconds: {{ $addonsSync.activeDeadlineSeconds | default 600 }}
   template:
     metadata:
       labels:
@@ -158,14 +159,54 @@ spec:
 
           run_sync_once() {
             if [ "${ADDONS_SYNC_SOURCE:-share}" = "share" ]; then
-              /usr/local/bin/sync_addons_from_share.sh
+              ADDONS_REMOTE_META="${REMOTE_META}" /usr/local/bin/sync_addons_from_share.sh
             else
               /usr/local/bin/sync_addons_from_dir.sh
             fi
           }
 
-          REMOTE_HASH="$(compute_remote_hash)"
-          echo "Remote addons hash: ${REMOTE_HASH}"
+          # Share metadata snapshot: one WebDAV PROPFIND per distinct location
+          # (plugins/, themes/) over a single TLS connection returns etag/size/
+          # mtime for every pinned archive (~1.7s for the whole share vs ~16s for
+          # per-archive HEAD probing). The sync script uses it to download only
+          # changed archives.
+          REMOTE_META="/tmp/addons-remote-meta.tsv"
+
+          if [ "${ADDONS_SYNC_PROBE_MODE:-propfind}" = "propfind" ] && [ -x /usr/local/bin/share_meta_probe.rb ]; then
+            probe_rc=0
+            ruby /usr/local/bin/share_meta_probe.rb > "${REMOTE_META}.part" 2>/tmp/probe.err || probe_rc=$?
+            if [ "${probe_rc}" -eq 0 ] && [ -s "${REMOTE_META}.part" ]; then
+              mv "${REMOTE_META}.part" "${REMOTE_META}"
+              REMOTE_HASH="$(sha256sum "${REMOTE_META}" | awk '{print $1}')"
+              echo "Share metadata probe OK: $(wc -l < "${REMOTE_META}") archives, hash ${REMOTE_HASH}"
+            else
+              cat /tmp/probe.err >&2 || true
+              if [ "${probe_rc}" -eq 1 ] && [ "${ADDONS_SYNC_ON_PROBE_FAILURE:-skip-if-populated}" = "skip-if-populated" ]; then
+                # Unreachable share (network/auth). If every mounted volume is
+                # already populated, skip the sync and let the upgrade proceed
+                # with the addons it has; an empty volume is a hard failure.
+                all_populated=1
+                for addons_root in /addons-*; do
+                  [ -d "${addons_root}" ] || continue
+                  if [ ! -d "${addons_root}/current/plugins" ] \
+                    || [ -z "$(ls -A "${addons_root}/current/plugins" 2>/dev/null)" ] \
+                    || [ ! -d "${addons_root}/current/themes/${A1_THEME_ID:-a1}" ]; then
+                    all_populated=0
+                  fi
+                done
+                if [ "${all_populated}" = "1" ]; then
+                  echo "WARNING: share unreachable but all addon volumes are populated; skipping sync, continuing upgrade" >&2
+                  exit 0
+                fi
+              fi
+              echo "Share metadata probe failed (rc=${probe_rc})" >&2
+              exit 1
+            fi
+          else
+            rm -f "${REMOTE_META}"
+            REMOTE_HASH="$(compute_remote_hash)"
+            echo "Remote addons hash (legacy per-archive probe): ${REMOTE_HASH}"
+          fi
 
           synced=0
           for addons_root in /addons-*; do
@@ -213,6 +254,10 @@ spec:
           value: {{ .Values.redmine.environment.PLUGINS_PASSWORD | quote }}
         - name: ADDONS_SYNC_MODE
           value: {{ .Values.addonsSync.syncMode | default "full" | quote }}
+        - name: ADDONS_SYNC_PROBE_MODE
+          value: {{ $addonsSync.probeMode | default "propfind" | quote }}
+        - name: ADDONS_SYNC_ON_PROBE_FAILURE
+          value: {{ $addonsSync.onProbeFailure | default "skip-if-populated" | quote }}
         - name: A1_THEME_URL
           value: {{ .Values.redmine.environment.A1_THEME_URL | default "" | quote }}
         - name: A1_THEME_ZIP

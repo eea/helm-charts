@@ -227,6 +227,33 @@ questions:
       - "1"
     required: true
     group: "Runtime and scaling"
+  - variable: "addonsSync.probeMode"
+    label: "Addons sync share probe mode"
+    description: "propfind snapshots the share with WebDAV PROPFIND and syncs only changed archives; legacy probes each archive with HEAD requests."
+    type: "enum"
+    default: "propfind"
+    options:
+      - "propfind"
+      - "legacy"
+    required: true
+    group: "Runtime and scaling"
+  - variable: "addonsSync.onProbeFailure"
+    label: "Addons sync behavior when share is unreachable"
+    description: "skip-if-populated continues the upgrade when every addon volume already has addons; fail always blocks the upgrade."
+    type: "enum"
+    default: "skip-if-populated"
+    options:
+      - "skip-if-populated"
+      - "fail"
+    required: true
+    group: "Runtime and scaling"
+  - variable: "addonsSync.activeDeadlineSeconds"
+    label: "Addons sync job deadline (seconds)"
+    description: "Hard time bound for the addons sync hook job; fail fast instead of hanging the upgrade."
+    type: "int"
+    default: 600
+    required: true
+    group: "Runtime and scaling"
   - variable: "redmineMigrate.enabled"
     label: "Enable migrate job"
     description: "Run dedicated migration job during install/upgrade."
