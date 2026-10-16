@@ -22,8 +22,8 @@ stage('Check Sonarqube Upgrades') {
   }
   environment {
     HELM_CHART = 'sonarqube'
-    GITHUB_RELEASES = 'https://api.github.com/repos/SonarSource/docker-sonarqube/releases'
-    GITHUB_RELEASE_REGEXP = '^20[0-9][0-9]\\.[0-9]+\\.[0-9]+$'
+    DOCKERHUB_TAGS = 'https://hub.docker.com/v2/repositories/library/sonarqube/tags?page_size=50&name=developer&ordering=last_updated'
+    DOCKERHUB_REGEXP = '^20[0-9][0-9]\\.[0-9]+\\.[0-9]+\\-developer$'
     RELEASE_PREFIX = ''
     RELEASE_SUFFIX = '-developer'
     HELM_UPGRADE_APPVERSION = 'yes'
