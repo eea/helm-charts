@@ -81,6 +81,18 @@ spec:
       affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- with .Values.volto.topologySpreadConstraints }}
+      {{- if .enabled }}
+      topologySpreadConstraints:
+      - maxSkew: {{ .maxSkew | default 1 }}
+        topologyKey: {{ .topologyKey | default "kubernetes.io/hostname" }}
+        whenUnsatisfiable: {{ .whenUnsatisfiable | default "ScheduleAnyway" }}
+        labelSelector:
+          matchLabels:
+            {{- include "appl.selectorLabels" $ | nindent 12 }}
+            component: volto
+      {{- end }}
+      {{- end }}
       {{- with .Values.volto.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}

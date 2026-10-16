@@ -61,6 +61,15 @@ volto:
       memory: 2Gi
     requests:
       memory: 2Gi
+  # Spread Volto replicas evenly across Kubernetes nodes so that a single
+  # node failure cannot take down all frontend pods. ScheduleAnyway is
+  # best-effort: replicas are spread when possible but pods are never left
+  # Pending, even on single-node or non-EKS clusters.
+  topologySpreadConstraints:
+    enabled: true
+    maxSkew: 1
+    topologyKey: kubernetes.io/hostname
+    whenUnsatisfiable: ScheduleAnyway
   environment:
     CSP_HEADER:
     LLMGW_URL:
