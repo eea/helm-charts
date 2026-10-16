@@ -48,6 +48,15 @@ plone:
       memory: 2Gi
     requests:
       memory: 1Gi
+  # Spread Plone replicas evenly across Kubernetes nodes so that a single
+  # node failure cannot take down all backend pods. ScheduleAnyway is
+  # best-effort: replicas are spread when possible but pods are never left
+  # Pending, even on single-node or non-EKS clusters.
+  topologySpreadConstraints:
+    enabled: true
+    maxSkew: 1
+    topologyKey: kubernetes.io/hostname
+    whenUnsatisfiable: ScheduleAnyway
   database:
     HOST: postgres
     POSTGRES_DB: eea
