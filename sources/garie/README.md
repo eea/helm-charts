@@ -77,6 +77,9 @@ internet.
 
 # Releases
 
+### Version 0.1.0 - 19 October 2026
+- make webscore only available via EEA internal network/VPN, refs #309078 [Silviu - [`a31c40aa`](https://github.com/eea/helm-charts/commit/a31c40aacd442d00e0eb0791c50f5bdaadc585d1)]
+
 ### Version 0.0.41 - 28 July 2026
 - fix variable in questions [valentinab25 - [`10f0bd47`](https://github.com/eea/helm-charts/commit/10f0bd4775dbea00533815337aa249d179102783)]
 
