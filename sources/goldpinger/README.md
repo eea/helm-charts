@@ -70,6 +70,97 @@ NavLink is cluster-scoped and named uniquely for this release and namespace; the
 
 Reference: [Rancher 2.14 custom navigation links](https://rancher.github.io/product-docs-playbook/rancher-manager/v2.14/en/rancher-admin/global-configuration/custom-branding.html).
 
+## Who can see the NavLink and connectivity graph?
+
+Goldpinger's runtime permissions and human access are separate. The chart's ServiceAccount and namespace-only `list pods` Role let the agents discover peers; they do not grant users access to the web UI. Enabling `rancherNavLink.enabled` creates the shortcut but does not create viewer RoleBindings.
+
+For access through Rancher, two permissions are required:
+
+| Permission | Purpose |
+|---|---|
+| Read NavLinks (`get`, `list`, `watch` on `navlinks.ui.cattle.io`) | Allows Rancher to retrieve the cluster-scoped navigation entries. Standard Rancher project Read-only roles already include this. |
+| `get` on the specific `services/proxy` resource in the installation namespace | Allows the user to open Goldpinger through Rancher's authenticated Kubernetes service proxy. Standard project Read-only and View Services permissions do not include this. |
+
+The chart uses a `toService` NavLink. Rancher 2.14 checks access to its destination service proxy and filters out the link when access is denied. A user can therefore have permission to read NavLinks but still not see the Goldpinger entry. A bookmarked proxy URL does not bypass service-proxy authorization.
+
+With standard, unmodified roles, the expected behavior is:
+
+| User permissions | Expected Goldpinger access through Rancher |
+|---|---|
+| Rancher administrator or Cluster Owner | Yes. |
+| Project Owner or Project Member in the project containing the installation namespace | Yes, through their inherited namespace admin/edit permissions. |
+| Project Read-only in that project | Requires the additional Goldpinger service-proxy permission shown below. |
+| Access only to another project | Not granted by this chart; requires separately assigned permissions. |
+| View Monitoring only | Does not by itself grant Goldpinger proxy access; the built-in monitoring permission targets the named Grafana, Prometheus and Alertmanager services. |
+
+Custom roles and additional bindings can change these results. Check the user's effective permissions rather than relying only on the role's display name.
+
+### Grant access to existing Read-only project users
+
+An administrator can create a Role and RoleBinding in the installation namespace. This example assumes namespace `eea-monitoring`, release `goldpinger`, service `goldpinger-eea-goldpinger` and HTTP service port `8080`. Adjust these to match the actual NavLink target.
+
+First, have the intended user run `kubectl auth whoami` with their own Rancher-downloaded kubeconfig. Use the returned Kubernetes **Username**, often a Rancher ID such as `u-abcde`, rather than assuming their email address is the Kubernetes username.
+
+Save the following as `goldpinger-ui-access.yaml`, replacing `REPLACE_WITH_KUBERNETES_USERNAME`:
+
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: goldpinger-ui-view
+  namespace: eea-monitoring
+rules:
+  - apiGroups: [""]
+    resources: ["services/proxy"]
+    resourceNames:
+      - "http:goldpinger-eea-goldpinger:8080"
+    verbs: ["get"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: goldpinger-ui-viewers
+  namespace: eea-monitoring
+subjects:
+  - kind: User
+    name: REPLACE_WITH_KUBERNETES_USERNAME
+    apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role
+  name: goldpinger-ui-view
+  apiGroup: rbac.authorization.k8s.io
+```
+
+Apply it with an administrator kubeconfig:
+
+```bash
+kubectl --kubeconfig ADMIN.yaml apply -f goldpinger-ui-access.yaml
+```
+
+Add more `User` entries under `subjects` for additional viewers, or bind a verified Kubernetes `Group` identity supplied by the authentication provider. This example does not automatically include all current or future Read-only project members. It grants only GET access through this named service proxy; it does not grant workload modification, pod listing, logs or exec permissions. Existing permissions remain in effect. These manually created resources are managed separately from the Goldpinger Helm release.
+
+### Verify a viewer's access
+
+Run these commands with the viewer's own kubeconfig, not an administrator's:
+
+```bash
+kubectl --kubeconfig USER.yaml auth can-i list navlinks.ui.cattle.io
+
+kubectl --kubeconfig USER.yaml -n eea-monitoring auth can-i \
+  get services/http:goldpinger-eea-goldpinger:8080 \
+  --subresource=proxy
+```
+
+Both should return `yes`. Refresh Rancher and open the Goldpinger sidebar entry to verify the complete browser flow. If proxy access is allowed but the entry is absent, also check that NavLink is enabled, exists in this cluster and points to the correct namespace, service and port.
+
+### Scope of the graph and other access paths
+
+A viewer sees the connectivity information exposed by this Goldpinger release, including its participating nodes and configured extra targets. The graph is not filtered to the viewer's application namespaces or project. Grant access only where that visibility is appropriate.
+
+`goldpinger.graphOnly` hides navigation items; it does not change authorization or block the underlying API endpoints. Goldpinger itself has no built-in authentication. Rancher proxy permissions govern access through Rancher; an ingress, direct in-cluster connection or port-forward uses its own access controls. Port-forward access requires separate Kubernetes permissions and is not granted by the Role above. Grafana dashboard access is also separate from access to Goldpinger's own UI.
+
+References: [Rancher 2.14 NavLink destination authorization](https://github.com/rancher/rancher/blob/release/v2.14/pkg/api/steve/navlinks/store.go), [Rancher role definitions](https://github.com/rancher/rancher/blob/release/v2.14/pkg/data/management/role_data.go), and [Kubernetes RBAC](https://kubernetes.io/docs/reference/access-authn-authz/rbac/).
+
 ## Alternative: Open the connectivity graph
 
 ```bash
@@ -173,3 +264,5 @@ The customized page is derived from Goldpinger 3.11.5's Apache-2.0-licensed `sta
 ## Option to only enable the goldpinger connectivity graph in the UI (0.1.4)
 
 ## Default namespace supplied for the goldpinger Grafana dashboard (0.1.5)
+
+## Expanded Readme regarding the Goldpinger navlink and graphical UI access (0.1.6)
