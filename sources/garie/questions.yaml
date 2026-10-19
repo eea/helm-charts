@@ -17,6 +17,13 @@ questions:
     type: string
     required: false
 
+  - variable: ingress.legacy.enabled
+    group: Ingress Configuration
+    default: false
+    description: 'Use the legacy ingress layout for webscore instead of the restricted one. Both are limited to the EEA internal network/VPN source ranges (#309078)'
+    type: boolean
+    required: false
+
   - variable: ingress.hosts.webscore
     group: Ingress Configuration
     description: Webscore ingress hostname

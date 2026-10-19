@@ -66,6 +66,15 @@ We have the following services that should be exposed in ingress:
 - garie-browsertime:3000
 - garie-webscore:3000
 
+Webscore is only exposed through the restricted ingress (`garie-ingress-restricted`),
+which is limited to the EEA internal network/VPN source ranges defined in
+`ingress.annotations`. It is not reachable from the public internet.
+
+The former public ingress (`garie-ingress`) is kept in the chart but disabled by
+default (`ingress.legacy.enabled: false`). It now carries the same source range
+whitelist, so even if re-enabled it can never expose webscore to the public
+internet.
+
 # Releases
 
 ### Version 0.0.41 - 28 July 2026

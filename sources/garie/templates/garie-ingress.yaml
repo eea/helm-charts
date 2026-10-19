@@ -1,3 +1,4 @@
+{{- if .Values.ingress.legacy.enabled }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -11,6 +12,9 @@ metadata:
     {{ end }}
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     nginx.ingress.kubernetes.io/ingress-class: {{ .Values.ingress.class }} 
+  {{- with .Values.ingress.annotations }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   ingressClassName: {{ .Values.ingress.class }}
   tls:
@@ -22,6 +26,7 @@ spec:
       secretName: garie-tls-secret
       {{ end }}
   rules:
+    {{- if .Values.ingress.hosts.webscore }}
     - host: {{ .Values.ingress.hosts.webscore }}
       http:
         paths:
@@ -32,3 +37,5 @@ spec:
                 name: garie-webscore
                 port:
                   number: 3000
+    {{- end }}
+{{- end }}
