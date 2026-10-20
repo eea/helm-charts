@@ -72,6 +72,9 @@ When `autoscaling.engine` is set to `keda`, the chart will render the existing S
 
 ## Releases
 
+### Version 0.33.0 - 20 October 2026
+- Automated release of [eeacms/danswer:v4.3.9-eea.0.0.120](https://github.com/eea/danswer/releases) [EEA Jenkins - [`130732e2a`](https://github.com/eea/helm-charts/commit/130732e2a6d3da64a4fc65d82069d2ec4db33720)]
+
 ### Version 0.32.1 - 23 September 2026
 - Data caches are now configured per service through a `caches` block (`hf`, `tiktoken`, `nltk`) on api, celery_beat, every celery worker, the model servers, slackbot, discordbot and mcpServer. Mount paths stay shared under `hfCache` / `tiktokenCache` / `nltkCache`, so every service sees the same location.
 - Added `nltkCache` (emptyDir at `/usr/share/nltk_data`, seeded by `hf-cache-init` when the image ships data). The model servers disable it by default because the model_server image has no `nltk`.
