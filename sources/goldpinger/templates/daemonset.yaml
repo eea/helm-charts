@@ -23,8 +23,8 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
         checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
-        {{- if .Values.goldpinger.graphOnly }}
-        checksum/graph-ui: {{ .Files.Get "files/graph-only.html" | sha256sum }}
+        {{- if or .Values.goldpinger.graphOnly .Values.goldpinger.targetLabels }}
+        checksum/graph-ui: {{ include "gp.uiHtml" . | sha256sum }}
         {{- end }}
     spec:
       serviceAccountName: {{ include "gp.serviceAccount" . }}
@@ -150,7 +150,7 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
-            {{- if .Values.goldpinger.graphOnly }}
+            {{- if or .Values.goldpinger.graphOnly .Values.goldpinger.targetLabels }}
             - name: graph-ui
               mountPath: /static/index.html
               subPath: index.html
@@ -160,7 +160,7 @@ spec:
               mountPath: /config
               readOnly: true
       volumes:
-        {{- if .Values.goldpinger.graphOnly }}
+        {{- if or .Values.goldpinger.graphOnly .Values.goldpinger.targetLabels }}
         - name: graph-ui
           configMap:
             name: {{ include "gp.fullname" . }}-graph-ui

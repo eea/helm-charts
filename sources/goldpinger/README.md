@@ -251,7 +251,33 @@ See `VALIDATION.md` for the checks performed on this package and their limits. I
 - Application source tag: <https://github.com/bloomberg/goldpinger/tree/v3.11.5>
 - EEA separately managed RBAC: <https://github.com/eea/helm-charts/tree/main/sources/goldpinger-rbac>
 
-This chart is an EEA-oriented deployment package, not the upstream Bloomberg chart. No upstream application source is modified or bundled.
+This chart is an EEA-oriented deployment package, not the upstream Bloomberg chart. The upstream application binary is not modified. The chart bundles customized static HTML pages for graph-only mode and optional target labels, retaining the upstream license headers.
+
+## Target display labels
+
+Optional `goldpinger.targetLabels` entries replace the labels of additional DNS, TCP and HTTP(S) target nodes in the connectivity graph. Match each key exactly to its configured target, including scheme, port, path and trailing slash where present. Targets without a label continue to display their original address.
+
+```yaml
+goldpinger:
+  dnsTargets:
+    - kubernetes.default.svc.cluster.local
+  tcpTargets:
+    - kubernetes.default.svc.cluster.local:443
+  httpTargets:
+    - https://www.google.com/
+  targetLabels:
+    kubernetes.default.svc.cluster.local: Cluster DNS resolution
+    "kubernetes.default.svc.cluster.local:443": Kubernetes API TCP
+    "https://www.google.com/": Google HTTPS
+```
+
+Configure the map through **Edit YAML** when installing or upgrading in Rancher, or in a Helm values file. `targetLabels` defaults to `{}`. It is a map, not a list or a string. Labels work with both `graphOnly: true` and `graphOnly: false`.
+
+Only the displayed text changes. Probe destinations, graph node IDs, peer-node names, edge status/latency and Prometheus metric labels remain unchanged. Click a target node to see its original address and diagnostic data. Duplicate display labels are allowed, but distinct names are easier to read. An unmatched map key has no effect; for example, `https://www.google.com` does not match `https://www.google.com/`.
+
+A label is not a probe definition: keep ports out of `dnsTargets`, use `host:port` for `tcpTargets`, and a full URL for `httpTargets`. Labeling a literal IP as a DNS query does not make it one: Goldpinger's hostname lookup can return a literal IP without contacting DNS.
+
+The chart serves a customized HTML page whenever graph-only mode or target labels are enabled. Changes to labels update the page checksum and roll the agents so that their mounted page is refreshed. After upgrading, reload the browser page; use a hard refresh if it still shows old labels. With `graphOnly: false` and no labels, the unmodified page supplied by the image is used. The custom pages are based on application version 3.11.5 and need review when upgrading the image.
 
 ## Graph-only interface
 
@@ -266,3 +292,6 @@ The customized page is derived from Goldpinger 3.11.5's Apache-2.0-licensed `sta
 ## Default namespace supplied for the goldpinger Grafana dashboard (0.1.5)
 
 ## Expanded Readme regarding the Goldpinger navlink and graphical UI access (0.1.6)
+
+## Added graph labels for checks that involve non-Goldpinger resources (0.1.7)
+

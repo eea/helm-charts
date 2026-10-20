@@ -28,3 +28,9 @@ helm.sh/chart: {{ printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | 
 {{- define "gp.dashboardUid" -}}
 {{- default (printf "eea-gp-%s" (printf "%s/%s" .Release.Namespace .Release.Name | sha256sum | trunc 16)) .Values.grafanaDashboard.uid -}}
 {{- end -}}
+
+{{/* Render the optional custom page for graph-only mode or target labels. */}}
+{{- define "gp.uiHtml" -}}
+{{- $path := ternary "files/graph-only.html" "files/full-ui.html" .Values.goldpinger.graphOnly -}}
+{{- .Files.Get $path | replace "__GOLDPINGER_TARGET_LABELS_JSON__" (mustToJson (mustToJson (default dict .Values.goldpinger.targetLabels))) -}}
+{{- end -}}

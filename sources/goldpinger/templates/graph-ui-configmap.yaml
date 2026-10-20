@@ -1,4 +1,4 @@
-{{- if .Values.goldpinger.graphOnly }}
+{{- if or .Values.goldpinger.graphOnly .Values.goldpinger.targetLabels }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -8,5 +8,5 @@ metadata:
     {{- include "gp.labels" . | nindent 4 }}
 data:
   index.html: |-
-    {{- .Files.Get "files/graph-only.html" | nindent 4 }}
+    {{- include "gp.uiHtml" . | nindent 4 }}
 {{- end }}

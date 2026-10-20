@@ -17,6 +17,13 @@ service:
 # Each instance tests peers using their pod IPs, without host networking.
 goldpinger:
   graphOnly: true # simplified UI with graph and Reload; false restores the full upstream UI
+  # Optional graph labels keyed by the exact entries in dnsTargets/tcpTargets/httpTargets.
+  # Only display text changes; addresses, node IDs, probe requests and metrics are unchanged.
+  targetLabels: {}
+  # targetLabels:
+  #   kubernetes.default.svc.cluster.local: Cluster DNS resolution
+  #   "kubernetes.default.svc.cluster.local:443": Kubernetes API TCP
+  #   "https://www.google.com/": Google HTTPS
   port: 8080
   refreshInterval: 30 # seconds; must be >0
   pingNumber: 0 # 0 = all peers; lower coverage can be selected for large clusters

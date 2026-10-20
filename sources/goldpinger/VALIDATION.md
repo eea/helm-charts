@@ -41,3 +41,11 @@ No EEA cluster was accessed and no release was installed during preparation. The
 - Graph-only mode renders the page ConfigMap, read-only single-file mount and page checksum. Disabling the mode removes all three. The default service account and namespace-only discovery RBAC remain unchanged.
 - The page removes the navigation links while preserving Reload, graph code and relative API/static asset paths. Inline JavaScript passed syntax validation.
 - Browser rendering and the ConfigMap mount require verification after installation in the target cluster; no live cluster was accessed for this change.
+
+## Version 0.1.7 checks
+
+- Prepared from EEA chart commit `ae5451bc64d4c482af3aa73a43259bac5b015c16` (chart 0.1.6).
+- Strict Helm lint passed; rendered both graph-only and full interfaces with target aliases, Rancher global values and NavLink enabled. Probe target environment values remain unchanged.
+- Confirmed that changing aliases updates the UI checksum; full mode without aliases uses the image's original page. Invalid maps, non-string labels and empty/whitespace-only labels are rejected.
+- Inline JavaScript passed syntax checks. Executed both rendered page scripts with mocked API, DOM and graph-renderer dependencies: labels, unmatched-target fallback, duplicate aliases, special characters, graph IDs/edges/status, target diagnostic clicks and Reload passed. These tests do not replace live browser verification.
+- No live cluster was accessed. Verify appearance and browser refresh behavior after upgrading.

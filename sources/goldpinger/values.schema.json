@@ -179,6 +179,15 @@
         "graphOnly": {
           "type": "boolean",
           "default": true
+        },
+        "targetLabels": {
+          "type": "object",
+          "description": "Optional graph display labels keyed by exact probe target strings. Does not change probe destinations or metrics.",
+          "additionalProperties": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          }
         }
       }
     },

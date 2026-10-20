@@ -206,6 +206,14 @@ var loadingDialog = function(enable){
 var global_data = undefined;
 var s; // the sigma graph
 
+// EEA customization: graph labels are separate from probe target IDs.
+// Helm supplies a JSON string literal, safely escaped for an HTML script element.
+var targetLabels = JSON.parse(__GOLDPINGER_TARGET_LABELS_JSON__);
+var targetLabel = function(target) {
+        return Object.prototype.hasOwnProperty.call(targetLabels, target)
+                ? targetLabels[target] : target;
+};
+
 
 var main = function(timeout){
 
@@ -307,7 +315,7 @@ var main = function(timeout){
 
                         value["OK"] = allOk
                         probeResultsNodes.push({
-                                "label": checkedHost,
+                                "label": targetLabel(checkedHost),
                                 "id": checkedHost,
                                 "x": 0,
                                 "y": 0,
