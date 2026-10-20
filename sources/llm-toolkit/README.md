@@ -334,6 +334,9 @@ helm delete llm-toolkit
 
 ## Releases
 
+### Version 0.5.2 - 20 October 2026
+- Added optional Redis wiring for LiteLLM (`litellm.redis`) so rate limits, budgets and router state are shared across workers
+
 ### Version 0.4.0 - 01 October 2026
 - Added optional AI Gateway (API-only) ingress for LiteLLM (`litellm.aigatewayIngress`) exposing exact inference paths on a dedicated host
 

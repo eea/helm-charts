@@ -463,6 +463,14 @@ questions:
     group: "LiteLLM Networking"
     show_if: "litellm.enabled=true && litellm.ingress.enabled=true"
 
+  - variable: "litellm.redis.enabled"
+    default: false
+    description: "Connect LiteLLM to Redis (shared rate limits, budgets and router state across workers)"
+    type: "boolean"
+    label: "Enable LiteLLM Redis"
+    group: "LiteLLM Networking"
+    show_if: "litellm.enabled=true"
+
   - variable: "litellm.aigatewayIngress.enabled"
     default: false
     description: "Enable the AI Gateway (API-only) ingress for LiteLLM"

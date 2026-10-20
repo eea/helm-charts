@@ -717,6 +717,23 @@ litellm:
     # -- TLS configuration for the ingress
     tls: []
 
+  # -- Redis configuration for LiteLLM (shared state across workers: rate limits, budgets, router state, cache)
+  redis:
+    # -- Set to `true` to connect LiteLLM to a Redis server
+    enabled: false
+    # -- Redis host. Defaults to the Redis master deployed with this chart
+    host: ""
+    # -- Redis port
+    port: 6379
+    # -- Redis username. Defaults to the username of the Redis deployed with this chart
+    username: ""
+    # -- Secret with the Redis password
+    passwordSecret:
+      # -- Name of the secret. Defaults to the secret of the Redis deployed with this chart
+      name: ""
+      # -- Key in the secret containing the password
+      key: redis-password
+
   # Horizontal Pod Autoscaler configuration for LiteLLM
   autoscaling:
     # -- Set to `true` to enable HPA for the LiteLLM pods

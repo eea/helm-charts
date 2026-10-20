@@ -130,6 +130,19 @@ spec:
                   optional: true
             - name: LITELLM_SALT_KEY
               value: {{ .Values.litellm.saltKey | quote }}
+            {{- if .Values.litellm.redis.enabled }}
+            - name: LITELLM_REDIS_HOST
+              value: {{ .Values.litellm.redis.host | default (printf "%s-redis-master" (include "appl.fullname" .)) | quote }}
+            - name: LITELLM_REDIS_PORT
+              value: {{ .Values.litellm.redis.port | default 6379 | quote }}
+            - name: LITELLM_REDIS_USERNAME
+              value: {{ .Values.litellm.redis.username | default .Values.redis.auth.username | quote }}
+            - name: LITELLM_REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.litellm.redis.passwordSecret.name | default (printf "%s-redis" (include "appl.fullname" .)) }}
+                  key: {{ .Values.litellm.redis.passwordSecret.key | default "redis-password" }}
+            {{- end }}
             {{- if .Values.litellm.edenai.enabled }}
             - name: EDENAI_API_KEY
               valueFrom:
