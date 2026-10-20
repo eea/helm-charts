@@ -334,6 +334,9 @@ helm delete llm-toolkit
 
 ## Releases
 
+### Version 0.5.3 - 20 October 2026
+- Fixed LiteLLM Redis wiring env names (`LITELLM_REDIS_*` -> `REDIS_*`), matching how LiteLLM v1.104.x reads its Redis connection from the environment
+
 ### Version 0.5.2 - 20 October 2026
 - Added optional Redis wiring for LiteLLM (`litellm.redis`) so rate limits, budgets and router state are shared across workers
 
