@@ -1,6 +1,6 @@
 # EEA Goldpinger (No separate RBAC chart required)
 
-Goldpinger monitors connectivity between Kubernetes pods running on different nodes. This chart deploys one non-root agent on each eligible Linux node, a ClusterIP service for its connectivity graph, and a dedicated service account with namespace-only permission to list pods. It complements Blackbox Exporter: Goldpinger shows the network between per-node agents, while Blackbox checks configured destinations.
+Goldpinger monitors connectivity between Kubernetes pods running on different nodes. This chart deploys one non-root agent on each eligible Linux node, a ClusterIP service for its connectivity graph, and a dedicated service account with namespace-only permission to list pods.
 
 Application image: **docker.io/bloomberg/goldpinger:3.11.5**.
 
@@ -26,7 +26,7 @@ helm --kubeconfig 02test.yaml upgrade --install goldpinger ./eea-goldpinger \
   --wait --timeout 5m
 ```
 
-These examples do not assume cluster-specific IP addresses. The namespace `eea-monitoring` can be shared with Blackbox; all names and discovery selectors are specific to this release.
+These examples do not assume cluster-specific IP addresses. The namespace `eea-monitoring` can be shared with other monitoring apps (Blackbox); all names and discovery selectors are specific to this release.
 
 The monitoring examples require the ServiceMonitor, PrometheusRule and NavLink APIs. They disable Grafana dashboard provisioning, so no dashboard namespace is needed. Enabling the optional dashboard requires an existing namespace watched by Grafana and installer permission to create a ConfigMap there.
 
@@ -195,7 +195,7 @@ resources: ["pods"]
 verbs: ["list"]
 ```
 
-These permissions apply only within the installation namespace. A label selector filters discovery; it does not restrict the account's authorization. The account can list full pod specifications for all pods in that namespace, including Blackbox pods and literal environment values, but cannot list pods elsewhere, read Secret objects, fetch pod logs, exec into pods or modify resources through this Role. Restrict installation/upgrades and pod modification/exec access to infrastructure administrators. Splitting RBAC into another Helm release does not remove the workload's ability to use its assigned service-account permissions.
+These permissions apply only within the installation namespace. A label selector filters discovery; it does not restrict the account's authorization. The account can list full pod specifications for all pods in that namespace, but cannot list pods elsewhere, read Secret objects, fetch pod logs, exec into pods or modify resources through this Role. Restrict installation/upgrades and pod modification/exec access to infrastructure administrators. Splitting RBAC into another Helm release does not remove the workload's ability to use its assigned service-account permissions.
 
 To reuse separately managed RBAC:
 
@@ -239,7 +239,7 @@ Use the same release name, namespace and values file for upgrades. Changing sele
 helm --kubeconfig 02test.yaml uninstall goldpinger -n eea-monitoring
 ```
 
-Uninstall removes chart-owned resources, including its dashboard ConfigMap. It does not delete the shared namespace, Blackbox resources, externally managed RBAC or Grafana UI changes saved elsewhere.
+Uninstall removes chart-owned resources, including its dashboard ConfigMap. It does not delete the shared namespace, externally managed RBAC or Grafana UI changes saved elsewhere.
 
 ## Validation
 
@@ -294,4 +294,6 @@ The customized page is derived from Goldpinger 3.11.5's Apache-2.0-licensed `sta
 ## Expanded Readme regarding the Goldpinger navlink and graphical UI access (0.1.6)
 
 ## Added graph labels for checks that involve non-Goldpinger resources (0.1.7)
+
+## Updated Readme (0.1.8) 
 
