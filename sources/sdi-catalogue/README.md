@@ -152,6 +152,9 @@ own filesystem store.
 
 ## Releases
 
+### Version 0.14.1 - 22 October 2026
+- Bump Nextcloud image to 30.0.17-apache (PHP2Shell hardening) [Juan Luis Rodriguez Ponce - [`b8b42c635`](https://github.com/eea/helm-charts/commit/b8b42c635782bde97e4610118fcfdfab789f5f78)]
+
 ### Version 0.14.0 - 14 October 2026
 - Add optional datahub UI served at the site root (datahub.enabled), restart Apache when its config changes and drop the /internal-catalogue redirect. Refs [#309613](https://taskman.eionet.europa.eu/issues/309613) [Juan Luis Rodriguez Ponce - [`b41e95aa8`](https://github.com/eea/helm-charts/commit/b41e95aa85c13d198fd559b3d2d4144c6ef89e88)]
 
