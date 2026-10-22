@@ -46,7 +46,7 @@ spec:
               name: sdi-nextcloud-app
       containers:
       - name: nextcloud-cron
-        image: eeacms/nextcloud:30.0.2-apache
+        image: eeacms/nextcloud:30.0.17-apache
         command:
         - /cron.sh
         env:

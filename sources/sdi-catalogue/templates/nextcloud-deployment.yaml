@@ -47,7 +47,7 @@ spec:
               name: sdi-nextcloud-app
       containers:
       - name: nextcloud
-        image: eeacms/nextcloud:30.0.2-apache
+        image: eeacms/nextcloud:30.0.17-apache
         env:
         - name: POSTGRES_DB
           value: {{ .Values.nextclouddb.database }}
