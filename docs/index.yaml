@@ -27623,6 +27623,24 @@ entries:
     version: 0.0.1
   cmshare:
   - apiVersion: v2
+    appVersion: 35.0.2-fpm-alpine
+    created: "2026-10-22T15:43:11.309265919+03:00"
+    dependencies:
+    - name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.2.0
+    description: A NextCloud service for sharing files
+    digest: 4c178711603e374e5dab4b4bc6a37e703a4740c1f8b0e18e331d760409777bb6
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/cm-share/cmshare.svg
+    keywords:
+    - Sharing
+    - Nextcloud
+    name: cmshare
+    type: application
+    urls:
+    - cmshare-0.6.0.tgz
+    version: 0.6.0
+  - apiVersion: v2
     appVersion: 34.0.5-fpm-alpine
     created: "2026-10-22T14:45:43.207364894+03:00"
     dependencies:
@@ -76409,4 +76427,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2026-10-22T15:22:31.08390128+03:00"
+generated: "2026-10-22T15:43:11.307796715+03:00"
