@@ -29,7 +29,7 @@ spec:
 
       containers:
       - name: db
-        image: mariadb:10.6.27
+        image: mariadb:10.11.19
         args:
         - --transaction-isolation=READ-COMMITTED
         - --binlog-format=ROW
@@ -44,6 +44,8 @@ spec:
           value: {{ .Values.db.user }}
         - name: TZ
           value: Europe/Copenhagen
+        - name: MARIADB_AUTO_UPGRADE
+          value: "1"
         resources:
            {{- toYaml .Values.db.resources | nindent 10 }}
         volumeMounts:
