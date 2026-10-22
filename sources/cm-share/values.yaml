@@ -130,6 +130,11 @@ db:
     limits:
       memory: 5Gi
   storage: 4Gi
+  extraArgs:
+    - --innodb-log-file-size=256M
+    - --slow-query-log=ON
+    - --long-query-time=2
+    - --slow-query-log-file=/dev/stderr
 
 redis:
   resources:

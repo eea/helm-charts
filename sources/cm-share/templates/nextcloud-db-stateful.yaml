@@ -33,6 +33,9 @@ spec:
         args:
         - --transaction-isolation=READ-COMMITTED
         - --binlog-format=ROW
+        {{- range .Values.db.extraArgs }}
+        - {{ . }}
+        {{- end }}
         env:
         - name: MYSQL_DATABASE
           value: {{ .Values.db.database }}
