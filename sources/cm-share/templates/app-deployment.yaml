@@ -50,7 +50,10 @@ spec:
           value: redis
         - name: TZ
           value: Europe/Copenhagen
-
+        - name: NC_serverid
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.labels['apps.kubernetes.io/pod-index']
         ports:
         - containerPort: 9000
 

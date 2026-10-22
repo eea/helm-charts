@@ -20,7 +20,7 @@ spec:
         {{- include "appl.selectorLabels" . | nindent 8 }}
         component: db
     spec:
-      terminationGracePeriodSeconds: 10
+      terminationGracePeriodSeconds: 100
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}

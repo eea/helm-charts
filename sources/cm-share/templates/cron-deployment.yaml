@@ -44,6 +44,8 @@ spec:
           value: redis
         - name: TZ
           value: Europe/Copenhagen
+        - name: NC_serverid
+          value: "500"
         resources:
           {{- toYaml .Values.cron.resources | nindent 10 }}
 
