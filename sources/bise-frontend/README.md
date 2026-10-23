@@ -10,6 +10,9 @@ This chart deployes the BISE frontend app
 
 ## Releases
 
+### Version 2.25.6 - 23 October 2026
+- block requests to species id that are not defined in discodata [Claudia Ifrim - [`2ed3516c4`](https://github.com/eea/helm-charts/commit/2ed3516c437413d51bf0a6b3d0b9310a82e6ba41)]
+
 ### Version 2.25.5 - 23 October 2026
 - Automated release of [eeacms/bise-frontend:4.8.1-beta.04](https://github.com/eea/bise-frontend/releases) [EEA Jenkins - [`876521421`](https://github.com/eea/helm-charts/commit/876521421d1b49d8caa208279d99d5eacbab2a60)]
 
