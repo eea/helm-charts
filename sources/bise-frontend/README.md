@@ -10,6 +10,9 @@ This chart deployes the BISE frontend app
 
 ## Releases
 
+### Version 2.25.7 - 23 October 2026
+- fix headers for species requests [Claudia Ifrim - [`9120d8722`](https://github.com/eea/helm-charts/commit/9120d8722289ceb375026f8b9caca939b43c9194)]
+
 ### Version 2.25.6 - 23 October 2026
 - block requests to species id that are not defined in discodata [Claudia Ifrim - [`2ed3516c4`](https://github.com/eea/helm-charts/commit/2ed3516c437413d51bf0a6b3d0b9310a82e6ba41)]
 
