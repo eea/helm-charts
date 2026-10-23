@@ -284,7 +284,13 @@ async:
   serviceType: ClusterIP
   image:
     repository: eeacms/climateadapt-async-translate
-    tag: "v1.1.3"
+    # v1.2.0 carries the quota-aware eTranslation work: language bundling, the
+    # in-flight submission gate, and handling of failure notifications
+    # (git tag v1.2.0 = merge of eea/climateadapt-async-translate#3).
+    # Confirm the image is actually published before applying this chart -
+    # pullPolicy is Always and replicas is 1, so a missing tag takes the
+    # translation worker down rather than leaving it on the previous build.
+    tag: "v1.2.0"
     pullPolicy: Always
   port: 3000
   resources:
@@ -295,8 +301,24 @@ async:
   environment:
     PORTAL_URL: "https://climate-adapt.eea.europa.eu"
     TRANSLATION_AUTH_TOKEN: ""
-    BULL_QUEUE_NAMES_CSV: etranslation,save_etranslation,sync_paths,delete_translation
-    ENABLED_JOBS: save_translated_html,call_etranslation,etranslation,sync_translated_paths,delete_translation
+    # etranslation_submit is the queue the bundled-submission stage uses. It is
+    # inert on older builds, but the worker disables grouping at startup if the
+    # queue is absent here, so the switch below would silently do nothing.
+    BULL_QUEUE_NAMES_CSV: etranslation,save_etranslation,sync_paths,delete_translation,etranslation_submit
+    # submit_group performs the bundled submission; translation_failed consumes
+    # eTranslation's failure notification. Both must be listed here: a job name
+    # the worker is not allowed to run is rejected with RateLimitError and
+    # requeued for an immediate retry, i.e. a busy loop.
+    ENABLED_JOBS: save_translated_html,call_etranslation,etranslation,sync_translated_paths,delete_translation,submit_group,translation_failed
+    # Master switch for quota-aware submissions. It needs the Plone side that
+    # accepts a comma separated target_lang plus ext_ref on @@call-etranslation
+    # and forwards targetLanguage from @@translate-callback - shipped in
+    # v11.0.82-plone6.1. Keep false until that image is rolled out to both
+    # `plone` and `plone-translate`, then turn it on for the next sweep.
+    ETL_GROUPING_ENABLED: "false"
+    # eTranslation allows 50 active submissions per client. Start the first
+    # grouped sweep at 10 and raise it to 40 once that sweep looks clean.
+    ETL_MAX_INFLIGHT: "10"
   livenessProbe:
     tcpSocket:
       port: http

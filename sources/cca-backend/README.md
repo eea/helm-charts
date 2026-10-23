@@ -10,6 +10,20 @@ and the broken-links cron job.
 Sensitive values are intentionally left empty in `values.yaml`.
 ## Releases
 
+### Version 0.10.11 - 23 octombrie 2026
+- v11.0.82-plone6.1 — eTranslation quota work on the Plone side: `@@call-etranslation`
+  accepts a comma separated `target_lang` plus an optional `ext_ref` (short
+  correlation id, avoids the 200-char `externalReference` limit), `@@translate-callback`
+  forwards `targetLanguage`, malformed language codes are dropped instead of
+  failing the whole request, and `@@translate-failure` receives eTranslation's
+  failure notifications.
+- v1.2.0 async: quota-aware eTranslation submissions — bundles the 26 target
+  languages into one request, gates concurrent submissions under the service's
+  50-active quota, and acts on eTranslation failure notifications. Needs
+  `etranslation_submit` in `BULL_QUEUE_NAMES_CSV` and `submit_group` plus
+  `translation_failed` in `ENABLED_JOBS`. `ETL_GROUPING_ENABLED` stays false
+  until the new backend image is rolled out.
+
 ### Version 0.10.10 - 20 octombrie 2026
 - Add script to fix mission images [Tiberiu Ichim - [`b5b9396d5`](https://github.com/eea/helm-charts/commit/b5b9396d5589a36bed4fa0ae3f755e8bdaab3e27)]
 
