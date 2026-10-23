@@ -4,6 +4,7 @@ import os
 import re
 import threading
 import time
+import urllib.parse
 import urllib.request
 
 SPECIES_PATH_RE = re.compile(r"^/species/(\d+)(?:/|$)")
@@ -63,8 +64,12 @@ class Handler(http.server.BaseHTTPRequestHandler):
             self.send_response(200)
             self.end_headers()
             return
-        original_uri = self.headers.get("X-Original-URI", "")
-        match = SPECIES_PATH_RE.match(original_uri)
+        # ingress-nginx's auth-url subrequest sends the full original URL in
+        # X-Original-URL (scheme://host/path), not a bare path in
+        # X-Original-URI - handle both since urlsplit().path works for either.
+        original = self.headers.get("X-Original-URL") or self.headers.get("X-Original-URI", "")
+        original_path = urllib.parse.urlsplit(original).path
+        match = SPECIES_PATH_RE.match(original_path)
         with allowed_ids_lock:
             ids = allowed_ids
         if match and ids is not None and match.group(1) not in ids:
