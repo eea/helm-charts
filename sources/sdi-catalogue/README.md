@@ -152,6 +152,9 @@ own filesystem store.
 
 ## Releases
 
+### Version 0.14.2 - 23 October 2026
+- Make Jetty maxFormKeys and maxFormContentSize configurable via values [Juan Luis Rodriguez Ponce - [`2ec982735`](https://github.com/eea/helm-charts/commit/2ec9827356b8c9bcb0b8ad7a99d8e88ea73414b1)]
+
 ### Version 0.14.1 - 22 October 2026
 - Bump Nextcloud image to 30.0.17-apache (PHP2Shell hardening) [Juan Luis Rodriguez Ponce - [`b8b42c635`](https://github.com/eea/helm-charts/commit/b8b42c635782bde97e4610118fcfdfab789f5f78)]
 
