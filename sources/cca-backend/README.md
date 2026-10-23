@@ -10,6 +10,9 @@ and the broken-links cron job.
 Sensitive values are intentionally left empty in `values.yaml`.
 ## Releases
 
+### Version 0.11.0 - 23 octombrie 2026
+- Update climateadapt-translate-async [Tiberiu Ichim - [`fa290f389`](https://github.com/eea/helm-charts/commit/fa290f38921fdc97fcbbed8aa3d50d8bb2b2ec0a)]
+
 ### Version 0.10.11 - 23 octombrie 2026
 - v11.0.82-plone6.1 — eTranslation quota work on the Plone side: `@@call-etranslation`
   accepts a comma separated `target_lang` plus an optional `ext_ref` (short
