@@ -117,9 +117,9 @@ questions:
     label: "Cachet number of threads"
     type: int
     required: true
-    default: "150"
+    default: "20"
     group: "General"
-    description: "Needs to be no more than database connections"
+    description: "php-fpm workers; needs to be no more than database connections"
 
   - variable: cachet.environment.PHP_MAX_EXECUTION_TIME
     label: "Cachet php timeout"
@@ -162,7 +162,7 @@ questions:
     label: "Cachet Monitor Token"
     type: string
     default: ""
-    description: "Token used by the Cachet Monitor for authentication (generate from dashboard)"
+    description: "Cachet v3 API key used by the Cachet Monitor (Dashboard -> API Keys)"
     show_if: "monitor.enabled"
     group: General
     

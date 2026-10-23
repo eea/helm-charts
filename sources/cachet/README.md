@@ -43,7 +43,38 @@ Cachet is a beautiful and powerful open source status page system.
 - "Time zone"
 
 
+## Upgrading from chart 0.1.x (Cachet v2.3, PostgreSQL 9.6)
+
+Chart 0.2.0 runs Cachet v3 (`eeacms/cachet:3`) on PostgreSQL 17 (`eeacms/postgres:17s`). The image upgrades the v2.3 data in place on its first start ([details](https://github.com/eea/eea.docker.cachet/tree/3#upgrading-from-cachet-v23-eeacmscachet23-x)). PostgreSQL 17 cannot use the 9.6 data volume, so the database is dumped and restored into the new StatefulSet (`<release>-postgres17-ss`); the volume of the old `<release>-postgres-ss` StatefulSet is not deleted and stays as fallback.
+
+Keep the same `APP_KEY` and `DB_PREFIX` values. Use `--reset-then-reuse-values` (Helm 3.14+): it applies the new chart defaults (images, volumes, probes) under your existing values, while `--reuse-values` would drop them. Example for release `status` in namespace `status`:
+
+1. Dump the v2 database:
+
+       kubectl -n status exec status-postgres-ss-0 -- pg_dump -U postgres -d cachet > cachet-v2.sql
+
+2. Upgrade the chart with Cachet stopped, so it does not create an empty v3 database:
+
+       helm upgrade status eea/cachet --version 0.2.0 --reset-then-reuse-values --set cachet.replicaCount=0 --set monitor.enabled=false
+
+3. Restore the dump as the application user (the Cachet migrations alter the tables, so the user must own them), leaving out the PostgreSQL 9.6 specific, ownership and grant statements:
+
+       grep -vE "^SET default_with_oids|^(CREATE|COMMENT ON) EXTENSION |^ALTER .* OWNER TO |^(GRANT|REVOKE) " cachet-v2.sql \
+         | kubectl -n status exec -i status-postgres17-ss-0 -- env PGPASSWORD=<POSTGRES_DBPASS> \
+           psql -h 127.0.0.1 -U cachet -d cachet -v ON_ERROR_STOP=1
+
+4. Start Cachet; the log shows the `[v2-upgrade]` lines and the migrations:
+
+       helm upgrade status eea/cachet --version 0.2.0 --reset-then-reuse-values --set cachet.replicaCount=1
+
+5. cachet-monitor: create an API key in Dashboard -> API Keys, set it as `monitor.environment.CACHET_TOKEN` and enable the monitor again. The monitor now uses `eeacms/cachet-monitor:3` and `https://<hostname>/api`.
+
+Rollback: `helm rollback` to the previous revision brings back the 9.6 StatefulSet on its untouched volume and the v2 image.
+
+Uploads (the status page banner) are stored on the `<release>-cachet-uploads` volume (`cachet.datastorage`), mounted at `/var/www/html/storage/app/public`.
+
 ## Releases
+
 
 ### Version 0.2.0 - 23 October 2026
 - Upgrade to 2.3-1.4 [valentinab25 - [`fd3f21149`](https://github.com/eea/helm-charts/commit/fd3f21149a1f228b9ebbf0483d0cdb58fdafeb0d)]

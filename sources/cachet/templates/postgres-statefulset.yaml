@@ -1,13 +1,15 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ .Release.Name }}-postgres-ss
+  # PostgreSQL 17 needs a new data volume: the new name creates one and the
+  # volume of the former "-postgres-ss" (9.6) StatefulSet is kept as fallback
+  name: {{ .Release.Name }}-postgres17-ss
   labels:
     {{- include "appl.labels" . | nindent 4 }}
     component: postgres
 spec:
   replicas: 1
-  serviceName: {{ .Release.Name }}-postgres
+  serviceName: {{ .Release.Name }}-postgres17
   selector:
     matchLabels:
       {{- include "appl.selectorLabels" . | nindent 6 }}
@@ -28,7 +30,7 @@ spec:
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
       containers:
         - name: postgres
-          image: eeacms/postgres:9.6s
+          image: "{{ .Values.postgres.image | default "eeacms/postgres:17s" }}"
           imagePullPolicy: {{ .Values.postgres.pullPolicy }}
           ports:
             - containerPort: 5432

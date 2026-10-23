@@ -1,7 +1,8 @@
 image:
   repository: eeacms/cachet
   pullPolicy: Always
-  tag: ""
+  # Cachet v3 image; empty uses the chart appVersion
+  tag: "3"
 
 imagePullSecrets: []
 
@@ -67,6 +68,8 @@ ingress:
   restrictedClassName: "appsec-nginx" 
    
 postgres:
+  # PostgreSQL 17 starts on a new volume; see the README for upgrading from 9.6
+  image: eeacms/postgres:17s
   pullPolicy: IfNotPresent
   podAnnotations: {}
   podSecurityContext: {}
@@ -125,6 +128,8 @@ postfix:
       certificate: mailtrap.01dev.eea.europa.eu-tls
   
 cachet:
+  # set to 0 while restoring the database during the v2 -> v3 upgrade (see README)
+  replicaCount: 1
   serviceType: ClusterIP
   serviceName: cachet-svc
   hostname: status.01dev.eea.europa.eu
@@ -136,29 +141,40 @@ cachet:
   environment:
     DB_PREFIX: "chq_"
     APP_KEY: "base64:4t9MvAAFSKd7jIdCSAGV/NwXRTrafJeKUU9QqLrK+Zk="
-    APP_LOG: "errorlog"
+    LOG_CHANNEL: "stderr"
     DEBUG: "false"
     MAIL_NAME: "EEA Systems Status"
     MAIL_ADDRESS: "noreply@eea.europa.eu"
     TIMEOUT: "180"
-    PHP_MAX_CHILDREN: "150"
+    # php-fpm workers; each one can hold a database connection (max_connections = 150)
+    PHP_MAX_CHILDREN: "20"
     PHP_MAX_EXECUTION_TIME: "300"
 
   livenessProbe:
-    tcpSocket:
+    httpGet:
+      path: /up
       port: 8000
     initialDelaySeconds: 30
     periodSeconds: 10
     timeoutSeconds: 5
     failureThreshold: 6
 
+  # the first start after the v2 -> v3 upgrade runs the database migrations
   startupProbe:
-    tcpSocket:
+    httpGet:
+      path: /up
       port: 8000
     initialDelaySeconds: 10
     periodSeconds: 5
     timeoutSeconds: 5
-    failureThreshold: 12
+    failureThreshold: 120
+
+  terminationGracePeriodSeconds: 70
+  # the image runs as uid 1001, group 0: make the uploads volume writable for group 0
+  podSecurityContext:
+    fsGroup: 0
+
+  # uploads volume (status page banner, ...)
   datastorage:
     size: 1Gi
     storageClassName: ""
@@ -169,7 +185,12 @@ cachet:
     
 monitor:
   enabled: false
+  image:
+    repository: eeacms/cachet-monitor
+    # Cachet v3 API support
+    tag: "3"
   environment:
+    # Cachet v3: an API key from Dashboard -> API Keys
     CACHET_TOKEN: ""
     CACHET_DEV: ""
     CONFIG: |

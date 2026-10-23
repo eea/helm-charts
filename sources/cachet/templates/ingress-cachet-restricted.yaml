@@ -25,7 +25,7 @@ spec:
   - host: {{ .Values.cachet.hostname }}
     http:
       paths:
-      - path: /dashboard/
+      - path: /dashboard
         pathType: Prefix
         backend:
           service:

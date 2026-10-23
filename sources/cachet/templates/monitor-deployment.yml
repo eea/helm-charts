@@ -20,13 +20,14 @@ spec:
     spec:
       containers:
         - name: cachet-monitor
-          image: eeacms/cachet-monitor:1.1
+          {{- $image := .Values.monitor.image | default dict }}
+          image: "{{ $image.repository | default "eeacms/cachet-monitor" }}:{{ $image.tag | default "3" }}"
           env:
             - name: CACHET_API
               {{- if .Values.ingress.tls }}
-              value: "https://{{ .Values.cachet.hostname }}/api/v1"
+              value: "https://{{ .Values.cachet.hostname }}/api"
               {{- else }}
-              value: "http://{{ .Values.cachet.hostname }}/api/v1"
+              value: "http://{{ .Values.cachet.hostname }}/api"
               {{- end }}
             - name: TZ
               value: "{{ .Values.timezone }}"

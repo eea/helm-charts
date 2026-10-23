@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Release.Name }}-cachet-uploads
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: cachet
+  annotations:
+    # keep the uploads when the release is deleted
+    helm.sh/resource-policy: keep
+spec:
+  accessModes:
+    - {{ .Values.cachet.datastorage.accessModes }}
+  {{- if .Values.cachet.datastorage.storageClassName }}
+  storageClassName: "{{ .Values.cachet.datastorage.storageClassName }}"
+  {{- end }}
+  resources:
+    requests:
+      storage: "{{ .Values.cachet.datastorage.size }}"

@@ -6,7 +6,8 @@ metadata:
     {{- include "appl.labels" . | nindent 4 }}
     component: cachet
 spec:
-  replicas: {{ .Values.cachet.replicaCount | default 1 }}
+  # "default" would turn 0 into 1; 0 is used while restoring the database
+  replicas: {{ hasKey .Values.cachet "replicaCount" | ternary .Values.cachet.replicaCount 1 }}
   selector:
     matchLabels:
       {{- include "appl.selectorLabels" . | nindent 6 }}
@@ -22,6 +23,12 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      # the queue worker gets 60s to finish a running job (supervisord stopwaitsecs)
+      terminationGracePeriodSeconds: {{ .Values.cachet.terminationGracePeriodSeconds | default 70 }}
+      {{- with .Values.cachet.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
       - name: cachet
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -80,4 +87,13 @@ spec:
 
         resources:
           {{- toYaml .Values.cachet.resources | nindent 12 }}
+
+        # uploaded files (status page banner, ...)
+        volumeMounts:
+          - name: uploads
+            mountPath: /var/www/html/storage/app/public
+      volumes:
+        - name: uploads
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-cachet-uploads
 
