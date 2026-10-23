@@ -34,6 +34,8 @@ spec:
           value: {{ .Values.speciesFilter.discodataUrl | quote }}
         - name: REFRESH_INTERVAL_SECONDS
           value: "{{ .Values.speciesFilter.refreshIntervalSeconds }}"
+        - name: FILTERS
+          value: {{ .Values.speciesFilter.filters | toJson | quote }}
         ports:
         - name: http
           containerPort: {{ .Values.speciesFilter.port }}

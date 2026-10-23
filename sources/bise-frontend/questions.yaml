@@ -45,8 +45,8 @@ questions:
     group: "General"
 
   - variable: "speciesFilter.enabled"
-    label: "Enable species ID allow-list filter"
-    description: "Block /species/<id> requests whose id is not in the bundled allow-list (403)"
+    label: "Enable EUNIS object ID allow-list filter"
+    description: "Block species/habitats/sites requests whose id is not in discodata (403)"
     default: true
     type: "boolean"
     required: true

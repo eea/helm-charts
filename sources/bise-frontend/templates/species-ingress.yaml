@@ -17,13 +17,15 @@ spec:
   - host: {{ .Values.volto.hostname }}
     http:
       paths:
-      - path: {{ .Values.speciesFilter.path }}
+      {{- range .Values.speciesFilter.filters }}
+      - path: {{ .path }}
         pathType: Prefix
         backend:
           service:
-            name: {{ .Values.varnish.serviceName }}
+            name: {{ $.Values.varnish.serviceName }}
             port:
-              number: {{ .Values.varnish.port }}
+              number: {{ $.Values.varnish.port }}
+      {{- end }}
   {{- if .Values.ingress.tls }}
   tls:
   - hosts:

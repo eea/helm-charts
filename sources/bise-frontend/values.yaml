@@ -41,18 +41,49 @@ ingress:
    
 speciesFilter:
   enabled: true
-  path: /species
   port: 8080
-  discodataUrl: "https://discodata.eea.europa.eu/sql?query=select%20id_eunis%20from%20EUNIS.latest.species_information&p=1&nrOfHits=500000&mail=null&schema=null"
+  discodataUrl: "https://discodata.eea.europa.eu/sql"
   refreshIntervalSeconds: 21600
+  # Each filter routes `path` (ingress Prefix) through the gatekeeper; requests
+  # matching `pattern` (group 1 = id) get 403 unless the id is returned by
+  # `query` (discodata SQL, column must be named "id").
+  filters:
+  - name: species
+    path: /species
+    pattern: '^/species/(\d+)(?:/|$)'
+    query: "select id_eunis as id from EUNIS.latest.species_information"
+  - name: habitats_annex1
+    path: /habitats
+    pattern: '^/habitats/([^/]+)(?:/|$)'
+    query: "select habitat_unique_id as id from EUNIS.latest.habitat_information where habitat_category='ANNEX1'"
+  - name: habitats_eunis_revised
+    path: /habitats_eunis_revised
+    pattern: '^/habitats_eunis_revised/([^/]+)(?:/|$)'
+    query: "select habitat_unique_id as id from EUNIS.latest.habitat_information where habitat_category='EUNISrev'"
+  - name: habitats_rl
+    path: /habitats_rl
+    pattern: '^/habitats_rl/([^/]+)(?:/|$)'
+    query: "select habitat_unique_id as id from EUNIS.latest.habitat_information where habitat_category='REDLIST'"
+  - name: sites_natura2000
+    path: /sites/natura2000
+    pattern: '^/sites/natura2000/([^/]+)(?:/|$)'
+    query: "select code_site as id from EUNIS.latest.Site_Information where source_db='NATURA2000'"
+  - name: sites_national
+    path: /sites/national
+    pattern: '^/sites/national/([^/]+)(?:/|$)'
+    query: "select code_site as id from EUNIS.latest.Site_Information where source_db='CDDA_NATIONAL'"
+  - name: sites_emerald
+    path: /sites/emerald
+    pattern: '^/sites/emerald/([^/]+)(?:/|$)'
+    query: "select code_site as id from EUNIS.latest.Site_Information where source_db='Emerald'"
   image:
     repository: python
     tag: "3.12-alpine"
   resources:
     limits:
-      memory: 128Mi
+      memory: 256Mi
     requests:
-      memory: 64Mi
+      memory: 128Mi
 
 ingressredirects:
 - enabled: false
