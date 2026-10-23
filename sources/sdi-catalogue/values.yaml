@@ -182,6 +182,8 @@ publicCatalogue:
   geonetwork_dir: /catalogue-data
   catalogue_name: catalogue
   jvm_max_memory: 2G
+  jetty_max_form_keys: 10000
+  jetty_max_form_content_size: 5000000
   db_type: postgres
   formatter_dir: "{{ .Values.publicCatalogue.geonetwork_dir }}/data/formatter"
   schema_dir: /opt/geonetwork/WEB-INF/data/config/schema_plugins
@@ -307,6 +309,8 @@ gn46:
   geonetwork_data_dir: /var/local/gis_sdi/cataloguestore/metadata_data
   catalogue_name: catalogue
   jvm_max_memory: 2G
+  jetty_max_form_keys: 10000
+  jetty_max_form_content_size: 5000000
   db_type: postgres
   formatter_dir: "{{ .Values.gn46.geonetwork_dir }}/data/formatter"
   schema_dir: /opt/geonetwork/WEB-INF/data/config/schema_plugins

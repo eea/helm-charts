@@ -37,7 +37,7 @@ spec:
         - name: CATALOGUE
           value: {{ .Values.gn46.catalogue_name }}
         - name: JAVA_OPTIONS
-          value: "-Djava.security.egd=file:/dev/./urandom -Djava.awt.headless=true -Xms512M -Xss512M -Xmx{{ .Values.gn46.jvm_max_memory }} -XX:+UseConcMarkSweepGC -Dorg.eclipse.jetty.annotations.AnnotationParser.LEVEL=OFF"
+          value: "-Djava.security.egd=file:/dev/./urandom -Djava.awt.headless=true -Xms512M -Xss512M -Xmx{{ .Values.gn46.jvm_max_memory }} -XX:+UseConcMarkSweepGC -Dorg.eclipse.jetty.annotations.AnnotationParser.LEVEL=OFF -Dorg.eclipse.jetty.server.Request.maxFormContentSize={{ .Values.gn46.jetty_max_form_content_size | int64 }} -Dorg.eclipse.jetty.server.Request.maxFormKeys={{ .Values.gn46.jetty_max_form_keys }}"
         - name: GN_CONFIG_PROPERTIES
           value: "-Dgeonetwork.security.type={{ .Values.gn46.security_type }} -Dgeonetwork.dir={{ .Values.gn46.geonetwork_dir }} -Dgeonetwork.data.dir={{ .Values.gn46.geonetwork_data_dir }} -Dgeonetwork.db.type={{ .Values.gn46.db_type }} -Dgeonetwork.schema.dir={{ .Values.gn46.schema_dir }} -Dgeonetwork.formatter.dir={{ tpl .Values.gn46.formatter_dir . }} -Dgeonetwork.indexConfig.dir={{ .Values.gn46.index_config_dir }} -Dgeonetwork.resources.dir={{ tpl .Values.gn46.resources_dir . }} -Des.host={{ .Values.gn46.es_host }} -Des.port={{ .Values.gn46.es_port }} -Des.protocol={{ .Values.gn46.es_protocol }} -Des.index.records={{ .Values.gn46.es_index_records }} -Des.url={{ tpl .Values.gn46.es_url . }} -Dgeonetwork.ESFeaturesProxy.targetUri={{ tpl .Values.gn46.es_features_proxy .}} -Dkb.url=http://kibana:5601 -Dgeonetwork.HttpDashboardProxy.targetUri={{ .Values.gn46.dashboardproxy_targeturi }}"
         {{- if .Values.gn46.opendal.enabled }}
