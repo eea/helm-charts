@@ -1,0 +1,67 @@
+{{- if .Values.speciesFilter.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: species-gatekeeper
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: species-gatekeeper
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: species-gatekeeper
+  template:
+    metadata:
+      labels:
+        {{- include "appl.selectorLabels" . | nindent 8 }}
+        component: species-gatekeeper
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      containers:
+      - name: species-gatekeeper
+        image: "{{ .Values.speciesFilter.image.repository }}:{{ .Values.speciesFilter.image.tag }}"
+        command: ["python3", "/app/gatekeeper.py"]
+        env:
+        - name: PORT
+          value: "{{ .Values.speciesFilter.port }}"
+        - name: DISCODATA_URL
+          value: {{ .Values.speciesFilter.discodataUrl | quote }}
+        - name: REFRESH_INTERVAL_SECONDS
+          value: "{{ .Values.speciesFilter.refreshIntervalSeconds }}"
+        ports:
+        - name: http
+          containerPort: {{ .Values.speciesFilter.port }}
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: http
+          periodSeconds: 20
+          timeoutSeconds: 5
+          initialDelaySeconds: 30
+          failureThreshold: 5
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: http
+          periodSeconds: 10
+          timeoutSeconds: 5
+          initialDelaySeconds: 30
+          failureThreshold: 5
+        resources:
+          {{- toYaml .Values.speciesFilter.resources | nindent 10 }}
+        volumeMounts:
+        - name: gatekeeper
+          mountPath: /app/gatekeeper.py
+          subPath: gatekeeper.py
+      volumes:
+      - name: gatekeeper
+        configMap:
+          name: species-gatekeeper
+      restartPolicy: Always
+{{- end }}

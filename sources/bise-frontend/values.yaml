@@ -39,6 +39,21 @@ ingress:
     nginx.ingress.kubernetes.io/proxy-read-timeout: '480'
     nginx.ingress.kubernetes.io/proxy-send-timeout: '120'
    
+speciesFilter:
+  enabled: true
+  path: /species
+  port: 8080
+  discodataUrl: "https://discodata.eea.europa.eu/sql?query=select%20id_eunis%20from%20EUNIS.latest.species_information&p=1&nrOfHits=500000&mail=null&schema=null"
+  refreshIntervalSeconds: 21600
+  image:
+    repository: python
+    tag: "3.12-alpine"
+  resources:
+    limits:
+      memory: 128Mi
+    requests:
+      memory: 64Mi
+
 ingressredirects:
 - enabled: false
   tls: true

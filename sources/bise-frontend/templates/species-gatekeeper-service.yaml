@@ -1,0 +1,18 @@
+{{- if .Values.speciesFilter.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: species-gatekeeper
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: species-gatekeeper
+spec:
+  type: ClusterIP
+  ports:
+  - name: http
+    port: {{ .Values.speciesFilter.port }}
+    targetPort: {{ .Values.speciesFilter.port }}
+  selector:
+    {{- include "appl.selectorLabels" . | nindent 4 }}
+    component: species-gatekeeper
+{{- end }}
