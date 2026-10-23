@@ -10,6 +10,9 @@ This chart deployes the BISE frontend app
 
 ## Releases
 
+### Version 2.25.8 - 23 October 2026
+- Extended filtering to other objects [miahi - [`49b4389a3`](https://github.com/eea/helm-charts/commit/49b4389a3465b3885558a55acab0555c61b421cc)]
+
 ### Version 2.25.7 - 23 October 2026
 - fix headers for species requests [Claudia Ifrim - [`9120d8722`](https://github.com/eea/helm-charts/commit/9120d8722289ceb375026f8b9caca939b43c9194)]
 
