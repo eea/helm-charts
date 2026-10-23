@@ -75,6 +75,9 @@ Uploads (the status page banner) are stored on the `<release>-cachet-uploads` vo
 
 ## Releases
 
+### Version 1.0.0 - 23 October 2026
+- Helm chart for cachet 3 [valentinab25 - [`4d2de3696`](https://github.com/eea/helm-charts/commit/4d2de3696d731df342ef598282167497248627fd)]
+
 
 ### Version 0.2.0 - 23 October 2026
 - Upgrade to 2.3-1.4 [valentinab25 - [`fd3f21149`](https://github.com/eea/helm-charts/commit/fd3f21149a1f228b9ebbf0483d0cdb58fdafeb0d)]
