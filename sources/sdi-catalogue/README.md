@@ -152,6 +152,9 @@ own filesystem store.
 
 ## Releases
 
+### Version 0.14.3 - 23 October 2026
+- Pass Jetty form limits via JAVA_OPTS, the only variable the geonetwork image entrypoint uses [Juan Luis Rodriguez Ponce - [`fb4448923`](https://github.com/eea/helm-charts/commit/fb44489230f808641600c57cdf1e8bd4b77730e7)]
+
 ### Version 0.14.2 - 23 October 2026
 - Make Jetty maxFormKeys and maxFormContentSize configurable via values [Juan Luis Rodriguez Ponce - [`2ec982735`](https://github.com/eea/helm-charts/commit/2ec9827356b8c9bcb0b8ad7a99d8e88ea73414b1)]
 
