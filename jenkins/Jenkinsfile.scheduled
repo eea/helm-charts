@@ -25,7 +25,7 @@ stage('Check Sonarqube Upgrades') {
     DOCKERHUB_TAGS = 'https://hub.docker.com/v2/repositories/library/sonarqube/tags?page_size=50&name=developer&ordering=last_updated'
     DOCKERHUB_REGEXP = '^20[0-9][0-9]\\.[0-9]+\\.[0-9]+\\-developer$'
     RELEASE_PREFIX = ''
-    RELEASE_SUFFIX = '-developer'
+    RELEASE_SUFFIX = ''
     HELM_UPGRADE_APPVERSION = 'yes'
     DOCKER_IMAGENAME = 'sonarqube'
     DOCKER_ARTIFACT = "sonarqube"
@@ -56,7 +56,7 @@ stage('Check Sonarqube Upgrades') {
 
             echo "Starting docker image"
 
-            docker run --pull always -i --name="$DOCKER_NAME" -e GIT_TOKEN="$GITHUB_TOKEN" -e HELM_CHART="$HELM_CHART" -e DOCKER_ARTIFACT_CONTENT="$DOCKER_ARTIFACT_CONTENT" -e DOCKER_ARTIFACT="$DOCKER_ARTIFACT" -e HELM_UPGRADE_APPVERSION="$HELM_UPGRADE_APPVERSION" -e GITHUB_RELEASES="$GITHUB_RELEASES" -e GITHUB_RELEASE_REGEXP="$GITHUB_RELEASE_REGEXP" -e RELEASE_PREFIX="$RELEASE_PREFIX" -e RELEASE_SUFFIX="$RELEASE_SUFFIX" -e DOCKER_IMAGENAME="$DOCKER_IMAGENAME" -e FLEET_LOCATIONS="$FLEET_LOCATIONS" eeacms/gitflow /update_helm_charts.sh
+            docker run --pull always -i --name="$DOCKER_NAME" -e GIT_TOKEN="$GITHUB_TOKEN" -e HELM_CHART="$HELM_CHART" -e DOCKER_ARTIFACT_CONTENT="$DOCKER_ARTIFACT_CONTENT" -e DOCKER_ARTIFACT="$DOCKER_ARTIFACT" -e HELM_UPGRADE_APPVERSION="$HELM_UPGRADE_APPVERSION" -e DOCKERHUB_TAGS="$DOCKERHUB_TAGS" -e DOCKERHUB_REGEXP="$DOCKERHUB_REGEXP" -e RELEASE_PREFIX="$RELEASE_PREFIX" -e RELEASE_SUFFIX="$RELEASE_SUFFIX" -e DOCKER_IMAGENAME="$DOCKER_IMAGENAME" -e FLEET_LOCATIONS="$FLEET_LOCATIONS" eeacms/gitflow /update_helm_charts.sh
 
             docker cp "$DOCKER_NAME:/artifacts/$DOCKER_ARTIFACT" "artifacts/$DOCKER_ARTIFACT"
           '''
