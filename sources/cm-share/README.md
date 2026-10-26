@@ -4,6 +4,9 @@ A Nextcloud instance for sharing files.
 
 ## Releases
 
+### Version 0.6.2 - 26 October 2026
+- Use nginx configmap correctly [valentinab25 - [`3de8f8a2e`](https://github.com/eea/helm-charts/commit/3de8f8a2ea1767b0656e844a1ad8e248043aa290)]
+
 ### Version 0.6.1 - 26 October 2026
 - Add php configuration file from values, disable upload status [valentinab25 - [`cdc2ce340`](https://github.com/eea/helm-charts/commit/cdc2ce340e8fc5245d67feffde7cb7408b45ff8f)]
 
