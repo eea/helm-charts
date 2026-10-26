@@ -585,3 +585,65 @@ questions:
     description: "If empty, https will not be enabled"
     default: "mailtrap-climate-adapt.eea.europa.eu-tls"
     group: "Mail"
+
+  - variable: "async.environment.ETL_GROUPING_ENABLED"
+    label: "Bundle target languages into one eTranslation request"
+    description: "eTranslation allows 50 active submissions per client. Sending one request per language exhausts that in seconds. Grouping folds the 26 per-language jobs for an object into a single request. Requires backend v11.0.82-plone6.1 or newer on both plone and plone-translate."
+    type: "boolean"
+    default: false
+    group: "eTranslation"
+
+  - variable: "async.environment.ETL_MAX_INFLIGHT"
+    label: "Maximum concurrent eTranslation submissions"
+    description: "Keep below the service's 50 active-submission quota. 10 for a first sweep, 40 once it looks clean."
+    type: "int"
+    default: 10
+    group: "eTranslation"
+
+  - variable: "async.environment.ETL_GROUP_WINDOW_MS"
+    label: "Grouping window (ms)"
+    description: "How long the per-language jobs of one object are collected before a single bundled request is submitted."
+    type: "int"
+    default: 10000
+    group: "eTranslation"
+
+  - variable: "async.environment.ETL_LEASE_MS"
+    label: "Submission lease (ms)"
+    description: "A slot is freed when its last language is delivered, but a language can silently never arrive, so this lease is what guarantees slots come back. Can drop to 120000-180000 once failure notifications are confirmed working."
+    type: "int"
+    default: 900000
+    group: "eTranslation"
+
+  - variable: "async.environment.ETL_BREAKER_MS"
+    label: "Backoff after a quota rejection (ms)"
+    description: "How long intake pauses after eTranslation returns errorCode -11200 QUOTA_EXCEEDED."
+    type: "int"
+    default: 30000
+    group: "eTranslation"
+
+  - variable: "async.environment.ETL_SKIP_CACHE"
+    label: "Skip languages already translated for identical source HTML"
+    type: "boolean"
+    default: true
+    group: "eTranslation"
+
+  - variable: "async.environment.BULL_QUEUE_NAMES_CSV"
+    label: "Queues the translation worker monitors"
+    description: "Must include etranslation_submit, otherwise grouping disables itself at startup and the switch above does nothing."
+    type: "string"
+    default: "etranslation,save_etranslation,sync_paths,delete_translation,etranslation_submit"
+    group: "eTranslation"
+
+  - variable: "async.environment.ENABLED_JOBS"
+    label: "Jobs the translation worker may run"
+    description: "Must include submit_group and translation_failed. A job name listed on a monitored queue but missing here is rejected with RateLimitError and retried immediately, i.e. a busy loop."
+    type: "string"
+    default: "save_translated_html,call_etranslation,etranslation,sync_translated_paths,delete_translation,submit_group,translation_failed"
+    group: "eTranslation"
+
+  - variable: "ploneTranslate.environment.ETRANSLATION_DISABLE_DAYTIME_DELAY"
+    label: "Bypass the 19:00-07:00 translation window"
+    description: "For staging runs only. Left off, Plone defers translation jobs to the night window."
+    type: "boolean"
+    default: false
+    group: "eTranslation"

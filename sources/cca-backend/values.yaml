@@ -161,6 +161,10 @@ ploneTranslate:
       memory: 8Gi
   environment:
     IS_JOB_EXECUTOR: "true"
+    # Plone defers translation jobs to the 19:00-07:00 window. Set to 1 to
+    # bypass that for a staging run outside the night. Left empty it is not
+    # rendered at all, which is the normal production state.
+    ETRANSLATION_DISABLE_DAYTIME_DELAY: ""
   livenessProbe:
     httpGet:
       path: /ok
@@ -319,6 +323,19 @@ async:
     # eTranslation allows 50 active submissions per client. Start the first
     # grouped sweep at 10 and raise it to 40 once that sweep looks clean.
     ETL_MAX_INFLIGHT: "10"
+    # How long the per-language jobs for one object are collected before a
+    # single bundled request is submitted. Plone queues all 26 at once, so the
+    # default comfortably covers them.
+    ETL_GROUP_WINDOW_MS: "10000"
+    # A submission slot is freed when its last language is delivered, but a
+    # language can silently never arrive, so this lease is what guarantees
+    # slots come back. With failure notifications confirmed working it can drop
+    # to 2-3 minutes; keep it high until a sweep proves notifications land.
+    ETL_LEASE_MS: "900000"
+    # Intake pause after a -11200 QUOTA_EXCEEDED.
+    ETL_BREAKER_MS: "30000"
+    # Skip languages already translated for byte-identical source HTML.
+    ETL_SKIP_CACHE: "true"
   livenessProbe:
     tcpSocket:
       port: http
