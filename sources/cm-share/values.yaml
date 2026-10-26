@@ -111,6 +111,12 @@ app:
 
 
 
+# Extra PHP settings, mounted as /usr/local/etc/php/conf.d/zz-cmshare.ini
+# in the app and cron containers; PHP loads it on start.
+php:
+  config: |
+    session.upload_progress.enabled = 0
+
 postfix:
   fullnameOverride: "postfix"
   serverName: ""

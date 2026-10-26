@@ -19,10 +19,11 @@ spec:
       labels:
         {{- include "appl.selectorLabels" . | nindent 8 }}
         component: app
-      {{- with .Values.podAnnotations }}
       annotations:
+        checksum/php-config: {{ include (print $.Template.BasePath "/php-configmap.yaml") . | sha256sum }}
+        {{- with .Values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
-      {{- end }}
+        {{- end }}
 
     spec:
       {{- with .Values.imagePullSecrets }}
@@ -65,6 +66,9 @@ spec:
           name: cmshare-app-data
         - mountPath: /data
           name: {{ .Values.pvcNames.cmshareData }}
+        - mountPath: /usr/local/etc/php/conf.d/zz-cmshare.ini
+          name: php-config
+          subPath: zz-cmshare.ini
 
         {{- if (.Values.app.livenessProbe) }}
         livenessProbe:
@@ -102,3 +106,6 @@ spec:
       - name: {{ .Values.pvcNames.cmshareData }}
         persistentVolumeClaim:
           claimName: {{ .Values.pvcNames.cmshareData }}
+      - name: php-config
+        configMap:
+          name: php-config
