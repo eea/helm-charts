@@ -4,6 +4,9 @@ A Nextcloud instance for sharing files.
 
 ## Releases
 
+### Version 0.6.1 - 26 October 2026
+- Add php configuration file from values, disable upload status [valentinab25 - [`cdc2ce340`](https://github.com/eea/helm-charts/commit/cdc2ce340e8fc5245d67feffde7cb7408b45ff8f)]
+
 ### Version 0.6.0 - 22 October 2026
 - Upgrade to 35.0.2 [valentinab25 - [`06d4f1cbb`](https://github.com/eea/helm-charts/commit/06d4f1cbb0ec871588ac8ef2de6a4c947d841b86)]
 
