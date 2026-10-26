@@ -641,9 +641,9 @@ questions:
     default: "save_translated_html,call_etranslation,etranslation,sync_translated_paths,delete_translation,submit_group,translation_failed"
     group: "eTranslation"
 
-  - variable: "ploneTranslate.environment.ETRANSLATION_DISABLE_DAYTIME_DELAY"
+  - variable: "commonEnv.ETRANSLATION_DISABLE_DAYTIME_DELAY"
     label: "Bypass the 19:00-07:00 translation window"
-    description: "For staging runs only. Left off, Plone defers translation jobs to the night window."
+    description: "Plone stamps every translation job with a delay that pushes it to 19:00 when it is queued between 07:00 and 19:00. This applies to manual triggers from @@see_folder_objects_view and to content rules, not just to scheduled sweeps, and it is the web pods that compute the delay - hence the setting lives in commonEnv. Read once at import, so the pods must restart after changing it. Turn off for production."
     type: "boolean"
     default: false
     group: "eTranslation"

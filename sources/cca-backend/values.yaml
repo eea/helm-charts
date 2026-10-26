@@ -42,6 +42,14 @@ commonEnv:
   DEFAULT_ORGANISATIONS_cca: "EEA"
   DEFAULT_PUBLISHER_cca: "EEA"
   DYNAMIC_BANNER_ENABLED: "No"
+  # Plone defers translation jobs to the 19:00-07:00 window. This has to live in
+  # commonEnv, not just on plone-translate: queue_translate runs in the web
+  # process, so it is the `plone` pods that stamp the delay when you click
+  # "Translate all langs" or when a content rule fires on edit. The flag is read
+  # once at import in translation/core.py, so a pod restart is required after
+  # changing it. Left false the helper skips it entirely and the night window
+  # stays active.
+  ETRANSLATION_DISABLE_DAYTIME_DELAY: false
   GRAYLOG: "logcentral.eea.europa.eu:12201"
   GRAYLOG_FACILITY: ""
   MARINE_PASS: ""
@@ -161,10 +169,6 @@ ploneTranslate:
       memory: 8Gi
   environment:
     IS_JOB_EXECUTOR: "true"
-    # Plone defers translation jobs to the 19:00-07:00 window. Set to 1 to
-    # bypass that for a staging run outside the night. Left empty it is not
-    # rendered at all, which is the normal production state.
-    ETRANSLATION_DISABLE_DAYTIME_DELAY: ""
   livenessProbe:
     httpGet:
       path: /ok
