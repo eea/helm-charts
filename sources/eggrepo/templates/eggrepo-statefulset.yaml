@@ -17,6 +17,8 @@ spec:
       labels:
         {{- include "appl.selectorLabels" . | nindent 8 }}
         component: eggrepo
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/eggrepo-configmap.yaml") . | sha256sum }}
     spec:
       terminationGracePeriodSeconds: 10
       {{- with .Values.imagePullSecrets }}
@@ -27,9 +29,11 @@ spec:
       containers:
       - name: {{ .Release.Name }}-repo
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-        {{- with .Values.commandArgs }}
+        {{- if .Values.commandArgs }}
         args:
-          {{- toYaml . | nindent 10 }}
+          {{- toYaml .Values.commandArgs | nindent 10 }}
+        {{- else if gt (int .Values.eggrepo.processes) 1 }}
+        args: ["su-exec", "cluerelmgr", "python", "/opt/eggrepo/server.py", "-p", "9090", "-b", "/var/local/eggrepo/files"]
         {{- end }}
         ports:
         - containerPort: 9090
@@ -37,16 +41,14 @@ spec:
         env:
         - name: TZ
           value: "{{ .Values.timezone }}"
-        securityContext:
-          {{- toYaml .Values.securityContext | nindent 10 }}
+        - name: EGGREPO_PROCESSES
+          value: "{{ .Values.eggrepo.processes }}"
         volumeMounts:
         - mountPath: /var/local/eggrepo
           name: eggrepo-data
-        readinessProbe:
-          tcpSocket:
-            port: 9090
-          initialDelaySeconds: 5
-          periodSeconds: 20
+        - mountPath: /opt/eggrepo
+          name: eggrepo-server
+          readOnly: true
         resources:
           {{- toYaml .Values.eggrepo.resources | nindent 10 }}
         securityContext:
@@ -80,6 +82,10 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       restartPolicy: Always
+      volumes:
+      - name: eggrepo-server
+        configMap:
+          name: {{ .Release.Name }}-repo-cm
 
   volumeClaimTemplates:
   - metadata:

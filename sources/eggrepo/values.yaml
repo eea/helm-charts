@@ -56,6 +56,8 @@ ingress:
   certificate: ""
 
 eggrepo:
+  # Number of forked worker processes; 1 runs the stock single-threaded server
+  processes: 8
   resources:
     requests:
       memory: 2Gi
@@ -63,7 +65,7 @@ eggrepo:
       memory: 2Gi
   livenessProbe:
     httpGet:
-      path: /
+      path: /favicon.ico
       port: 9090
     periodSeconds: 20
     timeoutSeconds: 10
@@ -72,7 +74,7 @@ eggrepo:
     successThreshold: 1
   startupProbe:
     httpGet:
-      path: /
+      path: /favicon.ico
       port: 9090
     periodSeconds: 5
     timeoutSeconds: 10
@@ -81,7 +83,7 @@ eggrepo:
     successThreshold: 1
   readinessProbe:
     httpGet:
-      path: /
+      path: /favicon.ico
       port: 9090
     periodSeconds: 10
     timeoutSeconds: 10
@@ -92,8 +94,31 @@ eggrepo:
   affinity: {}
 
 httpd:
-  image: eeacms/apache:2.4-2.9
   securityContext: {}
+  # Serve /d/<distro>/f/<file> straight from the eggrepo volume instead of the backend
+  serveFiles: true
+  # PVC with the eggs, defaults to the eggrepo statefulset volume
+  filesClaim: ""
+  proxyTimeout: 180
+  mpm:
+    serverLimit: 16
+    startServers: 4
+    threadsPerChild: 64
+    minSpareThreads: 128
+    maxSpareThreads: 512
+    maxRequestWorkers: 1024
+    maxConnectionsPerChild: 10000
+  keepAlive:
+    maxRequests: 1000
+    timeout: 2
+  # Disk cache for the /simple/ index
+  cache:
+    enabled: true
+    # seconds
+    expire: 15
+    # bytes; the mod_cache_disk default (1MB) is smaller than the /simple/ page
+    maxFileSize: 104857600
+    sizeLimit: 1Gi
   resources:
     requests:
       memory: 512Mi
@@ -101,24 +126,26 @@ httpd:
       memory: 512Mi
   livenessProbe:
     httpGet:
-      path: /
+      path: /healthz
       port: 80
     periodSeconds: 20
     timeoutSeconds: 10
     failureThreshold: 6
     successThreshold: 1
+  # Requests /simple/ (with Host set to .Values.url) so the cache is warm
+  # before the pod receives traffic
   startupProbe:
     httpGet:
-      path: /
+      path: /simple/
       port: 80
     periodSeconds: 5
-    timeoutSeconds: 10
+    timeoutSeconds: 60
     initialDelaySeconds: 10
     failureThreshold: 12
     successThreshold: 1
   readinessProbe:
     httpGet:
-      path: /
+      path: /healthz
       port: 80
     periodSeconds: 15
     timeoutSeconds: 10

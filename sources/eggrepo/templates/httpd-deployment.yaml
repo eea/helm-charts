@@ -16,6 +16,8 @@ spec:
       labels:
         {{- include "appl.selectorLabels" . | nindent 8 }}
         component: httpd
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/httpd-configmap.yaml") . | sha256sum }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -24,7 +26,7 @@ spec:
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
       containers:
       - name: {{ .Release.Name }}-httpd
-        image: "{{ .Values.httpd.image }}"
+        image: eeacms/apache:2.4-3.5
         ports:
         - containerPort: 80
           protocol: TCP
@@ -36,6 +38,16 @@ spec:
             configMapKeyRef:
               name: {{ .Release.Name }}-apache-config-cm
               key: vh-my-app.conf
+        volumeMounts:
+        {{- if .Values.httpd.serveFiles }}
+        - mountPath: /var/local/eggrepo
+          name: eggrepo-data
+          readOnly: true
+        {{- end }}
+        {{- if .Values.httpd.cache.enabled }}
+        - mountPath: /var/cache/httpd
+          name: httpd-cache
+        {{- end }}
         resources:
           {{- toYaml .Values.httpd.resources | nindent 10 }}
         securityContext:
@@ -46,9 +58,13 @@ spec:
           {{- toYaml .Values.httpd.livenessProbe | nindent 10 }}
         {{- end }}
 
-        {{- if (.Values.httpd.startupProbe) }}
+        {{- with .Values.httpd.startupProbe }}
+        {{- $probe := deepCopy . }}
+        {{- if and $probe.httpGet (not $probe.httpGet.httpHeaders) }}
+        {{- $_ := set $probe.httpGet "httpHeaders" (list (dict "name" "Host" "value" $.Values.url)) }}
+        {{- end }}
         startupProbe:
-          {{- toYaml .Values.httpd.startupProbe | nindent 10 }}
+          {{- toYaml $probe | nindent 10 }}
         {{- end }}
 
         {{- if (.Values.httpd.readinessProbe) }}
@@ -60,13 +76,35 @@ spec:
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.httpd.affinity }}
+      {{- if .Values.httpd.affinity }}
       affinity:
-        {{- toYaml . | nindent 8 }}
+        {{- toYaml .Values.httpd.affinity | nindent 8 }}
+      {{- else if .Values.httpd.serveFiles }}
+      # the eggrepo volume is ReadWriteOnce, so apache must run on the same node
+      affinity:
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                {{- include "appl.selectorLabels" . | nindent 16 }}
+                component: eggrepo
+            topologyKey: kubernetes.io/hostname
       {{- end }}
       {{- with .Values.httpd.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       restartPolicy: Always
+      volumes:
+      {{- if .Values.httpd.serveFiles }}
+      - name: eggrepo-data
+        persistentVolumeClaim:
+          claimName: {{ .Values.httpd.filesClaim | default (printf "eggrepo-data-%s-repo-ss-0" .Release.Name) }}
+          readOnly: true
+      {{- end }}
+      {{- if .Values.httpd.cache.enabled }}
+      - name: httpd-cache
+        emptyDir:
+          sizeLimit: {{ .Values.httpd.cache.sizeLimit }}
+      {{- end }}
 

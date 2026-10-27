@@ -5,10 +5,60 @@ metadata:
 
 data:
   vh-my-app.conf: |-
+    {{- with .Values.httpd.mpm }}
+    ServerLimit {{ .serverLimit }}
+    StartServers {{ .startServers }}
+    ThreadsPerChild {{ .threadsPerChild }}
+    MinSpareThreads {{ .minSpareThreads }}
+    MaxSpareThreads {{ .maxSpareThreads }}
+    MaxRequestWorkers {{ .maxRequestWorkers }}
+    MaxConnectionsPerChild {{ .maxConnectionsPerChild }}
+    {{- end }}
+
+    KeepAlive On
+    MaxKeepAliveRequests {{ .Values.httpd.keepAlive.maxRequests }}
+    KeepAliveTimeout {{ .Values.httpd.keepAlive.timeout }}
+    ProxyTimeout {{ .Values.httpd.proxyTimeout }}
+
+    LDAPSharedCacheSize 10000000
+    LDAPCacheEntries 10000
+    LDAPCacheTTL 600
+    LDAPOpCacheEntries 10000
+    LDAPOpCacheTTL 600
+    LDAPConnectionTimeout 5
+
+    {{- if .Values.httpd.cache.enabled }}
+
+    LoadModule cache_module modules/mod_cache.so
+    LoadModule cache_disk_module modules/mod_cache_disk.so
+
+    CacheQuickHandler On
+    # while one request refreshes an expired entry, the others get the stale copy
+    CacheLock On
+    CacheLockPath /tmp/mod_cache-lock
+    CacheLockMaxAge 5
+
+    # must exist, mod_cache_disk only creates subdirectories
+    CacheRoot "/var/cache/httpd"
+    CacheEnable disk /simple/
+    CacheDefaultExpire {{ .Values.httpd.cache.expire }}
+    CacheMaxExpire {{ .Values.httpd.cache.expire }}
+    CacheMaxFileSize {{ .Values.httpd.cache.maxFileSize | int64 }}
+
+    # pip sends Cache-Control: max-age=0, the backend sends no Last-Modified
+    CacheIgnoreNoLastMod On
+    CacheIgnoreCacheControl On
+    CacheHeader On
+    {{- end }}
+
+    # Probe endpoint served by apache itself, independent of the backend
+    Alias /healthz /usr/local/apache2/htdocs/index.html
+
     {{- if .Values.rewrite.url }}
     <VirtualHost *:80>
       ServerName {{ .Values.rewrite.url }}
       RewriteEngine On
+      RewriteCond %{REQUEST_URI} !^/healthz$
       RewriteRule ^(.*)$ https://{{ .Values.url }}$1 [R=permanent,L]
     </VirtualHost>
     {{- end }}
@@ -22,7 +72,7 @@ data:
       # to be copying this value in the HOST header ending up
       # with host.com, host.com in the HOST header
       RequestHeader unset X-Forwarded-Host
-      
+
       Header set Content-Security-Policy "default-src 'self'; script-src 'self' ; style-src 'self' ; font-src 'self'; img-src 'self' data:; connect-src 'self'; frame-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'self'"
       Header set X-Content-Type-Options "nosniff"
       Header set Referrer-Policy "strict-origin-when-cross-origin"
@@ -46,14 +96,29 @@ data:
 
       RewriteEngine On
       RewriteRule ^/pypi(.*) http://pypi.python.org/simple$1 [R=permanent,L]
-      
+
       #add trailing slash or it does not work
       RewriteRule ^/simple$ /simple/ [PT,L]
       RewriteRule ^/d/([^/]+)$ /d/$1/ [PT,L]
 
       ProxyPreserveHost On
-      ProxyPass / http://{{ .Release.Name }}-repository:9090/
+      ProxyPass /healthz !
+
+      {{- if .Values.httpd.serveFiles }}
+
+      # Serve package files directly from the eggrepo volume
+      ProxyPassMatch "^/d/[^/]+/f/[^/]+$" "!"
+      AliasMatch "^/d/(([A-Za-z0-9_.-])[^/]*)/f/([^/]+)$" "/var/local/eggrepo/files/$2/$1/$3"
+
+      <Directory "/var/local/eggrepo/files">
+        Options -Indexes +FollowSymLinks
+        AllowOverride None
+        Require all granted
+      </Directory>
+      {{- end }}
+
+      # Everything else still goes upstream
+      ProxyPass / http://{{ .Release.Name }}-repository:9090/ timeout={{ .Values.httpd.proxyTimeout }}
       ProxyPassReverse / http://{{ .Release.Name }}-repository:9090/
 
     </VirtualHost>
-

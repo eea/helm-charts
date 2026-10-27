@@ -6,6 +6,27 @@ For deployment into production set:
     ingress:
       enabled: true
 
+## Gotchas
+
+- `/simple/` is one flat page with every file of every package, rendered on
+  each request. The backend (werkzeug 0.4, python2) is single-threaded with a
+  tiny listen backlog, so it refuses connections under load. Threads don't help
+  (the render is CPU bound and python2 has the GIL); the chart runs it forking
+  instead, see `eggrepo.processes` and `templates/eggrepo-configmap.yaml`.
+- mod_cache_disk does not create `CacheRoot`; if it is missing nothing is
+  stored and every response is `X-Cache: MISS` (only `cache:debug` logs show
+  `store_body failed`). It is the `httpd-cache` emptyDir mount.
+- mod_cache_disk skips responses over 1MB by default, and `/simple/` is bigger,
+  hence `httpd.cache.maxFileSize`.
+- Helm renders numbers of 1000000 and above as `1.048576e+08`, which Apache
+  reads as `1`. Use `| int64` for such values in the config templates.
+- `CacheLock` only serves stale copies of an existing entry; with an empty
+  cache every concurrent request goes to the backend. The httpd startupProbe
+  requests `/simple/` so a new pod gets traffic only with a warm cache.
+- Probes must not hit backend pages: on a busy backend they time out and pods
+  drop out of the service. httpd uses `/healthz` (served by apache itself), the
+  backend uses `/favicon.ico`.
+
 ## Releases
 
 ### Version 0.4.6 - 12 May 2025

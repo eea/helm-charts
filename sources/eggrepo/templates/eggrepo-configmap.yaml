@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-repo-cm
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: eggrepo
+data:
+  # cluerelmgr-server runs werkzeug.run_simple single-threaded with a tiny listen
+  # backlog, so concurrent requests queue up or get refused. Run it forking instead
+  # (threads don't help: rendering /simple/ is CPU bound and python2 has the GIL).
+  server.py: |
+    import os
+    import sys
+
+    import sqlalchemy
+    import werkzeug
+    from sqlalchemy.pool import NullPool
+
+    from clue.relmgr import main as relmgr_main
+
+    _create_engine = sqlalchemy.create_engine
+    _run_simple = werkzeug.run_simple
+
+
+    def create_engine(uri, **kwargs):
+        # do not share sqlite connections between forked workers
+        if str(uri).startswith('sqlite'):
+            kwargs.setdefault('poolclass', NullPool)
+        return _create_engine(uri, **kwargs)
+
+
+    def run_simple(*args, **kwargs):
+        kwargs['processes'] = int(os.environ.get('EGGREPO_PROCESSES', '8'))
+        return _run_simple(*args, **kwargs)
+
+
+    sqlalchemy.create_engine = create_engine
+    werkzeug.run_simple = run_simple
+
+    sys.argv[0] = 'cluerelmgr-server'
+    relmgr_main.main()
