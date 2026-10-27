@@ -13,7 +13,7 @@ Cronjobs have been removed since the update to GN 5/ GN 46 and the new folder st
 | serverName | string | sdi.eea.europa.eu | Name of the server |
 | serverUrl | string | <https://sdi.eea.europa.eu:443> | URL of the server. The port is required. |
 | gn5.image | string | 'eeacms/eea-geonetwork5:f422d582' | GN5 Docker image. Unset uses the default in `gn5-deployment.yaml` |
-| gn46.image | string | 'eeacms/eea-geonetwork:eea-4.9.x-c7dcc38a' | GN46 Docker image. Unset uses the default in `gn46-deployment.yaml` |
+| gn46.image | string | 'eeacms/eea-geonetwork:eea-4.9.x-19e87b65' | GN46 Docker image. Unset uses the default in `gn46-deployment.yaml` |
 | gn46.opendal.enabled | boolean | false | Store GN46 record attachments and thumbnails with OpenDAL instead of `gn46.geonetwork_data_dir`. Needs an image that includes the OpenDAL data storage (eea-4.13.x from `8cb89f79` on) |
 | gn46.opendal.scheme | string | 's3' | OpenDAL service (`s3`, `fs`, `webdav`, ...) |
 | gn46.opendal.root | string | '/' | Folder inside the bucket. Use a different one per environment when they share a bucket |
