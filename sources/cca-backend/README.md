@@ -10,6 +10,9 @@ and the broken-links cron job.
 Sensitive values are intentionally left empty in `values.yaml`.
 ## Releases
 
+### Version 0.12.4 - 27 October 2026
+- Upgrade converter to v1.0.8 - fix teaser itemModel 500 [Tiberiu Ichim - [`1fe1e4ac9`](https://github.com/eea/helm-charts/commit/1fe1e4ac97fe43ba7f6decb1121421a6e337fe13)]
+
 ### Version 0.12.3 - 27 octombrie 2026
 - Tweak translation values and upgrade [Tiberiu Ichim - [`21c090682`](https://github.com/eea/helm-charts/commit/21c09068228a5a4b2b8b4e5c9ff0deadc4fea11e)]
 
