@@ -110,20 +110,25 @@ httpd:
     maxConnectionsPerChild: 10000
   keepAlive:
     maxRequests: 1000
-    timeout: 2
+    # longer than the nginx-ingress upstream keepalive (60s), or nginx may reuse
+    # a connection apache just closed and return a 502
+    timeout: 75
   # Disk cache for the /simple/ index
   cache:
     enabled: true
     # seconds
-    expire: 15
+    expire: 10
+    # seconds; how long other requests get the stale copy while one refreshes it,
+    # should cover the /simple/ render time
+    lockMaxAge: 10
     # bytes; the mod_cache_disk default (1MB) is smaller than the /simple/ page
     maxFileSize: 104857600
     sizeLimit: 1Gi
   resources:
     requests:
-      memory: 512Mi
+      memory: 2Gi
     limits:
-      memory: 512Mi
+      memory: 2Gi
   livenessProbe:
     httpGet:
       path: /healthz

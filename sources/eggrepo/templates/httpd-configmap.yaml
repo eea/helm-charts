@@ -36,7 +36,7 @@ data:
     # while one request refreshes an expired entry, the others get the stale copy
     CacheLock On
     CacheLockPath /tmp/mod_cache-lock
-    CacheLockMaxAge 5
+    CacheLockMaxAge {{ .Values.httpd.cache.lockMaxAge }}
 
     # must exist, mod_cache_disk only creates subdirectories
     CacheRoot "/var/cache/httpd"
