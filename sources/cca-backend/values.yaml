@@ -292,13 +292,17 @@ async:
   serviceType: ClusterIP
   image:
     repository: eeacms/climateadapt-async-translate
-    # v1.2.0 carries the quota-aware eTranslation work: language bundling, the
-    # in-flight submission gate, and handling of failure notifications
-    # (git tag v1.2.0 = merge of eea/climateadapt-async-translate#3).
-    # Confirm the image is actually published before applying this chart -
-    # pullPolicy is Always and replicas is 1, so a missing tag takes the
-    # translation worker down rather than leaving it on the previous build.
-    tag: "v1.2.0"
+    # v1.2.1 adds logging to the submit_group paths that exit without
+    # submitting. Previously a cached or already-consumed group produced no
+    # output at all, which in the logs was indistinguishable from a hung job.
+    # No new env vars, no queue or schema changes.
+    # v1.2.0 carried the quota-aware eTranslation work: language bundling, the
+    # in-flight submission gate, handling of failure notifications.
+    # Published by the GitHub release - git tag v1.2.1 = 4f1ee9b, image digest
+    # sha256:037d37fda969c75d31. pullPolicy is Always and replicas is 1, so a
+    # missing tag takes the translation worker down rather than leaving it on
+    # the previous build.
+    tag: "v1.2.1"
     pullPolicy: Always
   port: 3000
   resources:
@@ -320,13 +324,21 @@ async:
     ENABLED_JOBS: save_translated_html,call_etranslation,etranslation,sync_translated_paths,delete_translation,submit_group,translation_failed
     # Master switch for quota-aware submissions. It needs the Plone side that
     # accepts a comma separated target_lang plus ext_ref on @@call-etranslation
-    # and forwards targetLanguage from @@translate-callback - shipped in
-    # v11.0.82-plone6.1. Keep false until that image is rolled out to both
-    # `plone` and `plone-translate`, then turn it on for the next sweep.
-    ETL_GROUPING_ENABLED: "false"
-    # eTranslation allows 50 active submissions per client. Start the first
-    # grouped sweep at 10 and raise it to 40 once that sweep looks clean.
-    ETL_MAX_INFLIGHT: "10"
+    # and forwards targetLanguage from @@translate-callback - live since
+    # v11.0.82-plone6.1, so the requirement is met on v11.0.83-plone6.1.
+    # Verified end to end in production: the 26 per-language jobs for an object
+    # collapse into a single eTranslation request, using 1 of the service's 50
+    # concurrent submissions instead of 26.
+    ETL_GROUPING_ENABLED: "true"
+    # eTranslation allows 50 active submissions per client. 40 leaves headroom
+    # for manual work and retries.
+    # Do NOT drop this back to 10. At 10 the gate itself became the bottleneck
+    # and fragmented the bundling: a capacity requeue carries a frozen group
+    # payload while the closed group's window gets re-armed by stragglers, so a
+    # single object forked into many submissions. Measured 52 groups for 7
+    # objects, only 13 of 50 submissions carrying the full 26 languages - an
+    # ~8x reduction where 26x was intended, with 229 capacity requeues.
+    ETL_MAX_INFLIGHT: "40"
     # How long the per-language jobs for one object are collected before a
     # single bundled request is submitted. Plone queues all 26 at once, so the
     # default comfortably covers them.
