@@ -29,6 +29,9 @@ For deployment into production set:
 
 ## Releases
 
+### Version 0.5.0 - 27 October 2026
+- Upgrade apache, add cache, improve performance, mount static files in apache [valentinab25 - [`3f6f0251d`](https://github.com/eea/helm-charts/commit/3f6f0251d4c19472ed8845ef3c0a80723ee3ff02)]
+
 ### Version 0.4.6 - 12 May 2025
 - Add trailing slash to /simple [valentinab25 - [`ffaacf3`](https://github.com/eea/helm-charts/commit/ffaacf3574f23bec0c0fc3238efb4afbfffd2d09)]
 
