@@ -217,9 +217,9 @@ redmineJobs:
   replicas: 1
   resources:
     requests:
-      memory: 1Gi
-    limits:
       memory: 2Gi
+    limits:
+      memory: 4Gi
   environment:
     ACTIVE_JOB_QUEUE_ADAPTER: solid_queue
     ASSETS_PRECOMPILE: "0"
