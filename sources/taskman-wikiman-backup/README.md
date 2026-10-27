@@ -1,5 +1,8 @@
 ## Releases
 
+### Version 0.16.1 - 27 October 2026
+- allow env variables in the deployment for backup config [Mihai Dobrescu - [`e241a4c45`](https://github.com/eea/helm-charts/commit/e241a4c45dd7a7b568bb2eb42dd4bb0dfc97a632)]
+
 ### Version 0.16.0 - 03 September 2026
 - Automated release of [eeacms/redmine-wikiman:2.1.23](https://github.com/eea/eea.docker.redmine-wikiman/releases) [EEA Jenkins - [`5706f21e`](https://github.com/eea/helm-charts/commit/5706f21efa1d5b291cdbdad8bbca6c142ddefabd)]
 
