@@ -379,7 +379,12 @@ converter:
   port: 8000
   image:
     repository: eeacms/eea-volto-blocks-converter
-    tag: "v1.0.7"
+    # v1.0.8 stops /blocks2html returning HTTP 500 for a teaser block whose
+    # itemModel has no "@type" (a teaser added but never given a card). One such
+    # block aborted the conversion of the whole page, and Plone swallowed the
+    # error, so 36 published Climate-ADAPT pages were silently never translated.
+    # The partial itemModel round-trips unchanged - no @type is invented.
+    tag: "v1.0.8"
     pullPolicy: Always
   resources:
     limits:
