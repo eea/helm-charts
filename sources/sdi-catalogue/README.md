@@ -152,6 +152,9 @@ own filesystem store.
 
 ## Releases
 
+### Version 0.14.4 - 27 October 2026
+- Update gn46 to eea-4.9.x-19e87b65 [Juan Luis Rodriguez Ponce - [`f09273f6f`](https://github.com/eea/helm-charts/commit/f09273f6f7625015b771eee367f3340ee2473e45)]
+
 ### Version 0.14.3 - 23 October 2026
 - Pass Jetty form limits via JAVA_OPTS, the only variable the geonetwork image entrypoint uses [Juan Luis Rodriguez Ponce - [`fb4448923`](https://github.com/eea/helm-charts/commit/fb44489230f808641600c57cdf1e8bd4b77730e7)]
 
