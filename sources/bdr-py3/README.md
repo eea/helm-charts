@@ -179,6 +179,9 @@ schedule deadlines prevent a hung job from blocking future executions under
 
 ## Releases
 
+### Version 0.1.22 - 27 October 2026
+- Release of dependent chart rn-apache:0.3.0 [EEA Jenkins - [`aab3bc452`](https://github.com/eea/helm-charts/commit/aab3bc452d3953e450fcb602317da3480e162292)]
+
 ### Version 0.1.21 - 01 October 2026
 - Updated appVersion to z5-1.23 [Olimpiu Rob - [`c208f28d`](https://github.com/eea/helm-charts/commit/c208f28de255473167d992f7126ba23c91323bd4)]
 
