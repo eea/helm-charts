@@ -29,6 +29,9 @@ For deployment into production set:
 
 ## Releases
 
+### Version 0.5.1 - 27 October 2026
+- Fix default values for performance [valentinab25 - [`e7c2cd425`](https://github.com/eea/helm-charts/commit/e7c2cd4250f75132ffbb82c2f2644664e71d4f27)]
+
 ### Version 0.5.0 - 27 October 2026
 - Upgrade apache, add cache, improve performance, mount static files in apache [valentinab25 - [`3f6f0251d`](https://github.com/eea/helm-charts/commit/3f6f0251d4c19472ed8845ef3c0a80723ee3ff02)]
 
