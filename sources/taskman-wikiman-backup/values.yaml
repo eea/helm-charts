@@ -35,6 +35,13 @@ podSecurityContext: {}
 # Container security context
 securityContext: {}
 
+# Extra environment variables for the container, e.g.
+# - name: CLEANUP_INTERVAL
+#   value: "300"
+# - name: HEALTH_STARTUP_GRACE_SECONDS
+#   value: "900"
+extraEnv: []
+
 # Resource limits and requests
 resources:
   limits:
