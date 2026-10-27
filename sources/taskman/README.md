@@ -495,6 +495,9 @@ grunt
 
 ## Releases
 
+### Version 0.50.0 - 27 October 2026
+- Bump redmineJobs memory to 2Gi/4Gi after OOM (Refs [#308735](https://taskman.eionet.europa.eu/issues/308735)) [Silviu - [`517fe9054`](https://github.com/eea/helm-charts/commit/517fe9054ff89ee80625237072c8f94d34ec9f5e)]
+
 ### Version 0.49.0 - 26 October 2026
 - Automated release of [eeacms/redmine:6.1.5-1.11](https://github.com/eea/eea.docker.redmine/releases) [EEA Jenkins - [`bf7f8e8f5`](https://github.com/eea/helm-charts/commit/bf7f8e8f5f074726d0244a172e5f943d3ef1aa6d)]
 
