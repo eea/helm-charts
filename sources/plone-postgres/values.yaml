@@ -115,10 +115,11 @@ memcached:
   securityContext: {}
   resources:
     requests:
-      memory: 2048Mi
+      memory: 3Gi
     limits:
-      memory: 2048Mi
-  #needs < = memory request and limit
+      memory: 3Gi
+  # cache_size_m (-m) must leave headroom below the container memory limit
+  # for OS/libevent/network buffer overhead, or the cgroup OOM-kills memcached.
   cache_size_m: 2048
   slab_page_size: 50m
   nodeSelector: {}

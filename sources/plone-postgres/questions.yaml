@@ -213,15 +213,15 @@
     group: "General"
   - variable: "memcached.resources.requests.memory"
     label: "Memory reservation memcached"
-    default: "2Gi"
+    default: "3Gi"
     required: true
     type: "string"
     group: "General"
     show_if: "memcached.enabled=true"
   - variable: "memcached.resources.limits.memory"
     label: "Memory limit memcached"
-    description: "Must be bigger than cache size"
-    default: "2Gi"
+    description: "Must be bigger than cache size, with headroom for OS/libevent/network buffer overhead above the -m cache size, or the cgroup OOM-kills memcached"
+    default: "3Gi"
     required: true
     type: "string"
     group: "General"
