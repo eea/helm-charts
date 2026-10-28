@@ -131,7 +131,7 @@ g.access_tokens.find({ token: { $type: 'string' } }).forEach(t => {
   fp.push('access_tokens\u0000' + t._id + '\u0000' + plain);
   if (MODE === 'apply') g.access_tokens.updateOne({ _id: t._id }, { $set: { token: tokenEncrypt(plain, NEW), token_type: 1 } });
 });
-const sha1Users = g.users.find({ password: /^[a-f0-9]{40}$/ }, { username: 1 }).toArray().map(u => u.username);
+const sha1Users = g.users.find({ password: { $regex: '^[a-f0-9]{40}$' } }, { username: 1 }).toArray().map(u => u.username);
 
 print('mode: ' + MODE + ', database: ' + g.getName());
 print('encrypted values: ' + stats.valuesOk + '/' + stats.values + ' decrypted with OLD_SECRET (' + stats.valuesEmpty + ' empty)');

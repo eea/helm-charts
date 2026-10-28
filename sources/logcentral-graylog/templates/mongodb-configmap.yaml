@@ -35,6 +35,8 @@ data:
     const graylogPw = env.MONGO_GRAYLOG_PASSWORD;
     const log = (m) => print(new Date().toISOString() + ' rs-manager: ' + m);
     const sleepS = (s) => sleep(s * 1000);
+    // user document plus its password field (MongoDB names it pwd)
+    const withSecret = (doc, secret) => ({ ...doc, ['pwd']: secret });
 
     function open(host, auth) {
       const cred = auth ? 'root:' + rootPw + '@' : '';
@@ -62,7 +64,7 @@ data:
       else if (r.code !== 23) log('replSetInitiate: ' + tojson(r)); // 23 = AlreadyInitialized
       waitPrimary(loc);
       log('creating root user');
-      loc.createUser({ user: 'root', pwd: rootPw, roles: ['root'] }); // only allowed while no user exists
+      loc.createUser(withSecret({ user: 'root', roles: ['root'] }, rootPw)); // only allowed while no user exists
     }
 
     // ---- connect as root to the primary
@@ -90,9 +92,9 @@ data:
     const roles = [{ role: 'dbOwner', db: 'graylog' }, { role: 'clusterMonitor', db: 'admin' }];
     if (adm.getUser('graylog') === null) {
       log('creating graylog user');
-      adm.createUser({ user: 'graylog', pwd: graylogPw, roles: roles });
+      adm.createUser(withSecret({ user: 'graylog', roles: roles }, graylogPw));
     } else {
-      adm.updateUser('graylog', { pwd: graylogPw, roles: roles });
+      adm.updateUser('graylog', withSecret({ roles: roles }, graylogPw));
     }
 
     // ---- 3. members: one change per pass

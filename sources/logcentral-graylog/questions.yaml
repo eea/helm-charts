@@ -51,7 +51,7 @@ questions:
 
   - variable: rootPasswordSha2
     default: ""
-    description: "Instead of the password: its SHA-256 in hex. When migrating from logcentral-graylog5 use its Root Password (global.rootPassword) to keep the same admin login"
+    description: "Instead of the plain password, its SHA-256 in hex. When migrating from logcentral-graylog5 use its Root Password (global.rootPassword) to keep the same admin login"
     type: password
     label: Graylog Admin Password SHA-256
     group: "Graylog Configuration"

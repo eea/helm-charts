@@ -18,7 +18,7 @@ passwordSecret: ""
 # Password of the Graylog root user (graylog.graylog.config.rootUsername), in plain text; only its
 # SHA-256 is stored. Empty = generated, readable in the Secret "<release>-mongodb", key graylog-root-password.
 rootPassword: ""
-# Alternative to rootPassword: its SHA-256 in hex, e.g. the old release's global.rootPassword
+# Alternative to rootPassword (its SHA-256 in hex), e.g. the old release's global.rootPassword
 # (GRAYLOG_ROOT_PASSWORD_SHA2), so the admin login stays the same. rootPassword wins if both are set.
 rootPasswordSha2: ""
 
@@ -105,7 +105,7 @@ graylog:
       GRAYLOG_LB_THROTTLE_THRESHOLD_PERCENTAGE: "25"
     config:
       timezone: Europe/Copenhagen
-      rootUsername: admin      # password: rootPassword at the top of this file
+      rootUsername: admin      # its password is rootPassword, at the top of this file
       serverJavaOpts: "-Xms2g -Xmx2g"
       extraServerJavaOpts:
         - "-XX:NewRatio=1"
