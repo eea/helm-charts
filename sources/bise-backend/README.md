@@ -10,6 +10,9 @@ This chart deployes the BISE backend app
 
 ## Releases
 
+### Version 1.81.2 - 28 October 2026
+- raise plone autoscaling maxReplicas to 10 and expose it in questions.yaml [Claudia Ifrim - [`65f1c473d`](https://github.com/eea/helm-charts/commit/65f1c473d8ac5425a7dba04f25cffc4612ef2c2e)]
+
 ### Version 1.81.1 - 28 October 2026
 - enable memcached for plone backend caching in bise-backend [Claudia Ifrim - [`db7fd3f08`](https://github.com/eea/helm-charts/commit/db7fd3f089d980d6e38b70f4d95fcecbd5d50654)]
 
