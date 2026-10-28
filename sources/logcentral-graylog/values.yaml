@@ -117,11 +117,20 @@ graylog:
       # Journal usage (% of messageJournal.maxSize) at which a node reports THROTTLED (HTTP 429)
       # on /api/system/lbstatus, and back to ALIVE below it; checked every 60 s. The readiness
       # probe below then takes it out of the Services. Graylog's default is 100 (only when full).
-      GRAYLOG_LB_THROTTLE_THRESHOLD_PERCENTAGE: "25"
+      # 10% of the 80gb journal = 8 GB, about 17M messages, or ~14 min of indexing lag on one node.
+      GRAYLOG_LB_THROTTLE_THRESHOLD_PERCENTAGE: "10"
+      # Graylog 7.2 turns stream-aware field types on by default; it costs performance with many
+      # streams and fields. Enable only to limit search field lists to the selected streams.
+      GRAYLOG_STREAM_AWARE_FIELD_TYPES: "false"
+      # Requests through the ingress: take the client IP from X-Forwarded-For (sessions, audit) when
+      # it comes from these networks. 10.42.0.0/16 is the RKE pod network, where the ingress
+      # controllers run. Narrow it to the ingress controllers before enabling Graylog's trusted
+      # header authentication, which also trusts these proxies.
+      GRAYLOG_TRUSTED_PROXIES: "127.0.0.1/32, 0:0:0:0:0:0:0:1/128, 10.42.0.0/16"
     config:
       timezone: Europe/Copenhagen
       rootUsername: admin      # its password is rootPassword, at the top of this file
-      serverJavaOpts: "-Xms2g -Xmx2g"
+      serverJavaOpts: "-Xms4g -Xmx4g"   # fixed heap (no resizing under load), half of the 8Gi memory limit
       extraServerJavaOpts:
         - "-XX:NewRatio=1"
         - "-XX:MaxMetaspaceSize=256m"
@@ -132,9 +141,9 @@ graylog:
       network:
         externalUri: ""        # public URL incl. trailing slash, e.g. https://logs.example.com/
       performance:
-        processBufferProcessors: "20"
+        processBufferProcessors: "20"  # parsing, extractors, pipelines: the per-node limit in the 02pre load tests
       messageJournal:
-        maxSize: "40gb"        # must stay <= 90% of persistence.size
+        maxSize: "80gb"        # ~170M messages; must stay <= 90% of persistence.size. The only flood buffer: TCP/UDP inputs have no backpressure
       email:
         enabled: "true"
         senderAddress: graylog@eea.europa.eu
@@ -195,14 +204,14 @@ graylog:
     persistence:
       enabled: true
       storageClass: nfs-client
-      size: 50Gi
+      size: 90Gi             # journal (messageJournal.maxSize) + Graylog data; fixed once the StatefulSet exists
     resources:
       requests:
-        cpu: "1"
-        memory: 4Gi
+        cpu: "2"
+        memory: 8Gi
       limits:
         cpu: null              # removes the chart's default 2-CPU limit
-        memory: 4Gi
+        memory: 8Gi
  
   # ---- The official chart's Ingress stays off: this chart has its own (ingress below).
   ingress:

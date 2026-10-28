@@ -135,7 +135,7 @@ Data Adapters), e.g. `/usr/share/graylog/geoip/GeoLite2-City.mmdb`; logcentral-g
 ## Load balancing on overload
 
 Graylog's `/api/system/lbstatus` returns 200 ALIVE, 429 THROTTLED or 503 DEAD. A node turns THROTTLED
-when its journal passes `GRAYLOG_LB_THROTTLE_THRESHOLD_PERCENTAGE` (25 here; Graylog's default 100
+when its journal passes `GRAYLOG_LB_THROTTLE_THRESHOLD_PERCENTAGE` (10 here; Graylog's default 100
 means "only when full") and back to ALIVE below it, checked every 60 s.
 
 The readiness probe (`graylog.graylog.readinessProbe`, a shell script in `values.yaml`) turns that into
@@ -143,6 +143,11 @@ Service membership: ALIVE is ready, DEAD is not, THROTTLED is not ready only whi
 ALIVE. When every node is throttled (typically OpenSearch is slow) they all stay ready, so the inputs
 and the web UI keep their endpoints. The startup probe accepts ALIVE or THROTTLED, so a node restarting
 with a full journal is not killed.
+
+Graylog has no backpressure for TCP or UDP inputs: the inputs' "Allow throttling this input"
+option only works for pull inputs (Kafka, AMQP, HTTP polling). Tested on 7.2.1, a TCP input kept
+reading at 25,000 msg/s into a node that had stopped processing. A flood is only bounded by the
+journal (when full, Graylog deletes the oldest unprocessed messages) or by limits at the senders.
 
 Kubernetes only steers new connections away from an unready pod: long-lived TCP senders and ongoing
 UDP flows stay on the throttled node. To test, force one node (port-forward to that pod):
@@ -160,6 +165,12 @@ and back with `.../override/alive`.
   does better on block storage. Graylog warns that its journal is on NFS, as the old chart's was.
 
 ## Releases
+
+### Version 1.0.4 - 29 October 2026
+- Message journal 80gb per node (was 40gb) on a 90Gi volume: about 170M messages, the only buffer against floods because Graylog's TCP/UDP inputs have no backpressure. The volume size of an existing StatefulSet cannot change: existing releases keep their size (set graylog.graylog.persistence.size and messageJournal.maxSize to the old values) or recreate the StatefulSet
+- Graylog heap fixed at 4g in 8Gi pods (CPU request 2), stream-aware field types off (on by default in 7.2). Tested on 02pre and not adopted: output batches of 10mb took twice as long as the default 500 messages, and 8 instead of 20 process buffer processors gained nothing
+- `GRAYLOG_TRUSTED_PROXIES` includes the RKE pod network (10.42.0.0/16), so Graylog records the users' IPs from X-Forwarded-For instead of the ingress controller's
+- Load balancer throttling at 10% journal usage (was 25%): about 17M messages, or ~14 minutes of indexing lag on one node, before it steps out of the Services
 
 ### Version 1.0.3 - 28 October 2026
 - GeoLite2 downloads moved from the official chart's per-pod sidecar to one CronJob (plus a Job after each install/upgrade) writing to a shared volume mounted at `/usr/share/graylog/geoip/`. The sidecar ignored SIGTERM, so every Graylog pod waited out its 300 s grace period on each restart, and it only downloaded at midnight. Switch on with `geoip.enabled` (was `graylog.graylog.config.geolocation.enabled`) and repoint the MaxMind data adapters to the new path

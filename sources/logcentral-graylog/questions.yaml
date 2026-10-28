@@ -47,7 +47,7 @@ questions:
     group: "Graylog Configuration"
 
   - variable: graylog.graylog.config.serverJavaOpts
-    default: "-Xms2g -Xmx2g"
+    default: "-Xms4g -Xmx4g"
     description: "JVM heap options for the Graylog server; keep the heap at about half of the memory limit"
     type: string
     label: Graylog Java Heap
@@ -62,14 +62,14 @@ questions:
     group: "Graylog Configuration"
 
   - variable: graylog.graylog.env.GRAYLOG_LB_THROTTLE_THRESHOLD_PERCENTAGE
-    default: "25"
+    default: "10"
     description: "Journal usage (%) at which a node reports THROTTLED and leaves the Services until it catches up, unless every node is throttled. 100 = only when the journal is full (Graylog default)"
     type: string
     label: Throttle at Journal Usage (%)
     group: "Graylog Configuration"
 
   - variable: graylog.graylog.config.messageJournal.maxSize
-    default: "40gb"
+    default: "80gb"
     description: "Maximum size of the message journal; must stay below 90% of the Graylog storage size"
     type: string
     label: Message Journal Max Size
@@ -263,7 +263,7 @@ questions:
     group: "Storage"
 
   - variable: graylog.graylog.persistence.size
-    default: "50Gi"
+    default: "90Gi"
     description: "Size of the journal volume of each Graylog node"
     type: string
     label: Graylog Storage Size
@@ -287,14 +287,14 @@ questions:
 
   # ---------------------------------------------------------------- Resources
   - variable: graylog.graylog.resources.requests.cpu
-    default: "1"
+    default: "2"
     description: "CPU request for each Graylog node"
     type: string
     label: Graylog CPU Request
     group: "Resources"
 
   - variable: graylog.graylog.resources.requests.memory
-    default: "4Gi"
+    default: "8Gi"
     description: "Memory request for each Graylog node"
     type: string
     label: Graylog Memory Request
@@ -302,7 +302,7 @@ questions:
     group: "Resources"
 
   - variable: graylog.graylog.resources.limits.memory
-    default: "4Gi"
+    default: "8Gi"
     description: "Memory limit for each Graylog node"
     type: string
     label: Graylog Memory Limit
