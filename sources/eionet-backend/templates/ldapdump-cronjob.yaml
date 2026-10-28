@@ -1,0 +1,52 @@
+{{- if .Values.cronjobs.ldapdump.enabled }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ .Release.Name }}-cronjob-ldapdump
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: ldapdump
+spec:
+  schedule: {{ .Values.cronjobs.ldapdump.schedule | quote }}
+  concurrencyPolicy: {{ .Values.cronjobs.ldapdump.concurrencyPolicy | default "Forbid" }}
+  successfulJobsHistoryLimit: {{ .Values.cronjobs.ldapdump.successfulJobsHistoryLimit | default 1 }}
+  failedJobsHistoryLimit: {{ .Values.cronjobs.ldapdump.failedJobsHistoryLimit | default 3 }}
+  jobTemplate:
+    spec:
+      backoffLimit: {{ .Values.cronjobs.ldapdump.backoffLimit | default 1 }}
+      activeDeadlineSeconds: {{ .Values.cronjobs.ldapdump.activeDeadlineSeconds | default 3600 }}
+      template:
+        metadata:
+          labels:
+            {{- include "appl.selectorLabels" . | nindent 12 }}
+            component: ldapdump
+        spec:
+          {{- with .Values.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          serviceAccountName: {{ include "appl.serviceAccountName" . }}
+          restartPolicy: Never
+          # Files on the shared volume belong to the plone user
+          securityContext:
+            runAsUser: 500
+            runAsGroup: 500
+          containers:
+          - name: data
+            image: {{ include "appl.image" . | quote }}
+            imagePullPolicy: {{ .Values.image.pullPolicy }}
+            command:
+            - /app/bin/python
+            - /app/scripts/dump_ldap.py
+            env:
+            {{- include "appl.ploneEnv" . | nindent 12 }}
+            volumeMounts:
+            - name: data
+              mountPath: /data
+            resources:
+              {{- toYaml .Values.cronjobs.ldapdump.resources | nindent 14 }}
+          volumes:
+          - name: data
+            persistentVolumeClaim:
+              claimName: {{ .Release.Name }}-data
+{{- end }}

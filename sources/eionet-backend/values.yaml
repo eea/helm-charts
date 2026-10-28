@@ -1,0 +1,149 @@
+image:
+  repository: eeacms/eionet-backend
+  pullPolicy: Always
+  tag: ""
+
+imagePullSecrets: []
+
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: false
+  annotations: {}
+  name: ""
+
+timezone: Europe/Copenhagen
+
+ingress:
+  enabled: true
+  annotations: {}
+  letsencrypt: "01dev-eea-letsencrypt"
+  ingressClassName: "nginx"
+  configuration:
+    proxy-body-size: "20m"
+    proxy-read-timeout: "300s"
+    proxy-send-timeout: "120s"
+    # Comma separated CIDRs; restricts access (e.g. staging). Empty: public
+    whitelist-source-range: ""
+  tls: true
+  certificate: "eionet-backend.01dev.eea.europa.eu-tls"
+
+plone:
+  serviceType: ClusterIP
+  hostname: eionet-backend.01dev.eea.europa.eu
+  # Plone site id; served at the domain root through Zope virtual hosting
+  site: Plone
+  resources:
+    limits:
+      memory: 2Gi
+    requests:
+      memory: 1Gi
+  environment:
+    GRAYLOG: 'logcentral.eea.europa.eu:12201'
+    SENTRY_DSN: ''
+    SENTRY_ENVIRONMENT: '01dev'
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  livenessProbe:
+    httpGet:
+      path: /ok
+      port: http
+    periodSeconds: 20
+    timeoutSeconds: 10
+    initialDelaySeconds: 30
+    failureThreshold: 6
+    successThreshold: 1
+  startupProbe:
+    httpGet:
+      path: /ok
+      port: http
+    periodSeconds: 5
+    timeoutSeconds: 10
+    initialDelaySeconds: 10
+    failureThreshold: 12
+    successThreshold: 1
+  readinessProbe:
+    httpGet:
+      path: /ok
+      port: http
+    periodSeconds: 15
+    timeoutSeconds: 10
+    initialDelaySeconds: 30
+    failureThreshold: 4
+    successThreshold: 1
+
+# Eionet LDAP. Read by scripts/setup_tools.py, which runs before Plone starts
+# and stores these settings in each account tool. Settings of tools that
+# already exist are kept: change them in the ZMI.
+ldap:
+  # host:port, always ldaps
+  server: ""
+  adminDN: ""
+  adminPassword: ""
+  # Read-only account, also used by the LDAP dump cron job
+  secondaryDN: ""
+  secondaryPassword: ""
+  usersDN: "ou=Users,o=EIONET,l=Europe"
+  orgsDN: "ou=Organisations,o=EIONET,l=Europe"
+  rolesDN: "ou=Roles,o=EIONET,l=Europe"
+
+# Plone mail settings, applied by the setup script on every start
+mail:
+  from: ""
+  fromName: "Eionet"
+
+# Run create-classic and scripts/setup_tools.py as init containers. Both are
+# idempotent: an existing site and existing tools are left untouched.
+setup:
+  enabled: true
+  resources:
+    limits:
+      memory: 2Gi
+    requests:
+      memory: 512Mi
+
+# /data: Plone filestorage and blobs, and /data/ldapdump (naaya.ldapdump
+# config.yaml, SQLite cache of LDAP users, countries.json). ReadWriteMany:
+# the LDAP dump job may run on another node.
+persistence:
+  storageClass: ""
+  accessMode: ReadWriteMany
+  size: 2Gi
+
+cronjobs:
+  # Refresh the SQLite cache (duplicate checks on account creation, roles
+  # membership by date)
+  ldapdump:
+    enabled: true
+    schedule: "41 8,13,16 * * 1-5"
+    concurrencyPolicy: Forbid
+    activeDeadlineSeconds: 3600
+    backoffLimit: 1
+    successfulJobsHistoryLimit: 1
+    failedJobsHistoryLimit: 3
+    resources:
+      limits:
+        memory: 1Gi
+      requests:
+        memory: 256Mi
+
+postfix:
+  fullnameOverride: ''
+  dryrun: true
+  serverName: eionet-backend.01dev.eea.europa.eu
+  mtpPass: ''
+  mtpPort: ''
+  mtpRelay: ''
+  mtpUser: ''
+  serviceName: 'postfix'
+  mailtrap:
+    httpenabled: false
+    serviceType: ClusterIP
+    ingress:
+      enabled: false
+      hostname: mailtrap-eionet-backend.01dev.eea.europa.eu
+      annotations:
+        cert-manager.io/cluster-issuer: 01dev-eea-letsencrypt
+      certificate: mailtrap-eionet-backend.01dev.eea.europa.eu-tls

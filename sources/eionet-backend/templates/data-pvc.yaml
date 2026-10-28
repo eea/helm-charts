@@ -1,0 +1,19 @@
+# Plone filestorage and blobs, and the naaya.ldapdump files in /data/ldapdump
+# (config.yaml, SQLite cache, countries.json), shared with the LDAP dump job
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Release.Name }}-data
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: data
+
+spec:
+  accessModes:
+  - {{ .Values.persistence.accessMode }}
+  {{- if .Values.persistence.storageClass }}
+  storageClassName: {{ .Values.persistence.storageClass }}
+  {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.size }}

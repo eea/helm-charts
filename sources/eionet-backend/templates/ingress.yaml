@@ -1,0 +1,47 @@
+{{- $className := .Values.ingress.ingressClassName | default "nginx" -}}
+{{- if .Values.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-ingress
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: ingress
+  annotations:
+    # Classic UI site at the domain root; the add-ons use root-relative links
+    {{ $className }}.ingress.kubernetes.io/rewrite-target: /VirtualHostBase/https/{{ .Values.plone.hostname }}:443/{{ .Values.plone.site }}/VirtualHostRoot/$1
+    {{ $className }}.ingress.kubernetes.io/use-regex: "true"
+  {{- if .Values.ingress.letsencrypt }}
+    cert-manager.io/cluster-issuer: "{{ .Values.ingress.letsencrypt }}"
+  {{- end }}
+  {{- range $key, $value := .Values.ingress.configuration }}
+    {{- if ($value) }}
+    {{ $className }}.ingress.kubernetes.io/{{ $key }}: {{ $value | quote }}
+    {{- end }}
+  {{- end }}
+  {{- with .Values.ingress.annotations }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+
+spec:
+  ingressClassName: {{ $className }}
+  rules:
+  - host: {{ .Values.plone.hostname }}
+    http:
+      paths:
+      - path: /(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: {{ .Release.Name }}-plone
+            port:
+              number: 8080
+  {{- if .Values.ingress.tls }}
+  tls:
+  - hosts:
+    - {{ .Values.plone.hostname }}
+    {{- if .Values.ingress.certificate }}
+    secretName: {{ .Values.ingress.certificate }}
+    {{- end  }}
+  {{- end  }}
+{{- end }}
