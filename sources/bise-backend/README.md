@@ -10,6 +10,9 @@ This chart deployes the BISE backend app
 
 ## Releases
 
+### Version 1.81.1 - 28 October 2026
+- enable memcached for plone backend caching in bise-backend [Claudia Ifrim - [`db7fd3f08`](https://github.com/eea/helm-charts/commit/db7fd3f089d980d6e38b70f4d95fcecbd5d50654)]
+
 ### Version 1.81.0 - 02 October 2026
 - Automated release of [eeacms/bise-backend:6.1.4-29](https://github.com/eea/bise-backend/releases) [EEA Jenkins - [`2b206cb5`](https://github.com/eea/helm-charts/commit/2b206cb5dc84a5dd7f8da47c02855a61eb9aa5d8)]
 
