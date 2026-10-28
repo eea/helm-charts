@@ -1,22 +1,5 @@
 questions:
 
-  # ---------------------------------------------------------------- General
-  - variable: graylog.graylog.config.timezone
-    default: "Europe/Copenhagen"
-    description: "Timezone of the Graylog root user"
-    type: string
-    label: Graylog Timezone
-    required: true
-    group: "General"
-
-  - variable: postfix.timezone
-    default: "Europe/Copenhagen"
-    description: "Timezone of the Postfix container"
-    type: string
-    label: Postfix Timezone
-    required: true
-    group: "General"
-
   # ---------------------------------------------------------------- Graylog
   - variable: graylog.graylog.replicas
     default: 4
@@ -92,6 +75,28 @@ questions:
     label: Message Journal Max Size
     required: true
     group: "Graylog Configuration"
+
+  # ---------------------------------------------------------------- GeoIP
+  - variable: graylog.graylog.config.geolocation.enabled
+    default: false
+    description: "Download the MaxMind GeoLite2 City and ASN databases into every Graylog node (/usr/share/graylog/data/geolocation/), daily, for the GeoIP lookup tables"
+    type: boolean
+    label: Enable GeoLite2 Downloads
+    show_subquestion_if: true
+    group: "GeoIP"
+    subquestions:
+      - variable: geoip.accountId
+        default: ""
+        description: "MaxMind account ID (the same account as matomo's geoipupdate)"
+        type: string
+        label: MaxMind Account ID
+        required: true
+      - variable: geoip.licenseKey
+        default: ""
+        description: "MaxMind license key"
+        type: password
+        label: MaxMind License Key
+        required: true
 
   # ---------------------------------------------------------------- OpenSearch
   - variable: graylog.opensearch.hosts[0]

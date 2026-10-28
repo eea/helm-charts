@@ -122,6 +122,14 @@ with the new one. Both print the same `fingerprint` when the contents are unchan
 `passwordSecret` to the new secret and start Graylog. When migrating from logcentral-graylog5, do this
 between restoring the dump and starting Graylog (step 3 and 4 of the migration).
 
+## GeoIP
+
+With `graylog.graylog.config.geolocation.enabled` and the MaxMind account in `geoip.accountId` /
+`geoip.licenseKey` (the matomo chart's account), a geoipupdate sidecar in each Graylog pod downloads
+GeoLite2 City and ASN at start and daily to `/usr/share/graylog/data/geolocation/`. Graylog's MaxMind
+data adapters must point there (System > Lookup Tables > Data Adapters), e.g.
+`/usr/share/graylog/data/geolocation/GeoLite2-City.mmdb`; logcentral-graylog5 used `.../data/geolite/`.
+
 ## Load balancing on overload
 
 Graylog's `/api/system/lbstatus` returns 200 ALIVE, 429 THROTTLED or 503 DEAD. A node turns THROTTLED
@@ -150,6 +158,9 @@ and back with `.../override/alive`.
   does better on block storage. Graylog warns that its journal is on NFS, as the old chart's was.
 
 ## Releases
+
+### Version 1.0.1 - 28 October 2026
+- GeoLite2 City and ASN databases for the Graylog GeoIP lookup tables: the official chart's geoipupdate sidecar (`graylog.graylog.config.geolocation.enabled`), with the MaxMind account in `geoip.accountId` / `geoip.licenseKey` (Secret `logcentral-graylog-maxmind`)
 
 ### Version 1.0.0 - 28 October 2026
 - Initial release: official Graylog chart 2.1.0 with Graylog 7.2.1 (`graylog.version`) with external OpenSearch, a MongoDB 7.0 replica set run by this chart (no operator, namespace rights only), and the postfix chart

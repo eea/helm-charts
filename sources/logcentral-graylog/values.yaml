@@ -22,6 +22,12 @@ rootPassword: ""
 # (GRAYLOG_ROOT_PASSWORD_SHA2), so the admin login stays the same. rootPassword wins if both are set.
 rootPasswordSha2: ""
 
+# MaxMind account for the GeoLite2 downloads (graylog.graylog.config.geolocation.enabled), the
+# same account as the matomo chart's geoipupdate. Stored in the Secret "logcentral-graylog-maxmind".
+geoip:
+  accountId: ""
+  licenseKey: ""
+
 # Official chart reads every Graylog secret from this Secret (written by templates/secrets.yaml).
 # Fixed name, so one release per namespace.
 global:
@@ -129,6 +135,15 @@ graylog:
         useSsl: "false"
         useTls: "false"
         webInterfaceUrl: ""
+      # GeoLite2 databases for the lookup table adapters (e.g. "iplookup" in the pipeline rules).
+      # A geoipupdate sidecar in each Graylog pod downloads them at start and then daily into
+      # /usr/share/graylog/data/geolocation/ (GeoLite2-City.mmdb, GeoLite2-ASN.mmdb); point the
+      # Graylog data adapters there. Needs the MaxMind account in geoip below.
+      geolocation:
+        enabled: false
+        maxmindGeoIp:
+          existingSecret: logcentral-graylog-maxmind   # written by this chart from geoip below
+          editionIds: "GeoLite2-City GeoLite2-ASN"
     # ---- Probes on /api/system/lbstatus: 200 ALIVE, 429 THROTTLED (journal over the threshold above),
     # 503 DEAD (shutting down / drained by hand).
     # Startup: ALIVE or THROTTLED, so a node restarting with a full journal is not killed.
