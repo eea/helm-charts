@@ -110,6 +110,31 @@ questions:
     required: true
     group: "General"
 
+  - variable: "plone.autoscaling.enabled"
+    label: "Enable Plone autoscaling"
+    description: "Automatically scale Plone replicas with memory utilization, instead of a fixed replica count"
+    type: "boolean"
+    default: false
+    required: true
+    group: "General"
+    show_subquestion_if: true
+    subquestions:
+      - variable: "plone.autoscaling.minReplicas"
+        label: "Minimum Plone replicas"
+        type: "int"
+        default: 1
+        required: true
+      - variable: "plone.autoscaling.maxReplicas"
+        label: "Maximum Plone replicas"
+        type: "int"
+        default: 10
+        required: true
+      - variable: "plone.autoscaling.targetMemoryUtilizationPercentage"
+        label: "Target memory utilization percentage"
+        type: "int"
+        default: 60
+        required: true
+
   - variable: "debug.serviceType"
     label: "Expose debug"
     description: "Select NodePort to expose debug"
