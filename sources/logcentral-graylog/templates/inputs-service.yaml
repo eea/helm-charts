@@ -1,0 +1,50 @@
+{{- /*
+Graylog inputs on their own Service "<release>-inputs": LoadBalancer (MetalLB) in production, like
+the graylog-client LoadBalancer of logcentral-graylog5, or NodePort for testing. Only the input
+ports are published; the web interface stays behind the Ingress.
+*/}}
+{{- if .Values.inputsService.enabled }}
+{{- $type := .Values.inputsService.type | default "LoadBalancer" }}
+{{- if not (has $type (list "LoadBalancer" "NodePort")) }}
+{{- fail (printf "inputsService.type must be LoadBalancer or NodePort, not %q." $type) }}
+{{- end }}
+{{- $isLB := eq $type "LoadBalancer" }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-inputs
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    app.kubernetes.io/component: inputs
+  {{- if or (and $isLB .Values.inputsService.loadBalancerIP) .Values.inputsService.annotations }}
+  annotations:
+    {{- if $isLB }}
+    {{- with .Values.inputsService.loadBalancerIP }}
+    metallb.universe.tf/loadBalancerIPs: {{ . | quote }}
+    {{- end }}
+    {{- end }}
+    {{- with .Values.inputsService.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- end }}
+spec:
+  type: {{ $type }}
+  externalTrafficPolicy: {{ .Values.inputsService.externalTrafficPolicy | default "Cluster" }}
+  ports:
+    {{- range .Values.graylog.graylog.inputs }}
+    - name: {{ .name }}
+      port: {{ .port | int }}
+      targetPort: {{ .targetPort | default .port | int }}
+      protocol: {{ .protocol }}
+      {{- if not $isLB }}
+      {{- with index ($.Values.inputsService.nodePorts | default dict) .name }}
+      nodePort: {{ . | int }}
+      {{- end }}
+      {{- end }}
+    {{- end }}
+  # Same selector as the official chart's graylog-svc: the Graylog server pods.
+  selector:
+    app: graylog-app
+    app.kubernetes.io/name: graylog
+    app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}

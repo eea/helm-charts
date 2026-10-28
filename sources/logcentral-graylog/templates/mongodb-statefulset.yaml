@@ -1,0 +1,186 @@
+{{- $name := include "appl.mongodbName" . }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "appl.mongodbHeadless" . }}
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    app.kubernetes.io/component: mongodb
+spec:
+  clusterIP: None
+  # Members must resolve each other before they are ready, or the replica set cannot form.
+  publishNotReadyAddresses: true
+  ports:
+    - name: mongodb
+      port: 27017
+      targetPort: mongodb
+  selector:
+    {{- include "appl.mongodbSelectorLabels" . | nindent 4 }}
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ $name }}
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    app.kubernetes.io/component: mongodb
+spec:
+  serviceName: {{ include "appl.mongodbHeadless" . }}
+  replicas: {{ .Values.mongodb.replicas }}
+  podManagementPolicy: Parallel
+  selector:
+    matchLabels:
+      {{- include "appl.mongodbSelectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "appl.mongodbSelectorLabels" . | nindent 8 }}
+      annotations:
+        checksum/scripts: {{ include (print $.Template.BasePath "/mongodb-configmap.yaml") . | sha256sum }}
+    spec:
+      securityContext:
+        runAsUser: 999
+        runAsGroup: 999
+        fsGroup: 999
+      {{- with .Values.mongodb.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.mongodb.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      affinity:
+        {{- if .Values.mongodb.affinity }}
+        {{- toYaml .Values.mongodb.affinity | nindent 8 }}
+        {{- else }}
+        # Spread the members over nodes when possible.
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchLabels:
+                    {{- include "appl.mongodbSelectorLabels" . | nindent 20 }}
+        {{- end }}
+      initContainers:
+        # mongod refuses a keyfile readable by group or others; Secret volumes cannot be 0400 for uid 999.
+        - name: keyfile
+          image: "{{ .Values.mongodb.image.repository }}:{{ .Values.mongodb.image.tag }}"
+          imagePullPolicy: {{ .Values.mongodb.image.pullPolicy }}
+          command: ["sh", "-c", "cp /secret/keyfile /keyfile/keyfile && chmod 0400 /keyfile/keyfile"]
+          volumeMounts:
+            - name: secret
+              mountPath: /secret
+            - name: keyfile
+              mountPath: /keyfile
+      containers:
+        - name: mongodb
+          image: "{{ .Values.mongodb.image.repository }}:{{ .Values.mongodb.image.tag }}"
+          imagePullPolicy: {{ .Values.mongodb.image.pullPolicy }}
+          command:
+            - mongod
+            - --replSet={{ .Values.mongodb.replicaSetName }}
+            - --bind_ip_all
+            - --keyFile=/keyfile/keyfile
+            - --dbpath=/data/db
+          env:
+            # Not used by mongod; for "kubectl exec" admin shells and restores.
+            - name: MONGO_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $name }}
+                  key: mongodb-root-password
+          ports:
+            - name: mongodb
+              containerPort: 27017
+          readinessProbe:
+            exec:
+              command: ["mongosh", "--quiet", "--eval", "db.adminCommand({ping: 1}).ok"]
+            initialDelaySeconds: 10
+            periodSeconds: 15
+            timeoutSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: mongodb
+            initialDelaySeconds: 30
+            periodSeconds: 20
+            timeoutSeconds: 5
+            failureThreshold: 6
+          {{- with .Values.mongodb.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+            - name: data
+              mountPath: /data/db
+            - name: keyfile
+              mountPath: /keyfile
+        - name: rs-manager
+          image: "{{ .Values.mongodb.image.repository }}:{{ .Values.mongodb.image.tag }}"
+          imagePullPolicy: {{ .Values.mongodb.image.pullPolicy }}
+          command: ["bash", "/scripts/rs-manager.sh"]
+          env:
+            - name: RS_NAME
+              value: {{ .Values.mongodb.replicaSetName | quote }}
+            - name: RS_MEMBERS
+              value: {{ include "appl.mongodbMembers" . | quote }}
+            - name: MONGO_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $name }}
+                  key: mongodb-root-password
+            - name: MONGO_GRAYLOG_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $name }}
+                  key: mongodb-graylog-password
+          resources:
+            requests:
+              cpu: 10m
+              memory: 64Mi
+            limits:
+              memory: 256Mi
+          volumeMounts:
+            - name: scripts
+              mountPath: /scripts
+      volumes:
+        - name: secret
+          secret:
+            secretName: {{ $name }}
+            items:
+              - key: keyfile
+                path: keyfile
+        - name: keyfile
+          emptyDir:
+            medium: Memory
+        - name: scripts
+          configMap:
+            name: {{ $name }}
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        {{- with .Values.mongodb.persistence.storageClass }}
+        storageClassName: {{ . }}
+        {{- end }}
+        resources:
+          requests:
+            storage: {{ .Values.mongodb.persistence.size }}
+{{- if gt (int .Values.mongodb.replicas) 1 }}
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ $name }}
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    app.kubernetes.io/component: mongodb
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      {{- include "appl.mongodbSelectorLabels" . | nindent 6 }}
+{{- end }}

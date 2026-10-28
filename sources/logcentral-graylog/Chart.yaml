@@ -1,0 +1,24 @@
+apiVersion: v2
+name: logcentral-graylog
+description: Graylog centralized logging, based on the official Graylog Helm chart, with a MongoDB replica set and Postfix. Uses an external OpenSearch cluster.
+icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/logcentral-graylog/graylog.png
+ 
+# A chart can be either an 'application' or a 'library' chart.
+type: application
+ 
+# This is the chart version. This version number should be incremented each time you make changes
+# to the chart and its templates, including the app version.
+# Versions are expected to follow Semantic Versioning (https://semver.org/)
+version: 1.0.0
+ 
+# This is the version number of the application being deployed (Graylog).
+# It is recommended to use it with quotes.
+appVersion: "7.2.1"
+ 
+dependencies:
+  - name: graylog
+    version: 2.1.0
+    repository: https://graylog2.github.io/graylog-helm
+  - name: postfix
+    version: 3.2.2
+    repository: https://eea.github.io/helm-charts/

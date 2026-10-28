@@ -1,0 +1,42 @@
+Graylog {{ .Chart.AppVersion }} is deployed as release "{{ .Release.Name }}" in namespace "{{ .Release.Namespace }}".
+
+Web interface:
+{{- if .Values.ingress.enabled }}
+  http{{ if .Values.ingress.tls.enabled }}s{{ end }}://{{ .Values.ingress.host }}/
+{{- else }}
+  Ingress is disabled. Port-forward to reach it:
+    kubectl -n {{ .Release.Namespace }} port-forward svc/{{ include "appl.graylogFullname" . }}-svc 9000:9000
+    then open http://localhost:9000/
+{{- end }}
+
+Login: {{ .Values.graylog.graylog.config.rootUsername }}
+{{- if not .Values.rootPassword }}
+  rootPassword was empty, so one was generated:
+    kubectl -n {{ .Release.Namespace }} get secret {{ include "appl.mongodbName" . }} -o jsonpath='{.data.graylog-root-password}' | base64 -d
+{{- end }}
+
+MongoDB: replica set "{{ .Values.mongodb.replicaSetName }}", {{ .Values.mongodb.replicas }} member(s), StatefulSet {{ include "appl.mongodbName" . }}.
+  Member 0 runs the replica set manager:  kubectl -n {{ .Release.Namespace }} logs {{ include "appl.mongodbName" . }}-0 -c rs-manager
+  Root shell:  kubectl -n {{ .Release.Namespace }} exec -it {{ include "appl.mongodbName" . }}-0 -c mongodb -- \
+    bash -c 'mongosh "mongodb://root:$MONGO_ROOT_PASSWORD@localhost:27017/admin?directConnection=true"'
+
+{{- if .Values.inputsService.enabled }}
+
+Inputs (Service {{ .Release.Name }}-inputs, type {{ .Values.inputsService.type }}):
+{{- range .Values.graylog.graylog.inputs }}
+  {{ .name }}: {{ .port }}/{{ .protocol }}
+{{- end }}
+  Address: kubectl -n {{ .Release.Namespace }} get svc {{ .Release.Name }}-inputs
+  Remember to create the matching inputs in Graylog (System > Inputs) on these ports.
+{{- end }}
+
+{{- if not .Values.passwordSecret }}
+
+WARNING: passwordSecret is empty. Graylog uses the official chart's generated pepper, so
+encrypted values in a MongoDB restored from logcentral-graylog5 will not be readable.
+{{- end }}
+
+{{- if .Values.postfix.dryrun }}
+
+NOTE: postfix.dryrun is true. Mail is caught by mailtrap and not delivered.
+{{- end }}

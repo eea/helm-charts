@@ -1,0 +1,212 @@
+# Wrapper chart: values for each dependency go under the dependency's name.
+# NOTE the double "graylog:" -- the first is the dependency (official chart), the second is
+# that chart's own "graylog" section (the Graylog server). The same goes for "ingress",
+# "opensearch" and "datanode": they live under the first "graylog:". The top-level "mongodb:" is this
+# chart's own MongoDB; "graylog.mongodb" only switches the official chart's MongoDB off.
+#
+# No secrets and no environment-specific hosts here (this repository is public).
+# Set rootPassword and passwordSecret in the deployed values (see README).
+
+# ---------------------------------------------------------------- Graylog secrets
+# This chart writes the Graylog Secret itself ("logcentral-graylog-secrets", see global below):
+# the MongoDB URI, the root user and these two values. Generated values are kept across upgrades.
+#
+# password_secret encrypts values stored in MongoDB; keep it for the life of the data. When migrating
+# from logcentral-graylog5 use its global.adminPassword (which that chart passed as
+# GRAYLOG_PASSWORD_SECRET). Any length >= 16. Empty = generated (fresh installation only).
+passwordSecret: ""
+# Password of the Graylog root user (graylog.graylog.config.rootUsername), in plain text; only its
+# SHA-256 is stored. Empty = generated, readable in the Secret "<release>-mongodb", key graylog-root-password.
+rootPassword: ""
+# Alternative to rootPassword: its SHA-256 in hex, e.g. the old release's global.rootPassword
+# (GRAYLOG_ROOT_PASSWORD_SHA2), so the admin login stays the same. rootPassword wins if both are set.
+rootPasswordSha2: ""
+
+# Official chart reads every Graylog secret from this Secret (written by templates/secrets.yaml).
+# Fixed name, so one release per namespace.
+global:
+  existingSecretName: logcentral-graylog-secrets
+
+# ---------------------------------------------------------------- MongoDB
+# Replica set run by this chart (StatefulSet "<release>-mongodb", official mongo image, keyfile auth).
+# No operator and nothing cluster-wide: installs with namespace rights only. The sidecar in member 0
+# initiates the replica set, creates the users (root, graylog) and adds/removes members on scaling.
+mongodb:
+  image:
+    repository: mongo
+    tag: "7.0.45"            # Graylog 7 needs MongoDB >= 7.0
+    pullPolicy: IfNotPresent
+  replicas: 3                # odd: 3 survives one member down; 1 for test
+  replicaSetName: rs0
+  persistence:
+    storageClass: nfs-client
+    size: 20Gi
+  resources:
+    requests:
+      cpu: 100m
+      memory: 2Gi
+    limits:
+      memory: 2Gi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+# ---------------------------------------------------------------- Inputs Service
+# Publishes graylog.graylog.inputs on the Service "<release>-inputs". The web interface is not on it
+# (it goes through the Ingress).
+#   production: LoadBalancer (MetalLB), as the old chart did
+#   pre:        NodePort, for testing
+inputsService:
+  enabled: true
+  type: LoadBalancer            # LoadBalancer or NodePort
+  loadBalancerIP: ""            # LoadBalancer only: MetalLB address (old graylogClient.lb.exposeIP); empty = pool picks one
+  nodePorts: {}                 # NodePort only: fixed node ports by input name, e.g. {syslog-tcp: 31514}; missing = random
+  annotations: {}
+  externalTrafficPolicy: Cluster   # Local keeps the client source IP but only answers on nodes running Graylog
+ 
+graylog:
+  # ---- Graylog image tag (graylog/graylog). The official chart 2.1.0 ships 7.1.8; keep this equal
+  # to appVersion in Chart.yaml.
+  version: "7.2.1"
+
+  # ---- Indexer: your existing OpenSearch (>= 2.x, up to 2.19.x). No Graylog Data Node.
+  datanode:
+    enabled: false
+  opensearch:
+    enabled: true
+    hosts:
+      - http://opensearch-cluster-master:9200
+    tls:
+      enabled: false
+ 
+  # ---- MongoDB: provided by this chart (see mongodb above), not by the operator.
+  mongodb:
+    communityResource:
+      enabled: false
+
+  # ---- Graylog server
+  graylog:
+    enterprise: false          # open image graylog/graylog (chart default is graylog-enterprise)
+    replicas: 4
+    inputs:                    # every entry opens one port on the Service; names <= 15 chars
+      - { name: syslog-tcp, port: 1514,  protocol: TCP }
+      - { name: syslog-udp, port: 1514,  protocol: UDP }
+      - { name: gelf-tcp,   port: 12201, protocol: TCP }
+      - { name: gelf-udp,   port: 12201, protocol: UDP }
+      - { name: gelf2-tcp,  port: 12202, protocol: TCP }
+      - { name: gelf2-udp,  port: 12202, protocol: UDP }
+    env:                       # unknown GRAYLOG_* names are ignored by Graylog
+      GRAYLOG_TRANSPORT_EMAIL_SUBJECT_PREFIX: "[graylog2]"
+      GRAYLOG_TELEMETRY_ENABLED: "false"
+      GRAYLOG_USAGE_STATISTICS_ENABLED: "false"
+      # Journal usage (% of messageJournal.maxSize) at which a node reports THROTTLED (HTTP 429)
+      # on /api/system/lbstatus, and back to ALIVE below it; checked every 60 s. The readiness
+      # probe below then takes it out of the Services. Graylog's default is 100 (only when full).
+      GRAYLOG_LB_THROTTLE_THRESHOLD_PERCENTAGE: "25"
+    config:
+      timezone: Europe/Copenhagen
+      rootUsername: admin      # password: rootPassword at the top of this file
+      serverJavaOpts: "-Xms2g -Xmx2g"
+      extraServerJavaOpts:
+        - "-XX:NewRatio=1"
+        - "-XX:MaxMetaspaceSize=256m"
+        - "-XX:+ResizeTLAB"
+        - "-XX:-OmitStackTraceInFastThrow"
+      mongodb:
+        maxConnections: "100"
+      network:
+        externalUri: ""        # public URL incl. trailing slash, e.g. https://logs.example.com/
+      performance:
+        processBufferProcessors: "20"
+      messageJournal:
+        maxSize: "40gb"        # must stay <= 90% of persistence.size
+      email:
+        enabled: "true"
+        senderAddress: graylog@eea.europa.eu
+        hostname: postfix      # the postfix dependency below, Service name set by postfix.serviceName
+        port: "25"
+        useAuth: "false"
+        useSsl: "false"
+        useTls: "false"
+        webInterfaceUrl: ""
+    # ---- Probes on /api/system/lbstatus: 200 ALIVE, 429 THROTTLED (journal over the threshold above),
+    # 503 DEAD (shutting down / drained by hand).
+    # Startup: ALIVE or THROTTLED, so a node restarting with a full journal is not killed.
+    startupProbe:
+      exec:
+        command:
+          - sh
+          - -c
+          - s=$(curl -s -o /dev/null -w '%{http_code}' -m 3 http://localhost:9000/api/system/lbstatus); [ "$s" = 200 ] || [ "$s" = 429 ]
+    # Readiness: ALIVE = ready, DEAD = not ready, THROTTLED = not ready only while another node is
+    # ALIVE. If every node is throttled they all stay in, so the inputs and the web UI never lose
+    # all endpoints. Other nodes are found as <statefulset>-<n>.<domain of this pod>, stopping after
+    # three missing ordinals. Unready only steers new connections: established TCP connections and
+    # ongoing UDP flows stay on the node.
+    readinessProbe:
+      periodSeconds: 10
+      timeoutSeconds: 15
+      failureThreshold: 3
+      exec:
+        command:
+          - sh
+          - -c
+          - |
+            s=$(curl -s -o /dev/null -w '%{http_code}' -m 3 http://localhost:9000/api/system/lbstatus)
+            case "$s" in
+              200) exit 0 ;;
+              429) ;;
+              *) exit 1 ;;
+            esac
+            me=$(hostname); fqdn=$(hostname -f); dom=${fqdn#*.}; base=${me%-*}; miss=0; i=0
+            while [ $i -lt 64 ] && [ $miss -lt 3 ]; do
+              p="$base-$i.$dom"; i=$((i+1))
+              [ "$base-$((i-1))" = "$me" ] && continue
+              if ! getent hosts "$p" >/dev/null; then miss=$((miss+1)); continue; fi
+              miss=0
+              [ "$(curl -s -o /dev/null -w '%{http_code}' -m 2 "http://$p:9000/api/system/lbstatus")" = 200 ] && exit 1
+            done
+            exit 0
+    persistence:
+      enabled: true
+      storageClass: nfs-client
+      size: 50Gi
+    resources:
+      requests:
+        cpu: "1"
+        memory: 4Gi
+      limits:
+        cpu: null              # removes the chart's default 2-CPU limit
+        memory: 4Gi
+ 
+  # ---- The official chart's Ingress stays off: this chart has its own (ingress below).
+  ingress:
+    enabled: false
+
+# ---------------------------------------------------------------- Ingress (web UI)
+# Same behaviour as logcentral-graylog5. Host and annotations come from the deployed values.
+ingress:
+  enabled: false
+  host: ""                      # e.g. logs.eea.europa.eu
+  className: ""                 # empty = the cluster's default ingress class
+  annotations: {}               # passed through unchanged (cert-manager issuer, server-snippet, ...)
+  tls:
+    enabled: true               # HTTPS for host
+    secretName: ""              # empty = the ingress controller's default certificate
+
+# ---------------------------------------------------------------- Postfix (eea chart)
+postfix:
+  serviceName: postfix          # Graylog sends mail to host "postfix", port 25
+  dryrun: true                  # true = eaudeweb/mailtrap catches mail (no real delivery); false = relay
+  timezone: Europe/Copenhagen
+  # Used when dryrun: false
+  serverName: logs.eea.europa.eu
+  mtpRelay: ironports.eea.europa.eu
+  mtpPort: "8587"
+  mtpUser: ""
+  mtpPass: ""
+  resources:
+    requests:
+      memory: 256Mi
+    limits:
+      memory: 512Mi

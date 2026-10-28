@@ -1,0 +1,332 @@
+questions:
+
+  # ---------------------------------------------------------------- General
+  - variable: graylog.graylog.config.timezone
+    default: "Europe/Copenhagen"
+    description: "Timezone of the Graylog root user"
+    type: string
+    label: Graylog Timezone
+    required: true
+    group: "General"
+
+  - variable: postfix.timezone
+    default: "Europe/Copenhagen"
+    description: "Timezone of the Postfix container"
+    type: string
+    label: Postfix Timezone
+    required: true
+    group: "General"
+
+  # ---------------------------------------------------------------- Graylog
+  - variable: graylog.graylog.replicas
+    default: 4
+    description: "Number of Graylog server nodes. Set to 0 to deploy only MongoDB (e.g. before restoring a dump)"
+    type: int
+    label: Graylog Replicas
+    required: true
+    group: "Graylog Configuration"
+
+  - variable: graylog.graylog.config.network.externalUri
+    default: ""
+    description: "Public URL of the Graylog web interface, including the trailing slash (e.g. https://logs.example.com/)"
+    type: string
+    label: Graylog External URL
+    required: true
+    group: "Graylog Configuration"
+
+  - variable: graylog.graylog.config.rootUsername
+    default: "admin"
+    description: "Login of the Graylog root user"
+    type: string
+    label: Graylog Admin Username
+    required: true
+    group: "Graylog Configuration"
+
+  - variable: rootPassword
+    default: ""
+    description: "Password of the Graylog root user, in plain text (the chart stores only its SHA-256). Empty = generated, readable in the Secret <release>-mongodb, key graylog-root-password"
+    type: password
+    label: Graylog Admin Password
+    group: "Graylog Configuration"
+
+  - variable: rootPasswordSha2
+    default: ""
+    description: "Instead of the password: its SHA-256 in hex. When migrating from logcentral-graylog5 use its Root Password (global.rootPassword) to keep the same admin login"
+    type: password
+    label: Graylog Admin Password SHA-256
+    group: "Graylog Configuration"
+
+  - variable: passwordSecret
+    default: ""
+    description: "Graylog password_secret, at least 16 characters. Keep it for the life of the data: encrypted values in MongoDB are unreadable with another one. When migrating from logcentral-graylog5 use its Admin Password (global.adminPassword). Empty = generated, for a fresh installation only"
+    type: password
+    label: Graylog Password Secret
+    group: "Graylog Configuration"
+
+  - variable: graylog.graylog.config.serverJavaOpts
+    default: "-Xms2g -Xmx2g"
+    description: "JVM heap options for the Graylog server; keep the heap at about half of the memory limit"
+    type: string
+    label: Graylog Java Heap
+    required: true
+    group: "Graylog Configuration"
+
+  - variable: graylog.graylog.config.performance.processBufferProcessors
+    default: "20"
+    description: "Number of process buffer processors"
+    type: string
+    label: Process Buffer Processors
+    group: "Graylog Configuration"
+
+  - variable: graylog.graylog.env.GRAYLOG_LB_THROTTLE_THRESHOLD_PERCENTAGE
+    default: "25"
+    description: "Journal usage (%) at which a node reports THROTTLED and leaves the Services until it catches up, unless every node is throttled. 100 = only when the journal is full (Graylog default)"
+    type: string
+    label: Throttle at Journal Usage (%)
+    group: "Graylog Configuration"
+
+  - variable: graylog.graylog.config.messageJournal.maxSize
+    default: "40gb"
+    description: "Maximum size of the message journal; must stay below 90% of the Graylog storage size"
+    type: string
+    label: Message Journal Max Size
+    required: true
+    group: "Graylog Configuration"
+
+  # ---------------------------------------------------------------- OpenSearch
+  - variable: graylog.opensearch.hosts[0]
+    default: "http://opensearch-cluster-master:9200"
+    description: "URL of the existing OpenSearch cluster (2.x, up to 2.19.x). If it runs in another namespace use the full service name, e.g. http://opensearch-cluster-master.<namespace>.svc:9200"
+    type: string
+    label: OpenSearch Host
+    required: true
+    group: "External Services"
+
+  - variable: graylog.opensearch.auth.username
+    default: ""
+    description: "OpenSearch user; leave empty if the OpenSearch security plugin is disabled"
+    type: string
+    label: OpenSearch Username
+    group: "External Services"
+
+  - variable: graylog.opensearch.auth.password
+    default: ""
+    description: "OpenSearch password; leave empty if the OpenSearch security plugin is disabled"
+    type: password
+    label: OpenSearch Password
+    group: "External Services"
+
+  # ---------------------------------------------------------------- MongoDB
+  - variable: mongodb.replicas
+    default: 3
+    description: "Number of members of the MongoDB replica set. Use an odd number: 3 for production (survives one member down), 1 for test. Can be raised later without reinstalling"
+    type: int
+    min: 1
+    label: MongoDB Replicas
+    required: true
+    group: "MongoDB"
+
+  - variable: mongodb.image.tag
+    default: "7.0.45"
+    description: "MongoDB version (official mongo image). Graylog 7 needs 7.0 or newer; upgrade one major version at a time"
+    type: string
+    label: MongoDB Version
+    required: true
+    group: "MongoDB"
+
+  # ---------------------------------------------------------------- Email
+  - variable: graylog.graylog.config.email.senderAddress
+    default: "graylog@eea.europa.eu"
+    description: "Sender address of Graylog emails"
+    type: string
+    label: Email Sender Address
+    group: "Mail"
+
+  - variable: graylog.graylog.config.email.webInterfaceUrl
+    default: ""
+    description: "Base URL used for links in notification emails (usually the Graylog External URL)"
+    type: string
+    label: Email Web Interface URL
+    group: "Mail"
+
+  - variable: "postfix.dryrun"
+    label: "Run in development mode"
+    description: "If checked, will not send emails, but use mailtrap to catch them"
+    default: true
+    type: "boolean"
+    required: true
+    show_subquestion_if: false
+    group: "Mail"
+    subquestions:
+    - variable: "postfix.mtpRelay"
+      label: "Postfix relay"
+      required: true
+      description: "Postfix SMTP relay"
+      type: "string"
+      default: "ironports.eea.europa.eu"
+    - variable: "postfix.mtpPort"
+      label: "Postfix relay port"
+      description: "Postfix SMTP relay port"
+      type: "string"
+      required: true
+      default: "8587"
+    - variable: "postfix.mtpUser"
+      label: "Postfix user"
+      description: "Without authentication, emails will not be sent"
+      type: "string"
+      required: true
+    - variable: "postfix.mtpPass"
+      label: "Postfix password"
+      description: "Without authentication, emails will not be sent"
+      type: "password"
+      required: true
+    - variable: "postfix.serverName"
+      label: "Application url"
+      type: "string"
+      required: true
+      default: "logs.eea.europa.eu"
+
+  # ---------------------------------------------------------------- Inputs
+  - variable: inputsService.enabled
+    default: true
+    description: "Publish the Graylog inputs (syslog 1514, GELF 12201/12202, TCP and UDP) on their own Service"
+    type: boolean
+    label: Expose Inputs
+    required: true
+    show_subquestion_if: true
+    group: "Inputs"
+    subquestions:
+      - variable: inputsService.type
+        default: "LoadBalancer"
+        description: "LoadBalancer (MetalLB) for production, NodePort for testing"
+        type: enum
+        options:
+          - "LoadBalancer"
+          - "NodePort"
+        label: Inputs Service Type
+        required: true
+      - variable: inputsService.loadBalancerIP
+        default: ""
+        description: "MetalLB IP of the inputs (the old graylogClient.lb.exposeIP, so log senders need no change). Empty = assigned from the pool"
+        type: string
+        label: Inputs Load Balancer IP
+        show_if: "inputsService.type=LoadBalancer"
+
+  # ---------------------------------------------------------------- Ingress
+  - variable: ingress.enabled
+    default: false
+    description: "Expose the Graylog web interface through an Ingress"
+    type: boolean
+    label: Enable Ingress
+    required: true
+    show_subquestion_if: true
+    group: "Ingress"
+    subquestions:
+      - variable: ingress.host
+        default: ""
+        description: "Hostname of the Graylog web interface, e.g. logs.eea.europa.eu"
+        type: hostname
+        label: Ingress Hostname
+        required: true
+      - variable: ingress.className
+        default: ""
+        description: "Ingress class name. Empty = the cluster's default ingress class"
+        type: string
+        label: Ingress Class Name
+      - variable: ingress.tls.enabled
+        default: true
+        description: "Serve the hostname over HTTPS"
+        type: boolean
+        label: Enable TLS
+      - variable: ingress.tls.secretName
+        default: ""
+        description: "TLS secret. Empty = the ingress controller's default certificate. With a cert-manager issuer annotation, the secret cert-manager should create"
+        type: string
+        label: TLS Secret Name
+
+  # ---------------------------------------------------------------- Storage
+  - variable: graylog.graylog.persistence.storageClass
+    default: "nfs-client"
+    description: "Storage class of the Graylog journal volumes"
+    type: storageclass
+    label: Graylog Storage Class
+    group: "Storage"
+
+  - variable: graylog.graylog.persistence.size
+    default: "50Gi"
+    description: "Size of the journal volume of each Graylog node"
+    type: string
+    label: Graylog Storage Size
+    required: true
+    group: "Storage"
+
+  - variable: mongodb.persistence.storageClass
+    default: "nfs-client"
+    description: "Storage class of the MongoDB volumes"
+    type: storageclass
+    label: MongoDB Storage Class
+    group: "Storage"
+
+  - variable: mongodb.persistence.size
+    default: "20Gi"
+    description: "Size of the data volume of each MongoDB member"
+    type: string
+    label: MongoDB Storage Size
+    required: true
+    group: "Storage"
+
+  # ---------------------------------------------------------------- Resources
+  - variable: graylog.graylog.resources.requests.cpu
+    default: "1"
+    description: "CPU request for each Graylog node"
+    type: string
+    label: Graylog CPU Request
+    group: "Resources"
+
+  - variable: graylog.graylog.resources.requests.memory
+    default: "4Gi"
+    description: "Memory request for each Graylog node"
+    type: string
+    label: Graylog Memory Request
+    required: true
+    group: "Resources"
+
+  - variable: graylog.graylog.resources.limits.memory
+    default: "4Gi"
+    description: "Memory limit for each Graylog node"
+    type: string
+    label: Graylog Memory Limit
+    required: true
+    group: "Resources"
+
+  - variable: mongodb.resources.requests.memory
+    default: "2Gi"
+    description: "Memory request for each MongoDB member"
+    type: string
+    label: MongoDB Memory Request
+    required: true
+    group: "Resources"
+
+  - variable: mongodb.resources.limits.memory
+    default: "2Gi"
+    description: "Memory limit for each MongoDB member"
+    type: string
+    label: MongoDB Memory Limit
+    required: true
+    group: "Resources"
+
+  - variable: postfix.resources.requests.memory
+    default: "256Mi"
+    description: "Memory request for Postfix"
+    type: string
+    label: Postfix Memory Request
+    required: true
+    group: "Resources"
+
+  - variable: postfix.resources.limits.memory
+    default: "512Mi"
+    description: "Memory limit for Postfix"
+    type: string
+    label: Postfix Memory Limit
+    required: true
+    group: "Resources"

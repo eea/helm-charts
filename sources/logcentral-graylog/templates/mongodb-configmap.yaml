@@ -1,0 +1,114 @@
+{{- /*
+Replica set manager, run by the "rs-manager" sidecar of member 0 every 30 seconds:
+  1. on an empty member 0: rs.initiate and create the root user (localhost exception);
+  2. create or update the graylog user (dbOwner on graylog, clusterMonitor);
+  3. add one reachable missing member, or remove one member beyond mongodb.replicas, per pass
+     (MongoDB allows one voting member change per reconfig). When scaling down leaves no primary,
+     it force-reconfigures to the members that are still wanted.
+*/}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "appl.mongodbName" . }}
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    app.kubernetes.io/component: mongodb
+data:
+  rs-manager.sh: |
+    #!/bin/bash
+    # Only member 0 manages the replica set; the others just idle.
+    if [ "${HOSTNAME##*-}" != "0" ]; then exec sleep infinity; fi
+    until mongosh --quiet "mongodb://localhost:27017/admin?directConnection=true" \
+        --eval 'db.adminCommand({ping: 1}).ok' >/dev/null 2>&1; do
+      sleep 5
+    done
+    while true; do
+      mongosh --quiet --nodb /scripts/rs-manager.js || echo "rs-manager: pass failed, retrying"
+      sleep 30
+    done
+  rs-manager.js: |
+    const env = process.env;
+    const rsName = env.RS_NAME;
+    const wanted = env.RS_MEMBERS.split(',');
+    const self = wanted[0];
+    const rootPw = env.MONGO_ROOT_PASSWORD;
+    const graylogPw = env.MONGO_GRAYLOG_PASSWORD;
+    const log = (m) => print(new Date().toISOString() + ' rs-manager: ' + m);
+    const sleepS = (s) => sleep(s * 1000);
+
+    function open(host, auth) {
+      const cred = auth ? 'root:' + rootPw + '@' : '';
+      return new Mongo('mongodb://' + cred + host + '/admin?directConnection=true&serverSelectionTimeoutMS=5000&connectTimeoutMS=5000').getDB('admin');
+    }
+    function reachable(host) {
+      try { return open(host, false).runCommand({ ping: 1 }).ok === 1; } catch (e) { return false; }
+    }
+    function waitPrimary(adm) {
+      for (let i = 0; i < 60; i++) {
+        if (adm.runCommand({ hello: 1 }).isWritablePrimary) return;
+        sleepS(2);
+      }
+      throw new Error('member 0 did not become primary');
+    }
+
+    // ---- 1. first start: initiate and create root through the localhost exception
+    function rootWorks() {
+      try { return open('localhost:27017', true).runCommand({ connectionStatus: 1 }).authInfo.authenticatedUsers.length > 0; } catch (e) { return false; }
+    }
+    if (!rootWorks()) {
+      const loc = open('localhost:27017', false);
+      const r = loc.runCommand({ replSetInitiate: { _id: rsName, members: [{ _id: 0, host: self }] } });
+      if (r.ok === 1) log('initiated replica set ' + rsName + ' with ' + self);
+      else if (r.code !== 23) log('replSetInitiate: ' + tojson(r)); // 23 = AlreadyInitialized
+      waitPrimary(loc);
+      log('creating root user');
+      loc.createUser({ user: 'root', pwd: rootPw, roles: ['root'] }); // only allowed while no user exists
+    }
+
+    // ---- connect as root to the primary
+    const local = open('localhost:27017', true);
+    const hello = local.runCommand({ hello: 1 });
+    if (!hello.primary) {
+      // No primary: possible after scaling down below a majority. Force-reconfigure to the wanted
+      // members if every wanted member is up and the missing voters are all unwanted ones.
+      const cfg = local.runCommand({ replSetGetConfig: 1 }).config;
+      const extra = cfg.members.filter(m => !wanted.includes(m.host));
+      if (extra.length > 0 && wanted.every(reachable) && extra.every(m => !reachable(m.host))) {
+        cfg.members = cfg.members.filter(m => wanted.includes(m.host));
+        cfg.version += 1;
+        log('no primary; force reconfig to ' + cfg.members.map(m => m.host).join(','));
+        const r = local.runCommand({ replSetReconfig: cfg, force: true });
+        if (r.ok !== 1) throw new Error('forced reconfig: ' + tojson(r));
+      } else {
+        log('no primary yet, waiting');
+      }
+      quit(0);
+    }
+    const adm = hello.isWritablePrimary ? local : open(hello.primary, true);
+
+    // ---- 2. graylog user
+    const roles = [{ role: 'dbOwner', db: 'graylog' }, { role: 'clusterMonitor', db: 'admin' }];
+    if (adm.getUser('graylog') === null) {
+      log('creating graylog user');
+      adm.createUser({ user: 'graylog', pwd: graylogPw, roles: roles });
+    } else {
+      adm.updateUser('graylog', { pwd: graylogPw, roles: roles });
+    }
+
+    // ---- 3. members: one change per pass
+    const cfg = adm.runCommand({ replSetGetConfig: 1 }).config;
+    const have = cfg.members.map(m => m.host);
+    const remove = cfg.members.find(m => !wanted.includes(m.host) && m.host !== hello.primary);
+    const add = wanted.find(h => !have.includes(h) && reachable(h));
+    if (remove) {
+      cfg.members = cfg.members.filter(m => m.host !== remove.host);
+      log('removing member ' + remove.host);
+    } else if (add) {
+      cfg.members.push({ _id: Math.max(...cfg.members.map(m => m._id)) + 1, host: add });
+      log('adding member ' + add);
+    } else {
+      quit(0);
+    }
+    cfg.version += 1;
+    const r = adm.runCommand({ replSetReconfig: cfg });
+    if (r.ok !== 1) throw new Error('reconfig: ' + tojson(r));
