@@ -10,6 +10,9 @@ This chart deployes the BISE backend app
 
 ## Releases
 
+### Version 1.81.3 - 28 October 2026
+- fix plone HPA scaleTargetRef to match actual deployment name [Claudia Ifrim - [`b0d0a298b`](https://github.com/eea/helm-charts/commit/b0d0a298b56ea28a8af057a3f57d55c526ad5d0d)]
+
 ### Version 1.81.2 - 28 October 2026
 - raise plone autoscaling maxReplicas to 10 and expose it in questions.yaml [Claudia Ifrim - [`65f1c473d`](https://github.com/eea/helm-charts/commit/65f1c473d8ac5425a7dba04f25cffc4612ef2c2e)]
 
