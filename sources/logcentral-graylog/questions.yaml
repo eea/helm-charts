@@ -77,9 +77,9 @@ questions:
     group: "Graylog Configuration"
 
   # ---------------------------------------------------------------- GeoIP
-  - variable: graylog.graylog.config.geolocation.enabled
+  - variable: geoip.enabled
     default: false
-    description: "Download the MaxMind GeoLite2 City and ASN databases into every Graylog node (/usr/share/graylog/data/geolocation/), daily, for the GeoIP lookup tables"
+    description: "Download the MaxMind GeoLite2 City and ASN databases daily into a volume shared by all Graylog nodes (/usr/share/graylog/geoip/), for the GeoIP lookup data adapters"
     type: boolean
     label: Enable GeoLite2 Downloads
     show_subquestion_if: true
@@ -97,6 +97,11 @@ questions:
         type: password
         label: MaxMind License Key
         required: true
+      - variable: geoip.persistence.storageClass
+        default: "nfs-client"
+        description: "Storage class of the shared GeoIP volume; must support ReadWriteMany"
+        type: storageclass
+        label: GeoIP Storage Class
 
   # ---------------------------------------------------------------- OpenSearch
   - variable: graylog.opensearch.hosts[0]

@@ -124,11 +124,13 @@ between restoring the dump and starting Graylog (step 3 and 4 of the migration).
 
 ## GeoIP
 
-With `graylog.graylog.config.geolocation.enabled` and the MaxMind account in `geoip.accountId` /
-`geoip.licenseKey` (the matomo chart's account), a geoipupdate sidecar in each Graylog pod downloads
-GeoLite2 City and ASN at start and daily to `/usr/share/graylog/data/geolocation/`. Graylog's MaxMind
-data adapters must point there (System > Lookup Tables > Data Adapters), e.g.
-`/usr/share/graylog/data/geolocation/GeoLite2-City.mmdb`; logcentral-graylog5 used `.../data/geolite/`.
+With `geoip.enabled` and the MaxMind account in `geoip.accountId` / `geoip.licenseKey` (the matomo
+chart's account), the chart downloads GeoLite2 City and ASN into the ReadWriteMany volume
+`logcentral-graylog-geoip`, mounted read-only in every Graylog pod at `/usr/share/graylog/geoip/`:
+a Job right after each install/upgrade, then a CronJob on `geoip.schedule` (daily; geoipupdate only
+fetches editions that changed). Point Graylog's MaxMind data adapters there (System > Lookup Tables >
+Data Adapters), e.g. `/usr/share/graylog/geoip/GeoLite2-City.mmdb`; logcentral-graylog5 used
+`/usr/share/graylog/data/geolite/`. The volume exists even with GeoIP off (the pods always mount it).
 
 ## Load balancing on overload
 
@@ -158,6 +160,9 @@ and back with `.../override/alive`.
   does better on block storage. Graylog warns that its journal is on NFS, as the old chart's was.
 
 ## Releases
+
+### Version 1.0.3 - 28 October 2026
+- GeoLite2 downloads moved from the official chart's per-pod sidecar to one CronJob (plus a Job after each install/upgrade) writing to a shared volume mounted at `/usr/share/graylog/geoip/`. The sidecar ignored SIGTERM, so every Graylog pod waited out its 300 s grace period on each restart, and it only downloaded at midnight. Switch on with `geoip.enabled` (was `graylog.graylog.config.geolocation.enabled`) and repoint the MaxMind data adapters to the new path
 
 ### Version 1.0.2 - 28 October 2026
 - MongoDB pods restart only when the replica set scripts change, no longer on every chart version (the checksum covered the ConfigMap's labels, which carry the chart version)

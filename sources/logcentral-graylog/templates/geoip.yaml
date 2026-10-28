@@ -1,0 +1,84 @@
+{{- /*
+GeoLite2 databases for Graylog's MaxMind lookup data adapters, downloaded once for the whole release
+into the shared volume "logcentral-graylog-geoip" that every Graylog pod mounts read-only at
+/usr/share/graylog/geoip (graylog.graylog.extraVolumes / extraVolumeMounts in values.yaml):
+  - a CronJob refreshes them on geoip.schedule (geoipupdate only fetches editions that changed);
+  - a Job after every install/upgrade fetches them at once, so a new release does not wait.
+The volume always exists (the pods mount it whatever geoip.enabled says); it stays empty when off.
+Replaces the official chart's per-pod sidecar, which ignored SIGTERM and held every Graylog pod
+for its whole 300 s termination grace period.
+*/}}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: logcentral-graylog-geoip
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    app.kubernetes.io/component: geoip
+spec:
+  accessModes: ["ReadWriteMany"]
+  {{- with .Values.geoip.persistence.storageClass }}
+  storageClassName: {{ . }}
+  {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.geoip.persistence.size }}
+{{- if .Values.geoip.enabled }}
+{{- if not (and .Values.geoip.accountId .Values.geoip.licenseKey) }}
+{{- fail "geoip.enabled needs the MaxMind account: set geoip.accountId and geoip.licenseKey." }}
+{{- end }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: logcentral-graylog-maxmind
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    app.kubernetes.io/component: geoip
+type: Opaque
+data:
+  GEOIPUPDATE_ACCOUNT_ID: {{ .Values.geoip.accountId | toString | b64enc }}
+  GEOIPUPDATE_LICENSE_KEY: {{ .Values.geoip.licenseKey | toString | b64enc }}
+{{- $job := dict "spec" (dict
+      "backoffLimit" 3
+      "template" (dict
+        "metadata" (dict "labels" (dict "app.kubernetes.io/name" (include "appl.name" .) "app.kubernetes.io/instance" .Release.Name "app.kubernetes.io/component" "geoip"))
+        "spec" (dict
+          "restartPolicy" "OnFailure"
+          "containers" (list (dict
+            "name" "geoipupdate"
+            "image" .Values.geoip.image
+            "envFrom" (list (dict "secretRef" (dict "name" "logcentral-graylog-maxmind")))
+            "env" (list (dict "name" "GEOIPUPDATE_EDITION_IDS" "value" .Values.geoip.editionIds) (dict "name" "GEOIPUPDATE_VERBOSE" "value" "1"))
+            "resources" (dict "requests" (dict "cpu" "10m" "memory" "64Mi") "limits" (dict "memory" "256Mi"))
+            "volumeMounts" (list (dict "name" "geoip" "mountPath" "/usr/share/GeoIP"))))
+          "volumes" (list (dict "name" "geoip" "persistentVolumeClaim" (dict "claimName" "logcentral-graylog-geoip")))))) }}
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ .Release.Name }}-geoipupdate
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    app.kubernetes.io/component: geoip
+spec:
+  schedule: {{ .Values.geoip.schedule | quote }}
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    {{- toYaml $job | nindent 4 }}
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .Release.Name }}-geoipupdate-now
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    app.kubernetes.io/component: geoip
+  annotations:
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+spec:
+  {{- toYaml $job.spec | nindent 2 }}
+{{- end }}
