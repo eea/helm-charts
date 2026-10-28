@@ -36,7 +36,8 @@ spec:
       labels:
         {{- include "appl.mongodbSelectorLabels" . | nindent 8 }}
       annotations:
-        checksum/scripts: {{ include (print $.Template.BasePath "/mongodb-configmap.yaml") . | sha256sum }}
+        # Over the scripts only: the ConfigMap's labels carry the chart version, which must not roll MongoDB.
+        checksum/scripts: {{ (include (print $.Template.BasePath "/mongodb-configmap.yaml") . | fromYaml).data | toYaml | sha256sum }}
     spec:
       securityContext:
         runAsUser: 999

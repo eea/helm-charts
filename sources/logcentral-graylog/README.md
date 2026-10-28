@@ -159,6 +159,9 @@ and back with `.../override/alive`.
 
 ## Releases
 
+### Version 1.0.2 - 28 October 2026
+- MongoDB pods restart only when the replica set scripts change, no longer on every chart version (the checksum covered the ConfigMap's labels, which carry the chart version)
+
 ### Version 1.0.1 - 28 October 2026
 - GeoLite2 City and ASN databases for the Graylog GeoIP lookup tables: the official chart's geoipupdate sidecar (`graylog.graylog.config.geolocation.enabled`), with the MaxMind account in `geoip.accountId` / `geoip.licenseKey` (Secret `logcentral-graylog-maxmind`)
 
