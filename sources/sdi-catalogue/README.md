@@ -152,6 +152,9 @@ own filesystem store.
 
 ## Releases
 
+### Version 0.14.5 - 29 October 2026
+- Set the GN5 record permalink to the datahub record page, or the GN4 HTML record view without datahub [Juan Luis Rodriguez Ponce - [`29a35a680`](https://github.com/eea/helm-charts/commit/29a35a6807a7491b7540c7ba8ee2ad60080f1b78)]
+
 ### Version 0.14.4 - 27 October 2026
 - Update gn46 to eea-4.9.x-19e87b65 [Juan Luis Rodriguez Ponce - [`f09273f6f`](https://github.com/eea/helm-charts/commit/f09273f6f7625015b771eee367f3340ee2473e45)]
 
