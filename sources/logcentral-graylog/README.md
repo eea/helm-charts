@@ -166,6 +166,10 @@ and back with `.../override/alive`.
 
 ## Releases
 
+### Version 1.0.5 - 29 October 2026
+- OpenSearch request timeout raised from 60 s to 5 minutes (`GRAYLOG_ELASTICSEARCH_SOCKET_TIMEOUT`). On production the message-count histogram over 30 days takes about 55 s; anything slower failed with the widget error "null"
+- Ingress nginx settings in `ingress.configuration`, as in the other EEA charts: proxy read/send timeout 360 s (nginx default 60 s), so synchronous searches and CSV exports are not cut off by the ingress before Graylog's 5 minutes, and body size 100m (nginx default 1m) for content pack uploads
+
 ### Version 1.0.4 - 29 October 2026
 - Message journal 80gb per node (was 40gb) on a 90Gi volume: about 170M messages, the only buffer against floods because Graylog's TCP/UDP inputs have no backpressure. The volume size of an existing StatefulSet cannot change: existing releases keep their size (set graylog.graylog.persistence.size and messageJournal.maxSize to the old values) or recreate the StatefulSet
 - Graylog heap fixed at 4g in 8Gi pods (CPU request 2), stream-aware field types off (on by default in 7.2). Tested on 02pre and not adopted: output batches of 10mb took twice as long as the default 500 messages, and 8 instead of 20 process buffer processors gained nothing

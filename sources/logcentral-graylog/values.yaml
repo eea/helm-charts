@@ -122,6 +122,10 @@ graylog:
       # Graylog 7.2 turns stream-aware field types on by default; it costs performance with many
       # streams and fields. Enable only to limit search field lists to the selected streams.
       GRAYLOG_STREAM_AWARE_FIELD_TYPES: "false"
+      # How long Graylog waits for one OpenSearch request (default 60s). The message-count
+      # histogram over 30 days takes ~55 s on production (~340M messages a day); past the limit
+      # the widget fails with the error "null".
+      GRAYLOG_ELASTICSEARCH_SOCKET_TIMEOUT: "5m"
       # Requests through the ingress: take the client IP from X-Forwarded-For (sessions, audit) when
       # it comes from these networks. 10.42.0.0/16 is the RKE pod network, where the ingress
       # controllers run. Narrow it to the ingress controllers before enabling Graylog's trusted
@@ -224,6 +228,15 @@ ingress:
   host: ""                      # e.g. logs.eea.europa.eu
   className: ""                 # empty = the cluster's default ingress class
   annotations: {}               # passed through unchanged (cert-manager issuer, server-snippet, ...)
+  # nginx settings, written as nginx.ingress.kubernetes.io/<key> annotations (empty = left out; the
+  # same annotation in annotations wins). The timeouts are seconds, above Graylog's OpenSearch
+  # timeout (GRAYLOG_ELASTICSEARCH_SOCKET_TIMEOUT, 5m), so long synchronous searches and CSV
+  # exports finish in Graylog before nginx gives up (nginx default 60). The body size covers
+  # content pack uploads (nginx default 1m).
+  configuration:
+    proxy-body-size: "100m"
+    proxy-read-timeout: "360"
+    proxy-send-timeout: "360"
   tls:
     enabled: true               # HTTPS for host
     secretName: ""              # empty = the ingress controller's default certificate

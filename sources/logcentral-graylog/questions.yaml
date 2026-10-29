@@ -253,6 +253,21 @@ questions:
         description: "TLS secret. Empty = the ingress controller's default certificate. With a cert-manager issuer annotation, the secret cert-manager should create"
         type: string
         label: TLS Secret Name
+      - variable: ingress.configuration.proxy-body-size
+        default: "100m"
+        description: "Maximum request body size, e.g. 100m (content pack uploads)"
+        type: string
+        label: Ingress body size
+      - variable: ingress.configuration.proxy-read-timeout
+        default: "360"
+        description: "Seconds nginx waits for Graylog's response. Keep it above Graylog's OpenSearch timeout (5 minutes), so long searches and exports are not cut off"
+        type: string
+        label: Ingress read timeout
+      - variable: ingress.configuration.proxy-send-timeout
+        default: "360"
+        description: "Seconds nginx waits while sending the request to Graylog"
+        type: string
+        label: Ingress send timeout
 
   # ---------------------------------------------------------------- Storage
   - variable: graylog.graylog.persistence.storageClass

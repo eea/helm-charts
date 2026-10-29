@@ -53246,6 +53246,25 @@ entries:
   logcentral-graylog:
   - apiVersion: v2
     appVersion: 7.2.1
+    created: "2026-10-29T19:22:29.426060159+02:00"
+    dependencies:
+    - name: graylog
+      repository: https://graylog2.github.io/graylog-helm
+      version: 2.1.0
+    - name: postfix
+      repository: https://eea.github.io/helm-charts/
+      version: 3.2.2
+    description: Graylog centralized logging, based on the official Graylog Helm chart,
+      with a MongoDB replica set and Postfix. Uses an external OpenSearch cluster.
+    digest: 1e64aa8372d47a67deb23fa4f78f9b9e1e52b017dce6e5ef7196f3410ca58625
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/logcentral-graylog/graylog.png
+    name: logcentral-graylog
+    type: application
+    urls:
+    - logcentral-graylog-1.0.5.tgz
+    version: 1.0.5
+  - apiVersion: v2
+    appVersion: 7.2.1
     created: "2026-10-29T01:43:14.752528767+02:00"
     dependencies:
     - name: graylog
@@ -77900,4 +77919,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2026-10-29T13:24:10.811851848Z"
+generated: "2026-10-29T19:22:29.416047134+02:00"
