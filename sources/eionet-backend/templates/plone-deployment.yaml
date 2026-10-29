@@ -22,8 +22,6 @@ spec:
       labels:
         {{- include "appl.selectorLabels" . | nindent 8 }}
         component: plone
-      annotations:
-        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -32,9 +30,7 @@ spec:
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
 
       {{- if .Values.setup.enabled }}
-      # Site and account tools must exist, and naaya.ldapdump's config.yaml
-      # be written, before Plone starts: the dump reader is configured at
-      # start-up. Both steps skip what already exists.
+      # Create the Plone site if it does not exist yet
       initContainers:
       - name: create-site
         image: {{ include "appl.image" . | quote }}
@@ -45,53 +41,6 @@ spec:
         {{- include "appl.ploneEnv" . | nindent 8 }}
         - name: SITE_ID
           value: "{{ .Values.plone.site }}"
-        volumeMounts:
-        - name: data
-          mountPath: /data
-        resources:
-          {{- toYaml .Values.setup.resources | nindent 10 }}
-      - name: setup-tools
-        image: {{ include "appl.image" . | quote }}
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
-        args:
-        - run
-        - /app/scripts/setup_tools.py
-        env:
-        {{- include "appl.ploneEnv" . | nindent 8 }}
-        - name: SITE_ID
-          value: "{{ .Values.plone.site }}"
-        - name: LDAP_SERVER
-          value: "{{ .Values.ldap.server }}"
-        - name: LDAP_ADMIN_DN
-          value: "{{ .Values.ldap.adminDN }}"
-        - name: LDAP_ADMIN_PW
-          valueFrom:
-            secretKeyRef:
-              name: {{ include "appl.fullname" . }}
-              key: LDAP_ADMIN_PW
-        - name: LDAP_SECONDARY_DN
-          value: "{{ .Values.ldap.secondaryDN }}"
-        - name: LDAP_SECONDARY_PW
-          valueFrom:
-            secretKeyRef:
-              name: {{ include "appl.fullname" . }}
-              key: LDAP_SECONDARY_PW
-        - name: LDAP_USERS_DN
-          value: "{{ .Values.ldap.usersDN }}"
-        - name: LDAP_ORGS_DN
-          value: "{{ .Values.ldap.orgsDN }}"
-        - name: LDAP_ROLES_DN
-          value: "{{ .Values.ldap.rolesDN }}"
-        - name: MAILHOST
-          value: "{{ .Values.postfix.serviceName }}"
-        - name: MAILPORT
-          value: "25"
-        {{- if .Values.mail.from }}
-        - name: MAIL_FROM
-          value: "{{ .Values.mail.from }}"
-        {{- end }}
-        - name: MAIL_FROM_NAME
-          value: "{{ .Values.mail.fromName }}"
         volumeMounts:
         - name: data
           mountPath: /data

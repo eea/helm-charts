@@ -74,28 +74,9 @@ plone:
     failureThreshold: 4
     successThreshold: 1
 
-# Eionet LDAP. Read by scripts/setup_tools.py, which runs before Plone starts
-# and stores these settings in each account tool. Settings of tools that
-# already exist are kept: change them in the ZMI.
-ldap:
-  # host:port, always ldaps
-  server: ""
-  adminDN: ""
-  adminPassword: ""
-  # Read-only account, also used by the LDAP dump cron job
-  secondaryDN: ""
-  secondaryPassword: ""
-  usersDN: "ou=Users,o=EIONET,l=Europe"
-  orgsDN: "ou=Organisations,o=EIONET,l=Europe"
-  rolesDN: "ou=Roles,o=EIONET,l=Europe"
-
-# Plone mail settings, applied by the setup script on every start
-mail:
-  from: ""
-  fromName: "Eionet"
-
-# Run create-classic and scripts/setup_tools.py as init containers. Both are
-# idempotent: an existing site and existing tools are left untouched.
+# Create the Classic Plone site (id plone.site) before Plone starts, if it
+# does not exist yet. The account tools, their LDAP settings and the mail
+# settings are configured in the ZMI and Plone control panels.
 setup:
   enabled: true
   resources:

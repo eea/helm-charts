@@ -7,10 +7,8 @@ database only holds the site and the tool settings.
 
 ## Components
 
-- Plone backend, one instance on filestorage, with two init containers that
-  create the Classic site and the account tools (`create-classic`,
-  `scripts/setup_tools.py`). Both skip what already exists, so they run safely
-  on every start.
+- Plone backend, one instance on filestorage, with an init container that
+  creates the Classic site (`create-classic`) if it does not exist yet
 - `<release>-data` volume (ReadWriteMany) at `/data`: filestorage, blobs, and
   `/data/ldapdump` (`config.yaml`, SQLite cache of LDAP users,
   `countries.json`), shared with the LDAP dump job
@@ -23,24 +21,18 @@ database only holds the site and the tool settings.
 |-----|------|---------|-------------|
 | plone.hostname | string | eionet-backend.01dev.eea.europa.eu | Public domain |
 | plone.site | string | Plone | Plone site id, mapped to the domain root |
-| ldap.server | string | "" | LDAP `host:port`, always ldaps |
-| ldap.adminDN, ldap.adminPassword | string | "" | Bind account with write access |
-| ldap.secondaryDN, ldap.secondaryPassword | string | "" | Read-only bind account, also used by the LDAP dump |
-| mail.from | string | "" | Sender address of account emails |
 | ingress.configuration.whitelist-source-range | string | "" | Comma separated CIDRs allowed to reach the site; empty for public |
 | persistence.storageClass | string | "" | Storage class supporting ReadWriteMany |
-| setup.enabled | bool | true | Run the site and tools setup before Plone starts |
+| setup.enabled | bool | true | Create the Plone site before Plone starts |
 | cronjobs.ldapdump.schedule | string | 41 8,13,16 * * 1-5 | LDAP dump schedule |
-
-LDAP passwords are stored in the `<release>-eionet-backend` Secret.
 
 ## Notes
 
-- The LDAP settings are copied into each account tool when it is created.
-  Later changes to `ldap.*` do not update existing tools: change them in the
-  ZMI (`manage_edit` of each tool). The LDAP dump reads
-  `/data/ldapdump/config.yaml`, which is written only once; edit or delete
-  it, then restart the backend.
+- The account tools and their LDAP settings are created in the ZMI
+  (Configure tab, `manage_edit`, of each tool); the mail settings in Site
+  Setup (host `postfix`, port 25).
+- The LDAP dump reads `/data/ldapdump/config.yaml` (LDAP host, read-only bind
+  DN and password). Create it on the volume, then restart the backend.
 - The Zope `admin` user is created with the default password on the first
   start. Change it in the ZMI (`/acl_users`) right after the first deployment.
 - The database only changes when tool settings change; pack it, if ever
@@ -49,6 +41,10 @@ LDAP passwords are stored in the `<release>-eionet-backend` Secret.
   the web.
 
 ## Releases
+
+### Version 0.2.0 - 29 October 2026
+- Remove the LDAP and mail values, the Secret and the setup-tools init
+  container: the account tools are configured in the ZMI
 
 ### Version 0.1.0 - 28 October 2026
 - Initial release
