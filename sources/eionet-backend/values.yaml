@@ -32,7 +32,8 @@ ingress:
 plone:
   serviceType: ClusterIP
   hostname: eionet-backend.01dev.eea.europa.eu
-  # Plone site id; served at the domain root through Zope virtual hosting
+  # Id of the Plone site (created through the web); served at the domain
+  # root through Zope virtual hosting
   site: Plone
   resources:
     limits:
@@ -73,17 +74,6 @@ plone:
     initialDelaySeconds: 30
     failureThreshold: 4
     successThreshold: 1
-
-# Create the Classic Plone site (id plone.site) before Plone starts, if it
-# does not exist yet. The account tools, their LDAP settings and the mail
-# settings are configured in the ZMI and Plone control panels.
-setup:
-  enabled: true
-  resources:
-    limits:
-      memory: 2Gi
-    requests:
-      memory: 512Mi
 
 # /data: Plone filestorage and blobs, and /data/ldapdump (naaya.ldapdump
 # config.yaml, SQLite cache of LDAP users, countries.json). ReadWriteMany:

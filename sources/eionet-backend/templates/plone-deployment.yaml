@@ -29,25 +29,6 @@ spec:
       {{- end }}
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
 
-      {{- if .Values.setup.enabled }}
-      # Create the Plone site if it does not exist yet
-      initContainers:
-      - name: create-site
-        image: {{ include "appl.image" . | quote }}
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
-        args:
-        - create-classic
-        env:
-        {{- include "appl.ploneEnv" . | nindent 8 }}
-        - name: SITE_ID
-          value: "{{ .Values.plone.site }}"
-        volumeMounts:
-        - name: data
-          mountPath: /data
-        resources:
-          {{- toYaml .Values.setup.resources | nindent 10 }}
-      {{- end }}
-
       containers:
       - name: plone
         image: {{ include "appl.image" . | quote }}

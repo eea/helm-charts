@@ -7,8 +7,9 @@ database only holds the site and the tool settings.
 
 ## Components
 
-- Plone backend, one instance on filestorage, with an init container that
-  creates the Classic site (`create-classic`) if it does not exist yet
+- Plone backend, one instance on filestorage. The Classic Plone site (id
+  `plone.site`), the account tools and their settings are created through
+  the web
 - `<release>-data` volume (ReadWriteMany) at `/data`: filestorage, blobs, and
   `/data/ldapdump` (`config.yaml`, SQLite cache of LDAP users,
   `countries.json`), shared with the LDAP dump job
@@ -23,7 +24,6 @@ database only holds the site and the tool settings.
 | plone.site | string | Plone | Plone site id, mapped to the domain root |
 | ingress.configuration.whitelist-source-range | string | "" | Comma separated CIDRs allowed to reach the site; empty for public |
 | persistence.storageClass | string | "" | Storage class supporting ReadWriteMany |
-| setup.enabled | bool | true | Create the Plone site before Plone starts |
 | cronjobs.ldapdump.schedule | string | 41 8,13,16 * * 1-5 | LDAP dump schedule |
 
 ## Notes
@@ -41,6 +41,10 @@ database only holds the site and the tool settings.
   the web.
 
 ## Releases
+
+### Version 0.3.0 - 29 October 2026
+- Remove the create-site init container: the Plone site is created through
+  the web
 
 ### Version 0.2.0 - 29 October 2026
 - Remove the LDAP and mail values, the Secret and the setup-tools init
