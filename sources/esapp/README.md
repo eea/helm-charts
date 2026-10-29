@@ -3,6 +3,9 @@
 
 ## Releases
 
+### Version 0.1.11 - 29 October 2026
+- fix default securityEnabled false [valentinab25 - [`2ca66ab10`](https://github.com/eea/helm-charts/commit/2ca66ab10985bb1d9d93dac497d9c02a6f565914)]
+
 ### Version 0.1.10 - 31 August 2026
 - Automated release of [eeacms/esbootstrap-configs:v3.0.131](https://github.com/eea/eea.esbootstrap.configs/releases) [EEA Jenkins - [`eceeaa4f`](https://github.com/eea/helm-charts/commit/eceeaa4fe539355aacd42b07774abd73d6792e75)]
 
