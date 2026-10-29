@@ -8,6 +8,9 @@ Using [eeacms/eea-query-intent](https://hub.docker.com/repository/docker/eeacms/
 
 ## Releases
 
+### Version 0.0.13 - 29 October 2026
+- Fix default securityEnabled [valentinab25 - [`1ec70b194`](https://github.com/eea/helm-charts/commit/1ec70b1947b52e3cc8dfb009cf5039bc4b793be0)]
+
 ### Version 0.0.12 - 07 October 2026
 - fix questions [valentinab25 - [`a9fa4763`](https://github.com/eea/helm-charts/commit/a9fa4763f314d42be76db494e1b5e024c218c33e)]
 
