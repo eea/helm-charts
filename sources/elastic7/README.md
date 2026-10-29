@@ -203,6 +203,9 @@ helm install elastic7 ./elastic7 \
 
 ## Releases
 
+### Version 1.0.2 - 29 October 2026
+- fix default securityEnabled bug [valentinab25 - [`b3d2d21a5`](https://github.com/eea/helm-charts/commit/b3d2d21a57801c9e1e57f19c6a26b4d86aee40b6)]
+
 ### Version 1.0.1 - 07 July 2026
 - Fix variable names [valentinab25 - [`a9fd9f7e`](https://github.com/eea/helm-charts/commit/a9fd9f7e325c5c88ec727b0a5461dc723d1256d7)]
 
