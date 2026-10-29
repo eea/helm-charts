@@ -32,7 +32,7 @@ spec:
             runAsUser: 500
             runAsGroup: 500
           containers:
-          - name: data
+          - name: ldapdump
             image: {{ include "appl.image" . | quote }}
             imagePullPolicy: {{ .Values.image.pullPolicy }}
             command:

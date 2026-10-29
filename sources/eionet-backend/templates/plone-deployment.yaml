@@ -45,6 +45,9 @@ spec:
         {{- include "appl.ploneEnv" . | nindent 8 }}
         - name: SITE_ID
           value: "{{ .Values.plone.site }}"
+        volumeMounts:
+        - name: data
+          mountPath: /data
         resources:
           {{- toYaml .Values.setup.resources | nindent 10 }}
       - name: setup-tools
