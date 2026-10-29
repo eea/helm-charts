@@ -1,0 +1,17 @@
+apiVersion: v2
+name: eionet-backend
+type: application
+version: 0.1.0
+appVersion: '6.1.4-1'
+description: Eionet LDAP account tools - Plone 6 Classic backend
+icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/eionet-backend/logo_eionet.png
+home: https://github.com/eea/eionet-backend
+keywords:
+  - Plone
+  - LDAP
+  - Eionet
+# Remember to do helm dep up
+dependencies:
+  - name: postfix
+    version: 3.2.0
+    repository: https://eea.github.io/helm-charts
