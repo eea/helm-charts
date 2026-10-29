@@ -30,7 +30,18 @@ data:
 
       openapi:
         url: https://{{ .Values.serverName }}
-        
+
+      settings:
+        metadata:
+          url:
+            # Record link used in RSS and sitemap, pointing to the record page in the UI.
+            # The DB setting metadata/url/sitemapLinkUrl takes precedence if set.
+            {{- if .Values.datahub.enabled }}
+            permalink: https://{{ .Values.serverName }}/record/{{ "{{UUID}}" }}
+            {{- else }}
+            permalink: https://{{ .Values.serverName }}{{ .Values.gn46.webapp_context }}/srv/api/records/{{ "{{UUID}}" }}/formatters/xsl-view?output=html
+            {{- end }}
+
       security:
         provider: {{ .Values.gn5.security.provider | default "none" }}
         createdUser:
