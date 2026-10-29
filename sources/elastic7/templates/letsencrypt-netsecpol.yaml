@@ -1,4 +1,4 @@
-{{- if and (default .Values.securityEnabled true) ( or (.Values.kibana.ingress.letsencrypt) (.Values.esclient.ingress.letsencrypt))  }}
+{{- if and .Values.securityEnabled ( or (.Values.kibana.ingress.letsencrypt) (.Values.esclient.ingress.letsencrypt))  }}
 
 {{/*
  Letsencrypt creates a pod in the namespace and needs access on port 8089

@@ -1,4 +1,4 @@
-{{- if ( default .Values.securityEnabled true) -}}
+{{- if .Values.securityEnabled -}}
 
 {{-  if .Values.cerebro.enabled -}}
 
