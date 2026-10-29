@@ -1,4 +1,4 @@
-{{- if ( default .Values.securityEnabled true) -}}
+{{- if .Values.securityEnabled -}}
 
 {{/*
   By default, allow only access from pods in the same namespace to port 5432
