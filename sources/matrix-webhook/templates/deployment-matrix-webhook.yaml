@@ -44,6 +44,10 @@ spec:
                 secretKeyRef:
                   name: {{ include "matrix-webhook.secretName" . }}
                   key: webhook-key
+            {{- range $key := keys .Values.matrixWebhook.extraEnv | sortAlpha }}
+            - name: {{ $key }}
+              value: {{ index $.Values.matrixWebhook.extraEnv $key | quote }}
+            {{- end }}
           livenessProbe:
             httpGet:
               path: /health
