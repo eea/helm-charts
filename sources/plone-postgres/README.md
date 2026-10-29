@@ -4,6 +4,9 @@ Postgres for plone Apps.
 
 ## Releases
 
+### Version 1.1.8 - 29 October 2026
+- fix default securityEnabled bug [valentinab25 - [`2503ed06a`](https://github.com/eea/helm-charts/commit/2503ed06a7e097c7c3ad6ac7c5eeeb7947b3a74d)]
+
 ### Version 1.1.7 - 28 October 2026
 - raise memcached memory limit to 3Gi for OS/buffer headroom [Claudia Ifrim - [`ad2333e05`](https://github.com/eea/helm-charts/commit/ad2333e0576ccc962ebbfb80a25919639b7d43b3)]
 
