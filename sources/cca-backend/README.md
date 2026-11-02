@@ -10,6 +10,9 @@ and the broken-links cron job.
 Sensitive values are intentionally left empty in `values.yaml`.
 ## Releases
 
+### Version 0.12.7 - 2 November 2026
+- Backend v11.0.85-plone6.1 - skip TranslateAsync content rule on the job executor [Tiberiu Ichim - [`46281383b`](https://github.com/eea/helm-charts/commit/46281383bd75affc33fde9c1352e6331d9e70544)]
+
 ### Version 0.12.6 - 02 noiembrie 2026
 - Fix translate on change env value [Tiberiu Ichim - [`5bad456d6`](https://github.com/eea/helm-charts/commit/5bad456d68f28b0d0d265226a1bc4ddef6f6d81d)]
 
