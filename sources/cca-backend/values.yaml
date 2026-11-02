@@ -61,7 +61,11 @@ commonEnv:
   SENTRY_SITE: ""
   STATIC_BANNER_ENABLED: "No"
   TZ: ""
-  TRANSLATE_ON_CHANGE: "1"
+  # TRANSLATE_ON_CHANGE is deliberately NOT in commonEnv. It gates the TranslateAsync
+  # content rule (translation/contentrules.py), and commonEnv is shared with
+  # plone-translate. With it set there, saving a delivered translation fires the
+  # rule on the translation instance and re-queues a translation of the object that
+  # was just saved. Set it per-component (plone.environment) instead.
   TRANSLATION_AUTH_TOKEN: ""
 
 persistence:
@@ -116,6 +120,12 @@ plone:
     POSTGRES_PASSWORD: ""
   environment:
     REDIS_PORT: "6379"
+    # Only the web pods may queue translations when content changes. The translation
+    # instance must not: it is where delivered translations are saved, and the
+    # ObjectModifiedEvent from that save would otherwise re-trigger translation of
+    # the object that was just translated. Note that commonEnv wins the merge in
+    # templates/_helpers.tpl, so this key must stay out of commonEnv.
+    TRANSLATE_ON_CHANGE: "1"
   annotations: {}
   command:
     - sh
