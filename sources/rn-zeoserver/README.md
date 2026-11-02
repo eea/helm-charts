@@ -18,6 +18,9 @@ Zeoserver is the Zope server for Reportek
 
 ## Releases
 
+### Version 0.3.0 - 02 November 2026
+- Updated appVersion to 6.3-1 [Olimpiu Rob - [`640ee2a27`](https://github.com/eea/helm-charts/commit/640ee2a270ec065682c1de5711d01094c34e0059)]
+
 ### Version 0.2.0 - 07 May 2026
 - Added accessMode env, defaults to ReadWriteOnce [Olimpiu Rob - [`b28c19f4`](https://github.com/eea/helm-charts/commit/b28c19f4db879969c3cf9b4f1cf306956a10566b)]
 
