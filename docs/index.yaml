@@ -22942,6 +22942,37 @@ entries:
     version: 0.59.0
   cdr-py3:
   - apiVersion: v2
+    appVersion: 5.14-11
+    created: "2026-11-02T11:01:55.445800709Z"
+    dependencies:
+    - alias: zeoserver
+      name: rn-zeoserver
+      repository: https://eea.github.io/helm-charts
+      version: 0.2.0
+    - alias: varnish
+      condition: rn-varnish.enabled
+      name: rn-varnish
+      repository: https://eea.github.io/helm-charts
+      version: 0.6.2
+    - alias: local-converters
+      condition: rn-local-converters.enabled
+      name: rn-local-converters
+      repository: https://eea.github.io/helm-charts
+      version: 0.1.13
+    - alias: clamav
+      condition: rn-clamav.enabled
+      name: rn-clamav
+      repository: https://eea.github.io/helm-charts
+      version: 1.0.0
+    description: A CDR Helm chart for Kubernetes (Python 3 / Zope 5+ stack)
+    digest: 658b230e9c8e6e5c006b477e0bb513e3d7e76aeb745d40c7fbd7eb12fd395756
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/cdr/logo_eionet.png
+    name: cdr-py3
+    type: application
+    urls:
+    - cdr-py3-0.1.58.tgz
+    version: 0.1.58
+  - apiVersion: v2
     appVersion: 5.14-10
     created: "2026-10-30T15:44:57.712549413Z"
     dependencies:
@@ -78565,4 +78596,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2026-11-02T12:09:03.157198163+02:00"
+generated: "2026-11-02T11:01:55.438678806Z"
