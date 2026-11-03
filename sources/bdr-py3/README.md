@@ -179,6 +179,9 @@ schedule deadlines prevent a hung job from blocking future executions under
 
 ## Releases
 
+### Version 0.1.31 - 03 November 2026
+- Automated release of [eeacms/reportek-bdr:6.3-1](https://github.com/eea/eea.docker.reportek.bdr-instance/releases) [EEA Jenkins - [`3279d50e2`](https://github.com/eea/helm-charts/commit/3279d50e2db48c5b055b727261cfa8c24ee13154)]
+
 ### Version 0.1.30 - 02 November 2026
 - Automated release of [eeacms/reportek-bdr:5.14-11](https://github.com/eea/eea.docker.reportek.bdr-instance/releases) [EEA Jenkins - [`a9bdc2e25`](https://github.com/eea/helm-charts/commit/a9bdc2e2520c7bfa1434d06d506315e8f201407c)]
 
