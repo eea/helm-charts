@@ -179,6 +179,9 @@ schedule deadlines prevent a hung job from blocking future executions under
 
 ## Releases
 
+### Version 0.2.2 - 03 November 2026
+- Fallback to default zeoserver image tag in cronzeopack if not overriden [Olimpiu Rob - [`30c24fa9e`](https://github.com/eea/helm-charts/commit/30c24fa9e9d5c74f4131c8a145f13edf0fa0d4c2)]
+
 ### Version 0.2.1 - 03 November 2026
 - Removed tag from cronzeopack in values [Olimpiu Rob - [`e42c94811`](https://github.com/eea/helm-charts/commit/e42c9481111ee86dedb65316c2b8ca94b1e15c81)]
 
