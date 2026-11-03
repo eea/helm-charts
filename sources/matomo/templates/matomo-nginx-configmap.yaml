@@ -32,7 +32,28 @@ data:
         root /var/www/html;
         index index.php;
 
-        location ~ ^/(config|tmp|core|lang)(/|$) {
+        # NOTE: regex locations are evaluated in order, first match wins.
+
+        # Only these PHP entry points are executed (as in matomo-org/matomo-nginx)
+        location ~ ^/(index|matomo|piwik|js/index|plugins/HeatmapSessionRecording/configs)\.php$ {
+            try_files $fastcgi_script_name =404;
+            include fastcgi_params;
+            fastcgi_pass 127.0.0.1:9000;
+            fastcgi_index index.php;
+            fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+
+            fastcgi_read_timeout 1800s;
+            fastcgi_send_timeout 1800s;
+            fastcgi_connect_timeout 1800s;
+        }
+
+        # Deny every other PHP file
+        location ~* \.php$ {
+            deny all;
+            return 403;
+        }
+
+        location ~ ^/(config|tmp|core|lang|console|tests)(/|$) {
             deny all;
             return 403;
         }
@@ -47,23 +68,27 @@ data:
             return 403;
         }
 
-        location / {
-            try_files $uri $uri/ /index.php?$args;
+        # Root markdown files (README.md, PRIVACY.md, SECURITY.md)
+        location ~* ^/[^/]+\.md$ {
+            deny all;
+            return 403;
         }
 
-        location ~ \.php$ {
-            include fastcgi_params;
-            fastcgi_pass 127.0.0.1:9000;
-            fastcgi_index index.php;
-            fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
 
-            fastcgi_read_timeout 1800s;
-            fastcgi_send_timeout 1800s;
-            fastcgi_connect_timeout 1800s;
-        }
-
-        location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg)$ {
+        # Static assets - must stay BEFORE the libs|vendor|plugins|misc|node_modules
+        # deny, so plugin assets and misc/user logos keep loading
+        location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|webp|htm|html|ttf|eot|woff|woff2|mp3|mp4|wav|ogg|avi)$ {
             expires max;
             log_not_found off;
+        }
+
+        # Deny everything else in these directories
+        location ~ ^/(libs|vendor|plugins|misc|node_modules)(/|$) {
+            deny all;
+            return 403;
+        }
+
+        location / {
+            try_files $uri $uri/ /index.php?$args;
         }
     }
