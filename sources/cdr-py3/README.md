@@ -128,6 +128,9 @@ When `ldapMemcachedServers` is empty the env var is omitted entirely.
 
 ## Releases
 
+### Version 0.2.2 - 03 November 2026
+- Fallback to default zeoserver image tag in cronzeopack if not overriden [Olimpiu Rob - [`7f8263ba0`](https://github.com/eea/helm-charts/commit/7f8263ba099a19170310fe2abc77729569849fb2)]
+
 ### Version 0.2.1 - 03 November 2026
 - Removed tag from zeoserver in values [Olimpiu Rob - [`acf59653c`](https://github.com/eea/helm-charts/commit/acf59653c68bf6cca932b7be6f2c7cff01a1fbf4)]
 
