@@ -128,6 +128,9 @@ When `ldapMemcachedServers` is empty the env var is omitted entirely.
 
 ## Releases
 
+### Version 0.2.1 - 03 November 2026
+- Removed tag from zeoserver in values [Olimpiu Rob - [`acf59653c`](https://github.com/eea/helm-charts/commit/acf59653c68bf6cca932b7be6f2c7cff01a1fbf4)]
+
 ### Version 0.2.0 - 03 November 2026
 - Updated rn-zeoserver to 0.3.0 [Olimpiu Rob - [`21474285c`](https://github.com/eea/helm-charts/commit/21474285c40613b1d166d4297c0f64ef714745d4)]
 
