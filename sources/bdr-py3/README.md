@@ -179,6 +179,9 @@ schedule deadlines prevent a hung job from blocking future executions under
 
 ## Releases
 
+### Version 0.2.0 - 03 November 2026
+- Updated rn-zeoserver to 0.3.0 [Olimpiu Rob - [`0110266bf`](https://github.com/eea/helm-charts/commit/0110266bfd042bbc1a9f0aba07755b6597f95b60)]
+
 ### Version 0.1.31 - 03 November 2026
 - Automated release of [eeacms/reportek-bdr:6.3-1](https://github.com/eea/eea.docker.reportek.bdr-instance/releases) [EEA Jenkins - [`3279d50e2`](https://github.com/eea/helm-charts/commit/3279d50e2db48c5b055b727261cfa8c24ee13154)]
 
