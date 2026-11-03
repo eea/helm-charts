@@ -345,6 +345,9 @@ You don't need to change anything on this container, it should work by having th
 
 ## Releases
 
+### Version 3.18.2 - 03 November 2026
+- Add more strict rules in nginx config [valentinab25 - [`fdb23acd5`](https://github.com/eea/helm-charts/commit/fdb23acd5a62c829d1d4203b8efb7d7e9618f08b)]
+
 ### Version 3.18.1 - 29 October 2026
 - Fix default securityEnabled bug [valentinab25 - [`8e80d720e`](https://github.com/eea/helm-charts/commit/8e80d720ea30dbf847be6a7423151791f1fbfdec)]
 
