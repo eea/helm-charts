@@ -128,6 +128,9 @@ When `ldapMemcachedServers` is empty the env var is omitted entirely.
 
 ## Releases
 
+### Version 0.2.0 - 03 November 2026
+- Updated rn-zeoserver to 0.3.0 [Olimpiu Rob - [`21474285c`](https://github.com/eea/helm-charts/commit/21474285c40613b1d166d4297c0f64ef714745d4)]
+
 ### Version 0.1.59 - 03 November 2026
 - Automated release of [eeacms/reportek-cdr:6.3-1](https://github.com/eea/eea.docker.reportek.cdr-instance/releases) [EEA Jenkins - [`44d6c66da`](https://github.com/eea/helm-charts/commit/44d6c66da44109392ebfdef3bf285b7161f0ea6b)]
 
