@@ -29,14 +29,16 @@ instance:
   networkPolicy:
     enabled: false
     egress:
-      ipBlockRules: []
+      ipBlockRules:
+        []
         # - cidr: 10.50.4.0/24  # Example: Legacy service network
         #   ports:
         #     - protocol: TCP
         #       port: 443     # HTTPS
         #     - protocol: TCP
         #       port: 80      # HTTP
-      rawRules: []
+      rawRules:
+        []
         # - to:
         #     - namespaceSelector:
         #         matchLabels:
@@ -102,7 +104,7 @@ instance:
 cronzeopack:
   enabled: false
   repository: eeacms/reportek.zeoserver
-  tag: "z5-1.0"
+  tag: ""
   schedule: "0 3 * * *"
   resources:
     requests:
@@ -264,7 +266,7 @@ webforms:
 
 ingress:
   enabled: false
-  type: nginx  # Options: 'nginx' or 'gatewayAPI'
+  type: nginx # Options: 'nginx' or 'gatewayAPI'
 
   hostname: cdr.eionet.europa.eu
   tlsSecretName: ""
