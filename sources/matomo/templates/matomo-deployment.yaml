@@ -13,6 +13,8 @@ spec:
       labels:
         app.kubernetes.io/name: {{ .Release.Name }}-matomo
         component: matomo
+      annotations:
+        checksum/nginx-config: {{ include (print $.Template.BasePath "/matomo-nginx-configmap.yaml") . | sha256sum }}
     spec:
       securityContext:
         fsGroup: 82
