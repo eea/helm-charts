@@ -179,6 +179,9 @@ schedule deadlines prevent a hung job from blocking future executions under
 
 ## Releases
 
+### Version 0.2.1 - 03 November 2026
+- Removed tag from cronzeopack in values [Olimpiu Rob - [`e42c94811`](https://github.com/eea/helm-charts/commit/e42c9481111ee86dedb65316c2b8ca94b1e15c81)]
+
 ### Version 0.2.0 - 03 November 2026
 - Updated rn-zeoserver to 0.3.0 [Olimpiu Rob - [`0110266bf`](https://github.com/eea/helm-charts/commit/0110266bfd042bbc1a9f0aba07755b6597f95b60)]
 
