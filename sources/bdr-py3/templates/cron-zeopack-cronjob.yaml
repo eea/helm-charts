@@ -22,7 +22,10 @@ spec:
 
           containers:
           - name: {{ include "appl.fullname" . }}
-            image: "{{ .Values.cronzeopack.repository }}:{{ .Values.cronzeopack.tag | default .Chart.AppVersion }}"
+            {{- /* Fall back to the zeoserver subchart image when not explicitly set */}}
+            {{- $repository := .Values.cronzeopack.repository | default .Values.zeoserver.image.repository }}
+            {{- $tag := .Values.cronzeopack.tag | default .Values.zeoserver.image.tag | default .Subcharts.zeoserver.Chart.AppVersion }}
+            image: "{{ $repository }}:{{ $tag }}"
             imagePullPolicy: {{ .Values.image.pullPolicy }}
             resources:
               {{- toYaml .Values.cronzeopack.resources | nindent 14 }}
@@ -33,7 +36,7 @@ spec:
             - configMapRef:
                 name: {{ include "appl.fullname" . }}-instance-env
             - secretRef:
-                name: {{ include "appl.instanceSecretName" . }}
+                name: {{ include "appl.fullname" . }}-instance-env
             env:
             - name: PACK_REQUEST
               value: 'zeopack -h {{ include "appl.fullname" . }}-zeoserver -p {{ .Values.zeoserver.port | default 8100 }} -d 7 && echo "Successfully called pack"'

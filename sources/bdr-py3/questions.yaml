@@ -73,7 +73,6 @@ questions:
     default: "1Gi"
     group: "Core components"
 
-
   - variable: local-converters.resources.requests.memory
     label: "Local Converters Memory Request"
     type: string
@@ -463,17 +462,17 @@ questions:
 
   - variable: cronzeopack.repository
     label: "Cron zeopack Image Repository"
-    description: "zeopack uses the ZEO server image, not the BDR instance image."
+    description: "zeopack uses the ZEO server image, not the BDR instance image. Leave empty to use zeoserver.image.repository"
     type: string
-    default: "eeacms/reportek.zeoserver"
+    default: ""
     show_if: "cronzeopack.enabled"
     group: "Cron jobs"
 
   - variable: cronzeopack.tag
     label: "Cron zeopack Image Tag"
-    description: "Required — no fallback to Chart.AppVersion."
+    description: "Leave empty to use zeoserver.image.tag, falling back to the rn-zeoserver chart appVersion."
     type: string
-    default: "z5-1.0"
+    default: ""
     show_if: "cronzeopack.enabled"
     group: "Cron jobs"
 
