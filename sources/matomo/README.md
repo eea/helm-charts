@@ -345,6 +345,9 @@ You don't need to change anything on this container, it should work by having th
 
 ## Releases
 
+### Version 3.18.3 - 03 November 2026
+- recreate matomo on configuration change [valentinab25 - [`d76f3203c`](https://github.com/eea/helm-charts/commit/d76f3203cc22ee59df708d5ec83097ffbeafe57f)]
+
 ### Version 3.18.2 - 03 November 2026
 - Add more strict rules in nginx config [valentinab25 - [`fdb23acd5`](https://github.com/eea/helm-charts/commit/fdb23acd5a62c829d1d4203b8efb7d7e9618f08b)]
 
