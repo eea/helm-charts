@@ -26,6 +26,16 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      {{- with .Values.gn46.tmpdir }}
+      initContainers:
+      # Creates the temp directory on the gis-sdi volume, it must exist before the JVM starts
+      - name: init-tmpdir
+        image: {{ $.Values.gn46.image | default "eeacms/eea-geonetwork:eea-4.9.x-19e87b65" }}
+        command: ["sh", "-c", "mkdir -p {{ . }}"]
+        volumeMounts:
+        - mountPath: /var/local/gis_sdi
+          name: gis-sdi
+      {{- end }}
       containers:
       - name: gn46
         image: {{ .Values.gn46.image | default "eeacms/eea-geonetwork:eea-4.9.x-19e87b65" }}
@@ -39,6 +49,12 @@ spec:
         - name: JAVA_OPTS
           # The image entrypoint only passes JAVA_OPTS and GN_CONFIG_PROPERTIES to the JVM (JAVA_OPTIONS is overwritten)
           value: "-Djava.security.egd=file:/dev/./urandom -Djava.awt.headless=true -Xms512M -Xss512M -Xmx2G -XX:+UseConcMarkSweepGC -Dorg.eclipse.jetty.server.Request.maxFormContentSize={{ .Values.gn46.jetty_max_form_content_size | int64 }} -Dorg.eclipse.jetty.server.Request.maxFormKeys={{ .Values.gn46.jetty_max_form_keys | int64 }}"
+        {{- with .Values.gn46.tmpdir }}
+        # JAVA_OPTS does not work for java.io.tmpdir in this image (Jetty takes it as a start property),
+        # JAVA_TOOL_OPTIONS is read by the JVM itself
+        - name: JAVA_TOOL_OPTIONS
+          value: "-Djava.io.tmpdir={{ . }}"
+        {{- end }}
         - name: GN_CONFIG_PROPERTIES
           value: "-Dgeonetwork.security.type={{ .Values.gn46.security_type }} -Dgeonetwork.dir={{ .Values.gn46.geonetwork_dir }} -Dgeonetwork.data.dir={{ .Values.gn46.geonetwork_data_dir }} -Dgeonetwork.db.type={{ .Values.gn46.db_type }} -Dgeonetwork.schema.dir={{ .Values.gn46.schema_dir }} -Dgeonetwork.formatter.dir={{ tpl .Values.gn46.formatter_dir . }} -Dgeonetwork.indexConfig.dir={{ .Values.gn46.index_config_dir }} -Dgeonetwork.resources.dir={{ tpl .Values.gn46.resources_dir . }} -Des.host={{ .Values.gn46.es_host }} -Des.port={{ .Values.gn46.es_port }} -Des.protocol={{ .Values.gn46.es_protocol }} -Des.index.records={{ .Values.gn46.es_index_records }} -Des.url={{ tpl .Values.gn46.es_url . }} -Dgeonetwork.ESFeaturesProxy.targetUri={{ tpl .Values.gn46.es_features_proxy .}} -Dkb.url=http://kibana:5601 -Dgeonetwork.HttpDashboardProxy.targetUri={{ .Values.gn46.dashboardproxy_targeturi }} -Dapi.params.maxUploadSize={{ .Values.gn46.max_upload_size | int64 }}"
         {{- if .Values.gn46.opendal.enabled }}
