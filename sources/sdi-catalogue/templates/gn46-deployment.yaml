@@ -27,11 +27,17 @@ spec:
       {{- end }}
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
       {{- with .Values.gn46.tmpdir }}
+      {{- /* The init container deletes old files in this directory, so only accept a subdirectory of /var/local/gis_sdi/tmp/ */}}
+      {{- if or (not (regexMatch "^/var/local/gis_sdi/tmp/[A-Za-z0-9][A-Za-z0-9._/-]*$" .)) (contains ".." .) }}
+      {{- fail "gn46.tmpdir must be a subdirectory of /var/local/gis_sdi/tmp/ (letters, digits, . _ - / only, no ..)" }}
+      {{- end }}
       initContainers:
-      # Creates the temp directory on the gis-sdi volume, it must exist before the JVM starts
+      # Creates the temp directory on the gis-sdi volume, it must exist before the JVM starts.
+      # Also deletes files older than a day left by pods that were killed (strategy is Recreate,
+      # so the previous pod is gone). "|| true" so a cleanup error never blocks the start.
       - name: init-tmpdir
         image: {{ $.Values.gn46.image | default "eeacms/eea-geonetwork:eea-4.9.x-19e87b65" }}
-        command: ["sh", "-c", "mkdir -p {{ . }}"]
+        command: ["sh", "-c", "mkdir -p {{ . }} && (find {{ . }} -mindepth 1 -mtime +1 -delete || true)"]
         volumeMounts:
         - mountPath: /var/local/gis_sdi
           name: gis-sdi

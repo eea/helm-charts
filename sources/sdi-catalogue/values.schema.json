@@ -1,0 +1,32 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "gn46": {
+      "type": "object",
+      "properties": {
+        "max_upload_size": {
+          "description": "Max size in bytes of an uploaded attachment (api.params.maxUploadSize)",
+          "type": "integer",
+          "minimum": 1
+        },
+        "tmpdir": {
+          "description": "Java temp directory, empty or a subdirectory of /var/local/gis_sdi/tmp/. The template also rejects '..'",
+          "type": "string",
+          "pattern": "^$|^/var/local/gis_sdi/tmp/[A-Za-z0-9][A-Za-z0-9._/-]*$"
+        },
+        "opendal": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "presignExpirySeconds": {
+              "description": "0 disables presigned download URLs",
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        }
+      }
+    }
+  }
+}

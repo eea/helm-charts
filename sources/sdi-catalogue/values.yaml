@@ -317,7 +317,8 @@ gn46:
   # Java temp directory (-Djava.io.tmpdir). Uploads are staged there before they go to the
   # store, so it needs as much free space as the largest upload. Empty keeps the default
   # (/tmp on the node disk). It must be under /var/local/gis_sdi (the gis-sdi volume), for
-  # example /var/local/gis_sdi/tmp/gn46. Files left by a killed pod are not cleaned up.
+  # example /var/local/gis_sdi/tmp/gn46. Files left by a killed pod are deleted by the init
+  # container on the next start once they are more than a day old.
   tmpdir: ''
   db_type: postgres
   formatter_dir: "{{ .Values.gn46.geonetwork_dir }}/data/formatter"
