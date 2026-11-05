@@ -49,6 +49,10 @@ spec:
           value: {{ .Values.gn46.opendal.scheme | quote }}
         - name: OPENDAL_ROOT
           value: {{ .Values.gn46.opendal.root | quote }}
+        {{- with .Values.gn46.opendal.presignExpirySeconds }}
+        - name: OPENDAL_PRESIGN_EXPIRY_SECONDS
+          value: {{ . | quote }}
+        {{- end }}
         {{- with .Values.gn46.opendal.bucket }}
         - name: OPENDAL_BUCKET
           value: {{ . | quote }}

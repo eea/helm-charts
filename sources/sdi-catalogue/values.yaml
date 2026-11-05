@@ -341,6 +341,9 @@ gn46:
     endpoint: ''
     # Pre-created secret with the access-key-id and secret-access-key keys
     existingSecret: ''
+    # Seconds a presigned download URL stays valid. 0 disables it and GN46 streams the
+    # files itself. Keep it short, anyone with the URL can download until it expires.
+    presignExpirySeconds: 0
   # Empty by default. Large uploads are staged on the pod's disk before they go to
   # the store, so ephemeral-storage must exceed gn46.max_upload_size. Example:
   # resources:

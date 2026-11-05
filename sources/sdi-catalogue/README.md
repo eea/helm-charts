@@ -22,6 +22,7 @@ Cronjobs have been removed since the update to GN 5/ GN 46 and the new folder st
 | gn46.opendal.bucket | string | '' | Bucket name |
 | gn46.opendal.region | string | '' | Bucket region, for example `eu-west-1` |
 | gn46.opendal.endpoint | string | '' | Service endpoint. Leave empty for AWS, set it for other S3 compatible services |
+| gn46.opendal.presignExpirySeconds | integer | 0 | Seconds a presigned download URL stays valid. `0` disables presigned URLs and GN46 streams the files itself. Keep it short (a few minutes), anyone with the URL can download until it expires |
 | gn46.opendal.existingSecret | string | '' | Pre-created secret with the `access-key-id` and `secret-access-key` keys |
 | elasticsearch.image | string | 'docker.elastic.co/elasticsearch/elasticsearch:8.14.3' | Elasticsearch Docker image, used by both `elasticsearch` and `elasticsearch-es02` |
 | kibana.image | string | 'docker.elastic.co/kibana/kibana:8.14.3' | Kibana Docker image |
