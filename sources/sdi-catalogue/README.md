@@ -156,6 +156,9 @@ own filesystem store.
 
 ## Releases
 
+### Version 0.14.8 - 05 November 2026
+- Add gn46.tmpdir to move the Java temp directory (large upload staging) to the gis-sdi volume [Juan Luis Rodriguez Ponce - [`cd90c6780`](https://github.com/eea/helm-charts/commit/cd90c6780fcb9d867f09f21f7a41a276d51409bf)]
+
 ### Version 0.14.7 - 05 November 2026
 - Add gn46.opendal.presignExpirySeconds to enable presigned downloads [Juan Luis Rodriguez Ponce - [`8befd6cf6`](https://github.com/eea/helm-charts/commit/8befd6cf6a31b3acd8ba16377622ea5f9db5d85c)]
 
