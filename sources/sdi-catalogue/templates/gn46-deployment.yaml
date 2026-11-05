@@ -37,7 +37,7 @@ spec:
       # so the previous pod is gone). It prints what it finds and deletes (see the init-tmpdir logs),
       # and a cleanup error never blocks the start.
       - name: init-tmpdir
-        image: {{ $.Values.gn46.image | default "eeacms/eea-geonetwork:eea-4.9.x-19e87b65" }}
+        image: {{ $.Values.gn46.image | default "eeacms/eea-geonetwork:eea-4.9.x-b4bb7fce" }}
         command:
         - sh
         - -c
@@ -56,7 +56,7 @@ spec:
       {{- end }}
       containers:
       - name: gn46
-        image: {{ .Values.gn46.image | default "eeacms/eea-geonetwork:eea-4.9.x-19e87b65" }}
+        image: {{ .Values.gn46.image | default "eeacms/eea-geonetwork:eea-4.9.x-b4bb7fce" }}
         env:
         - name: WEBAPP_CONTEXT_PATH
           value: {{ .Values.gn46.webapp_context }}

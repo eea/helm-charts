@@ -13,7 +13,7 @@ Cronjobs have been removed since the update to GN 5/ GN 46 and the new folder st
 | serverName | string | sdi.eea.europa.eu | Name of the server |
 | serverUrl | string | <https://sdi.eea.europa.eu:443> | URL of the server. The port is required. |
 | gn5.image | string | 'eeacms/eea-geonetwork5:f422d582' | GN5 Docker image. Unset uses the default in `gn5-deployment.yaml` |
-| gn46.image | string | 'eeacms/eea-geonetwork:eea-4.9.x-19e87b65' | GN46 Docker image. Unset uses the default in `gn46-deployment.yaml` |
+| gn46.image | string | 'eeacms/eea-geonetwork:eea-4.9.x-b4bb7fce' | GN46 Docker image. Unset uses the default in `gn46-deployment.yaml` |
 | gn46.max_upload_size | integer | 100000000 | Max size in bytes of an uploaded attachment (`api.params.maxUploadSize`). The default is the GeoNetwork default (100 MB). Set it higher per environment for large files, for example `10737418240` (10 GiB) |
 | gn46.tmpdir | string | '' | Java temp directory (`-Djava.io.tmpdir`) of GN46. Uploads are staged there before they go to the store. Empty keeps `/tmp` on the node disk. Set a subdirectory of `/var/local/gis_sdi/tmp/` (for example `/var/local/gis_sdi/tmp/gn46`) to use the shared volume for very large uploads. Other paths are rejected. An init container creates it. The init container also deletes files older than a day left by killed pods |
 | gn46.resources | object | {} | Resource requests and limits of GN46. Large uploads are staged on the pod's disk, so set `ephemeral-storage` above `gn46.max_upload_size` (for example requests `3Gi` memory and `20Gi` ephemeral-storage, limits `4Gi` and `40Gi`) |
