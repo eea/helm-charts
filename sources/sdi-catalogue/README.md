@@ -154,6 +154,9 @@ own filesystem store.
 
 ## Releases
 
+### Version 0.14.6 - 05 November 2026
+- Make the gn46 max upload size configurable and add gn46 resources [Juan Luis Rodriguez Ponce - [`e1ea9cbed`](https://github.com/eea/helm-charts/commit/e1ea9cbed95c3a0d327b06fed02ab6f166801499)]
+
 ### Version 0.14.5 - 29 October 2026
 - Set the GN5 record permalink to the datahub record page, or the GN4 HTML record view without datahub [Juan Luis Rodriguez Ponce - [`29a35a680`](https://github.com/eea/helm-charts/commit/29a35a6807a7491b7540c7ba8ee2ad60080f1b78)]
 

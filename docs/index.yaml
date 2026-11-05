@@ -72265,6 +72265,23 @@ entries:
     version: 0.1.1
   sdi-catalogue:
   - apiVersion: v2
+    created: "2026-11-05T11:49:28.193263+01:00"
+    dependencies:
+    - name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.2.0
+    description: A CSW service and front end application to search and find EEA GIS
+      datasets.
+    digest: 499875313fc95857f4bad50799fbbcb8b4f0c705b800990f3c156ad5f1360712
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/sdi-catalogue/logo.svg
+    keywords:
+    - GIS
+    name: sdi-catalogue
+    type: application
+    urls:
+    - sdi-catalogue-0.14.6.tgz
+    version: 0.14.6
+  - apiVersion: v2
     created: "2026-10-29T11:44:32.789672+01:00"
     dependencies:
     - name: postfix
@@ -79538,4 +79555,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2026-11-05T09:42:49.860899145Z"
+generated: "2026-11-05T11:49:28.191883+01:00"
