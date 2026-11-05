@@ -156,6 +156,9 @@ own filesystem store.
 
 ## Releases
 
+### Version 0.14.11 - 05 November 2026
+- Update gn46 to eea-4.9.x-b4bb7fce [Juan Luis Rodriguez Ponce - [`3e35c1f4c`](https://github.com/eea/helm-charts/commit/3e35c1f4ce594fdb82fe43cd92e6eff23d94e2dd)]
+
 ### Version 0.14.10 - 05 November 2026
 - Log the init-tmpdir steps (volume free space, entries before and after, deleted files) [Juan Luis Rodriguez Ponce - [`5110b9267`](https://github.com/eea/helm-charts/commit/5110b9267c46124722f60d5fd197c7817fd7c72a)]
 
