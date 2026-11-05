@@ -68,6 +68,22 @@ affinity: {}
 config:
   logLevel: INFO
 
+# ==============================================================================
+# UPGRADE NOTIFICATIONS (#310015)
+# ==============================================================================
+# Background watcher that posts Helm release install/upgrade/rollback cards to
+# a Matrix room via the per-cluster matrix-webhook. Inert unless enabled AND
+# webhookUrl is set.
+upgradeNotify:
+  enabled: false
+  # Full matrix-webhook URL incl. key/room_id/cluster query params, e.g.
+  # http://webhook-matrix-webhook-nginx.matrix-webhook.svc.cluster.local/?key=<>&room_id=!<room>:matrix.eea.europa.eu&cluster=01dev
+  webhookUrl: ""
+  # Cluster/environment label shown in the notification card
+  cluster: ""
+  # Seconds between scans
+  interval: 60
+
 # Storage configuration
 storage:
   path: "/app/logs"
