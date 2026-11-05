@@ -156,6 +156,9 @@ own filesystem store.
 
 ## Releases
 
+### Version 0.14.10 - 05 November 2026
+- Log the init-tmpdir steps (volume free space, entries before and after, deleted files) [Juan Luis Rodriguez Ponce - [`5110b9267`](https://github.com/eea/helm-charts/commit/5110b9267c46124722f60d5fd197c7817fd7c72a)]
+
 ### Version 0.14.9 - 05 November 2026
 - Validate gn46 values with a schema, restrict gn46.tmpdir and clean old temp files in the init container [Juan Luis Rodriguez Ponce - [`ebdf6a704`](https://github.com/eea/helm-charts/commit/ebdf6a70497d737582d2cbd94bcf87d0417d1b3a)]
 
