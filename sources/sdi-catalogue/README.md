@@ -155,6 +155,9 @@ own filesystem store.
 
 ## Releases
 
+### Version 0.14.7 - 05 November 2026
+- Add gn46.opendal.presignExpirySeconds to enable presigned downloads [Juan Luis Rodriguez Ponce - [`8befd6cf6`](https://github.com/eea/helm-charts/commit/8befd6cf6a31b3acd8ba16377622ea5f9db5d85c)]
+
 ### Version 0.14.6 - 05 November 2026
 - Make the gn46 max upload size configurable and add gn46 resources [Juan Luis Rodriguez Ponce - [`e1ea9cbed`](https://github.com/eea/helm-charts/commit/e1ea9cbed95c3a0d327b06fed02ab6f166801499)]
 
