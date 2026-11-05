@@ -34,10 +34,22 @@ spec:
       initContainers:
       # Creates the temp directory on the gis-sdi volume, it must exist before the JVM starts.
       # Also deletes files older than a day left by pods that were killed (strategy is Recreate,
-      # so the previous pod is gone). "|| true" so a cleanup error never blocks the start.
+      # so the previous pod is gone). It prints what it finds and deletes (see the init-tmpdir logs),
+      # and a cleanup error never blocks the start.
       - name: init-tmpdir
         image: {{ $.Values.gn46.image | default "eeacms/eea-geonetwork:eea-4.9.x-19e87b65" }}
-        command: ["sh", "-c", "mkdir -p {{ . }} && (find {{ . }} -mindepth 1 -mtime +1 -delete || true)"]
+        command:
+        - sh
+        - -c
+        - |
+          dir={{ . }}
+          mkdir -p "$dir" || exit 1
+          echo "init-tmpdir: using $dir"
+          df -h "$dir" | tail -n 1 | sed 's/^/init-tmpdir: volume: /'
+          echo "init-tmpdir: before cleanup: $(find "$dir" -mindepth 1 | wc -l) entries, $(du -sh "$dir" | cut -f1)"
+          echo "init-tmpdir: deleting entries older than a day:"
+          find "$dir" -mindepth 1 -mtime +1 -print -delete || echo "init-tmpdir: cleanup reported errors, ignoring them"
+          echo "init-tmpdir: after cleanup: $(find "$dir" -mindepth 1 | wc -l) entries, $(du -sh "$dir" | cut -f1)"
         volumeMounts:
         - mountPath: /var/local/gis_sdi
           name: gis-sdi

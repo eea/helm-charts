@@ -34,8 +34,10 @@ expect_accepted() {
   local dir=$1 out
   out=$(render "$dir")
   grep -q 'gn46.tmpdir must be a subdirectory' <<<"$out" && { fail "'$dir' should be accepted"; return; }
-  grep -qF "\"mkdir -p $dir && (find $dir -mindepth 1 -mtime +1 -delete || true)\"" <<<"$out" \
-    || fail "'$dir' did not render the expected init container command"
+  grep -qF "          dir=$dir" <<<"$out" \
+    || fail "'$dir' was not set as the directory of the init container script"
+  grep -qF 'find "$dir" -mindepth 1 -mtime +1 -print -delete' <<<"$out" \
+    || fail "'$dir' did not render the cleanup command in the init container"
   grep -qF "value: \"-Djava.io.tmpdir=$dir\"" <<<"$out" \
     || fail "'$dir' did not render JAVA_TOOL_OPTIONS"
 }
