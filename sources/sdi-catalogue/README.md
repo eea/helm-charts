@@ -156,6 +156,9 @@ own filesystem store.
 
 ## Releases
 
+### Version 0.14.9 - 05 November 2026
+- Validate gn46 values with a schema, restrict gn46.tmpdir and clean old temp files in the init container [Juan Luis Rodriguez Ponce - [`ebdf6a704`](https://github.com/eea/helm-charts/commit/ebdf6a70497d737582d2cbd94bcf87d0417d1b3a)]
+
 ### Version 0.14.8 - 05 November 2026
 - Add gn46.tmpdir to move the Java temp directory (large upload staging) to the gis-sdi volume [Juan Luis Rodriguez Ponce - [`cd90c6780`](https://github.com/eea/helm-charts/commit/cd90c6780fcb9d867f09f21f7a41a276d51409bf)]
 
