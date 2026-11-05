@@ -14,6 +14,8 @@ Cronjobs have been removed since the update to GN 5/ GN 46 and the new folder st
 | serverUrl | string | <https://sdi.eea.europa.eu:443> | URL of the server. The port is required. |
 | gn5.image | string | 'eeacms/eea-geonetwork5:f422d582' | GN5 Docker image. Unset uses the default in `gn5-deployment.yaml` |
 | gn46.image | string | 'eeacms/eea-geonetwork:eea-4.9.x-19e87b65' | GN46 Docker image. Unset uses the default in `gn46-deployment.yaml` |
+| gn46.max_upload_size | integer | 100000000 | Max size in bytes of an uploaded attachment (`api.params.maxUploadSize`). The default is the GeoNetwork default (100 MB). Set it higher per environment for large files, for example `10737418240` (10 GiB) |
+| gn46.resources | object | {} | Resource requests and limits of GN46. Large uploads are staged on the pod's disk, so set `ephemeral-storage` above `gn46.max_upload_size` (for example requests `3Gi` memory and `20Gi` ephemeral-storage, limits `4Gi` and `40Gi`) |
 | gn46.opendal.enabled | boolean | false | Store GN46 record attachments and thumbnails with OpenDAL instead of `gn46.geonetwork_data_dir`. Needs an image that includes the OpenDAL data storage (eea-4.13.x from `8cb89f79` on) |
 | gn46.opendal.scheme | string | 's3' | OpenDAL service (`s3`, `fs`, `webdav`, ...) |
 | gn46.opendal.root | string | '/' | Folder inside the bucket. Use a different one per environment when they share a bucket |
