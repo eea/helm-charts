@@ -33,6 +33,9 @@ then bumps `appVersion` and releases through `release.sh`.
 
 ## Releases
 
+### Version 0.89.1 - 6 November 2026
+- Block portal_modifier at the edge in the frontend nginx [Tiberiu Ichim - [`236d9da23`](https://github.com/eea/helm-charts/commit/236d9da2356c4d5e119cf8545213eeb8055dc1ca)]
+
 ### Version 0.89.0 - 03 November 2026
 - Automated release of [eeacms/cca-frontend:4.50.0](https://github.com/eea/cca-frontend/releases) [EEA Jenkins - [`a96e34f99`](https://github.com/eea/helm-charts/commit/a96e34f99ba97c05407ef36cc23820164acf9704)]
 
@@ -398,4 +401,3 @@ then bumps `appVersion` and releases through `release.sh`.
 
 ### Version 0.1.1 - 13 March 2026
 - add questions [Dobricean Ioan Dorian - [`43f14405`](https://github.com/eea/helm-charts/commit/43f144055b47dddc298a8b8a5d0a15eda0dbce22)]
-
