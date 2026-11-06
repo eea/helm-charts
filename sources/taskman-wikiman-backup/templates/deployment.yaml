@@ -91,6 +91,10 @@ spec:
               value: {{ .Values.upgradeNotify.cluster | default "" | quote }}
             - name: UPGRADE_NOTIFY_CLUSTER_URL
               value: {{ .Values.upgradeNotify.clusterUrl | default "" | quote }}
+            - name: UPGRADE_NOTIFY_RELEASE_NOTES
+              value: {{ .Values.upgradeNotify.releaseNotes | default true | quote }}
+            - name: GITHUB_TOKEN
+              value: {{ .Values.upgradeNotify.githubToken | default "" | quote }}
             - name: UPGRADE_NOTIFY_INTERVAL
               value: {{ .Values.upgradeNotify.interval | default 60 | quote }}
             {{- with .Values.extraEnv }}

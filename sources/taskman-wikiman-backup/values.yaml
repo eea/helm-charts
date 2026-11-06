@@ -83,6 +83,11 @@ upgradeNotify:
   cluster: ""
   # Public URL of this cluster (ingress/console), linked in the card
   clusterUrl: ""
+  # Resolve release notes from the deployed app's git tag/commit on GitHub
+  # (best-effort, omitted when it cannot be resolved)
+  releaseNotes: true
+  # Optional GitHub token (raises the unauthenticated 60 req/h API limit)
+  githubToken: ""
   # Seconds between scans
   interval: 60
 
