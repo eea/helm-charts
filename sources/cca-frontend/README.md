@@ -5,6 +5,32 @@ Helm chart for the Climate-ADAPT frontend stack.
 The chart follows the Volto/Varnish pattern already present in this repository
 and adds the Apache routing layer used by the existing Rancher stack. Secrets
 and tokens are intentionally left empty in `values.yaml`.
+
+## Releasing
+
+`release.py` is the non-interactive equivalent of `release.sh` (which needs a
+TTY). Dry run is the default - nothing is committed, packaged or pushed without
+`--publish`:
+
+```bash
+cd sources/cca-frontend
+python3 release.py -m "block portal_modifier at the edge" --bump PATCH          # dry run
+python3 release.py -m "block portal_modifier at the edge" --bump PATCH --publish
+```
+
+`Chart.yaml` `appVersion` is the `eeacms/cca-frontend` image tag that gets
+deployed (`values.yaml` keeps `image.tag` empty). Production tags are sometimes
+bumped in Rancher without a chart release, so check the running tag before
+releasing or the upgrade silently reverts it:
+
+```bash
+kubectl -n cca get deploy volto -o jsonpath='{.spec.template.spec.containers[0].image}'
+```
+
+This chart releases configuration only - the image itself is built by the
+[cca-frontend](https://github.com/eea/cca-frontend) Jenkins pipeline, which
+then bumps `appVersion` and releases through `release.sh`.
+
 ## Releases
 
 ### Version 0.89.0 - 03 November 2026

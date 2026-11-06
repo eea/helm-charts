@@ -11,6 +11,7 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/configuration-snippet: |
+{{ include "cca-backend.ingressClassicToolGuard" . | indent 6 }}
       if ($uri ~ "^/metadata(/.*)?$") {
         return 301 https://{{ $host }}/en/metadata$is_args$args;
       }

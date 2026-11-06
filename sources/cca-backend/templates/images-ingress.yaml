@@ -8,6 +8,7 @@ metadata:
     component: cca-images
   annotations:
     nginx.ingress.kubernetes.io/configuration-snippet: |
+{{ include "cca-backend.ingressClassicToolGuard" . | indent 6 }}
 {{ include "cca-backend.ingressCommonConfigurationSnippet" . | indent 6 }}
 {{ include "cca-backend.ingressSecurityHeaders" . | indent 6 }}
     nginx.ingress.kubernetes.io/use-regex: "true"

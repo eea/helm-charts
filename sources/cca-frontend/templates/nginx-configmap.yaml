@@ -55,6 +55,27 @@ data:
         deny all;
       }
 
+      # Block traversal to the CMFEditions portal_modifier tool (an OFS
+      # OrderedFolder mounted in the portal root). It is reachable through any
+      # URL that reaches classic Plone traversal - here that is /_admin/...,
+      # which is the only public path that exposes classic Plone; everything
+      # else goes to Volto or through the ++api++ REST traverser. Blocking it
+      # at the edge is the mitigation recommended on community.plone.org while
+      # the fix is prepared upstream; the Traefik/Varnish recipes there are
+      # equivalent. Nothing in Climate-ADAPT has a content id, view or query
+      # named portal_modifier, so this cannot produce false 403s.
+      #
+      # nginx matches location regexes against the normalised, percent-decoded
+      # URI, so /portal_modifier, /a/b/portal_modifier, //portal_modifier and
+      # /portal%5Fmodifier are all caught. Unanchored on purpose - the tool is
+      # traversable at any depth. This must stay the FIRST regex location in
+      # this server block: nginx evaluates regex locations in order of
+      # appearance and stops at the first match, so it has to win over the
+      # /_admin, /++api++ and @@... locations below.
+      location ~* portal_modifier {
+        return 403;
+      }
+
       location ~ ^/@@translate-callback(.*)$ {
         rewrite ^/@@translate-callback(.*)$ /VirtualHostBase/https/$host:443/{{ include "cca-frontend.virtualHostRoot" . }}/VirtualHostRoot/@@translate-callback$1 break;
         proxy_pass http://backend_translate;

@@ -8,6 +8,27 @@ proxy_set_header X-Forwarded-Port 443;
 {{- end }}
 
 {{/*
+Edge guard for the CMFEditions portal_modifier tool.
+
+portal_modifier is an OFS OrderedFolder mounted in the portal root, so it is
+reachable from the web through any URL that reaches classic Plone traversal.
+The cca-* ingresses talk to the backend varnish directly, bypassing the
+frontend nginx (which carries the same guard in its own config), so it is
+repeated here as defence in depth. Blocking the path at the edge is the
+mitigation recommended on community.plone.org while the upstream fix is
+prepared.
+
+$uri is the normalised, percent-decoded path, so /portal%5Fmodifier and
+/a/b/portal_modifier are matched too. Nothing in Climate-ADAPT has a content
+id or view named portal_modifier, so this cannot produce false 403s.
+*/}}
+{{- define "cca-backend.ingressClassicToolGuard" -}}
+if ($uri ~* "portal_modifier") {
+  return 403;
+}
+{{- end -}}
+
+{{/*
 Security headers previously set by Apache.
 X-Frame-Options remains disabled for embed-chart paths, matching the old behavior.
 */}}

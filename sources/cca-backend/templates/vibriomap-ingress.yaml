@@ -8,6 +8,7 @@ metadata:
     component: cca-vibriomap
   annotations:
     nginx.ingress.kubernetes.io/configuration-snippet: |
+{{ include "cca-backend.ingressClassicToolGuard" . | indent 6 }}
       rewrite ^/@@vibriomap-view-simple$ /VirtualHostBase/https/{{ .Values.plone.hostname }}:443/{{ .Values.plone.site }}/VirtualHostRoot/@@vibriomap-view-simple break;
 {{ include "cca-backend.ingressCommonConfigurationSnippet" . | indent 6 }}
 {{ include "cca-backend.ingressSecurityHeaders" . | indent 6 }}

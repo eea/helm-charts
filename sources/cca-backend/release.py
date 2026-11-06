@@ -80,6 +80,13 @@ def read_version() -> str:
     return m.group(1)
 
 
+def read_app_version() -> str:
+    """appVersion is the image tag this chart deploys (values.yaml image.tag: "")."""
+    text = (CHART_DIR / "Chart.yaml").read_text()
+    m = re.search(r"^appVersion:\s*[\"']?([^\"'\s]+)", text, re.M)
+    return m.group(1) if m else "<unset>"
+
+
 def bump_version(current: str, kind: str) -> str:
     parts = current.split(".")
     if len(parts) != 3:
@@ -238,6 +245,7 @@ def main() -> int:
 
     print(f"chart:    {REL_CHART}")
     print(f"version:  {current} -> {new_version}  ({args.bump})")
+    print(f"image:    appVersion {read_app_version()} (values image.tag is the fallback)")
     print(f"changes:  {len(tracked)} tracked, {len(untracked)} untracked")
     for f in tracked:
         print(f"          M {f}")
@@ -325,7 +333,7 @@ def main() -> int:
         git("push")
 
     print(f"\n== released {CHART_NAME} {current} -> {new_version} ==")
-    print(f"next: helm upgrade -n cca cca-backend --version {new_version} ...")
+    print(f"next: helm upgrade -n cca {CHART_NAME} --version {new_version} ...")
     return 0
 
 

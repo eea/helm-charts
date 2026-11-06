@@ -8,6 +8,7 @@ metadata:
     component: cca-api
   annotations:
     nginx.ingress.kubernetes.io/configuration-snippet: |
+{{ include "cca-backend.ingressClassicToolGuard" . | indent 6 }}
       rewrite ^/(\+\+api\+\+)(.*)$ /VirtualHostBase/https/{{ .Values.plone.hostname }}:443/{{ .Values.plone.site }}/VirtualHostRoot/$1$2 break;
 {{ include "cca-backend.ingressCommonConfigurationSnippet" . | indent 6 }}
 {{ include "cca-backend.ingressSecurityHeaders" . | indent 6 }}

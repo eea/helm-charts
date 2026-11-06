@@ -340,15 +340,27 @@ async:
     # collapse into a single eTranslation request, using 1 of the service's 50
     # concurrent submissions instead of 26.
     ETL_GROUPING_ENABLED: "true"
-    # eTranslation allows 50 active submissions per client. 40 leaves headroom
-    # for manual work and retries.
-    # Do NOT drop this back to 10. At 10 the gate itself became the bottleneck
-    # and fragmented the bundling: a capacity requeue carries a frozen group
-    # payload while the closed group's window gets re-armed by stragglers, so a
-    # single object forked into many submissions. Measured 52 groups for 7
-    # objects, only 13 of 50 submissions carrying the full 26 languages - an
-    # ~8x reduction where 26x was intended, with 229 capacity requeues.
-    ETL_MAX_INFLIGHT: "40"
+    # eTranslation allows 50 active submissions per client.
+    #
+    # Two effects pull this value in opposite directions. Both are measured, so
+    # pick deliberately rather than by intuition:
+    #
+    #  * LOW values fragment bundles. A capacity requeue carries a frozen group
+    #    payload while the closed group's window gets re-armed by stragglers, so
+    #    one object forks into many submissions. At 10: 52 groups for 7 objects,
+    #    only 13 of 50 submissions carrying the full 26 languages, 229 capacity
+    #    requeues - an ~8x loss of bundling where 26x was intended.
+    #  * HIGH values make eTranslation silently drop work. Measured on the same
+    #    objects and payloads: at 40, 0 of 30 submissions were ever delivered;
+    #    at 16, 164 of 428 languages landed (38%); at 4, ~92% landed and the
+    #    section converged to zero. quota_exceeded never moved at 4.
+    #
+    # Silent loss dominates, so sweeps run at 4. The bundling cost is real but
+    # bounded (more submissions); the silent loss is unbounded - a submission
+    # that never delivers also never reports failure, so it just has to be
+    # redone. See artifacts/ro-sweep/FINDING-CONCURRENCY-AND-SKIP-CACHE.md in
+    # the cca repo.
+    ETL_MAX_INFLIGHT: "4"
     # How long the per-language jobs for one object are collected before a
     # single bundled request is submitted. Plone queues all 26 at once, so the
     # default comfortably covers them.
@@ -362,6 +374,19 @@ async:
     ETL_BREAKER_MS: "30000"
     # Skip languages already translated for byte-identical source HTML.
     ETL_SKIP_CACHE: "true"
+    # How long a submission's correlation record lives, i.e. how late a delivery
+    # may arrive and still be matched to its object. Must exceed the real
+    # delivery latency: submissions have been observed to go silent for many
+    # hours, and with the 24h default such a delivery is logged but cannot be
+    # saved. 48h.
+    ETL_CORR_TTL_SEC: "172800"
+    # A collected job older than this is dropped instead of submitted. NOTE the
+    # worker's built-in default is wrong by a factor of 1000 (7 * 86_400 ms =
+    # 10 minutes, not 7 days), which silently drops work whenever concurrency
+    # is low enough that jobs legitimately queue. Set explicitly here so the
+    # behaviour is correct regardless of image version; the code fix is tracked
+    # separately.
+    ETL_STALE_JOB_MAX_AGE_MS: "604800000"
   livenessProbe:
     tcpSocket:
       port: http
