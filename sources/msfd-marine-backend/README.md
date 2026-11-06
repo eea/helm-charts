@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 0.102.1 - 06 November 2026
+- fix(msfd-marine-backend): block portal_modifier [laszlocseh - [`c226b2534`](https://github.com/eea/helm-charts/commit/c226b253497ea9c72ff17d591cb1fed6a09e551b)]
+
 ### Version 0.102.0 - 30 October 2026
 - Automated release of [eeacms/msfd-backend:6.1.5-1](https://github.com/eea/msfd-backend/releases) [EEA Jenkins - [`e5cbc065f`](https://github.com/eea/helm-charts/commit/e5cbc065f482e5c8dd6523d96986eeca51b6dbe9)]
 
