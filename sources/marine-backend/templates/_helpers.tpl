@@ -51,6 +51,23 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
+Block the portal_modifier RCE vector (Plone security fix 20261110).
+
+Zope acquisition makes portal_modifier reachable at any depth, so match
+anywhere in the path, not only at the root. $uri is decoded and normalised
+by nginx, so percent-encoded variants (/%70ortal_modifier, //portal_modifier)
+are caught too. The check runs in the server rewrite phase, i.e. before
+location matching and before any rewrite to VirtualHostBase in the per-location
+configuration-snippet.
+*/}}
+{{- define "appl.blockPortalModifier" -}}
+nginx.ingress.kubernetes.io/server-snippet: |
+  if ($uri ~* "portal_modifier") {
+    return 403;
+  }
+{{- end }}
+
+{{/*
 Create the name of the service account to use
 */}}
 {{- define "appl.serviceAccountName" -}}

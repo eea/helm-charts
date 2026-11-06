@@ -12,6 +12,7 @@ metadata:
       rewrite ^/marine/(\+\+resource\+\+.*)$ /VirtualHostBase/https/{{ .Values.plone.hostname }}:443/{{ .Values.plone.site }}/VirtualHostRoot/_vh_marine/$1 break;
       rewrite ^/marine/(\+\+plone\+\+.*)$ /VirtualHostBase/https/{{ .Values.plone.hostname }}:443/{{ .Values.plone.site }}/VirtualHostRoot/_vh_marine/$1 break;
       rewrite ^/marine/(\+\+theme\+\+.*)$ /VirtualHostBase/https/{{ .Values.plone.hostname }}:443/{{ .Values.plone.site }}/VirtualHostRoot/_vh_marine/$1 break;
+    {{- include "appl.blockPortalModifier" . | nindent 4 }}
   {{- with .Values.ingress.annotations }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
