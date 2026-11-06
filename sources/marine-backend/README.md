@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 1.108.1 - 06 November 2026
+- fix(marine-backend): block portal_modifier [laszlocseh - [`389e93ed0`](https://github.com/eea/helm-charts/commit/389e93ed0f3f8261c1e97d49c05eb142647cd2d7)]
+
 ### Version 1.108.0 - 30 October 2026
 - Automated release of [eeacms/marine-backend:6.1.5-1](https://github.com/eea/marine-backend/releases) [EEA Jenkins - [`25ebec785`](https://github.com/eea/helm-charts/commit/25ebec7857019911379a07f952770e63638e2c31)]
 
