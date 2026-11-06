@@ -42,6 +42,9 @@ database only holds the site and the tool settings.
 
 ## Releases
 
+### Version 0.4.0 - 06 November 2026
+- Automated release of [eeacms/eionet-backend:6.1.4-2](https://github.com/eea/eionet-backend/releases) [EEA Jenkins - [`2a874263b`](https://github.com/eea/helm-charts/commit/2a874263b32dd0d8947e4e5ebfc8df2f57a119b0)]
+
 ### Version 0.3.0 - 29 October 2026
 - Remove the create-site init container: the Plone site is created through
   the web
