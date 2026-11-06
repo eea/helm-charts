@@ -9,6 +9,7 @@ metadata:
     nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/proxy-body-size: 100m
     nginx.ingress.kubernetes.io/configuration-snippet: |
+{{ include "appl.blockSnippet" . | indent 6 }}
       rewrite ^/freshwater/(\+\+resource\+\+.*)$ /VirtualHostBase/https/{{ .Values.plone.hostname }}:443/{{ .Values.plone.site }}/VirtualHostRoot/_vh_freshwater/$1 break;
       rewrite ^/freshwater/(\+\+plone\+\+.*)$ /VirtualHostBase/https/{{ .Values.plone.hostname }}:443/{{ .Values.plone.site }}/VirtualHostRoot/_vh_freshwater/$1 break;
       rewrite ^/freshwater/(\+\+theme\+\+.*)$ /VirtualHostBase/https/{{ .Values.plone.hostname }}:443/{{ .Values.plone.site }}/VirtualHostRoot/_vh_freshwater/$1 break;

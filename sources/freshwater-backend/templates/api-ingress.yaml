@@ -7,6 +7,7 @@ metadata:
     component: freshwater-api
   annotations:
     nginx.ingress.kubernetes.io/configuration-snippet: |
+{{ include "appl.blockSnippet" . | indent 6 }}
       rewrite ^/freshwater/(\+\+api\+\+)(.*)$ /VirtualHostBase/https/{{ .Values.plone.hostname }}:443/{{ .Values.plone.site }}/VirtualHostRoot/_vh_freshwater/$1$2 break;
     nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/proxy-body-size: 100m
