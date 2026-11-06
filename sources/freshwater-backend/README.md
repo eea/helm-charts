@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 3.55.1 - 06 November 2026
+- fix(freshwater-backend): block portal_modifier [laszlocseh - [`bf65d1af2`](https://github.com/eea/helm-charts/commit/bf65d1af2c79224e874643e77f2650389cb3bacc)]
+
 ### Version 3.55.0 - 06 November 2026
 - Security: block `portal_modifier` URLs in nginx ingress (Plone security fix 20261110, RCE) via `ingress.blockedPaths`
 
