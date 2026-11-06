@@ -10,6 +10,9 @@ and the broken-links cron job.
 Sensitive values are intentionally left empty in `values.yaml`.
 ## Releases
 
+### Version 0.12.10 - 6 November 2026
+- v11.0.87-plone6.1 [Tiberiu Ichim - [`b8b4278de`](https://github.com/eea/helm-charts/commit/b8b4278dede7524fbf658fdc4bf9a12c884da734)]
+
 ### Version 0.12.9 - 6 November 2026
 - Block portal_modifier at the edge; commit ETL_MAX_INFLIGHT=4 and the ETL_CORR_TTL_SEC / ETL_STALE_JOB_MAX_AGE_MS async values [Tiberiu Ichim - [`dc8c2eb5a`](https://github.com/eea/helm-charts/commit/dc8c2eb5ae030601eb2f63accd4b229630abc70a)]
 
