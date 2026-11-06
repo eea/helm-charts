@@ -6,6 +6,7 @@ metadata:
     {{- include "appl.labels" . | nindent 4 }}
     component: msfd-legacy-redirect
   annotations:
+    {{- include "appl.blockPortalModifier" . | nindent 4 }}
     nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/configuration-snippet: |
       if ($uri ~ "^/marine/(policy-and-reporting/reports-and-assessments(/.*)?)$") {

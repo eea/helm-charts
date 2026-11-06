@@ -49,6 +49,26 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
+Block the Plone/Zope portal_modifier remote code execution vector
+(Plone security fix 20261110).
+
+Zope acquisition makes portal_modifier reachable at any depth in the path
+(/portal_modifier/..., /folder/page/portal_modifier/...), so match the whole
+normalised, percent-decoded $uri instead of a fixed prefix. Ingress-nginx
+resolves ".." and duplicated slashes, so /%70ortal_modifier and //portal_modifier
+are covered as well.
+
+Applied as a server-snippet so it is evaluated before any location/rewrite
+from the individual ingress rules.
+*/}}
+{{- define "appl.blockPortalModifier" -}}
+nginx.ingress.kubernetes.io/server-snippet: |
+  if ($uri ~* "portal_modifier") {
+    return 403;
+  }
+{{- end }}
+
+{{/*
 Create the name of the service account to use
 */}}
 {{- define "appl.serviceAccountName" -}}

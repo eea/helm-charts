@@ -6,6 +6,7 @@ metadata:
     {{- include "appl.labels" . | nindent 4 }}
     component: msfd-admin
   annotations:
+    {{- include "appl.blockPortalModifier" . | nindent 4 }}
     nginx.ingress.kubernetes.io/rewrite-target: /VirtualHostBase/https/{{ .Values.plone.hostname }}:443/{{ .Values.plone.site }}/VirtualHostRoot/_vh_marine/_vh_assessment-module/_vh_admin/$1
     nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/proxy-body-size: 100m
