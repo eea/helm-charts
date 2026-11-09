@@ -51,6 +51,19 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
+Block traversal to the CMFEditions portal_modifier tool.
+
+Zope acquisition makes portal_modifier reachable at any depth in a path, so
+match the whole normalised, percent-decoded $uri before requests are rewritten
+to VirtualHostBase and forwarded to Plone.
+*/}}
+{{- define "appl.blockPortalModifier" -}}
+if ($uri ~* "portal_modifier") {
+  return 403;
+}
+{{- end }}
+
+{{/*
 Create the name of the service account to use
 */}}
 {{- define "appl.serviceAccountName" -}}

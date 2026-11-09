@@ -9,6 +9,11 @@ metadata:
     nginx.ingress.kubernetes.io/rewrite-target: /VirtualHostBase/https/{{ .Values.plone.hostname }}:443/{{ .Values.plone.site }}/VirtualHostRoot/_vh_admin/$1
     nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/proxy-body-size: 100m
+    # Run once at server level to protect every route on the Plone hostname.
+    nginx.ingress.kubernetes.io/server-snippet: |
+{{ include "appl.blockPortalModifier" . | indent 6 }}
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+{{ include "appl.blockPortalModifier" . | indent 6 }}
   {{- with .Values.ingress.annotations }}
     {{- toYaml . | nindent 4 }}
   {{- end }}

@@ -8,6 +8,7 @@ metadata:
     component: clms-api-egms
   annotations:
     nginx.ingress.kubernetes.io/configuration-snippet: |
+{{ include "appl.blockPortalModifier" . | indent 6 }}
       rewrite ^/api/(.*)$ /VirtualHostBase/https/{{ .Values.plone.hostname }}:443/{{ .Values.plone.site }}/VirtualHostRoot/_vh_api/$1 break;
     nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/proxy-body-size: 100m
