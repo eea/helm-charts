@@ -42,6 +42,9 @@ database only holds the site and the tool settings.
 
 ## Releases
 
+### Version 0.6.0 - 09 November 2026
+- Automated release of [eeacms/eionet-backend:6.1.4-4](https://github.com/eea/eionet-backend/releases) [EEA Jenkins - [`e682d97a4`](https://github.com/eea/helm-charts/commit/e682d97a483b0f72bd83b9a1933cbe99f29894c4)]
+
 ### Version 0.5.0 - 06 November 2026
 - Automated release of [eeacms/eionet-backend:6.1.4-3](https://github.com/eea/eionet-backend/releases) [EEA Jenkins - [`a9dab502b`](https://github.com/eea/helm-charts/commit/a9dab502b37679f10f74c91e30966196be501304)]
 
