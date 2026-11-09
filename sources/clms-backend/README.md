@@ -10,6 +10,9 @@ This chart deployes the CLMS backend app
 
 ## Releases
 
+### Version 2.50.1 - 09 November 2026
+- portal_modifier [GhitaB - [`5e06cddf0`](https://github.com/eea/helm-charts/commit/5e06cddf026a4bcbc2bdfb45bded3238b4c1653e)]
+
 ### Version 2.50.0 - 03 November 2026
 - Automated release of [eeacms/clms-backend:6.0.15-175](https://github.com/eea/clms-backend/releases) [EEA Jenkins - [`25cd045d0`](https://github.com/eea/helm-charts/commit/25cd045d0f33b0d0e7ddec957c0ecca3f8ae3a15)]
 
