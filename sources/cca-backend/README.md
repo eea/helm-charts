@@ -10,6 +10,9 @@ and the broken-links cron job.
 Sensitive values are intentionally left empty in `values.yaml`.
 ## Releases
 
+### Version 0.12.11 - 9 November 2026
+- async v1.2.2: fix stale-job age units (1000x) and stop caching unregistered translations [Tiberiu Ichim - [`755051da7`](https://github.com/eea/helm-charts/commit/755051da7669888e82e1a2a4e6c680cf0b2d592c)]
+
 ### Version 0.12.10 - 6 November 2026
 - v11.0.87-plone6.1 [Tiberiu Ichim - [`b8b4278de`](https://github.com/eea/helm-charts/commit/b8b4278dede7524fbf658fdc4bf9a12c884da734)]
 
