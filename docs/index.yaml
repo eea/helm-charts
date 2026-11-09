@@ -18758,6 +18758,24 @@ entries:
     version: 1.0.0
   cca-backend:
   - apiVersion: v2
+    appVersion: v11.0.88-plone6.1
+    created: "2026-11-09T12:34:20.799240797+02:00"
+    dependencies:
+    - name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.2.0
+    description: Climate-ADAPT backend
+    digest: b9369438e3cd6f50604b436e367d8f0157977371b2ea10fd9094e2a925b9fc40
+    home: https://climate-adapt.eea.europa.eu
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/cca-backend/logo.svg
+    keywords:
+    - CMS
+    name: cca-backend
+    type: application
+    urls:
+    - cca-backend-0.12.12.tgz
+    version: 0.12.12
+  - apiVersion: v2
     appVersion: v11.0.87-plone6.1
     created: "2026-11-09T11:51:22.028151777+02:00"
     dependencies:
@@ -80002,4 +80020,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2026-11-09T11:51:22.026097021+02:00"
+generated: "2026-11-09T12:34:20.797437393+02:00"

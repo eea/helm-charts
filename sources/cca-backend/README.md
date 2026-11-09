@@ -10,6 +10,9 @@ and the broken-links cron job.
 Sensitive values are intentionally left empty in `values.yaml`.
 ## Releases
 
+### Version 0.12.12 - 9 November 2026
+- plone v11.0.88-plone6.1: verify translation registration before reporting a save successful (eea.climateadapt 7.1, PR #359) [Tiberiu Ichim - [`ac0f186f2`](https://github.com/eea/helm-charts/commit/ac0f186f20fab88aa26fb931bc6ff2c1efdc1899)]
+
 ### Version 0.12.11 - 9 November 2026
 - async v1.2.2: fix stale-job age units (1000x) and stop caching unregistered translations [Tiberiu Ichim - [`755051da7`](https://github.com/eea/helm-charts/commit/755051da7669888e82e1a2a4e6c680cf0b2d592c)]
 
