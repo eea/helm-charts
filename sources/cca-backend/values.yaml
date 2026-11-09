@@ -302,17 +302,27 @@ async:
   serviceType: ClusterIP
   image:
     repository: eeacms/climateadapt-async-translate
-    # v1.2.1 adds logging to the submit_group paths that exit without
-    # submitting. Previously a cached or already-consumed group produced no
-    # output at all, which in the logs was indistinguishable from a hung job.
-    # No new env vars, no queue or schema changes.
-    # v1.2.0 carried the quota-aware eTranslation work: language bundling, the
-    # in-flight submission gate, handling of failure notifications.
-    # Published by the GitHub release - git tag v1.2.1 = 4f1ee9b, image digest
-    # sha256:037d37fda969c75d31. pullPolicy is Always and replicas is 1, so a
-    # missing tag takes the translation worker down rather than leaving it on
+    # v1.2.2 fixes two correctness bugs found during the 26-language sweep:
+    #  1. staleJobMaxAgeMs defaulted to `7 * 86_400` but is consumed as
+    #     milliseconds, so the effective default was 604,800 ms = 10 minutes,
+    #     not 7 days. Any job waiting longer than ten minutes for a gate slot
+    #     was silently dropped as stale - which made lowering ETL_MAX_INFLIGHT
+    #     look like it was losing work. Now `7 * 86_400 * 1000`, matching the
+    #     value production has been setting out-of-band.
+    #  2. markTranslated cached a language as done whenever the portal save
+    #     returned a url, even when the translation was never registered with
+    #     ITranslationManager. The skip cache then reported the object as
+    #     already translated for the full 7-day TTL and it could not converge.
+    #     Now requires `translation_registered !== false`.
+    # Backward compatible with the current portal image: the old portal does not
+    # send `translation_registered`, so it is undefined and `undefined !== false`
+    # is true - caching behaves exactly as before until the portal side
+    # (eea.climateadapt.plone #359) starts reporting false explicitly.
+    # Published by the GitHub release - git tag v1.2.2 = 4e356404, image digest
+    # sha256:9f0f35164bd6c3265718eb6. pullPolicy is Always and replicas is 1, so
+    # a missing tag takes the translation worker down rather than leaving it on
     # the previous build.
-    tag: "v1.2.1"
+    tag: "v1.2.2"
     pullPolicy: Always
   port: 3000
   resources:
