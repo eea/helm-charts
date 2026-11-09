@@ -33,6 +33,9 @@ then bumps `appVersion` and releases through `release.sh`.
 
 ## Releases
 
+### Version 0.92.0 - 09 November 2026
+- Automated release of [eeacms/cca-frontend:4.53.0](https://github.com/eea/cca-frontend/releases) [EEA Jenkins - [`3a507b568`](https://github.com/eea/helm-charts/commit/3a507b5684da1f3aa34010075c6c709e71e86bd3)]
+
 ### Version 0.91.0 - 06 November 2026
 - Automated release of [eeacms/cca-frontend:4.52.0](https://github.com/eea/cca-frontend/releases) [EEA Jenkins - [`924293172`](https://github.com/eea/helm-charts/commit/92429317236230dc15a9ed2a3247e422fdb0efe6)]
 
