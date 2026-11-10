@@ -24,6 +24,12 @@ ingress:
     cert-manager.io/cluster-issuer: 01dev-eea-letsencrypt
   certificate: dev-insitu.copernicus.01dev.eea.europa.eu-tls
   tls: enabled
+  # Path patterns (regex, matched against the decoded $uri) that are refused
+  # with 403 by nginx. portal_modifier is required by Plone security fix
+  # 20261110 (remote code execution): Zope acquisition makes it reachable at
+  # any depth, e.g. /portal_modifier/... and /folder/page/portal_modifier/...
+  blockedPaths:
+    - portal_modifier
 
 nginx:
   basicAuth:
