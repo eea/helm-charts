@@ -1,0 +1,19 @@
+{{- if .Values.ragFactsCheck.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: rag-facts-check
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: rag-facts-check
+
+spec:
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 8000
+    targetPort: http
+  selector:
+    {{- include "appl.selectorLabels" . | nindent 4 }}
+    component: rag-facts-check
+{{- end }}

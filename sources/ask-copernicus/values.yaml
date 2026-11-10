@@ -83,6 +83,14 @@ volto:
     DANSWER_USERNAME: ""
     ONYX_URL: ""
     ONYX_API_KEY: ""
+    # rag-facts-check (claim verification). Bare origin, no trailing path - the Volto
+    # add-on appends /halloumi/generate. With ragFactsCheck.enabled below, the
+    # in-cluster value is http://rag-facts-check:8000 and this entry can stay empty.
+    # Set it only to point at a checker outside this release. Cluster-internal only:
+    # the proxy sends no credential and the service has no auth. Left empty with the
+    # service disabled, the add-on falls back to http://localhost:8000 and
+    # fact-checks fail with "Fact-checker unavailable".
+    RAG_FACT_CHECKER_URL: ""
     CSP_HEADER: >-
       default-src 'none';
       base-uri 'self';
@@ -118,6 +126,84 @@ volto:
     initialDelaySeconds: 10
     failureThreshold: 12
     successThreshold: 1
+
+ragFactsCheck:
+  # Claim verification for the chatbot. The Volto add-on (volto-eea-chatbot) posts
+  # /_ha/generate to the Volto SSR proxy, which forwards it here. One instance per
+  # release; the service is cluster-internal and has no auth.
+  # NOTE: this release's image must ship @eeacms/volto-eea-chatbot >= 4.0.0, which
+  # is the version whose /_ha proxy reads RAG_FACT_CHECKER_URL. Older images still
+  # talk to the LLM gateway directly and ignore this service.
+  enabled: true
+  image:
+    repository: eeacms/rag-facts-check
+    pullPolicy: Always
+    tag: "v1.2"
+  replicaCount: 1
+  resources:
+    limits:
+      memory: 1Gi
+    requests:
+      memory: 512Mi
+  environment:
+    # OpenAI-compatible base URL of the LLM gateway (llm-toolkit / LiteLLM). The
+    # checker appends no path of its own, so include /v1.
+    LLM_API_BASE: "https://llmgw.eea.europa.eu/v1"
+    # Never commit a key. Empty here, supplied per environment (Rancher form or
+    # --set); the deployment template skips empty values, so nothing is rendered.
+    LLM_API_KEY: ""
+    # Model alias served by the gateway, not the upstream model id - see
+    # llm-toolkit's edenai deployment (model: edenai/openai/gpt-mini-latest).
+    LLM_MODEL: "edenai"
+    LLM_TEMPERATURE: "0.1"
+    LLM_MAX_TOKENS: "1024"
+    # Seconds per judge call. Varnish sits in front of Volto with
+    # first_byte_timeout=300s, so keep the whole request well under that.
+    LLM_TIMEOUT: "120"
+    # 1 turns chain-of-thought off, roughly halving judge latency on reasoning
+    # models. Endpoint-specific variants go in LLM_EXTRA_BODY.
+    LLM_DISABLE_REASONING: "1"
+    # Raw JSON merged into every request; wins over LLM_DISABLE_REASONING on
+    # conflicting keys. Empty = unused.
+    LLM_EXTRA_BODY: ""
+    # Evidence budget in characters. A document that fits inside MAX_DOCS_CHARS is
+    # passed whole; MAX_CHARS_PER_DOC only applies when the corpus overflows the
+    # total, so one huge source cannot starve the others. Matches the code defaults.
+    CHECKER_MAX_DOCS_CHARS: "100000"
+    CHECKER_MAX_CHARS_PER_DOC: "10000"
+    # Only the Volto SSR proxy calls this service, server-side, so no browser origin
+    # is required. Empty keeps the server's own default (allow all).
+    CORS_ORIGINS: ""
+  livenessProbe:
+    httpGet:
+      path: /health
+      port: http
+    periodSeconds: 20
+    timeoutSeconds: 10
+    initialDelaySeconds: 15
+    failureThreshold: 6
+    successThreshold: 1
+  startupProbe:
+    httpGet:
+      path: /health
+      port: http
+    periodSeconds: 5
+    timeoutSeconds: 10
+    initialDelaySeconds: 10
+    failureThreshold: 12
+    successThreshold: 1
+  readinessProbe:
+    httpGet:
+      path: /health
+      port: http
+    periodSeconds: 15
+    timeoutSeconds: 10
+    initialDelaySeconds: 15
+    failureThreshold: 4
+    successThreshold: 2
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
 
 service:
   type: ClusterIP
