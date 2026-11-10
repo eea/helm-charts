@@ -10,6 +10,9 @@ This chart deployes the BISE backend app
 
 ## Releases
 
+### Version 1.85.3 - 10 November 2026
+- fix(bise-backend): stop replicas fighting HPA, add memory headroom [Claudia Ifrim - [`fdef03bc2`](https://github.com/eea/helm-charts/commit/fdef03bc2136389e71aaf55569420c3b96e0b450)]
+
 ### Version 1.85.2 - 10 November 2026
 - fix(bise-backend): block portal_modifier [Claudia Ifrim - [`e1d6cb3d3`](https://github.com/eea/helm-charts/commit/e1d6cb3d31b9a3047e807073c4c37b60698361ab)]
 
