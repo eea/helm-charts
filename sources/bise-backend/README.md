@@ -10,6 +10,9 @@ This chart deployes the BISE backend app
 
 ## Releases
 
+### Version 1.85.2 - 10 November 2026
+- fix(bise-backend): block portal_modifier [Claudia Ifrim - [`e1d6cb3d3`](https://github.com/eea/helm-charts/commit/e1d6cb3d31b9a3047e807073c4c37b60698361ab)]
+
 ### Version 1.85.1 - 10 November 2026
 - Automated release of [eeacms/plone-varnish:8.0-1.0](https://github.com/eea/plone-varnish/releases) [EEA Jenkins - [`ca3310d61`](https://github.com/eea/helm-charts/commit/ca3310d61c6a042bd393a528aa532883310a3828)]
 
