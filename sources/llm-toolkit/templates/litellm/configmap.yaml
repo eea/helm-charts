@@ -16,6 +16,10 @@ data:
     {{- end }}
     {{- $models = append $models (dict "model_name" .Values.litellm.edenai.modelName "litellm_params" $edenaiParams) }}
     {{- end }}
+    {{- with .Values.litellm.litellmSettings }}
+    litellm_settings:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
     {{- if .Values.litellm.llmGuardPlugin.enabled }}
     guardrails:
       - guardrail_name: "EEA-pre-guard_noerror"

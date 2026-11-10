@@ -672,6 +672,25 @@ litellm:
   # -- Custom Langfuse host URL, defaults to the web service in this chart
   # (Langfuse credentials for LiteLLM are managed in the LiteLLM database, not here)
   langfuseHost: ""
+  # -- Raw litellm_settings block rendered into the LiteLLM config file
+  # (callbacks, default_team_settings, ...). Per-team example:
+  # litellmSettings:
+  #   default_team_settings:
+  #     - team_id: "<litellm team uuid>"
+  #       success_callback: ["langfuse_otel"]
+  #       failure_callback: ["langfuse_otel"]
+  #       langfuse_public_key: os.environ/LANGFUSE_PROJECT1_PUBLIC_KEY
+  #       langfuse_secret_key: os.environ/LANGFUSE_PROJECT1_SECRET_KEY
+  litellmSettings: {}
+  # -- Extra env vars for the LiteLLM container (e.g. per-project Langfuse keys
+  # resolved from os.environ/... references in litellmSettings):
+  # env:
+  #   - name: LANGFUSE_PROJECT1_PUBLIC_KEY
+  #     valueFrom:
+  #       secretKeyRef:
+  #         name: my-litellm-langfuse-teams
+  #         key: project1-public-key
+  env: []
 
   service:
     # -- The type of service to use for the LiteLLM application

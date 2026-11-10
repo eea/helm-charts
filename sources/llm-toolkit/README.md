@@ -121,6 +121,23 @@ litellm:
       cpu: 500m
       memory: 512Mi
 
+  # Optional litellm_settings rendered into the LiteLLM config (callbacks,
+  # default_team_settings for per-team overrides such as per-team Langfuse projects):
+  # litellmSettings:
+  #   default_team_settings:
+  #     - team_id: "<litellm team uuid>"
+  #       success_callback: ["langfuse_otel"]
+  #       failure_callback: ["langfuse_otel"]
+  #       langfuse_public_key: os.environ/LANGFUSE_PROJECT1_PUBLIC_KEY
+  #       langfuse_secret_key: os.environ/LANGFUSE_PROJECT1_SECRET_KEY
+  #   # os.environ/... references resolve from the container env, e.g.:
+  # env:
+  #   - name: LANGFUSE_PROJECT1_PUBLIC_KEY
+  #     valueFrom:
+  #       secretKeyRef:
+  #         name: my-litellm-langfuse-teams
+  #         key: project1-public-key
+
   # Optional LLM Guard plugin for content filtering
   llmGuardPlugin:
     enabled: false
@@ -334,6 +351,7 @@ helm delete llm-toolkit
 ## Releases
 
 ### Version 0.5.4 - 10 November 2026
+- Added `litellm.litellmSettings` (raw `litellm_settings` block, e.g. `default_team_settings` for per-team Langfuse projects) and `litellm.env` (extra container env vars, e.g. per-project keys referenced via `os.environ/...`)
 - Removed the unused `*-litellm-langfuse` secret and the `litellm.langfusePublicKey`/`litellm.langfuseSecretKey` values; LiteLLM Langfuse credentials are managed in the LiteLLM database (UI), not via this chart
 - Guarded the `*-litellm-db` secret and the `*-litellm-postgres-init` configmap behind `litellm.enabled` so they are not rendered when LiteLLM is disabled
 
