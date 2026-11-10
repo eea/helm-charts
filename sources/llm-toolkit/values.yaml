@@ -669,11 +669,8 @@ litellm:
   llmGuardApiUrl: ""
   llmGuardResponsePrompt: ""
 
-  # -- Langfuse public API key for LiteLLM integration
-  langfusePublicKey: ""
-  # -- Langfuse secret API key for LiteLLM integration
-  langfuseSecretKey: ""
   # -- Custom Langfuse host URL, defaults to the web service in this chart
+  # (Langfuse credentials for LiteLLM are managed in the LiteLLM database, not here)
   langfuseHost: ""
 
   service:

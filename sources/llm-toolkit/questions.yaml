@@ -303,22 +303,6 @@ questions:
     required: true
     show_if: "litellm.enabled=true"
 
-  - variable: "litellm.langfusePublicKey"
-    default: ""
-    description: "Langfuse public API key for LiteLLM integration"
-    type: "string"
-    label: "Langfuse Public Key"
-    group: "LiteLLM Langfuse Integration"
-    show_if: "litellm.enabled=true"
-
-  - variable: "litellm.langfuseSecretKey"
-    default: ""
-    description: "Langfuse secret API key for LiteLLM integration"
-    type: "password"
-    label: "Langfuse Secret Key"
-    group: "LiteLLM Langfuse Integration"
-    show_if: "litellm.enabled=true"
-
   - variable: "litellm.langfuseHost"
     default: ""
     description: "Custom Langfuse host URL (defaults to the web service in this chart)"

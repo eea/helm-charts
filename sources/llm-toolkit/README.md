@@ -110,8 +110,7 @@ LiteLLM is disabled by default. To enable it:
 litellm:
   enabled: true
   masterKey: "your-secure-master-key"
-  langfusePublicKey: "pk-your-langfuse-public-key"
-  langfuseSecretKey: "sk-your-langfuse-secret-key"
+  # Langfuse credentials for LiteLLM are managed in the LiteLLM database (UI), not via this chart
 
   # Default resource settings
   resources:
@@ -333,6 +332,10 @@ helm delete llm-toolkit
 ```
 
 ## Releases
+
+### Version 0.5.4 - 10 November 2026
+- Removed the unused `*-litellm-langfuse` secret and the `litellm.langfusePublicKey`/`litellm.langfuseSecretKey` values; LiteLLM Langfuse credentials are managed in the LiteLLM database (UI), not via this chart
+- Guarded the `*-litellm-db` secret and the `*-litellm-postgres-init` configmap behind `litellm.enabled` so they are not rendered when LiteLLM is disabled
 
 ### Version 0.5.3 - 20 October 2026
 - Fixed LiteLLM Redis wiring env names (`LITELLM_REDIS_*` -> `REDIS_*`), matching how LiteLLM v1.104.x reads its Redis connection from the environment
