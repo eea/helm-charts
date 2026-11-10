@@ -31,6 +31,18 @@ Create chart name and version as used by the chart label.
 {{- end }}
 
 {{/*
+Nginx snippet blocking Zope-acquired objects (Plone security fix 20261110, RCE).
+Zope acquisition makes portal_modifier reachable at any depth, so the pattern is
+matched anywhere in the path. nginx matches against the decoded, normalised $uri,
+so percent-encoded variants (/%70ortal_modifier) are blocked as well.
+*/}}
+{{- define "appl.blockSnippet" -}}
+{{- range .Values.ingress.blockedPaths -}}
+if ($uri ~ "{{ . }}") { return 403; }
+{{- end }}
+{{- end }}
+
+{{/*
 Common labels
 */}}
 {{- define "appl.labels" -}}
