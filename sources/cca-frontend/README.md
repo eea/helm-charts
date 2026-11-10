@@ -33,6 +33,9 @@ then bumps `appVersion` and releases through `release.sh`.
 
 ## Releases
 
+### Version 0.93.0 - 10 noiembrie 2026
+- Add rag-facts-check claim-verification service for chatbot fact-checking [Tiberiu Ichim - [`ec6251940`](https://github.com/eea/helm-charts/commit/ec6251940cb9b3f69694428ce90587784c17b4ed)]
+
 ### Version 0.92.0 - 09 November 2026
 - Automated release of [eeacms/cca-frontend:4.53.0](https://github.com/eea/cca-frontend/releases) [EEA Jenkins - [`3a507b568`](https://github.com/eea/helm-charts/commit/3a507b5684da1f3aa34010075c6c709e71e86bd3)]
 
