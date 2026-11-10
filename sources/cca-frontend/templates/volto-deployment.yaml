@@ -45,6 +45,10 @@ spec:
               value: "{{ include "cca-frontend.releaseVersion" . }}"
             - name: TZ
               value: "{{ .Values.timezone }}"
+            {{- if .Values.ragFactsCheck.enabled }}
+            - name: RAG_FACT_CHECKER_URL
+              value: "http://rag-facts-check:8000"
+            {{- end }}
             - name: VOLTO_ROBOTSTXT
               value: |-
 {{ include "cca-frontend.robotsTxt" . | nindent 16 }}
