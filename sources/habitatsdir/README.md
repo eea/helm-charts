@@ -23,6 +23,9 @@ To set the app up for Article 12 do:
 
 ## Releases
 
+### Version 1.0.13 - 10 November 2026
+- Enable postfix [Diana Boiangiu - [`062fbe067`](https://github.com/eea/helm-charts/commit/062fbe067c858d09686e91d9fb6daa0cd41905e2)]
+
 ### Version 1.0.12 - 10 November 2026
 - Upgraded eeacms/art17-consultation:4.1.0 [Diana Boiangiu - [`07d9db8b2`](https://github.com/eea/helm-charts/commit/07d9db8b2ecd330c26c7a5067b566a5096d96815)]
 
