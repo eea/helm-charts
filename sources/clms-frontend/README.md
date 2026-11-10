@@ -24,6 +24,9 @@ The chart deploys a three-tier architecture:
 
 ## Releases
 
+### Version 7.85.0 - 10 noiembrie 2026
+- Add rag-facts-check claim-verification service for chatbot fact-checking [Tiberiu Ichim - [`5e45ba443`](https://github.com/eea/helm-charts/commit/5e45ba4435fed527d7d4c9a360dc80ad288af63b)]
+
 ### Version 7.84.0 - 30 September 2026
 - Automated release of [eeacms/clms-frontend:3.604.0](https://github.com/eea/clms-frontend/releases) [EEA Jenkins - [`b0975a31`](https://github.com/eea/helm-charts/commit/b0975a31bd54fe66f35da42ecead40cc3be6c6c5)]
 
