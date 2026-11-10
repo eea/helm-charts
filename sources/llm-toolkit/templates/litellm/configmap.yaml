@@ -16,6 +16,25 @@ data:
     {{- end }}
     {{- $models = append $models (dict "model_name" .Values.litellm.edenai.modelName "litellm_params" $edenaiParams) }}
     {{- end }}
+    {{- $settings := .Values.litellm.litellmSettings | default dict }}
+    {{- with .Values.litellm.langfuse.callback }}
+    {{- $settings = set $settings "callbacks" (list .) }}
+    {{- end }}
+    {{- with .Values.litellm.langfuse.defaultTags }}
+    {{- $tags := . }}
+    {{- if kindIs "string" $tags }}{{- $tags = splitList "," $tags }}{{- end }}
+    {{- $settings = set $settings "langfuse_default_tags" $tags }}
+    {{- end }}
+    {{- with .Values.litellm.keyAliasPattern }}
+    {{- $settings = set $settings "key_alias_pattern" . }}
+    {{- end }}
+    {{- if .Values.litellm.enableKeyAliasFormatValidation }}
+    {{- $settings = set $settings "enable_key_alias_format_validation" true }}
+    {{- end }}
+    {{- with $settings }}
+    litellm_settings:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
     {{- if .Values.litellm.llmGuardPlugin.enabled }}
     guardrails:
       - guardrail_name: "EEA-pre-guard_noerror"

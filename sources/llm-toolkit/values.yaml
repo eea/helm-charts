@@ -669,12 +669,42 @@ litellm:
   llmGuardApiUrl: ""
   llmGuardResponsePrompt: ""
 
-  # -- Langfuse public API key for LiteLLM integration
-  langfusePublicKey: ""
-  # -- Langfuse secret API key for LiteLLM integration
-  langfuseSecretKey: ""
   # -- Custom Langfuse host URL, defaults to the web service in this chart
+  # (Langfuse credentials for LiteLLM are managed in the LiteLLM database, not here)
   langfuseHost: ""
+  # -- Langfuse observability + key alias policy, rendered into the LiteLLM
+  # config (litellm_settings). Blank by default; the commented lines below show
+  # the recommended EEA setup (eea/aihubintel docs/decisions/litellm-naming-convention.md):
+  # one Langfuse project for all teams, identity via tags, kebab-case aliases.
+  langfuse:
+    # -- Callback to register: "langfuse" or "langfuse_otel"; blank = not rendered
+    # (Langfuse keys/host stay in the LiteLLM database, not here)
+    # callback: "langfuse"
+    callback: ""
+    # -- Tags exported on every Langfuse trace (key/team/user identity for reporting)
+    # defaultTags:
+    #   - user_api_key_alias
+    #   - user_api_key_team_alias
+    #   - user_api_key_user_id
+    defaultTags: []
+  # -- Key alias format pattern (kebab-case); blank = not rendered
+  # keyAliasPattern: "^[a-z0-9]+(-[a-z0-9]+){1,3}$"
+  keyAliasPattern: ""
+  # -- Enforce keyAliasPattern on /key/generate and /key/update (opt-in upstream)
+  # enableKeyAliasFormatValidation: true
+  enableKeyAliasFormatValidation: false
+  # -- Raw litellm_settings rendered into the LiteLLM config file (escape hatch;
+  # merged with the structured values above, raw wins on key conflicts)
+  litellmSettings: {}
+  # -- Extra env vars for the LiteLLM container (e.g. per-project Langfuse keys
+  # resolved from os.environ/... references in litellmSettings):
+  # env:
+  #   - name: LANGFUSE_PROJECT1_PUBLIC_KEY
+  #     valueFrom:
+  #       secretKeyRef:
+  #         name: my-litellm-langfuse-teams
+  #         key: project1-public-key
+  env: []
 
   service:
     # -- The type of service to use for the LiteLLM application

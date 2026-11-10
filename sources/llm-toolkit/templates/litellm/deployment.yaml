@@ -160,6 +160,9 @@ spec:
               value: {{ .Values.litellm.llmGuardResponsePrompt | quote }}
             - name: TZ
               value: {{ .Values.timezone | default "Europe/Copenhagen" }}
+            {{- with .Values.litellm.env }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
           ports:
             - name: http
               containerPort: {{ .Values.litellm.service.port }}
