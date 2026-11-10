@@ -8,10 +8,11 @@ metadata:
     {{- include "appl.labels" . | nindent 4 }}
     component: marine-google-admin
   annotations:
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+{{ include "appl.blockSnippet" . | indent 6 }}
     nginx.ingress.kubernetes.io/rewrite-target: /VirtualHostBase/https/{{ .Values.plone.hostname }}:443/{{ .Values.plone.site }}/VirtualHostRoot/_vh_marine/_vh_admin/{{ .Values.plone.googleUrl }}$1
     nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/proxy-body-size: 100m
-    {{- include "appl.blockPortalModifier" . | nindent 4 }}
   {{- with .Values.ingress.annotations }}
     {{- toYaml . | nindent 4 }}
   {{- end }}

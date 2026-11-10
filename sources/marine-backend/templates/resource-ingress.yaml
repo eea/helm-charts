@@ -9,10 +9,10 @@ metadata:
     nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/proxy-body-size: 100m
     nginx.ingress.kubernetes.io/configuration-snippet: |
+{{ include "appl.blockSnippet" . | indent 6 }}
       rewrite ^/marine/(\+\+resource\+\+.*)$ /VirtualHostBase/https/{{ .Values.plone.hostname }}:443/{{ .Values.plone.site }}/VirtualHostRoot/_vh_marine/$1 break;
       rewrite ^/marine/(\+\+plone\+\+.*)$ /VirtualHostBase/https/{{ .Values.plone.hostname }}:443/{{ .Values.plone.site }}/VirtualHostRoot/_vh_marine/$1 break;
       rewrite ^/marine/(\+\+theme\+\+.*)$ /VirtualHostBase/https/{{ .Values.plone.hostname }}:443/{{ .Values.plone.site }}/VirtualHostRoot/_vh_marine/$1 break;
-    {{- include "appl.blockPortalModifier" . | nindent 4 }}
   {{- with .Values.ingress.annotations }}
     {{- toYaml . | nindent 4 }}
   {{- end }}

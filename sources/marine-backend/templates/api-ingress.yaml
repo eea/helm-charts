@@ -7,10 +7,10 @@ metadata:
     component: marine-api
   annotations:
     nginx.ingress.kubernetes.io/configuration-snippet: |
+{{ include "appl.blockSnippet" . | indent 6 }}
       rewrite ^/marine/(\+\+api\+\+)(.*)$ /VirtualHostBase/https/{{ .Values.plone.hostname }}:443/{{ .Values.plone.site }}/VirtualHostRoot/_vh_marine/$1$2 break;
     nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/proxy-body-size: 100m
-    {{- include "appl.blockPortalModifier" . | nindent 4 }}
   {{- with .Values.ingress.annotations }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
