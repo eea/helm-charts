@@ -39,15 +39,14 @@ plone:
   autoscaling:
     enabled: false
     minReplicas: 1
-    maxReplicas: 6
-    # targetCPUUtilizationPercentage: 80
-    targetMemoryUtilizationPercentage: 60
-  replicaCount: 2
+    maxReplicas: 10
+    targetMemoryUtilizationPercentage: 50
+  replicaCount: 1
   resources:
     limits:
-      memory: 2Gi
+      memory: 6Gi
     requests:
-      memory: 2Gi
+      memory: 4Gi
   database:
     POSTGRES_DB: database
     POSTGRES_USER: databaseuser
