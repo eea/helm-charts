@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 1.108.3 - 10 November 2026
+- fix(marine-backend): fix HPA/replicas conflict, expose autoscaling in UI [Claudia Ifrim - [`d9a07dd32`](https://github.com/eea/helm-charts/commit/d9a07dd32b29b2c93b412a66a750077fc9a9666f)]
+
 ### Version 1.108.2 - 10 November 2026
 - fix(marine-backend): block portal_modifier - standard template for thematic websites [Claudia Ifrim - [`141c323d5`](https://github.com/eea/helm-charts/commit/141c323d5af065841156db688f2989844e2ace5d)]
 
