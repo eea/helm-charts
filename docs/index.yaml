@@ -41098,6 +41098,24 @@ entries:
   fise-backend:
   - apiVersion: v2
     appVersion: 6.1.5-1
+    created: "2026-11-10T17:57:31.305883+02:00"
+    dependencies:
+    - name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.2.0
+    description: FISE backend
+    digest: aead2a9c7adc63c4bfdff5a9849456dcddc778c5581ea7ad9fc6c06231120a50
+    home: https://github.com/eea/fise-backend
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/fise-backend/logo.png
+    keywords:
+    - CMS
+    name: fise-backend
+    type: application
+    urls:
+    - fise-backend-1.72.1.tgz
+    version: 1.72.1
+  - apiVersion: v2
+    appVersion: 6.1.5-1
     created: "2026-10-30T11:53:03.83112138Z"
     dependencies:
     - name: postfix
@@ -80589,4 +80607,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2026-11-10T17:56:31.873789+02:00"
+generated: "2026-11-10T17:57:31.305027+02:00"
