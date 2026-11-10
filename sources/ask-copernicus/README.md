@@ -25,6 +25,9 @@ The chart deploys a three-tier architecture:
 
 ## Releases
 
+### Version 1.47.0 - 10 noiembrie 2026
+- Add rag-facts-check claim-verification service for chatbot fact-checking (needs frontend image with @eeacms/volto-eea-chatbot >= 4.0.0) [Tiberiu Ichim - [`fdcd6f467`](https://github.com/eea/helm-charts/commit/fdcd6f467943ce9bbe0ed5da3cc6380edae0f30f)]
+
 ### Version 1.46.0 - 21 June 2026
 - Automated release of [eeacms/ask-copernicus-frontend:3.410.0](https://github.com/eea/ask-copernicus-frontend/releases) [EEA Jenkins - [`747ed3bf`](https://github.com/eea/helm-charts/commit/747ed3bfa8343ae2bc6829957595e194796a8aa4)]
 
