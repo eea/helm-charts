@@ -10,6 +10,9 @@ This chart deployes the Forest Information System of Europe website backend app
 
 ## Releases
 
+### Version 1.72.2 - 10 November 2026
+- fix(fise-backend): fix HPA/replicas conflict, expose autoscaling in UI [Claudia Ifrim - [`e051690ca`](https://github.com/eea/helm-charts/commit/e051690cabd826481126d30371507e2b6a816a6b)]
+
 ### Version 1.72.1 - 10 November 2026
 - fix(fise-backend): block portal_modifier [Claudia Ifrim - [`d32c1f7f9`](https://github.com/eea/helm-charts/commit/d32c1f7f9835a4e714295a60d4767fe631296bdd)]
 
