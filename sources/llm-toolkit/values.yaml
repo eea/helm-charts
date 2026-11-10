@@ -672,17 +672,30 @@ litellm:
   # -- Custom Langfuse host URL, defaults to the web service in this chart
   # (Langfuse credentials for LiteLLM are managed in the LiteLLM database, not here)
   langfuseHost: ""
-  # -- Raw litellm_settings block rendered into the LiteLLM config file.
-  # Recommended (eea/aihubintel docs/decisions/litellm-naming-convention.md):
-  # one Langfuse project for all teams, identity via tags, kebab-case aliases:
-  # litellmSettings:
-  #   callbacks: ["langfuse"]
-  #   langfuse_default_tags:
+  # -- Langfuse observability + key alias policy, rendered into the LiteLLM
+  # config (litellm_settings). All blank by default. Recommended per the EEA
+  # LiteLLM naming convention (eea/aihubintel docs/decisions/litellm-naming-convention.md),
+  # one Langfuse project for all teams with identity via tags:
+  # langfuse:
+  #   callback: "langfuse"
+  #   defaultTags:
   #     - user_api_key_alias
   #     - user_api_key_team_alias
   #     - user_api_key_user_id
-  #   key_alias_pattern: "^[a-z0-9]+(-[a-z0-9]+){1,3}$"
-  #   enable_key_alias_format_validation: true
+  # keyAliasPattern: "^[a-z0-9]+(-[a-z0-9]+){1,3}$"
+  # enableKeyAliasFormatValidation: true
+  langfuse:
+    # -- Callback to register: "langfuse" or "langfuse_otel"; blank = not rendered
+    # (Langfuse keys/host stay in the LiteLLM database, not here)
+    callback: ""
+    # -- Tags exported on every Langfuse trace (key/team/user identity for reporting)
+    defaultTags: []
+  # -- Key alias format pattern (kebab-case); blank = not rendered
+  keyAliasPattern: ""
+  # -- Enforce keyAliasPattern on /key/generate and /key/update (opt-in upstream)
+  enableKeyAliasFormatValidation: false
+  # -- Raw litellm_settings rendered into the LiteLLM config file (escape hatch;
+  # merged with the structured values above, raw wins on key conflicts)
   litellmSettings: {}
   # -- Extra env vars for the LiteLLM container (e.g. per-project Langfuse keys
   # resolved from os.environ/... references in litellmSettings):

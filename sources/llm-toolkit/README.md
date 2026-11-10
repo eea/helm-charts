@@ -121,19 +121,21 @@ litellm:
       cpu: 500m
       memory: 512Mi
 
-  # Optional litellm_settings rendered into the LiteLLM config (callbacks,
-  # default tags, key alias policy). Recommended per the EEA LiteLLM naming
-  # convention (single Langfuse project, identity via tags):
-  # litellmSettings:
-  #   callbacks: ["langfuse"]
-  #   langfuse_default_tags:
+  # Optional LiteLLM settings rendered into the LiteLLM config (litellm_settings).
+  # Structured values, blank by default — recommended per the EEA LiteLLM naming
+  # convention (single Langfuse project, identity via tags, kebab-case aliases):
+  # langfuse:
+  #   callback: "langfuse"          # or "langfuse_otel"
+  #   defaultTags:
   #     - user_api_key_alias
   #     - user_api_key_team_alias
   #     - user_api_key_user_id
-  #   key_alias_pattern: "^[a-z0-9]+(-[a-z0-9]+){1,3}$"
-  #   enable_key_alias_format_validation: true
-  #   # os.environ/... references in litellmSettings resolve from the
-  #   # container env, e.g.:
+  # keyAliasPattern: "^[a-z0-9]+(-[a-z0-9]+){1,3}$"
+  # enableKeyAliasFormatValidation: true
+  #
+  # litellmSettings is a raw escape hatch merged on top of the structured values
+  # (raw wins on key conflicts); os.environ/... references resolve from the
+  # container env, which can be extended via env:
   # env:
   #   - name: SOME_KEY
   #     valueFrom:
@@ -354,7 +356,7 @@ helm delete llm-toolkit
 ## Releases
 
 ### Version 0.5.4 - 10 November 2026
-- Added `litellm.litellmSettings` (raw `litellm_settings` block, e.g. `default_team_settings` for per-team Langfuse projects) and `litellm.env` (extra container env vars, e.g. per-project keys referenced via `os.environ/...`)
+- Added structured LiteLLM settings (all blank by default): `litellm.langfuse.callback`, `litellm.langfuse.defaultTags`, `litellm.keyAliasPattern`, `litellm.enableKeyAliasFormatValidation`, rendered into `litellm_settings` per the EEA LiteLLM naming convention; `litellm.litellmSettings` remains as a raw `litellm_settings` escape hatch, and `litellm.env` adds extra container env vars (e.g. keys referenced via `os.environ/...`)
 - Removed the unused `*-litellm-langfuse` secret and the `litellm.langfusePublicKey`/`litellm.langfuseSecretKey` values; LiteLLM Langfuse credentials are managed in the LiteLLM database (UI), not via this chart
 - Guarded the `*-litellm-db` secret and the `*-litellm-postgres-init` configmap behind `litellm.enabled` so they are not rendered when LiteLLM is disabled
 
