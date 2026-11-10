@@ -37,9 +37,9 @@ plone:
   annotations: {}
   autoscaling:
     enabled: false
-    maxReplicas: 6
+    maxReplicas: 10
     minReplicas: 1
-    targetMemoryUtilizationPercentage: 60
+    targetMemoryUtilizationPercentage: 50
   site: fise
   googleUrl: google85dc6cec8f1329e5.html
   database:
@@ -78,7 +78,7 @@ plone:
   replicaCount: 1
   resources:
     limits:
-      memory: 4Gi
+      memory: 6Gi
     requests:
       memory: 4Gi
   serviceType: ClusterIP
