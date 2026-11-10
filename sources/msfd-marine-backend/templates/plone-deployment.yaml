@@ -7,7 +7,9 @@ metadata:
     component: plone
 
 spec:
+  {{- if not .Values.plone.autoscaling.enabled }}
   replicas: {{ .Values.plone.replicaCount }}
+  {{- end }}
   selector:
     matchLabels:
       {{- include "appl.selectorLabels" . | nindent 6 }}
