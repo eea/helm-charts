@@ -40,11 +40,11 @@ plone:
     enabled: false
     minReplicas: 1
     maxReplicas: 10
-    targetMemoryUtilizationPercentage: 60
+    targetMemoryUtilizationPercentage: 50
   replicaCount: 1
   resources:
     limits:
-      memory: 4Gi
+      memory: 6Gi
     requests:
       memory: 4Gi
   database:
