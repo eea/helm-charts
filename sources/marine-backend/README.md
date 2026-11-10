@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 1.109.0 - 10 November 2026
+- Automated release of [eeacms/marine-backend:6.1.6-1](https://github.com/eea/marine-backend/releases) [EEA Jenkins - [`ab544642f`](https://github.com/eea/helm-charts/commit/ab544642facb5e0961f896f186810ccdade067b6)]
+
 ### Version 1.108.3 - 10 November 2026
 - fix(marine-backend): fix HPA/replicas conflict, expose autoscaling in UI [Claudia Ifrim - [`d9a07dd32`](https://github.com/eea/helm-charts/commit/d9a07dd32b29b2c93b412a66a750077fc9a9666f)]
 
