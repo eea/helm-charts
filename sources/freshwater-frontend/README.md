@@ -4,6 +4,9 @@ A Helm chart for deploying the WISE Freshwater frontend application.
 
 ## Releases
 
+### Version 2.24.0 - 10 noiembrie 2026
+- Add rag-facts-check claim-verification service for chatbot fact-checking [Tiberiu Ichim - [`b273e2a97`](https://github.com/eea/helm-charts/commit/b273e2a97889a569c049a661793973ce9e346902)]
+
 ### Version 2.23.0 - 05 October 2026
 - Automated release of [eeacms/freshwater-frontend:2.40.0](https://github.com/eea/freshwater-frontend/releases) [EEA Jenkins - [`9de6f77f`](https://github.com/eea/helm-charts/commit/9de6f77fde1f38e1dcd9333c382a1228f0bf97d1)]
 
