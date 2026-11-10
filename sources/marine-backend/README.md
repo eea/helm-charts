@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 1.108.2 - 10 November 2026
+- fix(marine-backend): block portal_modifier - standard template for thematic websites [Claudia Ifrim - [`141c323d5`](https://github.com/eea/helm-charts/commit/141c323d5af065841156db688f2989844e2ace5d)]
+
 ### Version 1.108.1 - 06 November 2026
 - fix(marine-backend): block portal_modifier [laszlocseh - [`389e93ed0`](https://github.com/eea/helm-charts/commit/389e93ed0f3f8261c1e97d49c05eb142647cd2d7)]
 
