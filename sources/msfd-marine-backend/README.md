@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 0.102.2 - 10 November 2026
+- fix(msfd-marine-backend): fix HPA/replicas conflict, expose autoscaling in UI [Claudia Ifrim - [`9fdd669ca`](https://github.com/eea/helm-charts/commit/9fdd669ca85364ad5ba015f966e48959a8bd5617)]
+
 ### Version 0.102.1 - 06 November 2026
 - fix(msfd-marine-backend): block portal_modifier [laszlocseh - [`c226b2534`](https://github.com/eea/helm-charts/commit/c226b253497ea9c72ff17d591cb1fed6a09e551b)]
 
