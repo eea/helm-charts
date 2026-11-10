@@ -672,15 +672,17 @@ litellm:
   # -- Custom Langfuse host URL, defaults to the web service in this chart
   # (Langfuse credentials for LiteLLM are managed in the LiteLLM database, not here)
   langfuseHost: ""
-  # -- Raw litellm_settings block rendered into the LiteLLM config file
-  # (callbacks, default_team_settings, ...). Per-team example:
+  # -- Raw litellm_settings block rendered into the LiteLLM config file.
+  # Recommended (eea/aihubintel docs/decisions/litellm-naming-convention.md):
+  # one Langfuse project for all teams, identity via tags, kebab-case aliases:
   # litellmSettings:
-  #   default_team_settings:
-  #     - team_id: "<litellm team uuid>"
-  #       success_callback: ["langfuse_otel"]
-  #       failure_callback: ["langfuse_otel"]
-  #       langfuse_public_key: os.environ/LANGFUSE_PROJECT1_PUBLIC_KEY
-  #       langfuse_secret_key: os.environ/LANGFUSE_PROJECT1_SECRET_KEY
+  #   callbacks: ["langfuse"]
+  #   langfuse_default_tags:
+  #     - user_api_key_alias
+  #     - user_api_key_team_alias
+  #     - user_api_key_user_id
+  #   key_alias_pattern: "^[a-z0-9]+(-[a-z0-9]+){1,3}$"
+  #   enable_key_alias_format_validation: true
   litellmSettings: {}
   # -- Extra env vars for the LiteLLM container (e.g. per-project Langfuse keys
   # resolved from os.environ/... references in litellmSettings):

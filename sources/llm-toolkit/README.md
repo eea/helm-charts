@@ -122,21 +122,24 @@ litellm:
       memory: 512Mi
 
   # Optional litellm_settings rendered into the LiteLLM config (callbacks,
-  # default_team_settings for per-team overrides such as per-team Langfuse projects):
+  # default tags, key alias policy). Recommended per the EEA LiteLLM naming
+  # convention (single Langfuse project, identity via tags):
   # litellmSettings:
-  #   default_team_settings:
-  #     - team_id: "<litellm team uuid>"
-  #       success_callback: ["langfuse_otel"]
-  #       failure_callback: ["langfuse_otel"]
-  #       langfuse_public_key: os.environ/LANGFUSE_PROJECT1_PUBLIC_KEY
-  #       langfuse_secret_key: os.environ/LANGFUSE_PROJECT1_SECRET_KEY
-  #   # os.environ/... references resolve from the container env, e.g.:
+  #   callbacks: ["langfuse"]
+  #   langfuse_default_tags:
+  #     - user_api_key_alias
+  #     - user_api_key_team_alias
+  #     - user_api_key_user_id
+  #   key_alias_pattern: "^[a-z0-9]+(-[a-z0-9]+){1,3}$"
+  #   enable_key_alias_format_validation: true
+  #   # os.environ/... references in litellmSettings resolve from the
+  #   # container env, e.g.:
   # env:
-  #   - name: LANGFUSE_PROJECT1_PUBLIC_KEY
+  #   - name: SOME_KEY
   #     valueFrom:
   #       secretKeyRef:
-  #         name: my-litellm-langfuse-teams
-  #         key: project1-public-key
+  #         name: my-litellm-extra
+  #         key: some-key
 
   # Optional LLM Guard plugin for content filtering
   llmGuardPlugin:
