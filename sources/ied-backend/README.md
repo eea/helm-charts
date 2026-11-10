@@ -10,6 +10,9 @@ This chart deployes the European Industrial Emissions Portal backend app
 
 ## Releases
 
+### Version 2.39.3 - 10 November 2026
+- fix(ied-backend): fix HPA/replicas conflict, expose autoscaling in UI [Claudia Ifrim - [`1e5a2a367`](https://github.com/eea/helm-charts/commit/1e5a2a36775e240bbae8bf25f2b754d174f28cb3)]
+
 ### Version 2.39.2 - 10 November 2026
 - fix(ied-backend): block portal_modifier [Claudia Ifrim - [`97b72fc57`](https://github.com/eea/helm-charts/commit/97b72fc57d2313f6f25517ab673be9f4ba2d69b3)]
 
