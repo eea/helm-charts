@@ -4,6 +4,9 @@ A Helm chart for deploying the WISE Freshwater frontend application.
 
 ## Releases
 
+### Version 2.24.1 - 11 November 2026
+- Automated release of [eeacms/plone-varnish:8.0-1.0](https://github.com/eea/plone-varnish/releases) [EEA Jenkins - [`b747de520`](https://github.com/eea/helm-charts/commit/b747de5205ed0a0d7e41d06ecb7c1d38a6d09c72)]
+
 ### Version 2.24.0 - 10 noiembrie 2026
 - Add rag-facts-check claim-verification service for chatbot fact-checking [Tiberiu Ichim - [`b273e2a97`](https://github.com/eea/helm-charts/commit/b273e2a97889a569c049a661793973ce9e346902)]
 
