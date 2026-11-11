@@ -1,3 +1,5 @@
+# The Plone backend image. Leave `tag` empty to deploy the image release that
+# Chart.yaml pins in `appVersion` (templates fall back to .Chart.AppVersion).
 image:
   repository: eeacms/eea.docker.plone-climateadapt
   pullPolicy: Always
