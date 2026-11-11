@@ -10,6 +10,9 @@ This chart deployes the European Industrial Emissions Portal backend app
 
 ## Releases
 
+### Version 2.39.4 - 11 November 2026
+- Automated release of [eeacms/plone-varnish:8.0-1.0](https://github.com/eea/plone-varnish/releases) [EEA Jenkins - [`3d2bc4f02`](https://github.com/eea/helm-charts/commit/3d2bc4f02dc39a5cf387da87483f8dcfc8a8f00b)]
+
 ### Version 2.39.3 - 10 November 2026
 - fix(ied-backend): fix HPA/replicas conflict, expose autoscaling in UI [Claudia Ifrim - [`1e5a2a367`](https://github.com/eea/helm-charts/commit/1e5a2a36775e240bbae8bf25f2b754d174f28cb3)]
 
