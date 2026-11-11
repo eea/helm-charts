@@ -37,6 +37,15 @@ data:
   EVENT_LOG_LEVEL: {{ .Values.instance.env.eventLogLevel | quote }}
   PYTHONFAULTHANDLER: {{ .Values.instance.env.pythonFaulthandler | quote }}
   ZEO_CLIENT_CACHE_SIZE: {{ .Values.instance.env.zeoClientCacheSize | quote }}
+  {{- if .Values.instance.env.zodbCacheSize }}
+  ZODB_CACHE_SIZE: {{ .Values.instance.env.zodbCacheSize | quote }}
+  {{- end }}
+  {{- if .Values.instance.env.zodbCacheSizeBytes }}
+  ZODB_CACHE_SIZE_BYTES: {{ .Values.instance.env.zodbCacheSizeBytes | quote }}
+  {{- end }}
+  {{- if .Values.instance.env.zopeSecurityPolicy }}
+  ZOPE_SECURITY_POLICY: {{ .Values.instance.env.zopeSecurityPolicy | quote }}
+  {{- end }}
   {{- if ne (.Values.instance.env.zeoSharedBlobDir | default "off" | toString) "on" }}
   ZEO_CLIENT_BLOB_CACHE_SIZE: {{ .Values.instance.env.zeoClientBlobCacheSize | quote }}
   {{- end }}

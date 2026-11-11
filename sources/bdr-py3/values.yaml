@@ -99,6 +99,13 @@ instance:
     blobStorageCacheVolumeSize: 1Gi
     zeoClientCacheSize: 128MB
     zeoClientBlobCacheSize: 512MB
+    # Optional ZODB cache tuning; empty keeps the image defaults (50000 objects per
+    # Zope thread, no memory cap). The caches are per thread, so the worst case is
+    # zopeThreads x zodbCacheSizeBytes of pod memory.
+    zodbCacheSize: ""
+    zodbCacheSizeBytes: ""
+    # Zope security policy implementation (C or python); empty keeps the image default
+    zopeSecurityPolicy: ""
     # Set to "on" to mount the ZEO server's PVC directly into the instance pod
     # at /opt/zope/var/blobstorage (subPath: blobstorage) and have Zope read
     # blobs from the shared filesystem instead of streaming them over ZEO.
