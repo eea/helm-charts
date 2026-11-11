@@ -179,6 +179,9 @@ schedule deadlines prevent a hung job from blocking future executions under
 
 ## Releases
 
+### Version 0.2.8 - 11 November 2026
+- Automated release of [eeacms/reportek-bdr:6.3-6](https://github.com/eea/eea.docker.reportek.bdr-instance/releases) [EEA Jenkins - [`4c602216f`](https://github.com/eea/helm-charts/commit/4c602216fe27cd51c7ebcc204ffdc1b732a60604)]
+
 ### Version 0.2.7 - 11 November 2026
 - Added zodbCacheSize, zodbCacheSizeBytes and zopeSecurityPolicy envs [Olimpiu Rob - [`3f0894c67`](https://github.com/eea/helm-charts/commit/3f0894c675466371144f579cb7f0b1cdbb1dca05)]
 
