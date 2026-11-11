@@ -325,7 +325,7 @@ questions:
     group: "Resources"
 
   - variable: mongodb.resources.requests.memory
-    default: "2Gi"
+    default: "3Gi"
     description: "Memory request for each MongoDB member"
     type: string
     label: MongoDB Memory Request
@@ -333,7 +333,7 @@ questions:
     group: "Resources"
 
   - variable: mongodb.resources.limits.memory
-    default: "2Gi"
+    default: "3Gi"
     description: "Memory limit for each MongoDB member"
     type: string
     label: MongoDB Memory Limit

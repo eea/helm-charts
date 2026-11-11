@@ -56,12 +56,17 @@ mongodb:
   persistence:
     storageClass: nfs-client
     size: 20Gi
+  # WiredTiger cache is ~50% of (limit - 1Gi). mongosh run in the mongodb container shares this limit.
   resources:
     requests:
       cpu: 100m
-      memory: 2Gi
+      memory: 3Gi
     limits:
-      memory: 2Gi
+      memory: 3Gi
+  # Same scheduling as the Graylog nodes (graylog.graylog.nodeSelector / tolerations), e.g. on
+  # nodes reserved with the label and NoSchedule taint ReservedFor=Graylog:
+  #   nodeSelector: {ReservedFor: Graylog}
+  #   tolerations: [{key: ReservedFor, operator: Equal, value: Graylog, effect: NoSchedule}]
   nodeSelector: {}
   tolerations: []
   affinity: {}
@@ -80,9 +85,9 @@ inputsService:
   externalTrafficPolicy: Cluster   # Local keeps the client source IP but only answers on nodes running Graylog
  
 graylog:
-  # ---- Graylog image tag (graylog/graylog). The official chart 2.1.0 ships 7.1.8; keep this equal
+  # ---- Graylog image tag (graylog/graylog). The official chart 2.1.1 ships 7.1.8; keep this equal
   # to appVersion in Chart.yaml.
-  version: "7.2.1"
+  version: "7.2.2"
 
   # ---- Indexer: your existing OpenSearch (>= 2.x, up to 2.19.x). No Graylog Data Node.
   datanode:
