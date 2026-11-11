@@ -656,6 +656,31 @@ questions:
     default: "128MB"
     group: "Advanced Settings"
 
+  - variable: instance.env.zodbCacheSize
+    label: "ZODB Cache Size (objects per thread)"
+    description: "Number of objects each Zope thread keeps in its ZODB cache. Empty uses the image default (50000)."
+    type: string
+    default: ""
+    group: "Advanced Settings"
+
+  - variable: instance.env.zodbCacheSizeBytes
+    label: "ZODB Cache Size Limit (bytes per thread)"
+    description: "Optional memory cap for each thread's ZODB cache, e.g. 500MB. Worst case pod usage is Zope Threads x this value. Empty means no cap."
+    type: string
+    default: ""
+    group: "Advanced Settings"
+
+  - variable: instance.env.zopeSecurityPolicy
+    label: "Zope Security Policy"
+    description: "Security policy implementation (C or python). Empty uses the image default."
+    type: enum
+    options:
+      - ""
+      - "C"
+      - "python"
+    default: ""
+    group: "Advanced Settings"
+
   - variable: instance.env.zeoClientBlobCacheSize
     label: "ZEO Client Blob Cache Size"
     description: "Size of the local blob cache. Only applies when shared-blob mode is off."
