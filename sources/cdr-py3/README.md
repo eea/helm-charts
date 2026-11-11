@@ -128,6 +128,9 @@ When `ldapMemcachedServers` is empty the env var is omitted entirely.
 
 ## Releases
 
+### Version 0.2.9 - 11 November 2026
+- Release of dependent chart rn-varnish:0.8.0 [EEA Jenkins - [`4d0bd4923`](https://github.com/eea/helm-charts/commit/4d0bd4923bdf8a37dab3dfc05ef5bdb6410ed237)]
+
 ### Version 0.2.8 - 11 November 2026
 - Added zodbCacheSize, zodbCacheSizeBytes and zopeSecurityPolicy envs [Olimpiu Rob - [`49c0dabb1`](https://github.com/eea/helm-charts/commit/49c0dabb1b29b04bbd8874fc03fefc1f7c2f9c7a)]
 
