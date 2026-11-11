@@ -17,6 +17,9 @@ This chart deployes the PloneSaaS app together with several frontends as Ingress
 
 ## Releases
 
+### Version 2.18.3 - 11 November 2026
+- add climate energy api annotations [valentinab25 - [`a74d84176`](https://github.com/eea/helm-charts/commit/a74d84176cff37fdd34bd2709a166c87f3c816be)]
+
 ### Version 2.18.2 - 11 November 2026
 - Upgrade varnish plonesaas [valentinab25 - [`f31e6ea05`](https://github.com/eea/helm-charts/commit/f31e6ea05db86f72cadbeff9c6c7bea7f33cf26b)]
 
