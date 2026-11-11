@@ -26,7 +26,7 @@ spec:
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
       containers:
       - name: varnish
-        image: eeacms/varnish-plonesaas:4.1-6.4
+        image: eeacms/varnish-plonesaas:7.7-1.0
         env:
         - name: TZ
           value: "{{ .Values.timezone }}"
@@ -38,8 +38,6 @@ spec:
         ports:
         - containerPort: 6081
           name: webui
-        - containerPort: 6085
-          name: dashboard
 
         livenessProbe:
           httpGet:
