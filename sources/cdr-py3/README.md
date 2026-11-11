@@ -128,6 +128,9 @@ When `ldapMemcachedServers` is empty the env var is omitted entirely.
 
 ## Releases
 
+### Version 0.2.8 - 11 November 2026
+- Added zodbCacheSize, zodbCacheSizeBytes and zopeSecurityPolicy envs [Olimpiu Rob - [`49c0dabb1`](https://github.com/eea/helm-charts/commit/49c0dabb1b29b04bbd8874fc03fefc1f7c2f9c7a)]
+
 ### Version 0.2.7 - 11 November 2026
 - Automated release of [eeacms/reportek-cdr:6.3-5](https://github.com/eea/eea.docker.reportek.cdr-instance/releases) [EEA Jenkins - [`57487a05b`](https://github.com/eea/helm-charts/commit/57487a05bf2df681c369fe4e39692d33c5c4b5c8)]
 
