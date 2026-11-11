@@ -166,6 +166,9 @@ and back with `.../override/alive`.
 
 ## Releases
 
+### Version 1.0.6 - 11 November 2026
+- Upgrade graylog 7.2.2, chart to 2.1.1 and increase default mongodb memory [valentinab25 - [`dee9d2c33`](https://github.com/eea/helm-charts/commit/dee9d2c33fd896b1c0bbf85a4ffc5a81d1efe676)]
+
 ### Version 1.0.5 - 29 October 2026
 - OpenSearch request timeout raised from 60 s to 5 minutes (`GRAYLOG_ELASTICSEARCH_SOCKET_TIMEOUT`). On production the message-count histogram over 30 days takes about 55 s; anything slower failed with the widget error "null"
 - Ingress nginx settings in `ingress.configuration`, as in the other EEA charts: proxy read/send timeout 360 s (nginx default 60 s), so synchronous searches and CSV exports are not cut off by the ingress before Graylog's 5 minutes, and body size 100m (nginx default 1m) for content pack uploads
