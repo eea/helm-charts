@@ -24,6 +24,9 @@ The chart deploys a three-tier architecture:
 
 ## Releases
 
+### Version 7.85.1 - 11 November 2026
+- Automated release of [eeacms/plone-varnish:8.0-1.0](https://github.com/eea/plone-varnish/releases) [EEA Jenkins - [`3793dcd97`](https://github.com/eea/helm-charts/commit/3793dcd9784564be5c6b301638ee3800a277f13b)]
+
 ### Version 7.85.0 - 10 noiembrie 2026
 - Add rag-facts-check claim-verification service for chatbot fact-checking [Tiberiu Ichim - [`5e45ba443`](https://github.com/eea/helm-charts/commit/5e45ba4435fed527d7d4c9a360dc80ad288af63b)]
 
