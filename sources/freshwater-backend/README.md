@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 3.57.0 - 11 November 2026
+- Automated release of [eeacms/freshwater-backend:6.1.6-2](https://github.com/eea/freshwater-backend/releases) [EEA Jenkins - [`02788141e`](https://github.com/eea/helm-charts/commit/02788141e122a601cd08c7f89de40a9889f2631e)]
+
 ### Version 3.56.1 - 11 November 2026
 - Automated release of [eeacms/plone-varnish:8.0-1.0](https://github.com/eea/plone-varnish/releases) [EEA Jenkins - [`a37c1e1dd`](https://github.com/eea/helm-charts/commit/a37c1e1dd98d6d0283978d9ad2b5012530e17937)]
 
