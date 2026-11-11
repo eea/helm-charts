@@ -10,6 +10,9 @@ and the broken-links cron job.
 Sensitive values are intentionally left empty in `values.yaml`.
 ## Releases
 
+### Version 0.14.0 - 11 November 2026
+- Automated release of [eeacms/eea.docker.plone-climateadapt:v11.0.91-plone6.1](https://github.com/eea/eea.docker.plone-climateadapt/releases) [EEA Jenkins - [`a08817e94`](https://github.com/eea/helm-charts/commit/a08817e94482876514822b9ec7e9ba1bb695c25b)]
+
 ### Version 0.13.1 - 11 noiembrie 2026
 - Re-release of the v11.0.90-plone6.1 chart package (0.13.0 was committed but GitHub Pages had not published it); document that image.tag defaults to Chart.AppVersion [Tiberiu Ichim - [`af38f067c`](https://github.com/eea/helm-charts/commit/af38f067cdd3c5e269d0e143bcf1e3d8f138bf6e)]
 
