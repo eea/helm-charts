@@ -183,10 +183,12 @@ varnish:
       memory: 5Gi
     limits:
       memory: 5Gi
+  # Healthy while the varnishd child is running (varnishadm status), so that the pod is not
+  # restarted, and its cache lost, when only the backend is down or slow.
   livenessProbe:
-    httpGet:
-      path: /
-      port: 8080
+    exec:
+      command:
+        - /docker-healthcheck.sh
     initialDelaySeconds: 30
     periodSeconds: 20
     failureThreshold: 3
