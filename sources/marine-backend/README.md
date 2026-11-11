@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 1.109.2 - 11 November 2026
+- Automated release of [eeacms/plone-varnish:8.0-1.0](https://github.com/eea/plone-varnish/releases) [EEA Jenkins - [`7f5de3b18`](https://github.com/eea/helm-charts/commit/7f5de3b187acdbe794805c05b82f4eeb04413196)]
+
 ### Version 1.109.1 - 11 November 2026
 - Automated release of [eeacms/marine-backend:6.1.6-1.beta.01](https://github.com/eea/marine-backend/releases) [EEA Jenkins - [`6be0f2164`](https://github.com/eea/helm-charts/commit/6be0f2164920aae06d4bad3eb5a7f2bbafe9d2f3)]
 
