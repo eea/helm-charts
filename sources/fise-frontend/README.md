@@ -10,6 +10,9 @@ This chart deployes the Forest Information System of Europe website frontend app
 
 ## Releases
 
+### Version 1.34.2 - 11 November 2026
+- Automated release of [eeacms/plone-varnish:8.0-1.0](https://github.com/eea/plone-varnish/releases) [EEA Jenkins - [`722689ef2`](https://github.com/eea/helm-charts/commit/722689ef2f422e6948d5eeff3f404211f70c8949)]
+
 ### Version 1.34.1 - 26 August 2026
 - rename RAZZLE_PROXY_ES/QA_DSN env vars to match volto-searchlib 5.x [Claudia Ifrim - [`265d7746`](https://github.com/eea/helm-charts/commit/265d7746653333a2ede9385e006474a180d57678)]
 
