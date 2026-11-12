@@ -2,6 +2,9 @@
 
 ## Releases
 
+### Version 3.59.1 - 12 November 2026
+- Automated release of [eeacms/plone-varnish:9.1-1.0](https://github.com/eea/plone-varnish/releases) [EEA Jenkins - [`3b538bec9`](https://github.com/eea/helm-charts/commit/3b538bec93ae059ee46a7b5ebaae70144e48d71b)]
+
 ### Version 3.59.0 - 12 November 2026
 - Automated release of [eeacms/freshwater-backend:6.1.6-4](https://github.com/eea/freshwater-backend/releases) [EEA Jenkins - [`f088ba93b`](https://github.com/eea/helm-charts/commit/f088ba93b2e03a728e698494da8d2d6dde67bca5)]
 
