@@ -25,6 +25,9 @@ The chart deploys a three-tier architecture:
 
 ## Releases
 
+### Version 1.47.2 - 12 November 2026
+- Automated release of [eeacms/plone-varnish:9.1-1.0](https://github.com/eea/plone-varnish/releases) [EEA Jenkins - [`66101d906`](https://github.com/eea/helm-charts/commit/66101d906b4e1b369809564bcdb17c10568322e4)]
+
 ### Version 1.47.1 - 10 November 2026
 - Automated release of [eeacms/plone-varnish:8.0-1.0](https://github.com/eea/plone-varnish/releases) [EEA Jenkins - [`8b3c12429`](https://github.com/eea/helm-charts/commit/8b3c1242904529b837e4b25e36569586436c52b6)]
 
