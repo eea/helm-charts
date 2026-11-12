@@ -156,6 +156,9 @@ own filesystem store.
 
 ## Releases
 
+### Version 0.14.12 - 12 November 2026
+- Refuse changes through the GN5 attachment API and serve its reads from GN46 when gn46.opendal is enabled [Juan Luis Rodriguez Ponce - [`4fdc87d82`](https://github.com/eea/helm-charts/commit/4fdc87d824e5a89cecc1f2a63ec0499e3933c9ec)]
+
 ### Version 0.14.11 - 05 November 2026
 - Update gn46 to eea-4.9.x-b4bb7fce [Juan Luis Rodriguez Ponce - [`3e35c1f4c`](https://github.com/eea/helm-charts/commit/3e35c1f4ce594fdb82fe43cd92e6eff23d94e2dd)]
 
