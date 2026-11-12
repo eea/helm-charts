@@ -121,6 +121,17 @@ data:
         RewriteEngine On
         RewriteRule ^/catalogue/srv/(.*)/csw-(.*) /catalogue/$2/eng/csw  [L,R]
 
+        {{- if .Values.gn46.opendal.enabled }}
+
+        # Record attachments are in the GN46 OpenDAL store. GN5 only has a filesystem store, so
+        # its attachment API cannot find them and would write new files to its own disk:
+        # refuse changes through it and serve reads from GN46 (through GN5, which adds the
+        # authentication headers GN46 expects). RewriteRules run before the ProxyPass below.
+        RewriteCond %{REQUEST_METHOD} !^(GET|HEAD)$
+        RewriteRule ^{{ .Values.gn46.webapp_context }}/api/records/[^/]+/attachments(/.*)?$ - [F,L]
+        RewriteRule ^{{ .Values.gn46.webapp_context }}/api/records/([^/]+)/attachments(/.*)?$ http://gn5:8080{{ .Values.gn46.webapp_context }}/srv/api/records/$1/attachments$2 [P,L]
+        {{- end }}
+
         <Location {{ .Values.gn46.webapp_context }}>
             AllowOverride None
 
