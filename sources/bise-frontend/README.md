@@ -10,6 +10,9 @@ This chart deployes the BISE frontend app
 
 ## Releases
 
+### Version 2.26.5 - 12 November 2026
+- Automated release of [eeacms/plone-varnish:9.1-1.0](https://github.com/eea/plone-varnish/releases) [EEA Jenkins - [`e590b3b9a`](https://github.com/eea/helm-charts/commit/e590b3b9a4d2e8887351d6aec271e474b5ae22cc)]
+
 ### Version 2.26.4 - 10 November 2026
 - Automated release of [eeacms/plone-varnish:8.0-1.0](https://github.com/eea/plone-varnish/releases) [EEA Jenkins - [`d8cd52396`](https://github.com/eea/helm-charts/commit/d8cd52396134a64266a47e207555d01ecc0c72d6)]
 
