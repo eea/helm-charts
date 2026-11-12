@@ -65,6 +65,9 @@ To customize the network policies, you should modify the `instance.networkPolicy
 
 ## Releases
 
+### Version 0.82.3 - 12 November 2026
+- Release of dependent chart rn-varnish:0.9.0 [EEA Jenkins - [`c39838982`](https://github.com/eea/helm-charts/commit/c39838982da22dee96bd43005c2431a74d8009cd)]
+
 ### Version 0.82.2 - 11 November 2026
 - Release of dependent chart rn-varnish:0.8.0 [EEA Jenkins - [`935591abc`](https://github.com/eea/helm-charts/commit/935591abc2c293f8901e79b756c2bab6fb7db8ea)]
 
