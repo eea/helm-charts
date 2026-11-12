@@ -10,6 +10,9 @@ and the broken-links cron job.
 Sensitive values are intentionally left empty in `values.yaml`.
 ## Releases
 
+### Version 0.15.1 - 12 November 2026
+- async v1.3.0: delivery watchdog - re-submit translations whose delivery never arrives [Tiberiu Ichim - [`38dedf9c2`](https://github.com/eea/helm-charts/commit/38dedf9c2b8740e12f6d63d7e632a14dd5ee8948)]
+
 ### Version 0.15.0 - 12 November 2026
 - Automated release of [eeacms/eea.docker.plone-climateadapt:v11.0.93-plone6.1](https://github.com/eea/eea.docker.plone-climateadapt/releases) [EEA Jenkins - [`bfdcb8933`](https://github.com/eea/helm-charts/commit/bfdcb89337abac9724962828fcbc8508acd1edbb)]
 
