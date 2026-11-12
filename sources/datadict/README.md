@@ -4,6 +4,9 @@ This chart is configured for production use.
 
 ## Releases
 
+### Version 4.1.2
+- Removal of 'vocabulary' type in attributes. Vocabulary update failing fix.
+
 ### Version 4.1.1
 - Logging filter for rpcrouter.
 
