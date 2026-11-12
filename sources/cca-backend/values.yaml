@@ -304,27 +304,30 @@ async:
   serviceType: ClusterIP
   image:
     repository: eeacms/climateadapt-async-translate
-    # v1.2.2 fixes two correctness bugs found during the 26-language sweep:
-    #  1. staleJobMaxAgeMs defaulted to `7 * 86_400` but is consumed as
-    #     milliseconds, so the effective default was 604,800 ms = 10 minutes,
-    #     not 7 days. Any job waiting longer than ten minutes for a gate slot
-    #     was silently dropped as stale - which made lowering ETL_MAX_INFLIGHT
-    #     look like it was losing work. Now `7 * 86_400 * 1000`, matching the
-    #     value production has been setting out-of-band.
-    #  2. markTranslated cached a language as done whenever the portal save
-    #     returned a url, even when the translation was never registered with
-    #     ITranslationManager. The skip cache then reported the object as
-    #     already translated for the full 7-day TTL and it could not converge.
-    #     Now requires `translation_registered !== false`.
-    # Backward compatible with the current portal image: the old portal does not
-    # send `translation_registered`, so it is undefined and `undefined !== false`
-    # is true - caching behaves exactly as before until the portal side
-    # (eea.climateadapt.plone #359) starts reporting false explicitly.
-    # Published by the GitHub release - git tag v1.2.2 = 4e356404, image digest
-    # sha256:9f0f35164bd6c3265718eb6. pullPolicy is Always and replicas is 1, so
-    # a missing tag takes the translation worker down rather than leaving it on
-    # the previous build.
-    tag: "v1.2.2"
+    # v1.3.0 adds the delivery watchdog. eTranslation is fully asynchronous and
+    # has no per-request status endpoint, so a delivery that never arrives is
+    # invisible: the in-flight lease expires, the gate frees its slot, and
+    # /stats reports an idle healthy pipeline while content silently stays
+    # untranslated. That is how a 20 hour upstream stall (level 2 - Critical
+    # load) presented in production: submissions accepted, gate healthy, zero
+    # callbacks for ~23 hours.
+    # The watchdog keeps its own record, independent of the gate's short lease,
+    # and re-submits languages still outstanding past ETL_DELIVERY_DEADLINE_MS
+    # (45 min), consulting the skip cache first so it never re-asks for a
+    # language the portal already registered. Re-submits are capped
+    # (ETL_WATCHDOG_MAX_RESUBMITS=2) and then logged at ERROR.
+    # New env knobs: ETL_DELIVERY_DEADLINE_MS, ETL_WATCHDOG_INTERVAL_MS,
+    # ETL_WATCHDOG_MAX_RESUBMITS, ETL_WATCHDOG_BATCH, ETL_WATCHDOG_ENABLED.
+    # IMPORTANT: production mounts the `async-src` ConfigMap over
+    # /usr/src/app/src and runs `npx ts-node --transpile-only src/index.ts`, so
+    # the image's compiled dist is NEVER executed. Bumping this tag alone does
+    # not change the running code - the ConfigMap must be synced to match. See
+    # artifacts/scripts/sync_async_configmap.sh in the cca repo.
+    # Published by the GitHub release - git tag v1.3.0 = 6f208a01, image digest
+    # sha256:6e06468517c3eca04153c631473618ea27bd8a7bc883f5ebd52ae26a774859cc.
+    # pullPolicy is Always and replicas is 1, so a missing tag takes the
+    # translation worker down rather than leaving it on the previous build.
+    tag: "v1.3.0"
     pullPolicy: Always
   port: 3000
   resources:
