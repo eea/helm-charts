@@ -4,6 +4,9 @@ A Helm chart for deploying the WISE Freshwater frontend application.
 
 ## Releases
 
+### Version 2.24.2 - 12 November 2026
+- Automated release of [eeacms/plone-varnish:9.1-1.0](https://github.com/eea/plone-varnish/releases) [EEA Jenkins - [`5dfb1ee9b`](https://github.com/eea/helm-charts/commit/5dfb1ee9ba5354f2c906999f4d4130e8e8659723)]
+
 ### Version 2.24.1 - 11 November 2026
 - Automated release of [eeacms/plone-varnish:8.0-1.0](https://github.com/eea/plone-varnish/releases) [EEA Jenkins - [`b747de520`](https://github.com/eea/helm-charts/commit/b747de5205ed0a0d7e41d06ecb7c1d38a6d09c72)]
 
