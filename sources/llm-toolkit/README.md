@@ -355,8 +355,12 @@ helm delete llm-toolkit
 
 ## Releases
 
+### Version 0.5.5 - 11 November 2026
+- LiteLLM pods now roll automatically when their config changes: the pod template carries a `checksum/litellm-config` annotation computed from the rendered `llmguard_config.yaml`, so any change to `litellmSettings`, the langfuse/key-alias settings, models or the LLM Guard plugin triggers a rolling restart (previously the configmap changed but the running proxy kept the old config until a manual restart)
+
 ### Version 0.5.4 - 10 November 2026
 - Added structured LiteLLM settings (all blank by default): `litellm.langfuse.callback`, `litellm.langfuse.defaultTags`, `litellm.keyAliasPattern`, `litellm.enableKeyAliasFormatValidation`, rendered into `litellm_settings` per the EEA LiteLLM naming convention; `litellm.litellmSettings` remains as a raw `litellm_settings` escape hatch, and `litellm.env` adds extra container env vars (e.g. keys referenced via `os.environ/...`)
+- Added Helm questions for the new LiteLLM values; `litellm.langfuse.defaultTags` also accepts a comma-separated string
 - Removed the unused `*-litellm-langfuse` secret and the `litellm.langfusePublicKey`/`litellm.langfuseSecretKey` values; LiteLLM Langfuse credentials are managed in the LiteLLM database (UI), not via this chart
 - Guarded the `*-litellm-db` secret and the `*-litellm-postgres-init` configmap behind `litellm.enabled` so they are not rendered when LiteLLM is disabled
 
