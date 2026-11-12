@@ -672,26 +672,42 @@ litellm:
   # -- Custom Langfuse host URL, defaults to the web service in this chart
   # (Langfuse credentials for LiteLLM are managed in the LiteLLM database, not here)
   langfuseHost: ""
-  # -- Langfuse observability + key alias policy, rendered into the LiteLLM
-  # config (litellm_settings). Blank by default; the commented lines below show
-  # the recommended EEA setup (eea/aihubintel docs/decisions/litellm-naming-convention.md):
-  # one Langfuse project for all teams, identity via tags, kebab-case aliases.
+  # -- Langfuse trace tags + key alias policy, rendered into the LiteLLM
+  # config (litellm_settings). Blank by default; the commented lines below
+  # show the recommended EEA setup (eea/aihubintel
+  # docs/decisions/litellm-naming-convention.md).
+  #
+  # Recommended split (verified on 01dev, LiteLLM v1.104.2):
+  #   - Langfuse routing + credentials: configured in the LiteLLM UI, stored
+  #     in its database — NOT in this chart. Global fallback under
+  #     Settings; per-team under team settings -> Logging Integrations ->
+  #     "Langfuse OTEL" with that team's Langfuse project keys.
+  #   - This chart's config carries only the two settings with no UI surface
+  #     (verified absent from the LiteLLM UI up to v1.109.1):
+  #     langfuse.defaultTags and litellm.keyAliasPattern.
   langfuse:
-    # -- Callback to register: "langfuse" or "langfuse_otel"; blank = not rendered
-    # (Langfuse keys/host stay in the LiteLLM database, not here)
+    # -- Callback to register: "langfuse" or "langfuse_otel"; blank = not
+    # rendered. Keep blank while the Langfuse keys only exist in the
+    # LiteLLM database: a config-file callback is initialized before the
+    # database env vars load, so it exports with missing credentials
+    # (HTTP 401). If it must live in the config, supply the keys in the
+    # container env via env: (secretKeyRef)
     # callback: "langfuse"
     callback: ""
-    # -- Tags exported on every Langfuse trace (key/team/user identity for reporting)
+    # -- Tags exported on every Langfuse trace (key/team/user identity for
+    # reporting); no UI surface — set here
     # defaultTags:
     #   - user_api_key_alias
     #   - user_api_key_team_alias
     #   - user_api_key_user_id
     defaultTags: []
-  # -- Key alias format pattern (kebab-case); blank = not rendered
+  # -- Key alias format pattern (kebab-case); blank = not rendered; no UI
+  # surface — set here. Once set, v1.104.2 rejects non-matching aliases on
+  # /key/generate and /key/update
   # keyAliasPattern: "^[a-z0-9]+(-[a-z0-9]+){1,3}$"
   keyAliasPattern: ""
-  # -- Enforce keyAliasPattern on /key/generate and /key/update (opt-in upstream)
-  # enableKeyAliasFormatValidation: true
+  # -- Upstream toggle for alias format validation; v1.104.2 enforces
+  # keyAliasPattern without it (verified on 01dev), keep false
   enableKeyAliasFormatValidation: false
   # -- Raw litellm_settings rendered into the LiteLLM config file (escape hatch;
   # merged with the structured values above, raw wins on key conflicts)
