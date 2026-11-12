@@ -11,6 +11,9 @@ This chart deploys the EEA Main Website frontend app
 
 ## Releases
 
+### Version 3.41.2 - 12 November 2026
+- Automated release of [eeacms/plone-varnish:9.1-1.0](https://github.com/eea/plone-varnish/releases) [EEA Jenkins - [`e16e5a1fb`](https://github.com/eea/helm-charts/commit/e16e5a1fb735b49012b9d1016cf9189b4876e091)]
+
 ### Version 3.41.1 - 12 November 2026
 - Automated release of [eeacms/eea-website-frontend:7.4.1-beta.1](https://github.com/eea/eea-website-frontend/releases) [EEA Jenkins - [`76872588b`](https://github.com/eea/helm-charts/commit/76872588baaa4a5d26cefcc203ecc9dbe80daf8f)]
 
