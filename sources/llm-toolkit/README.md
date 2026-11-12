@@ -122,16 +122,22 @@ litellm:
       memory: 512Mi
 
   # Optional LiteLLM settings rendered into the LiteLLM config (litellm_settings).
-  # Structured values, blank by default — recommended per the EEA LiteLLM naming
-  # convention (single Langfuse project, identity via tags, kebab-case aliases):
+  # Recommended EEA split (verified on 01dev, LiteLLM v1.104.2): Langfuse
+  # routing + credentials live in the LiteLLM UI / database (global under
+  # Settings, per-team under team settings -> Logging Integrations ->
+  # "Langfuse OTEL" with that team's project keys); only the two settings
+  # with no UI surface (up to v1.109.1) go in the chart config:
   # langfuse:
-  #   callback: "langfuse"          # or "langfuse_otel"
   #   defaultTags:
   #     - user_api_key_alias
   #     - user_api_key_team_alias
   #     - user_api_key_user_id
   # keyAliasPattern: "^[a-z0-9]+(-[a-z0-9]+){1,3}$"
-  # enableKeyAliasFormatValidation: true
+  #
+  # Do not set langfuse.callback while the keys only exist in the database:
+  # a config-file callback is initialized before the database env vars load
+  # and exports with HTTP 401. Supply the keys via env: (secretKeyRef) if
+  # the callback must live in the config.
   #
   # litellmSettings is a raw escape hatch merged on top of the structured values
   # (raw wins on key conflicts); os.environ/... references resolve from the
@@ -354,6 +360,11 @@ helm delete llm-toolkit
 ```
 
 ## Releases
+
+### Version 0.5.6 - 12 November 2026
+- Docs: corrected the recommended EEA LiteLLM split (verified on 01dev) — Langfuse routing and credentials are configured in the LiteLLM UI (stored in its database, per-team via team settings -> Logging Integrations -> "Langfuse OTEL"); the chart config carries only `litellm.langfuse.defaultTags` and `litellm.keyAliasPattern`, the two settings with no UI surface (verified absent from the LiteLLM UI up to v1.109.1)
+- Docs: warned that a config-file `callbacks` entry is initialized before the database env vars load, so it exports with HTTP 401 unless the Langfuse keys are supplied in the container env via `litellm.env`
+- Docs: noted that v1.104.2 enforces `keyAliasPattern` on `/key/generate` and `/key/update` without `enableKeyAliasFormatValidation` (verified on 01dev)
 
 ### Version 0.5.5 - 11 November 2026
 - LiteLLM pods now roll automatically when their config changes: the pod template carries a `checksum/litellm-config` annotation computed from the rendered `llmguard_config.yaml`, so any change to `litellmSettings`, the langfuse/key-alias settings, models or the LLM Guard plugin triggers a rolling restart (previously the configmap changed but the running proxy kept the old config until a manual restart)
