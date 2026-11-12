@@ -26,7 +26,7 @@
 litellm_settings:
   {{- toYaml . | nindent 2 }}
 {{- end }}
-{{- if .Values.litellm.llmGuardPlugin.enabled -}}
+{{- if .Values.litellm.llmGuardPlugin.enabled }}
 guardrails:
   - guardrail_name: "EEA-pre-guard_noerror"
     litellm_params:
@@ -37,7 +37,7 @@ guardrails:
       guardrail: eea_guardrail.eeaGuardrail
       mode: "pre_call"
 {{- end }}
-{{- if $models -}}
+{{- if $models }}
 model_list:
   {{- toYaml $models | nindent 2 }}
 {{- end }}
