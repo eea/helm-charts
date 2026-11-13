@@ -275,6 +275,9 @@ varnish:
     successThreshold: 1
 
 nginx:
+  basicAuth:
+    username: eeaploneadmin
+    password: ""
   conf: |-
     # Trust only your VPC/ELB subnets
     # set_real_ip_from 10.140.0.0/16;
