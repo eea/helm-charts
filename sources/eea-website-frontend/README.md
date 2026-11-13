@@ -36,6 +36,9 @@ ask for the password again for these paths.
 
 ## Releases
 
+### Version 3.44.3 - 13 November 2026
+- Automated release of [eeacms/eea-website-frontend:7.6.2-beta.1](https://github.com/eea/eea-website-frontend/releases) [EEA Jenkins - [`34920d6e5`](https://github.com/eea/helm-charts/commit/34920d6e5da2b7be828c6853ae4ca9fa82c8a3ed)]
+
 ### Version 3.44.2 - 13 November 2026
 - feat(eea-website-frontend): optional nginx basic auth [Alin Voinea - [`2f18d74c4`](https://github.com/eea/helm-charts/commit/2f18d74c4ef996b17c11188e6af4a2e2783bee78)]
 
