@@ -1,5 +1,8 @@
 ## Releases
 
+### Version 0.20.0 - 13 November 2026
+- Fix 01dev slow-start: the standalone-resource archive sweep verified each candidate with one list call per (namespace, kind) instead of per file (a months-old backlog of finished job/pod files took an hour+ at ~90 ms/file), and the initial sync no longer runs cleanup, so `/ready` is no longer gated on the archive backlog (the periodic cleanup job archives right after). Requires image `eeacms/redmine-wikiman:backup-2.1.26` [Silviu Panaite]
+
 ### Version 0.19.0 - 13 November 2026
 - Fix 01dev crash loop: git repository setup is no longer run during `initialize_components` (it blocked the HTTP server bind and, on a fresh volume, the full ~115 MB clone outlived the startup probe, so each restart re-ran an oversized clone and the pod died exit 137). Setup now runs in the background after the server serves `/health`; clone/fetch/push are subprocess steps capped by `GIT_SETUP_TIMEOUT_SECONDS` (default 600s); a hollow repo (no usable refs, e.g. a killed mid-clone) is wiped and re-cloned. Requires image `eeacms/redmine-wikiman:backup-2.1.25` [Silviu Panaite]
 
