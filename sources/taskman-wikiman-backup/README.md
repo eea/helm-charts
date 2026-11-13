@@ -1,5 +1,8 @@
 ## Releases
 
+### Version 0.20.0 - 13 November 2026
+- Automated release of [eeacms/redmine-wikiman:2.1.26](https://github.com/eea/eea.docker.redmine-wikiman/releases) [EEA Jenkins - [`9ef9d7335`](https://github.com/eea/helm-charts/commit/9ef9d73356f985ada29a2acff8575a55fc34740c)]
+
 ### Version 0.19.0 - 13 November 2026
 - Fix 01dev crash loop: git repository setup is no longer run during `initialize_components` (it blocked the HTTP server bind and, on a fresh volume, the full ~115 MB clone outlived the startup probe, so each restart re-ran an oversized clone and the pod died exit 137). Setup now runs in the background after the server serves `/health`; clone/fetch/push are subprocess steps capped by `GIT_SETUP_TIMEOUT_SECONDS` (default 600s); a hollow repo (no usable refs, e.g. a killed mid-clone) is wiped and re-cloned. Requires image `eeacms/redmine-wikiman:backup-2.1.25` [Silviu Panaite]
 
