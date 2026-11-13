@@ -11,4 +11,4 @@ data:
     }
 
   default.conf: |
-{{ .Values.nginx.conf | indent 4 }} 
+{{ .Values.nginx.conf | replace "#BASIC_AUTH#" (include "appl.basicAuth" .) | indent 4 }}

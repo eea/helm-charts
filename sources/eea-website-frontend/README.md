@@ -8,6 +8,31 @@ This chart deploys the EEA Main Website frontend app
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | links.backend | string | NAME.NAMESPACE | Service name for varnish for backend instance, followed by the namespace. |
+| nginx.basicAuth.username | string | eeaploneadmin | User for the nginx basic authentication. Empty or missing password disables the feature. |
+| nginx.basicAuth.password | string | | Password for the nginx basic authentication. Set it per environment, never in git. |
+
+### nginx basic authentication
+
+When `nginx.basicAuth.username` and `nginx.basicAuth.password` are both set, the chart creates the
+`<fullname>-basic-auth` Secret, mounts it at `/etc/nginx/auth` and replaces the `#BASIC_AUTH#` marker
+from `nginx.conf` with:
+
+```nginx
+auth_basic "Restricted Area";
+auth_basic_user_file /etc/nginx/auth/.htpasswd;
+```
+
+Put the marker inside the `location` that must be protected, usually next to `/admin`, for example:
+
+```nginx
+location ~ ^/([a-z][a-z]/)?[+][+](theme|resource|widgets)[+][+] {
+#BASIC_AUTH#
+  ...
+}
+```
+
+The realm is the same as in the backend chart, so a browser that authenticated on `/admin` does not
+ask for the password again for these paths.
 
 ## Releases
 

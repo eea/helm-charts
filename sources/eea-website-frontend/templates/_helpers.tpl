@@ -60,3 +60,10 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{- define "appl.basicAuth" -}}
+{{- if and .Values.nginx.basicAuth.username .Values.nginx.basicAuth.password }}
+        auth_basic "Restricted Area";
+        auth_basic_user_file /etc/nginx/auth/.htpasswd;
+{{- end }}
+{{- end }}
