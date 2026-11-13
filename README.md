@@ -102,6 +102,51 @@ This script will run all the necessary steps to do a release, including increasi
 
 Please use this script so all the helm charts changes will have a easy to follow changelog with commit links in order to have a easy way to follow the upgrades.
 
+## Manual release (without the scripts)
+
+`release.sh` calls `increase_version_helm.sh` and then `update_docs.sh`, and both run `git commit`
+and `git push` on the current branch themselves. Run the steps by hand when you want each of them
+visible, or when the change is already merged and the tree is clean (`increase_version_helm.sh`
+refuses to run with nothing to commit).
+
+Bump the version in `Chart.yaml` and lint the chart:
+
+    cd sources/toypackage
+    sed -i '' 's/^version: 0.1.1$/version: 0.1.2/' Chart.yaml    # macOS; on Linux drop the ''
+    helm lint .
+
+Add the changelog entry in the chart `README.md`, under `## Releases`, with the same shape the
+scripts produce:
+
+    ### Version 0.1.2 - 13 November 2026
+    - What changed [Author - [`COMMIT`](COMMIT_LINK)]
+
+Package the chart and update the repository index:
+
+    cd ../../docs
+    mkdir -p temp && cd temp
+    helm package ../../sources/toypackage
+    helm repo index --merge ../index.yaml .
+    mv *.tgz ../ && mv index.yaml ../
+    cd .. && rm -rf temp
+
+Commit the chart together with `docs/` on a branch and open a PR against `main`:
+
+    cd ..
+    git add sources/toypackage docs
+    git commit -m "Release on toypackage version 0.1.2"
+    git push -u origin release-toypackage-0.1.2
+    gh pr create --base main --title "Release toypackage 0.1.2"
+
+Check the three artefacts before opening the PR:
+
+    grep '^version:' sources/toypackage/Chart.yaml
+    ls docs/toypackage-0.1.2.tgz
+    grep -c 'toypackage-0.1.2' docs/index.yaml
+
+Without the packaged `.tgz` in `docs/` and the entry in `docs/index.yaml`, Rancher does not see the
+new version, no matter what `Chart.yaml` says.
+
 ## Subcharts update after release
 
 If you manually released a chart that is also used as a subchart in another chart, you can use this script to update all helm charts from sources directory that contain it:
