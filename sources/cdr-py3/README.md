@@ -128,6 +128,9 @@ When `ldapMemcachedServers` is empty the env var is omitted entirely.
 
 ## Releases
 
+### Version 0.2.14 - 13 November 2026
+- Automated release of [eeacms/reportek-cdr:6.3-8](https://github.com/eea/eea.docker.reportek.cdr-instance/releases) [EEA Jenkins - [`f4da2b1cc`](https://github.com/eea/helm-charts/commit/f4da2b1cc21ac704d1e33f30bb74f109ceef8df0)]
+
 ### Version 0.2.13 - 13 November 2026
 - Automated release of [eeacms/reportek-cdr:6.3-7](https://github.com/eea/eea.docker.reportek.cdr-instance/releases) [EEA Jenkins - [`bd44f6de8`](https://github.com/eea/helm-charts/commit/bd44f6de809e3a1a4c68d1432a56de4d0658f8fe)]
 
