@@ -1,5 +1,8 @@
 ## Releases
 
+### Version 0.19.0 - 13 November 2026
+- Fix 01dev crash loop: git repository setup is no longer run during `initialize_components` (it blocked the HTTP server bind and, on a fresh volume, the full ~115 MB clone outlived the startup probe, so each restart re-ran an oversized clone and the pod died exit 137). Setup now runs in the background after the server serves `/health`; clone/fetch/push are subprocess steps capped by `GIT_SETUP_TIMEOUT_SECONDS` (default 600s); a hollow repo (no usable refs, e.g. a killed mid-clone) is wiped and re-cloned. Requires image `eeacms/redmine-wikiman:backup-2.1.25` [Silviu Panaite]
+
 ### Version 0.18.0 - 13 November 2026
 - upgradeNotify: add `clusterUrl` (cluster ingress link in the card), `releaseNotes` toggle and `githubToken` (git-based release notes, best-effort); split liveness/readiness probes with startup grace (2026-11-09 restart-storm fix) [Silviu Panaite]
 
