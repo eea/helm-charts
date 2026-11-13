@@ -1,5 +1,11 @@
 ## Releases
 
+### Version 0.18.0 - 13 November 2026
+- upgradeNotify: add `clusterUrl` (cluster ingress link in the card), `releaseNotes` toggle and `githubToken` (git-based release notes, best-effort); split liveness/readiness probes with startup grace (2026-11-09 restart-storm fix) [Silviu Panaite]
+
+### Version 0.17.0 - 05 November 2026
+- Add upgrade notifications (#310015): taskman-backup posts Helm release install/upgrade/rollback cards to the Upgrades (DevOps) room via matrix-webhook. New `upgradeNotify` values (`enabled`, `webhookUrl`, `cluster`, `interval`), off by default; requires image `eeacms/redmine-wikiman:backup-2.1.24` [Silviu Panaite]
+
 ### Version 0.16.1 - 27 October 2026
 - allow env variables in the deployment for backup config [Mihai Dobrescu - [`e241a4c45`](https://github.com/eea/helm-charts/commit/e241a4c45dd7a7b568bb2eb42dd4bb0dfc97a632)]
 

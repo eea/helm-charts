@@ -83,6 +83,20 @@ spec:
               value: "{{ .Values.webhook.excludedNamespaces | join "," }}"
             - name: RELEASE_NAMESPACE
               value: "{{ .Release.Namespace }}"
+            - name: UPGRADE_NOTIFY_ENABLED
+              value: {{ .Values.upgradeNotify.enabled | default false | quote }}
+            - name: UPGRADE_NOTIFY_WEBHOOK_URL
+              value: {{ .Values.upgradeNotify.webhookUrl | default "" | quote }}
+            - name: UPGRADE_NOTIFY_CLUSTER
+              value: {{ .Values.upgradeNotify.cluster | default "" | quote }}
+            - name: UPGRADE_NOTIFY_CLUSTER_URL
+              value: {{ .Values.upgradeNotify.clusterUrl | default "" | quote }}
+            - name: UPGRADE_NOTIFY_RELEASE_NOTES
+              value: {{ .Values.upgradeNotify.releaseNotes | default true | quote }}
+            - name: GITHUB_TOKEN
+              value: {{ .Values.upgradeNotify.githubToken | default "" | quote }}
+            - name: UPGRADE_NOTIFY_INTERVAL
+              value: {{ .Values.upgradeNotify.interval | default 60 | quote }}
             {{- with .Values.extraEnv }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
@@ -90,6 +104,12 @@ spec:
             - name: http
               containerPort: {{ .Values.webhook.port }}
               protocol: TCP
+          # Probe split (2026-11-09 restart-storm fix, RESILIENCE_REVIEW.md):
+          # /health = liveness (listener alive; never fails on GitLab
+          # outages or slow syncs - killing the pod cannot fix a remote),
+          # /ready = readiness (startup complete, push healthy within
+          # grace; NotReady takes webhook traffic off the pod without
+          # restarting it).
           startupProbe:
             httpGet:
               path: /health
@@ -97,7 +117,7 @@ spec:
               scheme: HTTPS
             initialDelaySeconds: 10
             periodSeconds: 2
-            timeoutSeconds: 1
+            timeoutSeconds: 5
             failureThreshold: 15
             successThreshold: 1
           livenessProbe:
@@ -107,17 +127,17 @@ spec:
               scheme: HTTPS
             initialDelaySeconds: 30
             periodSeconds: 10
-            timeoutSeconds: 1
-            failureThreshold: 3
+            timeoutSeconds: 5
+            failureThreshold: 5
             successThreshold: 1
           readinessProbe:
             httpGet:
-              path: /health
+              path: /ready
               port: http
               scheme: HTTPS
             initialDelaySeconds: 5
             periodSeconds: 5
-            timeoutSeconds: 1
+            timeoutSeconds: 5
             failureThreshold: 3
             successThreshold: 1
           resources:
