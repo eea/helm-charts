@@ -27,6 +27,13 @@ spec:
           {{- end }}
           serviceAccountName: {{ include "appl.serviceAccountName" . }}
           restartPolicy: Never
+          dnsConfig:
+            options:
+              - name: attempts
+                value: "10"
+              - name: timeout
+                value: "2"
+              - name: single-request-reopen
           containers:
           - name: entrasync
             image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
