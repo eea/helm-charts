@@ -27,6 +27,11 @@ spec:
       containers:
       - name: volto
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        {{- with .Values.existingSecret }}
+        envFrom:
+        - secretRef:
+            name: {{ . }}
+        {{- end }}
         env:
         - name: PORT
           value: "3000"

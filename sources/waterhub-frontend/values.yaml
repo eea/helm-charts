@@ -7,6 +7,10 @@ image:
 
 imagePullSecrets: []
 
+# Name of an existing Secret (managed outside the chart) loaded with envFrom
+# into the volto and debug containers, e.g. SENTRY_AUTH_TOKEN, RAZZLE_SENTRY_DSN
+existingSecret: ""
+
 nameOverride: ""
 fullnameOverride: ""
 
