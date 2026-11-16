@@ -1,0 +1,11 @@
+{{- if .Values.links.memcached }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: "memcached"
+spec:
+  type: ExternalName
+  externalName: "{{ .Values.links.memcached }}.svc.cluster.local"
+
+
+{{- end }}

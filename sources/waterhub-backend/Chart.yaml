@@ -1,0 +1,15 @@
+apiVersion: v2
+name: waterhub-backend
+type: application
+version: 0.0.0
+appVersion: "6.1.4-2"
+description: WaterHub backend
+icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/waterhub-backend/volto.png
+home: https://github.com/eea/waterhub-backend
+keywords:
+  - CMS
+# Remember to do helm dep up
+dependencies:
+  - name: postfix
+    version: 3.2.0
+    repository: https://eea.github.io/helm-charts
