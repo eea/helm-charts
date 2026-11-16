@@ -6,6 +6,9 @@ Deploy in the same namespace as `plone-postgres`, `waterhub-backend` and `waterh
 
 ## Releases
 
+### Version 0.1.1 - 16 November 2026
+- Load credentials from an existing Secret [Mihai Dobrescu - [`26d3133b4`](https://github.com/eea/helm-charts/commit/26d3133b47d5304bb58d5dae00e769e93eb7fbff)]
+
 ### Version 0.1.0 - 16 November 2026
 - initial helm chart configuration [Mihai Dobrescu - [`e11a9ea39`](https://github.com/eea/helm-charts/commit/e11a9ea39b039f7c94569c27e270861dbcbcdc5f)]
 
