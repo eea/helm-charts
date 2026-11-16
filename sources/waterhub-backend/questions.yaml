@@ -17,7 +17,7 @@ questions:
   - variable: "plone.googleUrl"
     label: "Plone google website owner url"
     description: "Leave empty for no google url"
-    default: "google85dc6cec8f1329e5.html"
+    default: ""
     type: "string"
     group: "General"
 
@@ -44,8 +44,8 @@ questions:
 
   - variable: "nginx.basicAuth.password"
     label: "Password for /admin"
-    description: "Set password for /admin endpoint"
-    type: "string"
+    description: "Set password for /admin endpoint (or set nginx.basicAuth.existingSecret). Without it /admin is not exposed"
+    type: "password"
     required: true
     group: "Nginx"
 
@@ -107,7 +107,6 @@ questions:
     description: "Select NodePort to expose varnish"
     type: "enum"
     options:
-      - "NodePort"
       - "ClusterIP"
     default: "ClusterIP"
     required: true
@@ -118,7 +117,6 @@ questions:
     description: "Select NodePort to expose plone"
     type: "enum"
     options:
-      - "NodePort"
       - "ClusterIP"
     default: "ClusterIP"
     required: true
@@ -137,7 +135,6 @@ questions:
     description: "Select NodePort to expose debug"
     type: "enum"
     options:
-      - "NodePort"
       - "ClusterIP"
     default: "ClusterIP"
     required: true
@@ -449,7 +446,6 @@ questions:
         description: "Select NodePort to expose mailtrap on port"
         type: "enum"
         options:
-          - "NodePort"
           - "ClusterIP"
         default: "ClusterIP"
         required: true

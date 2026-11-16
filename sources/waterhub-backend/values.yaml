@@ -39,13 +39,14 @@ nginx:
   basicAuth:
     username: eeaploneadmin
     password: ""
+    # /admin (Plone classic) is only exposed when password or existingSecret is set
     # Existing Secret with an htpasswd "auth" key; overrides username/password
     existingSecret: ""
 
 plone:
   serviceType: ClusterIP
   hostname: plone.eea.europa.eu
-  googleUrl: google85dc6cec8f1329e5.html
+  googleUrl: ""
   site: Plone
   autoscaling:
     enabled: false
@@ -208,7 +209,7 @@ postfix:
   serviceName: "postfix"
   mailtrap:
     httpenabled: false
-    serviceType: NodePort
+    serviceType: ClusterIP
     ingress:
       enabled: false
       hostname: mailtrap.01dev.eea.europa.eu
