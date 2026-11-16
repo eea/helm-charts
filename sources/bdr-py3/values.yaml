@@ -68,6 +68,11 @@ instance:
     beakerPath: /sessions
     useBeakerSession: "1"
     redisUrl: "redis://bdr-py3-valkey:6379/0"
+    # The pods share the answers of the registries (what a user can access)
+    # through Valkey: "1" to turn it on. Needs sessionSecret. The address is
+    # redisUrl, unless registryCacheUrl is set.
+    registrySharedCache: ""
+    registryCacheUrl: ""
     sentryDSN: ""
     sentrySite: "bdr.eionet.europa.eu"
     sentryEnvironment: "production"
@@ -410,6 +415,12 @@ valkey:
     tag: 7.2.5-alpine
     pullPolicy: IfNotPresent
   env: []
+  # Valkey holds the Beaker sessions and the registry cache: every key has a
+  # TTL. maxmemory must stay below resources.limits.memory, so that Valkey
+  # evicts keys (volatile-lru: only keys with a TTL) before the pod can be
+  # OOM-killed, which would drop every session. Empty: no limit set.
+  maxmemory: 128mb
+  maxmemoryPolicy: volatile-lru
   livenessProbe:
     tcpSocket:
       port: valkey
@@ -426,7 +437,7 @@ valkey:
   resources:
     requests:
       cpu: 100m
-      memory: 128Mi
+      memory: 256Mi
     limits:
       cpu: 200m
       memory: 256Mi

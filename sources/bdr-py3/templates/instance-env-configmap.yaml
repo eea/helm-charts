@@ -10,6 +10,12 @@ data:
   USE_BEAKER_SESSION: {{ .Values.instance.env.useBeakerSession | quote }}
   BEAKER_PATH: {{ .Values.instance.env.beakerPath | quote }}
   REDIS_URL: {{ .Values.instance.env.redisUrl | quote }}
+  {{- if .Values.instance.env.registrySharedCache }}
+  REGISTRY_SHARED_CACHE: {{ .Values.instance.env.registrySharedCache | quote }}
+  {{- end }}
+  {{- if .Values.instance.env.registryCacheUrl }}
+  REGISTRY_CACHE_URL: {{ .Values.instance.env.registryCacheUrl | quote }}
+  {{- end }}
   CACHE_PURGING_DOMAIN: {{ .Values.instance.env.cachePurgingDomain | quote }}
   CACHE_PURGING_ENABLED: {{ .Values.instance.env.cachePurgingEnabled | quote }}
   CACHE_PURGING_PROXY: {{ .Values.instance.env.cachePurgingProxy | quote }}

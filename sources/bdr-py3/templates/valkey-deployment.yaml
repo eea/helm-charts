@@ -22,6 +22,13 @@ spec:
         - name: valkey
           image: "{{ .Values.valkey.image.repository }}:{{ .Values.valkey.image.tag | default "7.2.5-alpine" }}"
           imagePullPolicy: {{ .Values.valkey.image.pullPolicy }}
+          {{- if .Values.valkey.maxmemory }}
+          args:
+            - "--maxmemory"
+            - {{ .Values.valkey.maxmemory | quote }}
+            - "--maxmemory-policy"
+            - {{ .Values.valkey.maxmemoryPolicy | default "volatile-lru" | quote }}
+          {{- end }}
           {{- with .Values.valkey.env }}
           env:
             {{- toYaml . | nindent 12 }}
