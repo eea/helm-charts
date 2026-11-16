@@ -5,6 +5,13 @@ image:
 
 imagePullSecrets: []
 
+# Name of an existing Secret (managed outside the chart) loaded with envFrom
+# into the plone, debug, zodbpack and entrasync containers. Put credentials
+# here instead of in values: POSTGRES_PASSWORD (required when set, used in
+# RELSTORAGE_DSN instead of plone.database.POSTGRES_PASSWORD), SENTRY_DSN,
+# PLONE_REGISTRY_YAML_CONTENT, ...
+existingSecret: ""
+
 nameOverride: ""
 fullnameOverride: ""
 
@@ -32,6 +39,8 @@ nginx:
   basicAuth:
     username: eeaploneadmin
     password: ""
+    # Existing Secret with an htpasswd "auth" key; overrides username/password
+    existingSecret: ""
 
 plone:
   serviceType: ClusterIP
