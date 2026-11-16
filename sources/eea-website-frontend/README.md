@@ -36,6 +36,9 @@ ask for the password again for these paths.
 
 ## Releases
 
+### Version 3.44.4 - 16 November 2026
+- Automated release of [eeacms/eea-website-frontend:7.6.2-beta.2](https://github.com/eea/eea-website-frontend/releases) [EEA Jenkins - [`21c5dc7b1`](https://github.com/eea/helm-charts/commit/21c5dc7b13ce78162dfb10a8649a97837233c113)]
+
 ### Version 3.44.3 - 13 November 2026
 - Automated release of [eeacms/eea-website-frontend:7.6.2-beta.1](https://github.com/eea/eea-website-frontend/releases) [EEA Jenkins - [`34920d6e5`](https://github.com/eea/helm-charts/commit/34920d6e5da2b7be828c6853ae4ca9fa82c8a3ed)]
 
