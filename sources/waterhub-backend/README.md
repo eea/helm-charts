@@ -6,6 +6,9 @@ Deploy in the same namespace as `plone-postgres`, `waterhub-backend` and `waterh
 
 ## Releases
 
+### Version 0.1.2 - 16 November 2026
+- Security hardening: ClusterIP-only services, /admin exposed only behind Basic Auth, remove advisory-board Google verification and Sentry Expect-CT defaults [Mihai Dobrescu - [`10daa5e4b`](https://github.com/eea/helm-charts/commit/10daa5e4be52446f9ce9fbac88ace0dedd98ea21)]
+
 ### Version 0.1.1 - 16 November 2026
 - Load credentials from an existing Secret [Mihai Dobrescu - [`26d3133b4`](https://github.com/eea/helm-charts/commit/26d3133b47d5304bb58d5dae00e769e93eb7fbff)]
 
