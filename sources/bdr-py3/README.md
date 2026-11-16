@@ -179,6 +179,9 @@ schedule deadlines prevent a hung job from blocking future executions under
 
 ## Releases
 
+### Version 0.2.13 - 16 November 2026
+- Added registrySharedCache [Olimpiu Rob - [`b793b9049`](https://github.com/eea/helm-charts/commit/b793b9049a668ddf50722ef32c445b8fec4ba3d9)]
+
 ### Version 0.2.12 - 13 November 2026
 - Automated release of [eeacms/reportek-bdr:6.3-9](https://github.com/eea/eea.docker.reportek.bdr-instance/releases) [EEA Jenkins - [`a918be02a`](https://github.com/eea/helm-charts/commit/a918be02ae5399f620d3bb590ed5d4b178871d0f)]
 
