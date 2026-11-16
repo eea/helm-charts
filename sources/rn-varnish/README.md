@@ -81,6 +81,9 @@ rn-varnish: # Assuming you named your rn-varnish subchart "rn-varnish"
 
 ## Releases
 
+### Version 0.10.0 - 16 November 2026
+- Automated release of [eeacms/reportek-varnish:9.1-1.2](https://github.com/eea/eea.docker.varnish-reportek/releases) [EEA Jenkins - [`75a7b518c`](https://github.com/eea/helm-charts/commit/75a7b518ca82b62aa2c053a7c5045401ed231be4)]
+
 ### Version 0.9.0 - 12 November 2026
 - Automated release of [eeacms/reportek-varnish:9.1-1.1](https://github.com/eea/eea.docker.varnish-reportek/releases) [EEA Jenkins - [`7ffc39410`](https://github.com/eea/helm-charts/commit/7ffc39410735cb2bd02ccdbe32f948e9563615a4)]
 
