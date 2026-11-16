@@ -10,6 +10,9 @@ This chart deployes the Wise Marine frontend app
 
 ## Releases
 
+### Version 1.50.0 - 16 November 2026
+- Automated release of [eeacms/marine-frontend:3.27.0](https://github.com/eea/marine-frontend/releases) [EEA Jenkins - [`8893d5b25`](https://github.com/eea/helm-charts/commit/8893d5b258137cf081a9f0bfa6da8b59fc14583f)]
+
 ### Version 1.49.5 - 12 November 2026
 - Automated release of [eeacms/plone-varnish:9.1-1.0](https://github.com/eea/plone-varnish/releases) [EEA Jenkins - [`d96318486`](https://github.com/eea/helm-charts/commit/d96318486372f2358f7a45f6aa0f22d6751677f8)]
 
