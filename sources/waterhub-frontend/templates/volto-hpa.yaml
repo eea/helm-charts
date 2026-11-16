@@ -1,0 +1,36 @@
+{{- if .Values.volto.autoscaling.enabled }}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: volto
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: volto
+
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: volto
+
+  minReplicas: {{ .Values.volto.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.volto.autoscaling.maxReplicas }}
+
+  metrics:
+    {{- if .Values.volto.autoscaling.targetCPUUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.volto.autoscaling.targetCPUUtilizationPercentage }}
+    {{- end }}
+    {{- if .Values.volto.autoscaling.targetMemoryUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.volto.autoscaling.targetMemoryUtilizationPercentage }}
+    {{- end }}
+{{- end }}
