@@ -156,6 +156,9 @@ own filesystem store.
 
 ## Releases
 
+### Version 0.14.13 - 17 November 2026
+- Allow setting GN5 OAuth2 user groups and profiles from token claims (gn5.oauth2.userCreationRegistration) and restart GN5 when its configuration changes [Juan Luis Rodriguez Ponce - [`fd52e9962`](https://github.com/eea/helm-charts/commit/fd52e996212cd831d3b228bd950e366c216f2e06)]
+
 ### Version 0.14.12 - 12 November 2026
 - Refuse changes through the GN5 attachment API and serve its reads from GN46 when gn46.opendal is enabled [Juan Luis Rodriguez Ponce - [`4fdc87d82`](https://github.com/eea/helm-charts/commit/4fdc87d824e5a89cecc1f2a63ec0499e3933c9ec)]
 
