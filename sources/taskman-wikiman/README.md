@@ -27,6 +27,9 @@ The stack needs a rancher_crontab stack to start it according to the Run Schedul
 
 ## Releases
 
+### Version 1.28.0 - 17 November 2026
+- Automated release of [eeacms/redmine-wikiman:2.1.29](https://github.com/eea/eea.docker.redmine-wikiman/releases) [EEA Jenkins - [`d9400f66e`](https://github.com/eea/helm-charts/commit/d9400f66e38e6eb5aef205ba8ebdcdc6e870f92f)]
+
 ### Version 1.27.0 - 16 November 2026
 - Automated release of [eeacms/redmine-wikiman:2.1.28](https://github.com/eea/eea.docker.redmine-wikiman/releases) [EEA Jenkins - [`191a30e45`](https://github.com/eea/helm-charts/commit/191a30e450af4fbdbb683f6db7add779f7d2a94d)]
 
