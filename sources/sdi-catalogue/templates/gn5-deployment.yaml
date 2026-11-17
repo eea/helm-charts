@@ -17,6 +17,9 @@ spec:
     type: Recreate
   template:
     metadata:
+      annotations:
+        # gn5-config.yaml is read at startup, so restart GN5 when it changes
+        checksum/config: {{ include (print $.Template.BasePath "/gn5-configmap.yaml") . | sha256sum }}
       labels:
         {{- include "appl.selectorLabels" . | nindent 8 }}
         component: gn5

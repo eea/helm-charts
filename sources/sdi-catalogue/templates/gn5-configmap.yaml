@@ -63,6 +63,12 @@ data:
             name: {{ .Values.gn5.security.ldap.attributes.name | quote }}
             surname: {{ .Values.gn5.security.ldap.attributes.surname | quote }}
         {{- end }}
+        {{- if and .Values.gn5.oauth2.enabled .Values.gn5.oauth2.userCreationRegistration }}
+        oauth2:
+          userCreationRegistration:
+            eea:
+              {{- toYaml .Values.gn5.oauth2.userCreationRegistration | nindent 14 }}
+        {{- end }}
 
     {{- if .Values.gn5.oauth2.enabled }}
 

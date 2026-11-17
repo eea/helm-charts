@@ -296,6 +296,12 @@ gn5:
     redirectUri: ''  # Defaults to {geonetwork.url_with_context}/login/oauth2/code/eea if empty
     scopes: 'openid,profile,email'
     userNameAttribute: email
+    # Groups and profiles assigned from token claims at login (rolesClaim, roleMappings,
+    # updateGroup, createMissingGroups...). Rendered as
+    # geonetwork.security.oauth2.userCreationRegistration.eea; empty disables it.
+    # Needs a GN5 image that supports it. See the GN5 docs, docs/manual/docs/GN4-Integration/index.md,
+    # section "Setting groups and profiles from the token".
+    userCreationRegistration: {}
   resources:
     requests:
       memory: 2Gi
