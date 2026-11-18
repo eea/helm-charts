@@ -6,6 +6,9 @@ Deploy in the same namespace as `plone-postgres`, `waterhub-backend` and `waterh
 
 ## Releases
 
+### Version 0.2.2 - 18 November 2026
+- Pod hardening: disable service account token automount, add non-root securityContext [Mihai Dobrescu - [`d03e96ec1`](https://github.com/eea/helm-charts/commit/d03e96ec18577d22d11ea449d1ca7b9b45942ba3)]
+
 ### Version 0.2.1 - 18 November 2026
 - Point RAZZLE_INTERNAL_API_PATH to the waterhub Plone site [Mihai Dobrescu - [`74eba248b`](https://github.com/eea/helm-charts/commit/74eba248ba7276e47956b4fb3f4b60e7e66163c6)]
 
