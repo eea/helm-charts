@@ -19,6 +19,18 @@ serviceAccount:
   annotations: {}
   name: ""
 
+networkPolicy:
+  # Ingress-only NetworkPolicies for varnish and the app pods. Set to false to roll back.
+  enabled: true
+  # Peer allowed to reach varnish: the cluster ingress controller (RKE2 default).
+  ingressController:
+    namespaceSelector:
+      matchLabels:
+        kubernetes.io/metadata.name: kube-system
+    podSelector:
+      matchLabels:
+        app.kubernetes.io/name: rke2-ingress-nginx
+
 timezone: Europe/Copenhagen
 
 

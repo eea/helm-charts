@@ -258,3 +258,10 @@ questions:
     required: true
     default: "2Gi"
     group: "Memory"
+
+  - variable: "networkPolicy.enabled"
+    label: "Enable NetworkPolicies"
+    description: "Allow only ingress controller -> varnish -> app traffic. Disable to roll back if the site returns 502/504."
+    default: true
+    type: "boolean"
+    group: "Security"
