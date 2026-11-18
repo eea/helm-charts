@@ -1,0 +1,50 @@
+{{- if .Values.networkPolicy.enabled }}
+# ponytail: ingress rules only; egress (Sentry, Graylog, Entra, SMTP relay) left open until those endpoints are fixed per environment.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ .Release.Name }}-varnish
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: varnish
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: varnish
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    # ingress controller (public site, /++api++, /admin)
+    - {{- toYaml .Values.networkPolicy.ingressController | nindent 6 }}
+    # pods in this namespace (Volto server-side rendering via the "backend" service)
+    - podSelector: {}
+    ports:
+    - port: {{ .Values.varnish.port }}
+      protocol: TCP
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ .Release.Name }}-plone
+  labels:
+    {{- include "appl.labels" . | nindent 4 }}
+    component: plone
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "appl.selectorLabels" . | nindent 6 }}
+      component: plone
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          {{- include "appl.selectorLabels" . | nindent 10 }}
+          component: varnish
+    ports:
+    - port: 8080
+      protocol: TCP
+{{- end }}
