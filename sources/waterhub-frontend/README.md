@@ -6,6 +6,9 @@ Deploy in the same namespace as `plone-postgres`, `waterhub-backend` and `waterh
 
 ## Releases
 
+### Version 0.2.1 - 18 November 2026
+- Point RAZZLE_INTERNAL_API_PATH to the waterhub Plone site [Mihai Dobrescu - [`74eba248b`](https://github.com/eea/helm-charts/commit/74eba248ba7276e47956b4fb3f4b60e7e66163c6)]
+
 ### Version 0.2.0 - 18 November 2026
 - Automated release of [eeacms/waterhub-frontend:1.0.0](https://github.com/eea/waterhub-frontend/releases) [EEA Jenkins - [`65d011676`](https://github.com/eea/helm-charts/commit/65d0116768fa43eb18618e9bae5face481fb4a68)]
 
