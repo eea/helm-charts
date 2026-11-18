@@ -51,16 +51,16 @@ questions:
 
   - variable: "links.memcached"
     label: "Memcached service"
-    description: "Memcached service for python caching, SERVICE.NAMESPACE"
+    description: "Leave empty when plone-postgres runs in this namespace. Only for memcached in another namespace: SERVICE.NAMESPACE"
     type: "string"
-    required: true
+    required: false
     group: "General"
 
   - variable: "links.database"
     label: "PostgreSQL"
-    description: "PostgreSQL DB backend, SERVICE.NAMESPACE"
+    description: "Leave empty when plone-postgres runs in this namespace. Only for PostgreSQL in another namespace: SERVICE.NAMESPACE"
     type: "string"
-    required: true
+    required: false
     group: "General"
 
   - variable: "entrasync.enabled"
