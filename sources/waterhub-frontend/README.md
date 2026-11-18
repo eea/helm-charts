@@ -6,6 +6,9 @@ Deploy in the same namespace as `plone-postgres`, `waterhub-backend` and `waterh
 
 ## Releases
 
+### Version 0.2.3 - 18 November 2026
+- Add NetworkPolicies restricting traffic between ingress, varnish, plone and volto [Mihai Dobrescu - [`074bc1bea`](https://github.com/eea/helm-charts/commit/074bc1bea856021b76a85facaea9c16ea2d1c34e)]
+
 ### Version 0.2.2 - 18 November 2026
 - Pod hardening: disable service account token automount, add non-root securityContext [Mihai Dobrescu - [`d03e96ec1`](https://github.com/eea/helm-charts/commit/d03e96ec18577d22d11ea449d1ca7b9b45942ba3)]
 
