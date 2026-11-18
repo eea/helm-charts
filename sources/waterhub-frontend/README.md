@@ -6,6 +6,9 @@ Deploy in the same namespace as `plone-postgres`, `waterhub-backend` and `waterh
 
 ## Releases
 
+### Version 0.2.0 - 18 November 2026
+- Automated release of [eeacms/waterhub-frontend:1.0.0](https://github.com/eea/waterhub-frontend/releases) [EEA Jenkins - [`65d011676`](https://github.com/eea/helm-charts/commit/65d0116768fa43eb18618e9bae5face481fb4a68)]
+
 ### Version 0.1.2 - 16 November 2026
 - Security hardening: ClusterIP-only services, /admin exposed only behind Basic Auth, remove advisory-board Google verification and Sentry Expect-CT defaults [Mihai Dobrescu - [`9201b1d01`](https://github.com/eea/helm-charts/commit/9201b1d01bf26b2b615affec6f7c5e82f91bd9c3)]
 
