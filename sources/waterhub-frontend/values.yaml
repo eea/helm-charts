@@ -62,6 +62,16 @@ volto:
     # targetCPUUtilizationPercentage: 80
     targetMemoryUtilizationPercentage: 60
   replicaCount: 1
+  # Image entrypoint already drops to uid 1000; run as it from the start.
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 1000
+    runAsGroup: 1000
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop: [ALL]
+    seccompProfile:
+      type: RuntimeDefault
   resources:
     limits:
       memory: 2Gi
@@ -135,6 +145,11 @@ varnish:
   serviceName: frontend-varnish
   port: 3000
   backend: "frontend-volto"
+  # varnishd master needs root to set up its jail, so no runAsNonRoot / capability drop here.
+  securityContext:
+    allowPrivilegeEscalation: false
+    seccompProfile:
+      type: RuntimeDefault
   resources:
     limits:
       memory: 3Gi

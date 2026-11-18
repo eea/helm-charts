@@ -23,6 +23,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
+      automountServiceAccountToken: false
       containers:
       - name: varnish
         image: eeacms/plone-varnish:7.7-1.2
@@ -55,6 +56,10 @@ spec:
           {{- toYaml .Values.varnish.startupProbe | nindent 10 }}
         {{- end }}
 
+        {{- with .Values.varnish.securityContext }}
+        securityContext:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
         resources:
           {{- toYaml .Values.varnish.resources | nindent 10 }}
 
