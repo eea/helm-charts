@@ -23,6 +23,7 @@ spec:
             {{- toYaml . | nindent 8 }}
           {{- end }}
           serviceAccountName: {{ include "appl.serviceAccountName" . }}
+          automountServiceAccountToken: false
           containers:
           - name: entrasync
             image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
