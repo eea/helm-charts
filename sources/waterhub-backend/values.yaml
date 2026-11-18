@@ -47,7 +47,7 @@ plone:
   serviceType: ClusterIP
   hostname: plone.eea.europa.eu
   googleUrl: ""
-  site: Plone
+  site: waterhub
   autoscaling:
     enabled: false
     minReplicas: 1
@@ -71,6 +71,7 @@ plone:
     CORS_ALLOW_ORIGIN: ""
     DEFAULT_PUBLISHER: ""
     DEFAULT_ORGANISATIONS: ""
+    STATIC_BANNER_ENABLED_waterhub: ""
     DYNAMIC_BANNER_ENABLED: ""
     PLONE_REGISTRY_YAML_CONTENT: ""
   annotations: {}
