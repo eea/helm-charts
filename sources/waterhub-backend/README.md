@@ -6,6 +6,9 @@ Deploy in the same namespace as `plone-postgres`, `waterhub-backend` and `waterh
 
 ## Releases
 
+### Version 0.1.4 - 18 November 2026
+- Make links.database and links.memcached optional for same-namespace plone-postgres [Mihai Dobrescu - [`ca7ecd6b5`](https://github.com/eea/helm-charts/commit/ca7ecd6b58fe6fd0e533312fc8d0054f873191ce)]
+
 ### Version 0.1.3 - 18 November 2026
 - Release eeacms/waterhub-backend:6.1.4-3; use waterhub as Plone site id, restore STATIC_BANNER_ENABLED_waterhub [Mihai Dobrescu - [`e3f1ba8e9`](https://github.com/eea/helm-charts/commit/e3f1ba8e986c81a9c854d74530c47cb84427eb18)]
 
