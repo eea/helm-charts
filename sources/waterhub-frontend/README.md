@@ -6,6 +6,9 @@ Deploy in the same namespace as `plone-postgres`, `waterhub-backend` and `waterh
 
 ## Releases
 
+### Version 0.2.4 - 18 November 2026
+- Ingress hardening: security headers on backend ingresses, fix frontend header quoting, CSP report-only, rate limiting [Mihai Dobrescu - [`d378cacf4`](https://github.com/eea/helm-charts/commit/d378cacf4552e954884f95f2272b3c63f4dc7ae1)]
+
 ### Version 0.2.3 - 18 November 2026
 - Add NetworkPolicies restricting traffic between ingress, varnish, plone and volto [Mihai Dobrescu - [`074bc1bea`](https://github.com/eea/helm-charts/commit/074bc1bea856021b76a85facaea9c16ea2d1c34e)]
 
