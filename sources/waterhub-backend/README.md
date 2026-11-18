@@ -6,6 +6,9 @@ Deploy in the same namespace as `plone-postgres`, `waterhub-backend` and `waterh
 
 ## Releases
 
+### Version 0.1.5 - 18 November 2026
+- Pod hardening: disable service account token automount, add non-root securityContext [Mihai Dobrescu - [`542300d76`](https://github.com/eea/helm-charts/commit/542300d760aa48e69bf1a2d39827c170c003d100)]
+
 ### Version 0.1.4 - 18 November 2026
 - Make links.database and links.memcached optional for same-namespace plone-postgres [Mihai Dobrescu - [`ca7ecd6b5`](https://github.com/eea/helm-charts/commit/ca7ecd6b58fe6fd0e533312fc8d0054f873191ce)]
 
