@@ -1,5 +1,8 @@
 ## Releases
 
+### Version 1.57.0 - 18 November 2026
+- Automated release of [eeacms/clms-backend:6.1.6-2](https://github.com/eea/clms-backend/releases) [EEA Jenkins - [`52c3ca0b4`](https://github.com/eea/helm-charts/commit/52c3ca0b4633fb156b6de8eeee02281e238083d7)]
+
 ### Version 1.56.1 - 12 November 2026
 - Automated release of [eeacms/plone-varnish:9.1-1.0](https://github.com/eea/plone-varnish/releases) [EEA Jenkins - [`157f222f8`](https://github.com/eea/helm-charts/commit/157f222f8850b7c53639abc96d43a337ea9b74af)]
 
