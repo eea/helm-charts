@@ -4,6 +4,9 @@ This chart is configured for production use.
 
 ## Releases
 
+### Version 4.1.3
+- Optional database.innodbBufferPoolSize to set the MariaDB InnoDB buffer pool size.
+
 ### Version 4.1.2
 - Removal of 'vocabulary' type in attributes. Vocabulary update failing fix.
 

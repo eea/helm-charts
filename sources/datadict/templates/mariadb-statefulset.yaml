@@ -32,6 +32,10 @@ spec:
         - containerPort: 3306
           protocol: TCP
         image: mariadb:12.0.2
+        {{- with .Values.database.innodbBufferPoolSize }}
+        args:
+          - {{ printf "--innodb-buffer-pool-size=%s" . | quote }}
+        {{- end }}
         env:
         - name: MYSQL_DATABASE
           value: "{{ .Values.database.database }}"
