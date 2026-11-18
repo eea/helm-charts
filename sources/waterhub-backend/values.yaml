@@ -46,6 +46,17 @@ ingress:
     cert-manager.io/cluster-issuer: 01dev-eea-letsencrypt
   certificate: plone.eea.europa.eu-tls
   tls: enabled
+  # Added to the api, admin and google ingresses (HSTS comes from the ingress controller).
+  securityHeaders: |
+    more_set_headers 'X-Content-Type-Options nosniff'
+      'X-Frame-Options SAMEORIGIN'
+      'Referrer-Policy strict-origin-when-cross-origin';
+  # Requests per second per client IP (nginx allows bursts of 5x). Empty disables.
+  rateLimit:
+    api: "20"
+    admin: "5"
+  # Comma-separated CIDRs allowed to reach /admin. Empty allows all (Basic Auth still applies).
+  adminSourceRange: ""
 
 nginx:
   basicAuth:

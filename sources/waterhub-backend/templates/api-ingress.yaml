@@ -7,6 +7,9 @@ metadata:
     component: waterhub-api
   annotations:
     nginx.ingress.kubernetes.io/configuration-snippet: |
+      {{- with .Values.ingress.securityHeaders }}
+      {{- . | nindent 6 }}
+      {{- end }}
       if ($uri = "/++api++/@email-send") {
         return 403;
       }
@@ -18,6 +21,9 @@ metadata:
       rewrite ^/(\+\+api\+\+)(.*)$ /VirtualHostBase/https/{{ .Values.plone.hostname }}:443/{{ .Values.plone.site }}/$1/VirtualHostRoot$2 break;
     nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/proxy-body-size: 100m
+    {{- with .Values.ingress.rateLimit.api }}
+    nginx.ingress.kubernetes.io/limit-rps: {{ . | quote }}
+    {{- end }}
   {{- with .Values.ingress.annotations }}
     {{- toYaml . | nindent 4 }}
   {{- end }}

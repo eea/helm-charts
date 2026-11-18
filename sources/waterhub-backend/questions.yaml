@@ -486,3 +486,9 @@ questions:
     default: true
     type: "boolean"
     group: "Security"
+  - variable: "ingress.adminSourceRange"
+    label: "/admin allowed source ranges"
+    description: "Comma-separated CIDRs allowed to reach /admin (e.g. EEA office/VPN ranges). Empty allows all; Basic Auth still applies."
+    default: ""
+    type: "string"
+    group: "Security"
