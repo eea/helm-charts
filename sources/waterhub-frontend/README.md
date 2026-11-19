@@ -6,6 +6,9 @@ Deploy in the same namespace as `plone-postgres`, `waterhub-backend` and `waterh
 
 ## Releases
 
+### Version 0.2.6 - 19 November 2026
+- Keep credentials out of the pod spec: chart-managed Secret from values, existingSecret overrides it [Mihai Dobrescu - [`36b922c86`](https://github.com/eea/helm-charts/commit/36b922c8660dc2b1665f01dbb5f4904ab9fe327b)]
+
 ### Version 0.2.5 - 19 November 2026
 - Fix CORS proxy question to set RAZZLE_ALLOWED_CORS_DESTINATIONS; clarify Sentry DSN description [Mihai Dobrescu - [`65c34906f`](https://github.com/eea/helm-charts/commit/65c34906f8d1229c9d882aa267b2acc24a2293e3)]
 
