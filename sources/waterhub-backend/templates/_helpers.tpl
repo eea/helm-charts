@@ -60,3 +60,10 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+Secret loaded with envFrom: existingSecret, or the one the chart renders from values.
+*/}}
+{{- define "appl.envSecretName" -}}
+{{- .Values.existingSecret | default (printf "%s-secrets" (include "appl.fullname" .)) }}
+{{- end }}

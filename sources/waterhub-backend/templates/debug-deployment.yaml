@@ -32,11 +32,9 @@ spec:
         imagePullPolicy: Always
         args:
         - cat
-        {{- with .Values.existingSecret }}
         envFrom:
         - secretRef:
-            name: {{ . }}
-        {{- end }}
+            name: {{ include "appl.envSecretName" . }}
         env:
         - name: SERVER_NAME
           value: "{{ .Values.plone.hostname }}"
@@ -51,9 +49,9 @@ spec:
         - name: TZ
           value: "{{ .Values.timezone }}"
         - name: RELSTORAGE_DSN
-          value: "host='postgres' dbname='{{ .Values.plone.database.POSTGRES_DB }}' user='{{ .Values.plone.database.POSTGRES_USER }}' password='{{ if .Values.existingSecret }}$(POSTGRES_PASSWORD){{ else }}{{ .Values.plone.database.POSTGRES_PASSWORD }}{{ end }}'"
+          value: "host='postgres' dbname='{{ .Values.plone.database.POSTGRES_DB }}' user='{{ .Values.plone.database.POSTGRES_USER }}' password='$(POSTGRES_PASSWORD)'"
         {{- range $key, $value := .Values.plone.environment }}
-        {{- if ($value) }}
+        {{- if and ($value) (not (has $key $.Values.secretEnvKeys)) }}
         - name: {{ $key }}
           value: {{ $value | quote }}
         {{- end }}
