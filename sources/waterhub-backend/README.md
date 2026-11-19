@@ -6,6 +6,9 @@ Deploy in the same namespace as `plone-postgres`, `waterhub-backend` and `waterh
 
 ## Releases
 
+### Version 0.2.1 - 19 November 2026
+- Keep credentials out of the pod spec: chart-managed Secret from values, existingSecret overrides it [Mihai Dobrescu - [`7f59df36f`](https://github.com/eea/helm-charts/commit/7f59df36f9be50f77a29ebd00efca7683cc34e0c)]
+
 ### Version 0.2.0 - 19 November 2026
 - Automated release of [eeacms/waterhub-backend:6.1.4-4](https://github.com/eea/waterhub-backend/releases) [EEA Jenkins - [`a931c5561`](https://github.com/eea/helm-charts/commit/a931c556108dc60c1360b0f1a6562d8f3ca6a70c)]
 

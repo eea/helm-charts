@@ -84139,6 +84139,24 @@ entries:
   waterhub-backend:
   - apiVersion: v2
     appVersion: 6.1.4-4
+    created: "2026-11-19T22:13:43.586211207+02:00"
+    dependencies:
+    - name: postfix
+      repository: https://eea.github.io/helm-charts
+      version: 3.2.0
+    description: WaterHub backend
+    digest: 3e38a562021b1f90714a62341f3ace932e47de0b635ebdbb2c1af4c7d2da7f06
+    home: https://github.com/eea/waterhub-backend
+    icon: https://raw.githubusercontent.com/eea/helm-charts/main/sources/waterhub-backend/volto.png
+    keywords:
+    - CMS
+    name: waterhub-backend
+    type: application
+    urls:
+    - waterhub-backend-0.2.1.tgz
+    version: 0.2.1
+  - apiVersion: v2
+    appVersion: 6.1.4-4
     created: "2026-11-19T17:01:53.09600962Z"
     dependencies:
     - name: postfix
@@ -84751,4 +84769,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2026-11-19T22:13:17.477895697+02:00"
+generated: "2026-11-19T22:13:43.582139112+02:00"
