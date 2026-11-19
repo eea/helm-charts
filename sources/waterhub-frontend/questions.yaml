@@ -82,9 +82,9 @@ questions:
     type: "string"
     group: "Volto configuration"
 
-  - variable: "volto.environment.ALLOWED_CORS_DESTINATIONS"
-    label: "ALLOWED_CORS_DESTINATIONS"
-    description: "Allowed CORS Proxy destinations, e.g.: staging.eea.europa.eu, ims.dev.eea.europa.eu"
+  - variable: "volto.environment.RAZZLE_ALLOWED_CORS_DESTINATIONS"
+    label: "Allowed CORS proxy destinations"
+    description: "Comma-separated hostnames the Volto CORS proxy may fetch, e.g.: staging.eea.europa.eu,ims.dev.eea.europa.eu. Leave empty unless a feature needs it."
     default: ""
     type: "string"
     group: "Volto configuration"
@@ -118,7 +118,7 @@ questions:
 
   - variable: "volto.environment.RAZZLE_SENTRY_DSN"
     label: "Sentry DSN"
-    description: "Sentry client key. If set, Sentry error reporting and User feedback will be enabled. Default is plone-saas DSN."
+    description: "Sentry client key (https://<key>@sentry.eea.europa.eu/<project-id>). If set, Sentry error reporting and User feedback will be enabled. Empty disables Sentry."
     type: "string"
     required: false
     group: "Volto configuration"
