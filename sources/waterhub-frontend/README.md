@@ -6,6 +6,9 @@ Deploy in the same namespace as `plone-postgres`, `waterhub-backend` and `waterh
 
 ## Releases
 
+### Version 0.2.5 - 19 November 2026
+- Fix CORS proxy question to set RAZZLE_ALLOWED_CORS_DESTINATIONS; clarify Sentry DSN description [Mihai Dobrescu - [`65c34906f`](https://github.com/eea/helm-charts/commit/65c34906f8d1229c9d882aa267b2acc24a2293e3)]
+
 ### Version 0.2.4 - 18 November 2026
 - Ingress hardening: security headers on backend ingresses, fix frontend header quoting, CSP report-only, rate limiting [Mihai Dobrescu - [`d378cacf4`](https://github.com/eea/helm-charts/commit/d378cacf4552e954884f95f2272b3c63f4dc7ae1)]
 
