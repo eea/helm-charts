@@ -156,6 +156,9 @@ own filesystem store.
 
 ## Releases
 
+### Version 0.14.14 - 19 November 2026
+- Update sdi-apache to 1.0.16 (httpd 2.4.71) [Juan Luis Rodriguez Ponce - [`0ab0809ca`](https://github.com/eea/helm-charts/commit/0ab0809ca88b323ab8bcf75b6054b515827e308e)]
+
 ### Version 0.14.13 - 17 November 2026
 - Allow setting GN5 OAuth2 user groups and profiles from token claims (gn5.oauth2.userCreationRegistration) and restart GN5 when its configuration changes [Juan Luis Rodriguez Ponce - [`fd52e9962`](https://github.com/eea/helm-charts/commit/fd52e996212cd831d3b228bd950e366c216f2e06)]
 
