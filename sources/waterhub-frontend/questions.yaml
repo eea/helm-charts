@@ -265,3 +265,9 @@ questions:
     default: true
     type: "boolean"
     group: "Security"
+  - variable: "existingSecret"
+    label: "Existing Secret with credentials"
+    description: "Name of a Secret in this namespace holding SENTRY_AUTH_TOKEN, RAZZLE_SENTRY_DSN. Leave empty to have the chart create it from the values in this form."
+    default: ""
+    type: "string"
+    group: "Security"

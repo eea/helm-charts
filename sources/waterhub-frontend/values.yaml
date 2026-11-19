@@ -7,9 +7,16 @@ image:
 
 imagePullSecrets: []
 
-# Name of an existing Secret (managed outside the chart) loaded with envFrom
-# into the volto and debug containers, e.g. SENTRY_AUTH_TOKEN, RAZZLE_SENTRY_DSN
+# Credentials are loaded with envFrom into the volto and debug containers from a
+# Secret, never written into the pod spec.
+# - existingSecret empty: the chart renders "<release>-secrets" from values:
+#   the volto.environment keys listed in secretEnvKeys.
+# - existingSecret set: that Secret (managed outside the chart) is used instead
+#   and must contain the same keys; the values above are then ignored.
 existingSecret: ""
+secretEnvKeys:
+  - SENTRY_AUTH_TOKEN
+  - RAZZLE_SENTRY_DSN
 
 nameOverride: ""
 fullnameOverride: ""

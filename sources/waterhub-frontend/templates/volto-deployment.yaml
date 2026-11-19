@@ -15,6 +15,8 @@ spec:
 
   template:
     metadata:
+      annotations:
+        checksum/env-secret: {{ include (print $.Template.BasePath "/env-secret.yaml") . | sha256sum }}
       labels:
         {{- include "appl.selectorLabels" . | nindent 8 }}
         component: volto
@@ -28,11 +30,9 @@ spec:
       containers:
       - name: volto
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-        {{- with .Values.existingSecret }}
         envFrom:
         - secretRef:
-            name: {{ . }}
-        {{- end }}
+            name: {{ include "appl.envSecretName" . }}
         env:
         - name: PORT
           value: "3000"
@@ -47,7 +47,7 @@ spec:
         - name: TZ
           value: "{{ .Values.timezone }}"
         {{- range $key, $value := .Values.volto.environment }}
-        {{- if and ($value) (ne $key "RAZZLE_FRONTEND_VERSION") (ne $key "RAZZLE_FRONTEND_NAME") }}
+        {{- if and ($value) (not (has $key $.Values.secretEnvKeys)) (ne $key "RAZZLE_FRONTEND_VERSION") (ne $key "RAZZLE_FRONTEND_NAME") }}
         - name: {{ $key }}
           value: {{ $value | quote }}
         {{- end }}
