@@ -128,6 +128,9 @@ When `ldapMemcachedServers` is empty the env var is omitted entirely.
 
 ## Releases
 
+### Version 0.2.21 - 19 November 2026
+- Bumped webforms proxy image to nginx:1.31.9-alpine [Olimpiu Rob - [`b33913474`](https://github.com/eea/helm-charts/commit/b3391347419003b9201d1f23e7f921bd3ba81e63)]
+
 ### Version 0.2.20 - 18 November 2026
 - Automated release of [eeacms/reportek-cdr:6.3-14](https://github.com/eea/eea.docker.reportek.cdr-instance/releases) [EEA Jenkins - [`cb613a4f4`](https://github.com/eea/helm-charts/commit/cb613a4f42099cfcd6668a2d5ef6da316a9a37ec)]
 
