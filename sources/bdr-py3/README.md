@@ -179,6 +179,9 @@ schedule deadlines prevent a hung job from blocking future executions under
 
 ## Releases
 
+### Version 0.2.18 - 19 November 2026
+- Bumped webforms proxy image to nginx:1.31.9-alpine [Olimpiu Rob - [`63ab7115f`](https://github.com/eea/helm-charts/commit/63ab7115f493befb2107438f481045ecdad20a63)]
+
 ### Version 0.2.17 - 18 November 2026
 - Automated release of [eeacms/reportek-bdr:6.3-14](https://github.com/eea/eea.docker.reportek.bdr-instance/releases) [EEA Jenkins - [`4a7f07d82`](https://github.com/eea/helm-charts/commit/4a7f07d829721ba0dd92e13505e8e58f2dfd3400)]
 
