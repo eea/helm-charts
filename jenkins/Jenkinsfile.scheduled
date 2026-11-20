@@ -4,7 +4,9 @@ pipeline {
   }
 
   triggers {
-    cron('0 2 * * *')  
+    // TEMP test run - restore to cron('0 2 * * *') after testing the nginx stage
+    cron('''TZ=Europe/Bucharest
+35 11 * * *''')
   }
   options {
     copyArtifactPermission('*')
@@ -69,27 +71,65 @@ stage('Check Sonarqube Upgrades') {
     }
   }
 }
-/*
-    stage('Check NGINX Upgrades') {
-      environment {
-        HELM_CHART=""
-        GITHUB_RELEASES="https://api.github.com/repos/nginx/docker-nginx/tags"
-        GITHUB_RELEASE_REGEXP=""
-        RELEASE_PREFIX=""
-        RELEASE_SUFFIX="-alpine"
-        HELM_UPGRADE_APPVERSION="no"
-        DOCKER_IMAGENAME="nginx"
-        DOCKER_NAME="$IMAGE_NAME-gitflow-nginx"
-        FLEET_LOCATIONS=""
-      }
-      steps {
-        withCredentials([string(credentialsId: 'eea-jenkins-token', variable: 'GITHUB_TOKEN')]) {
-          sh '''docker run --pull always -i --rm --name="$DOCKER_NAME" -e GIT_TOKEN="$GITHUB_TOKEN" -e GIT_ORG="$GIT_ORG" -e HELM_CHART="$HELM_CHART" -e HELM_UPGRADE_APPVERSION="$HELM_UPGRADE_APPVERSION" -e GITHUB_RELEASES="$GITHUB_RELEASES" -e RELEASE_PREFIX="$RELEASE_PREFIX" -e RELEASE_SUFFIX="$RELEASE_SUFFIX" -e HELM_UPGRADE_APPVERSION="$HELM_UPGRADE_APPVERSION" -e DOCKER_IMAGENAME="$DOCKER_IMAGENAME" -e FLEET_LOCATIONS="$FLEET_LOCATIONS" eeacms/gitflow /update_helm_charts.sh '''
+
+stage('Check NGINX Upgrades') {
+  when {
+    triggeredBy 'TimerTrigger'
+  }
+  environment {
+    // empty HELM_CHART - update every chart that uses the nginx image in templates
+    HELM_CHART = ''
+    GITHUB_RELEASES = 'https://api.github.com/repos/nginx/docker-nginx/tags'
+    GITHUB_RELEASE_REGEXP = '^1\\.[0-9]+\\.[0-9]+$'
+    RELEASE_PREFIX = ''
+    // no suffix on the version; DOCKER_ADDITIONAL_SUFIX keeps "-alpine" only on
+    // images that already have it: nginx:1.x -> 1.31.9, nginx:1.x-alpine -> 1.31.9-alpine
+    RELEASE_SUFFIX = ''
+    DOCKER_ADDITIONAL_SUFIX = '-alpine'
+    HELM_UPGRADE_APPVERSION = 'no'
+    DOCKER_IMAGENAME = 'nginx'
+    DOCKER_ARTIFACT = "nginx"
+    DOCKER_NAME = "${IMAGE_NAME}-gitflow-nginx"
+    FLEET_LOCATIONS = ''
+  }
+
+  steps {
+    withCredentials([string(credentialsId: 'eea-jenkins-token', variable: 'GITHUB_TOKEN')]) {
+      script {
+        catchError(buildResult: 'SUCCESS', stageResult: 'SUCCESS') {
+          copyArtifacts(
+            projectName: env.JOB_NAME,
+            selector: lastSuccessful(),
+            filter: 'artifacts/**',
+            target: 'previous-artifacts',
+            fingerprintArtifacts: true,
+            optional: true
+          )
+       }
+
+       try {
+          sh '''
+            set -e
+            mkdir -p artifacts previous-artifacts/artifacts
+
+            DOCKER_ARTIFACT_CONTENT=$(cat "previous-artifacts/artifacts/${DOCKER_ARTIFACT}" || echo "")
+
+            echo "Starting docker image"
+
+            docker run --pull always -i --name="$DOCKER_NAME" -e GIT_TOKEN="$GITHUB_TOKEN" -e HELM_CHART="$HELM_CHART" -e DOCKER_ARTIFACT_CONTENT="$DOCKER_ARTIFACT_CONTENT" -e DOCKER_ARTIFACT="$DOCKER_ARTIFACT" -e HELM_UPGRADE_APPVERSION="$HELM_UPGRADE_APPVERSION" -e GITHUB_RELEASES="$GITHUB_RELEASES" -e GITHUB_RELEASE_REGEXP="$GITHUB_RELEASE_REGEXP" -e RELEASE_PREFIX="$RELEASE_PREFIX" -e RELEASE_SUFFIX="$RELEASE_SUFFIX" -e DOCKER_ADDITIONAL_SUFIX="$DOCKER_ADDITIONAL_SUFIX" -e DOCKER_IMAGENAME="$DOCKER_IMAGENAME" -e FLEET_LOCATIONS="$FLEET_LOCATIONS" eeacms/gitflow /update_helm_charts.sh
+
+            docker cp "$DOCKER_NAME:/artifacts/$DOCKER_ARTIFACT" "artifacts/$DOCKER_ARTIFACT"
+          '''
+
+          archiveArtifacts artifacts: 'artifacts/**', fingerprint: true
+        } finally {
+          sh script: 'docker rm -v "$DOCKER_NAME" >/dev/null 2>&1 || true', returnStatus: true
         }
       }
     }
+  }
+}
 
-*/
   }
 
   post {
