@@ -345,6 +345,9 @@ You don't need to change anything on this container, it should work by having th
 
 ## Releases
 
+### Version 3.18.4 - 20 November 2026
+- Automated release of nginx:1.31.9 [EEA Jenkins - [`d5cf48e48`](https://github.com/eea/helm-charts/commit/d5cf48e4887fccdc7e76397e12c1feb166f38753)]
+
 ### Version 3.18.3 - 03 November 2026
 - recreate matomo on configuration change [valentinab25 - [`d76f3203c`](https://github.com/eea/helm-charts/commit/d76f3203cc22ee59df708d5ec83097ffbeafe57f)]
 
