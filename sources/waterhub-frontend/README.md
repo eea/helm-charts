@@ -6,6 +6,9 @@ Deploy in the same namespace as `plone-postgres`, `waterhub-backend` and `waterh
 
 ## Releases
 
+### Version 0.3.0 - 20 November 2026
+- Automated release of [eeacms/waterhub-frontend:1.1.0](https://github.com/eea/waterhub-frontend/releases) [EEA Jenkins - [`c861f8204`](https://github.com/eea/helm-charts/commit/c861f8204c159d6ebb9e22b77293829a82b709fd)]
+
 ### Version 0.2.8 - 20 November 2026
 - update variable description [Mihai Dobrescu - [`f865f5dad`](https://github.com/eea/helm-charts/commit/f865f5dadf52d41fce027708dae934a39c68dc21)]
 
