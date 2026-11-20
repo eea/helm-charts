@@ -36,6 +36,9 @@ ask for the password again for these paths.
 
 ## Releases
 
+### Version 3.44.7 - 20 November 2026
+- Automated release of nginx:1.31.9 [EEA Jenkins - [`751d725dc`](https://github.com/eea/helm-charts/commit/751d725dc8685cdc16df561925423c4e7582e6cd)]
+
 ### Version 3.44.6 - 18 November 2026
 - Automated release of [eeacms/eea-website-frontend:7.6.2-beta.4](https://github.com/eea/eea-website-frontend/releases) [EEA Jenkins - [`8b8b701ac`](https://github.com/eea/helm-charts/commit/8b8b701acfa3d9fa9eda117d193a1fd025103855)]
 
