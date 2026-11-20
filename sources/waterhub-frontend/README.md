@@ -6,6 +6,9 @@ Deploy in the same namespace as `plone-postgres`, `waterhub-backend` and `waterh
 
 ## Releases
 
+### Version 0.2.8 - 20 November 2026
+- update variable description [Mihai Dobrescu - [`f865f5dad`](https://github.com/eea/helm-charts/commit/f865f5dadf52d41fce027708dae934a39c68dc21)]
+
 ### Version 0.2.7 - 20 November 2026
 - Fix Matomo second site id question to set volto.environment.RAZZLE_MATOMO_SECOND_SITE_ID [Mihai Dobrescu - [`1720ff6ca`](https://github.com/eea/helm-charts/commit/1720ff6cac4ff52b2c473e5adc7c2e15587d21b7)]
 
