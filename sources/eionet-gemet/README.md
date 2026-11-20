@@ -4,6 +4,9 @@ This chart is (almost) configured for production.
 
 ## Releases
 
+### Version 1.0.2 - 20 November 2026
+- Automated release of nginx:1.31.9 [EEA Jenkins - [`0343c43eb`](https://github.com/eea/helm-charts/commit/0343c43eb9293b65a3cb1dfb64d20e779ff159d8)]
+
 ### Version 1.0.1 - 27 October 2026
 - Automated release of [eeacms/apache:2.4-3.5](https://github.com/eea/eea.docker.apache/releases) [EEA Jenkins - [`db5d132aa`](https://github.com/eea/helm-charts/commit/db5d132aaaed69cf1ed6e9a60f7c89af3f96c30c)]
 
