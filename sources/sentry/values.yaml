@@ -2664,6 +2664,7 @@ ingress:
     nginx.ingress.kubernetes.io/proxy-buffers-number: "4"
     nginx.ingress.kubernetes.io/proxy-buffer-size: "128k"
     nginx.ingress.kubernetes.io/proxy-busy-buffers-size: "256k"
+    nginx.ingress.kubernetes.io/proxy-body-size: "256m"
     # Use below annotations to enable HTTP to HTTPS redirects on AWS ALB
     # alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
     # alb.ingress.kubernetes.io/ssl-redirect: '443'
