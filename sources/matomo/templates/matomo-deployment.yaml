@@ -93,7 +93,7 @@ spec:
             {{- toYaml .Values.matomo.fpmreadinessProbe | nindent 12 }}
           {{- end }}
         - name: nginx
-          image: nginx:1.31.1-alpine
+          image: nginx:1.31.9-alpine
           ports:
             - containerPort: {{ .Values.matomo.environment.NGINX_HTTP_PORT_NUMBER }}
               name: nginx
