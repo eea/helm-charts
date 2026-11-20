@@ -1655,3 +1655,8 @@ externalPostgresql:
 - [DigitalOcean](docs/usage-digitalocean.md)
 - [External Services](docs/external-services.md)
 
+## Releases
+
+### Version 33.8.1 - 20 November 2026
+- define proxy body size limit [Mihai Dobrescu - [`6f6e07077`](https://github.com/eea/helm-charts/commit/6f6e070770284c8060fcbae9a0553db3dfc21d64)]
+
