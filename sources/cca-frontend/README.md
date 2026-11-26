@@ -33,6 +33,9 @@ then bumps `appVersion` and releases through `release.sh`.
 
 ## Releases
 
+### Version 0.95.2 - 26 November 2026
+- Automated release of nginx:1.31.10 [Valentina Balan - [`42d38ed38`](https://github.com/eea/helm-charts/commit/42d38ed38a60c55e800962d1b5ace926b1be5f7a)]
+
 ### Version 0.95.1 - 20 November 2026
 - Automated release of nginx:1.31.9 [EEA Jenkins - [`b9690645f`](https://github.com/eea/helm-charts/commit/b9690645f2ec86cd72f01b56c82cc75700a52704)]
 
