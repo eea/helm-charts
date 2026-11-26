@@ -1,5 +1,8 @@
 ## Releases
 
+### Version 0.1.4 - 26 November 2026
+- Automated release of nginx:1.31.10 [Valentina Balan - [`1e6db6681`](https://github.com/eea/helm-charts/commit/1e6db6681a9688505a6c28d26ab6c4505385dfcc)]
+
 ### Version 0.1.3 - 20 November 2026
 - Automated release of nginx:1.31.9 [EEA Jenkins - [`480960a33`](https://github.com/eea/helm-charts/commit/480960a33a8918126eeded3cbf782ec88d11cd41)]
 
