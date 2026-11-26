@@ -128,6 +128,9 @@ When `ldapMemcachedServers` is empty the env var is omitted entirely.
 
 ## Releases
 
+### Version 0.2.22 - 26 November 2026
+- Automated release of nginx:1.31.10 [Valentina Balan - [`f6de908c5`](https://github.com/eea/helm-charts/commit/f6de908c5f624fd78368f065fbfb5b9558cff5ad)]
+
 ### Version 0.2.21 - 19 November 2026
 - Bumped webforms proxy image to nginx:1.31.9-alpine [Olimpiu Rob - [`b33913474`](https://github.com/eea/helm-charts/commit/b3391347419003b9201d1f23e7f921bd3ba81e63)]
 
