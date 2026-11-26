@@ -179,6 +179,9 @@ schedule deadlines prevent a hung job from blocking future executions under
 
 ## Releases
 
+### Version 0.2.19 - 26 November 2026
+- Automated release of nginx:1.31.10 [Valentina Balan - [`05e9ed39b`](https://github.com/eea/helm-charts/commit/05e9ed39b5c14bdd94a77ff1f5c893930550c86f)]
+
 ### Version 0.2.18 - 19 November 2026
 - Bumped webforms proxy image to nginx:1.31.9-alpine [Olimpiu Rob - [`63ab7115f`](https://github.com/eea/helm-charts/commit/63ab7115f493befb2107438f481045ecdad20a63)]
 
