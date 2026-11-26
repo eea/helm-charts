@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
         - name: nginx
-          image: nginx:1.31.9-alpine
+          image: nginx:1.31.10-alpine
           imagePullPolicy: {{ .Values.nginx.image.pullPolicy }}
           ports:
             - name: http
