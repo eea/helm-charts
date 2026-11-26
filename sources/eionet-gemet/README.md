@@ -4,6 +4,9 @@ This chart is (almost) configured for production.
 
 ## Releases
 
+### Version 1.0.3 - 26 November 2026
+- Automated release of nginx:1.31.10 [Valentina Balan - [`caf768be7`](https://github.com/eea/helm-charts/commit/caf768be790dd7f30bb019dc18349604f2185d76)]
+
 ### Version 1.0.2 - 20 November 2026
 - Automated release of nginx:1.31.9 [EEA Jenkins - [`0343c43eb`](https://github.com/eea/helm-charts/commit/0343c43eb9293b65a3cb1dfb64d20e779ff159d8)]
 
