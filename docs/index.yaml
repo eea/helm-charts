@@ -2136,6 +2136,33 @@ entries:
   agent-vault:
   - apiVersion: v2
     appVersion: 0.39.0
+    created: "2026-11-26T11:53:53.0458937Z"
+    dependencies:
+    - condition: mailtrap.enabled
+      name: mailtrap
+      repository: https://eea.github.io/helm-charts
+      version: 1.0.3
+    description: Infisical Agent Vault, deployed with a private management API/MITM
+      proxy and a public nginx reverse proxy that exposes only the management UI
+    digest: af726bbb664b50dccb425e848d95a221813d4ef79181e103da3a44458f6c4852
+    home: https://github.com/eea/helm-charts
+    keywords:
+    - agent-vault
+    - infisical
+    - secrets
+    - proxy
+    maintainers:
+    - name: EEA
+    name: agent-vault
+    sources:
+    - https://github.com/eea/helm-charts
+    - https://github.com/Infisical/agent-vault
+    type: application
+    urls:
+    - agent-vault-0.1.2.tgz
+    version: 0.1.2
+  - apiVersion: v2
+    appVersion: 0.39.0
     created: "2026-11-20T11:26:37.862904981Z"
     dependencies:
     - condition: mailtrap.enabled
@@ -85133,4 +85160,4 @@ entries:
     urls:
     - zz-testing-catalogrefresh-2.0.0.tgz
     version: 2.0.0
-generated: "2026-11-26T13:44:28.16187+02:00"
+generated: "2026-11-26T11:53:53.039814913Z"

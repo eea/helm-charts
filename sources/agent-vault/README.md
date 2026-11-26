@@ -264,6 +264,9 @@ by someone with cluster access) rather than an on-machine `agent-vault auth logi
   `nginx.conf` / `default.conf.template` without needing a custom-built image.
 ## Releases
 
+### Version 0.1.2 - 26 November 2026
+- Automated release of nginx:1.31.10 [Valentina Balan - [`129eb83a2`](https://github.com/eea/helm-charts/commit/129eb83a2c738c6db71db514815424de68b80268)]
+
 ### Version 0.1.1 - 20 November 2026
 - Automated release of nginx:1.31.9 [EEA Jenkins - [`8030265f5`](https://github.com/eea/helm-charts/commit/8030265f58823dee523c305c5ed1a38156503d07)]
 
