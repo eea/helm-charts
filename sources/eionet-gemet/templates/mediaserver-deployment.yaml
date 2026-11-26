@@ -31,7 +31,7 @@ spec:
 
       containers:
       - name: mediaserver
-        image: nginx:1.31.9-alpine
+        image: nginx:1.31.10-alpine
         env:
         - name: TZ
           value: {{ .Values.timezone }}
