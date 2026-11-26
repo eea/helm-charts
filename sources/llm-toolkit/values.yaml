@@ -609,6 +609,12 @@ litellm:
   # -- Number of worker processes for LiteLLM
   numWorkers: 4
 
+  # -- Seconds uvicorn waits for a (re)started worker to answer its health-check
+  # ping before SIGKILL-ing it. The worker only answers after it has fully
+  # imported the LiteLLM app, which can exceed uvicorn's 5s default on slow or
+  # cold nodes; too low a value makes every worker die in a crash loop.
+  workerHealthcheckTimeout: 90
+
   # -- Extra model deployments rendered into the LiteLLM config (model_list)
   # Each entry is a standard LiteLLM model_list item, e.g.:
   # models:

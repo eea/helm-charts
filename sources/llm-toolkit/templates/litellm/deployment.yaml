@@ -98,10 +98,11 @@ spec:
             - -c
             - |
               echo "=== Starting LiteLLM {{ .Values.litellm.image.tag | default .Chart.AppVersion }} ==="
+              {{- $whTimeout := .Values.litellm.workerHealthcheckTimeout | default 90 }}
               {{- if .Values.litellm.llmGuardPlugin.enabled }}
-              exec litellm --port 4000 --num_workers {{ .Values.litellm.numWorkers | default 6 }} --config /app/litellm/llmguard-plugin/plugin/plugin/llmguard_config.yaml
+              exec litellm --port 4000 --num_workers {{ .Values.litellm.numWorkers | default 6 }} --timeout_worker_healthcheck {{ $whTimeout }} --config /app/litellm/llmguard-plugin/plugin/plugin/llmguard_config.yaml
               {{- else }}
-              exec litellm --port 4000 --num_workers {{ .Values.litellm.numWorkers | default 6 }} --config /app/litellm/config/llmguard_config.yaml
+              exec litellm --port 4000 --num_workers {{ .Values.litellm.numWorkers | default 6 }} --timeout_worker_healthcheck {{ $whTimeout }} --config /app/litellm/config/llmguard_config.yaml
               {{- end }}
           env:
             - name: PORT
