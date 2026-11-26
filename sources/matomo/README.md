@@ -345,6 +345,9 @@ You don't need to change anything on this container, it should work by having th
 
 ## Releases
 
+### Version 3.18.5 - 26 November 2026
+- Automated release of nginx:1.31.10 [Valentina Balan - [`e15abf6e8`](https://github.com/eea/helm-charts/commit/e15abf6e83c79625284fcc53aefe273642c43a19)]
+
 ### Version 3.18.4 - 20 November 2026
 - Automated release of nginx:1.31.9 [EEA Jenkins - [`d5cf48e48`](https://github.com/eea/helm-charts/commit/d5cf48e4887fccdc7e76397e12c1feb166f38753)]
 
