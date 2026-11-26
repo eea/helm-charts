@@ -361,6 +361,9 @@ helm delete llm-toolkit
 
 ## Releases
 
+### Version 0.5.7 - 26 November 2026
+- LiteLLM now starts with `--timeout_worker_healthcheck` (new value `litellm.workerHealthcheckTimeout`, default `90`): uvicorn 0.51 SIGKILLs a worker that does not answer its startup health-check ping within `timeout_worker_healthcheck` (5s default), but a spawned worker only answers after it has fully re-imported the LiteLLM app, which exceeds 5s on cold/slow nodes, so every worker died in a silent crash loop at `num_workers > 1`
+
 ### Version 0.5.6 - 12 November 2026
 - Docs: corrected the recommended EEA LiteLLM split (verified on 01dev) — Langfuse routing and credentials are configured in the LiteLLM UI (stored in its database, per-team via team settings -> Logging Integrations -> "Langfuse OTEL"); the chart config carries only `litellm.langfuse.defaultTags` and `litellm.keyAliasPattern`, the two settings with no UI surface (verified absent from the LiteLLM UI up to v1.109.1)
 - Docs: warned that a config-file `callbacks` entry is initialized before the database env vars load, so it exports with HTTP 401 unless the Langfuse keys are supplied in the container env via `litellm.env`
