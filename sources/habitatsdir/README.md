@@ -23,6 +23,9 @@ To set the app up for Article 12 do:
 
 ## Releases
 
+### Version 1.0.16 - 26 November 2026
+- Automated release of nginx:1.31.10 [Valentina Balan - [`2f91df0b9`](https://github.com/eea/helm-charts/commit/2f91df0b9cc992e29b57da538f3f58cba538355f)]
+
 ### Version 1.0.15 - 20 November 2026
 - Automated release of nginx:1.31.9 [EEA Jenkins - [`00c989db5`](https://github.com/eea/helm-charts/commit/00c989db56e510e0cbb60e059364573e8c1a170e)]
 
