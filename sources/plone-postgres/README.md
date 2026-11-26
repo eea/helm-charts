@@ -4,6 +4,9 @@ Postgres for plone Apps.
 
 ## Releases
 
+### Version 1.2.1 - 26 November 2026
+- Use correct version [valentinab25 - [`e7e973ff9`](https://github.com/eea/helm-charts/commit/e7e973ff945a5a8a84666a7643662559863d405b)]
+
 ### Version 1.2.0 - 26 November 2026
 - Upgrade postgres version, remove default cron scripts [valentinab25 - [`8bc1df1a9`](https://github.com/eea/helm-charts/commit/8bc1df1a9cd6c2e9fd474f2a5854547b966b32d1)]
 
