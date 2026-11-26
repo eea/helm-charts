@@ -36,6 +36,9 @@ ask for the password again for these paths.
 
 ## Releases
 
+### Version 3.45.0 - 26 November 2026
+- Release nginx 1.31.10 [Alin Voinea - [`2e6a0ba33`](https://github.com/eea/helm-charts/commit/2e6a0ba3301ea054653902ff6e4ddecae23d80a4)]
+
 ### Version 3.44.7 - 20 November 2026
 - Automated release of nginx:1.31.9 [EEA Jenkins - [`751d725dc`](https://github.com/eea/helm-charts/commit/751d725dc8685cdc16df561925423c4e7582e6cd)]
 
