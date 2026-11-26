@@ -10,6 +10,9 @@ This chart deployes the EEA Website Plone 6 backend app
 
 ## Releases
 
+### Version 1.98.0 - 26 November 2026
+- Release nginx 1.31.10 [Alin Voinea - [`6f9dd1f07`](https://github.com/eea/helm-charts/commit/6f9dd1f07975bbe2d9afc38a54d7f9106180a22d)]
+
 ### Version 1.97.3 - 20 November 2026
 - Automated release of nginx:1.31.9 [EEA Jenkins - [`67a647d02`](https://github.com/eea/helm-charts/commit/67a647d0244fce9d888244edcd02db63b28dd88e)]
 
