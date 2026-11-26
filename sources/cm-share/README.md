@@ -4,6 +4,9 @@ A Nextcloud instance for sharing files.
 
 ## Releases
 
+### Version 0.6.4 - 26 November 2026
+- Automated release of nginx:1.31.10 [Valentina Balan - [`08609807f`](https://github.com/eea/helm-charts/commit/08609807f8183550d8781aefebc5a4b3a654a54e)]
+
 ### Version 0.6.3 - 20 November 2026
 - Automated release of nginx:1.31.9 [EEA Jenkins - [`d0ace26a5`](https://github.com/eea/helm-charts/commit/d0ace26a53f53e548f06a53869ac153b6b81b732)]
 
