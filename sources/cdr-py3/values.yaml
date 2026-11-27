@@ -78,6 +78,13 @@ instance:
     zipCacheEnabled: true
     zipCachePath: /opt/zope/var
     zipCacheThreshold: "100000000"
+    # Uploaded zip archives: an archive with more files, or whose files unpack
+    # to more bytes, is refused; ratio = unpacked / compressed size, checked
+    # for files over 10 MB
+    zipUploadMaxFiles: "1000"
+    zipUploadMaxMemberSize: "2147483648"
+    zipUploadMaxTotalSize: "5368709120"
+    zipUploadMaxRatio: "200"
     zeoAddress: cdr-py3-zeoserver:8100
     localConvertersHost: cdr-py3-local-converters
     blobStorageCacheVolumeEnabled: true
