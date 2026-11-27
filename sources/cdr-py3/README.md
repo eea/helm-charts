@@ -128,6 +128,9 @@ When `ldapMemcachedServers` is empty the env var is omitted entirely.
 
 ## Releases
 
+### Version 0.2.24 - 27 November 2026
+- Added clamavFailMode env variable [Olimpiu Rob - [`24c6d77bc`](https://github.com/eea/helm-charts/commit/24c6d77bc6da53bdc7246c74c6c688215f32d390)]
+
 ### Version 0.2.23 - 27 November 2026
 - Added zip upload related env variables [Olimpiu Rob - [`b602c4963`](https://github.com/eea/helm-charts/commit/b602c49639dd5eb3cb32564977999c76b31f4b42)]
 
