@@ -38,6 +38,10 @@ data:
   ZIP_CACHE_ENABLED: {{ .Values.instance.env.zipCacheEnabled | quote }}
   ZIP_CACHE_PATH: {{ .Values.instance.env.zipCachePath | quote }}
   ZIP_CACHE_THRESHOLD: {{ .Values.instance.env.zipCacheThreshold | quote }}
+  ZIP_UPLOAD_MAX_FILES: {{ .Values.instance.env.zipUploadMaxFiles | quote }}
+  ZIP_UPLOAD_MAX_MEMBER_SIZE: {{ .Values.instance.env.zipUploadMaxMemberSize | quote }}
+  ZIP_UPLOAD_MAX_TOTAL_SIZE: {{ .Values.instance.env.zipUploadMaxTotalSize | quote }}
+  ZIP_UPLOAD_MAX_RATIO: {{ .Values.instance.env.zipUploadMaxRatio | quote }}
   ZOPE_THREADS: {{ .Values.instance.env.zopeThreads | quote }}
   ZOPE_DEBUG_MODE: {{ .Values.instance.env.zopeDebugMode | quote }}
   EVENT_LOG_LEVEL: {{ .Values.instance.env.eventLogLevel | quote }}

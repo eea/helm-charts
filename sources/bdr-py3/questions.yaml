@@ -1038,6 +1038,32 @@ questions:
     show_if: "instance.env.zipCacheEnabled"
     group: "Advanced Settings"
 
+  - variable: instance.env.zipUploadMaxFiles
+    label: "Zip upload: max files per archive"
+    description: "An uploaded zip archive with more files is refused"
+    type: string
+    default: "1000"
+    group: "Advanced Settings"
+
+  - variable: instance.env.zipUploadMaxMemberSize
+    label: "Zip upload: max unpacked size per file (bytes)"
+    type: string
+    default: "2147483648"
+    group: "Advanced Settings"
+
+  - variable: instance.env.zipUploadMaxTotalSize
+    label: "Zip upload: max unpacked size per archive (bytes)"
+    type: string
+    default: "5368709120"
+    group: "Advanced Settings"
+
+  - variable: instance.env.zipUploadMaxRatio
+    label: "Zip upload: max compression ratio"
+    description: "A file over 10 MB that unpacks to more than this many times its compressed size is refused"
+    type: string
+    default: "200"
+    group: "Advanced Settings"
+
   - variable: instance.env.localConvertersHost
     label: "Local Converters Host"
     type: string
