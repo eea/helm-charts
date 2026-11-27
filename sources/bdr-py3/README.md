@@ -179,6 +179,9 @@ schedule deadlines prevent a hung job from blocking future executions under
 
 ## Releases
 
+### Version 0.2.20 - 27 November 2026
+- Added zip upload related env variables [Olimpiu Rob - [`664cb62c0`](https://github.com/eea/helm-charts/commit/664cb62c0319174d7e68a624aeca8620b0dda857)]
+
 ### Version 0.2.19 - 26 November 2026
 - Automated release of nginx:1.31.10 [Valentina Balan - [`05e9ed39b`](https://github.com/eea/helm-charts/commit/05e9ed39b5c14bdd94a77ff1f5c893930550c86f)]
 
