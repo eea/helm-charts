@@ -128,6 +128,9 @@ When `ldapMemcachedServers` is empty the env var is omitted entirely.
 
 ## Releases
 
+### Version 0.2.23 - 27 November 2026
+- Added zip upload related env variables [Olimpiu Rob - [`b602c4963`](https://github.com/eea/helm-charts/commit/b602c49639dd5eb3cb32564977999c76b31f4b42)]
+
 ### Version 0.2.22 - 26 November 2026
 - Automated release of nginx:1.31.10 [Valentina Balan - [`f6de908c5`](https://github.com/eea/helm-charts/commit/f6de908c5f624fd78368f065fbfb5b9558cff5ad)]
 
