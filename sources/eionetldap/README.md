@@ -12,6 +12,8 @@ There is a backup cronjob built in, which can be enabled with backup.enable=true
 ## Releases
 
 <dl>
+  <dt>Version 1.2.3 - 27 November 2026</dt>
+  <dd>Added secondary accounts browser account - will eventually replace the original one</dd>
 
   <dt>Version 1.2.2 - 28 May 2024</dt>
   <dd>Make TLS enforcement optional.</dd>
