@@ -18,6 +18,7 @@ spec:
         component: nginx
       annotations:
         checksum/nginx-config: {{ include (print $.Template.BasePath "/httpd-configmap.yaml") . | sha256sum }}
+        checksum/nginx-static: {{ include (print $.Template.BasePath "/httpd-static-configmap.yaml") . | sha256sum }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -26,7 +27,7 @@ spec:
       serviceAccountName: {{ include "appl.serviceAccountName" . }}
       containers:
       - name: {{ .Release.Name }}-nginx
-        image: eeacms/nginx-taskman:1.31.1
+        image: nginx:1.31.10-alpine
         ports:
         - containerPort: 80
           protocol: TCP
@@ -37,6 +38,8 @@ spec:
         - name: nginx-config
           mountPath: /etc/nginx/nginx.conf
           subPath: nginx.conf
+        - name: nginx-static
+          mountPath: /usr/share/nginx/html
         - name: nginx-cache-cold
           mountPath: /var/cache/nginx
         - name: nginx-cache-hot
@@ -65,6 +68,30 @@ spec:
       - name: nginx-config
         configMap:
           name: {{ .Release.Name }}-nginx-config-cm
+      - name: nginx-static
+        configMap:
+          name: {{ .Release.Name }}-nginx-static-cm
+          items:
+          - key: 404.html
+            path: errors/404.html
+          - key: 50x.html
+            path: errors/50x.html
+          - key: maintenance.html
+            path: errors/maintenance.html
+          - key: index.html
+            path: errors/index.html
+          - key: style.css
+            path: errors/static_errors/css/style.css
+          - key: ice.gif
+            path: errors/static_errors/ice.gif
+          - key: retrocars.gif
+            path: errors/static_errors/retrocars.gif
+          - key: containers.gif
+            path: errors/static_errors/containers.gif
+          - key: robots.txt
+            path: robots.txt
+          - key: google1c3b89acd75baccf.html
+            path: google1c3b89acd75baccf.html
       - name: nginx-cache-cold
         emptyDir: {}
       - name: nginx-cache-hot
