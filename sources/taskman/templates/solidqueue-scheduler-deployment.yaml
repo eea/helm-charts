@@ -124,7 +124,7 @@ spec:
         - name: REDMINE_HOST
           value: redmine:3000
         {{- range $key, $value := .Values.solidQueue.scheduler.environment }}
-        {{- if and (ne $key nil) (ne $key "START_SERVER") (ne $key "START_CRON") (ne $key "START_SOLID_QUEUE") (ne $key "RUN_DB_MIGRATE") (ne $key "REDMINE_PLUGINS_MIGRATE") (ne $key "MIGRATIONS_ONLY_STARTUP") (ne $key "SOLID_QUEUE_ROLE") (ne $key "SOLID_QUEUE_ONLY_WORK") (ne $key "SOLID_QUEUE_SKIP_RECURRING") (ne $key "FAST_BOOT") (ne $key "MALLOC_ARENA_MAX") (ne $key "RAILS_MAX_THREADS") (ne $key "RAILS_LOG_LEVEL") (ne $key "RUNTIME_BUNDLE_INSTALL") (ne $key "RUNTIME_BUNDLE_LOCAL_INSTALL") (ne $key "REQUIRE_MOUNTED_ADDONS") (ne $key "MOUNTED_ADDONS_ROOT") }}
+        {{- if and (ne $key nil) (ne $key "START_SERVER") (ne $key "START_CRON") (ne $key "START_SOLID_QUEUE") (ne $key "RUN_DB_MIGRATE") (ne $key "REDMINE_PLUGINS_MIGRATE") (ne $key "MIGRATIONS_ONLY_STARTUP") (ne $key "SOLID_QUEUE_ROLE") (ne $key "SOLID_QUEUE_ONLY_WORK") (ne $key "SOLID_QUEUE_SKIP_RECURRING") (ne $key "FAST_BOOT") (ne $key "MALLOC_ARENA_MAX") (ne $key "RAILS_MAX_THREADS") (ne $key "RAILS_LOG_LEVEL") (ne $key "RUNTIME_BUNDLE_INSTALL") (ne $key "RUNTIME_BUNDLE_LOCAL_INSTALL") (ne $key "REQUIRE_MOUNTED_ADDONS") (ne $key "MOUNTED_ADDONS_ROOT") (ne $key "REDMINE_DB_MYSQL") (ne $key "REDMINE_DB_ENCODING") (ne $key "REDMINE_HOST") }}
         - name: {{ $key }}
           value: {{ $value | quote }}
         {{- end }}
