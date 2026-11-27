@@ -179,6 +179,9 @@ schedule deadlines prevent a hung job from blocking future executions under
 
 ## Releases
 
+### Version 0.2.21 - 27 November 2026
+- Added clamavFailMode env variable [Olimpiu Rob - [`fa8319ccc`](https://github.com/eea/helm-charts/commit/fa8319ccc60c49e579f471cc4016cf2bd5b29f42)]
+
 ### Version 0.2.20 - 27 November 2026
 - Added zip upload related env variables [Olimpiu Rob - [`664cb62c0`](https://github.com/eea/helm-charts/commit/664cb62c0319174d7e68a624aeca8620b0dda857)]
 
