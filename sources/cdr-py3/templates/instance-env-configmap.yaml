@@ -15,6 +15,7 @@ data:
   CACHE_PURGING_VHOST: '{{ .Values.instance.env.cachePurgingVhost }}'
   CACHE_SETTINGS_ENABLED: '{{ .Values.instance.env.cacheSettingsEnabled }}'
   CLAMAV_HOST: '{{ .Values.instance.env.clamavHost }}'
+  CLAMAV_FAIL_MODE: '{{ .Values.instance.env.clamavFailMode }}'
   DEPLOYMENT_HOST: '{{ .Values.instance.env.deploymentHost }}'
   GRAYLOG: '{{ .Values.instance.env.graylog }}'
   GRAYLOG_FACILITY: '{{ .Values.instance.env.graylogFacility }}'

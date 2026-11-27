@@ -68,6 +68,10 @@ instance:
     cachePurgingVhost: true
     cacheSettingsEnabled: true
     clamavHost: cdr-py3-clamav
+    # what happens to an upload that could not be scanned for viruses (scanner
+    # unreachable or failing, file too big): "open" accepts it, "closed" refuses
+    # it; it is logged either way
+    clamavFailMode: "open"
     graylog: ""
     graylogFacility: ""
     rabbitmqEnabled: true
