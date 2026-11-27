@@ -1064,6 +1064,16 @@ questions:
     default: "200"
     group: "Advanced Settings"
 
+  - variable: instance.env.clamavFailMode
+    label: "Virus scan: when a file could not be scanned"
+    description: "open accepts the upload, closed refuses it; logged either way"
+    type: enum
+    options:
+      - "open"
+      - "closed"
+    default: "open"
+    group: "Advanced Settings"
+
   - variable: instance.env.localConvertersHost
     label: "Local Converters Host"
     type: string
